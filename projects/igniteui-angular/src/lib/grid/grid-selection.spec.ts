@@ -62,7 +62,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
@@ -74,7 +73,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
@@ -87,7 +85,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         spyOn(grid.cdr, 'markForCheck').and.callThrough();
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
@@ -103,7 +100,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2)).toBeDefined();
@@ -117,7 +113,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2)).toBeDefined();
@@ -132,7 +127,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         const targetCell = grid.getCellByKey(2, 'Name');
@@ -145,7 +139,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
         expect(targetCell.focused).toEqual(true);
 
-        const targetCellDebugElement = fix.debugElement.query(By.css('.igx-grid__td--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
         await wait(30);
         fix.detectChanges();
@@ -161,7 +154,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const targetCellPrimaryKey = grid.rowList.last.rowID;
         const targetCell = grid.getCellByColumn(targetCellPrimaryKey, 'Column1');
         const initialValue = targetCell.value;
@@ -173,7 +165,6 @@ describe('IgxGrid - Row Selection', () => {
         spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
         fix.detectChanges();
         expect(targetCell.focused).toEqual(true);
-        const targetCellDebugElement = fix.debugElement.query(By.css('.igx-grid__td--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
         await wait(30);
         fix.detectChanges();
@@ -191,7 +182,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         const grid = fix.componentInstance.gridSelection2;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const nextBtn: HTMLElement = fix.nativeElement.querySelector('.nextPageBtn');
         const prevBtn: HTMLElement = fix.nativeElement.querySelector('.prevPageBtn');
         const selectedRow = grid.getRowByIndex(5);
@@ -216,7 +206,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const nextBtn: HTMLElement = fix.nativeElement.querySelector('.nextPageBtn');
         const prevBtn: HTMLElement = fix.nativeElement.querySelector('.prevPageBtn');
         const firstRow = grid.getRowByIndex(0);
@@ -257,7 +246,6 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const nextBtn: HTMLElement = fix.nativeElement.querySelector('.nextPageBtn');
         const prevBtn: HTMLElement = fix.nativeElement.querySelector('.prevPageBtn');
         const selectedRow1 = grid.getRowByIndex(5);
@@ -302,8 +290,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-        const nextBtn: HTMLElement = fix.nativeElement.querySelector('.nextPageBtn');
-        const prevBtn: HTMLElement = fix.nativeElement.querySelector('.prevPageBtn');
         const selectedRow = grid.getRowByIndex(0);
         expect(selectedRow).toBeDefined();
         const checkboxElement: HTMLElement = selectedRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -376,7 +362,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection3;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
         const firstRow = grid.getRowByKey('0_0');
         const firstRowCheckbox: HTMLInputElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -403,7 +388,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
         const firstRow = grid.getRowByIndex(0);
 
@@ -509,6 +493,7 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         for (const row of grid.rowList.toArray()) {
+
             // ensure we were scroll - the first cell's column index should not be 0
             const firstCellColumnIndex = row.cells.toArray()[0].columnIndex;
             expect(firstCellColumnIndex).not.toEqual(0);
@@ -761,14 +746,12 @@ describe('IgxGrid - Row Selection', () => {
 
         const grid = fix.componentInstance.gridSelection3;
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
-        const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
 
         expect(firstRow).toBeDefined();
         expect(secondRow).toBeDefined();
 
-        const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
 
@@ -889,7 +872,6 @@ describe('IgxGrid - Row Selection', () => {
         oldCell.nativeElement.click();
         grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true });
         fixture.detectChanges();
-        const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();
         expect(grid.selectedCells.length).toBe(1);
         expect(grid.selectedCells[0].cellID.rowID).toEqual(oldCellID.rowID);
@@ -901,13 +883,11 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridCancelable;
-        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
         const firstRow = grid.getRowByIndex(0);
         const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const secondRow = grid.getRowByIndex(1);
         const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
-        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
@@ -934,7 +914,6 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridSelection3;
-        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
         const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -958,7 +937,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.selectAllRows();
         fix.detectChanges();
@@ -971,13 +949,10 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
         const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
         const headerCheckboxElement: HTMLElement = headerRow.querySelector('.igx-checkbox');
         const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
-        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
         expect(firstRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
@@ -1002,11 +977,7 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-        const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
-        const headerCheckboxElement: HTMLElement = headerRow.querySelector('.igx-checkbox');
         const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
         const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
@@ -1056,13 +1027,16 @@ describe('IgxGrid - Row Selection', () => {
 
         const grid = fix.componentInstance.gridSelection5;
         const virtualizationSpy = spyOn<any>(IgxGridComponent.prototype, '_focusNextCell');
+
         // _focusNextCell is called when virt scroll is done
         fix.detectChanges();
+
         // Focus left right cell
         const cells = fix.debugElement.queryAll(By.css('.igx-grid__td'));
         const gridFirstRow = grid.rowList.first;
         const cellsLength = grid.rowList.first.cells.length;
         const mockEvent = jasmine.createSpyObj('mockEvt', ['preventDefault', 'stopPropagation']);
+
         // Focus last right cell
         const lastVisibleCell = gridFirstRow.cells.toArray()[cellsLength - 3];
 
@@ -1084,6 +1058,7 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(targetCell.isSelected).toBeTruthy();
+
         // Focus second last right cell, TAB will NOT trigger virtualization;
         // targetCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab' }));
         UIInteractions.triggerKeyDownEvtUponElem('tab', targetCell, true);
@@ -1091,8 +1066,10 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
+
         // Focus has changed to last cell
         expect(lastVisibleCell.isSelected).toBeTruthy();
+
         // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
         gridFirstRow.cells.first.onFocus(mockEvent);
         await wait();
@@ -1102,6 +1079,7 @@ describe('IgxGrid - Row Selection', () => {
         gridFirstRow.cells.first.onShiftTabKey(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         await wait(100);
         fix.detectChanges();
+
         // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
     }));
