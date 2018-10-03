@@ -20,7 +20,7 @@ export interface IgxTransactionService {
     /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
-     * @param recordRef Reference to the value of the record in thd data source related to the changed item
+     * @param recordRef Reference to the value of the record in the data source related to the changed item
      *
      * @returns If operation is successful.
      */
@@ -73,7 +73,7 @@ export interface IgxTransactionService {
     clear(): void;
 
     /**
-     * Starts pending transaction. All transaction passed after call to startPending
+     * Starts pending transactions. All transactions passed after call to startPending
      * will not be added to transaction log and will not be reflected in aggregated
      * state
      */
