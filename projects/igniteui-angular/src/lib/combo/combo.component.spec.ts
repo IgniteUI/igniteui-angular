@@ -42,7 +42,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -253,6 +253,7 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toBeFalsy();
             expect(dropdown.verticalScrollContainer).toBeDefined();
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
+            const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
             const mockFn = () => dropdown.navigatePrev();
             expect(mockFn).toThrow();
             expect(dropdown.focusedItem).toEqual(null);
@@ -301,6 +302,7 @@ describe('igxCombo', () => {
             expect(dropdown.verticalScrollContainer).toBeDefined();
             const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
+            const mockSearchInput = spyOnProperty(combo, 'searchInput', 'get').and.returnValue({ nativeElement: mockObj });
             const mockFn = () => dropdown.navigatePrev();
             const virtualMock = spyOn<any>(dropdown, 'navigateVirtualItem').and.callThrough();
             expect(mockFn).toThrow();
@@ -808,8 +810,8 @@ describe('igxCombo', () => {
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
 
                     // Scroll has not changed
-                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
 
+                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                     // Last item is focused again
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                     done();
@@ -831,8 +833,8 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
                 const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
-                expect(scrollbar.scrollTop).toEqual(0);
 
+                expect(scrollbar.scrollTop).toEqual(0);
                 // Scroll to bottom;
                 dropdownContent.dispatchEvent(endEvent);
                 combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
@@ -856,8 +858,10 @@ describe('igxCombo', () => {
                         dropdownContent.dispatchEvent(moveDownEvent);
                         fixture.detectChanges();
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
+
                         // Scroll has not change
                         expect(scrollbar.scrollTop).toEqual(0);
+
                         // First item is no longer focused
                         expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         dropdownContent.dispatchEvent(homeEvent);
@@ -1493,23 +1497,19 @@ describe('igxCombo', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-
             // override selection
             fixture.componentInstance.onSelectionChange = (event) => {
                 event.newSelection = [];
             };
             combo.toggle();
             tick();
-
             // No items are initially selected
             expect(combo.selectedItems()).toEqual([]);
-
             // Select the first 5 items
             combo.selectItems(fixture.componentInstance.initData.splice(0, 5));
             tick();
             fixture.detectChanges();
             tick();
-
             // onSelectionChange fires and overrides the selection to be [];
             expect(combo.selectedItems()).toEqual([]);
         }));
@@ -1639,7 +1639,6 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.collapsed).toBeFalsy();
-
             // NOTE: Minimum itemHeight is 2 rem, per Material Design Guidelines (for mobile only)
             expect(combo.itemHeight).toEqual(48); // Default value for itemHeight
             expect(combo.itemsMaxHeight).toEqual(480); // Default value for itemsMaxHeight
@@ -2149,10 +2148,8 @@ describe('igxCombo', () => {
             const listItems = dropDownContainer.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             expect(listItems.length).toEqual(0);
             expect(dropdownList.childElementCount).toEqual(3);
-
             // Expect no items to be rendered in the virtual container
             expect(dropdownItemsContainer.children[0].childElementCount).toEqual(0);
-
             // Expect the list child (NOT COMBO ITEM) to be a container with "The list is empty";
             const dropdownItem = dropdownList.lastElementChild as HTMLElement;
             expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
@@ -2484,6 +2481,7 @@ describe('igxCombo', () => {
             expect(combo.data[combo.data.length - 1]).toEqual('myItem');
         });
         it('Should filter the dropdown items when typing in the search input', fakeAsync(() => {
+            let searchInputElement;
             let dropdownList;
             let dropdownItems;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -2502,6 +2500,7 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyFilteredItems = function (inputValue: string, expectedItemsNumber) {
                 UIInteractions.sendInput(searchInput, inputValue, fixture);
@@ -2527,6 +2526,7 @@ describe('igxCombo', () => {
             expect(dropdownItems.length).toEqual(0);
         }));
         it('Should display empty list when the search query does not match any item', fakeAsync(() => {
+            let searchInputElement;
             let dropdownList: HTMLElement;
             let dropDownContainer: HTMLElement;
             let listItems;
@@ -2537,6 +2537,7 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
             UIInteractions.sendInput(searchInput, 'P', fixture);
             fixture.detectChanges();
             dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
@@ -2554,6 +2555,7 @@ describe('igxCombo', () => {
             expect(dropdownItem.firstElementChild.textContent).toEqual('The list is empty');
         }));
         it('Should fire onSearchInput event when typing in the search box ', fakeAsync(() => {
+            let searchInputElement;
             let timesFired = 0;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -2563,6 +2565,7 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyOnSearchInputEventIsFired = function (inputValue: string) {
                 UIInteractions.sendInput(searchInput, inputValue, fixture);
@@ -2577,6 +2580,7 @@ describe('igxCombo', () => {
             verifyOnSearchInputEventIsFired('Pala');
         }));
         it('Should restore the initial combo dropdown list after clearing the search input', fakeAsync(() => {
+            let searchInputElement;
             let dropdownList;
             let dropdownItems;
             const fixture = TestBed.createComponent(IgxComboTestComponent);
@@ -2586,6 +2590,7 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
 
             const verifyFilteredItems = function (inputValue: string,
                 expectedDropdownItemsNumber: number,
@@ -2633,6 +2638,7 @@ describe('igxCombo', () => {
             expect(searchInputElement.textContent).toEqual('');
         }));
         it('Group header should not be visible when no results are filtered for a group', fakeAsync(() => {
+            let searchInputElement;
             let dropdownList;
             const fixture = TestBed.createComponent(IgxComboInputTestComponent);
             fixture.detectChanges();
@@ -2647,6 +2653,7 @@ describe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             const searchInput = fixture.debugElement.query(By.css('input[name=\'searchInput\']'));
+            searchInputElement = searchInput.nativeElement;
             UIInteractions.sendInput(searchInput, 'Mi', fixture);
             fixture.detectChanges();
             dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
@@ -2781,7 +2788,6 @@ describe('igxCombo', () => {
 
             tick();
             fixture.detectChanges();
-
             // SPACE does not add item to collection
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('');
@@ -2818,7 +2824,6 @@ describe('igxCombo', () => {
 
             tick();
             fixture.detectChanges();
-
             // SPACE does not add item to collection
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('');
@@ -2935,7 +2940,6 @@ describe('igxCombo', () => {
             expect(combo.onInputClick).toHaveBeenCalledTimes(1);
 
             form.disable();
-
             // Disabling the form disables all of the controls in it
             fix.detectChanges();
             expect(comboFormReference.disabled).toBeTruthy();
@@ -3000,6 +3004,8 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
+            // tslint:disable-next-line:no-debugger
+            debugger;
             expect(combo.selectedItems()).toEqual(fixture.componentInstance.comboSelectedItems);
             combo.selectItems([...data].splice(1, 3), true);
             fixture.detectChanges();
