@@ -64,7 +64,7 @@ export class IgxTransactionBaseService implements IgxTransactionService {
 
     public commit(data: any[]) {
         this._states.forEach((s: IState) => {
-            const index = data.findIndex(i => i === s.recordRef);
+            const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
                 case TransactionType.ADD:
                     data.push(s.value);
