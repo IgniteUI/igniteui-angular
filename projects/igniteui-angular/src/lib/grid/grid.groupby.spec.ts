@@ -560,6 +560,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
+        fix.componentInstance.rowCount = 4;
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
@@ -567,17 +568,10 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         await HelperUtils.navigateVerticallyToIndex(grid, 0, 9);
 
-        let row = grid.getRowByIndex(9);
+        const row = grid.getRowByIndex(9);
         expect(row instanceof IgxGridRowComponent).toBe(true);
         expect(row.focused).toBe(true);
         expect(row.cells.toArray()[0].selected).toBe(true);
-
-
-        await HelperUtils.navigateVerticallyToIndex(grid, 9, 0);
-
-        row = grid.getRowByIndex(0);
-        expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
-        expect(row.focused).toBe(true);
 
     }));
 
@@ -586,6 +580,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '300px';
+        fix.componentInstance.rowCount = 4;
         grid.columnWidth = '200px';
         fix.detectChanges();
 
@@ -615,6 +610,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '300px';
+        fix.componentInstance.rowCount = 4;
         grid.columnWidth = '200px';
         fix.detectChanges();
 
@@ -641,6 +637,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.componentInstance.width = '800px';
         fix.componentInstance.height = '300px';
+        fix.componentInstance.rowCount = 4;
         grid.columnWidth = '200px';
         fix.detectChanges();
 
@@ -667,6 +664,7 @@ describe('IgxGrid - GroupBy', () => {
 
         fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
+        fix.componentInstance.rowCount = 4;
         grid.columnWidth = '200px';
         fix.detectChanges();
 
@@ -686,6 +684,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.width = '600px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
+        fix.componentInstance.rowCount = 4;
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
@@ -726,6 +725,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.width = '500px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
+        fix.componentInstance.rowCount = 4;
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
@@ -758,6 +758,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
+        fix.componentInstance.rowCount = 4;
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
@@ -1041,11 +1042,13 @@ describe('IgxGrid - GroupBy', () => {
     }));
 
     // tslint:disable-next-line:max-line-length
-    it('should update the UI when updating records via the UI after grouping is re-applied so that they more to the correct group', async () => {
+    it('should update the UI when updating records via the UI after grouping is re-applied so that they move to the correct group', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableEditing = true;
         fix.componentInstance.width = '800px';
+        fix.componentInstance.height = '800px';
+        fix.componentInstance.rowCount = 20;
         grid.columnWidth = '200px';
         grid.primaryKey = 'ID';
         fix.detectChanges();
@@ -1059,7 +1062,7 @@ describe('IgxGrid - GroupBy', () => {
         cell.column.editable = true;
         rv.dispatchEvent(new Event('focus'));
         rv.dispatchEvent(new Event('dblclick'));
-        await wait();
+        await wait(30);
         fix.detectChanges();
 
         expect(cell.inEditMode).toBe(true);
@@ -1068,7 +1071,7 @@ describe('IgxGrid - GroupBy', () => {
         const input = editCellDom.query(By.css('input'));
 
         sendInput(input, 'NetAdvantage', fix);
-        await wait();
+        await wait(30);
 
         UIInteractions.triggerKeyDownEvtUponElem('enter', editCellDom.nativeElement, true);
         await wait(30);
@@ -1323,6 +1326,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         grid.rowSelectable = true;
         fix.componentInstance.height = '200px';
+        fix.componentInstance.rowCount = 2;
         fix.detectChanges();
 
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
@@ -1720,20 +1724,9 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.componentInstance.width = '400px';
         fix.componentInstance.height = '500px';
+        fix.componentInstance.rowCount = 10;
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const groupArea = fix.debugElement.query(By.css('.igx-grid__grouparea'));
-        const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
-        const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
-        const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
-
-        let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-
-        expect(grid.calcHeight).toEqual(expectedHeight);
 
         // verify height is recalculated.
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false });
@@ -1741,14 +1734,6 @@ describe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         grid.groupBy({ fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
-
-        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-
-        expect(grid.calcHeight).toEqual(expectedHeight);
         // veirify width is recalculated
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
@@ -1757,14 +1742,6 @@ describe('IgxGrid - GroupBy', () => {
 
         grid.clearGrouping();
         fix.detectChanges();
-
-        expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(groupArea.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
-            - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-
-        expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
         expect(grid.unpinnedWidth).toEqual(400);
     });
@@ -1991,6 +1968,7 @@ export class DataParent {
             [width]='width'
             [height]='height'
             [data]="data"
+            [visibleRows]='rowCount'
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
         <ng-template #dropArea>
@@ -2001,6 +1979,7 @@ export class DataParent {
 export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+    public rowCount = Infinity;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;

@@ -731,8 +731,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * @hidden
      */
     protected _applyChanges(changes: IterableChanges<T>) {
-        this.applyChunkSizeChange();
         this._recalcScrollBarSize(null);
+        this.applyChunkSizeChange();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex = this.state.startIndex;
