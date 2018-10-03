@@ -43,6 +43,13 @@ export class GridRowEditSampleComponent {
             ReorderLevel: this.getRandomInt(10, 20),
             Discontinued: this.getRandomInt(1, 10) % 2 === 0,
             OrderDate: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
+                .toISOString().slice(0, 10),
+            UnitPrice2: this.getRandomInt(10, 1000),
+            UnitsInStock2: this.getRandomInt(1, 100),
+            UnitsOnOrder2: this.getRandomInt(1, 20),
+            ReorderLevel2: this.getRandomInt(10, 20),
+            Discontinued2: this.getRandomInt(1, 10) % 2 === 0,
+            OrderDate2: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
                 .toISOString().slice(0, 10)
         });
         this.refresh(currentGrid);
