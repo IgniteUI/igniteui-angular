@@ -27,12 +27,21 @@ export abstract class IgxBaseExporter {
 
     protected _sort = null;
 
+    /**
+     * This event is emitted when a row is exported.
+     */
     @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
 
+    /**
+     * This event is emitted when a column is exported.
+     */
     @Output()
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
+    /**
+     * Method for exporting IgxGrid component's data.
+     */
     public export(grid: any, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
@@ -77,6 +86,9 @@ export abstract class IgxBaseExporter {
         this.exportData(data, options);
     }
 
+    /**
+     * Method for exporting any kind of array data.
+     */
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
             throw Error('No options provided!');

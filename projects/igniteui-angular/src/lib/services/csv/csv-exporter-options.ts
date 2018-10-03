@@ -1,5 +1,8 @@
 import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base';
 
+/**
+ * Objects of this class are used to configure the CSV exporting process.
+ */
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     private _valueDelimiter;
@@ -29,18 +32,30 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         return extension;
     }
 
+    /**
+     * Gets the value delimiter which will be used for the exporing operation.
+     */
     get valueDelimiter() {
         return this._valueDelimiter;
     }
 
+    /**
+     * Sets a value delimiter which will overwrite the default delimiter of the selected export format.
+     */
     set valueDelimiter(value) {
         this.setDelimiter(value);
     }
 
+    /**
+     * Gets the CSV export format.
+     */
     get fileType() {
         return this._fileType;
     }
 
+    /**
+     * Sets the CSV export format.
+     */
     set fileType(value) {
         this.setFileType(value);
     }
@@ -75,6 +90,14 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
     }
 }
 
+/**
+ * This enumeration is used to configure the default value separator
+ * as well as the default file extension of the exported file.
+ *
+ * CSV - Character Separated Values, default separator is "comma", default file extension is .csv
+ * TSV - Tab Separated Values, default separator is tab, default file extension is .tsv
+ * TAB - Tab Separated Values, default separator is tab, default file extension is .tab
+ */
 export enum CsvFileTypes {
     CSV,
     TSV,
