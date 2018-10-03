@@ -51,14 +51,14 @@ export interface IgxTransactionService {
      * @param id The id of the record
      * @returns whether there are uncommitted changes for provided id
      */
-    hasState(id: any): boolean;
+    hasState(id?: any): boolean;
 
     /**
      * Returns value of the required id including all uncommitted changes
      * @param id The id of the record
      * @returns updated recordRef
      */
-    getAggregatedValue(id: any): any;
+    getAggregatedValue(id: any, mergeChanges: boolean): any;
 
     // TODO rename to commit
     /**

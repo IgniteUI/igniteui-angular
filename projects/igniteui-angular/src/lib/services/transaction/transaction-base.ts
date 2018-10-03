@@ -37,18 +37,23 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         return new Map(this._states);
     }
 
-    public hasState(id: any): boolean {
-        return this._states.has(id) || this._pendingStates.has(id);
+    public hasState(id?: any): boolean {
+        if (id !== undefined) {
+            return this._states.has(id) || this._pendingStates.has(id);
+        }
+        return this._states.size > 0 || this._pendingStates.size > 0;
     }
 
-    public getAggregatedValue(id: any) {
+    public getAggregatedValue(id: any, mergeChanges = true) {
         //  if we pending changes for this id get the state from pendingStates
         let state = this._pendingStates.get(id);
         if (!state) {
             //  if there is no pending changes try to get state from aggregated states
             state = this._states.get(id);
         }
-
+        if (!mergeChanges) {
+            return state || null;
+        }
         //  if we have state update its recordRef and return the result
         if (state) {
             return this.updateValue(state);
