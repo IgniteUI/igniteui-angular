@@ -4681,8 +4681,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public repositionRowEditingOverlay(row: IgxGridRowComponent) {
-        this.transactions.endPending(true);
-        this.transactions.startPending();
         this.configureRowEditingOverlay(row);
         this.rowEditingOverlay.reposition();
     }
