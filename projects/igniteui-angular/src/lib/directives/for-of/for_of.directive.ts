@@ -268,7 +268,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._maxHeight = this._calcMaxBrowserHeight();
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
-                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
+                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler.bind(this));
                 this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
         }

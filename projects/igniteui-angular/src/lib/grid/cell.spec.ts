@@ -12,7 +12,7 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+fdescribe('IgxGrid - Cell component', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (
@@ -42,9 +42,9 @@ describe('IgxGrid - Cell component', () => {
             // else call arrow up/down
             // cell.nativeElement.dispatchEvent(keyboardEvent);
             if (dir === 'ArrowRight') {
-                cell.onKeydownArrowRight(keyboardEvent);
+                cell.nativeElement.dispatchEvent(keyboardEvent);
             } else {
-                cell.onKeydownArrowLeft(keyboardEvent);
+                cell.nativeElement.dispatchEvent(keyboardEvent);
             }
 
             grid.cdr.detectChanges();
@@ -54,7 +54,7 @@ describe('IgxGrid - Cell component', () => {
                 navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
-                cell.row.virtDirRow.onChunkLoad.pipe(take(1)).subscribe({
+                grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe({
                     next: () => {
                         grid.cdr.detectChanges();
                         nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
@@ -207,6 +207,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
 
                 rv.triggerEventHandler('dblclick', {});
+                await wait();
                 expect(cell.inEditMode).toBe(true);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
@@ -560,9 +561,8 @@ describe('IgxGrid - Cell component', () => {
                 const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
                 let expectedScroll;
                 let cellElem;
-
                 fixture.componentInstance.scrollTop(1000);
-                await wait(100);
+                await wait(500);
                 fixture.detectChanges();
 
                 const testCells = grid.getColumnByName('firstName').cells;
@@ -702,7 +702,6 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(CtrlKeyKeyboardNagivationComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
         const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const rv2 = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
 
@@ -778,12 +777,11 @@ describe('IgxGrid - Cell component', () => {
     it('should scroll first row into view when pressing arrow up', (async () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
-
         // the 2nd sell on the row with index 1
         const cell = fix.debugElement.queryAll(By.css(`${CELL_CSS_CLASS}:nth-child(2)`))[1];
 
         fix.componentInstance.scrollTop(25);
-        await wait();
+        await wait(200);
         fix.detectChanges();
 
         let scrollContainer = fix.componentInstance.instance.verticalScrollContainer.dc.instance._viewContainer;
@@ -856,7 +854,7 @@ describe('IgxGrid - Cell component', () => {
         const grid = fix.componentInstance.instance;
         grid.verticalScrollContainer.addScrollTop(5000);
 
-        await wait();
+        await wait(200);
         fix.detectChanges();
 
         const cell = grid.getCellByColumn(104, 'index');
@@ -941,8 +939,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
         const curCell = grid.getCellByColumn(3, '1');
-        curCell.onKeydownArrowDown(null);
-
+        curCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
             expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
             expect(displayContainer.parentElement.scrollTop).toEqual(0);
@@ -977,7 +974,7 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowUp(null);
+            curCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
 
             grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
                 expect(displayContainer.style.top).toEqual('0px');
@@ -1001,7 +998,7 @@ describe('IgxGrid - Cell component', () => {
         const rowDisplayContainer = rows[1].querySelector('igx-display-container');
 
         fix.componentInstance.scrollLeft(50);
-        grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
+        grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();
 
             expect(rowDisplayContainer.style.left).toEqual('-50px');
@@ -1014,9 +1011,9 @@ describe('IgxGrid - Cell component', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             const curCell = grid.getCellByColumn(1, '1');
-            curCell.onKeydownArrowLeft(null);
+            curCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: false }));
 
-            grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
+            grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
                 fix.detectChanges();
                 expect(rowDisplayContainer.style.left).toEqual('0px');
                 expect(fix.componentInstance.selectedCell.value).toEqual(0);
@@ -1046,9 +1043,8 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('2');
 
         const curCell = grid.getCellByColumn(1, '2');
-        curCell.onKeydownArrowRight(null);
-
-        grid.rowList.toArray()[1].virtDirRow.onChunkLoad.pipe(take(1)).subscribe(() => {
+        curCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: false }));
+        grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
             fix.detectChanges();
             expect(rowDisplayContainer.style.left).toEqual('-43px');
             expect(fix.componentInstance.selectedCell.value).toEqual(30);

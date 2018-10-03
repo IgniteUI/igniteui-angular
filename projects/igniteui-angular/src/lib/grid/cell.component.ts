@@ -291,8 +291,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
-
         this.cdr.detectChanges();
+        this.grid.cdr.markForCheck();
     }
 
     /**
@@ -585,7 +585,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (fireFocus) {
                 this.nativeElement.focus();
             }
-            this.grid.cdr.detectChanges();
             this.grid.onSelection.emit({ cell: this, event });
         }
     }
