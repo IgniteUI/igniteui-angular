@@ -4664,7 +4664,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             modal: false,
             closeOnOutsideClick: false,
             outlet: this.rowEditingOutletDirective,
-            positionStrategy: new AutoPositionStrategy({
+            positionStrategy: new ConnectedPositioningStrategy({
                 target: row.element.nativeElement,
                 horizontalDirection: HorizontalAlignment.Left,
                 verticalDirection: VerticalAlignment.Bottom,
