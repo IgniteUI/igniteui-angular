@@ -115,63 +115,63 @@
     );
 
     @if not($text-color) and $chip-background{
-        $text-color: text-contrast($chip-background);
+        $text-color: text-contrast(hexrgba($chip-background));
     }
 
     @if not($order-icon-color) and $chip-background{
-        $order-icon-color: text-contrast($chip-background);
+        $order-icon-color: text-contrast(hexrgba($chip-background));
     }
 
     @if not($text-hover-color) and $chip-hover-background{
-        $text-hover-color: text-contrast($chip-hover-background);
+        $text-hover-color: text-contrast(hexrgba($chip-hover-background));
     }
 
     @if not($text-color) and $selected-chip-background{
-        $text-color: text-contrast($selected-chip-background);
+        $text-color: text-contrast(hexrgba($selected-chip-background));
     }
 
     @if not($text-hover-color) and $selected-chip-hover-background{
-        $text-hover-color: text-contrast($selected-chip-hover-background);
+        $text-hover-color: text-contrast(hexrgba($selected-chip-hover-background));
     }
 
     @if not($order-icon-hover-color) and $chip-hover-background{
-        $order-icon-hover-color: text-contrast($chip-hover-background);
+        $order-icon-hover-color: text-contrast(hexrgba($chip-hover-background));
     }
 
     @if not($remove-icon-color) and $chip-background {
-        $remove-icon-color: text-contrast($chip-background);
+        $remove-icon-color: text-contrast(hexrgba($chip-background));
     }
 
     @if not($remove-icon-hover-color) and $chip-hover-background {
-        $remove-icon-hover-color: text-contrast($chip-hover-background);
+        $remove-icon-hover-color: text-contrast(hexrgba($chip-hover-background));
     }
 
     @if not($selected-remove-icon-hover-color) and $chip-hover-background {
-        $selected-remove-icon-hover-color: text-contrast($chip-hover-background);
+        $selected-remove-icon-hover-color: text-contrast(hexrgba($chip-hover-background));
     }
 
     @if not($selected-remove-icon-color) and $selected-chip-background{
-        $selected-remove-icon-color: text-contrast($selected-chip-background);
+        $selected-remove-icon-color: text-contrast(hexrgba($selected-chip-background));
     }
 
     @if not($selected-remove-icon-hover-color) and $selected-chip-hover-background{
-        $selected-remove-icon-hover-color: text-contrast($selected-chip-hover-background);
+        $selected-remove-icon-hover-color: text-contrast(hexrgba($selected-chip-hover-background));
     }
 
     @if not($selected-chip-text-color) and $selected-chip-background{
-        $selected-chip-text-color: text-contrast($selected-chip-background);
+        $selected-chip-text-color: text-contrast(hexrgba($selected-chip-background));
     }
 
     @if not($selected-chip-text-hover-color) and $selected-chip-hover-background{
-        $selected-chip-text-hover-color: text-contrast($selected-chip-hover-background);
+        $selected-chip-text-hover-color: text-contrast(hexrgba($selected-chip-hover-background));
     }
 
     @if not($selected-chip-icon-color) and $selected-chip-background{
-        $selected-chip-icon-color: text-contrast($selected-chip-background);
+        $selected-chip-icon-color: text-contrast(hexrgba($selected-chip-background));
     }
 
     @if not($selected-chip-icon-hover-color) and $selected-chip-hover-background{
-        $selected-chip-icon-hover-color: text-contrast($selected-chip-hover-background);
+        $selected-chip-icon-hover-color: text-contrast(hexrgba($selected-chip-hover-background));
     }
 
     @return extend($default-theme, (
@@ -469,3 +469,4 @@
         padding: map-get($chip-padding, 'compact');
     }
 }
+
