@@ -23,14 +23,14 @@
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()" (swipeleft)="nextMonth()">
     <div class="igx-calendar__body-picker">
         <div class="prev" (click)="previousMonth()">
-            <igx-icon fontSet="material" name="keyboard_arrow_left"></igx-icon>
+            <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
         <div class="date">
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
         <div class="next" (click)="nextMonth()">
-            <igx-icon fontSet="material" name="keyboard_arrow_right"></igx-icon>
+            <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
 
