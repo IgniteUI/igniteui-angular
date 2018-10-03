@@ -2362,7 +2362,7 @@ describe('igxOverlay', () => {
         }));
 
         it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', fakeAsync(() => {
-  
+
             // Utility handler meant for later detachment
             function _handler(event) {
                 if (event.key === targetButton) {
