@@ -4,8 +4,10 @@
     <ng-content></ng-content>
 </ng-template>
 
-<ng-template #implicitLigature>
-    {{getIconName}}
+<ng-template #svgImage>
+    <svg>
+        <use [attr.href]="getSvgKey"></use>
+    </svg>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template"></ng-container>
