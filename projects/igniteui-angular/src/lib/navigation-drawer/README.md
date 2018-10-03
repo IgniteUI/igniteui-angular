@@ -138,13 +138,13 @@ This variant is enabled simply by the presence of an alternative mini template m
     <ng-template igxDrawer>
         <span igxDrawerItem [isHeader]="true"> Header </span>
         <span igxDrawerItem igxRipple> 
-            <igx-icon fontSet="material" name="home"></igx-icon>
+            <igx-icon fontSet="material">home</igx-icon>
             <span>Home</span>
         </span>
     </ng-template>
     <ng-template igxDrawerMini>
         <span igxDrawerItem igxRipple> 
-            <igx-icon fontSet="material" name="home"></igx-icon>
+            <igx-icon fontSet="material">home</igx-icon>
         </span>
     </ng-template>
 </igx-nav-drawer>

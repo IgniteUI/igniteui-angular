@@ -3,11 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { IgxIconComponent } from './icon.component';
 import { IgxIconService } from './icon.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [IgxIconComponent],
     exports: [IgxIconComponent],
-    imports: [CommonModule],
+    imports: [CommonModule, HttpClientModule],
     providers: [IgxIconService]
 })
 export class IgxIconModule {
