@@ -14,7 +14,7 @@ A walkthrough of how to get started can be found [here](https://staging.infragis
     <label igxLabel for="phone">Phone</label>
     <input igxInput name="phone" type="text" [(ngModel)]="user.phone" />
     <igx-suffix>
-        <igx-icon name="phone"></igx-icon>
+        <igx-icon>phone</igx-icon>
     </igx-suffix>
 </igx-input-group>
 ```
@@ -23,7 +23,7 @@ A walkthrough of how to get started can be found [here](https://staging.infragis
 The following directives could be wrapped in an <igx-input-group> container - igxInput, igxLabel, igxPrefix, igxSuffix or igxHint.
 
 #### Prefix & Suffix
-Both directives can contain html elements, strings, icons or even other components. Let's add a new input field with string prefix (+359) and igxIcon suffix (<igx-icon name="phone"></igx-icon>)
+Both directives can contain html elements, strings, icons or even other components. Let's add a new input field with string prefix (+359) and igxIcon suffix (<igx-icon>phone</igx-icon>)
 
 #### Hints
 Ignite UI for Angular Hint provides a helper text placed below the input. The hint can be placed at the start or at the end of the input. The position of the igxHint can be set using the position property. Let's add a hint to our phone input:
@@ -34,7 +34,7 @@ Ignite UI for Angular Hint provides a helper text placed below the input. The hi
     <label igxLabel for="phone">Phone</label>
     <input igxInput name="phone" type="text" [(ngModel)]="user.phone" />
     <igx-suffix>
-        <igx-icon name="phone"></igx-icon>
+        <igx-icon>phone</igx-icon>
     </igx-suffix>
     <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
 </igx-input-group>

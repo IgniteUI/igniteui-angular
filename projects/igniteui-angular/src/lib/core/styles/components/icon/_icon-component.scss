@@ -16,3 +16,7 @@
         @extend %igx-icon--inactive !optional;
     }
 }
+
+@include b(igx-svg-container) {
+    @extend %igx-svg-container !optional
+}

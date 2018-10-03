@@ -21,7 +21,7 @@
                                 <p class="name">{{item.text}}</p>
                                 <span class="phone">{{item.phone}}</span>
                             </div>
-                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
+                            <igx-icon [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
@@ -48,7 +48,7 @@
                                 <p class="name">{{item.text}}</p>
                                 <span class="phone">{{item.phone}}</span>
                             </div>
-                            <igx-icon name="star" [class.favorite]="item.favorite" (click)="toggleFavorite(item)"></igx-icon>
+                            <igx-icon [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
