@@ -644,7 +644,7 @@ describe('IgxGrid - search API', () => {
     });
 
     /* ScrollableGrid */
-    xdescribe('', () => {
+    describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(ScrollableGridSearchComponent);
             fix.detectChanges();
@@ -810,7 +810,7 @@ describe('IgxGrid - search API', () => {
     });
 
     /* GroupableGrid */
-    describe('', () => {
+    xdescribe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
