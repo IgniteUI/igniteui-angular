@@ -9,7 +9,9 @@ import {
     Host,
     EventEmitter,
     Output,
-    ContentChild
+    ContentChild,
+    Inject,
+    forwardRef
 } from '@angular/core';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
@@ -78,7 +80,8 @@ export class IgxExpansionPanelHeaderComponent {
     @HostBinding('class.igx-expansion-panel--disabled')
     public disabled = false;
 
-    constructor(@Host() public panel: IgxExpansionPanelComponent, public cdr: ChangeDetectorRef,
+    constructor(@Inject(forwardRef(() => IgxExpansionPanelComponent)) public panel: IgxExpansionPanelComponent,
+     public cdr: ChangeDetectorRef,
      public elementRef: ElementRef) {
          this.id = `${this.panel.id}-header`;
      }

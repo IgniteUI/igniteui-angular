@@ -13,17 +13,21 @@ import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@ang
 import { growVerOut, growVerIn } from '../animations/main';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { IToggleView } from '../core/navigation';
 
 let NEXT_ID = 0;
 
+export interface AnimationSettings {
+    openAnimation: AnimationReferenceMetadata;
+    closeAnimation: AnimationReferenceMetadata;
+}
 @Component({
     selector: 'igx-expansion-panel',
     templateUrl: 'expansion-panel.component.html'
 })
-export class IgxExpansionPanelComponent {
-
+export class IgxExpansionPanelComponent implements IToggleView {
     @Input()
-    public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+    public animationSettings: AnimationSettings = {
         openAnimation: growVerIn,
         closeAnimation: growVerOut
     };
@@ -58,6 +62,14 @@ export class IgxExpansionPanelComponent {
     public get headerId() {
         return this.header ? `${this.id}-header` : '';
     }
+
+    /**
+     * @hidden
+     */
+    public get element() {
+        return this.elementRef.nativeElement;
+    }
+
     constructor(
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
@@ -122,9 +134,17 @@ export class IgxExpansionPanelComponent {
 
     toggle(evt?: Event) {
         if (this.collapsed) {
-            this.expand(evt);
+            this.open(evt);
         } else {
-            this.collapse(evt);
+            this.close(evt);
         }
     }
+
+    open(evt?: Event) {
+        this.expand(evt);
+    }
+    close(evt?: Event) {
+        this.collapse(evt);
+    }
+
 }

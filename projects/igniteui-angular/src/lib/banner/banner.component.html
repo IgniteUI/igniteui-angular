@@ -1,0 +1,27 @@
+<igx-expansion-panel #expansionPanel [animationSettings]="animationSettings" (onCollapsed)="onExpansionPanelClose()" (onExpanded)="onExpansionPanelOpen()"
+    [collapsed]="collapsed">
+    <igx-expansion-panel-body>
+        <div class="igx-banner">
+            <div class="igx-banner__message">
+                <div *ngIf="bannerIcon" class="igx-banner__illustration">
+                    <ng-content select="igx-icon"></ng-content>
+                </div>
+                <span class="igx-banner__text">
+                    <ng-content></ng-content>
+                </span>
+            </div>
+            <div class="igx-banner__actions">
+                <div class="igx-banner__row">
+                    <ng-container *ngIf="useDefaultTemplate">
+                        <button igxButton="flat" igxRipple (click)="close()">
+                            Dismiss
+                        </button>
+                    </ng-container>
+                    <ng-container *ngIf="!useDefaultTemplate">
+                        <ng-content select="igx-banner-actions"></ng-content>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </igx-expansion-panel-body>
+</igx-expansion-panel>

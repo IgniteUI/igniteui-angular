@@ -74,11 +74,13 @@ import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
 
 const components = [
     AppComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
+    BannerSampleComponent,
     ButtonSampleComponent,
     CalendarSampleComponent,
     CardSampleComponent,
