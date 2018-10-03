@@ -4,7 +4,6 @@ import {
     Component,
     Input,
     NgZone,
-    OnInit,
     TemplateRef,
     ViewChild,
     OnDestroy,
@@ -39,13 +38,40 @@ import { IgxIconComponent } from '../icon';
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid.filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDestroy {
-
-    @Input()
-    public column: IgxColumnComponent;
+export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @Input()
     public gridID: string;
+
+    @Input()
+    get column() {
+        return this._column;
+    }
+
+    set column(val) {
+        if (val) {
+            this._column = val;
+
+            this._expressionsMap = new Map<number, ExpressionUI[]>();
+            this.expressionsList = new Array<ExpressionUI>();
+
+            if (this.column.filteringExpressionsTree) {
+                this._generateExpressionsMap(this.column.filteringExpressionsTree, 0);
+                this._generateExpressionsList();
+            }
+
+            if (this.column.dataType === DataType.Boolean) {
+                this.expression = {
+                    fieldName: this.column.field,
+                    condition: null,
+                    searchVal: null,
+                    ignoreCase: this.column.filteringIgnoreCase
+                };
+            } else {
+                this._resetExpression();
+            }
+        }
+    }
 
     @Input()
     get value() {
@@ -103,6 +129,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
 
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
+    protected _column = null;
 
     public expression: IFilteringExpression;
     public expressionsList: Array<ExpressionUI>;
@@ -111,28 +138,8 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
     public cssClass = 'igx-grid__filtering-row';
 
     constructor(private zone: NgZone, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
-        this._expressionsMap = new Map<number, ExpressionUI[]>();
-        this.expressionsList = new Array<ExpressionUI>();
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
-    }
-
-    ngOnInit(): void {
-        if (this.column.filteringExpressionsTree) {
-            this._generateExpressionsMap(this.column.filteringExpressionsTree, 0);
-            this._generateExpressionsList();
-        }
-
-        if (this.column.dataType === DataType.Boolean) {
-            this.expression = {
-                fieldName: this.column.field,
-                condition: null,
-                searchVal: null,
-                ignoreCase: this.column.filteringIgnoreCase
-            };
-        } else {
-            this._resetExpression();
-        }
     }
 
     ngAfterViewInit(): void {

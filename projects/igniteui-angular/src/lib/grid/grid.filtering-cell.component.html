@@ -1,11 +1,11 @@
-<ng-template #emptyFilters>
+<ng-template #emptyFilter>
         <igx-chip (click)="onChipClicked()">
             <igx-icon>add</igx-icon>
             <span [class]="'igx-chip__text'">Add Filters</span>
         </igx-chip>
 </ng-template>
 
-<ng-template #filters>
+<ng-template #defaultFilter>
     <igx-chips-area>
         <igx-chip *ngFor="let item of expressionsList" (click)="onChipClicked(item.expression)" [removable]="true" (onRemove)="onChipRemoved($event, item)">
             <!-- <igx-avatar igxPrefix fontSet="material" [src]="expression.photo" roundShape="true"></igx-avatar> -->
@@ -13,6 +13,13 @@
             <span igxConnector>{{getOperator(item.afterOperator)}}</span>
         </igx-chip>
     </igx-chips-area>
+</ng-template>
+
+<ng-template #complexFilter>
+    <igx-chip [removable]="true" (onRemove)="clearFiltering()">
+        <igx-icon>filter_list</igx-icon>
+        <span [class]="'igx-chip__text'">Complex Filter</span>
+    </igx-chip>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>

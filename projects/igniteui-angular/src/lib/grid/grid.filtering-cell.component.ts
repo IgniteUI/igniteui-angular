@@ -38,13 +38,17 @@ export class IgxGridFilteringCellComponent implements OnInit {
     @Input()
     public gridID: string;
 
-    @ViewChild('emptyFilters', { read: TemplateRef })
-    protected emptyFilters: TemplateRef<any>;
+    @ViewChild('emptyFilter', { read: TemplateRef })
+    protected emptyFilter: TemplateRef<any>;
 
-    @ViewChild('filters', { read: TemplateRef })
-    protected filters: TemplateRef<any>;
+    @ViewChild('defaultFilter', { read: TemplateRef })
+    protected defaultFilter: TemplateRef<any>;
+
+    @ViewChild('complexFilter', { read: TemplateRef })
+    protected complexFilter: TemplateRef<any>;
 
     private _expressionsMap: Map<number, ExpressionUI[]>;
+    private _treesOnLevelCount = [0, 0, 0, 0, 0];
     private _rootExpressionsTree: FilteringExpressionsTree;
     private _filterPipe = new IgxGridFilterConditionPipe();
     private _titlecasePipe = new TitleCasePipe();
@@ -62,7 +66,9 @@ export class IgxGridFilteringCellComponent implements OnInit {
     ngOnInit(): void {
         if (this.column.filteringExpressionsTree) {
             this._generateExpressionsMap(this.column.filteringExpressionsTree, 0);
-            this._generateExpressionsList();
+            if (this._treesOnLevelCount.find(item => item > 0) === undefined) {
+                this._generateExpressionsList();
+            }
         }
     }
 
@@ -74,9 +80,13 @@ export class IgxGridFilteringCellComponent implements OnInit {
         const expressionTree = this.column.filteringExpressionsTree;
         if (this.column.filterable) {
             if (expressionTree && expressionTree.filteringOperands.length > 0) {
-                return this.filters;
+                if (this._treesOnLevelCount.find(item => item > 0)) {
+                    return this.complexFilter;
+                } else {
+                    return this.defaultFilter;
+                }
             } else {
-                return this.emptyFilters;
+                return this.emptyFilter;
             }
         } else {
             return null;
@@ -117,6 +127,7 @@ export class IgxGridFilteringCellComponent implements OnInit {
         if (expressionsTree.filteringOperands) {
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
                 if (expressionsTree.filteringOperands[i] instanceof FilteringExpressionsTree) {
+                    this._treesOnLevelCount[depth] ++;
                     this._generateExpressionsMap(expressionsTree.filteringOperands[i] as FilteringExpressionsTree, depth + 1);
                 } else {
                     const exprUI = new ExpressionUI();

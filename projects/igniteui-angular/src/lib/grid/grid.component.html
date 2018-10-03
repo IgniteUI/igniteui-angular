@@ -70,7 +70,7 @@
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     </div>
-    <igx-grid-filtering-row *ngIf="filterInfo.isFilterRowVisible" [column]="filterInfo.filteredColumn" [gridID]="id"></igx-grid-filtering-row>
+    <igx-grid-filtering-row *ngIf="filterInfo.isFilterRowVisible" [gridID]="id" [column]="filterInfo.filteredColumn"></igx-grid-filtering-row>
 </div>
 
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
