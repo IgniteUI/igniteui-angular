@@ -1375,10 +1375,6 @@
     }
 
     %igx-grid__row-editing-outlet {
-        z-index: 99999;
-    }
-
-    %igx-grid__row-editing-outlet .igx-overlay__content {
-        padding-right: 18px;
+        z-index: 23;
     }
 }
