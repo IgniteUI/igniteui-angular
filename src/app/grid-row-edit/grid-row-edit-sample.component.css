@@ -1,0 +1,17 @@
+.grid-row-edit-wrapper {
+    flex-flow: row wrap;
+    padding: 50px;
+}
+.dialog__header {
+    font-weight: 800;
+}
+
+.dialog__container {
+    width: 840px;
+    min-height: 420px;
+    background: #FFF;
+}
+.dialog__body {
+    padding: 4px;
+    height: 350px;
+}

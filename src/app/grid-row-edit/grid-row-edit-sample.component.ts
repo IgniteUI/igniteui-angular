@@ -1,25 +1,28 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from './data';
 
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, ITransaction, IgxToggleDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
-    styles: [
-        `.grid-row-edit-wrapper {
-            flex-flow: row wrap;
-            padding: 50px;
-    }`
-    ],
+    styleUrls: [ `grid-row-edit-sample.component.css`],
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
     private addProductId: number;
+    public currentActiveGrid: {
+        id: string,
+        transactions: any[]
+    } = {
+        id: '',
+        transactions: []
+    };
     data: any[];
     @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
     @ViewChild('gridTransaction', { read: IgxGridComponent }) public gridTransaction: IgxGridComponent;
+    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
 
     constructor() {
         this.data = data;
@@ -73,6 +76,23 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.redo();
         this.refresh(currentGrid);
+    }
+
+    public openCommitDialog(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        this.currentActiveGrid = {
+            id: gridID,
+            transactions: (<ITransaction[]>currentGrid.transactions.getTransactionLog()).map( e => {
+                return `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`;
+            })
+        };
+        this.toggle.open();
+    }
+    public commit(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        currentGrid.transactions.commit(this.data);
+        this.toggle.close();
+        this.refreshAll();
     }
 
     private getRandomInt(min, max) {

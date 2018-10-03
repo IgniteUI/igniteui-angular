@@ -13,7 +13,8 @@
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
-                <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'" editable=" true"></igx-column>
+                <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'"
+                    editable=" true"></igx-column>
                 <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
@@ -27,10 +28,11 @@
         <article class="grid-row-edit-wrapper">
             <h4>Grid with rowEditing and with transactions</h4>
             <app-grid-with-transactions>
-                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px"
+                    [rowEditable]="true">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
-                                <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
+                            <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
                     <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -48,6 +50,7 @@
             <button (click)="addRow('gridRowEditTransaction')">Add Row</button>
             <button (click)="undo('gridRowEditTransaction')">Undo</button>
             <button (click)="redo('gridRowEditTransaction')">Redo</button>
+            <button (click)="openCommitDialog('gridRowEditTransaction')">Commit</button>
         </article>
         <article class="grid-row-edit-wrapper">
             <h4>Grid without row editing neither transactions</h4>
@@ -58,7 +61,8 @@
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
-                <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'" editable="true"></igx-column>
+                <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'"
+                    editable="true"></igx-column>
                 <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
@@ -75,7 +79,7 @@
                 <igx-grid #gridTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                     <igx-column>
                         <ng-template igxCell let-cell="cell" let-val>
-                                <button (click)="deleteRow($event, 'gridTransaction', cell.cellID.rowID)">Delete</button>
+                            <button (click)="deleteRow($event, 'gridTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
                     <igx-column field="ProductID" header="Product ID"></igx-column>
@@ -93,6 +97,19 @@
             <button (click)="addRow('gridTransaction')">Add Row</button>
             <button (click)="undo('gridTransaction')">Undo</button>
             <button (click)="redo('gridTransaction')">Redo</button>
+            <button (click)="openCommitDialog('gridRowEditTransaction')">Commit</button>
         </article>
+        <div igxToggle class="dialog__container">
+            <div class="dialog__header">Submit the following transactions?</div>
+            <div class="dialog__body">
+                <p *ngFor="let transaction of currentActiveGrid.transactions" class="dialog__body-transaction">
+                    {{ transaction }}
+                </p>
+            </div>
+            <div class="dialog__buttons">
+                <button igxButton (click)="commit(currentActiveGrid.id)">Commit</button>
+                <button igxButton (click)="toggle.close()">Cancel</button>
+            </div>
+        </div>
     </div>
 </div>
