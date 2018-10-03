@@ -202,12 +202,12 @@ export class IgxGridRowComponent implements DoCheck {
         // in addition the rowID of parent row of the cell is saved, so that we are aware which of the rows is currently in edit mode.
         // This ensures that even when grid is scrolled, the correct row will stay in edit mode.
         const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-         if (this.grid.rowEditable && editableRow && this.grid.overlaySettings) {
+         if (this.grid.rowEditable && editableRow) {
 
             // When there is already a rowID that is saved and that is the current row ID,
             // the row is marked as edited and row editing overlay is repositioned below that row.
             if (editableRow.rowID === this.rowID) {
-                this.grid.repositionEditingOverlay(this);
+                this.grid.repositionRowEditingOverlay(this);
                 return true;
 
             // The problematic case is when exactly to hide the overlay dialog.

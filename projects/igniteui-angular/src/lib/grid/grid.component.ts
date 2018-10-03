@@ -156,7 +156,7 @@ export interface IColumnMovingEndEventArgs {
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _data;
-    public overlaySettings: OverlaySettings = null;
+
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
      * ```html
@@ -2071,6 +2071,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+
+    private defaultRowEditingOverlayPS = new ConnectedPositioningStrategy({
+        horizontalDirection: HorizontalAlignment.Left,
+        verticalDirection: VerticalAlignment.Bottom,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalStartPoint: VerticalAlignment.Bottom,
+        openAnimation: null,
+        closeAnimation: null
+    });
+
+    private rowEditingOverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        outlet: this.rowEditingOutletDirective,
+        positionStrategy: this.defaultRowEditingOverlayPS
+    };
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -4659,34 +4676,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public openRowEditingOverlay(row: IgxGridRowComponent) {
         this.transactions.startPending();
-        this.overlaySettings = {
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            modal: false,
-            closeOnOutsideClick: false,
-            outlet: this.rowEditingOutletDirective,
-            positionStrategy: new ConnectedPositioningStrategy({
-                target: row.element.nativeElement,
-                horizontalDirection: HorizontalAlignment.Left,
-                verticalDirection: VerticalAlignment.Bottom,
-                horizontalStartPoint: HorizontalAlignment.Right,
-                verticalStartPoint: VerticalAlignment.Bottom,
-                openAnimation: null,
-                closeAnimation: null
-            })
-        };
-        this.rowEditingOverlay.open(this.overlaySettings);
-
-        if (this.rowEditingOverlay.element.style.display === 'none') {
-            this.rowEditingOverlay.element.style.display = 'block';
-        }
+        this.configureRowEditingOverlay(row);
+        this.rowEditingOverlay.open(this.rowEditingOverlaySettings);
     }
 
-    public repositionEditingOverlay(row: IgxGridRowComponent) {
-        this.overlaySettings.positionStrategy.settings.target = row.element.nativeElement;
-        if (this.rowEditingOverlay.element.style.display === 'none') {
-            this.rowEditingOverlay.element.style.display = 'block';
-        }
+    public repositionRowEditingOverlay(row: IgxGridRowComponent) {
+        this.transactions.endPending(true);
+        this.transactions.startPending();
+        this.configureRowEditingOverlay(row);
         this.rowEditingOverlay.reposition();
+    }
+
+    public configureRowEditingOverlay(row: IgxGridRowComponent) {
+        if (this.rowEditingOverlaySettings) {
+            this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
+            if (row.index >= this.rowList.length - 3) {
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
+            } else {
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Bottom;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Bottom;
+            }
+
+            if (this.rowEditingOverlay.element.style.display === 'none') {
+                this.rowEditingOverlay.element.style.display = 'block';
+            }
+        }
     }
 
     public hideRowEditingOverlay() {
