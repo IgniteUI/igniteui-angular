@@ -174,6 +174,7 @@ export class IgxGridNavigationService {
                 `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[0].focus();
         } else {
+            (document.activeElement as any).blur();
             this.grid.verticalScrollContainer.scrollTo(0);
             this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {
@@ -191,6 +192,7 @@ export class IgxGridNavigationService {
                 `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[cells.length - 1].focus();
         } else {
+            (document.activeElement as any).blur();
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
             .pipe(first()).subscribe(() => {

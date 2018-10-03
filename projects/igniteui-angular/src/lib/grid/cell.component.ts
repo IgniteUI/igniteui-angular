@@ -12,13 +12,11 @@
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { sampleTime, takeUntil, first, tap } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -293,6 +291,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.cdr.detectChanges();
+        this.grid.cdr.markForCheck();
     }
 
     /**
@@ -540,26 +539,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public editValue;
     protected isFocused = false;
     protected isSelected = false;
-    private destroy$ = new Subject();
-    private keydown$ = fromEvent(this.nativeElement, 'keydown')
-        .pipe(
-            tap((event: KeyboardEvent) => {
-                if (event.key === 'Tab') {
-                    event.preventDefault();
-                }
-                if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
-                    event.stopPropagation();
-                    return;
-                }
-                if (this.isNavigationKey(event.key.toLowerCase())) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-            }),
-            takeUntil(this.destroy$),
-            // delay(60)
-            // sampleTime(60, rAF)
-        );
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
@@ -585,7 +564,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (fireFocus) {
                 this.nativeElement.focus();
             }
-            this.grid.cdr.detectChanges();
             this.grid.onSelection.emit({ cell: this, event });
         }
     }
@@ -655,7 +633,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public ngOnInit() {
         this.cellSelectionID = `${this.gridID}-cell`;
         this.prevCellSelectionID = `${this.gridID}-prev-cell`;
-        this.keydown$.subscribe((event: KeyboardEvent) => this.dispatchEvent(event));
     }
 
     /**
@@ -681,8 +658,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      *@hidden
      */
     public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
+        // this.destroy$.next(true);
+        // this.destroy$.complete();
     }
 
     /**
@@ -758,10 +735,25 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.row.focused = false;
     }
 
+    @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
+
+        if (key === 'tab') {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+
+        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+            event.stopPropagation();
+        }
+
+        if (this.isNavigationKey(key)) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
 
         if (this.inEditMode && this.isNavigationKey(key)) {
             return;
