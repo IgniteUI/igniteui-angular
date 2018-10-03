@@ -33,7 +33,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
     }
 
     /**
-     * Gets the value delimiter which will be used for the exporing operation.
+     * Gets the value delimiter which will be used for the exporting operation.
      */
     get valueDelimiter() {
         return this._valueDelimiter;

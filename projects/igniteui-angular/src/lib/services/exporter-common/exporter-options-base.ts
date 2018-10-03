@@ -30,14 +30,14 @@ export abstract class IgxExporterOptionsBase {
     }
 
     /**
-     * Gets/sets the file name which will be used for the exporing operation.
+     * Gets the file name which will be used for the exporting operation.
      */
     get fileName() {
         return this._fileName;
     }
 
     /**
-     * Sets the file name which will be used for the exporing operation.
+     * Sets the file name which will be used for the exporting operation.
      */
     set fileName(value) {
         this.setFileName(value);
