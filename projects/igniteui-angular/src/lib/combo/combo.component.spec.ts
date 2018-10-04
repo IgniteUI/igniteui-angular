@@ -44,7 +44,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-xdescribe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -650,7 +650,8 @@ xdescribe('igxCombo', () => {
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                    // there will be one not visible row in DOM
+                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
@@ -670,7 +671,8 @@ xdescribe('igxCombo', () => {
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                             expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                             expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
-                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[6]);
+                            // there will be one not visible row in DOM
+                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[5]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {
                                 fixture.detectChanges();
@@ -711,7 +713,8 @@ xdescribe('igxCombo', () => {
                         dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                        // there will be one not visible row in DOM
+                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                         expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
@@ -727,7 +730,8 @@ xdescribe('igxCombo', () => {
                                 dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                                 firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                                 lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                                // there will be one not visible row in DOM
+                                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                                 expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
@@ -1145,7 +1149,7 @@ xdescribe('igxCombo', () => {
             dropdownContent.dispatchEvent(event);
             setTimeout(function () {
                 fixture.detectChanges();
-                clickItemCheckbox(dropdownList, 5);
+                clickItemCheckbox(dropdownList, 6);
                 fixture.detectChanges();
                 setTimeout(function () {
                     fixture.detectChanges();
@@ -1651,20 +1655,21 @@ xdescribe('igxCombo', () => {
             expect(dropdownList.nativeElement.clientHeight).toEqual(438);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
-            combo.itemsMaxHeight = 1171;
+            combo.itemsMaxHeight = 1152;
+            combo.visibleRows = 23;
             tick();
             fix.detectChanges();
             expect(combo.itemHeight).toEqual(48);
-            expect(combo.itemsMaxHeight).toEqual(1171);
-            expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
+            expect(combo.itemsMaxHeight).toEqual(1152);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(1152);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(48);
 
             combo.itemHeight = 83;
             tick();
             fix.detectChanges();
             expect(combo.itemHeight).toEqual(83);
-            expect(combo.itemsMaxHeight).toEqual(1171);
-            expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
+            expect(combo.itemsMaxHeight).toEqual(1152);
+            expect(dropdownList.nativeElement.clientHeight).toEqual(1152);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(83);
         }));
         it('Should render grouped items properly', async(() => {

@@ -459,7 +459,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
-            const maxVirtScrollTop = this._virtHeight - this.containerSize;
+            const maxVirtScrollTop = this._virtHeight - (this.containerSize - this.igxForItemSize);
             let nextScrollTop = index * parseInt(this.igxForItemSize, 10);
             if (nextScrollTop > maxVirtScrollTop) {
                 nextScrollTop = maxVirtScrollTop;
@@ -937,7 +937,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         this.state.chunkSize = chunkSize;
         this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
         if (this.igxForScrollOrientation === 'vertical') {
-            const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
+            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
+            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize;
             this.onChunkGenerated.emit(height);
             this._recalcScrollBarSize(height);
         }
