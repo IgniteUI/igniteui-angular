@@ -325,35 +325,37 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Should scroll properly when using paging', (done) => {
+        it('Should scroll properly when using paging', async () => {
             grid.paging = true;
             grid.perPage = 7;
             const searchString = 'assoc';
             fix.detectChanges();
 
-            findNextWithPaging(grid, searchString).then(() => {
-                findNextWithPaging(grid, searchString).then(() => {
-                    expect(grid.page).toBe(1);
-                    grid.cdr.detectChanges();
-                    let highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-                    expect(highlight).not.toBeNull();
-                    findPreviousWithPaging(grid, searchString).then(() => {
-                        grid.cdr.detectChanges();
-                        highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-                        expect(highlight).not.toBeNull();
-                        expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
-                        expect(grid.page).toBe(0);
-                        findPreviousWithPaging(grid, searchString).then(() => {
-                            grid.cdr.detectChanges();
-                            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
-                            expect(highlight).not.toBeNull();
-                            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
-                            expect(grid.page).toBe(1);
-                            done();
-                        });
-                    });
-                });
-            });
+            grid.findNext(searchString);
+            grid.findNext(searchString);
+            await wait();
+            fix.detectChanges();
+
+            expect(grid.page).toBe(1);
+            let highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+
+            grid.findPrev(searchString);
+            await wait();
+            fix.detectChanges();
+
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+            expect(grid.page).toBe(0);
+            grid.findPrev(searchString);
+            await wait();
+            fix.detectChanges();
+
+            highlight = grid.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
+            expect(highlight).not.toBeNull();
+            expect(grid.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass).length).toBe(1);
+            expect(grid.page).toBe(1);
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {
@@ -635,7 +637,9 @@ describe('IgxGrid - search API', () => {
         });
 
         afterAll(() => {
-            grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
+            if (grid && grid.getCellByColumn(4, 'JobTitle')) {
+                grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
+            }
         });
     });
 
