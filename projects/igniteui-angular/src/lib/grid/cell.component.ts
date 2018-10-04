@@ -866,8 +866,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             } else {
                 if (!this.column.pinned) {
-                    if (this.grid.rowEditable) {
-                        (<any>this.grid)._focusNextCell(this.rowIndex, columnIndex + addedIndex, 'right', event);
+                    if (this.grid.rowEditable && this.inEditMode) {
+                        horVirtScroll.scrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex - addedIndex);
                     } else {
                         this.row.virtDirRow.scrollPrev();
                     }
@@ -960,7 +960,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!target.isPinned && targetEndLeftOffset > virtContainerSize) {
                     // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
                     const oldScrollLeft = horVirtScroll.scrollLeft;
-                    const targetScrollLeft = this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1) - virtContainerSize;
+                    const targetScrollLeft =
+                    this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1 + addedIndex) - virtContainerSize;
                     horVirtScroll.scrollLeft = targetScrollLeft;
 
                     if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
