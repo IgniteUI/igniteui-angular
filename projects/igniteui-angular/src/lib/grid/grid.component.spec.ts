@@ -147,7 +147,7 @@ describe('IgxGrid Component Tests', () => {
             expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1500px');
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-            grid.height = '200px';
+            grid.visibleRows = 4;
             fix.detectChanges();
 
             tick(200);
@@ -809,8 +809,8 @@ describe('IgxGrid Component Tests', () => {
 });
 
 @Component({
-    template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
+    template: `<div style="width: 800px;">
+        <igx-grid #grid [data]="data" [visibleRows]="visibleRows" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -826,6 +826,8 @@ export class IgxGridTestComponent {
     @ViewChild('grid') public grid: IgxGridComponent;
 
     public autoGenerate = false;
+
+    public visibleRows = 30;
 
     public columnEventCount = 0;
 
