@@ -110,10 +110,10 @@ Example of using an icon for a `prefix`, text for a `label` and a custom icon bu
 
 ```html
 <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+    <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
     <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
     <span igxSuffix *ngIf="removable" igxButton="icon" (click)="onClick()">
-        <igx-icon fontSet="material" [name]="'close'"></igx-icon>
+        <igx-icon fontSet="material">close</igx-icon>
     </span>
 </igx-chip>
 ```
@@ -178,7 +178,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | `onMoveEnd` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) ends. |
 | `onRemove ` | `IBaseChipEventArgs` | Fired when the chip remove button is clicked. |
 | `onClick ` | `IChipClickEventArgs` | Fired when the chip is clicked instead of dragged. |
-| `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected. |
+| `onSelection` | `IChipSelectEventArgs` | Fired when the chip is being selected/deselected. |
 | `onKeyDown ` | `IChipKeyDownEventArgs` | Fired when the chip keyboard navigation is being used. |
 | `onDragEnter ` | `IChipEnterDragAreaEventArgs` | Fired when another chip has entered the current chip area. |
 
@@ -188,15 +188,15 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `width` | `number` | Sets the width of the chips area. |
-| `height ` | `number` | Sets the height of the chip area. |
+| `height ` | `number` | Sets the height of the chips area. |
 
 ### Outputs
 | Name | Argument Type | Description |
 |:--:|:---|:---|
-| `onReorder ` | `IChipsAreaReorderEventArgs` | Fired when the chip moving(dragging) starts. |
-| `onSelection ` | `IChipsAreaSelectEventArgs` | Fired when the chip moving(dragging) ends. |
-| `onMoveStart  ` | `IBaseChipsAreaEventArgs` | Fired when the chip remove button is clicked. |
-| `onMoveEnd ` | `IBaseChipsAreaEventArgs` | Fired when the chip is clicked instead of dragged. |
+| `onReorder ` | `IChipsAreaReorderEventArgs` | Fired when the chips order should be changed(from dragging). Requires custom logic for actual reorder. |
+| `onSelection ` | `IChipsAreaSelectEventArgs` | Fired for all initially selected chips and when chip is being selected/deselected. |
+| `onMoveStart  ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) starts. |
+| `onMoveEnd ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) ends. |
 
 ### Properties
 | Name   | Return Type | Description |

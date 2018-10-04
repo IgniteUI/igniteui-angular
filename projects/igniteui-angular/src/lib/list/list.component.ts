@@ -18,7 +18,12 @@ import {
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 import { IgxListItemComponent } from './list-item.component';
-import { IgxEmptyListTemplateDirective, IgxDataLoadingTemplateDirective, IgxListPanState } from './list.common';
+import {
+    IgxDataLoadingTemplateDirective,
+    IgxEmptyListTemplateDirective,
+    IgxListPanState,
+    IgxListItemLeftPanningTemplateDirective,
+    IgxListItemRightPanningTemplateDirective} from './list.common';
 
 let NEXT_ID = 0;
 export interface IPanStateChangeEventArgs {
@@ -30,6 +35,12 @@ export interface IPanStateChangeEventArgs {
 export interface IListItemClickEventArgs {
     item: IgxListItemComponent;
     event: Event;
+}
+
+export interface IListItemPanningEventArgs {
+    item: IgxListItemComponent;
+    direction: IgxListPanState;
+    keepItem: boolean;
 }
 
 /**
@@ -56,8 +67,9 @@ export interface IListItemClickEventArgs {
 })
 export class IgxListComponent {
 
-    constructor(private element: ElementRef) {
+    constructor(public element: ElementRef) {
     }
+
     /**
      * Returns a collection of all items and headers in the list.
      * ```typescript
@@ -68,14 +80,68 @@ export class IgxListComponent {
     @ContentChildren(forwardRef(() => IgxListItemComponent))
     public children: QueryList<IgxListItemComponent>;
 
+    /**
+     * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `false`.
+     * ```typescript
+     * let emptyTemplate = this.list.emptyListTemplate;
+     * ```
+     * @memberof IgxListComponent
+     */
     @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
-    /**@hidden*/
+
+    /**
+     * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `true`.
+     * ```typescript
+     * let loadingTemplate = this.list.dataLoadingTemplate;
+     * ```
+     * @memberof IgxListComponent
+     */
     @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
+    /**
+     * Sets/gets the template shown when left panning a list item.
+     * Default value is `null`.
+     * ```html
+     *  <igx-list [allowLeftPanning] = "true"></igx-list>
+     * ```
+     * ```typescript
+     * let itemLeftPanTmpl = this.list.listItemLeftPanningTemplate;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
+    public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
+
+    /**
+     * Sets/gets the template shown when right panning a list item.
+     * Default value is `null`.
+     * ```html
+     *  <igx-list [allowLeftPanning] = "true"></igx-list>
+     * ```
+     * ```typescript
+     * let itemRightPanTmpl = this.list.listItemRightPanningTemplate;
+     * ```
+     * @memberof IgxListComponent
+     */
+    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
+    public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
+
+    /**
+     * Provides a threshold after which the item's panning will be completed automatically.
+     * By default this property is set to 0.5 which is 50% of the list item's width.
+     * ```typescript
+     * this.list.panEndTriggeringThreshold = 0.8;
+     * ```
+     */
+    @Input()
+    public panEndTriggeringThreshold = 0.5;
+
+    /**@hidden*/
     @ViewChild('defaultEmptyList', { read: TemplateRef })
     protected defaultEmptyListTemplate: TemplateRef<any>;
+
     /**@hidden*/
     @ViewChild('defaultDataLoading', { read: TemplateRef })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
@@ -94,6 +160,7 @@ export class IgxListComponent {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-list-${NEXT_ID++}`;
+
     /**
      * Sets/gets whether the left panning of an item is allowed.
      * Default value is `false`.
@@ -138,25 +205,27 @@ export class IgxListComponent {
     public isLoading = false;
 
     /**
-     * Emits an event within the current list when left pan gesture is executed on list item.
-     * Provides reference to the `IgxListItemComponent` as an event argument.
+     * Emits an event within the current list when left pan gesture is executed on a list item.
+     * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
      * ```html
-     * <igx-list [allowLeftPanning]="true" (onLeftPan) = "onLeftPan($event)"></igx-list>
+     * <igx-list [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
     @Output()
-    public onLeftPan = new EventEmitter<IgxListItemComponent>();
+    public onLeftPan = new EventEmitter<IListItemPanningEventArgs>();
+
     /**
-     * Emits an event within the current list when right pan gesture is executed on list item.
-     * Provides reference to the `IgxListItemComponent` as an event argument.
+     * Emits an event within the current list when right pan gesture is executed on a list item.
+     * Provides a reference to an object of type `IListItemPanningEventArgs` as an event argument.
      * ```html
-     * <igx-list [allowRightPanning]="true" (onRightPan) = "onRightPan($event)"></igx-list>
+     * <igx-list [allowRightPanning]="true" (onRightPan)="onRightPan($event)"></igx-list>
      * ```
      * @memberof IgxListComponent
      */
     @Output()
-    public onRightPan = new EventEmitter<IgxListItemComponent>();
+    public onRightPan = new EventEmitter<IListItemPanningEventArgs>();
+
     /**
     * Emits an event within the current list when pan gesture is executed on list item.
     * Provides references to the `IgxListItemComponent` and `IgxListPanState` as event arguments.
@@ -167,6 +236,7 @@ export class IgxListComponent {
     */
     @Output()
     public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
+
     /**
      * Emits an event within the current list when a list item has been clicked.
      * Provides references to the `IgxListItemComponent` and `Event` as event arguments.
@@ -177,6 +247,7 @@ export class IgxListComponent {
      */
     @Output()
     public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
+
     /**
      * Gets the `role` attribute.
      * ```typescript
@@ -188,6 +259,7 @@ export class IgxListComponent {
     public get role() {
         return 'list';
     }
+
     /**
      * Returns boolean indicating if the list is empty.
      * ```typescript
@@ -199,6 +271,7 @@ export class IgxListComponent {
     public get isListEmpty(): boolean {
         return !this.children || this.children.length === 0;
     }
+
     /**
      * Returns boolean indicating if the list has a `cssClass` attribute.
      * ```typescript
@@ -210,6 +283,7 @@ export class IgxListComponent {
     public get cssClass(): boolean {
         return this.children && this.children.length > 0;
     }
+
     /**
      * Returns the `items` in the list excluding the headers.
      * ```typescript
@@ -226,9 +300,9 @@ export class IgxListComponent {
                 }
             }
         }
-
         return items;
     }
+
     /**
      * Returns the headers in the list.
      * ```typescript
@@ -245,9 +319,9 @@ export class IgxListComponent {
                 }
             }
         }
-
         return headers;
     }
+
     /**
      * Returns the `context` object which represents the `template context` binding into the `list container`
      * by providing the `$implicit` declaration which is the `IgxListComponent` itself.
@@ -260,6 +334,7 @@ export class IgxListComponent {
             $implicit: this
         };
     }
+
     /**
      * Returns the `template` of an empty list.
      * ```typescript
@@ -275,12 +350,17 @@ export class IgxListComponent {
         }
     }
 }
+
 /**
  * The IgxListModule provides the {@link IgxListComponent} and the {@link IgxListItemComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective, IgxDataLoadingTemplateDirective],
-    exports: [IgxListComponent, IgxListItemComponent, IgxEmptyListTemplateDirective, IgxDataLoadingTemplateDirective],
+    declarations: [IgxListComponent, IgxListItemComponent,
+        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
+    exports: [IgxListComponent, IgxListItemComponent,
+        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
     imports: [CommonModule, IgxRippleModule]
 })
 export class IgxListModule {
