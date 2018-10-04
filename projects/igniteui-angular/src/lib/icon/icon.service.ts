@@ -67,7 +67,7 @@ export class IgxIconService {
     }
 
     /**
-     *  Adds an SVG image to the cache.
+     *  Adds an SVG image to the cache. SVG source is an url.
      *```typescript
      *   this.iconService.addSvgIcon('aruba', '/assets/svg/country_flags/aruba.svg', 'svg-flags');
      * ```
@@ -84,9 +84,24 @@ export class IgxIconService {
                 throw new Error(`The URL provided was not trusted as a resource URL: "${url}".`);
             }
 
-            this._fetchSvg(iconName, url, fontSet);
+            this.fetchSvg(iconName, url, fontSet);
         } else {
             throw new Error('You should provide at least `iconName` and `url` to register an svg icon.');
+        }
+    }
+
+    /**
+     *  Adds an SVG image to the cache. SVG source is its text.
+     *```typescript
+     *   this.iconService.addSvgIcon('simple', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+     *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
+     * ```
+     */
+    public addSvgIconFromText(iconName: string, iconText: string, fontSet: string = '') {
+        if (iconName && iconText) {
+            this.cacheSvgIcon(iconName, iconText, fontSet);
+        } else {
+            throw new Error('You should provide at least `iconName` and `iconText` to register an svg icon.');
         }
     }
 
@@ -114,10 +129,10 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private _fetchSvg(iconName: string, url: string, fontSet: string = '') {
+    private fetchSvg(iconName: string, url: string, fontSet: string = '') {
         const request = this._httpClient.get(url, { responseType: 'text' });
         const subscription = request.subscribe((value: string) => {
-            this._cacheSvgIcon(iconName, value, fontSet);
+            this.cacheSvgIcon(iconName, value, fontSet);
         }, (error) => {
             subscription.unsubscribe();
             throw new Error(`Could not fetch SVG from url: ${url}; error: ${error.message}`);
@@ -129,9 +144,9 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private _cacheSvgIcon(iconName: string, value: string, fontSet: string = '') {
+    private cacheSvgIcon(iconName: string, value: string, fontSet: string = '') {
         if (iconName && value) {
-            this._ensureSvgContainerCreated();
+            this.ensureSvgContainerCreated();
 
             const div = this._document.createElement('DIV');
             div.innerHTML = value;
@@ -159,7 +174,7 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private _ensureSvgContainerCreated() {
+    private ensureSvgContainerCreated() {
         if (!this._svgContainer) {
             this._svgContainer = this._document.documentElement.querySelector('.igx-svg-container');
             if (!this._svgContainer) {
