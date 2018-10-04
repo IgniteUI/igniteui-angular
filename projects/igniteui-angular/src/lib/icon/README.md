@@ -2,13 +2,13 @@
 
 **igx-icon** supports icon component that unifies various icon/font sets to allow their usage interchangeably.
 
-With the igx-icon you can add **material-icons** in your markup  
+With the igx-icon you can add **material-icons** and custom SVG icons in your markup.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
 
 # Usage
 
 ```html
-    <igx-icon fontSet="material" name="home" color="magenta" isActive="false"></igx-icon>
+    <igx-icon fontSet="material" color="magenta" isActive="false">home</igx-icon>
 ```
 
 You can set the fontSet to `fontSet="material"` to select the material icons set (default). More to be added later.
@@ -17,7 +17,7 @@ You can set the icon by providing its name from the official [material icons set
 
 You can set the icon color by providing a string value with the color `color="#474747"`
 
-You can attach set the icon to active/inactive by providing setting `isActive="true"` to true or false (default is true).
+You can set the icon to active/inactive by providing setting `isActive="true"` to true or false (default is true).
 
 
 You can access all properties of the button component with the following attributes:
@@ -48,3 +48,4 @@ You can programmatically get all of the icon properties with the following icon 
 `getIconColor()` returns the icon color
 `getIconName()` returns the icon name
 `getActive()` returns the icon active state
+`getSvgKey()` returns the key of a custom SVG icon. The SVG key is a combination between the font set and icon name

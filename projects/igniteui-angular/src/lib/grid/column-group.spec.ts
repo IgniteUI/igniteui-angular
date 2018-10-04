@@ -1249,6 +1249,7 @@ describe('IgxGrid - multi-column headers', () => {
             ci.faxColTitle = ci.cityColTitle = title;
 
         tick(50);
+        fixture.componentInstance.grid.cdr.markForCheck();
         fixture.detectChanges();
 
         NestedColGroupsTests.testHeadersRendering(fixture);

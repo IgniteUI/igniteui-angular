@@ -3339,7 +3339,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridHeight() {
-        this.calcHeight = this.visibleRows * this.rowHeight;
+        //this.calcHeight = this.visibleRows * this.rowHeight;
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
                 this.calcMaxSummaryHeight() : 0;
@@ -4358,12 +4358,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let maxLength = 0;
         const arr = [];
         let sum = 0;
-        const reducer = (accumulator, currentItem) => accumulator + 
-            (currentItem.width === "Infinity" ? Infinity : parseInt(currentItem.width, 10));
+        const reducer = (accumulator, currentItem) => accumulator +
+            (currentItem.width === 'Infinity' ? Infinity : parseInt(currentItem.width, 10));
         const availableSize = this.unpinnedWidth;
         for (i; i < columns.length; i++) {
             const column = columns[i];
-            sum = arr.reduce(reducer, column.width === "Infinity" ? Infinity : parseInt(column.width, 10));
+            sum = arr.reduce(reducer, column.width === 'Infinity' ? Infinity : parseInt(column.width, 10));
             if (isNaN(sum)) {
                 return maxLength;
             }

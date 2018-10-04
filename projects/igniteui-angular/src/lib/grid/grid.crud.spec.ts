@@ -48,7 +48,7 @@ describe('IgxGrid - CRUD operations', () => {
         for (let i = 0; i < 10; i++) {
             fix.componentInstance.data.push({ index: i, value: i});
         }
-
+        grid.visibleRows = Infinity;
         grid.cdr.markForCheck();
         fix.detectChanges();
 
@@ -286,6 +286,7 @@ describe('IgxGrid - CRUD operations', () => {
 
     it('should be able to updateRow when PK is defined outside displayContainer', async() => {
         grid.height = '250px';
+        grid.visibleRows = 4;
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
@@ -307,6 +308,7 @@ describe('IgxGrid - CRUD operations', () => {
 
     it('should be able to deleteRow when PK is defined outside displayContainer', async() => {
         grid.height = '250px';
+        grid.visibleRows = 4;
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
@@ -328,6 +330,7 @@ describe('IgxGrid - CRUD operations', () => {
 
     it('should be able to updateCell when PK is defined outside displayContainer', async() => {
         grid.height = '250px';
+        grid.visibleRows = 4;
         await wait(50);
         fix.detectChanges();
         const rowID = 9;
