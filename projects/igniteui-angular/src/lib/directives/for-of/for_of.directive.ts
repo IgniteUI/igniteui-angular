@@ -329,7 +329,8 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     public ngAfterViewInit() {
         if (this.igxForScrollOrientation === 'vertical') {
-            const height = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height - this.igxForItemSize;
+            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
+            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
             this.onChunkGenerated.emit(height);
             this._recalcScrollBarSize(height);
         }
@@ -383,6 +384,15 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                 this._zone.run(() => {
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
+                    if (this.dc) {
+                        this.dc.changeDetectorRef.detectChanges();
+                        if (this.igxForScrollOrientation === 'vertical') {
+                            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
+                            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
+                            this.onChunkGenerated.emit(height);
+                            this._recalcScrollBarSize(height);
+                        }
+                    }
                     this._updateScrollOffset();
                 });
             }
@@ -903,16 +913,26 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     private applyChunkSizeChange() {
         const dataLength = this.igxForOf ? this.igxForOf.length : 0;
         const chunkSize = this.isRemote ? dataLength : Math.min(dataLength, this.igxForVisibleElements);
+        const diff = Math.abs(chunkSize - this.state.chunkSize);
         if (chunkSize > this.state.chunkSize) {
-            const diff = chunkSize - this.state.chunkSize;
             for (let i = 0; i < diff; i++) {
                 this.addLastElem();
             }
         } else if (chunkSize < this.state.chunkSize) {
-            const diff = this.state.chunkSize - chunkSize;
             for (let i = 0; i < diff; i++) {
                 this.removeLastElem();
             }
+        }
+        if (this.dc && diff > 0) {
+            this._zone.run(() => {
+                this.dc.changeDetectorRef.detectChanges();
+                if (this.igxForScrollOrientation === 'vertical') {
+                    const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
+                    const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
+                    this.onChunkGenerated.emit(height);
+                    this._recalcScrollBarSize(height);
+                }
+            });
         }
         this.state.chunkSize = chunkSize;
         this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
