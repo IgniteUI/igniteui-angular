@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate, IgxCalendarComponent, IgxCalendarModule, isLeap, monthRange, weekDay, WEEKDAYS } from './index';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
-fdescribe('IgxCalendar', () => {
+describe('IgxCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [IgxCalendarRenderingComponent],
