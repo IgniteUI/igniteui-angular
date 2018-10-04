@@ -22,6 +22,20 @@ export interface ITooltipHideEventArgs {
     cancel: boolean;
 }
 
+/**
+ * **Ignite UI for Angular Tooltip Target** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html)
+ *
+ * The Ignite UI for Angular Tooltip Target directive is used to mark an HTML element in the markup as one that has a tooltip.
+ * The tooltip target is used in combination with the Ignite UI for Angular Tooltip by assigning the exported tooltip reference to the
+ * target's selector property.
+ *
+ * Example:
+ * ```html
+ * <button [igxTooltipTarget]="tooltipRef">Hover me</button>
+ * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+ * ```
+ */
 @Directive({
     exportAs: 'tooltipTarget',
     selector: '[igxTooltipTarget]'
@@ -417,6 +431,20 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 }
 
 let NEXT_ID = 0;
+/**
+ * **Ignite UI for Angular Tooltip** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip.html)
+ *
+ * The Ignite UI for Angular Tooltip directive is used to mark an HTML element in the markup as one that should behave as a tooltip.
+ * The tooltip is used in combination with the Ignite UI for Angular Tooltip Target by assigning the exported tooltip reference to the
+ * respective target's selector property.
+ *
+ * Example:
+ * ```html
+ * <button [igxTooltipTarget]="tooltipRef">Hover me</button>
+ * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
+ * ```
+ */
 @Directive({
     exportAs: 'tooltip',
     selector: '[igxTooltip]'
