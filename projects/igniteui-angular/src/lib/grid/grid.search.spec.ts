@@ -837,6 +837,8 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to navigate through highlights with grouping enabled', () => {
+            grid.visibleRows = Infinity;
+            fix.detectChanges();
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc
@@ -964,6 +966,8 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to properly handle perPage changes with gouping and paging', () => {
+            grid.visibleRows = Infinity;
+            fix.detectChanges();
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc
@@ -1005,6 +1009,8 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Should be able to properly handle navigating through collapsed rows', () => {
+            grid.visibleRows = Infinity;
+            fix.detectChanges();
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc
