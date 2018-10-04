@@ -28,7 +28,7 @@ describe('IgxGrid - search API', () => {
     }));
 
     /* BasicGrid */
-    describe('', () => {
+    xdescribe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
@@ -810,7 +810,7 @@ describe('IgxGrid - search API', () => {
     });
 
     /* GroupableGrid */
-    xdescribe('', () => {
+    describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
