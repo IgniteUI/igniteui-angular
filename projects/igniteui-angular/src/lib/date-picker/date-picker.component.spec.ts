@@ -299,6 +299,33 @@ describe('IgxDatePicker', () => {
 
         expect(datePicker.value).toBe(null);
     });
+
+    it('Should not alter hours, minutes, seconds and milliseconds when changing date.', () => {
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+        const debugElement = fixture.debugElement;
+        const datePicker = fixture.componentInstance.datePicker;
+        const date = new Date(2030, 1, 1, 15, 16, 17, 18);
+        datePicker.value = date;
+        fixture.detectChanges();
+
+        const datePickerTarget = debugElement.query(By.css('.igx-date-picker__input-date'));
+        datePickerTarget.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        fixture.detectChanges();
+
+        const targetDate = 15;
+        const fromDate = datePicker.calendar.dates.filter(
+            d => d.date.date.getDate() === targetDate)[0];
+        fromDate.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(datePicker.value.getFullYear()).toBe(date.getFullYear());
+        expect(datePicker.value.getMonth()).toBe(date.getMonth());
+        expect(datePicker.value.getDate()).toBe(targetDate);
+        expect(datePicker.value.getHours()).toBe(date.getHours());
+        expect(datePicker.value.getMinutes()).toBe(date.getMinutes());
+        expect(datePicker.value.getSeconds()).toBe(date.getSeconds());
+        expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
+    });
 });
 
 @Component({
