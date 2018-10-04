@@ -132,25 +132,24 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         const targetCell = grid.getCellByKey(2, 'Name');
         const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
         spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
-        expect(grid.getCellByKey(2, 'Name').focused).toEqual(false);
-        targetCellElement.focus();
-        await wait();
-        spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
+        expect(targetCell.focused).toEqual(false);
+        targetCellElement.dispatchEvent(new FocusEvent('focus'));
+        await wait(30);
+        spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
         fix.detectChanges();
+        expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
         expect(targetCell.focused).toEqual(true);
 
-        const targetCellDebugElement = fix.debugElement.query(By.css('.igx-grid__td--selected'));
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
         await wait(30);
         fix.detectChanges();
 
-        expect(targetCell.gridAPI.get_cell_by_visible_index).toHaveBeenCalledTimes(1);
+        expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
         expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
         expect(targetCell.focused).toEqual(false);
         expect(grid.selectedCells.length).toEqual(1);
@@ -901,13 +900,11 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridCancelable;
-        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
         const firstRow = grid.getRowByIndex(0);
         const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const secondRow = grid.getRowByIndex(1);
         const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
-        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
         expect(firstRow.isSelected).toBeFalsy();
         expect(secondRow.isSelected).toBeFalsy();
@@ -958,8 +955,6 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection1;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-
         grid.selectAllRows();
         fix.detectChanges();
 
@@ -971,13 +966,10 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fixture.nativeElement.querySelector('.igx-grid');
         const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
         const headerCheckboxElement: HTMLElement = headerRow.querySelector('.igx-checkbox');
         const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
-        const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
         expect(firstRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
@@ -1002,11 +994,8 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.gridSelection2;
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
-        const headerCheckboxElement: HTMLElement = headerRow.querySelector('.igx-checkbox');
         const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
         const thirdRow = grid.getRowByIndex(2);
         const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
 
@@ -1053,13 +1042,9 @@ describe('IgxGrid - Row Selection', () => {
     it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', (async () => {
         const fix = TestBed.createComponent(GridWithScrollsComponent);
         fix.detectChanges();
-
         const grid = fix.componentInstance.gridSelection5;
-        const virtualizationSpy = spyOn<any>(IgxGridComponent.prototype, '_focusNextCell');
-        // _focusNextCell is called when virt scroll is done
-        fix.detectChanges();
+        const virtualizationSpy = spyOn<any>(grid.parentVirtDir.onChunkLoad, 'emit').and.callThrough();
         // Focus left right cell
-        const cells = fix.debugElement.queryAll(By.css('.igx-grid__td'));
         const gridFirstRow = grid.rowList.first;
         const cellsLength = grid.rowList.first.cells.length;
         const mockEvent = jasmine.createSpyObj('mockEvt', ['preventDefault', 'stopPropagation']);
@@ -1067,40 +1052,36 @@ describe('IgxGrid - Row Selection', () => {
         const lastVisibleCell = gridFirstRow.cells.toArray()[cellsLength - 3];
 
         lastVisibleCell.onFocus(mockEvent);
-        await wait();
+        await wait(30);
         fix.detectChanges();
+
         expect(lastVisibleCell.isSelected).toBeTruthy();
-
         UIInteractions.triggerKeyDownEvtUponElem('tab', lastVisibleCell, true);
-        await wait(100);
+        await wait(30);
         fix.detectChanges();
-
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
 
-        const targetCell = gridFirstRow.cells.toArray()[cellsLength - 4];
-
+        const targetCell = gridFirstRow.cells.toArray()[cellsLength - 3];
         targetCell.onFocus(mockEvent);
-        await wait();
+        await wait(30);
         fix.detectChanges();
 
         expect(targetCell.isSelected).toBeTruthy();
         // Focus second last right cell, TAB will NOT trigger virtualization;
-        // targetCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab' }));
         UIInteractions.triggerKeyDownEvtUponElem('tab', targetCell, true);
-        await wait(100);
+        await wait(30);
         fix.detectChanges();
 
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-        // Focus has changed to last cell
         expect(lastVisibleCell.isSelected).toBeTruthy();
         // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
         gridFirstRow.cells.first.onFocus(mockEvent);
-        await wait();
+        await wait(30);
         fix.detectChanges();
 
         expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
-        gridFirstRow.cells.first.onShiftTabKey(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
-        await wait(100);
+        gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(30);
         fix.detectChanges();
         // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
