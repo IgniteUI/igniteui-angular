@@ -687,7 +687,18 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     }
 
     /**
-     * @hidden
+     * Informs the `igxDrag` directive that it has been dropped/released.
+     * This should usully be called when `animateOnRelease` is set to `true`.
+     * When canceling or defining custom drop logic this tells the igxDrag to update it's positions and
+     * animate correctly to the new position.
+     * ```typescript
+     * public onDropElem(event) {
+     *     // Function bound to the igxDrop directive event `onDrop`
+     *     // This cancels the default drop logic of the `igxDrop`
+     *     event.cancel = true;
+     *     event.drag.dropFinished();
+     * }
+     * ```
      */
     public dropFinished() {
         if (this.animateOnRelease && this._dragGhost) {
@@ -801,6 +812,8 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     public onLeave = new EventEmitter<IgxDropLeaveEventArgs>();
 
     /** Event triggered when dragged element is dropped in the area of the element.
+     * Since the `igxDrop` has default logic that appends the dropped element as a child, it can be canceled here.
+     * To cancel the default logic the `cancel` property of the event needs to be set to true.
      * ```html
      * <div class="cageArea" igxDrop (onDrop)="dragDrop()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
      * </div>
