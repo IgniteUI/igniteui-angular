@@ -89,6 +89,36 @@
         @extend %form-group-helper-item--end !optional;
     }
 
+    @include m(cosy) {
+        @include e(bundle) {
+            @extend %form-group-bundle--cosy !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--cosy !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--cosy !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--cosy !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--cosy !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-hint--cosy !optional;
+        }
+    }
+
     @include m(focused) {
         @extend %form-group-display !optional;
 
@@ -185,6 +215,62 @@
         }
     }
 
+    @include m(compact) {
+        @include e(bundle) {
+            @extend %form-group-bundle--compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--compact !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--compact !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--compact !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--compact !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-hint--compact !optional;
+        }
+    }
+
+    @include m(compact) {
+        @include e(bundle) {
+            @extend %form-group-bundle--compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--compact !optional;
+        }
+
+        @include e(bundle-suffix) {
+            @extend %form-group-suffix--compact !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--compact !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--compact !optional;
+        }
+    }
+
     @include m(box) {
         @extend %form-group-display--no-margin !optional;
 
@@ -222,6 +308,42 @@
 
         @include e(hint) {
             @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(box, cosy) {
+        @include e(bundle) {
+            @extend %form-group-bundle--box-cosy !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-cosy !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-cosy !optional;
+        }
+    }
+
+    @include mx(box, compact) {
+        @include e(bundle) {
+            @extend %form-group-bundle--box-compact !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
@@ -272,6 +394,42 @@
 
         @include e(hint) {
             @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(border, cosy) {
+        @include e(bundle) {
+            @extend %form-group-bundle--border-cosy !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-cosy !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-cosy !optional;
+        }
+    }
+
+    @include mx(border, compact) {
+        @include e(bundle) {
+            @extend %form-group-bundle--border-compact !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
@@ -340,6 +498,42 @@
 
         @include e(hint) {
             @extend %form-group-helper--box !optional;
+        }
+    }
+
+    @include mx(search, cosy) {
+        @include b(bundle) {
+            @extend %form-group-bundle--search-cosy !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-cosy !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-cosy !optional;
+        }
+    }
+
+    @include mx(search, compact) {
+        @include b(bundle) {
+            @extend %form-group-bundle--search-compact !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--box-compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %form-group-prefix--box-compact !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--box-compact !optional;
         }
     }
 
