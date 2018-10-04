@@ -899,7 +899,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * Recalculates chunkSize and adds/removes elements if need due to the change.
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
-    private applyChunkSizeChange() {
+    public applyChunkSizeChange() {
         const dataLength = this.igxForOf ? this.igxForOf.length : 0;
         const chunkSize = this.isRemote ? dataLength : Math.min(dataLength, this.igxForVisibleElements);
         if (chunkSize > this.state.chunkSize) {
