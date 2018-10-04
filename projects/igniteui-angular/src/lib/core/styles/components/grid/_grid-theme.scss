@@ -597,6 +597,7 @@
         flex-flow: row nowrap;
         width: 100%;
         background: --var($theme, 'header-background');
+        z-index: 24;
     }
 
     %grid-scroll-start {

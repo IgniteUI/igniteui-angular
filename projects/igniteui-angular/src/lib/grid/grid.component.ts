@@ -4678,6 +4678,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.transactions.startPending();
         this.configureRowEditingOverlay(row);
         this.rowEditingOverlay.open(this.rowEditingOverlaySettings);
+        this.rowEditingOverlay.element.addEventListener('wheel', (evt) => { this.onRowEditingOverlayScroll(evt); });
     }
 
     public repositionRowEditingOverlay(row: IgxGridRowComponent) {
@@ -4688,7 +4689,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public configureRowEditingOverlay(row: IgxGridRowComponent) {
         if (this.rowEditingOverlaySettings) {
             this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
-            if (row.index >= this.rowList.length - 3) {
+            this.rowEditingOverlaySettings.outlet = this.rowEditingOutletDirective;
+            const lastIndex = this.rowList.length - 1;
+            const rowList = this.rowList.toArray();
+            if ((row.rowID === rowList[lastIndex].rowID ||
+                row.rowID === rowList[lastIndex - 1].rowID ||
+                row.rowID === rowList[lastIndex - 2].rowID)) {
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
             } else {
@@ -4715,6 +4721,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public endRowTransaction(event, commit?: boolean) {
         this.gridAPI.submit_value(this.id);
         this.closeRowEditingOverlay(commit);
+    }
+
+    private onRowEditingOverlayScroll(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.verticalScrollContainer.scrollNext();
+        } else {
+            this.verticalScrollContainer.scrollPrev();
+        }
     }
 
     public get cellInEditMode(): IgxGridCellComponent {
