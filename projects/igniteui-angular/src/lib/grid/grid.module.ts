@@ -24,8 +24,8 @@ import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridFilteringCellComponent } from './grid.filtering-cell.component';
-import { IgxGridFilteringRowComponent } from './grid.filtering-row.component';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,

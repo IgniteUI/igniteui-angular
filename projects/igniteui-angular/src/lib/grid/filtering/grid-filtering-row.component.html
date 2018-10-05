@@ -4,7 +4,10 @@
     [value]="condition"
     [igxDropDownItemNavigation]="operands"
     [isSelected]="isConditionSelected(condition)">
-            {{ condition | filterCondition | titlecase }}
+        <div>
+            <igx-icon fontSet="filtering-icons" name="{{ condition.iconName }}"></igx-icon>
+            <span>{{ condition | filterCondition | titlecase }}</span>
+        </div>
     </igx-drop-down-item>
 </igx-drop-down>
 
@@ -26,7 +29,7 @@
 
 <ng-template #defaultDateUI>
     <igx-datePicker
-        [outlet]="grid.outletDirective"
+        [outlet]="gridOutlet"
         [(ngModel)]="value">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">

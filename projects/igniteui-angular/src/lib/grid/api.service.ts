@@ -456,4 +456,5 @@ export class IgxGridAPIService {
             groupingExpressions.splice(index, 1);
         }
     }
+
 }

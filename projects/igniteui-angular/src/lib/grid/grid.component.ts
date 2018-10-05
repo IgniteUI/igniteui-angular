@@ -52,7 +52,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxGridFilteringRowComponent } from './grid.filtering-row.component';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -127,12 +127,6 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
-export interface IFilterInfo {
-    isFilterRowVisible: boolean;
-    filteredColumn: IgxColumnComponent;
-    selectedExpression: IFilteringExpression;
-}
-
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -153,7 +147,8 @@ export interface IFilterInfo {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid',
-    templateUrl: './grid.component.html'
+    templateUrl: './grid.component.html',
+    providers: [IgxFilteringService]
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
@@ -889,6 +884,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+            this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
             }
@@ -1920,15 +1916,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public filterInfo: IFilterInfo = {
-        isFilterRowVisible: false,
-        filteredColumn: null,
-        selectedExpression: null
-    };
-
-    /**
-     * @hidden
-     */
     protected destroy$ = new Subject<boolean>();
 
     /**
@@ -2025,7 +2012,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
-        private viewRef: ViewContainerRef) {
+        private viewRef: ViewContainerRef,
+        public filteringService: IgxFilteringService) {
 
         this.resizeHandler = () => {
             this.calculateGridSizes();
@@ -2038,6 +2026,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.filteringService.gridId = this.id;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
