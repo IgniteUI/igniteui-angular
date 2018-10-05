@@ -245,7 +245,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 2, '9', '3 of 3', []);
     });
 
-    it('activate/deactivate paging', () => {
+    it('activate/deactivate paging', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         fix.detectChanges();
@@ -254,13 +254,14 @@ describe('IgxGrid - Grid Paging', () => {
         expect(paginator).toBeNull();
 
         grid.paging = !grid.paging;
+        tick();
         paginator = grid.nativeElement.querySelector('.igx-paginator');
         expect(paginator !== null).toBeTruthy();
 
         grid.paging = !grid.paging;
         paginator = grid.nativeElement.querySelector('.igx-paginator');
         expect(paginator).toBeNull();
-    });
+    }));
 
     it('should work correct with filtering', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
