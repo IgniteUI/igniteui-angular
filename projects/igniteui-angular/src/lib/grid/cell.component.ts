@@ -840,10 +840,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable && target) {
-                    addedIndex  = target.column.editable ? 0 :
+                addedIndex = target.column.editable ? 0 :
                     [...this.grid.visibleColumns].splice(0, this.visibleColumnIndex).reverse().findIndex(e => e.editable);
-                    target = target.column.editable ? target :
+                target = target.column.editable ? target :
                     this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex - addedIndex);
+            }
+            if (addedIndex === -1) {
+                // If rowEditable === true && there is not other editable cell before this one
+                // Move to the row editing overlay
+                this.grid.rowEditTabs.last.element.nativeElement.focus();
             }
             const targetUnpinnedIndex = this.unpinnedColumnIndex - 1 - addedIndex;
             const horVirtScroll = this.grid.parentVirtDir.getHorizontalScroll();
@@ -884,6 +889,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (bVirtSubscribe) {
                 (<any>this.grid)._focusNextCell(this.rowIndex, columnIndex - addedIndex, 'left', event);
             }
+        } else if (this.grid.rowEditable && this.inEditMode && this.grid.rowEditTabs) {
+            this.grid.rowEditTabs.last.element.nativeElement.focus();
         }
     }
 
@@ -909,7 +916,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(() => {
                 const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
                 target._updateCellSelectionStatus(true, event);
-        });
+            });
     }
 
     private exitRowEdit() {
@@ -930,9 +937,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable && target) {
-                    addedIndex  = target.column.editable ? 0 :
+                addedIndex = target.column.editable ? 0 :
                     [...visibleColumns].splice(this.visibleColumnIndex + 1, visibleColumns.length - 1).findIndex(e => e.editable);
-                    target = target.column.editable ? target :
+                target = target.column.editable ? target :
                     this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex + addedIndex);
             }
             const targetUnpinnedIndex = this.unpinnedColumnIndex + 1;
@@ -961,7 +968,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                     // Target cell is partially visible (right part of it is cut). Scroll to it so it is fully visible then focus.
                     const oldScrollLeft = horVirtScroll.scrollLeft;
                     const targetScrollLeft =
-                    this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1 + addedIndex) - virtContainerSize;
+                        this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1 + addedIndex) - virtContainerSize;
                     horVirtScroll.scrollLeft = targetScrollLeft;
 
                     if (oldScrollLeft === horVirtScroll.scrollLeft && oldScrollLeft !== targetScrollLeft) {
@@ -979,7 +986,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             } else {
                 horVirtScroll.scrollLeft =
-                this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1 + addedIndex) - virtContainerSize;
+                    this.row.virtDirRow.getColumnScrollLeft(targetUnpinnedIndex + 1 + addedIndex) - virtContainerSize;
             }
 
             /**
@@ -990,6 +997,10 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             if (bVirtSubscribe) {
                 (<any>this.grid)._focusNextCell(this.rowIndex, columnIndex + addedIndex, 'right', event);
             }
+        } else if (this.grid.rowEditable && this.inEditMode && this.grid.rowEditTabs.length) {
+            // this._clearCellSelection();
+            // this.inEditMode = false;
+            this.grid.rowEditTabs.first.element.nativeElement.focus();
         }
     }
 
@@ -1008,7 +1019,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe(() => {
                 const target = this.gridAPI.get_cell_by_visible_index(this.gridID, this.rowIndex, columnIndex);
                 target._updateCellSelectionStatus(true, event);
-        });
+            });
     }
 
     public onKeydownArrowUp(event) {

@@ -56,6 +56,8 @@ import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/tog
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { ITransaction, TransactionType, IgxTransactionService, IState } from '../services/transaction/utilities';
+import { IgxRowEditTemplateDirective,
+    IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -1446,6 +1448,52 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    @ViewChild(IgxRowEditTemplateDirective, { read: IgxRowEditTemplateDirective })
+    public rowEditContainer: IgxRowEditTemplateDirective;
+
+    // /**
+    //  * @hidden
+    //  */
+    // @ViewChild(IgxRowEditButton2TemplateDirective, { read: IgxRowEditButton2TemplateDirective })
+    // public rowEdit_button2: IgxRowEditButton2TemplateDirective;
+
+    // /**
+    //  * @hidden
+    //  */
+    // @ViewChild(IgxRowEditButton1TemplateDirective, { read: IgxRowEditButton1TemplateDirective })
+    // public rowEdit_button1: IgxRowEditButton1TemplateDirective;
+
+    /**
+     * @hidden
+     */
+    public get rowInEditMode(): IgxGridRowComponent {
+        const editRowId =  this.gridAPI.get_row_inEditMode(this.id);
+        return editRowId !== null ? this.rowList.find(e => e.rowID === editRowId.rowID) : null;
+    }
+
+    /**
+     * @hidden
+     */
+    public get firstEditableColumnIndex(): number {
+        return this.unpinnedColumns.findIndex(e => e.editable);
+    }
+
+    /**
+     * @hidden
+     */
+    public get lastEditableColumnIndex(): number {
+        return this.unpinnedColumns.length - 1 - this.unpinnedColumns.reverse().findIndex(e => e.editable);
+    }
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxRowEditTabStopDirective)
+    public rowEditTabs: QueryList<IgxRowEditTabStopDirective>;
 
     @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;

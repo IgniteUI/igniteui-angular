@@ -143,7 +143,7 @@
 </ng-template>
 
 <div igxToggle>
-    <div [className]="bannerClass">
+    <div igxRowEdit [className]="bannerClass">
         <div class="banner__message">
             <!--<div class="banner__massage-illustration">-->
                 <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
@@ -157,10 +157,10 @@
     </div>
 </div>
 <ng-template #buttonCancel>
-    <button igxButton (click)="endRowTransaction($event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endRowTransaction($event)">Cancel</button>
 </ng-template>
  <ng-template #buttonDone>
-    <button igxButton (click)="endRowTransaction($event, true)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="endRowTransaction($event, true)">Done</button>
 </ng-template>
 
 <div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>

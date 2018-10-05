@@ -57,6 +57,7 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 import { IgxTransactionService } from '../services';
 import { IgxNoOpTransactionService } from '../services/transaction/noop-transaction';
+import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
 @NgModule({
     declarations: [
@@ -74,6 +75,8 @@ import { IgxNoOpTransactionService } from '../services/transaction/noop-transact
         IgxGroupByRowTemplateDirective,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
+        IgxRowEditTemplateDirective,
+        IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
@@ -111,6 +114,8 @@ import { IgxNoOpTransactionService } from '../services/transaction/noop-transact
         IgxGroupByRowTemplateDirective,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
+        IgxRowEditTemplateDirective,
+        IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
