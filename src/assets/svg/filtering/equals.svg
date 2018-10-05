@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>Icons/filter/equals</title>
+    <desc>Created with Sketch.</desc>
+    <path d="M6.5,12.842 L17.5,12.842 L17.5,15.092 L6.5,15.092 L6.5,12.842 Z M6.5,8.9 L17.5,8.9 L17.5,11.15 L6.5,11.15 L6.5,8.9 Z" id="path-1"></path>
+    <g id="Icons/filter/equals" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="equals">
+            <g id="Icon-24px">
+                <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="="></g>
+                <g id="Colors/grays.600" mask="url(#mask-2)" fill="#000000" fill-opacity="0.54">
+                    <rect id="grays.600" x="0" y="0" width="24" height="24"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
