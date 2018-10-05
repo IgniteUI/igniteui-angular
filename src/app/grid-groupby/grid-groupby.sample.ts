@@ -38,6 +38,7 @@ export class GridGroupBySampleComponent implements OnInit {
                 dir: SortingDirection.Asc
             }
         ];
+        this.hideGroupedColumns = true;
 
         /* tslint:disable */
         this.data = [

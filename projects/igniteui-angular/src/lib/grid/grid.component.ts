@@ -870,10 +870,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.groupingDiffer = null;
         }
         if (this.columnList && this.groupingExpressions) {
-            this.groupingExpressions.forEach((expr) => {
-                const col = this.getColumnByName(expr.fieldName);
-                col.hidden = value;
-            });
+            this._setGroupColsVisibility(value);
         }
 
         this._hideGroupedColumns = value;
@@ -2055,10 +2052,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
 
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
-               this.groupingExpressions.forEach((expr) => {
-                   const col = this.getColumnByName(expr.fieldName);
-                   col.hidden = this.hideGroupedColumns;
-               });
+            this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
@@ -2145,7 +2139,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngDoCheck(): void {
         if (this.groupingDiffer) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
-            if (changes) {
+            if (changes && this.columnList) {
             changes.forEachAddedItem((rec) => {
                 const col = this.getColumnByName(rec.item.fieldName);
                 col.hidden = true;
@@ -3373,6 +3367,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const allItems = this.totalItemCount || this.data.length;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    private _setGroupColsVisibility(value) {
+        this.groupingExpressions.forEach((expr) => {
+            const col = this.getColumnByName(expr.fieldName);
+            col.hidden = value;
+        });
     }
 
     /**
