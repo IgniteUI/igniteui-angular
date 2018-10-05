@@ -14,10 +14,16 @@ import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxRowEditTemplateDirective,
+    IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
+
+    const DEBOUNCETIME = 30;
 
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const CELL_CSS_CLASS = '.igx-grid__td';
 
     describe('IgxGrid - input properties', () => {
         beforeEach(async(() => {
@@ -806,6 +812,53 @@ describe('IgxGrid Component Tests', () => {
             expect(firstCellInputValue).toEqual('4');
         });
     });
+
+    fdescribe('Row Editing', () => {
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridRowEditingComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule.forRoot()]
+            }).compileComponents();
+        }));
+
+        it('should be able to enter edit mode on dblclick, enter and f2', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.gridRowEdit;
+            const rv = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
+            const row = grid.getRowByIndex(0);
+
+            rv.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+
+            rv.triggerEventHandler('dblclick', {});
+            expect(row.inEditMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(false);
+        }));
+    });
 });
 
 @Component({
@@ -1093,3 +1146,42 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
         return this.value.toExponential().toString();
     }
 }
+
+@Component({
+    template: `
+    <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column>
+            <ng-template igxCell let-cell="cell" let-val>
+                <button (click)="deleteRow($event, 'gridRowEdit', cell.cellID.rowID)">Delete</button>
+            </ng-template>
+        </igx-column>
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'"
+            editable=" true"></igx-column>
+        <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
+        <igx-column field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingComponent {
+    public data = SampleTestData.foodProductData();
+
+    public changeInitColumns = false;
+
+    @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
+
+    public deleteRow(event, gridID, rowID) {
+        event.stopPropagation();
+            this.data.splice(rowID - 1, 1);
+            this.refreshAll();
+        }
+
+        refreshAll(): void {
+            this.refresh(this.gridRowEdit);
+        }
+
+        private refresh(grid: IgxGridComponent): void {
+            (<any>grid)._pipeTrigger++;
+            (<any>grid).cdr.markForCheck();
+        }
+    }
+
