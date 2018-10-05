@@ -3359,7 +3359,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridHeight() {
-        //this.calcHeight = this.visibleRows * this.rowHeight;
+        // this.calcHeight = this.visibleRows * this.rowHeight;
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
                 this.calcMaxSummaryHeight() : 0;
