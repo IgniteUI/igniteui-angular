@@ -46,6 +46,21 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true
+                        },
+                        "hmr": {
+                            "fileReplacements": [{
+                                "replace": "src/environments/environments.ts",
+                                "with": "src/environments/environment.hmr.ts"
+                            }],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "extractCss": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": false,
+                            "vendorChunk": false,
+                            "buildOptimizer": true
                         }
                     }
                 },

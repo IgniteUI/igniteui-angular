@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve --open --hmr --hmr-warning=false",
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint",
@@ -12,7 +12,7 @@
         "test:lib:azure": "ng test igniteui-angular --watch=false --no-progress --code-coverage --karma-config=./projects/igniteui-angular/karma.azure.conf.js",
         "test:lib:watch": "ng test igniteui-angular",
         "test:migration": "node -r ts-node/register ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/migrations/**/*.spec.ts",
-        "build:lib": "ng build igniteui-angular --prod && gulp build-style && gulp watch",
+        "build:lib": "ng build igniteui-angular --prod && gulp build-style",
         "build:style": "gulp build-style",
         "build:migration": "gulp copy-migrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
         "build:docs:export": "gulp typedoc-build:export",
