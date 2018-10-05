@@ -207,7 +207,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @memberof IgxCalendarComponent
      */
     public set viewDate(value: Date) {
-        this._viewDate = new Date(value);
+        this._viewDate = this.getDateOnly(value);
     }
 
     /**
@@ -871,7 +871,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     public changeYear(event: Date) {
-        this._viewDate = new Date(event.getFullYear(), this._viewDate.getMonth(), 1, 0, 0, 0);
+        this._viewDate = new Date(event.getFullYear(), this._viewDate.getMonth(), 1);
         this._activeView = CalendarView.DEFAULT;
     }
 
@@ -879,7 +879,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     public changeMonth(event: Date) {
-        this._viewDate = new Date(this._viewDate.getFullYear(), event.getMonth(), 1, 0, 0, 0);
+        this._viewDate = new Date(this._viewDate.getFullYear(), event.getMonth(), 1);
         this._activeView = CalendarView.DEFAULT;
     }
 
@@ -1079,7 +1079,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private selectSingle(value: Date) {
-        this.selectedDates = value;
+        this.selectedDates = this.getDateOnly(value);
         this._onChangeCallback(this.selectedDates);
     }
 
@@ -1089,13 +1089,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     private selectMultiple(value: Date | Date[]) {
         if (Array.isArray(value)) {
-            this.selectedDates = this.selectedDates.concat(value);
+            this.selectedDates = this.selectedDates.concat(value.map(v => this.getDateOnly(v)));
         } else {
-            if (this.selectedDates.every((date: Date) => date.toDateString() !== value.toDateString())) {
-                this.selectedDates.push(value);
+            const valueDateOnly = this.getDateOnly(value);
+            if (this.selectedDates.every((date: Date) => date.getTime() !== valueDateOnly.getTime())) {
+                this.selectedDates.push(valueDateOnly);
             } else {
                 this.selectedDates = this.selectedDates.filter(
-                    (date: Date) => date.toDateString() !== value.toDateString()
+                    (date: Date) => date.getTime() !== valueDateOnly.getTime()
                 );
             }
         }
@@ -1112,17 +1113,18 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         if (Array.isArray(value)) {
             this._rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-            start = value.shift();
-            end = value.pop();
+            start =  this.getDateOnly(value.shift());
+            end =  this.getDateOnly(value.pop());
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
         } else {
+            value = this.getDateOnly(value);
             if (!this._rangeStarted) {
                 this._rangeStarted = true;
                 this.selectedDates = [value];
             } else {
                 this._rangeStarted = false;
 
-                if (this.selectedDates[0].toDateString() === value.toDateString()) {
+                if (this.selectedDates[0].getTime() === value.getTime()) {
                     this.selectedDates = [];
                     this._onChangeCallback(this.selectedDates);
                     return;
@@ -1196,8 +1198,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         }
 
         value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-        const start = value.shift();
-        const end = value.pop();
+        const start =  this.getDateOnly(value.shift());
+        const end =  this.getDateOnly(value.pop());
 
         const deselectRange = [start, ...this.generateDateRange(start, end)];
         this.deselectMultiple(deselectRange);
@@ -1224,12 +1226,12 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *@hidden
      */
     private isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
-        date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        date = this.getDateOnly(date);
         const dateInMs = date.getTime();
 
         for (const descriptor of ranges) {
             const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
-                r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
+                r => this.getDateOnly(r)) : undefined;
             switch (descriptor.type) {
                 case (DateRangeType.After):
                     if (dateInMs > dRanges[0].getTime()) {
@@ -1302,8 +1304,9 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     private generateDateRange(start: Date, end: Date): Date[] {
         const result = [];
-
-        while (start.toDateString() !== end.toDateString()) {
+        start = this.getDateOnly(start);
+        end = this.getDateOnly(end);
+        while (start.getTime() !== end.getTime()) {
             start = this.calendarModel.timedelta(start, 'day', 1);
             result.push(start);
         }
@@ -1326,7 +1329,14 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *@hidden
      */
     private getDateOnlyInMs(date: Date) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+        return this.getDateOnly(date).getTime();
+    }
+
+     /**
+     *@hidden
+     */
+    private getDateOnly(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     }
     /**
      *@hidden
