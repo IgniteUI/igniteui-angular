@@ -169,7 +169,7 @@ describe('IgxGrid Component Tests', () => {
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('200px');
-            expect(window.getComputedStyle(grid.nativeElement).height).toBeGreaterThan(250);
+            expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBeGreaterThan(250);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
 
             grid.width = '50%';
@@ -567,7 +567,7 @@ describe('IgxGrid Component Tests', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.initColumnsRows(20, 5);
-            grid.height = null;
+            grid.visibleRows = Infinity;
             fix.detectChanges();
 
             const recsCount = grid.data.length;
@@ -629,8 +629,8 @@ describe('IgxGrid Component Tests', () => {
         it(`should render 10 records if height is 100% and parent container\'s height is unset and
             display density is changed`, () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
+            fix.componentInstance.grid.visibleRows = 10;
+            fix.componentInstance.data = fix.componentInstance.data.slice(0, 12);
             fix.componentInstance.density = DisplayDensity.compact;
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
@@ -735,7 +735,7 @@ describe('IgxGrid Component Tests', () => {
             });
             let currScrollTop;
             grid.width = '800px';
-            grid.height = '500px';
+            grid.visibleRows = 10;
             fix.componentInstance.initColumnsRows(25, 25);
             fix.detectChanges();
             grid.nativeElement.dispatchEvent(new Event('focus'));
@@ -745,7 +745,10 @@ describe('IgxGrid Component Tests', () => {
             grid.cdr.detectChanges();
             setTimeout(() => {
                 currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
-                expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
+                expect(currScrollTop).toEqual(
+                    grid.verticalScrollContainer.dc.instance._viewContainer
+                    .element.nativeElement.getBoundingClientRect().height
+                );
 
                 // testing the pageup key
                 grid.nativeElement.dispatchEvent(pageUpKeyEvent);
