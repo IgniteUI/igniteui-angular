@@ -628,7 +628,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public height: string;
 
     /**
-     * Gets/sets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
+     * Gets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
      * If the data source contains more records than this number, a vertical scrollbar will be shown.
      * ```typescript
      * let visibleRows = this.grid.visibleRows;
@@ -636,7 +636,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public visibleRows = 10;
+    public get visibleRows(): number {
+        return this._visibleRows;
+    }
+
+    /**
+     * Sets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
+     * If the data source contains more records than this number, a vertical scrollbar will be shown.
+     * ```typescript
+     * let visibleRows = this.grid.visibleRows;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public set visibleRows(value) {
+        if (this._visibleRows !== value) {
+            this._visibleRows = value;
+            requestAnimationFrame(() => {
+                this.reflow();
+            });
+        }
+    }
 
     /**
      * @hidden
@@ -1982,6 +2001,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _rowHeight;
     private _horizontalChunkSize = 0;
     private _headerChunkSize = 0;
+    private _visibleRows = 10;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
 

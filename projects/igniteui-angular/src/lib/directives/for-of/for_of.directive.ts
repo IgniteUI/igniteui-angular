@@ -22,7 +22,6 @@ import {
     SimpleChanges,
     TemplateRef,
     TrackByFunction,
-    ViewChild,
     ViewContainerRef
 } from '@angular/core';
 
@@ -198,22 +197,6 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
     private _differ: IterableDiffer<T> | null = null;
     private _trackByFn: TrackByFunction<T>;
 
-    private get _isScrolledToBottom() {
-        if (!this.getVerticalScroll()) {
-            return true;
-        }
-        const scrollTop = this.getVerticalScroll().scrollTop;
-        const scrollHeight = this.getVerticalScroll().scrollHeight;
-        // Use === and not >= because `scrollTop + container size` can't be bigger than `scrollHeight`, unless something isn't updated.
-        // Also use Math.round because Chrome has some inconsistencies and `scrollTop + container` can be float when zooming the page.
-        return Math.round(scrollTop + this.containerSize) === scrollHeight;
-    }
-
-    private get _isAtBottomIndex() {
-        return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
-    }
-    private extraRowApplied = false;
-
     // Start properties related to virtual height handling due to browser limitation
     /** Maximum height for an element of the browser. */
     private _maxHeight;
@@ -329,10 +312,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     public ngAfterViewInit() {
         if (this.igxForScrollOrientation === 'vertical') {
-            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
-            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
-            this.onChunkGenerated.emit(height);
-            this._recalcScrollBarSize(height);
+            this.notifyContainerChange();
         }
     }
 
@@ -387,10 +367,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                     if (this.dc) {
                         this.dc.changeDetectorRef.detectChanges();
                         if (this.igxForScrollOrientation === 'vertical') {
-                            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
-                            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
-                            this.onChunkGenerated.emit(height);
-                            this._recalcScrollBarSize(height);
+                            requestAnimationFrame(() => this.notifyContainerChange());
                         }
                     }
                     this._updateScrollOffset();
@@ -581,6 +558,18 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     public getHorizontalScroll() {
         return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper') || this.hScroll;
+    }
+
+    /**
+     * @hidden
+     * Function that is called when scrolling vertically
+     */
+    protected notifyContainerChange() {
+        const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
+        const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
+        this.onChunkGenerated.emit(height);
+        this._recalcScrollBarSize(height);
+        this.cdr.detectChanges();
     }
 
     /**
@@ -926,21 +915,13 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         if (this.dc && diff > 0) {
             this._zone.run(() => {
                 this.dc.changeDetectorRef.detectChanges();
-                if (this.igxForScrollOrientation === 'vertical') {
-                    const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
-                    const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
-                    this.onChunkGenerated.emit(height);
-                    this._recalcScrollBarSize(height);
-                }
+                requestAnimationFrame(() => this.notifyContainerChange());
             });
         }
         this.state.chunkSize = chunkSize;
         this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
         if (this.igxForScrollOrientation === 'vertical') {
-            const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
-            const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize;
-            this.onChunkGenerated.emit(height);
-            this._recalcScrollBarSize(height);
+            this.notifyContainerChange();
         }
     }
 
