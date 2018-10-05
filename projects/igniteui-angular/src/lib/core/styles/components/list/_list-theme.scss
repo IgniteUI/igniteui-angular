@@ -36,7 +36,7 @@
         header-text-color: igx-color($palette, 'secondary'),
         item-background: #fff,
         item-text-color: igx-color($palette, 'grays', 800),
-        item-background-active: igx-color($palette, 'grays', 100),
+        item-background-active: hexrgba(igx-color($palette, 'grays', 100)),
         item-text-color-active: igx-color($palette, 'grays', 800)
     );
 
@@ -128,7 +128,20 @@
         user-select: none;
     }
 
-    %igx-list-item {
+    %igx-list-item-base {
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: center;
+    }
+
+    %igx-list-item-pan {
+        position: absolute;
+        visibility: hidden;
+        display: flex;
+        z-index: 1;
+    }
+
+    %igx-list-item-content {
         display: flex;
         position: relative;
         flex-flow: column wrap;
@@ -140,14 +153,14 @@
         z-index: 2;
     }
 
-    %igx-list-item--active {
+    %igx-list-item-content--active {
         color: --var($theme, 'item-text-color-active');
         background-color: --var($theme, 'item-background-active');
         z-index: 3;
     }
 
-    %igx-list-item--inactive {
-        transition: left .3s $ease-out-quad;
+    %igx-list-item-content--inactive {
+        transition: transform .3s $ease-out-quad;
     }
 }
 
