@@ -66,8 +66,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             } else {
                 this.resetExpression();
             }
-
-            this.toggleDropDown(this.operandsIcon.el.nativeElement);
         }
     }
 
@@ -145,7 +143,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
         }
 
-        //this.toggleDropDown(this.operandsIcon.el.nativeElement);
+        this.toggleDropDown(this.operandsIcon.el.nativeElement);
     }
 
     ngOnDestroy(): void {

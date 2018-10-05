@@ -4,7 +4,7 @@ import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxGridComponent } from '../grid.component';
-import { FilterIcons } from './svgIcons';
+import { CONTAINS } from './svgIcons';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -41,7 +41,7 @@ export class IgxFilteringService {
 
     public registerSVGIcons(): void {
         if (this.iconService.isSvgIconCached('contains', FILTERING_ICONS_FONT_SET) === false) {
-        this.iconService.addSvgIcon('contains', FilterIcons.Contains, FILTERING_ICONS_FONT_SET);
+        this.iconService.addSvgIconFromText('contains', CONTAINS, FILTERING_ICONS_FONT_SET);
         // iconsService.addSvgIcon('doesNotContain', '../../../src/assets/svg/filtering/does_not_contain.svg', fontSet);
         // iconsService.addSvgIcon('doesNotEqual', '../../../src/assets/svg/filtering/does_not_equal.svg', fontSet);
         // iconsService.addSvgIcon('endsWith', '../../../src/assets/svg/filtering/ends_with.svg', fontSet);

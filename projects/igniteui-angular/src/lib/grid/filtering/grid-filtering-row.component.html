@@ -5,7 +5,7 @@
     [igxDropDownItemNavigation]="operands"
     [isSelected]="isConditionSelected(condition)">
         <div>
-            <igx-icon fontSet="filtering-icons" name="{{ condition.iconName }}"></igx-icon>
+            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span>{{ condition | filterCondition | titlecase }}</span>
         </div>
     </igx-drop-down-item>

@@ -458,7 +458,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'contains',
             isUnary: false,
-            iconName:'contains',
+            iconName: 'contains',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
