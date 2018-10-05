@@ -28,7 +28,7 @@ describe('IgxGrid - search API', () => {
     }));
 
     /* BasicGrid */
-    xdescribe('', () => {
+    describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(BasicGridSearchComponent);
             fix.componentInstance.data = SampleTestData.personJobDataFull();
@@ -662,10 +662,12 @@ describe('IgxGrid - search API', () => {
         it('findNext scrolls to cells out of view', async () => {
             grid.findNext('30');
             await wait();
+            fix.detectChanges();
             expect(isInView(29, grid.virtualizationState)).toBeTruthy();
 
             grid.findNext('1887');
             await wait();
+            fix.detectChanges();
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
@@ -758,11 +760,11 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             cell.column.editable = true;
+            fix.detectChanges();
 
             grid.findNext('c');
             await wait();
             fix.detectChanges();
-            grid.findNext('c');
 
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
@@ -801,7 +803,7 @@ describe('IgxGrid - search API', () => {
             expect(highlight).not.toBeNull();
             expect(grid.page).toBe(0);
 
-            grid.perPage = 10;
+            grid.perPage = 8;
             fix.detectChanges();
 
             highlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -809,7 +811,7 @@ describe('IgxGrid - search API', () => {
             expect(grid.page).toBe(0);
 
             grid.page = 1;
-            await wait(30);
+            await wait();
             fix.detectChanges();
             highlight = grid.nativeElement.querySelector('.' + component.activeClass);
             expect(highlight).not.toBeNull();
