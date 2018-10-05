@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, QueryList } from '@angular/core';
+import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridCellComponent } from './cell.component';
 
@@ -16,7 +16,7 @@ export class IgxRowEditTabStopDirective {
     private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
-    constructor(public grid: IgxGridComponent, public element: ElementRef) {}
+    constructor(@Inject(forwardRef(() => IgxGridComponent)) public grid: IgxGridComponent, public element: ElementRef) {}
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
