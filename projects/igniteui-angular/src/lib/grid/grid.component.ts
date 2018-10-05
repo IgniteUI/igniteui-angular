@@ -2105,81 +2105,39 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer = new MutationObserver(callback);
             observer.observe(this.document.body, config);
         }
-        // setTimeout(() => {
-        //     this._horizontalForOfs = this._dataRowList.filter(row => row.virtDirRow).map(row => row.virtDirRow);
-        //     // const ofs = this.dataRowList.map(row => row.virtDirRow);
-        //     this._dataRowList.changes
-        //         .subscribe(list =>  {
-        //             console.log(list);
-        //             this._horizontalForOfs = list.filter(row => row.virtDirRow).map(row => row.virtDirRow);
-        //             this.zone.runOutsideAngular(() =>
-        //                 this._horizontalForOfs
-        //                     .filter(vfor => vfor.hScroll)
-        //                     .forEach(vfor => vfor.hScroll.removeEventListener('scroll', vfor.func))
-        //             );
-        //         });
-        //     this.zone.runOutsideAngular(() => {
-        //         this._horizontalForOfs.forEach(vfor => {
-        //             // Remove all scroll handlers
-        //             vfor.hScroll.removeEventListener('scroll', vfor.func);
-        //         });
-        //     });
-        //     this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', (event) => {
-        //         this.zone.runOutsideAngular(() => {
-        //             this._horizontalForOfs.forEach(vfor => {
-        //                 vfor.onHScroll(event);
-        //             });
-        //             this.cdr.detectChanges();
-        //             this.zone.run(() => {
-        //                 this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
-        //             });
-        //         });
-        //     });
-        //     this.zone.runOutsideAngular(() => {
-        //         const vc = this.verticalScrollContainer as any;
-        //         vc.vh.instance.elementRef.nativeElement.removeEventListener('scroll', vc.verticalScrollHandler);
-        //     });
-
-        //     (this.verticalScrollContainer as any).vh.instance.elementRef.nativeElement.addEventListener('scroll', (event) => {
-        //         this.zone.runOutsideAngular(() => {
-        //             (this.verticalScrollContainer as any).onScroll(event);
-        //             this.cdr.detectChanges();
-        //             this.zone.run(() => {
-        //                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-        //             });
-        //         });
-        //     });
-        // }, 100);
     }
 
     ngAfterViewChecked() {
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
 
-        this._dataRowList.changes
-            .subscribe(list => this._horizontalForOfs = list.toArray().filter(row => row.virtDirRow).map(row => row.virtDirRow));
+        this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
+            this._horizontalForOfs = list.toArray()
+                .filter(item => item.element.nativeElement.parentElement !== null)
+                .map(row => row.virtDirRow)
+        );
 
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', (event) => {
-                    this.verticalScrollContainer.onScroll(event);
+                this.verticalScrollContainer.onScroll(event);
+                this.zone.run(() => {
                     this.cdr.detectChanges();
-                    this.zone.run(() => {
-                        this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-                    });
+                    this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
                 });
+            });
         });
 
         this.zone.runOutsideAngular(() => {
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', (event) => {
-                    this.headerContainer.onHScroll(event);
-                    this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
-                    if (this.summaryContainer) {
-                        this.summaryContainer.onHScroll(event);
-                    }
+                this.headerContainer.onHScroll(event);
+                this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
+                if (this.summaryContainer) {
+                    this.summaryContainer.onHScroll(event);
+                }
+                this.zone.run(() => {
                     this.cdr.detectChanges();
-                    this.zone.run(() => {
-                        this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
-                    });
+                    this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
                 });
+            });
         });
 
         this.ngAfterViewChecked = () => {};
@@ -2189,6 +2147,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnDestroy() {
+        // TODO: Remove igxGridFor event listeners
         this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
         this.destroy$.next(true);
         this.destroy$.complete();

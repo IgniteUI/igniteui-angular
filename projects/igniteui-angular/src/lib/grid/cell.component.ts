@@ -37,7 +37,7 @@ import { IgxColumnComponent } from './column.component';
     selector: 'igx-grid-cell',
     templateUrl: './cell.component.html'
 })
-export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
+export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     /**
      * Gets the column of the cell.
@@ -653,13 +653,6 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         this.grid.refreshSearch();
     }
 
-    /**
-     *@hidden
-     */
-    public ngOnDestroy() {
-        // this.destroy$.next(true);
-        // this.destroy$.complete();
-    }
 
     /**
      *@hidden
