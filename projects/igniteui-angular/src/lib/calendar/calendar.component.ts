@@ -195,7 +195,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 throw new Error('Invalid selection value');
         }
         this._onChangeCallback(this.selectedDates);
-        this._rangeStarted = false;
+        this.rangeStarted = false;
         this._selection = value;
     }
 
@@ -595,7 +595,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    private _rangeStarted = false;
+    private rangeStarted = false;
     /**
      *@hidden
      */
@@ -628,23 +628,23 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    private _formatterMonth;
+    private formatterMonth;
     /**
      *@hidden
      */
-    private _formatterDay;
+    private formatterDay;
     /**
      *@hidden
      */
-    private _formatterYear;
+    private formatterYear;
     /**
      *@hidden
      */
-    private _formatterMonthday;
+    private formatterMonthday;
     /**
      *@hidden
      */
-    private _formatterWeekday;
+    private formatterWeekday;
     /**
      *@hidden
      */
@@ -673,11 +673,11 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private initFormatters() {
-        this._formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
-        this._formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
-        this._formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
-        this._formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
-        this._formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
+        this.formatterMonth = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month });
+        this.formatterDay = new Intl.DateTimeFormat(this._locale, { day: this._formatOptions.day });
+        this.formatterYear = new Intl.DateTimeFormat(this._locale, { year: this._formatOptions.year });
+        this.formatterMonthday = new Intl.DateTimeFormat(this._locale, { month: this._formatOptions.month, day: this._formatOptions.day });
+        this.formatterWeekday = new Intl.DateTimeFormat(this._locale, { weekday: this._formatOptions.weekday });
     }
 
     /**
@@ -709,7 +709,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     public formattedMonth(value: Date): string {
         if (this._formatViews.month) {
-            return this._formatterMonth.format(value);
+            return this.formatterMonth.format(value);
         }
         return `${value.getMonth()}`;
     }
@@ -722,7 +722,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     public formattedDate(value: Date): string {
         if (this._formatViews.day) {
-            return this._formatterDay.format(value);
+            return this.formatterDay.format(value);
         }
         return `${value.getDate()}`;
     }
@@ -735,7 +735,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     public formattedYear(value: Date): string {
         if (this._formatViews.year) {
-            return this._formatterYear.format(value);
+            return this.formatterYear.format(value);
         }
         return `${value.getFullYear()}`;
     }
@@ -792,8 +792,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         const date = this.headerDate;
 
         return {
-            monthday: this._formatterMonthday.format(date),
-            weekday: this._formatterWeekday.format(date),
+            monthday: this.formatterMonthday.format(date),
+            weekday: this.formatterWeekday.format(date),
         };
     }
 
@@ -905,7 +905,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         const dayNames = [];
         const rv = this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth())[0];
         for (const day of rv) {
-            dayNames.push(this._formatterWeekday.format(day.date));
+            dayNames.push(this.formatterWeekday.format(day.date));
         }
 
         return dayNames;
@@ -1161,17 +1161,17 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         let end: Date;
 
         if (Array.isArray(value)) {
-            this._rangeStarted = false;
+            this.rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             start = value.shift();
             end = value.pop();
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
         } else {
-            if (!this._rangeStarted) {
-                this._rangeStarted = true;
+            if (!this.rangeStarted) {
+                this.rangeStarted = true;
                 this.selectedDates = [value];
             } else {
-                this._rangeStarted = false;
+                this.rangeStarted = false;
 
                 if (this.selectedDates[0].toDateString() === value.toDateString()) {
                     this.selectedDates = [];
