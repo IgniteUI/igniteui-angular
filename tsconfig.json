@@ -18,11 +18,13 @@
         ],
         "paths": {
             "igniteui-angular": [
-                "dist/igniteui-angular"
+                "projects/igniteui-angular/src/public_api.ts"
             ]
         }
     },
-    "exclude": ["dist"],
+    "exclude": [
+        "dist"
+    ],
     "typedocOptions": {
         "mode": "file",
         "out": "dist/igniteui-angular/docs/typescript",
