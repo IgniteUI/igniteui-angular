@@ -9,7 +9,7 @@ import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSe
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { wait } from '../test-utils/ui-interactions.spec';
 
-fdescribe('IgxGrid - search API', () => {
+describe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid, fixNativeElement;
 
