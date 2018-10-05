@@ -5,7 +5,7 @@
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
                 <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
                     <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                    <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+                    <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
                 </igx-chip>
             </igx-chips-area>
             <br>

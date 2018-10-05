@@ -16,9 +16,9 @@ import { UIInteractions, wait} from '../test-utils/ui-interactions.spec';
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -62,9 +62,9 @@ class TestChipSelectComponent extends TestChipComponent {
             (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
             <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
