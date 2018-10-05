@@ -49,18 +49,9 @@
                         },
                         "hmr": {
                             "fileReplacements": [{
-                                "replace": "src/environments/environments.ts",
+                                "replace": "src/environments/environment.ts",
                                 "with": "src/environments/environment.hmr.ts"
-                            }],
-                            "optimization": true,
-                            "outputHashing": "all",
-                            "sourceMap": true,
-                            "extractCss": true,
-                            "namedChunks": false,
-                            "aot": true,
-                            "extractLicenses": false,
-                            "vendorChunk": false,
-                            "buildOptimizer": true
+                            }]
                         }
                     }
                 },
@@ -72,6 +63,11 @@
                     "configurations": {
                         "production": {
                             "browserTarget": "igniteui-dev-demos:build:production"
+                        },
+                        "hmr": {
+                            "hmr": true,
+                            "hmrWarning": false,
+                            "browserTarget": "igniteui-dev-demos:build:hmr"
                         }
                     }
                 },
