@@ -4768,9 +4768,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     public endRowTransaction(event, commit?: boolean) {
-        // this.gridAPI.submit_value(this.id);
+        const row = this.gridAPI.get_row_inEditMode(this.id);
+        this.gridAPI.submit_value(this.id);
         if (!this.transactions.aggregatedState() && commit) {
-            const row = this.gridAPI.get_row_inEditMode(this.id);
             Object.assign(this.data[row.rowIndex], this.transactions.getAggregatedValue(row.rowID));
         }
         this.closeRowEditingOverlay(commit);
