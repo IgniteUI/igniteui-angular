@@ -161,38 +161,23 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(fix.componentInstance.getVerticalScrollHeight()).toBeLessThan(verticalScrollHeight);
+            // showing the horizontal scrollbar will add to the grid height not chip into the container
+            expect(fix.componentInstance.getVerticalScrollHeight()).toEqual(verticalScrollHeight);
             gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('200px');
-            expect(window.getComputedStyle(grid.nativeElement).height).toMatch('200px');
+            expect(window.getComputedStyle(grid.nativeElement).height).toBeGreaterThan(250);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
-            grid.height = '50%';
-            fix.detectChanges();
-            tick(200);
-            fix.detectChanges();
 
             grid.width = '50%';
             fix.detectChanges();
             tick(200);
             fix.detectChanges();
 
-            expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
-
-            gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
-
-            // The scrollbar is no longer visible
-            //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-            // console.log(gridBodyHeight);
-            // console.log(window.getComputedStyle(gridBody.nativeElement).height);
-            // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
         }));
 
         it('should not have column misalignment when no vertical scrollbar is shown', () => {
