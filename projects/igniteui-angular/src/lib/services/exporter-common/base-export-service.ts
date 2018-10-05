@@ -29,18 +29,34 @@ export abstract class IgxBaseExporter {
 
     /**
      * This event is emitted when a row is exported.
+     * ```typescript
+     * this.exporterService.onRowExport.subscribe((args: IRowExportingEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
+     * @memberof IgxBaseExporter
      */
     @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
 
     /**
      * This event is emitted when a column is exported.
+     * ```typescript
+     * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
+     * @memberof IgxBaseExporter
      */
     @Output()
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
     /**
      * Method for exporting IgxGrid component's data.
+     * ```typescript
+     * this.exporterService.export(this.igxGridForExport, this.exportOptions);
+     * ```
+     * @memberof IgxBaseExporter
      */
     public export(grid: any, options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {
@@ -88,6 +104,10 @@ export abstract class IgxBaseExporter {
 
     /**
      * Method for exporting any kind of array data.
+     * ```typescript
+     * this.exporterService.exportData(this.arrayForExport, this.exportOptions);
+     * ```
+     * @memberof IgxBaseExporter
      */
     public exportData(data: any[], options: IgxExporterOptionsBase): void {
         if (options === undefined || options === null) {

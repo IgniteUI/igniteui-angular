@@ -51,6 +51,12 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     /**
      * This event is emitted when the export process finishes.
+     * ```typescript
+     * this.exporterService.onExportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
+     * @memberof IgxExcelExporterService
      */
     @Output()
     public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();

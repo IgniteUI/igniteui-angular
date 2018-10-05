@@ -36,6 +36,12 @@ export class IgxCsvExporterService extends IgxBaseExporter {
 
     /**
      * This event is emitted when the export process finishes.
+     * ```typescript
+     * this.exporterService.onExportEnded.subscribe((args: ICsvExportEndedEventArgs) => {
+     * // put event handler code here
+     * });
+     * ```
+     * @memberof IgxCsvExporterService
      */
     @Output()
     public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
