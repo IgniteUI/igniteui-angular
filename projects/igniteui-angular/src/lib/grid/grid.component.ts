@@ -1536,11 +1536,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get bannerClass(): string {
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
-                return 'banner--cosy';
+                return "igx-banner--cosy";
             case DisplayDensity.compact:
-                return 'banner--compact';
+                return "igx-banner--compact";
             default:
-                return 'banner';
+                return "igx-banner";
         }
     }
 

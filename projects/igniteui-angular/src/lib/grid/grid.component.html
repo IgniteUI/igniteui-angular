@@ -144,15 +144,19 @@
 
 <div igxToggle>
     <div igxRowEdit [className]="bannerClass">
-        <div class="banner__message">
-            <!--<div class="banner__massage-illustration">-->
+        <div class="igx-banner__message">
+            <!--<div class="igx-banner__illustration">-->
                 <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
             <!--</div>-->
-            <span class="banner__massage-text">There are edits pending on this row</span>
+            <span class="igx-banner__text">There are edits pending on this row</span>
         </div>
-        <div class="banner__actions">
-            <ng-container *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
-            <ng-container *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+        <div class="igx-banner__actions">
+            <div class="igx-banner__row">
+                <ng-container
+                    *ngTemplateOutlet="buttonCancelTemplate ? buttonCancelTemplate : buttonCancel; context: {$implicit: this}"></ng-container>
+                <ng-container
+                    *ngTemplateOutlet="buttonDoneTemplate ? buttonDoneTemplate : buttonDone; context: {$implicit: this}"></ng-container>
+            </div>
         </div>
     </div>
 </div>

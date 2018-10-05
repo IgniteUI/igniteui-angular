@@ -6,36 +6,40 @@
 /// @requires {mixin} bem-mod
 ////
 
-@include b(banner) {
-    @extend %banner !optional;
+@include b(igx-banner) {
+    @extend %igx-banner !optional;
 
-    @include e(message){
-        @extend %banner__message !optional;
+    @include e(message) {
+        @extend %igx-banner__message !optional;
     }
 
-    @include e(massage-illustration){
-        @extend %banner__massage-illustration !optional;
+    @include e(illustration) {
+        @extend %igx-banner__illustration !optional;
     }
 
-    @include e(massage-text){
-        @extend %banner__massage-text !optional;
+    @include e(text) {
+        @extend %igx-banner__text !optional;
     }
 
-    @include e(actions){
-        @extend %banner__actions !optional;
+    @include e(actions) {
+        @extend %igx-banner__actions !optional;
     }
 
     @include m(vertical) {
-        @extend %banner--vertical !optional;
+        @extend %igx-banner--vertical !optional;
+    }
+
+    @include e(banner__row) {
+        @extend %igx-banner__row !optional;
     }
 
     @include m(cosy) {
-        @extend %banner !optional;
-        @extend %banner--cosy !optional
+        @extend %igx-banner !optional;
+        @extend %igx-banner--cosy !optional
     }
 
     @include m(compact) {
-        @extend %banner !optional;
-        @extend %banner--compact !optional;
+        @extend %igx-banner !optional;
+        @extend %igx-banner--compact !optional;
     }
 }
