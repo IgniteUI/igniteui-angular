@@ -256,7 +256,7 @@ describe('IgxGrid - search API', () => {
             expect(count).toBe(0);
         });
 
-        it('Should update exact match highlights when filtering.', () => {
+        it('Should update exact match highlights when filtering.', async () => {
             const count = grid.findNext('Software Developer', false, true);
             let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -272,10 +272,12 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
+            await wait();
         });
 
         it('Should update exact match highlights when clearing filter.', () => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            // await wait();
             fix.detectChanges();
 
             const count = grid.findNext('Software Developer', false, true);
@@ -285,6 +287,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
+            // await wait();
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -329,9 +332,9 @@ describe('IgxGrid - search API', () => {
         it('Should scroll properly when using paging', async () => {
             grid.paging = true;
             grid.perPage = 7;
-            const searchString = 'assoc';
             fix.detectChanges();
 
+            const searchString = 'assoc';
             findNext(grid, searchString);
             findNext(grid, searchString);
             await wait();
@@ -401,8 +404,8 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.columns[1].pinned = false;
-
             fix.detectChanges();
+
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
             activeHighlight = cellName.querySelector('.' + component.activeClass);
             highlights = cellName.querySelectorAll('.' + component.highlightClass);
@@ -455,6 +458,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.filter('Name', 'Tanya', IgxStringFilteringOperand.instance().condition('contains'));
+            // await wait();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(0, 'JobTitle').nativeElement;
@@ -464,6 +468,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.clearFilter();
+            // await wait();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
@@ -574,6 +579,7 @@ describe('IgxGrid - search API', () => {
             grid.findNext('developer');
 
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            // await wait();
             fix.detectChanges();
 
             const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -582,8 +588,9 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Active highlight should be preserved when all rows are filtered out', () => {
+        it('Active highlight should be preserved when all rows are filtered out', async () => {
             grid.height = '500px';
+            await wait();
             fix.detectChanges();
 
             grid.findNext('casey');
@@ -683,7 +690,7 @@ describe('IgxGrid - search API', () => {
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
-        it('should keep the active highlight when active cell enters and exits edit mode', () => {
+        it('should keep the active highlight when active cell enters and exits edit mode', async () => {
             pending('When the cell enters edit mode, the highlight stays and the content is doubled! Happens in tests only!');
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             const cell = grid.getCellByColumn(0, 'ID');
@@ -695,6 +702,8 @@ describe('IgxGrid - search API', () => {
             fix.detectChanges();
 
             grid.findNext('1');
+            await wait();
+            fix.detectChanges();
 
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
@@ -811,7 +820,7 @@ describe('IgxGrid - search API', () => {
             expect(grid.page).toBe(0);
 
             grid.page = 1;
-            await wait();
+            // await wait();
             fix.detectChanges();
             highlight = grid.nativeElement.querySelector('.' + component.activeClass);
             expect(highlight).not.toBeNull();
