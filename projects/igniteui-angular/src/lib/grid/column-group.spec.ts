@@ -1231,7 +1231,7 @@ describe('IgxGrid - multi-column headers', () => {
         NestedColGroupsTests.testHeadersRendering(fixture);
     });
 
-    it('Should render headers correctly when having nested column groups with huge header text.', fakeAsync(() => {
+    it('Should render headers correctly when having nested column groups with huge header text.', () => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
         fixture.detectChanges();
         const ci = fixture.componentInstance;
@@ -1243,16 +1243,14 @@ describe('IgxGrid - multi-column headers', () => {
             ' leap into electronic typesetting, remaining essentially unchanged.It was popularised' +
             ' in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and' +
             ' more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.';
-
         ci.masterColGroupTitle = ci.firstSlaveColGroupTitle =
             ci.secondSlaveColGroupTitle = ci.addressColTitle = ci.phoneColTitle =
             ci.faxColTitle = ci.cityColTitle = title;
 
-        tick(50);
+        ci.grid.cdr.markForCheck();
         fixture.detectChanges();
-
         NestedColGroupsTests.testHeadersRendering(fixture);
-    }));
+    });
 
     it('Should emit "columnInit" event when having multi-column headers.', () => {
         const fixture = TestBed.createComponent(NestedColumnGroupsGridComponent);
