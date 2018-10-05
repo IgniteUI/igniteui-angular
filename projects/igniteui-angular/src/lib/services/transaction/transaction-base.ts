@@ -1,14 +1,11 @@
-import { IgxTransactionService, ITransaction, IState, TransactionType } from './utilities';
+import { ITransaction, IState, TransactionType } from './utilities';
+import { IgxNoOpTransactionService } from './noop-transaction';
 
-export class IgxTransactionBaseService implements IgxTransactionService {
+export class IgxTransactionBaseService extends IgxNoOpTransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _states: Map<any, IState> = new Map();
-
-    private _isPending = false;
-    private _pendingTransactions: ITransaction[] = [];
-    private _pendingStates: Map<any, IState> = new Map();
 
     public add(transaction: ITransaction, recordRef?: any) {
         const states = this._isPending ? this._pendingStates : this._states;
@@ -39,27 +36,22 @@ export class IgxTransactionBaseService implements IgxTransactionService {
 
     public hasState(id?: any): boolean {
         if (id !== undefined) {
-            return this._states.has(id) || this._pendingStates.has(id);
+            return this._states.has(id) || super.hasState(id);
         }
-        return this._states.size > 0 || this._pendingStates.size > 0;
+        return this._states.size > 0 || super.hasState();
     }
 
     public getAggregatedValue(id: any, mergeChanges = true) {
         //  if we pending changes for this id get the state from pendingStates
-        let state = this._pendingStates.get(id);
+        const state = super.getAggregatedValue(id, mergeChanges) || this._states.get(id);
         if (!state) {
-            //  if there is no pending changes try to get state from aggregated states
-            state = this._states.get(id);
+            return null;
         }
         if (!mergeChanges) {
-            return state || null;
+            return state.value;
         }
         //  if we have state update its recordRef and return the result
-        if (state) {
-            return this.updateValue(state);
-        }
-
-        return null;
+        return this.updateValue(state);
     }
 
     public commit(data: any[]) {
@@ -109,21 +101,6 @@ export class IgxTransactionBaseService implements IgxTransactionService {
             this._transactions.push(undoItem.transaction);
             this._undoStack.push(undoItem);
         }
-    }
-
-    public startPending(): void {
-        this._isPending = true;
-    }
-
-    public endPending(commit: boolean): void {
-        this._isPending = false;
-        if (commit) {
-            this._pendingStates.forEach((s: IState, k: any) => {
-                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
-            });
-        }
-        this._pendingStates.clear();
-        this._pendingTransactions = [];
     }
 
     /**
@@ -203,31 +180,5 @@ export class IgxTransactionBaseService implements IgxTransactionService {
         }
 
         states.set(transaction.id, { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type });
-    }
-
-    /**
-     * Updates the recordRef of the provided state with all the changes in the state. Accepts primitive and object value types
-     * @param state State to update value for
-     * @returns updated value including all the changes in provided state
-     */
-    protected updateValue(state: IState) {
-        if (typeof state.recordRef === 'object') {
-            return Object.assign({}, state.recordRef, state.value);
-        } else {
-            return state.value;
-        }
-    }
-
-    /**
-     * If provided value is object creates a new object and returns it, otherwise returns the value
-     * @param value Value to create copy for
-     * @returns Copy of provided value
-     */
-    protected copyValue(value: any): any {
-        if (typeof value === 'object') {
-            return Object.assign({}, value);
-        } else {
-            return value;
-        }
     }
 }

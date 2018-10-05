@@ -514,7 +514,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.grid.rowEditable) {
             const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
             if (rowCurrentState) {
-                return rowCurrentState.value && rowCurrentState.value[this.column.field];
+                return rowCurrentState && rowCurrentState[this.column.field];
             }
         } else {
             const states = this.grid.transactions.aggregatedState();

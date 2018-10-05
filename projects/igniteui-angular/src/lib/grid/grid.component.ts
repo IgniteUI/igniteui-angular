@@ -166,7 +166,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public get data(): any[] {
-        const aggregatedState = this.transactions.aggregatedState();
         if (this._data && this.transactions.hasState()) {
             const copy = [...this._data];
             copy.forEach((value, index) => {
@@ -175,11 +174,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                     copy[index] = this.transactions.getAggregatedValue(rowId, true);
                 }
             });
-            aggregatedState.forEach((state: IState) => {
-                if (state.type === TransactionType.ADD) {
-                    copy.push(state.value);
-                }
-            });
+            const aggregatedState = this.transactions.aggregatedState();
+            if (aggregatedState) {
+                const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
+                copy.push(addedRows.map(x => x['1'].value));
+            }
             // const transactionsState = this.transactions.aggregatedState();
             // transactionsState.forEach((state, key) => {
             //     const index = this._data.findIndex(v => v === state.recordRef);
@@ -4683,7 +4682,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public repositionRowEditingOverlay(row: IgxGridRowComponent) {
         this.configureRowEditingOverlay(row);
-        this.rowEditingOverlay.reposition();
+        if (!this.rowEditingOverlay.collapsed) {
+            this.rowEditingOverlay.reposition();
+        }
     }
 
     public configureRowEditingOverlay(row: IgxGridRowComponent) {
@@ -4719,7 +4720,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     public endRowTransaction(event, commit?: boolean) {
-        this.gridAPI.submit_value(this.id);
+        // this.gridAPI.submit_value(this.id);
+        if (!this.transactions.aggregatedState() && commit) {
+            const row = this.gridAPI.get_row_inEditMode(this.id);
+            Object.assign(this.data[row.rowIndex], this.transactions.getAggregatedValue(row.rowID));
+        }
         this.closeRowEditingOverlay(commit);
     }
 

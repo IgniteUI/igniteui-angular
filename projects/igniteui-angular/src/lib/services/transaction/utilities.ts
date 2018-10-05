@@ -58,7 +58,7 @@ export interface IgxTransactionService {
      * @param id The id of the record
      * @returns updated recordRef
      */
-    getAggregatedValue(id: any, mergeChanges: boolean): any;
+    getAggregatedValue(id: any, mergeChanges?: boolean): any;
 
     // TODO rename to commit
     /**

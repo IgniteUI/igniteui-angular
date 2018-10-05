@@ -212,10 +212,8 @@ export class IgxGridAPIService {
             //  if edit (new) value is same as old value do nothing here
             if (oldValue && oldValue === editValue) { return; }
 
-            if (grid.transactions.aggregatedState() !== null) {
-                const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
-                grid.transactions.add(transaction, grid.data[rowIndex]);
-            } else {
+            const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
+            if (!grid.transactions.add(transaction, grid.data[rowIndex])) {
                 grid.data[rowIndex][column.field] = args.newValue;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
