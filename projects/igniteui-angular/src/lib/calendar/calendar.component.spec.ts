@@ -852,7 +852,7 @@ describe('IgxCalendar', () => {
         fixture.detectChanges();
 
         let selectedDate = calendar.value;
-        expect(selectedDate).toBe(date);
+        expect(selectedDate).toEqual(date);
 
         calendar.deselectDate(date);
         fixture.detectChanges();
@@ -889,7 +889,8 @@ describe('IgxCalendar', () => {
         const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
         const selectedDates: Date[] = calendar.value as Date[];
         for (const selectedDate of selectedDates) {
-            expect(oddDates.indexOf(selectedDate)).toBeGreaterThan(-1);
+            const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+            expect(fdate).toBeTruthy();
         }
     });
 
@@ -948,7 +949,7 @@ describe('IgxCalendar', () => {
         fixture.detectChanges();
 
         let selectedDate = calendar.value;
-        expect(selectedDate).toBe(date);
+        expect(selectedDate).toEqual(date);
 
         calendar.deselectDate();
         fixture.detectChanges();
