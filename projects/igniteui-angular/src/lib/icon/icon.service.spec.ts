@@ -49,7 +49,7 @@ describe('Icon Service', () => {
         expect(iconService.fontSetClassName(ALIAS)).toBe(MY_FONT);
     });
 
-    it('should add custom svg icon', () => {
+    it('should add custom svg icon from url', () => {
         const iconService = TestBed.get(IgxIconService) as IgxIconService;
         const httpMock = TestBed.get(HttpTestingController);
         const document = TestBed.get(DOCUMENT);
@@ -72,5 +72,22 @@ describe('Icon Service', () => {
 
         // make sure thare are no outstanding requests
         httpMock.verify();
+    });
+
+    it('should add custom svg icon from text', () => {
+        const iconService = TestBed.get(IgxIconService) as IgxIconService;
+        const document = TestBed.get(DOCUMENT);
+
+        const iconName = 'test';
+        const fontSet = 'svg-icons';
+        const iconKey = fontSet + '_' + iconName;
+
+        iconService.addSvgIconFromText(iconName, svgText, fontSet);
+
+        expect(iconService.isSvgIconCached(iconName, fontSet)).toBeTruthy();
+        expect(iconService.getSvgIconKey(iconName, fontSet)).toEqual(iconKey);
+
+        const svgElement = document.querySelector(`svg[id='${iconKey}']`);
+        expect(svgElement).toBeDefined();
     });
 });
