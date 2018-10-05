@@ -566,10 +566,10 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      */
     protected notifyContainerChange() {
         const dcHeight = this.dc.instance._viewContainer.element.nativeElement.getBoundingClientRect().height;
-        const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize
+        const height =  this.dc.instance.notVirtual ? dcHeight : dcHeight - this.igxForItemSize;
         this.onChunkGenerated.emit(height);
         this._recalcScrollBarSize(height);
-        this.cdr.detectChanges();
+        // this.cdr.detectChanges();
     }
 
     /**
