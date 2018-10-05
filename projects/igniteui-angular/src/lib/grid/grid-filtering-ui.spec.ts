@@ -1056,7 +1056,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick();
 
-        expect(grid.rowList.length).toEqual(3);
+        expect(grid.rowList.length).toEqual(2);
     }));
 
     it('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {

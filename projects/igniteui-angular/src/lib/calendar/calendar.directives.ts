@@ -106,10 +106,10 @@ export class IgxCalendarDateDirective {
         }
 
         if (this.calendar.selection === 'single') {
-            this._selected = (this.calendar.value as Date).toDateString() === date.toDateString();
+            this._selected = (this.calendar.value as Date).getTime() === date.getTime();
         } else {
             this._selected = (this.calendar.value as Date[])
-                .some((each) => each.toDateString() === date.toDateString());
+                .some((each) => each.getTime() === date.getTime());
         }
         return this._selected;
     }
