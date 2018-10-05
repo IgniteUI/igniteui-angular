@@ -68,7 +68,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
     /**
      * Sets the CSV export format.
      * ```typescript
-     * this.exportOptions.fileType = 'exp';
+     * this.exportOptions.fileType = CsvFileTypes.TAB;
      * ```
      * @memberof IgxCsvExporterOptions
      */
