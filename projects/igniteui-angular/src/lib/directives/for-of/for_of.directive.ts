@@ -29,7 +29,7 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
-import {IgxScrollInertiaModule} from './../scroll-inertia/scroll_inertia.directive';
+import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -202,11 +202,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @ViewChild(VirtualHelperComponent)
     private virtualHelper: VirtualHelperComponent;
 
-    private _embeddedViews: Array<EmbeddedViewRef<any>> = [];
+    protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
     constructor(
         private _viewContainer: ViewContainerRef,
-        private _template: TemplateRef<NgForOfContext<T>>,
+        protected _template: TemplateRef<NgForOfContext<T>>,
         protected _differs: IterableDiffers,
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
@@ -749,7 +749,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 chunkSize = Math.ceil(parseInt(this.igxForContainerSize, 10) /
                     parseInt(this.igxForItemSize, 10));
                 chunkSize = isNaN(chunkSize) ? 0 : chunkSize;
-                if (chunkSize !== 0 && !this._isScrolledToBottom && !this._isAtBottomIndex) {
+                if (chunkSize !== 0 && !this._isAtBottomIndex) {
                     chunkSize++;
                     this.extraRowApplied = true;
                 } else {
@@ -849,7 +849,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         );
     }
 
-    private _recalcScrollBarSize() {
+    protected _recalcScrollBarSize() {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
         this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
         if (this.igxForScrollOrientation === 'horizontal') {
@@ -931,7 +931,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Recalculates chunkSize and adds/removes elements if need due to the change.
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
-    private applyChunkSizeChange() {
+    protected applyChunkSizeChange() {
         const chunkSize = this.isRemote ? (this.igxForOf ? this.igxForOf.length : 0) : this._calculateChunkSize();
         if (chunkSize > this.state.chunkSize) {
             const diff = chunkSize - this.state.chunkSize;
@@ -1073,6 +1073,50 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllCols(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+    }
+
+    protected addLastElem() {
+        let elemIndex = this.state.startIndex + this.state.chunkSize;
+        if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
+            return;
+        }
+
+        // If the end of the igxForOf array is reached add the last element.
+        // This is to ensure the smooth scrolling by providing one additional non-visible view.
+        if (elemIndex === this.igxForOf.length) {
+            elemIndex = this.igxForOf.length - 1;
+        }
+
+        const input = this.igxForOf[elemIndex];
+        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
+            this._template,
+            { $implicit: input, index: elemIndex }
+        );
+
+        this._embeddedViews.push(embeddedView);
+        this.state.chunkSize++;
+
+    }
+
+    protected _applyChanges(changes: IterableChanges<T>) {
+        this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
+        if (this.igxForOf && this.igxForOf.length && this.dc) {
+            const embeddedViewCopy = Object.assign([], this._embeddedViews);
+            let startIndex = this.state.startIndex;
+            let endIndex = this.state.chunkSize + this.state.startIndex;
+            if (this.isRemote) {
+                startIndex = 0;
+                endIndex = this.igxForOf.length;
+            }
+            for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
+                const input = this.igxForOf[i];
+                const embView = embeddedViewCopy.shift();
+                const cntx = (embView as EmbeddedViewRef<any>).context;
+                cntx.$implicit = input;
+                cntx.index = this.igxForOf.indexOf(input);
+            }
+        }
     }
 }
 /**
