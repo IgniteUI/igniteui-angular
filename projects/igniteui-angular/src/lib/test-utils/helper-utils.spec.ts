@@ -79,7 +79,7 @@ export class HelperUtils {
         }
 
         if (nextRow) {
-            await wait(10);
+            await wait(40);
             HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
             .then(() => { resolve(); });
         } else {
@@ -87,7 +87,7 @@ export class HelperUtils {
             grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
                 next: async() => {
                     nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                    HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                    await HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
                     .then(() => { resolve(); });
                 }
             });

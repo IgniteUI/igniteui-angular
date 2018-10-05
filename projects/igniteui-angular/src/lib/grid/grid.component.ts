@@ -4237,7 +4237,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (isColumn) {
                 directive.getHorizontalScroll().scrollLeft =
                     directive.getColumnScrollLeft(goal) -
-                    parseInt(directive.igxForContainerSize, 10) +
+                    directive.igxForDisplayContainerWidth +
                     parseInt(this.columns[goal].width, 10);
             } else {
                 directive.scrollTo(goal - size + 1);
