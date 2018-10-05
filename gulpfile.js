@@ -110,20 +110,6 @@ gulp.task('copy-git-hooks', () => {
         './.git/hooks/prepare-commit-msg');
 });
 
-gulp.task('watch', () => {
-    gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
-        try {
-            spawnSync('npm run build:lib', {
-                stdio: 'inherit',
-                shell: true,
-                cwd: process.cwd()
-            });
-        } catch (err) {
-            console.error(`Exception: ${err}`);
-        }
-    });
-});
-
 gulp.task('copy-migrations', () => {
     return gulp.src([
             './projects/igniteui-angular/migrations/**/*.json',
