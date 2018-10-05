@@ -1,7 +1,5 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-
-import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../public_api';
@@ -11,7 +9,7 @@ import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSe
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { wait } from '../test-utils/ui-interactions.spec';
 
-describe('IgxGrid - search API', () => {
+fdescribe('IgxGrid - search API', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid, fixNativeElement;
 
@@ -127,7 +125,6 @@ describe('IgxGrid - search API', () => {
             fix.detectChanges();
 
             let count = grid.findNext('Developer', true);
-
 
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             expect(spans.length).toBe(3);
@@ -255,7 +252,7 @@ describe('IgxGrid - search API', () => {
             expect(count).toBe(0);
         });
 
-        it('Should update exact match highlights when filtering.', () => {
+        it('Should update exact match highlights when filtering.', async () => {
             const count = grid.findNext('Software Developer', false, true);
             let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             let highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -263,6 +260,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            await wait();
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -271,10 +269,13 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
+            await wait();
+            fix.detectChanges();
         });
 
-        it('Should update exact match highlights when clearing filter.', () => {
+        it('Should update exact match highlights when clearing filter.', async () => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            await wait();
             fix.detectChanges();
 
             const count = grid.findNext('Software Developer', false, true);
@@ -284,6 +285,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
+            await wait();
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -440,13 +442,15 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Clear filter properly updates the highlights', () => {
+        it('Clear filter properly updates the highlights', async () => {
             let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
             let activeHighlight: any;
             let highlights: any[];
 
             grid.findNext('director');
+            await wait();
+            fix.detectChanges();
 
             gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             activeHighlight = gilbertoDirectorCell.querySelector('.' + component.activeClass);
@@ -455,6 +459,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.filter('Name', 'Tanya', IgxStringFilteringOperand.instance().condition('contains'));
+            await wait();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(0, 'JobTitle').nativeElement;
@@ -464,6 +469,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.clearFilter();
+            await wait();
             fix.detectChanges();
 
             tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
@@ -473,6 +479,8 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
 
             grid.findNext('Director');
+            await wait();
+            fix.detectChanges();
 
             gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             activeHighlight = gilbertoDirectorCell.querySelector('.' + component.activeClass);
@@ -570,10 +578,11 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Active highlight should be updated when filtering is applied', () => {
+        it('Active highlight should be updated when filtering is applied', async () => {
             grid.findNext('developer');
 
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            await wait();
             fix.detectChanges();
 
             const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -582,8 +591,9 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Active highlight should be preserved when all rows are filtered out', () => {
+        it('Active highlight should be preserved when all rows are filtered out', async () => {
             grid.height = '500px';
+            await wait();
             fix.detectChanges();
 
             grid.findNext('casey');
@@ -592,6 +602,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
 
             grid.filter('Name', 'zxxz', IgxStringFilteringOperand.instance().condition('contains'));
+            await wait();
             fix.detectChanges();
 
             let activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -600,6 +611,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('Name');
+            await wait();
             fix.detectChanges();
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -619,11 +631,12 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        it('Should exit edit mode and search a cell', () => {
+        it('Should exit edit mode and search a cell', async () => {
             const cell = grid.getCellByColumn(0, 'Name');
 
             cell.column.editable = true;
             cell.inEditMode = true;
+            await wait();
             fix.detectChanges();
 
             grid.findNext('casey');
@@ -634,6 +647,10 @@ describe('IgxGrid - search API', () => {
             expect(cell.inEditMode).toBeFalsy();
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
+
+            cell.inEditMode = false;
+            await wait(30);
+            fix.detectChanges();
         });
 
         afterAll(() => {
@@ -1092,73 +1109,73 @@ describe('IgxGrid - search API', () => {
         expect(matches).toBe(0);
     });
 
-    function findNext(currentGrid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
+    // function findNext(currentGrid: IgxGridComponent, text: string) {
+    //     const promise = new Promise((resolve) => {
+    //         currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+    //             resolve(state);
+    //         });
 
-            currentGrid.findNext(text);
-        });
-        return promise;
-    }
+    //         currentGrid.findNext(text);
+    //     });
+    //     return promise;
+    // }
 
-    function findPrev(currentGrid: IgxGridComponent, text: string) {
-        const promise = new Promise((resolve) => {
-            currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                resolve(state);
-            });
+    // function findPrev(currentGrid: IgxGridComponent, text: string) {
+    //     const promise = new Promise((resolve) => {
+    //         currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+    //             resolve(state);
+    //         });
 
-            currentGrid.findPrev(text);
-        });
-        return promise;
-    }
+    //         currentGrid.findPrev(text);
+    //     });
+    //     return promise;
+    // }
 
-    function find(currentGrid: IgxGridComponent, text: string, findFunc: Function) {
-        const promise = new Promise((resolve) => {
-            let horizontalSubscription, verticalSubsription = null;
+    // function find(currentGrid: IgxGridComponent, text: string, findFunc: Function) {
+    //     const promise = new Promise((resolve) => {
+    //         let horizontalSubscription, verticalSubsription = null;
 
-            verticalSubsription = currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-                horizontalSubscription.unsubscribe();
-                verticalSubsription.unsubscribe();
-                resolve(state);
-            });
+    //         verticalSubsription = currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+    //             horizontalSubscription.unsubscribe();
+    //             verticalSubsription.unsubscribe();
+    //             resolve(state);
+    //         });
 
-            horizontalSubscription = currentGrid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
-                horizontalSubscription.unsubscribe();
-                verticalSubsription.unsubscribe();
-                resolve(state);
-            });
+    //         horizontalSubscription = currentGrid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
+    //             horizontalSubscription.unsubscribe();
+    //             verticalSubsription.unsubscribe();
+    //             resolve(state);
+    //         });
 
-            findFunc.call(currentGrid, text);
-        });
+    //         findFunc.call(currentGrid, text);
+    //     });
 
-        return promise;
-    }
+    //     return promise;
+    // }
 
     function isInView(index, state: IForOfState): boolean {
         return index > state.startIndex && index <= state.startIndex + state.chunkSize;
     }
 
-    function findNextWithPaging(currentGrid: IgxGridComponent, searchString) {
-        const result = new Promise((resolve) => {
-            currentGrid.onPagingDone.subscribe((value) => {
-                const pageNumber = value.current;
-                resolve(pageNumber);
-            });
-            currentGrid.findNext(searchString);
-        });
-        return result;
-    }
+    // function findNextWithPaging(currentGrid: IgxGridComponent, searchString) {
+    //     const result = new Promise((resolve) => {
+    //         currentGrid.onPagingDone.subscribe((value) => {
+    //             const pageNumber = value.current;
+    //             resolve(pageNumber);
+    //         });
+    //         currentGrid.findNext(searchString);
+    //     });
+    //     return result;
+    // }
 
-    function findPreviousWithPaging(currentGrid: IgxGridComponent, searchString) {
-        const result = new Promise<number>((resolve) => {
-            currentGrid.onPagingDone.subscribe((value) => {
-                const pageNumber = value.current;
-                resolve(pageNumber);
-            });
-            currentGrid.findPrev(searchString);
-        });
-        return result;
-    }
+    // function findPreviousWithPaging(currentGrid: IgxGridComponent, searchString) {
+    //     const result = new Promise<number>((resolve) => {
+    //         currentGrid.onPagingDone.subscribe((value) => {
+    //             const pageNumber = value.current;
+    //             resolve(pageNumber);
+    //         });
+    //         currentGrid.findPrev(searchString);
+    //     });
+    //     return result;
+    // }
 });
