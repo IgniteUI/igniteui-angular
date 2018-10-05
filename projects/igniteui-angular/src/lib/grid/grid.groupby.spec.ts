@@ -575,7 +575,7 @@ describe('IgxGrid - GroupBy', () => {
 
     }));
 
-    fit('should persist last selected cell column index when navigation down through group rows.', async() => {
+    it('should persist last selected cell column index when navigation down through group rows.', async() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '400px';
