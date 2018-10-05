@@ -436,7 +436,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         if (this.igxForScrollOrientation === 'horizontal') {
             this.hScroll.scrollLeft = this.hCache[index] + 1;
         } else {
-            const maxVirtScrollTop = this._virtHeight - this.containerSize;
+            const maxVirtScrollTop = this._virtHeight - (this.containerSize - this.igxForItemSize);
             let nextScrollTop = index * parseInt(this.igxForItemSize, 10);
             if (nextScrollTop > maxVirtScrollTop) {
                 nextScrollTop = maxVirtScrollTop;
@@ -899,7 +899,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
      * Recalculates chunkSize and adds/removes elements if need due to the change.
      * this.state.chunkSize is updated in @addLastElem() or @removeLastElem()
      */
-    private applyChunkSizeChange() {
+    public applyChunkSizeChange() {
         const dataLength = this.igxForOf ? this.igxForOf.length : 0;
         const chunkSize = this.isRemote ? dataLength : Math.min(dataLength, this.igxForVisibleElements);
         const diff = Math.abs(chunkSize - this.state.chunkSize);

@@ -344,6 +344,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     onToggleOpening() {
         this.combo.handleInputChange();
         this.onOpening.emit();
+        this.verticalScrollContainer.applyChunkSizeChange();
     }
 
     /**
