@@ -394,3 +394,13 @@
     $split-arr: append($split-arr, $string);
     @return $split-arr;
 }
+
+/// @ignore
+@function get-theme($themes, $theme)  {
+    $_theme: map-get($themes, $theme);
+    @if $_theme {
+        @return $_theme;
+    } @else {
+        @return call(get-function(#{$theme}-theme));
+    }
+}
