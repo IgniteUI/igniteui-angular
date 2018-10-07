@@ -5,7 +5,7 @@ import { IgxGridComponent, ITransaction, IgxToggleDirective } from 'igniteui-ang
 
 @Component({
     selector: 'app-grid-row-edit',
-    styleUrls: [ `grid-row-edit-sample.component.css`],
+    styleUrls: [`grid-row-edit-sample.component.css`],
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
@@ -14,9 +14,9 @@ export class GridRowEditSampleComponent {
         id: string,
         transactions: any[]
     } = {
-        id: '',
-        transactions: []
-    };
+            id: '',
+            transactions: []
+        };
     data: any[];
     @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
@@ -25,7 +25,13 @@ export class GridRowEditSampleComponent {
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
 
     constructor() {
-        this.data = data;
+        this.data = data.map((e, i) => Object.assign(e, {
+            UnitPrice2: this.getRandomInt(10, 1000),
+            UnitsInStock2: this.getRandomInt(1, 100),
+            UnitsOnOrder2: this.getRandomInt(1, 20),
+            ReorderLevel2: this.getRandomInt(10, 20),
+            Discontinued2: this.getRandomInt(1, 10) % 2 === 0
+        }));
         this.addProductId = this.data.length + 1;
     }
 
@@ -89,7 +95,7 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         this.currentActiveGrid = {
             id: gridID,
-            transactions: (<ITransaction[]>currentGrid.transactions.getTransactionLog()).map( e => {
+            transactions: (<ITransaction[]>currentGrid.transactions.getTransactionLog()).map(e => {
                 return `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`;
             })
         };
