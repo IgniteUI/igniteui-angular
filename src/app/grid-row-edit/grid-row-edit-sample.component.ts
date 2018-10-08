@@ -12,6 +12,7 @@ export class GridRowEditSampleComponent {
     private addProductId: number;
     private pinFlag = false;
     private hideFlag = false;
+    private summaryFlag = false;
     public currentActiveGrid: {
         id: string,
         transactions: any[]
