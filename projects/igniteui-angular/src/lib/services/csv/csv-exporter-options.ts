@@ -1,5 +1,8 @@
 import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base';
 
+/**
+ * Objects of this class are used to configure the CSV exporting process.
+ */
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
     private _valueDelimiter;
@@ -29,18 +32,46 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         return extension;
     }
 
+    /**
+     * Gets the value delimiter which will be used for the exporting operation.
+     * ```typescript
+     * let delimiter = this.exportOptions.valueDelimiter;
+     * ```
+     * @memberof IgxCsvExporterOptions
+     */
     get valueDelimiter() {
         return this._valueDelimiter;
     }
 
+    /**
+     * Sets a value delimiter which will overwrite the default delimiter of the selected export format.
+     * ```typescript
+     * this.exportOptions.valueDelimiter = '|';
+     * ```
+     * @memberof IgxCsvExporterOptions
+     */
     set valueDelimiter(value) {
         this.setDelimiter(value);
     }
 
+    /**
+     * Gets the CSV export format.
+     * ```typescript
+     * let filetype = this.exportOptions.fileType;
+     * ```
+     * @memberof IgxCsvExporterOptions
+     */
     get fileType() {
         return this._fileType;
     }
 
+    /**
+     * Sets the CSV export format.
+     * ```typescript
+     * this.exportOptions.fileType = CsvFileTypes.TAB;
+     * ```
+     * @memberof IgxCsvExporterOptions
+     */
     set fileType(value) {
         this.setFileType(value);
     }
@@ -75,8 +106,21 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
     }
 }
 
+/**
+ * This enumeration is used to configure the default value separator
+ * as well as the default file extension used when performing CSV exporting.
+ */
 export enum CsvFileTypes {
+    /**
+     * Character Separated Values, default separator is "comma", default file extension is .csv
+     */
     CSV,
+    /**
+     * Tab Separated Values, default separator is tab, default file extension is .tsv
+     */
     TSV,
+    /**
+     * Tab Separated Values, default separator is tab, default file extension is .tab
+     */
     TAB
 }
