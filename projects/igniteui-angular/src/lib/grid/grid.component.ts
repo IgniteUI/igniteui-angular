@@ -48,7 +48,7 @@ import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe } from './grid.pipes';
+import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -173,36 +173,36 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Input()
     public get data(): any[] {
-        if (this._data && this.transactions.hasState()) {
-            const copy = [...this._data];
-            copy.forEach((value, index) => {
-                const rowId = this.primaryKey ? copy[index][this.primaryKey] : copy[index];
-                if (this.transactions.hasState(rowId)) {
-                    copy[index] = this.transactions.getAggregatedValue(rowId, true);
-                }
-            });
-            const aggregatedState = this.transactions.aggregatedState();
-            if (aggregatedState) {
-                const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
-                copy.push(addedRows.map(x => x['1'].value));
-            }
-            // const transactionsState = this.transactions.aggregatedState();
-            // transactionsState.forEach((state, key) => {
-            //     const index = this._data.findIndex(v => v === state.recordRef);
-            //     switch (state.type) {
-            //         case TransactionType.ADD: {
-            //             copy.push(state.value);
-            //             break;
-            //         }
-            //         case TransactionType.UPDATE: {
-            //             copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-            //             break;
-            //         }
-            //     }
-            // });
+        // if (this._data && this.transactions.hasState()) {
+        //     const copy = [...this._data];
+        //     copy.forEach((value, index) => {
+        //         const rowId = this.primaryKey ? copy[index][this.primaryKey] : copy[index];
+        //         if (this.transactions.hasState(rowId)) {
+        //             copy[index] = this.transactions.getAggregatedValue(rowId, true);
+        //         }
+        //     });
+        //     const aggregatedState = this.transactions.aggregatedState();
+        //     if (aggregatedState) {
+        //         const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
+        //         copy.push(addedRows.map(x => x['1'].value));
+        //     }
+        //     // const transactionsState = this.transactions.aggregatedState();
+        //     // transactionsState.forEach((state, key) => {
+        //     //     const index = this._data.findIndex(v => v === state.recordRef);
+        //     //     switch (state.type) {
+        //     //         case TransactionType.ADD: {
+        //     //             copy.push(state.value);
+        //     //             break;
+        //     //         }
+        //     //         case TransactionType.UPDATE: {
+        //     //             copy.splice(index, 1, Object.assign({}, copy[index], state.value));
+        //     //             break;
+        //     //         }
+        //     //     }
+        //     // });
 
-            return copy;
-        }
+        //     return copy;
+        // }
         return this._data;
     }
     public set data(value: any[]) {
@@ -2895,9 +2895,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const hasTransactions = this.transactions.aggregatedState() !== null;
             const index = this.data.map((record) => record[this.primaryKey]).indexOf(rowSelector);
-            if (hasTransactions) {
+            if (this.transactions.hasState()) {
                 if (index !== -1) {
                     const transaction: ITransaction = { id: rowSelector, type: TransactionType.DELETE, newValue: null };
                     this.transactions.add(transaction, this.data[index]);
@@ -3483,7 +3482,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected get rowBasedHeight() {
         if (this.data && this.data.length) {
-            return this.data.length * this.rowHeight;
+            return (this.data.length + this.addRowsInTransactionCount()) * this.rowHeight;
         }
         return 0;
     }
@@ -3520,7 +3519,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || this.data.length;
+        const allItems = this.totalItemCount || (this.data.length + this.addRowsInTransactionCount());
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
@@ -3894,7 +3893,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             event.checked ?
                 this.filteredData ?
                     this.selection.add_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.data, this.primaryKey) :
+                    this.selection.get_all_ids(this.dataWithTransactions(), this.primaryKey) :
                 this.filteredData ?
                     this.selection.delete_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selection.get_empty();
@@ -3916,7 +3915,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.data && this.data.length === 0) {
+        if (this.data && (this.data.length + this.addRowsInTransactionCount()) === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
@@ -3948,11 +3947,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.data);
+            this.allRowsSelected = this.selection.are_all_selected(this.id, (this.data.length + this.addRowsInTransactionCount()));
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked = this.selection.are_all_selected(this.id, this.data);
+                    this.headerCheckbox.checked =
+                        this.selection.are_all_selected(this.id, (this.data.length + this.addRowsInTransactionCount()));
                 }
             }
             this.cdr.markForCheck();
@@ -3992,7 +3992,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data) {
-            data = this.data;
+            // data = this.data;
+            this.checkHeaderCheckboxStatus();
+            return;
         }
         switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
             case 'allSelected': {
@@ -4077,7 +4079,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.data, this.primaryKey));
+        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithTransactions(), this.primaryKey));
     }
 
     /**
@@ -4329,6 +4331,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
+        if (!this.filteredData && this.transactions.hasState()) {
+            data = new IgxGridTransactionPipe(this.gridAPI).transform(data, this.id, -1);
+        }
 
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
@@ -4336,7 +4341,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
             data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
         }
-
         return data;
     }
 
@@ -4817,5 +4821,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public get cellInEditMode(): IgxGridCellComponent {
         const cell = this.gridAPI.get_cell_inEditMode(this.id);
         return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
+    }
+
+    private addRowsInTransactionCount(): number {
+        let result = 0;
+        if (this.transactions.hasState()) {
+            result += Array
+                .from(this.transactions.aggregatedState())
+                .filter(state => state['1'].type === TransactionType.ADD)
+                .length;
+            }
+
+        return result;
+    }
+
+    private get dataWithTransactions() {
+        const result = <any>cloneArray(this.data);
+        if (this.transactions.hasState()) {
+            this.transactions.aggregatedState().forEach((state: IState, key) => {
+                if (state.type === TransactionType.ADD) {
+                    result.push(this.transactions.getAggregatedValue(key));
+                }
+            });
+        }
+
+        return result;
     }
 }
