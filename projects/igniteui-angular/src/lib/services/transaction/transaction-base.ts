@@ -43,7 +43,7 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
 
     public getAggregatedValue(id: any, mergeChanges = true) {
         //  if we pending changes for this id get the state from pendingStates
-        const state = super.getAggregatedValue(id, mergeChanges) || this._states.get(id);
+        const state = this._pendingStates.get(id) || this._states.get(id);
         if (!state) {
             return null;
         }
