@@ -8,6 +8,7 @@ import {
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -150,7 +151,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, AfterViewChecked {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck, AfterViewChecked {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -849,6 +850,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         }
+    }
+
+    /**
+     * An @Input property that sets whether the grouped columns should be hidden as well.
+     * The default value is "false"
+     * ```html
+     * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get hideGroupedColumns() {
+        return this._hideGroupedColumns;
+    }
+
+    public set hideGroupedColumns(value: boolean) {
+        if (value) {
+            this.groupingDiffer = this.differs.find(this.groupingExpressions).create();
+        } else {
+            this.groupingDiffer = null;
+        }
+        if (this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(value);
+        }
+
+        this._hideGroupedColumns = value;
     }
 
     /**
@@ -1959,6 +1986,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected groupingDiffer;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -1975,6 +2006,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+    private _hideGroupedColumns = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -2025,6 +2057,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+
+        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
@@ -2142,6 +2178,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this.ngAfterViewChecked = () => {};
     }
+    public ngDoCheck(): void {
+        if (this.groupingDiffer) {
+            const changes = this.groupingDiffer.diff(this.groupingExpressions);
+            if (changes && this.columnList) {
+            changes.forEachAddedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = true;
+            });
+            changes.forEachRemovedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = false;
+            });
+            }
+        }
+      }
 
     /**
      * @hidden
@@ -3359,6 +3410,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const allItems = this.totalItemCount || this.data.length;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    private _setGroupColsVisibility(value) {
+        this.groupingExpressions.forEach((expr) => {
+            const col = this.getColumnByName(expr.fieldName);
+            col.hidden = value;
+        });
     }
 
     /**
