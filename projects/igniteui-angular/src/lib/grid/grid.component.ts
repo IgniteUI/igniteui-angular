@@ -1490,14 +1490,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public get firstEditableColumnIndex(): number {
-        return this.unpinnedColumns.findIndex(e => e.editable);
+        return [...this.pinnedColumns, ...this.unpinnedColumns].findIndex(e => e.editable);
     }
 
     /**
      * @hidden
      */
     public get lastEditableColumnIndex(): number {
-        return this.unpinnedColumns.length - 1 - this.unpinnedColumns.reverse().findIndex(e => e.editable);
+        const orderedColumns = [...this.pinnedColumns, ...this.unpinnedColumns];
+        return orderedColumns.length - 1 - orderedColumns.reverse().findIndex(e => e.editable);
     }
 
     /**
@@ -4754,7 +4755,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const rowList = this.rowList.toArray();
             if ((row.rowID === rowList[lastIndex].rowID ||
                 row.rowID === rowList[lastIndex - 1].rowID ||
-                row.rowID === rowList[lastIndex - 2].rowID)) {
+                row.rowID === rowList[lastIndex - 2].rowID)
+                // if row === rowList[0], then overlay should go to bottom, as otherwise it goes under the grid header
+                && row.rowID !== rowList[0].rowID) {
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
             } else {
