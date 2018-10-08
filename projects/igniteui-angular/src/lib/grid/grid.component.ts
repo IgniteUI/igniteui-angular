@@ -1460,11 +1460,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
+    @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
+    public defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    @ViewChild(IgxRowEditTemplateDirective, { read: IgxRowEditTemplateDirective })
-    public rowEditContainer: IgxRowEditTemplateDirective;
+    @ContentChild(IgxRowEditTemplateDirective, {read: TemplateRef})
+    public rowEditCustom: TemplateRef<any>;
+
+    public get rowEditContainer(): TemplateRef<any> {
+        return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
+    }
 
     // /**
     //  * @hidden
@@ -1960,10 +1966,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public buttonDoneTemplate;
+    public rowEditMessage = `You have uncommited changes on this row`;
 
     @Input()
-    public buttonCancelTemplate;
+    public rowEditButtonCommit = 'Commit';
+
+    @Input()
+    public rowEditButtonDiscard = 'Discard';
 
     /**
      * Emitted when an export process is initiated by the user.
