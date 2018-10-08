@@ -3,10 +3,14 @@
     <section class="sample-content">
         <div class="sample-holder">
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
-                <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
-                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                    <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
-                </igx-chip>
+                <ng-container  *ngFor="let chipElem of chipList; let last = last;">
+                    <igx-chip #chipRef="chip" class="test" [id]="chipElem.id" [draggable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
+                        <span #label [class]="'igx-chip__text'">{{chipElem.text}}</span>
+                        <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
+                            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
+                    </igx-chip>
+                    <igx-icon *ngIf="!last" class="igx-chip__dir-icon" fontSet="material">forward</igx-icon>
+                </ng-container>
             </igx-chips-area>
             <br>
             <button igxButton="flat" (click)="selectChip('City')">Select 'City'</button>

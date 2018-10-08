@@ -229,10 +229,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
      * @hidden
      */
     protected onChipMoveStart(event: IBaseChipEventArgs) {
-        this.chipsList.forEach((chip) => {
-            chip.areaMovingPerforming = true;
-            chip.cdr.detectChanges();
-        });
         this.onMoveStart.emit({
             originalEvent: event.originalEvent,
             owner: this
@@ -243,10 +239,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
      * @hidden
      */
     protected onChipMoveEnd(event: IBaseChipEventArgs) {
-        this.chipsList.forEach((chip) => {
-            chip.areaMovingPerforming = false;
-            chip.cdr.detectChanges();
-        });
         this.onMoveEnd.emit({
             originalEvent: event.originalEvent,
             owner: this

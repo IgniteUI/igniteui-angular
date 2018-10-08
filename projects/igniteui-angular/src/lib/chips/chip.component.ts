@@ -8,7 +8,8 @@
     Output,
     ViewChild,
     AfterViewInit,
-    Renderer2
+    Renderer2,
+    Directive
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
 import {
@@ -72,38 +73,37 @@ export class IgxChipComponent implements AfterViewInit {
     public draggable = false;
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
-     * By default it is set to false.
-     * ```html
-     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
-     * ```
-     */
-    @Input()
-    public removable = false;
-
-    /**
      * An @Input property that defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
      * ```html
-     * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
+     * <igx-chip [id]="chip.id" [draggable]="true" [selectable]="true"></igx-chip>
      * ```
      */
     @Input()
     public selectable = false;
+
+    @Input()
+    public class = '';
 
     /**
      * @hidden
      */
     @HostBinding('attr.class')
     get hostClass(): string {
+        const classes = [];
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-chip--cosy';
+                classes.push('igx-chip--cosy');
+                break;
             case DisplayDensity.compact:
-                return 'igx-chip--compact';
+                classes.push('igx-chip--compact');
+                break;
             default:
-                return 'igx-chip';
+                classes.push('igx-chip');
         }
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
     }
 
     /**
@@ -346,25 +346,10 @@ export class IgxChipComponent implements AfterViewInit {
     }
 
     /**
-     * Returns if the `IgxChipComponent` is the last one among its siblings.
-     * ```typescript
-     * @ViewChild('myChip')
-     * public chip: IgxChipComponent;
-     * ngAfterViewInit(){
-     *     let lastChip = this.chip.isLastChip;
-     * }
-     * ```
-     */
-    public get isLastChip() {
-        return !this.elementRef.nativeElement.nextElementSibling;
-    }
-
-    /**
      * @hidden
      */
     public chipTabindex = 0;
     public removeBtnTabindex = 0;
-    public areaMovingPerforming = false;
 
     private _displayDensity = DisplayDensity.comfortable;
     private _selected = false;
@@ -381,7 +366,7 @@ export class IgxChipComponent implements AfterViewInit {
         this.chipArea.nativeElement.addEventListener('keydown', (args) => {
             this.onChipKeyDown(args);
         });
-        if (this.removable) {
+        if (this.removeBtn.nativeElement.children.length) {
             this.removeBtn.nativeElement.addEventListener('keydown', (args) => {
                 this.onRemoveBtnKeyDown(args);
             });
@@ -403,7 +388,7 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        if ((event.key === 'Delete' || event.key === 'Del') && this.removable) {
+        if ((event.key === 'Delete' || event.key === 'Del') && this.removeBtn.nativeElement.children.length) {
             this.onRemove.emit({
                 originalEvent: event,
                 owner: this
@@ -573,3 +558,10 @@ export class IgxChipComponent implements AfterViewInit {
     }
     // End chip igxDrop behaviour
 }
+
+/* tslint:disable directive-selector */
+@Directive({
+    selector: 'igx-chip',
+    exportAs: 'chip'
+})
+export class IgxChipComponentExporterDirective {}

@@ -40,22 +40,19 @@ public ngOnInit() {
 
 #### Removing
 
-The `remove button` is a part of the chip as well. You can control the remove button visibility by setting the `removable` boolean option. An event `onRemove` gets fired when the end-user deletes a chip.
+A remove button can be defined if you need to implement removing logic. It can be done by applying the `igxRemoveButton` directive to any element being an icon or a button. After that the `igxChip` will handle all interactions with it like clicking and will trigger an event `onRemove` when the end-user wants to delete a chip.
 
 ```html
 <igx-chips-area #chipsArea>
-    <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [removable]="'true'" (onRemove)="chipRemoved($event)">
+    <igx-chip *ngFor="let chip of chipList" [id]="chip.id" (onRemove)="chipRemoved($event)">
         <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+        <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
+            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
     </igx-chip>
 </igx-chips-area>
 ```
 
 ```ts
-public ngOnInit() {
-    chipsArea.forEach((chip) => {
-        chip.removable = true;
-    });
-}
 
 public chipRemoved(event) {
     this.chipList = this.chipList.filter((item) => {
@@ -100,9 +97,9 @@ public chipsOrderChanged(event) {
 
 #### Chip Templates
 
-The `IgxChipComponent`'s main structure consists of chip content, a `remove button`, a `prefix`, a `suffix` and a `connector`. All of those elements are templatable except the `remove button`.
+The `IgxChipComponent`'s main structure consists of chip content, a `remove button`, a `prefix` and a `suffix`. All of those elements are templatable except the `remove button`.
 
-The content of the chip is taken by the content defined inside the chip template except elements that define the `prefix`, `suffix` or `connector` of the chip. You can define any type of content you need.
+The content of the chip is taken by the content defined inside the chip template except elements that define the `prefix`, `suffix` or `remove button` of the chip. You can define any type of content you need.
 
 The `prefix` and `suffix` are also elements inside the actual chip area where they can be templated by your preference. The way they can be specified is by using the `IgxPrefix` and `IxgSuffix` directives respectively.
 
@@ -115,26 +112,6 @@ Example of using an icon for a `prefix`, text for a `label` and a custom icon bu
     <span igxSuffix *ngIf="removable" igxButton="icon" (click)="onClick()">
         <igx-icon fontSet="material">close</igx-icon>
     </span>
-</igx-chip>
-```
-
-The `connectors` of the `igxChip` are fully templatable and are positioned after each chip. Their purpose is to provide a way to link two chips next to each other with an icon/text or anything you would like to use. The last chip (most right) does not have a connector applied. Connectors hide while dragging chips around and show again when interactions with the chips have finished. The connector is defined by using the `IgxConnector` directive.
-
-Example of using a prefix connector:
-
-```html
-<igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-    <span igxConnector> -> </span>
-</igx-chip>
-```
-
-Example of using a suffix connector:
-
-```html
-<igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-    <span igxSuffixConnector> -> </span>
 </igx-chip>
 ```
 
@@ -164,7 +141,6 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 |:----------|:-------------:|:------|
 | `id` | `string` | Unique identifier of the component. |
 | `draggable ` | `boolean` | Defines if the chip can be dragged in order to change its position. |
-| `removable ` | `boolean` | Defines if the chip should render remove button and throw remove events. |
 | `selectable ` | `boolen` | Defines if the chip can be selected on click or through navigation. |
 | `selected` | `boolen` | Sets if the chip is selected. |
 | `disabled` | `boolean` | Defines if the chip is disabled. |
