@@ -77,6 +77,11 @@ export interface IGridEditEventArgs {
     newValue: any;
 }
 
+export interface IGridRowEditEventArgs {
+    row: IgxGridRowComponent;
+    state: IState;
+}
+
 export interface IPinColumnEventArgs {
     column: IgxColumnComponent;
     insertAtIndex: number;
@@ -1012,6 +1017,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Output()
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
+
+    @Output()
+    public onRowEditDone = new EventEmitter<IGridRowEditEventArgs>();
+
+    @Output()
+    public onRowEditCancel = new EventEmitter<IGridRowEditEventArgs>();
 
     /**
      * Emitted when a grid column is initialized. Returns the column object.
@@ -4770,6 +4781,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     public closeRowEditingOverlay(commit?: boolean) {
         this.transactions.endPending(commit);
+        const row = this.gridAPI.get_row_inEditMode(this.id);
+        if (row) {
+            const state = this.transactions.getAggregatedValue(row.rowID);
+            this.onRowEditCancel.emit(state);
+        }
         this.rowEditingOverlay.close();
     }
 
@@ -4778,7 +4794,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const row = this.gridAPI.get_row_inEditMode(this.id);
         this.gridAPI.submit_value(this.id);
         if (!this.transactions.aggregatedState() && commit) {
-            Object.assign(this.data[row.rowIndex], this.transactions.getAggregatedValue(row.rowID));
+            const state = this.transactions.getAggregatedValue(row.rowID);
+            Object.assign(this.data[row.rowIndex], state);
+            this.onRowEditDone.emit(state);
         }
         this.closeRowEditingOverlay(commit);
     }
