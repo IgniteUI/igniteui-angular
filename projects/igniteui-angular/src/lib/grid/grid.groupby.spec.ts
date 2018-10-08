@@ -1889,6 +1889,70 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupDropArea.nativeElement.textContent.trim()).toEqual('Custom template');
     });
 
+    it('should hide all the grouped columns when hideGroupedColumns option is initially set to "true"', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        fix.detectChanges();
+        grid.groupBy([
+            {fieldName: 'Downloads', dir: SortingDirection.Asc},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+        ]);
+        fix.detectChanges();
+        // the two grouped columns should be hidden
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+        // these should be visible
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+    });
+
+    it('should show all the grid columns when hideGroupedColumns option is set to "false" at runtime, after being "true" initially', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.hideGroupedColumns = true;
+        fix.detectChanges();
+        grid.groupBy([
+            {fieldName: 'Downloads', dir: SortingDirection.Asc},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+        ]);
+        fix.detectChanges();
+        // the two grouped columns should be hidden initially
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+        grid.hideGroupedColumns = false;
+        fix.detectChanges();
+        // all columns, whether grouped or ungrouped, should be visible
+        expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(false);
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+    });
+
+    it('should hide the grouped columns when hideGroupedColumns option is set to "true" at runtime, after being "false" initially', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy([
+            {fieldName: 'Downloads', dir: SortingDirection.Asc},
+            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+        ]);
+        fix.detectChanges();
+         // all columns, whether grouped or ungrouped, should be visible
+         expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+         expect(grid.getColumnByName('ProductName').hidden).toBe(false);
+         expect(grid.getColumnByName('ID').hidden).toBe(false);
+         expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+         expect(grid.getColumnByName('Released').hidden).toBe(false);
+         grid.hideGroupedColumns = true;
+         fix.detectChanges();
+          // the two grouped columns should now be hidden
+        expect(grid.getColumnByName('Downloads').hidden).toBe(true);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(true);
+    });
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));

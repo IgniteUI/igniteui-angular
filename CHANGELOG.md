@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. This means that the icon name should be explicitly defined between the opening and closing tags.
     - Added support for custom SVG icons.
 - `igxGrid`:
+    - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`:
