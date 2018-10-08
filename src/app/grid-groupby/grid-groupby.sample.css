@@ -1,3 +1,7 @@
 .wrapper {
     margin: 24px;
 }
+.separator {
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
