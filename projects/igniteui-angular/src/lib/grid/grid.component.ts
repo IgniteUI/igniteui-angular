@@ -1479,14 +1479,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public get firstEditableColumnIndex(): number {
-        return this.unpinnedColumns.findIndex(e => e.editable);
+        return this.columns.findIndex(e => e.editable);
     }
 
     /**
      * @hidden
      */
     public get lastEditableColumnIndex(): number {
-        return this.unpinnedColumns.length - 1 - this.unpinnedColumns.reverse().findIndex(e => e.editable);
+        return this.columns.length - 1 - this.columns.reverse().findIndex(e => e.editable);
     }
 
     /**
