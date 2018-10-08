@@ -346,8 +346,8 @@ export class IgxGridRowComponent implements DoCheck {
         }
         (this.grid as any)._pipeTrigger++;
         this.cdr.markForCheck();
-        this.grid.refreshSearch();
 
+        this.grid.refreshSearch();
         if (this.grid.data.length % this.grid.perPage === 0 && this.grid.isLastPage && this.grid.page !== 0) {
             this.grid.page--;
         }
