@@ -10,6 +10,8 @@ import { IgxGridComponent, ITransaction, IgxToggleDirective } from 'igniteui-ang
 })
 export class GridRowEditSampleComponent {
     private addProductId: number;
+    private pinFlag = false;
+    private hideFlag = false;
     public currentActiveGrid: {
         id: string,
         transactions: any[]
