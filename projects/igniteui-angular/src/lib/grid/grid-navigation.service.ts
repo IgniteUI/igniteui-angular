@@ -76,7 +76,7 @@ export class IgxGridNavigationService {
                 if (this.isColumnLeftFullyVisible(visibleColumnIndex + 1)) {
                     element.nextElementSibling.firstElementChild.focus();
                 } else {
-                this.horizontalScroll(rowIndex).getHorizontalScroll().scrollLeft = 0;
+                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
                 this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -119,11 +119,11 @@ export class IgxGridNavigationService {
             element.parentNode.previousElementSibling.focus();
         } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             (document.activeElement as any).blur();
-            this.horizontalScroll(rowIndex).getHorizontalScroll().scrollLeft =
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
                 this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
             this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
-            .subscribe((state) => {
+            .subscribe(() => {
                 const currentCell = this.grid.nativeElement.querySelector(
                     `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
                     currentCell.previousElementSibling.focus();
@@ -240,34 +240,35 @@ export class IgxGridNavigationService {
 
     private focusPreviousElement(currentRowEl, visibleColumnIndex) {
         if (currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
-            currentRowEl.previousElementSibling.querySelector('.igx-grid__group-content').focus();
+            currentRowEl.previousElementSibling.focus();
         } else {
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
                 currentRowEl.previousElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
                 return;
             }
+            const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
             const cells = currentRowEl.previousElementSibling.querySelectorAll(`igx-grid-cell`);
-                const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
-                const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
-                const middle = (firstVisibleIndex + lastVisibleIndex ) / 2;
-                if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
-                    this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
-                    this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
-                } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
-                    this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
-                    (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex + 1) -
-                    this.displayContainerWidth);
-                }
-                this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    currentRowEl.previousElementSibling
-                    .querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
-                });
+            const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
+            const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
+            const middle = (firstVisibleIndex + lastVisibleIndex ) / 2;
+            if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
+            } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
+                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+                (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index + 1) -
+                this.displayContainerWidth);
+            }
+            this.grid.parentVirtDir.onChunkLoad
+            .pipe(first())
+            .subscribe(() => {
+                currentRowEl.previousElementSibling
+                .querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+            });
         }
     }
 
-    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
+    public navigateDown(rowElement, currentRowIndex, visibleColumnIndex, tabKey = false) {
         if (!rowElement.nextElementSibling) {
             return;
         }
@@ -288,17 +289,21 @@ export class IgxGridNavigationService {
                     rowElement = rowElement = this.grid.nativeElement.querySelector(
                         `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
                 }
-                this.focusNextElement(rowElement, visibleColumnIndex);
+                this.focusNextElement(rowElement, visibleColumnIndex, tabKey);
             });
         } else {
-            this.focusNextElement(rowElement, visibleColumnIndex);
+            this.focusNextElement(rowElement, visibleColumnIndex, tabKey);
         }
     }
 
-    private focusNextElement(rowElement, visibleColumnIndex) {
+    private focusNextElement(rowElement, visibleColumnIndex, tabKey = false) {
         if (rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
-            rowElement.nextElementSibling.querySelector('.igx-grid__group-content').focus();
+           rowElement.nextElementSibling.focus();
         } else {
+            if (tabKey && rowElement.nextElementSibling.querySelector('.igx-grid__cbx-selection')) {
+                rowElement.nextElementSibling.querySelector('.igx-grid__cbx-selection').querySelector('.igx-checkbox__input').focus();
+                return;
+            }
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
                 rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
                 return;
@@ -362,7 +367,7 @@ export class IgxGridNavigationService {
     public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.grid.rowList.find(row => row.index === rowIndex + 1)) {
-                this.navigateDown(currentRowEl, rowIndex, 0);
+                this.navigateDown(currentRowEl, rowIndex, 0, true);
             }
         } else {
             const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
@@ -374,8 +379,14 @@ export class IgxGridNavigationService {
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
         if (visibleColumnIndex === 0) {
-            this.navigateUp(currentRowEl, rowIndex,
-                this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+            if (currentRowEl.querySelector('.igx-grid__cbx-selection')) {
+                console.log(currentRowEl.querySelector('.igx-grid__cbx-selection'));
+                console.log(currentRowEl.querySelector('.igx-grid__cbx-selection').querySelector('.igx-checkbox__input'));
+                currentRowEl.querySelector('.igx-grid__cbx-selection').querySelector('.igx-checkbox__input').focus();
+            } else {
+                this.navigateUp(currentRowEl, rowIndex,
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+            }
         } else {
             const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             if (cell) {

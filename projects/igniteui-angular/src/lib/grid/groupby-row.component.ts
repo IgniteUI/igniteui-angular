@@ -11,7 +11,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './api.service';
-import { IgxGridComponent } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,6 +100,7 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    @HostBinding('attr.tabindex')
     public tabindex = 0;
 
     /**
@@ -123,7 +123,7 @@ export class IgxGridGroupByRowComponent {
      * const groupRowElement = this.nativeElement;
      * ```
      */
-    get nativeElement(): HTMLElement {
+    get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -155,17 +155,34 @@ export class IgxGridGroupByRowComponent {
     public onKeydown(event) {
         event.preventDefault();
         event.stopPropagation();
+        const shift = event.shiftKey;
         if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Space' || event.key === 'Enter') {
             this.grid.toggleGroup(this.groupRow);
             return;
         }
-        const colIndex = this._getPrevSelectedColIndex() || 0;
+        const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex || 0;
         if (event.key.toLowerCase() === 'arrowdown') {
             this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
         }
         if (event.key.toLowerCase() === 'arrowup') {
             this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+        }
+        if (event.key.toLowerCase() === 'tab') {
+            if (shift) {
+/*                 if (event.target.classList.contains('igx-grid__group-content')) {
+                    this.nativeElement.querySelector('.igx-grid__grouping-indicator').focus();
+                } else { */
+                    this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                // }
+            } else {
+/*                 if (event.target.classList.contains('igx-grid__grouping-indicator')) {
+                    this.groupContent.nativeElement.focus();
+                } else { */
+                    this.grid.navigation.navigateDown(this.nativeElement, this.index, 0, true);
+                // }
+            }
         }
     }
 
@@ -209,11 +226,11 @@ export class IgxGridGroupByRowComponent {
             return cell.columnID;
         }
     }
-
+/*
     private _getPrevSelectedColIndex() {
         const prevCell = this.selection.first_item(this.gridID + '-prev-cell');
         if (prevCell) {
             return prevCell.columnID;
         }
-    }
+    } */
 }

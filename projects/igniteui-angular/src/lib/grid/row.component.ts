@@ -19,7 +19,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
+import { first } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,12 +87,6 @@ export class IgxGridRowComponent implements DoCheck {
     get rowHeight() {
         return this.grid.rowHeight;
     }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
 
     /**
      * @hidden
@@ -181,7 +175,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -242,6 +236,21 @@ export class IgxGridRowComponent implements DoCheck {
     @HostListener('blur', ['$event'])
     public onBlur(event) {
         this.isFocused = false;
+    }
+
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event) {
+        if (this.rowSelectable && event.key.toLowerCase() === 'tab') {
+            event.preventDefault();
+            event.stopPropagation();
+            const shift = event.shiftKey;
+            if (shift) {
+                this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+            } else {
+                this.grid.navigation.onKeydownHome(this.index);
+            }
+        }
     }
 
     /**

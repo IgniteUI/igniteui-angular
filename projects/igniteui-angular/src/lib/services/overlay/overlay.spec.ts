@@ -6,8 +6,8 @@ import {
     ViewChild,
     ComponentRef
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { async as asyncWrapper, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
 import { IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './../../directives/toggle/toggle.directive';
@@ -740,6 +740,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
+
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
         it('Should render igx-overlay on top of all other views/components (any previously existing html on the page) etc.',
@@ -881,6 +882,7 @@ describe('igxOverlay', () => {
         }));
 
         it('Should show a component bigger than the visible window as centered and scrollbars should not appear.', fakeAsync(() => {
+
             // overlay div is forced to has width and height equal to 0. This will prevent body
             // to show any scrollbars whatever the size of the component is.
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -894,6 +896,7 @@ describe('igxOverlay', () => {
             const componentEl = overlayWrapper.children[0].children[0];
             const wrapperRect = overlayWrapper.getBoundingClientRect();
             const componentRect = componentEl.getBoundingClientRect();
+
             // display:flex parent will keep the content container within the wrapper in width (x, left = 0, right = width)
             expect(componentRect.left).toBe(0);
             expect(wrapperRect.width).toEqual(wrapperRect.right);
@@ -903,6 +906,7 @@ describe('igxOverlay', () => {
             hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
             expect(hasScrollbar).toBeFalsy();
         }));
+
         // 1.1.1 Global Css
         it('Should apply the css class on igx-overlay component div wrapper.' +
             'Test defaults: When no positionStrategy is passed use GlobalPositionStrategy with default PositionSettings and css class.',
@@ -912,6 +916,7 @@ describe('igxOverlay', () => {
                 fixture.componentInstance.overlay.show(SimpleDynamicComponent);
                 tick();
                 fixture.detectChanges();
+
                 // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
                 const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
                 expect(overlayWrapper).toBeTruthy();
@@ -1136,7 +1141,6 @@ describe('igxOverlay', () => {
             const overlay = fixture.componentInstance.overlay;
 
             overlay.show(SimpleDynamicComponent, overlaySettings);
-            const strategy = new ConnectedPositioningStrategy();
 
             tick();
             const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
@@ -1268,6 +1272,7 @@ describe('igxOverlay', () => {
             scrollStrat.detach();
             document.documentElement.scrollTop = 0;
         }));
+
         // 1.2.1 Connected Css
         it('Should apply css class on igx-overlay component div wrapper.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1281,6 +1286,7 @@ describe('igxOverlay', () => {
 
             fixture.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
+
             // overlay container IS NOT a child of the debugElement (attached to body, not app-root)
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
             expect(overlayWrapper).toBeTruthy();
@@ -1291,6 +1297,7 @@ describe('igxOverlay', () => {
         it('Should position component based on Point only when connected position strategy is used.', () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();
+
             // for a Point(300,300);
             const expectedTopForPoint: Array<string> = ['240px', '270px', '300px'];  // top/middle/bottom/
             const expectedLeftForPoint: Array<string> = ['240px', '270px', '300px']; // left/center/right/
@@ -1310,6 +1317,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             for (let i = 0; i < horAl.length; i++) {
                 for (let j = 0; j < verAl.length; j++) {
+
                     // start Point is static Top/Left at 300/300
                     const positionSettings2 = {
                         target: new Point(300, 300),
@@ -1333,6 +1341,7 @@ describe('igxOverlay', () => {
         it('Should position component based on element and start point when connected position strategy is used.', () => {
             const fixture = TestBed.createComponent(TopLeftOffsetComponent);
             fixture.detectChanges();
+
             // for a Point(300,300);
             const expectedTopForPoint: Array<number> = [240, 270, 300];  // top/middle/bottom/
             const expectedLeftForPoint: Array<number> = [240, 270, 300]; // left/center/right/
@@ -1351,6 +1360,7 @@ describe('igxOverlay', () => {
             const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('300_button')[0];
 
             fixture.detectChanges();
+
             // loop trough and test all possible combinations (count 81) for StartPoint and Direction.
             for (let lsp = 0; lsp < horAl.length; lsp++) {
                 for (let tsp = 0; tsp < verAl.length; tsp++) {
@@ -1522,7 +1532,6 @@ describe('igxOverlay', () => {
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            // expect(wrapperContent.children.length).toEqual(1);
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
@@ -1833,7 +1842,6 @@ describe('igxOverlay', () => {
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
-                // const offset = 16;
                 const button = fix.componentInstance.buttonElement.nativeElement;
                 const positionSettings: PositionSettings = {
                     horizontalDirection: HorizontalAlignment.Left,
@@ -2111,6 +2119,7 @@ describe('igxOverlay', () => {
 
         // 2.4. Scroll Strategy - Absolute.
         it('Should scroll everything except component when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
+
             // Should behave as NoOpScrollStrategy
             const fixture = TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
@@ -2196,6 +2205,7 @@ describe('igxOverlay', () => {
         }));
 
         it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
+
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             function _handler(event) {
@@ -2352,6 +2362,7 @@ describe('igxOverlay', () => {
         }));
 
         it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', fakeAsync(() => {
+
             // Utility handler meant for later detachment
             function _handler(event) {
                 if (event.key === targetButton) {
