@@ -330,6 +330,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
                 //  re-init cache.
+                if (!this.igxForOf) {
+                    return;
+                }
                 this.initSizesCache(this.igxForOf);
                 this._zone.run(() => {
                     this._applyChanges(changes);
@@ -564,13 +567,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const view = this._embeddedViews[i];
             const rNode = view.rootNodes.find((node) => node.nodeType === Node.ELEMENT_NODE);
             if (rNode) {
-                updatedHeights.push(rNode.clientHeight);
+                const h = Math.max(rNode.clientHeight, parseInt(this.igxForItemSize, 10));
+                updatedHeights.push(h);
                 const index = this.state.startIndex + i;
                 if (!this.igxForOf[index]) {
                     continue;
                 }
                 const oldVal = dimension === 'height' ? this.heightCache[index] : this.igxForOf[index][dimension];
-                const newVal = dimension === 'height' ?  rNode.clientHeight : rNode.clientWidth;
+                const newVal = dimension === 'height' ?  h : rNode.clientWidth;
                 if (dimension === 'height') {
                     this.heightCache[index] = newVal;
                 } else {
@@ -855,6 +859,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
              } else {
                  arr.push(item);
                  length = dimension === 'width' ? arr.length + 1 : arr.length;
+                 if (dimension === 'height' && sum - availableSize < parseInt(this.igxForItemSize, 10)) {
+                     // add one more for vertical smooth scroll
+                     length++;
+                 }
                  arr.splice(0, 1);
              }
              if (length > maxLength) {
@@ -941,16 +949,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected addLastElem() {
         let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (!this.isRemote && (!this.igxForOf || elemIndex > this.igxForOf.length)) {
+        if (!this.isRemote && !this.igxForOf) {
             return;
         }
 
-        // If the end of the igxForOf array is reached add the last element.
-        // This is to ensure the smooth scrolling by providing one additional non-visible view.
-        if (elemIndex === this.igxForOf.length) {
-            elemIndex = this.igxForOf.length - 1;
+        if (elemIndex >= this.igxForOf.length) {
+            elemIndex = this.igxForOf.length - this.state.chunkSize;
         }
-
         const input = this.igxForOf[elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,

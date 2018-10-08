@@ -1085,7 +1085,7 @@ describe('IgxGrid - multi-column headers', () => {
         grid.clearFilter('PostalCode');
         fixture.detectChanges();
 
-        expect(grid.rowList.length).toEqual(8);
+        expect(grid.rowList.length).toEqual(9);
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
 
@@ -1100,7 +1100,7 @@ describe('IgxGrid - multi-column headers', () => {
         grid.clearFilter('ContactTitle');
         fixture.detectChanges();
 
-        expect(grid.rowList.length).toEqual(8);
+        expect(grid.rowList.length).toEqual(9);
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
     });
