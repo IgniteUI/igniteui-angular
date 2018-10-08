@@ -5,72 +5,34 @@
 @import 'app-palettes';
 @import 'app-layout';
 
-$exclude: (
-    // igx-avatar,
-    // igx-badge,
-    // igx-button,
-    // igx-button-group,
-    // igx-calendar,
-    // igx-card,
-    // igx-carousel,
-    // igx-checkbox,
-    // igx-date-picker,
-    // igx-dialog,
-    // igx-grid,
-    // igx-filtering,
-    // igx-icon,
-    // igx-form-group,
-    // igx-input-group,
-    // igx-list,
-    // igx-navbar,
-    // igx-overlay,
-    // igx-nav-drawer,
-    // igx-paginator,
-    // progress-linear,
-    // progress-circular,
-    // igx-radio,
-    // igx-ripple,
-    // igx-slider,
-    // igx-snackbar,
-    // igx-switch,
-    // igx-bottom-nav,
-    // igx-toast
-);
-
 // Generating a theme
 @include igx-core();
-@include igx-theme($default-palette, $exclude, $legacy-support: true);
+@include igx-theme($default-palette);
 
-/// Typography samples
-// $button-type-style: igx-type-style(
-//     $font-weight: 700,
-//     $text-transform: lowercase,
-//     $font-family: 'Roboto'
-// );
+// Button Themes
+$blue-green: #2ec4b6;
+$bright-yellow: #ff9f1c;
+$smoky-black: #0c120c;
+$boston-red: #d00000;
 
-// $h5-style: igx-type-style($font-size: rem(18px));
-// $overline-style: igx-type-style($font-family: 'Dosis', $font-size: 14px);
-// $my-type-scale: igx-type-scale($overline: $caption-style, $button: $button-type-style);
-// $my-type-scale-1: igx-type-scale($h5: $h5-style, $overline: $overline-style);
-
-// @include igx-typography($type-scale: $my-type-scale);
-
-// @include igx-color-classes('background-color');
-
-// .my-cool-card {
-//     @include igx-card-typography($my-type-scale-1, (title: 'overline'));
-// }
-
-// .h1-mod {
-//     @include igx-type-style($my-type-scale, 'h1') {
-//         font-family: 'Arial', serif;
-//         color: red;
-//     }
-// }
-
-$tooltip-theme: igx-tooltip-theme(
-    $background: orange,
-    $text-color: red
+$red-sox-button: igx-button-theme(
+    $flat-background: $boston-red,
+    $raised-background: $boston-red,
+    $fab-background: $boston-red,
+    $icon-background: $boston-red
 );
 
-// @include igx-tooltip($tooltip-theme);
+$smoky-black-button: igx-button-theme(
+    $flat-background: $smoky-black,
+    $raised-background: $smoky-black,
+    $fab-background: $smoky-black,
+    $icon-background: $smoky-black
+);
+
+.red-sox-button {
+    @include igx-button($red-sox-button);
+}
+
+.smoky-black-button {
+    @include igx-button($smoky-black-button);
+}
