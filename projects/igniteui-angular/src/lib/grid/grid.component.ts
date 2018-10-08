@@ -1536,11 +1536,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get bannerClass(): string {
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
-                return "igx-banner--cosy";
+                return 'igx-banner--cosy';
             case DisplayDensity.compact:
-                return "igx-banner--compact";
+                return 'igx-banner--compact';
             default:
-                return "igx-banner";
+                return 'igx-banner';
         }
     }
 
@@ -4743,7 +4743,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const rowList = this.rowList.toArray();
             if ((row.rowID === rowList[lastIndex].rowID ||
                 row.rowID === rowList[lastIndex - 1].rowID ||
-                row.rowID === rowList[lastIndex - 2].rowID)) {
+                row.rowID === rowList[lastIndex - 2].rowID)
+                // if row === rowList[0], then overlay should go to bottom, as otherwise it goes under the grid header
+                && row.rowID !== rowList[0].rowID) {
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
             } else {
