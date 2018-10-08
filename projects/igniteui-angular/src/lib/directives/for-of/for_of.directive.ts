@@ -616,7 +616,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         // floating point number calculations are flawed so we need to handle rounding errors.
         let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         const endingIndex = this.state.chunkSize + currIndex;
-        if (endingIndex > this.igxForOf.length) {
+        if (endingIndex > this.igxForOf.length && !this.isRemote) {
             currIndex = this.igxForOf.length - this.state.chunkSize;
         }
 
