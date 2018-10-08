@@ -39,11 +39,11 @@
             <div class="list-sample">
                 <igx-list>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
-                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let item of navItems | igxFilter: fo1">
+                    <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems | igxFilter: fo1">
                         <div class="item">
                             <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
                             <span igxLabel>{{item.text}}</span>
-                            <igx-icon name="star" [class.favorite]="item.favorite"></igx-icon>
+                            <igx-icon [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
@@ -62,7 +62,7 @@
                                 <p class="name">{{navItem.text}}</p>
                                 <span class="phone">{{navItem.phone}}</span>
                             </div>
-                            <igx-icon name="chevron_right"></igx-icon>
+                            <igx-icon>chevron_right</igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
@@ -90,7 +90,7 @@
                     <igx-list-item *ngFor="let fruit of fruits">
                         <div class="item" [attr.data-fruit-id]="fruit.id">
                             <span>{{ fruit.name }}</span>
-                            <igx-icon class="delete-item" name="close" (click)="deleteFruit(fruit.id)">X</igx-icon>
+                            <igx-icon class="delete-item" (click)="deleteFruit(fruit.id)">close</igx-icon>
                         </div>
                     </igx-list-item>
                 </igx-list>
@@ -99,7 +99,7 @@
                 </div>
                 <button igxButton="fab" igxButtonColor="white" igxButtonBackground="#0375be" igRipple="white" (click)="addFruitDialog.open()"
                         [hidden]="fruits.length === 0" style="position: absolute; bottom: 24px; right: 24px">
-                    <igx-icon fontSet="material" name="add"></igx-icon>
+                    <igx-icon fontSet="material">add</igx-icon>
                 </button>
             </div>
         </article>
@@ -133,6 +133,7 @@
                 </igx-list>
             </div>
         </article>
+        
     </section>
 
 </div>

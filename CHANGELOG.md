@@ -3,9 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
--`igxGrid`:
-- `onGroupingChanged` - A new event, emitted when a column or multiple columns get grouped or ungrouped. Returns the `ISortingExpression` related to the grouping or ungrouping operation.
-- **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
+- `igxIcon`:
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. This means that the icon name should be explicitly defined between the opening and closing tags.
+    - Added support for custom SVG icons.
+- `igxGrid`:
+    - `onGroupingChanged` - A new event, emitted when a column or multiple columns get grouped or ungrouped. Returns the `ISortingExpression` related to the grouping or ungrouping operation.
+    - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
+    - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`:
     - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
@@ -56,6 +60,26 @@ All notable changes for each version of this project will be documented in this 
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
 - `igxExpansionPanel`:
     - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html).
+- `IgxList`:
+    - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
+    - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
+        - **item** of type `IgxListItemComponent`
+        - **direction** of type `IgxListPanState`
+        - **keepItem** of type `boolean`
+- `igxTooltip` and `igxTooltipTarget` directives:
+    - Added `IgxTooltipDirective`.
+        - An element that uses the `igxTooltip` directive is used as a tooltip for a specific target (anchor).
+        - Extends `IgxToggleDirective`.
+        - Exported with the name **tooltip**.
+    - Added `IgxTooltipTargetDirective`.
+        - An element that uses the `igxTooltipTarget` directive is used as a target (anchor) for a specific tooltip.
+        - Extends `IgxToggleActionDirective`.
+        - Exported with the name **tooltipTarget**.
+    - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `IgxDrag` and `IgxDrop` directives available.
+    - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
+    - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element. 
+    - Combined they provide a way to move elements around the page by dragging them. For more detail see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/dragdrop/README.md).
 
 ## 6.1.5
 - **General**

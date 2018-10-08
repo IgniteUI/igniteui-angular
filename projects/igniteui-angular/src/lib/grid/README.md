@@ -171,6 +171,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
 |`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
+|`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
 
 ### Outputs
 

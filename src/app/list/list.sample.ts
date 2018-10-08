@@ -187,6 +187,10 @@ export class ListSampleComponent {
             this.fruitList.isLoading = false;
         }, 1000);
     }
+
+    public toggleFavorite(contact: any) {
+        contact.favorite = !contact.favorite;
+    }
 }
 
 export interface Fruit {

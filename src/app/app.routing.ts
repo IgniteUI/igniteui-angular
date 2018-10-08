@@ -13,6 +13,7 @@ import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
+import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
 import { ListPerformanceSampleComponent } from './list-performance/list-performance.sample';
 import { NavbarSampleComponent } from './navbar/navbar.sample';
 import { NavdrawerSampleComponent } from './navdrawer/navdrawer.sample';
@@ -37,6 +38,7 @@ import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 
@@ -102,6 +104,10 @@ const appRoutes = [
     {
         path: 'list',
         component: ListSampleComponent
+    },
+    {
+        path: 'listPanning',
+        component: ListPanningSampleComponent
     },
     {
         path: 'listPerformance',
@@ -207,6 +213,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'tooltip',
+        component: TooltipSampleComponent
     }
 ];
 

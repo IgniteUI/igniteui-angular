@@ -9,7 +9,8 @@
     IterableDiffers,
     Output,
     QueryList,
-    DoCheck
+    DoCheck,
+    AfterViewInit
 } from '@angular/core';
 import {
     IgxChipComponent,
@@ -40,7 +41,7 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
 })
-export class IgxChipsAreaComponent implements DoCheck {
+export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
 
     /**
      * @hidden
@@ -69,7 +70,7 @@ export class IgxChipsAreaComponent implements DoCheck {
     public height: number;
 
     /**
-     * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` are reordered.
+     * Emits an event when `IgxChipComponent`s in the `IgxChipsAreaComponent` should be reordered.
      * Returns an array of `IgxChipComponent`s.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onReorder)="changedOrder($event)"></igx-chips-area>
@@ -84,7 +85,8 @@ export class IgxChipsAreaComponent implements DoCheck {
     public onReorder = new EventEmitter<IChipsAreaReorderEventArgs>();
 
     /**
-     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected.
+     * Emits an event when an `IgxChipComponent` in the `IgxChipsAreaComponent` is selected/deselected.
+     * Fired after the chips area is initialized if there are initially selected chips as well.
      * Returns an array of selected `IgxChipComponent`s and the `IgxChipAreaComponent`.
      * ```html
      * <igx-chips-area #chipsArea [width]="'300'" [height]="'10'" (onSelection)="selection($event)"></igx-chips-area>
@@ -143,6 +145,23 @@ export class IgxChipsAreaComponent implements DoCheck {
     constructor(public cdr: ChangeDetectorRef,
                 private _iterableDiffers: IterableDiffers) {
         this._differ = this._iterableDiffers.find([]).create(null);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit() {
+        // If we have initially selected chips through their inputs, we need to get them, because we cannot listen to their events yet.
+        if (this.chipsList.length) {
+            this.selectedChips = this.chipsList.filter((item: IgxChipComponent) => item.selected);
+            if (this.selectedChips.length) {
+                this.onSelection.emit({
+                    originalEvent: null,
+                    newSelection: this.selectedChips,
+                    owner: this
+                });
+            }
+        }
     }
 
     /**
