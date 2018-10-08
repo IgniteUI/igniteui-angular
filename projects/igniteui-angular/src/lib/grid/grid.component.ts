@@ -150,7 +150,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, AfterViewChecked {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -1976,6 +1976,26 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     private _defaultTargetRecordNumber = 10;
 
+    private verticalScrollHandler(event) {
+        this.verticalScrollContainer.onScroll(event);
+        this.zone.run(() => {
+            this.cdr.detectChanges();
+            this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+        });
+    }
+
+    private horizontalScrollHandler(event) {
+        this.headerContainer.onHScroll(event);
+        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
+        if (this.summaryContainer) {
+            this.summaryContainer.onHScroll(event);
+        }
+        this.zone.run(() => {
+            this.cdr.detectChanges();
+            this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
+        });
+    }
+
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
@@ -2105,10 +2125,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer = new MutationObserver(callback);
             observer.observe(this.document.body, config);
         }
-    }
-
-    ngAfterViewChecked() {
-        this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
             this._horizontalForOfs = list.toArray()
@@ -2116,39 +2132,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 .map(row => row.virtDirRow)
         );
 
-        this.zone.runOutsideAngular(() => {
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', (event) => {
-                this.verticalScrollContainer.onScroll(event);
-                this.zone.run(() => {
-                    this.cdr.detectChanges();
-                    this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-                });
-            });
-        });
+        this.zone.runOutsideAngular(() =>
+            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
+        );
 
-        this.zone.runOutsideAngular(() => {
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', (event) => {
-                this.headerContainer.onHScroll(event);
-                this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
-                if (this.summaryContainer) {
-                    this.summaryContainer.onHScroll(event);
-                }
-                this.zone.run(() => {
-                    this.cdr.detectChanges();
-                    this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
-                });
-            });
-        });
-
-        this.ngAfterViewChecked = () => {};
+        this.zone.runOutsideAngular(() =>
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
+        );
+        this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
     }
 
     /**
      * @hidden
      */
     public ngOnDestroy() {
-        // TODO: Remove igxGridFor event listeners
-        this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
+        this.zone.runOutsideAngular(() => {
+            this.document.defaultView.removeEventListener('resize', this.resizeHandler);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+        });
         this.destroy$.next(true);
         this.destroy$.complete();
         this.gridAPI.unset(this.id);
