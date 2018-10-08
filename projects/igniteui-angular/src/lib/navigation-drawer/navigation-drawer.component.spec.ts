@@ -6,9 +6,8 @@ import {
   tick
 } from '@angular/core/testing';
 
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 import * as Infragistics from '../../public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 
@@ -30,6 +29,7 @@ describe('Navigation Drawer', () => {
                 ],
                 imports: [Infragistics.IgxNavigationDrawerModule]
             });
+
             // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
             // so for tests just force override the the `getWindowWidth`
             this.widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
@@ -107,6 +107,7 @@ describe('Navigation Drawer', () => {
             set: {
                 template
             }});
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -156,6 +157,7 @@ describe('Navigation Drawer', () => {
         it('async API calls should emit events', async(() => {
             let fixture: ComponentFixture<TestComponentDIComponent>;
             let drawer;
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -195,6 +197,7 @@ describe('Navigation Drawer', () => {
             set: {
                 template
             }});
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -209,6 +212,7 @@ describe('Navigation Drawer', () => {
         }));
 
         it('should update with dynamic min template', async(() => {
+
             // immediate requestAnimationFrame for testing
             spyOn(window, 'requestAnimationFrame').and.callFake((callback) => callback());
             const template = `<igx-nav-drawer>
@@ -221,6 +225,7 @@ describe('Navigation Drawer', () => {
             }});
             let fixture;
             let asideElem;
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentMini);
@@ -249,6 +254,7 @@ describe('Navigation Drawer', () => {
             set: {
                 template
             }});
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 const fixture = TestBed.createComponent(TestComponentPin);
@@ -370,6 +376,7 @@ describe('Navigation Drawer', () => {
                 expect(fixture.componentInstance.viewChild.isOpen).toEqual(false);
 
                 const listener = navDrawer.renderer.listen(document.body, 'panmove', () => {
+
                     // mid gesture
                     expect(navDrawer.drawer.classList).toContain('panning');
                     expect(navDrawer.drawer.style.transform)
@@ -381,14 +388,17 @@ describe('Navigation Drawer', () => {
             })
             .then(() => {
                 expect(navDrawer.isOpen).toEqual(false, 'should ignore too short pan');
+
                 // valid pan
                 return pan(document.body, 10, 10, 100, 200, 0);
             }).then(() => {
                 expect(navDrawer.isOpen).toEqual(true, 'should open on valid pan');
+
                 // not enough distance, closing
                 return pan(document.body, 200, 10, 100, -20, 0);
             }).then(() => {
                 expect(navDrawer.isOpen).toEqual(true, 'should remain open on too short pan');
+
                 // close
                 return pan(document.body, 250, 10, 100, -200, 0);
             }).then(() => {
@@ -409,11 +419,11 @@ describe('Navigation Drawer', () => {
             set: {
                 template
             }});
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
                 fixture.detectChanges();
-                const drawer: Infragistics.IgxNavigationDrawerComponent = fixture.componentInstance.viewChild;
 
                 fixture.componentInstance.drawerMiniWidth = 60;
                 fixture.detectChanges();
@@ -439,6 +449,7 @@ describe('Navigation Drawer', () => {
             set: {
                 template
             }});
+
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             TestBed.compileComponents().then(() => {
                 fixture = TestBed.createComponent(TestComponentDIComponent);
@@ -487,9 +498,11 @@ describe('Navigation Drawer', () => {
             // compile after overrides, not in before each: https://github.com/angular/angular/issues/10712
             await TestBed.compileComponents();
             fixture = TestBed.createComponent(TestComponentPin);
+
             // watch for initial pin with 2-way bind expression changed errors
             expect(() => fixture.detectChanges()).not.toThrow();
             await fixture.whenStable();
+
             // defaults:
             expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should be initially unpinned');
             expect(fixture.componentInstance.pin).toBe(false, 'Parent component pin should update initially');
@@ -498,6 +511,7 @@ describe('Navigation Drawer', () => {
             fixture.componentInstance.pin = true;
             fixture.detectChanges();
             window.dispatchEvent(new Event('resize'));
+
             // wait for debounce
             await wait(200);
             expect(fixture.componentInstance.viewChild.pin).toBe(false, `Shouldn't change state on resize if window width is the same`);
@@ -507,6 +521,7 @@ describe('Navigation Drawer', () => {
 
             this.widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
             window.dispatchEvent(new Event('resize'));
+
             // wait for debounce
             await wait(200);
             expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should pin on window resize over threshold');
@@ -514,6 +529,7 @@ describe('Navigation Drawer', () => {
 
             this.widthSpyOverride.and.returnValue(768);
             window.dispatchEvent(new Event('resize'));
+
             // wait for debounce
             await wait(200);
             expect(fixture.componentInstance.viewChild.pin).toBe(false, 'Should un-pin on window resize below threshold');
@@ -528,6 +544,7 @@ describe('Navigation Drawer', () => {
 
         it('should get correct window width', (done) => {
             const originalWidth = window.innerWidth;
+
             // re-enable `getWindowWidth`
             const widthSpy = (this.widthSpyOverride as jasmine.Spy).and.callThrough();
             expect(widthSpy.call(null)).toEqual(originalWidth);
@@ -546,6 +563,7 @@ describe('Navigation Drawer', () => {
             };
 
             return new Promise((resolve, reject) => {
+
                 // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
                 Simulator.setType('touch');
                 Simulator.gestures.swipe(element, swipeOptions, () => {
@@ -563,6 +581,7 @@ describe('Navigation Drawer', () => {
             };
 
             return new Promise((resolve, reject) => {
+
                 // force touch (https://github.com/hammerjs/hammer.js/issues/1065)
                 Simulator.setType('touch');
                 Simulator.gestures.pan(element, swipeOptions, () => {
