@@ -1,6 +1,6 @@
-@import '../../../dist/igniteui-angular/lib/core/styles/themes/utilities';
-@import '../../../dist/igniteui-angular/lib/core/styles/components/button/button-theme';
-@import '../../../dist/igniteui-angular/lib/core/styles/components/button/button-component';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/components/button/button-theme';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/components/button/button-component';
 @import '../../styles/app-palettes';
 
 $button-background: igx-contrast-color($default-palette, 'primary');
