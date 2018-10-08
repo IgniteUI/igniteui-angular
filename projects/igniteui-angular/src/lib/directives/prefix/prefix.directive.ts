@@ -1,4 +1,4 @@
-import { Directive, HostBinding, ViewContainerRef } from '@angular/core';
+import { NgModule, Directive, HostBinding, ViewContainerRef } from '@angular/core';
 import { IgxChipComponent } from '../../chips';
 import { IgxInputGroupComponent } from '../../input-group';
 
@@ -17,3 +17,9 @@ export class IgxPrefixDirective {
         this.childOfInputGroup = !!this._viewContainerRef.parentInjector.get(IgxInputGroupComponent, null);
     }
 }
+
+@NgModule({
+    declarations: [IgxPrefixDirective],
+    exports: [IgxPrefixDirective]
+})
+export class IgxPrefixModule { }

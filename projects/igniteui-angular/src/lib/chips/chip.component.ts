@@ -63,6 +63,15 @@ export class IgxChipComponent implements AfterViewInit {
     public id = `igx-chip-${CHIP_ID++}`;
 
     /**
+     * An @Input property that stores data related to the chip.
+     * ```html
+     * <igx-chip [data]={ value: 'Country' }></igx-chip>
+     * ```
+     */
+    @Input()
+    public data: any;
+
+    /**
      * An @Input property that defines if the `IgxChipComponent` can be dragged in order to change it's position.
      * By default it is set to false.
      * ```html

@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxChipsModule } from './chips.module';
+import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
+import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
@@ -136,7 +138,7 @@ describe('IgxChipsArea', () => {
                 TestChipReorderComponent,
                 TestChipSelectComponent
             ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule]
+            imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
         }).compileComponents();
     }));
 

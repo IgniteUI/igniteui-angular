@@ -54,6 +54,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
+import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
+import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 
 @NgModule({
   declarations: [
@@ -132,7 +134,9 @@ import { IgxColumnPinningModule } from './column-pinning.component';
     IgxColumnHidingModule,
     IgxDropDownModule,
     IgxButtonGroupModule,
-    IgxColumnPinningModule
+    IgxColumnPinningModule,
+    IgxPrefixModule,
+    IgxSuffixModule
   ],
   providers: [IgxGridAPIService, IgxSelectionAPIService, IgxColumnMovingService]
 })

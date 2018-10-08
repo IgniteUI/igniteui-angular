@@ -4,7 +4,9 @@
 
     <ng-content  select="igx-prefix,[igxPrefix]"></ng-content>
 
-    <ng-content class="igx-chip__content"></ng-content>
+    <div class="igx-chip__content">
+        <ng-content></ng-content>
+    </div>
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 

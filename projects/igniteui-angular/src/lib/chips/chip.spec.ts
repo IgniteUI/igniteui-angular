@@ -83,6 +83,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     const CHIP_ITEM_AREA = 'igx-chip__item';
+    const CHIP_PREFIX = 'igx-chip-prefix';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -114,9 +115,10 @@ describe('IgxChip', () => {
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // For this first chip there are 2 elements. The prefix and content span.
-        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(2);
+        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
         expect(chipElems[0].nativeElement.children[0].children[0].tagName).toEqual('IGX-ICON');
         expect(chipElems[0].nativeElement.children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
+        expect(chipElems[0].nativeElement.children[0].children[0].classList).toContain(CHIP_PREFIX);
     });
 
     it('should render remove button when enabled after the content inside the chip', () => {

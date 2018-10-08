@@ -32,6 +32,7 @@ import {
     IgxTimePickerTemplateDirective
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
+import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -1061,7 +1062,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
         CommonModule,
         IgxInputGroupModule,
         IgxDialogModule,
-        IgxIconModule
+        IgxIconModule,
+        IgxPrefixModule
     ],
     providers: []
 })
