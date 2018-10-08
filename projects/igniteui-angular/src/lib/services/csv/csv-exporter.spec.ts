@@ -6,6 +6,7 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('CSV exporter', () => {
     let exporter: IgxCsvExporterService;
@@ -29,87 +30,98 @@ describe('CSV exporter', () => {
         const typeName = CsvFileTypes[fileType];
         const options = new IgxCsvExporterOptions('Test' + typeName, fileType);
 
-        it(typeName + ' should not fail when data is empty.', async(() => {
+        it(typeName + ' should not fail when data is empty.', async () => {
             getExportedData([], options).then((wrapper) => {
                 wrapper.verifyData('');
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export empty objects successfully.', async(() => {
+        it(typeName + ' should export empty objects successfully.', async () => {
             getExportedData(SampleTestData.emptyObjectData(), options).then((wrapper) => {
                 wrapper.verifyData('');
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export string data without headers successfully.', async(() => {
+        it(typeName + ' should export string data without headers successfully.', async () => {
             getExportedData(SampleTestData.stringArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersStringData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export number data without headers successfully.', async(() => {
+        it(typeName + ' should export number data without headers successfully.', async () => {
             getExportedData(SampleTestData.numbersArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersNumberData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export date time data without headers successfully.', async(() => {
+        it(typeName + ' should export date time data without headers successfully.', async () => {
             getExportedData(SampleTestData.dateArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersDateTimeData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export object data without headers successfully.', async(() => {
+        it(typeName + ' should export object data without headers successfully.', async () => {
             getExportedData(SampleTestData.noHeadersObjectArray(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.noHeadersObjectData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export regular data successfully.', async(() => {
+        it(typeName + ' should export regular data successfully.', async () => {
             getExportedData(SampleTestData.contactsData(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export data with missing values successfully.', async(() => {
+        it(typeName + ' should export data with missing values successfully.', async () => {
             getExportedData(SampleTestData.contactsDataPartial(), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsPartialData);
             });
-        }));
+            await wait();
+        });
 
-        it(typeName + ' should export data with special characters successfully.', async(() => {
+        it(typeName + ' should export data with special characters successfully.', async () => {
             getExportedData(SampleTestData.getContactsFunkyData(options.valueDelimiter), options).then((wrapper) => {
                 wrapper.verifyData(wrapper.contactsFunkyData);
             });
-        }));
-
+            await wait();
+        });
     }
 
-    it('CSV should export data with a custom delimiter successfully.', async(() => {
+    it('CSV should export data with a custom delimiter successfully.', async () => {
         const options = new IgxCsvExporterOptions('CustomDelimiter', CsvFileTypes.CSV);
         options.valueDelimiter = '###';
         getExportedData(SampleTestData.getContactsFunkyData(options.valueDelimiter), options).then((wrapper) => {
             wrapper.verifyData(wrapper.contactsFunkyData);
         });
-    }));
+        await wait();
+    });
 
-    it('CSV should use a default delimiter when given an invalid one.', async(() => {
+    it('CSV should use a default delimiter when given an invalid one.', async () => {
         const options = new IgxCsvExporterOptions('InvalidDelimiter', CsvFileTypes.CSV);
         options.valueDelimiter = '';
         getExportedData(SampleTestData.contactsData(), options).then((wrapper) => {
             expect(options.valueDelimiter).toBe(',');
         });
-    }));
+        await wait();
+    });
 
-    it('CSV should overwrite file type successfully.', async(() => {
+    it('CSV should overwrite file type successfully.', async () => {
         const options = new IgxCsvExporterOptions('Export', CsvFileTypes.CSV);
         options.fileType = CsvFileTypes.TAB;
         getExportedData(SampleTestData.getContactsFunkyData('\t'), options).then((wrapper) => {
             expect(options.fileName.endsWith('.tab')).toBe(true);
         });
-    }));
+        await wait();
+    });
 
-    it('should fire \'onColumnExport\' for each data field.', async(() => {
+    it('should fire \'onColumnExport\' for each data field.', async () => {
         const options = new IgxCsvExporterOptions('ExportEvents', CsvFileTypes.CSV);
         const cols = [];
         exporter.onColumnExport.subscribe((value) => {
@@ -125,9 +137,10 @@ describe('CSV exporter', () => {
             expect(cols[2].header).toBe('JobTitle');
             expect(cols[2].index).toBe(2);
         });
-    }));
+        await wait();
+    });
 
-    it('should fire \'onRowExport\' for each data row.', async(() => {
+    it('should fire \'onRowExport\' for each data row.', async () => {
         const options = new IgxCsvExporterOptions('ExportEvents', CsvFileTypes.CSV);
         const rows = [];
         exporter.onRowExport.subscribe((value) => {
@@ -141,7 +154,8 @@ describe('CSV exporter', () => {
                 expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.personJobData()[i]));
             }
         });
-    }));
+        await wait();
+    });
 
     function getExportedData(data: any[], csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
