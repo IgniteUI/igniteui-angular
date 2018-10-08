@@ -364,13 +364,13 @@ describe('UpdateChanges', () => {
 
         update.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
-`<igx-icon fontSet="material">phone</igx-icon>
+`<igx-icon fontSet='material'>phone</igx-icon>
 <igx-icon fontSet="material-icons">build</igx-icon>
 <igx-icon>accessory</igx-icon>`);
 
         expect(appTree.readContent('test1.component.html')).toEqual(
-            `"<igx-icon fontSet="material">{{'phone'}}</igx-icon>
-<igx-icon fontSet="material-icons">{{getName()}}</igx-icon>"`);
+`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
+<igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
 
         done();
     });
