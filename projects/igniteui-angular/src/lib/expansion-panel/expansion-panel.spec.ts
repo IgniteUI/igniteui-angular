@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -9,13 +9,12 @@ import { IgxExpansionPanelComponent } from './expansion-panel.component';
 import { ICON_POSITION, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grid';
-import { IgxListComponent, IgxListModule } from '../list';
+import { IgxListModule } from '../list';
 import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
 const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
-const CSS_CLASS_HEADER_COLLAPSED = 'igx-expansion-panel__header--collapsed';
 const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
 const CSS_CLASS_PANEL_ICON = 'igx-icon';
 const CSS_CLASS_LIST = 'igx-list';
@@ -85,7 +84,6 @@ describe('igxExpansionPanel', () => {
         it('Should properly set base classes', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
-            const panel = fixture.componentInstance.expansionPanel;
             const header = document.getElementsByClassName(CSS_CLASS_PANEL_HEADER);
             const headerExpanded = document.getElementsByClassName(CSS_CLASS_HEADER_EXPANDED);
             const panelClass = document.getElementsByClassName(CSS_CLASS_EXPANSION_PANEL);
@@ -142,6 +140,7 @@ describe('igxExpansionPanel', () => {
             header.onAction(mockEvent);
             tick();
             fixture.detectChanges();
+
             // No additional calls, because panel.disabled === true
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(2);
@@ -682,6 +681,7 @@ describe('igxExpansionPanel', () => {
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
             header.iconPosition = ICON_POSITION.LEFT;
             fixture.detectChanges();
+
             // Buttons are wrapper in wrapper div to hold positioning class
             const iconContainer = headerButton.children[1];
             const titleContainer = headerButton.children[0];
@@ -732,9 +732,11 @@ describe('igxExpansionPanel', () => {
             const headerElement = header.elementRef.nativeElement;
             const title = fixture.componentInstance.expansionPanel.header;
             fixture.detectChanges();
+
             // IgxExpansionPanelHeaderComponent host
             expect(headerElement.getAttribute('aria-level')).toEqual('3');
             expect(headerElement.getAttribute('role')).toEqual('heading');
+
             // Body of IgxExpansionPanelComponent
             panel.expand();
             tick();
@@ -742,11 +744,13 @@ describe('igxExpansionPanel', () => {
             tick();
             expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+
             // Button of IgxExpansionPanelHeaderComponent
             expect(headerElement.lastElementChild.getAttribute('role')).toEqual('button');
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
             expect(headerElement.firstElementChild.getAttribute('aria-expanded')).toEqual('true');
             expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
+
             // Disabled
             header.disabled = true;
             expect(headerElement.firstElementChild.getAttribute('aria-disabled')).toEqual('false');
@@ -769,6 +773,7 @@ describe('igxExpansionPanel', () => {
             tick();
             fixture.detectChanges();
             tick();
+
             // Body of IgxExpansionPanelComponent
             expect(panelElement.lastElementChild.getAttribute('role')).toEqual('region');
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual('');
@@ -790,8 +795,10 @@ describe('igxExpansionPanel', () => {
             tick();
             fixture.detectChanges();
             tick();
+
             // Body of IgxExpansionPanelComponent
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
+
             // Button of IgxExpansionPanelHeaderComponent
             expect(headerElement.firstElementChild.getAttribute('aria-controls')).toEqual(panel.id);
             panel.id = 'example-test-panel-id';
