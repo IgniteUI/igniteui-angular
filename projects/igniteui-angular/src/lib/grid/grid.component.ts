@@ -3623,7 +3623,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected get rowBasedHeight() {
         if (this.data && this.data.length) {
-            return (this.data.length + this.addRowsInTransactionCount()) * this.rowHeight;
+            return this.dataWithTransactions.length * this.rowHeight;
         }
         return 0;
     }
@@ -3660,7 +3660,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || (this.data.length + this.addRowsInTransactionCount());
+        const allItems = this.totalItemCount || this.dataWithTransactions.length;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
@@ -4063,7 +4063,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.data && (this.data.length + this.addRowsInTransactionCount()) === 0) {
+        if (this.data && this.dataWithTransactions.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
@@ -4095,12 +4095,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, (this.data.length + this.addRowsInTransactionCount()));
+            this.allRowsSelected = this.selection.are_all_selected(this.id, this.dataWithTransactions.length);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
                     this.headerCheckbox.checked =
-                        this.selection.are_all_selected(this.id, (this.data.length + this.addRowsInTransactionCount()));
+                        this.selection.are_all_selected(this.id, this.dataWithTransactions.length);
                 }
             }
             this.cdr.markForCheck();
@@ -4989,25 +4989,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    private addRowsInTransactionCount(): number {
-        let result = 0;
-        if (this.transactions.hasTransactions()) {
-            result += this.transactions.aggregatedState()
-                .filter(state => state.type === TransactionType.ADD)
-                .length;
-            }
-
-        return result;
-    }
-
     private get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
         if (this.transactions.hasTransactions()) {
-            this.transactions.aggregatedState().forEach((state: Transaction) => {
-                if (state.type === TransactionType.ADD) {
-                    result.push(this.transactions.getAggregatedValue(state.id));
-                }
-            });
+            result.push(this.transactions.aggregatedState()
+                .filter(state => state.type === TransactionType.ADD));
         }
 
         return result;
