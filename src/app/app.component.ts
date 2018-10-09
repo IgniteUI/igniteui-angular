@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
@@ -12,6 +12,9 @@ export class AppComponent implements OnInit {
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent })
     navdrawer;
+
+    @HostBinding('attr.id')
+    appId = 'igniteui-demo-app';
 
     drawerState = {
         enableGestures: true,
@@ -61,6 +64,11 @@ export class AppComponent implements OnInit {
             name: 'Combo'
         },
         {
+            link: '/expansionPanel',
+            icon: 'expand_more',
+            name: 'ExpansionPanel'
+        },
+        {
             link: '/datePicker',
             icon: 'date_range',
             name: 'DatePicker'
@@ -89,6 +97,11 @@ export class AppComponent implements OnInit {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'
+        },
+        {
+            link: '/gridConditionalCellStyling',
+            icon: 'view_column',
+            name: 'Grid Cell Styling'
         },
         {
             link: '/gridColumnPinning',
@@ -161,6 +174,11 @@ export class AppComponent implements OnInit {
             name: 'List'
         },
         {
+            link: '/listPanning',
+            icon: 'list',
+            name: 'List Panning'
+        },
+        {
             link: '/listPerformance',
             icon: 'list',
             name: 'List Performance'
@@ -179,6 +197,11 @@ export class AppComponent implements OnInit {
             link: '/overlay',
             icon: 'overlay',
             name: 'Overlay'
+        },
+        {
+            link: '/overlay-animation',
+            icon: 'overlay_animation',
+            name: 'Overlay Animation'
         },
         {
             link: '/progressbar',
@@ -252,6 +275,11 @@ export class AppComponent implements OnInit {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
+        },
+        {
+            link: '/tooltip',
+            icon: 'info',
+            name: 'Tooltip'
         }
     ];
 

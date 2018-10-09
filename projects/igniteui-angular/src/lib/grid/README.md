@@ -170,7 +170,8 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
-|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  | 
+|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
+|`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
 
 ### Outputs
 
@@ -276,7 +277,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`minWidth`|string|Columns minimal width|
 |`maxWidth`|string|Columns miximum width|
 |`headerClasses`|string|Additional CSS classes applied to the header element.|
-|`cellClasses`|string|Additional CSS classes applied to the cells in this column.|
+|`cellClasses`|string|Additional CSS classes that can be applied conditionally to the cells in this column.|
 |`formatter`|Function|A function used to "template" the values of the cells without the need to pass a cell template the column.|
 |`index`|string|Column index|
 |`filteringIgnoreCase`|boolean|Ignore capitalization of strings when filtering is applied. Defaults to _true_.|
@@ -407,7 +408,7 @@ import {
 |`groupRow` | IGroupByRecord | Yes | No | The group row data. Contains the related group expression, level, sub-records and group value. |
 |`expanded` | boolean | Yes | No | Whether the row is expanded or not. |
 |`groupContent` | ElementRef | Yes | No | The container for the group row template. Holds the group row content. |
-|`focused` | boolean | Yes | No | Returns whether the group row is currently focused. | 
+|`focused` | boolean | Yes | No | Returns whether the group row is currently focused. |
 
 ### Methods
 

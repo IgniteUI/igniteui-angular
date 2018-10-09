@@ -4,7 +4,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, OutputChanges, SelectorChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChanges } from './schema';
 import { UpdateChanges } from './UpdateChanges';
 
 describe('UpdateChanges', () => {
@@ -14,6 +14,7 @@ describe('UpdateChanges', () => {
         public getSelectorChanges() { return this.selectorChanges; }
         public getClassChanges() { return this.classChanges; }
         public getOutputChanges() { return this.outputChanges; }
+        public getInputChanges() { return this.inputChanges; }
     }
 
     beforeEach(() => {
@@ -97,7 +98,7 @@ describe('UpdateChanges', () => {
     });
 
     it('should replace/remove outputs', done => {
-        const outputJson: OutputChanges = {
+        const outputJson: BindingChanges = {
             changes: [
                 {
                     name: 'onReplaceMe', replaceWith: 'replaced',
@@ -137,6 +138,59 @@ describe('UpdateChanges', () => {
         update2.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
             `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
+        done();
+    });
+
+    it('should replace/remove inputs', done => {
+        const inputJson: BindingChanges = {
+            changes: [
+                {
+                    name: 'replaceMe', replaceWith: 'replaced',
+                    owner: { type: 'component' as any, selector: 'comp' }
+                },
+                {
+                    name: 'oldProp', remove: true,
+                    owner: { type: 'component' as any, selector: 'another' }
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+
+        const fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
+        appTree.create('test.component.html', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getInputChanges()).toEqual(inputJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another />`);
+
+        inputJson.changes[1].remove = false;
+        inputJson.changes[1].replaceWith = 'oldReplaced';
+        appTree.overwrite('test.component.html', fileContent);
+        const update2 = new UnitUpdateChanges(__dirname, appTree);
+        update2.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another oldReplaced="b" />`);
+        inputJson.changes[1].remove = true;
+
+        inputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
+        inputJson.changes[1].owner = { type: 'directive' as any, selector: 'tag' };
+        appTree.overwrite('test.component.html', fileContent);
+        const update3 = new UnitUpdateChanges(__dirname, appTree);
+        update3.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
         done();
     });
 
@@ -268,6 +322,55 @@ describe('UpdateChanges', () => {
             `    }` +
             `}`
         );
+
+        done();
+    });
+
+    it('should move property value between element tags', done => {
+        const inputJson: BindingChanges = {
+            changes: [
+                {
+                    name: 'name',
+                    moveBetweenElementTags: true,
+                    conditions: ['igxIcon_is_material_name'],
+                    owner: { type: 'component' as any, selector: 'igx-icon' }
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+
+        const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
+<igx-icon fontSet="material-icons" name="build"></igx-icon>
+<igx-icon name="accessory"></igx-icon>`;
+        appTree.create('test.component.html', fileContent);
+
+        const fileContent1 = `<igx-icon fontSet="material" [name]="'phone'"></igx-icon>
+<igx-icon fontSet="material-icons" [name]="getName()"></igx-icon>`;
+        appTree.create('test1.component.html', fileContent1);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.addCondition('igxIcon_is_material_name', () => { return true; });
+
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getInputChanges()).toEqual(inputJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+`<igx-icon fontSet='material'>phone</igx-icon>
+<igx-icon fontSet="material-icons">build</igx-icon>
+<igx-icon>accessory</igx-icon>`);
+
+        expect(appTree.readContent('test1.component.html')).toEqual(
+`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
+<igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
 
         done();
     });

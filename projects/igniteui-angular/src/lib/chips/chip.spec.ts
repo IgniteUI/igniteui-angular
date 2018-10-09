@@ -23,8 +23,8 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
-                <igx-icon igxPrefix fontSet="material" [name]="'drag_indicator'"></igx-icon>
+                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -421,5 +421,58 @@ describe('IgxChip', () => {
 
             done();
         });
+    });
+
+    it('should fire onSelection event when selectable is true', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(secondChipComp.onSelection, 'emit');
+        secondChipComp.chipArea.nativeElement.focus();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+        expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
+    });
+
+    it('should not fire onSelection event when selectable is false', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const firstChipComp = fix.componentInstance.chips.toArray()[0];
+
+        spyOn(firstChipComp.onSelection, 'emit');
+        firstChipComp.chipArea.nativeElement.focus();
+
+        const keyEvent = new KeyboardEvent('keydown', {
+            'key': ' '
+        });
+        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        fix.detectChanges();
+        expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not fire onSelection event when the remove button is clicked', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const secondChipComp = fix.componentInstance.chips.toArray()[1];
+
+        spyOn(secondChipComp.onSelection, 'emit');
+
+        const removeBtnTop = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().top;
+        const removeBtnLeft = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().left;
+
+        UIInteractions.simulatePointerEvent('pointerdown', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        fix.detectChanges();
+        UIInteractions.simulatePointerEvent('pointerup', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        fix.detectChanges();
+
+        expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
     });
 });

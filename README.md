@@ -1,5 +1,6 @@
 # Ignite UI for Angular - from Infragistics
 
+[![Build Status](https://dev.azure.com/IgniteUI/igniteui-angular/_apis/build/status/IgniteUI.igniteui-angular)](https://dev.azure.com/IgniteUI/igniteui-angular/_build/latest?definitionId=3)
 [![Build Status](https://travis-ci.org/IgniteUI/igniteui-angular.svg?branch=master)](https://travis-ci.org/IgniteUI/igniteui-angular)
 [![Coverage Status](https://coveralls.io/repos/github/IgniteUI/igniteui-angular/badge.svg?branch=master)](https://coveralls.io/github/IgniteUI/igniteui-angular?branch=master)
 [![npm version](https://badge.fury.io/js/igniteui-angular.svg)](https://badge.fury.io/js/igniteui-angular)
@@ -109,8 +110,7 @@ The output of the API docs build is located under `dist/igniteui-angular/docs`.
 The repository includes a sample application featuring the showcasing the different components/directives.
 In order to run the demo samples, build the library first and start the application.
 ```
-npm run build:lib
-ng serve
+npm start
 ```
 
 **NOTE**: Experimental demos are not always stable.

@@ -24,6 +24,7 @@ export * from './lib/directives/ripple/ripple.directive';
 export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
+export * from './lib/directives/tooltip/tooltip.directive';
 
 /**
  * Data operations
@@ -64,6 +65,7 @@ export * from './lib/grid/index';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
+export * from './lib/expansion-panel/index';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
 export * from './lib/progressbar/progressbar.component';

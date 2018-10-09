@@ -3,7 +3,7 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxDateSummaryOperand, IgxGridComponent, IgxGridModule, IgxNumberSummaryOperand } from './index';
+import { IgxDateSummaryOperand, IgxGridComponent, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
 import { IgxGridAPIService } from './api.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
@@ -20,6 +20,7 @@ describe('IgxGrid - Summaries', () => {
             declarations: [
                 NoActiveSummariesComponent,
                 SummaryColumnComponent,
+                CustomSummariesComponent,
                 VirtualSummaryColumnComponent,
                 SummaryColumnsWithIdenticalWidthsComponent
             ],
@@ -605,6 +606,41 @@ describe('IgxGrid - Summaries', () => {
         expect(grid.hasSummarizedColumns).toBe(true);
     }));
 
+    it('should properly render custom summaries', () => {
+        const fixture = TestBed.createComponent(CustomSummariesComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid1;
+        const summariesUnitOfStock = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[3];
+        const summariesOrderDate = fixture.debugElement.queryAll(By.css(SUMMARY_CLASS))[4];
+
+        const maxValue = summariesUnitOfStock.query(By.css('[title=\'Sum\']')).nativeElement.nextSibling.innerText;
+        const earliest = summariesOrderDate.query(By.css('[title=\'Earliest\']')).nativeElement.nextSibling.innerText;
+        expect(earliest).toBe('5/17/1990');
+        expect(maxValue).toBe('39,004');
+
+        const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
+        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
+        const input = filterUIContainer.query(By.directive(IgxInputDirective));
+        const select = filterUIContainer.query(By.css('select'));
+        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
+
+        filterIcon.nativeElement.click();
+        fixture.detectChanges();
+        select.nativeElement.value = 'lessThan';
+        select.nativeElement.dispatchEvent(new Event('change'));
+
+        UIInteractions.sendInput(input, '0');
+        fixture.detectChanges();
+        filterIcon.nativeElement.click();
+        fixture.detectChanges();
+        const filterResult = grid.rowList.length;
+        expect(filterResult).toEqual(0);
+
+        const countValue = summariesUnitOfStock.query(By.css('[title=\'Count\']')).nativeElement.nextSibling.innerText;
+        expect(countValue).toBe('0');
+    });
+
 });
 
 @Component({
@@ -771,4 +807,77 @@ export class VirtualSummaryColumnComponent {
         const vScrollbar = this.grid1.verticalScrollContainer.getVerticalScroll();
         vScrollbar.scrollTop = newTop;
     }
+}
+
+class DealsSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', {maximumFractionDigits: 2});
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class EarliestSummary extends IgxDateSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'earliest') {
+                obj.summaryResult = new Intl.DateTimeFormat('en-US').format(obj.summaryResult);
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
+            <igx-column field="ProductID" header="Product ID">
+            </igx-column>
+            <igx-column field="ProductName" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true" [summaries]="dealsSummary">
+            </igx-column>
+            <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
+                [summaries]="earliest">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class CustomSummariesComponent {
+
+    public data = [
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
+        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
+        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
+        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
+        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
+        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
+        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
+    ];
+    @ViewChild('grid1', { read: IgxGridComponent })
+    public grid1: IgxGridComponent;
+    public dealsSummary = DealsSummary;
+    public earliest = EarliestSummary;
 }

@@ -1,5 +1,5 @@
 {
-    "$schema": "../../common/schema/output.schema.json",
+    "$schema": "../../common/schema/binding.schema.json",
     "changes": [
         {
             "name": "onOpen",

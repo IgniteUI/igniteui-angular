@@ -1,22 +1,26 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "ElementType": {
-            "enum": [
-                "component",
-                "directive"
-            ],
-            "type": "string"
-        },
-        "OutputChange": {
+        "BindingChange": {
             "properties": {
+                "conditions": {
+                    "description": "An array of function names that will be executed as conditions.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "moveBetweenElementTags": {
+                    "description": "Move property value between owner's element tags.",
+                    "type": "boolean"
+                },
                 "name": {
-                    "description": "Name of the output property to change",
+                    "description": "Name of the input/output property to change",
                     "type": "string"
                 },
                 "owner": {
                     "$ref": "#/definitions/TemplateElement",
-                    "description": "Component that emits the output"
+                    "description": "Component that emits the output or accepts the input"
                 },
                 "remove": {
                     "description": "Remove directive/component",
@@ -32,6 +36,13 @@
                 "owner"
             ],
             "type": "object"
+        },
+        "ElementType": {
+            "enum": [
+                "component",
+                "directive"
+            ],
+            "type": "string"
         },
         "TemplateElement": {
             "properties": {
@@ -53,9 +64,9 @@
     },
     "properties": {
         "changes": {
-            "description": "An array of changes to output properties",
+            "description": "An array of changes to input/output properties",
             "items": {
-                "$ref": "#/definitions/OutputChange"
+                "$ref": "#/definitions/BindingChange"
             },
             "type": "array"
         }

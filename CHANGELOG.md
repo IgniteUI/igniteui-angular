@@ -3,8 +3,17 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- `igxIcon`:
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
+    - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
+- `igxGrid`:
+    - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
+    - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
-- `igxOverlay`: `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+- `igxOverlay`:
+    - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
+    - when `show` and `hide` methods are called `onAnimation` event fires. In the arguments of this event there is a reference to the `animationPlayer`, `animationType` (either `open` or `close`) and to the overlay id.
+    - if you call `show`/`hide` methods of overlay, while opening/closing animation is still ongoing, the animation will stop and respective open/close animation will start.
 - `igxToggleAction` new `outlet` input controls the target overlay element should be attached. Provides a shortcut for `overlaySettings.outlet`.
 - `IgxOverlayOutlet` directive introduced to mark an element as an `igxOverlay` outlet container. [ReadMe](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/toggle/README.md)
 - `igxButtonGroup`
@@ -25,8 +34,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
 - `IgxCombo`
     - Added the following directives for `TemplateRef` assignment for combo templates (item, footer, etc.):
         - Added `IgxComboItemDirective`. Use `[igxComboItem]` in markup to assing a TemplateRef to `combo.itemTemplate`.
@@ -37,13 +48,52 @@ All notable changes for each version of this project will be documented in this 
         - Added `IgxComboHeaderItemDirective`. Use `[igxComboHeaderItem]` in markup to assing a TemplateRef to `combo.headerItemTemplate`.
     - **Breaking change** Assigning templates with the following template ref variables is now deprecated in favor of the new directives:
             `#itemTemplate`, `#headerTemplate`, `#footerTemplate`, `#emptyTemplate`, `#addItemTemplate`, `#headerItemTemplate`.
+    - **Breaking change** `height` property is removed. In the future `IgxInputGroup` will expose an option that allows custom sizing and then `IgxCombo` will use the same functionality for proper styling and better consistency.
+
 - `IgxDropDown`
     - **Breaking change** `allowItemsFocus` default value is changed to `false`.
+    - Added `value` input to `IgxDropDownItemComponent` definition. The property allows data to be bound to a drop-down item so it can more easily be retrieved (e.g. on selection)
 - `igx-calendar`:
     - Introduced `disabledDates` property which allows a user to disable dates based on various rules: before or after a date, weekends, workdays, specific dates and ranges. The disabled dates cannot be selected and have a distinguishable style.
     - Introduced `specialDates` property which allows a user to mark dates as special. They can be set by using various rules. Their style is distinguishable.
     - Introduced `deselectDate` method added that deselects date(s) (based on the selection type)
+- `igxExpansionPanel`:
+    - component added. `igxExpansionPanel` provides a way to display more information after expanding an item, respectively show less after collapsing it. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/expansion_panel.html).
+- `IgxList`:
+    - the control now supports **ng-templates** which are shown "under" a list item when it is left or right panned. The templates are distinguished using the `igxListItemLeftPanning` and `igxListItemRightPanning` directives set on the templates.
+    - the IgxList's `onLeftPan` and `onRightPan` events now have an argument of type `IListItemPanningEventArgs` (instead of `IgxListItemComponent`). The event argument has the following fields:
+        - **item** of type `IgxListItemComponent`
+        - **direction** of type `IgxListPanState`
+        - **keepItem** of type `boolean`
+- `igxTooltip` and `igxTooltipTarget` directives:
+    - Added `IgxTooltipDirective`.
+        - An element that uses the `igxTooltip` directive is used as a tooltip for a specific target (anchor).
+        - Extends `IgxToggleDirective`.
+        - Exported with the name **tooltip**.
+    - Added `IgxTooltipTargetDirective`.
+        - An element that uses the `igxTooltipTarget` directive is used as a target (anchor) for a specific tooltip.
+        - Extends `IgxToggleActionDirective`.
+        - Exported with the name **tooltipTarget**.
+    - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `IgxDrag` and `IgxDrop` directives available.
+    - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
+    - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element. 
+    - Combined they provide a way to move elements around the page by dragging them. For more detail see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/dragdrop/README.md).
 
+## 6.1.5
+- **General**
+    - `IgxChip`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+        - A chip can now be selected with the API with the new `selected` input. The `selected` input overrides the `selectable` input value.
+        - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - `IgxChipArea`
+        - Introduced event argument types to all `EventEmitter` `@Output`s.
+    - `igxFor`
+        - Adding inertia scrolling for touch devices. This also affects the following components that virtualize their content via the igxFor - `igxGrid`, `igxCombo`.
+    - `igxGrid`
+        - Adding inertia scrolling for touch devices.
+    - `igxCombo`
+        - Adding inertia scrolling for touch devices. 
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
@@ -186,7 +236,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
 - `igxDropdown` component added
 
     ```html
-    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
+    <igx-drop-down (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
         <igx-drop-down-item *ngFor="let item of items" disabled={{item.disabled}} isHeader={{item.header}}>
                 {{ item.field }}
         </igx-drop-down-item>

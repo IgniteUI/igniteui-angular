@@ -1,0 +1,30 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "height",
+            "remove": true,
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "name",
+            "moveBetweenElementTags": true,
+            "conditions": ["igxIcon_is_material_name"],
+            "owner": {
+                "selector": "igx-icon",
+                "type": "component"
+            }
+        },
+        {
+            "name": "iconName",
+            "replaceWith": "name",
+            "owner": {
+                "selector": "igx-icon",
+                "type": "component"
+            }
+        }
+    ]
+}

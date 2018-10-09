@@ -1,15 +1,14 @@
-module typedoc
-{
+module typedoc {
     class FilterItem<T>
     {
-        protected key:string;
+        protected key: string;
 
-        protected value:T;
+        protected value: T;
 
-        protected defaultValue:T;
+        protected defaultValue: T;
 
 
-        constructor(key:string, value:T) {
+        constructor(key: string, value: T) {
             this.key = key;
             this.value = value;
             this.defaultValue = value;
@@ -22,23 +21,23 @@ module typedoc
         }
 
 
-        protected initialize() {}
+        protected initialize() { }
 
 
-        protected handleValueChange(oldValue:T, newValue:T) {}
+        protected handleValueChange(oldValue: T, newValue: T) { }
 
 
-        protected fromLocalStorage(value:string):T {
+        protected fromLocalStorage(value: string): T {
             return <any>value;
         }
 
 
-        protected toLocalStorage(value:T):string {
+        protected toLocalStorage(value: T): string {
             return <any>value;
         }
 
 
-        protected setValue(value:T) {
+        protected setValue(value: T) {
             if (this.value == value) return;
 
             var oldValue = this.value;
@@ -52,7 +51,7 @@ module typedoc
 
     class FilterItemCheckbox extends FilterItem<boolean>
     {
-        private $checkbox:JQuery;
+        private $checkbox: JQuery;
 
 
         protected initialize() {
@@ -63,18 +62,18 @@ module typedoc
         }
 
 
-        protected handleValueChange(oldValue:boolean, newValue:boolean) {
+        protected handleValueChange(oldValue: boolean, newValue: boolean) {
             this.$checkbox.prop('checked', this.value);
             $html.toggleClass('toggle-' + this.key, this.value != this.defaultValue);
         }
 
 
-        protected fromLocalStorage(value:string):boolean {
+        protected fromLocalStorage(value: string): boolean {
             return value == 'true';
         }
 
 
-        protected toLocalStorage(value:boolean):string {
+        protected toLocalStorage(value: boolean): string {
             return value ? 'true' : 'false';
         }
     }
@@ -82,7 +81,7 @@ module typedoc
 
     class FilterItemSelect extends FilterItem<string>
     {
-        private $select:JQuery;
+        private $select: JQuery;
 
 
         protected initialize() {
@@ -93,12 +92,12 @@ module typedoc
                 this.$select.addClass('active');
             }).on('mouseleave', () => {
                 this.$select.removeClass('active');
-            }).on(pointerUp, 'li', (e:JQueryMouseEventObject) => {
+            }).on(pointerUp, 'li', (e: JQueryMouseEventObject) => {
                 this.$select.removeClass('active');
                 this.setValue($(e.target).attr('data-value'));
             });
 
-            $document.on(pointerDown, (e:JQueryMouseEventObject) => {
+            $document.on(pointerDown, (e: JQueryMouseEventObject) => {
                 var $path = $(e.target).parents().addBack();
                 if ($path.is(this.$select)) return;
 
@@ -107,7 +106,7 @@ module typedoc
         }
 
 
-        protected handleValueChange(oldValue:string, newValue:string) {
+        protected handleValueChange(oldValue: string, newValue: string) {
             this.$select.find('li.selected').removeClass('selected');
             this.$select.find('.tsd-select-label').text(
                 this.$select.find('li[data-value="' + newValue + '"]').addClass('selected').text());
@@ -119,27 +118,27 @@ module typedoc
 
 
     class Filter extends Backbone.View<any>
-    { 
-        private optionVisibility:FilterItemSelect;
+    {
+        private optionVisibility: FilterItemSelect;
 
-        private optionInherited:FilterItemCheckbox;
+        private optionInherited: FilterItemCheckbox;
 
-        private optionOnlyExported:FilterItemCheckbox;
+        private optionOnlyExported: FilterItemCheckbox;
 
-        private optionExternals:FilterItemCheckbox;
+        private optionExternals: FilterItemCheckbox;
 
 
-        constructor(options?:Backbone.ViewOptions<any>) {
+        constructor(options?: Backbone.ViewOptions<any>) {
             super(options);
 
-            this.optionVisibility   = new FilterItemSelect('visibility',      'private');
-            this.optionInherited    = new FilterItemCheckbox('inherited',     true);
-            this.optionExternals    = new FilterItemCheckbox('externals',     true);
+            this.optionVisibility = new FilterItemSelect('visibility', 'private');
+            this.optionInherited = new FilterItemCheckbox('inherited', true);
+            this.optionExternals = new FilterItemCheckbox('externals', true);
             this.optionOnlyExported = new FilterItemCheckbox('only-exported', false);
         }
 
 
-        static isSupported():boolean {
+        static isSupported(): boolean {
             try {
                 return typeof window.localStorage != 'undefined';
             } catch (e) {

@@ -3,7 +3,7 @@ import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, OutputChanges, SelectorChange, SelectorChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges } from './schema';
 import { getIdentifierPositions } from './tsUtils';
 import { getProjectPaths, getWorkspace } from './util';
 
@@ -11,8 +11,10 @@ import { getProjectPaths, getWorkspace } from './util';
 export class UpdateChanges {
     protected sourcePaths: string[];
     protected classChanges: ClassChanges;
-    protected outputChanges: OutputChanges;
+    protected outputChanges: BindingChanges;
+    protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
+    protected conditionFunctions: Map<string, Function>;
 
     private _templateFiles: string[] = [];
     public get templateFiles(): string[] {
@@ -58,6 +60,10 @@ export class UpdateChanges {
         if (fs.existsSync(outputsJson)) {
             this.outputChanges = JSON.parse(fs.readFileSync(outputsJson, 'utf-8'));
         }
+        const inputsJson = path.join(this.rootPath, 'changes', 'inputs.json');
+        if (fs.existsSync(inputsJson)) {
+            this.inputChanges = JSON.parse(fs.readFileSync(inputsJson, 'utf-8'));
+        }
     }
 
     /** Apply configured changes to the Host Tree */
@@ -69,7 +75,13 @@ export class UpdateChanges {
         }
         if (this.outputChanges && this.outputChanges.changes.length) {
             for (const entryPath of this.templateFiles) {
-                this.updateOutputs(entryPath);
+                this.updateBindings(entryPath, this.outputChanges);
+            }
+        }
+
+        if (this.inputChanges && this.inputChanges.changes.length) {
+            for (const entryPath of this.templateFiles) {
+                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
             }
         }
 
@@ -79,6 +91,15 @@ export class UpdateChanges {
                 this.updateClasses(entryPath);
             }
         }
+    }
+
+    /** Add condition funtion. */
+    public addCondition(conditionName: string, callback: Function) {
+        if (!this.conditionFunctions) {
+            this.conditionFunctions = new Map<string, Function>();
+        }
+
+        this.conditionFunctions.set(conditionName, callback);
     }
 
     protected updateSelectors(entryPath: string) {
@@ -146,43 +167,99 @@ export class UpdateChanges {
         }
     }
 
-    protected updateOutputs(entryPath: string) {
+    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.output) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
-        for (const change of this.outputChanges.changes) {
-            if (fileContent.indexOf(change.owner.selector) !== -1 && fileContent.indexOf(change.name) !== -1) {
-                let reg = new RegExp(String.raw`\(${change.name}\)`, 'g');
-                let replace = `(${change.replaceWith})`;
-                let searchPattern;
 
-                if (change.remove) {
-                    // Group match (\1) as variable as it looks like octal escape (error in strict)
-                    reg = new RegExp(String.raw`\s*\(${change.name}\)=(["']).*?${'\\1'}(?=\s|\>)`, 'g');
-                    replace = '';
-                }
-                switch (change.owner.type) {
-                case 'component':
-                    searchPattern = String.raw`\<${change.owner.selector}[^\>]*\>`;
-                    break;
-                case 'directive':
-                    searchPattern = String.raw`\<[^\>]*[\s\[]${change.owner.selector}[^\>]*\>`;
-                    break;
-                }
-
-                const matches = fileContent.match(new RegExp(searchPattern, 'g'));
-
-                for (const match of matches) {
-                    fileContent = fileContent.replace(
-                        match,
-                        match.replace(reg, replace)
-                    );
-                }
-                overwrite = true;
+        for (const change of bindChanges.changes) {
+            if (fileContent.indexOf(change.owner.selector) === -1 || fileContent.indexOf(change.name) === -1) {
+                continue;
             }
+
+            let base;
+            let replace;
+            let groups = 1;
+            let searchPattern;
+
+            if (type === BindingType.output) {
+                base = String.raw`\(${change.name}\)`;
+                replace = `(${change.replaceWith})`;
+            } else {
+                base = String.raw`(\[?)${change.name}(\]?)`;
+                replace = String.raw`$1${change.replaceWith}$2`;
+                groups = 3;
+            }
+
+            let reg = new RegExp(base, 'g');
+            if (change.remove || change.moveBetweenElementTags) {
+                // Group match (\1) as variable as it looks like octal escape (error in strict)
+                reg = new RegExp(String.raw`\s*${base}=(["']).*?${'\\' + groups}(?=\s|\>)`, 'g');
+                replace = '';
+            }
+            switch (change.owner.type) {
+            case 'component':
+                searchPattern = String.raw`\<${change.owner.selector}[^\>]*\>`;
+                break;
+            case 'directive':
+                searchPattern = String.raw`\<[^\>]*[\s\[]${change.owner.selector}[^\>]*\>`;
+                break;
+            }
+
+            const matches = fileContent.match(new RegExp(searchPattern, 'g'));
+
+            for (const match of matches) {
+                if (!this.areConditionsFulfiled(match, change.conditions)) {
+                    continue;
+                }
+
+                if (change.moveBetweenElementTags) {
+                    const moveMatch = match.match(reg);
+                    fileContent = this.copyPropertyValueBetweenElementTags(fileContent, match, moveMatch);
+                }
+
+                fileContent = fileContent.replace(
+                    match,
+                    match.replace(reg, replace)
+                );
+            }
+            overwrite = true;
         }
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
+    }
+
+    private areConditionsFulfiled(match: string, conditions: string[]): boolean {
+        if (conditions) {
+            for (const condition of conditions) {
+                if (this.conditionFunctions && this.conditionFunctions.has(condition)) {
+                    const callback = this.conditionFunctions.get(condition);
+                    if (callback && !callback(match)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private copyPropertyValueBetweenElementTags(fileContent: string, ownerMatch: string, propertyMatchArray: RegExpMatchArray): string {
+        if (ownerMatch && propertyMatchArray && propertyMatchArray.length > 0) {
+            const propMatch = propertyMatchArray[0].trim();
+            const propValueMatch = propMatch.match(new RegExp(`=(["'])(.+?)${'\\1'}`));
+            if (propValueMatch && propValueMatch.length > 0) {
+                const propValue = propValueMatch[propValueMatch.length-1];
+
+                if (propMatch.startsWith('[')) {
+                    return fileContent.replace(ownerMatch, ownerMatch + `{{${propValue}}}`);
+                } else {
+                    return fileContent.replace(ownerMatch, ownerMatch + propValue);
+                }
+            }
+        }
+
+        return fileContent;
     }
 
     private sourceDirsVisitor(visitor: FileVisitor) {
@@ -191,4 +268,9 @@ export class UpdateChanges {
             srcDir.visit(visitor);
         }
     }
+}
+
+export enum BindingType {
+    output,
+    input
 }

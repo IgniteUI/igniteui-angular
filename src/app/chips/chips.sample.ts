@@ -54,6 +54,7 @@ export class ChipsSampleComponent {
         }
         this.chipList = newChipList;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     chipMovingEnded() {
@@ -74,7 +75,7 @@ export class ChipsSampleComponent {
     }
 
     onChipsSelected(event: IChipSelectEventArgs) {
-        console.log(event.selected);
+        console.log(event);
     }
 
     /**
@@ -91,6 +92,7 @@ export class ChipsSampleComponent {
         }
         this.chipListTo = newChipListTo;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     chipsOrderChangedCc(event) {
@@ -103,6 +105,7 @@ export class ChipsSampleComponent {
         }
         this.chipListCc = newChipListCc;
         event.isValid = true;
+        this.cdr.detectChanges();
     }
 
     public onDragEnterCc() {

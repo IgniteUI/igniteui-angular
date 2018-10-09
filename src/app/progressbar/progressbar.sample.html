@@ -85,10 +85,15 @@
             </div>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar [value]="18"></igx-circular-bar>
+                     <igx-circular-bar [value]="currentValue" [textVisibility]="true">
+                        <ng-template igxProcessBarText let-process>
+                            <svg:tspan x="50" dy="-25" >Value is:</tspan>
+                            <svg:tspan x="50" dy="25" font-weight="bold" font-size="30">{{process.value}}</tspan>
+                        </ng-template>
+                    </igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar [value]="77"></igx-circular-bar>
+                    <igx-circular-bar [value]="77" [text]="'Test'"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
                     <igx-circular-bar [value]="44"></igx-circular-bar>
@@ -99,7 +104,7 @@
 
     <div class="button-container">
         <button igxButton="fab" igxRipple="" (click)="generateNewProgressValues()">
-            <igx-icon fontSet="material" name="refresh"></igx-icon>
+            <igx-icon fontSet="material">refresh</igx-icon>
         </button>
     </div>
 </div>

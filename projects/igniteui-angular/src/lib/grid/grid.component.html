@@ -3,17 +3,17 @@
 
 <ng-template #defaultPager let-api>
         <button [disabled]="api.isFirstPage" (click)="api.paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
-            <igx-icon fontSet="material" name="first_page"></igx-icon>
+            <igx-icon fontSet="material">first_page</igx-icon>
         </button>
         <button [disabled]="api.isFirstPage" (click)="api.previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
-            <igx-icon fontSet="material" name="chevron_left"></igx-icon>
+            <igx-icon fontSet="material">chevron_left</igx-icon>
         </button>
         <span>{{ api.page + 1 }} of {{ api.totalPages }}</span>
         <button [disabled]="api.isLastPage" (click)="api.nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
-            <igx-icon fontSet="material" name="chevron_right"></igx-icon>
+            <igx-icon fontSet="material">chevron_right</igx-icon>
         </button>
         <button [disabled]="api.isLastPage" (click)="api.paginate(api.totalPages - 1)" igxButton="icon" igxRipple igxRippleCentered="true">
-            <igx-icon fontSet="material" name="last_page"></igx-icon>
+            <igx-icon fontSet="material">last_page</igx-icon>
         </button>
         <select style="margin-left: 1rem;" (change)="api.perPage = $event.target.value">
             <option [value]="val" [selected]="api.perPage == val" *ngFor="let val of [5, 10, 15, 25, 50, 100, 500]">{{ val }}</option>
@@ -32,9 +32,9 @@
                     [style.lineHeight]="'unset'"
                     [style.height]="'unset'">
                 <span class="igx-chip__text">{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
-                <igx-icon class="igx-chip__order-icon" fontSet="material" [name]="expr.dir == 1 ? 'arrow_upward' : 'arrow_downward'"></igx-icon>
+                <igx-icon class="igx-chip__order-icon" fontSet="material">{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </span>
-            <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" igxConnector fontSet="material" [name]="'forward'"></igx-icon>
+            <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
         </igx-chip>
         <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass">
             <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
@@ -49,7 +49,7 @@
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
                 <button class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
-                    <igx-icon fontSet="material" name="reorder"></igx-icon>
+                    <igx-icon fontSet="material">reorder</igx-icon>
                 </button>
             </div>
         </ng-container>
@@ -94,9 +94,16 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" [style.marginLeft.px]="summariesMargin" role="row" #summaries>
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
+        </ng-container>
+        <ng-container *ngIf="summariesMargin">
+            <div
+            class="igx-grid__summaries-patch"
+            [style.min-width.px]="summariesMargin" 
+            [style.flex-basis.px]="summariesMargin"
+            ></div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
@@ -129,7 +136,7 @@
 </ng-template>
 
 <ng-template #defaultDropArea>
-    <igx-icon fontSet="material" name="group_work" class="igx-drop-area__icon"></igx-icon>
+    <igx-icon fontSet="material" class="igx-drop-area__icon">group_work</igx-icon>
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 

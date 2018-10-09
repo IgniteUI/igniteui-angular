@@ -8,15 +8,19 @@ export interface SelectorChanges {
 }
 export interface SelectorChange extends TemplateElement, ChangeAction {}
 
-export interface OutputChanges {
-    /** An array of changes to output properties */
-    changes: OutputChange[];
+export interface BindingChanges {
+    /** An array of changes to input/output properties */
+    changes: BindingChange[];
 }
-export interface OutputChange extends ChangeAction {
-    /** Name of the output property to change */
+export interface BindingChange extends ChangeAction {
+    /** Name of the input/output property to change */
     name: string;
-    /** Component that emits the output */
+    /** Component that emits the output or accepts the input */
     owner: TemplateElement;
+    /** Move property value between owner's element tags. */
+    moveBetweenElementTags?: boolean;
+    /** An array of function names that will be executed as conditions. */
+    conditions?: string[];
 }
 
 export interface ClassChanges {

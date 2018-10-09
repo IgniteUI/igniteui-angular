@@ -8,6 +8,7 @@ import {
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -149,7 +150,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -848,6 +849,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         }
+    }
+
+    /**
+     * An @Input property that sets whether the grouped columns should be hidden as well.
+     * The default value is "false"
+     * ```html
+     * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get hideGroupedColumns() {
+        return this._hideGroupedColumns;
+    }
+
+    public set hideGroupedColumns(value: boolean) {
+        if (value) {
+            this.groupingDiffer = this.differs.find(this.groupingExpressions).create();
+        } else {
+            this.groupingDiffer = null;
+        }
+        if (this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(value);
+        }
+
+        this._hideGroupedColumns = value;
     }
 
     /**
@@ -1571,11 +1598,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._pinnedColumnsText = value;
     }
 
-    /**
-     * @hidden
-    */
-    public columnsWithNoSetWidths = null;
-
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -1960,6 +1982,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected groupingDiffer;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -1975,6 +2001,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+    private _hideGroupedColumns = false;
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -2024,6 +2051,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+
+        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
@@ -2069,7 +2100,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
         });
-        this._derivePossibleWidth();
+        this.calculateGridWidth();
         this.initPinning();
         this.calculateGridSizes();
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -2105,6 +2136,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer.observe(this.document.body, config);
         }
     }
+
+    public ngDoCheck(): void {
+        if (this.groupingDiffer) {
+            const changes = this.groupingDiffer.diff(this.groupingExpressions);
+            if (changes && this.columnList) {
+            changes.forEachAddedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = true;
+            });
+            changes.forEachRemovedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = false;
+            });
+            }
+        }
+      }
 
     /**
      * @hidden
@@ -3312,7 +3359,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._columnWidth = this.getPossibleColumnWidth();
             this.initColumns(this.columnList, null);
         }
-        this.calculateGridWidth();
     }
 
     /**
@@ -3322,6 +3368,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const allItems = this.totalItemCount || this.data.length;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    private _setGroupColsVisibility(value) {
+        this.groupingExpressions.forEach((expr) => {
+            const col = this.getColumnByName(expr.fieldName);
+            col.hidden = value;
+        });
     }
 
     /**
@@ -3401,28 +3454,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
-        let maxColumnWidth = Math.max(
-            ...this.visibleColumns.map((col) => parseInt(col.width, 10))
-                .filter((width) => !isNaN(width))
-        );
-
         if (this.rowSelectable) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
-        if (this.columnsWithNoSetWidths === null) {
-            this.columnsWithNoSetWidths = this.visibleColumns.filter((col) => !col.columnGroup && col.width === null);
-        }
+        const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
-        const sumExistingWidths = this.visibleColumns
-            .filter((col) => !col.columnGroup && this.columnsWithNoSetWidths.indexOf(col) === -1)
+        const columnsWithSetWidths = visibleChildColumns.filter(c => c.widthSetByUser);
+        const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
+
+        const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
 
-        maxColumnWidth = !Number.isFinite(sumExistingWidths) ?
-            Math.max(computedWidth / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH) :
-            Math.max((computedWidth - sumExistingWidths) / this.columnsWithNoSetWidths.length, MINIMUM_COLUMN_WIDTH);
+        const columnWidth = !Number.isFinite(sumExistingWidths) ?
+            Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
+            Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH);
 
-        return maxColumnWidth.toString();
+        return columnWidth.toString();
     }
 
     /**
@@ -3437,12 +3485,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
-                this._derivePossibleWidth();
                 this.cdr.markForCheck();
             }
-            return;
+        } else {
+            this.calcWidth = parseInt(this._width, 10);
         }
-        this.calcWidth = parseInt(this._width, 10);
+
+        this._derivePossibleWidth();
     }
 
     /**
@@ -3466,7 +3515,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
-        this._derivePossibleWidth();
+        this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
         if (this.rowSelectable) {
@@ -3633,29 +3682,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
-
-        if (this._columns.length !== collection.length) {
-            // XXX: Deprecate index
-            this._columns = this.columnList.toArray();
-        }
-        const _columnsWithNoSetWidths = [];
-
+        // XXX: Deprecate index
+        this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
+            column.defaultWidth = this.columnWidth;
+
             if (cb) {
                 cb(column);
             }
-            if ((this.columnsWithNoSetWidths === null && !column.width) ||
-                (this.columnsWithNoSetWidths !== null && this.columnsWithNoSetWidths.indexOf(column) !== -1)) {
-                column.width = this.columnWidth;
-
-                if (!column.hidden) {
-                    _columnsWithNoSetWidths.push(column);
-                }
-            }
         });
 
-        this.columnsWithNoSetWidths = _columnsWithNoSetWidths;
         this.reinitPinStates();
     }
 
@@ -3809,7 +3846,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!data) {
             data = this.data;
         }
-        switch (this.filteredItemsStatus(this.id, data)) {
+        switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
             case 'allSelected': {
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;

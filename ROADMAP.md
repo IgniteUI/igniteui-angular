@@ -6,15 +6,18 @@
 
 1. Hierarchical Grid POC (Proof of concept) [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
 2. Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
-3. Advanced Filtering Dialog
-4. Quick Per-column Search in the igxGrid
-5. Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
-6. Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
-7. Typography Updates 
-8. Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
-9. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
-10. Row Editing with transactions [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
-11. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
+3. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
+4. Advanced Filtering Dialog
+5. Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
+6. Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
+7. Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
+8. Typography Updates 
+9. Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
+10. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
+11. Row Editing with transactions [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
+12. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
+13. **[Done]** Drag and Drop Directive
+14. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
 
 # Previous Milestones
 
