@@ -179,9 +179,6 @@ export class IgxColumnComponent implements AfterContentInit {
             this.check();
             if (this.grid) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
-                if (!activeInfo) {
-                    return;
-                }
                 const oldIndex = activeInfo.columnIndex;
 
                 if (this.grid.lastSearchInfo.searchText) {

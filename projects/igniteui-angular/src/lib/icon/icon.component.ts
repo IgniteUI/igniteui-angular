@@ -28,10 +28,6 @@ export class IgxIconComponent implements OnInit {
     @ViewChild('explicitLigature', { read: TemplateRef })
     private explicitLigature: TemplateRef<HTMLElement>;
 
-    // TODO: remove this after glyphName property is deprecated.
-    @ViewChild('implicitLigature', { read: TemplateRef })
-    private implicitLigature: TemplateRef<HTMLElement>;
-
     @ViewChild('svgImage', { read: TemplateRef })
     private svgImage: TemplateRef<HTMLElement>;
 
@@ -246,14 +242,6 @@ export class IgxIconComponent implements OnInit {
         if (this.iconName) {
             if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
                 return this.svgImage;
-            }
-
-            // TODO: remove this after glyphName property is deprecated.
-            const materialFS = 'material-icons';
-            const materialFSAlias = 'material';
-            if (this.font === materialFS || this.font === materialFSAlias ||
-                (!this.font && (this.iconService.defaultFontSet === materialFS || this.iconService.defaultFontSet === materialFSAlias))) {
-                return this.implicitLigature;
             }
 
             return this.noLigature;
