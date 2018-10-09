@@ -22,6 +22,9 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const fs = require('fs');
+const convert = require('./localization');
+
+// const {convert} = require('./localization/index');
 /**
  * The theme function. You can directly export it like this:
  *
@@ -200,6 +203,7 @@ module.exports = function (dest, ctx) {
   // Avoid key collision with Handlebars default `data`.
   // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
   ctx._data = ctx.data;
+  convert(ctx._data);
   delete ctx.data;
 
   /**
