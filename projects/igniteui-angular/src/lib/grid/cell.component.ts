@@ -19,7 +19,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
-import { IState } from '../services/transaction/utilities';
+import { State } from '../services/transaction/utilities';
 import { IgxGridComponent } from './grid.component';
 import { TransactionType } from '../services/transaction/utilities';
 import { IgxGridRowComponent } from './row.component';
@@ -517,8 +517,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 return rowCurrentState && rowCurrentState[this.column.field];
             }
         } else {
-            const states = this.grid.transactions.aggregatedState();
-            const rowTransaction: IState = states.get(this.row.rowID);
+            const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
             return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
         }
 

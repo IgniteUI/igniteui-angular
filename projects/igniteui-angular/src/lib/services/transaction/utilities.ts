@@ -4,13 +4,13 @@ export enum TransactionType {
     UPDATE = 'update'
 }
 
-export interface ITransaction {
+export interface Transaction {
     id: any;
     type: TransactionType;
     newValue: any;
 }
 
-export interface IState {
+export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
@@ -24,12 +24,12 @@ export interface IgxTransactionService {
      *
      * @returns If operation is successful.
      */
-    add(transaction: ITransaction, recordRef?: any): boolean;
+    add(transaction: Transaction, recordRef?: any): boolean;
 
     /**
      * Returns an array of all transactions. If id is provided returns last transaction for provided id
      */
-    getTransactionLog(id?: any): ITransaction[] | ITransaction;
+    getTransactionLog(id?: any): Transaction[] | Transaction;
 
     /**
      * Remove the last transaction if any
@@ -42,16 +42,16 @@ export interface IgxTransactionService {
     redo(): void;
 
     /**
-     * Returns a map of aggregated state for all transactions
+     * Returns aggregated state of all transactions
      */
-    aggregatedState(): Map<any, IState>;
+    aggregatedState(): Transaction[];
 
     /**
-     * Returns whether there are any uncommitted changes for provided id
+     * Returns the state of the record with provided id
      * @param id The id of the record
-     * @returns whether there are uncommitted changes for provided id
+     * @returns state of the record if any
      */
-    hasState(id: any): boolean;
+    getState(id: any): State;
 
     /**
      * Returns whether transaction is enabled for this service

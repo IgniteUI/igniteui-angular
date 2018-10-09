@@ -12,7 +12,7 @@ import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { ITransaction, TransactionType } from '../services/transaction/utilities';
+import { Transaction, TransactionType } from '../services/transaction/utilities';
 /**
  *@hidden
  */
@@ -212,7 +212,7 @@ export class IgxGridAPIService {
             //  if edit (new) value is same as old value do nothing here
             if (oldValue && oldValue === editValue) { return; }
 
-            const transaction: ITransaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
+            const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
             if (!grid.transactions.add(transaction, grid.data[rowIndex])) {
                 grid.data[rowIndex][column.field] = args.newValue;
             }

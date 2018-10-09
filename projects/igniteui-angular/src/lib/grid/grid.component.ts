@@ -55,7 +55,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { ITransaction, TransactionType, IgxTransactionService, IState } from '../services/transaction/utilities';
+import { Transaction, TransactionType, IgxTransactionService, State } from '../services/transaction/utilities';
 import { IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
@@ -79,7 +79,7 @@ export interface IGridEditEventArgs {
 
 export interface IGridRowEditEventArgs {
     row: IgxGridRowComponent;
-    state: IState;
+    state: State;
 }
 
 export interface IPinColumnEventArgs {
@@ -2937,7 +2937,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public addRow(data: any): void {
         if (this.transactions.hasTransactions()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
-            const transaction: ITransaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
             this.transactions.add(transaction);
         } else {
             this.data.push(data);
@@ -2976,7 +2976,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             index = this.data.indexOf(rowId);
         }
-        const state = this.transactions.aggregatedState().get(rowId);
+        const state: State = this.transactions.getState(rowId);
         const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
 
         //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
@@ -2997,7 +2997,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         //  if there is a row in ADD or UPDATE state change it state to DELETE
         if (index !== -1) {
             if (this.transactions.hasTransactions()) {
-                const transaction: ITransaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
+                const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
                 this.transactions.add(transaction, this.data[index]);
             } else {
                 this.data.splice(index, 1);
@@ -4931,9 +4931,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private addRowsInTransactionCount(): number {
         let result = 0;
         if (this.transactions.hasTransactions()) {
-            result += Array
-                .from(this.transactions.aggregatedState())
-                .filter(state => state['1'].type === TransactionType.ADD)
+            result += this.transactions.aggregatedState()
+                .filter(state => state.type === TransactionType.ADD)
                 .length;
             }
 
@@ -4943,9 +4942,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
         if (this.transactions.hasTransactions()) {
-            this.transactions.aggregatedState().forEach((state: IState, key) => {
+            this.transactions.aggregatedState().forEach((state: Transaction) => {
                 if (state.type === TransactionType.ADD) {
-                    result.push(this.transactions.getAggregatedValue(key));
+                    result.push(this.transactions.getAggregatedValue(state.id));
                 }
             });
         }

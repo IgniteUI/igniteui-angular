@@ -21,7 +21,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
-import { TransactionType } from '../services';
+import { TransactionType, State } from '../services';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -169,8 +169,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-dirty')
     public get dirty(): boolean {
-        const state = this.grid.transactions.aggregatedState();
-        const row = state.get(this.rowID);
+        const row: State = this.grid.transactions.getState(this.rowID);
         if (row) {
             return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
         }
@@ -183,8 +182,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('attr.aria-deleted')
     public get deleted(): boolean {
-        const state = this.grid.transactions.aggregatedState();
-        const row = state.get(this.rowID);
+        const row: State = this.grid.transactions.getState(this.rowID);
         if (row) {
             return row.type === TransactionType.DELETE;
         }

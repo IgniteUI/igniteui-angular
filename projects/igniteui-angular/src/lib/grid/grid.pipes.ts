@@ -189,14 +189,14 @@ export class IgxGridTransactionPipe implements PipeTransform {
             const copy = cloneArray(collection, true);
             copy.forEach((value, index) => {
                 const rowId = grid.primaryKey ? copy[index][grid.primaryKey] : copy[index];
-                if (grid.transactions.hasState(rowId)) {
+                if (grid.transactions.getState(rowId)) {
                     copy[index] = grid.transactions.getAggregatedValue(rowId, true);
                 }
             });
             const aggregatedState = grid.transactions.aggregatedState();
-            const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
+            const addedRows = aggregatedState.filter(state => state.type === TransactionType.ADD);
             addedRows.forEach(row => {
-                copy.push(row['1'].value);
+                copy.push(grid.transactions.getAggregatedValue(row.id));
             });
             return copy;
         }

@@ -1,13 +1,13 @@
-import { ITransaction, IState, TransactionType } from './utilities';
+import { Transaction, State, TransactionType } from './utilities';
 import { IgxNoOpTransactionService } from './noop-transaction';
 
 export class IgxTransactionBaseService extends IgxNoOpTransactionService {
-    private _transactions: ITransaction[] = [];
-    private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
-    private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
-    private _states: Map<any, IState> = new Map();
+    private _transactions: Transaction[] = [];
+    private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
+    private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
+    private _states: Map<any, State> = new Map();
 
-    public add(transaction: ITransaction, recordRef?: any) {
+    public add(transaction: Transaction, recordRef?: any) {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
         this.updateState(states, transaction, recordRef);
@@ -23,22 +23,29 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
         return true;
     }
 
-    public getTransactionLog(id?: any): ITransaction[] | ITransaction {
+    public getTransactionLog(id?: any): Transaction[] | Transaction {
         if (id) {
             return [...this._transactions].reverse().find(t => t.id === id);
         }
         return [...this._transactions];
     }
 
-    public aggregatedState(): Map<any, IState> {
-        return new Map(this._states);
+    public aggregatedState(): Transaction[] {
+        const result: Transaction[] = [];
+        this._states.forEach((state: State, key: any) => {
+            result.push({ id: key, newValue: state.value, type: state.type });
+        });
+        return result;
     }
 
-    public hasState(id: any): boolean {
+    public getState(id: any): State {
         if (id !== undefined) {
-            return this._states.has(id) || super.hasState(id);
+            if (this._states.has(id)) {
+                return this._states.get(id);
+            }
+            return super.getState(id);
         }
-        return false;
+        return null;
     }
 
     public hasTransactions(): boolean {
@@ -59,7 +66,7 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
     }
 
     public commit(data: any[]) {
-        this._states.forEach((s: IState) => {
+        this._states.forEach((s: State) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
                 case TransactionType.ADD:
@@ -69,7 +76,6 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
                     if (0 <= index && index < data.length) {
                         data.splice(index, 1);
                     }
-                    //  TODO: should we throw here if there is no such item in the data
                     break;
                 case TransactionType.UPDATE:
                     if (0 <= index && index < data.length) {
@@ -92,7 +98,7 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
             return;
         }
         this._transactions.pop();
-        const action: { transaction: ITransaction, recordRef: any } = this._undoStack.pop();
+        const action: { transaction: Transaction, recordRef: any } = this._undoStack.pop();
         this._redoStack.push(action);
         this._states.clear();
         this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
@@ -111,7 +117,7 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    protected verifyAddedTransaction(states: Map<any, IState>, transaction: ITransaction, recordRef?: any): void {
+    protected verifyAddedTransaction(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
         const state = states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
@@ -140,7 +146,7 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, IState>, transaction: ITransaction, recordRef?: any): void {
+    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
         const state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
