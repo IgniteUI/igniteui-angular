@@ -362,8 +362,6 @@ export class IgxChipComponent implements AfterViewInit {
     @HostBinding('tabindex')
     public chipTabindex = 0;
 
-    public removeBtnTabindex = 0;
-
     private _displayDensity = DisplayDensity.comfortable;
     private _selected = false;
     private _movedWhileRemoving = false;
