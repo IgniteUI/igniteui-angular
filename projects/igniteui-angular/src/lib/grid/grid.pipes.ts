@@ -9,7 +9,6 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { TransactionType } from '../services/transaction/utilities';
-import { stat } from 'fs-extra';
 
 /**
  *@hidden
@@ -185,7 +184,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridComponent = this.gridAPI.get(id);
-        if (collection && grid.transactions.hasTransactions()) {
+        if (collection && grid.transactions.transactionsEnabled()) {
             const copy = cloneArray(collection, true);
             copy.forEach((value, index) => {
                 const rowId = grid.primaryKey ? copy[index][grid.primaryKey] : copy[index];
@@ -193,11 +192,11 @@ export class IgxGridTransactionPipe implements PipeTransform {
                     copy[index] = grid.transactions.getAggregatedValue(rowId, true);
                 }
             });
-            const aggregatedState = grid.transactions.aggregatedState();
-            const addedRows = aggregatedState.filter(state => state.type === TransactionType.ADD);
-            addedRows.forEach(row => {
-                copy.push(grid.transactions.getAggregatedValue(row.id));
-            });
+
+            copy.push(...grid.transactions
+                .aggregatedState()
+                .filter(state => state.type === TransactionType.ADD)
+                .map(state => state.newValue));
             return copy;
         }
         return collection;

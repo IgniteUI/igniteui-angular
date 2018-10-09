@@ -30,7 +30,7 @@ export class IgxBaseTransactionService implements TransactionService {
         return null;
     }
 
-    public hasTransactions(): boolean {
+    public transactionsEnabled(): boolean {
         return this._isPending;
     }
 

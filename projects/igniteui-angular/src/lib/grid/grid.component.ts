@@ -163,7 +163,6 @@ export interface IColumnMovingEndEventArgs {
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
-    private _data;
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -173,42 +172,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public get data(): any[] {
-        // if (this._data && this.transactions.hasState()) {
-        //     const copy = [...this._data];
-        //     copy.forEach((value, index) => {
-        //         const rowId = this.primaryKey ? copy[index][this.primaryKey] : copy[index];
-        //         if (this.transactions.hasState(rowId)) {
-        //             copy[index] = this.transactions.getAggregatedValue(rowId, true);
-        //         }
-        //     });
-        //     const aggregatedState = this.transactions.aggregatedState();
-        //     if (aggregatedState) {
-        //         const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
-        //         copy.push(addedRows.map(x => x['1'].value));
-        //     }
-        //     // const transactionsState = this.transactions.aggregatedState();
-        //     // transactionsState.forEach((state, key) => {
-        //     //     const index = this._data.findIndex(v => v === state.recordRef);
-        //     //     switch (state.type) {
-        //     //         case TransactionType.ADD: {
-        //     //             copy.push(state.value);
-        //     //             break;
-        //     //         }
-        //     //         case TransactionType.UPDATE: {
-        //     //             copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-        //     //             break;
-        //     //         }
-        //     //     }
-        //     // });
-
-        //     return copy;
-        // }
-        return this._data;
-    }
-    public set data(value: any[]) {
-        this._data = value;
-    }
+    public data: any[];
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -667,7 +631,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```typescript
      * let rowEditable = this.grid.rowEditable;
      * ```
-	 * @memberof IgxGridComponent
+     * @memberof IgxGridComponent
      */
     @Input()
     get rowEditable(): boolean {
@@ -1505,18 +1469,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
 
-    // /**
-    //  * @hidden
-    //  */
-    // @ViewChild(IgxRowEditButton2TemplateDirective, { read: IgxRowEditButton2TemplateDirective })
-    // public rowEdit_button2: IgxRowEditButton2TemplateDirective;
-
-    // /**
-    //  * @hidden
-    //  */
-    // @ViewChild(IgxRowEditButton1TemplateDirective, { read: IgxRowEditButton1TemplateDirective })
-    // public rowEdit_button1: IgxRowEditButton1TemplateDirective;
-
     /**
      * @hidden
      */
@@ -1768,7 +1720,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Get pending transactions for the grid.
+     * Get transactions service for the grid.
      */
     get transactions() {
         return this._transactions;
@@ -2987,7 +2939,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        if (this.transactions.hasTransactions()) {
+        if (this.transactions.transactionsEnabled()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
             this.transactions.add(transaction);
@@ -3019,7 +2971,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * hidden
+     * @hidden
+     * @param
      */
     public deleteRowById(rowId: any) {
         let index: number;
@@ -3046,9 +2999,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onRowDeleted.emit({ data: this.data[index] });
 
         //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it state to DELETE
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
-            if (this.transactions.hasTransactions()) {
+            if (this.transactions.transactionsEnabled()) {
                 const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
                 this.transactions.add(transaction, this.data[index]);
             } else {
@@ -4140,7 +4093,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data) {
-            // data = this.data;
             this.checkHeaderCheckboxStatus();
             return;
         }
@@ -4479,7 +4431,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
-        if (!this.filteredData && this.transactions.hasTransactions()) {
+        if (!this.filteredData && this.transactions.transactionsEnabled()) {
             data = new IgxGridTransactionPipe(this.gridAPI).transform(data, this.id, -1);
         }
 
@@ -4955,8 +4907,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.transactions.endPending(commit);
         const row = this.gridAPI.get_row_inEditMode(this.id);
         if (row) {
-            const state = this.transactions.getAggregatedValue(row.rowID);
-            this.onRowEditCancel.emit(state);
+            const value = this.transactions.getAggregatedValue(row.rowID);
+            this.onRowEditCancel.emit(value);
         }
         this.rowEditingOverlay.close();
     }
@@ -4970,9 +4922,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const currentCell = this.gridAPI.get_cell_by_key(this.id, row.rowID, this.gridAPI.get_cell_inEditMode(this.id).cell.column.field);
         this.gridAPI.submit_value(this.id);
         if (commit) {
-            const state = this.transactions.getAggregatedValue(row.rowID);
-            Object.assign(this.data[row.rowIndex], state);
-            this.onRowEditDone.emit(state);
+            const value = this.transactions.getAggregatedValue(row.rowID);
+            Object.assign(this.data[row.rowIndex], value);
+            this.onRowEditDone.emit(value);
         }
         currentCell.nativeElement.focus();
         this.closeRowEditingOverlay(commit);
@@ -4991,7 +4943,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     private get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
-        if (this.transactions.hasTransactions()) {
+        if (this.transactions.transactionsEnabled()) {
             result.push(this.transactions.aggregatedState()
                 .filter(state => state.type === TransactionType.ADD));
         }

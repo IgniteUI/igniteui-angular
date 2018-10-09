@@ -48,7 +48,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return null;
     }
 
-    public hasTransactions(): boolean {
+    public transactionsEnabled(): boolean {
         return true;
     }
 

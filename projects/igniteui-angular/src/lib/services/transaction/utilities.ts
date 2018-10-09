@@ -56,7 +56,7 @@ export interface TransactionService {
     /**
      * Returns whether transaction is enabled for this service
      */
-    hasTransactions(): boolean;
+    transactionsEnabled(): boolean;
 
     /**
      * Returns value of the required id including all uncommitted changes
