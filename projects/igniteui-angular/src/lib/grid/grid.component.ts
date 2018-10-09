@@ -2036,37 +2036,37 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Get/Set the text of the default IgxRowEditingOverlay commit button.
      * ```typescript
      * // Get
-     * const defaultText_COMMIT = this.grid.rowEditButtonCommit; // == 'Commit'
+     * const defaultText_DONE = this.grid.rowEditButtonDone; // == 'Done'
      * ...
      * // Set
-     * const customText_COMMIT = 'Apply Changes';
-     * this.grid.rowEditButtonCommit = customText_COMMIT;
+     * const customText_DONE = 'Apply Changes';
+     * this.grid.rowEditButtonDone = customText_COMMIT;
      * ```
      * Set through markup:
      * ```html
-     * <igx-grid [rowEditButtonCommit]="'Apply Changes'">
+     * <igx-grid [rowEditButtonDone]="'Apply Changes'">
      * ```
      */
     @Input()
-    public rowEditButtonCommit = 'Commit';
+    public rowEditButtonDone = 'Done';
 
     /**
      * Get/Set the text of the default IgxRowEditingOverlay discard button.
      * ```typescript
      * // Get
-     * const defaultText_CANCEL = this.grid.rowEditButtonDiscard; // == 'Discard'
+     * const defaultText_CANCEL = this.grid.rowEditButtonCancel; // == 'Cancel'
      * ...
      * // Set
      * const customText_CANCEL = 'Stop Editing';
-     * this.grid.rowEditButtonDiscard = customText_CANCEL;
+     * this.grid.rowEditButtonCancel = customText_CANCEL;
      * ```
      * Set through markup:
      * ```html
-     * <igx-grid [rowEditButtonDiscard]="'Stop Editing'">
+     * <igx-grid [rowEditButtonCancel]="'Stop Editing'">
      * ```
      */
     @Input()
-    public rowEditButtonDiscard = 'Discard';
+    public rowEditButtonCancel = 'Cancel';
 
     /**
      * Emitted when an export process is initiated by the user.
@@ -4952,30 +4952,42 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public closeRowEditingOverlay(commit?: boolean) {
-        this.transactions.endPending(commit);
-        const row = this.gridAPI.get_row_inEditMode(this.id);
-        if (row) {
-            const state = this.transactions.getAggregatedValue(row.rowID);
-            this.onRowEditCancel.emit(state);
-        }
         this.rowEditingOverlay.close();
     }
-
 
     /**
      * @hidden
      */
-    public endRowTransaction(event, commit?: boolean) {
-        const row = this.gridAPI.get_row_inEditMode(this.id);
-        const currentCell = this.gridAPI.get_cell_by_key(this.id, row.rowID, this.gridAPI.get_cell_inEditMode(this.id).cell.column.field);
-        this.gridAPI.submit_value(this.id);
+    public endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: {rowID: any, rowIndex: number}) {
+        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        const state = this.transactions.getAggregatedValue(rowInEdit.rowID);
         if (commit) {
-            const state = this.transactions.getAggregatedValue(row.rowID);
-            Object.assign(this.data[row.rowIndex], state);
             this.onRowEditDone.emit(state);
+        } else {
+            this.onRowEditCancel.emit(state);
         }
-        currentCell.nativeElement.focus();
-        this.closeRowEditingOverlay(commit);
+        this.transactions.endPending(commit);
+        if (closeOverlay) {
+            this.closeRowEditingOverlay(closeOverlay);
+        }
+        this._pipeTrigger++;
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * Finishes the row transactions on the current row.
+     * If `commit === true`, passes them from the pending state to the data (or transaction service)
+     * @param commit
+     */
+    public closeRowTransaction(commit?: boolean) {
+        const row = this.gridAPI.get_row_inEditMode(this.id);
+        const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
+        this.gridAPI.submit_value(this.id);
+        this.endRowTransaction(commit, true, row);
+        const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowID, cellInEdit.cell.column.field) : null;
+        if (currentCell) {
+            currentCell.nativeElement.focus();
+        }
     }
 
     /**
