@@ -406,7 +406,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else {
             const containerSize = parseInt(this.igxForContainerSize, 10);
             const maxVirtScrollTop = this._virtHeight - containerSize;
-            let nextScrollTop = this.sizesCache[index] + 1;
+            let nextScrollTop = this.sizesCache[index];
             if (nextScrollTop > maxVirtScrollTop) {
                 nextScrollTop = maxVirtScrollTop;
             }
@@ -597,7 +597,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.hScroll.children[0].style.width = totalWidth + 'px';
             }
             if (this.igxForScrollOrientation === 'vertical') {
+                const scrToBottom = this._isScrolledToBottom;
                 this.vh.instance.height += totalDiff;
+                this.vh.instance.cdr.detectChanges();
+                // update virt height after changes.
+                this._virtHeight += totalDiff * this._virtHeightRatio;
+                if (scrToBottom) {
+                    this.vh.instance.elementRef.nativeElement.scrollTop += totalDiff;
+                }
             }
         }
     }
@@ -607,6 +614,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected fixedUpdateAllRows(inScrollTop: number, scrollHeight: number): number {
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
+        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
 
         const ind = this.getIndexAt(
             inScrollTop,
@@ -616,8 +624,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         // floating point number calculations are flawed so we need to handle rounding errors.
         let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         const endingIndex = this.state.chunkSize + currIndex;
-        if (endingIndex > this.igxForOf.length) {
-            currIndex = this.igxForOf.length - this.state.chunkSize;
+        if (endingIndex > count) {
+            currIndex = count - this.state.chunkSize;
         }
 
         // We update the startIndex before recalculating the chunkSize.
@@ -793,7 +801,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected initSizesCache(cols: any[]): number {
+    protected initSizesCache(items: any[]): number {
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
@@ -802,13 +810,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.sizesCache = [];
         this.heightCache = [];
         this.sizesCache.push(0);
-        for (i; i < cols.length; i++) {
+        const count = this.isRemote ? this.totalItemCount : items.length;
+        for (i; i < count; i++) {
             if (dimension === 'height') {
                 // cols[i][dimension] = parseInt(this.igxForItemSize, 10) || 0;
                 size = parseInt(this.igxForItemSize, 10) || 0;
                 this.heightCache.push(size);
             } else {
-                size = parseInt(cols[i][dimension], 10) || 0;
+                size = parseInt(items[i][dimension], 10) || 0;
             }
             totalSize += size;
             this.sizesCache.push(totalSize);

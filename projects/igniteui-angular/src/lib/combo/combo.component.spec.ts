@@ -651,7 +651,7 @@ describe('igxCombo', () => {
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                     firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                     lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                    expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
@@ -671,7 +671,7 @@ describe('igxCombo', () => {
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                             expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                             expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
-                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[6]);
+                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[5]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {
                                 fixture.detectChanges();
@@ -712,7 +712,7 @@ describe('igxCombo', () => {
                         dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                         firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                        expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                         expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                         expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
@@ -728,7 +728,7 @@ describe('igxCombo', () => {
                                 dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                                 firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                                 lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 10]);
+                                expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 11]);
                                 expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                                 expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                                 expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
@@ -756,7 +756,7 @@ describe('igxCombo', () => {
                 const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
                 expect(scrollbar.scrollTop).toEqual(0);
                 dropdownContent.dispatchEvent(endEvent);
-                combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                setTimeout(() => {
                     fixture.detectChanges();
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                     dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
@@ -766,7 +766,7 @@ describe('igxCombo', () => {
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                     done();
-                });
+                }, 20);
             });
         });
 
@@ -786,7 +786,7 @@ describe('igxCombo', () => {
                 const scrollbar = fixture.debugElement.query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL)).nativeElement as HTMLElement;
                 expect(scrollbar.scrollTop).toEqual(0);
                 dropdownContent.dispatchEvent(endEvent);
-                combo.dropdown.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
+                setTimeout(() => {
                     fixture.detectChanges();
                     // Content was scrolled to bottom
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
@@ -806,13 +806,15 @@ describe('igxCombo', () => {
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
 
                     dropdownContent.dispatchEvent(endEvent);
-                    fixture.detectChanges();
-                    lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
-                    // Scroll has not changed
-                    expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
-                    // Last item is focused again
-                    expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
-                    done();
+                    setTimeout(() => {
+                        fixture.detectChanges();
+                        lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
+                        // Scroll has not changed
+                        expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
+                        // Last item is focused again
+                        expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
+                        done();
+                    }, 20);
                 });
             });
         });
@@ -1146,7 +1148,7 @@ describe('igxCombo', () => {
             dropdownContent.dispatchEvent(event);
             setTimeout(function () {
                 fixture.detectChanges();
-                clickItemCheckbox(dropdownList, 5);
+                clickItemCheckbox(dropdownList, 6);
                 fixture.detectChanges();
                 setTimeout(function () {
                     fixture.detectChanges();
