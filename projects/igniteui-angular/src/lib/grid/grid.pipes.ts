@@ -184,24 +184,22 @@ export class IgxGridTransactionPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
+        const grid: IgxGridComponent = this.gridAPI.get(id);
+        if (collection && grid.transactions.hasState()) {
+            const copy = cloneArray(collection, true);
+            copy.forEach((value, index) => {
+                const rowId = grid.primaryKey ? copy[index][grid.primaryKey] : copy[index];
+                if (grid.transactions.hasState(rowId)) {
+                    copy[index] = grid.transactions.getAggregatedValue(rowId, true);
+                }
+            });
+            const aggregatedState = grid.transactions.aggregatedState();
+            const addedRows = Array.from(aggregatedState).filter(state => state['1'].type === TransactionType.ADD);
+            addedRows.forEach(row => {
+                copy.push(row['1'].value);
+            });
+            return copy;
+        }
         return collection;
-        // const grid = this.gridAPI.get(id);
-        // //  TODO: find faster way to copy the data source collection
-        // const copy = [...collection];
-        // const transactionsState = grid.transactions.aggregatedState();
-        // transactionsState.forEach((state, ket) => {
-        //     // TODO change to switch case
-        //     if (state.type === TransactionType.ADD) {
-        //         copy.push(state.value);
-        //     }
-        //     if (state.type === TransactionType.UPDATE) {
-        //         const index = collection.findIndex(v => v === state.recordRef);
-        //         copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-        //     }
-        //     if (state.type === TransactionType.DELETE) {
-        //         //  TODO: mark row as deleted somehow
-        //     }
-        // });
-        // return copy;
     }
 }
