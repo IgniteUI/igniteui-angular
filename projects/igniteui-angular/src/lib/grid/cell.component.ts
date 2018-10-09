@@ -742,13 +742,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
+        if (this.inEditMode && this.isNavigationKey(key)) {
+            return;
+        }
+
         if (this.isNavigationKey(key)) {
             event.preventDefault();
             event.stopPropagation();
-        }
-
-        if (this.inEditMode && this.isNavigationKey(key)) {
-            return;
         }
 
         switch (key) {
@@ -809,6 +809,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'esc':
                 this.onKeydownExitEditMode(event);
                 break;
+            case ' ':
+            case 'Spacebar':
+            case 'Space':
+                if (this.row.rowSelectable) {
+                    this.row.checkboxElement.toggle();
+                }
+                break;
             default:
                 return;
         }
@@ -857,7 +864,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     private isNavigationKey(key) {
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end'].indexOf(key) !== -1;
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end', ' ', 'Spacebar', 'Space']
+        .indexOf(key) !== -1;
     }
 
 }
