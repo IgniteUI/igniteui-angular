@@ -152,10 +152,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
         this.combo.totalItemCount - 1 :
         Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
         if (vContainer.igxForOf.length <= vContainer.state.startIndex + vContainer.state.chunkSize) {
-            if (vContainer.getItemCountInView() === vContainer.state.chunkSize) {
-                this.focusItem(this.items.length - 1);
-                return;
-            }
+            this.focusItem(this.items.length - 1);
+            return;
         }
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
