@@ -173,8 +173,8 @@
         </div>
         <div class="igx-banner__actions">
             <div class="igx-banner__row">
-                <button igxButton igxRowEditTabStop (click)="endRowTransaction($event)">{{ rowEditButtonDiscard }}</button>
-                <button igxButton igxRowEditTabStop (click)="endRowTransaction($event, true)">{{ rowEditButtonCommit }}</button>
+                <button igxButton igxRowEditTabStop (click)="closeRowTransaction(false)">{{ rowEditButtonCancel }}</button>
+                <button igxButton igxRowEditTabStop (click)="closeRowTransaction(true)">{{ rowEditButtonDone }}</button>
             </div>
         </div>
     </div>
