@@ -1460,11 +1460,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
+    @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
+    public defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
-    @ViewChild(IgxRowEditTemplateDirective, { read: IgxRowEditTemplateDirective })
-    public rowEditContainer: IgxRowEditTemplateDirective;
+    @ContentChild(IgxRowEditTemplateDirective, {read: TemplateRef})
+    public rowEditCustom: TemplateRef<any>;
+
+    public get rowEditContainer(): TemplateRef<any> {
+        return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
+    }
 
     // /**
     //  * @hidden
@@ -1713,7 +1719,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Get transactions.
+     * Get pending transactions for the grid.
      */
     get transactions() {
         return this._transactions;
@@ -1960,10 +1966,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     @Input()
-    public buttonDoneTemplate;
+    public rowEditMessage = `You have uncommited changes on this row`;
 
     @Input()
-    public buttonCancelTemplate;
+    public rowEditButtonCommit = 'Commit';
+
+    @Input()
+    public rowEditButtonDiscard = 'Discard';
 
     /**
      * Emitted when an export process is initiated by the user.
@@ -4759,6 +4768,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.nativeElement.focus();
     }
 
+    /**
+     * @hidden
+     */
     public openRowEditingOverlay(row: IgxGridRowComponent) {
         this.transactions.startPending();
         this.configureRowEditingOverlay(row);
@@ -4766,6 +4778,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditingOverlay.element.addEventListener('wheel', (evt) => { this.onRowEditingOverlayScroll(evt); });
     }
 
+    /**
+     * @hidden
+     */
     public repositionRowEditingOverlay(row: IgxGridRowComponent) {
         this.configureRowEditingOverlay(row);
         if (!this.rowEditingOverlay.collapsed) {
@@ -4773,6 +4788,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    /**
+     * @hidden
+     */
     public configureRowEditingOverlay(row: IgxGridRowComponent) {
         if (this.rowEditingOverlaySettings) {
             this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
@@ -4797,10 +4815,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    /**
+     * @hidden
+     */
     public hideRowEditingOverlay() {
         this.rowEditingOverlay.element.style.display = 'none';
     }
 
+    /**
+     * @hidden
+     */
     public closeRowEditingOverlay(commit?: boolean) {
         this.transactions.endPending(commit);
         const row = this.gridAPI.get_row_inEditMode(this.id);
@@ -4812,6 +4836,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
 
+    /**
+     * @hidden
+     */
     public endRowTransaction(event, commit?: boolean) {
         const row = this.gridAPI.get_row_inEditMode(this.id);
         this.gridAPI.submit_value(this.id);
@@ -4823,17 +4850,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.closeRowEditingOverlay(commit);
     }
 
+    /**
+     * @hidden
+     */
     private onRowEditingOverlayScroll(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
             this.verticalScrollContainer.scrollPrev();
         }
-    }
-
-    public get cellInEditMode(): IgxGridCellComponent {
-        const cell = this.gridAPI.get_cell_inEditMode(this.id);
-        return this.gridAPI.get_cell_by_key(this.id, cell.cellID.rowID, cell.cell.column.field);
     }
 
     private addRowsInTransactionCount(): number {
