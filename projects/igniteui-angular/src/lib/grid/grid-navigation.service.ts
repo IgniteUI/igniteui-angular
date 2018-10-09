@@ -99,7 +99,7 @@ export class IgxGridNavigationService {
                 scrollAmount = parseInt(this.grid.columnList.filter(c => !c.columnGroup)
                 .find((column) => column.visibleIndex === visibleColumnIndex + 1).width, 10);
             }
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount;
+
             this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -107,6 +107,7 @@ export class IgxGridNavigationService {
                     `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
                 currentCell.nextElementSibling.focus();
             });
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount;
         }
     }
 
@@ -119,8 +120,6 @@ export class IgxGridNavigationService {
             element.parentNode.previousElementSibling.focus();
         } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             (document.activeElement as any).blur();
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
             this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
@@ -128,6 +127,8 @@ export class IgxGridNavigationService {
                     `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
                     currentCell.previousElementSibling.focus();
             });
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
         } else {
             element.previousElementSibling.focus();
         }
@@ -292,6 +293,7 @@ export class IgxGridNavigationService {
                 this.focusNextElement(rowElement, visibleColumnIndex, tabKey);
             });
         } else {
+            (document.activeElement as any).blur();
             this.focusNextElement(rowElement, visibleColumnIndex, tabKey);
         }
     }
@@ -380,8 +382,6 @@ export class IgxGridNavigationService {
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
         if (visibleColumnIndex === 0) {
             if (currentRowEl.querySelector('.igx-grid__cbx-selection')) {
-                console.log(currentRowEl.querySelector('.igx-grid__cbx-selection'));
-                console.log(currentRowEl.querySelector('.igx-grid__cbx-selection').querySelector('.igx-checkbox__input'));
                 currentRowEl.querySelector('.igx-grid__cbx-selection').querySelector('.igx-checkbox__input').focus();
             } else {
                 this.navigateUp(currentRowEl, rowIndex,
