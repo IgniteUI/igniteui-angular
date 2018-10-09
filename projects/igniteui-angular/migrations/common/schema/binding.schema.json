@@ -3,6 +3,17 @@
     "definitions": {
         "BindingChange": {
             "properties": {
+                "conditions": {
+                    "description": "An array of function names that will be executed as conditions.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "moveBetweenElementTags": {
+                    "description": "Move property value between owner's element tags.",
+                    "type": "boolean"
+                },
                 "name": {
                     "description": "Name of the input/output property to change",
                     "type": "string"
