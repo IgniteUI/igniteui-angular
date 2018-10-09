@@ -34,11 +34,15 @@ export class IgxTransactionBaseService extends IgxNoOpTransactionService {
         return new Map(this._states);
     }
 
-    public hasState(id?: any): boolean {
+    public hasState(id: any): boolean {
         if (id !== undefined) {
             return this._states.has(id) || super.hasState(id);
         }
-        return this._states.size > 0 || super.hasState();
+        return false;
+    }
+
+    public hasTransactions(): boolean {
+        return true;
     }
 
     public getAggregatedValue(id: any, mergeChanges = true) {

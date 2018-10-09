@@ -152,7 +152,7 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        { provide: IgxGridTransaction, useClass: IgxTransactionBaseService },
+        // { provide: IgxGridTransaction, useClass: IgxTransactionBaseService },
         IgxOverlayService
     ],
     bootstrap: [AppComponent]

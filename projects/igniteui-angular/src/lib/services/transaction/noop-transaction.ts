@@ -14,19 +14,24 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
         return true;
     }
 
-    getTransactionLog(id?: any): ITransaction[] | ITransaction { return null; }
+    getTransactionLog(id?: any): ITransaction[] | ITransaction { return []; }
 
     undo() { }
 
     redo() { }
 
-    aggregatedState(): Map<any, IState> { return null; }
+    aggregatedState(): Map<any, IState> { return new Map(); }
 
-    public hasState(id?: any): boolean {
+    public hasState(id: any): boolean {
         if (id !== undefined) {
             return this._pendingStates.has(id);
         }
-        return this._pendingStates.size > 0;
+
+        return false;
+    }
+
+    public hasTransactions(): boolean {
+        return this._isPending;
     }
 
     public getAggregatedValue(id: any, mergeChanges = true) {

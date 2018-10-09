@@ -72,7 +72,7 @@
             <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px">
                 <igx-column width="100px">
                     <ng-template igxCell let-cell="cell" let-val>
-                        <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
+                        <button (click)="deleteRow($event, 'grid', cell.cellID.rowID)">Delete</button>
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="ProductID" header="Product ID"></igx-column>

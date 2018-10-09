@@ -170,11 +170,9 @@ export class IgxGridRowComponent implements DoCheck {
     @HostBinding('attr.aria-dirty')
     public get dirty(): boolean {
         const state = this.grid.transactions.aggregatedState();
-        if (state) {
-            const row = state.get(this.rowID);
-            if (row) {
-                return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
-            }
+        const row = state.get(this.rowID);
+        if (row) {
+            return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
         }
 
         return false;
@@ -186,11 +184,9 @@ export class IgxGridRowComponent implements DoCheck {
     @HostBinding('attr.aria-deleted')
     public get deleted(): boolean {
         const state = this.grid.transactions.aggregatedState();
-        if (state) {
-            const row = state.get(this.rowID);
-            if (row) {
-                return row.type === TransactionType.DELETE;
-            }
+        const row = state.get(this.rowID);
+        if (row) {
+            return row.type === TransactionType.DELETE;
         }
 
         return false;
@@ -332,25 +328,7 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public delete() {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell && editableCell.cellID.rowID === this.rowID) {
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-        }
-        const index = this.grid.data.indexOf(this.rowData);
-        this.grid.onRowDeleted.emit({ data: this.rowData });
-        this.grid.data.splice(index, 1);
-        if (this.grid.rowSelectable === true && this.isSelected) {
-            this.grid.deselectRows([this.rowID]);
-        } else {
-            this.grid.checkHeaderCheckboxStatus();
-        }
-        (this.grid as any)._pipeTrigger++;
-        this.cdr.markForCheck();
-
-        this.grid.refreshSearch();
-        if (this.grid.data.length % this.grid.perPage === 0 && this.grid.isLastPage && this.grid.page !== 0) {
-            this.grid.page--;
-        }
+        this.grid.deleteRowById(this.rowID);
     }
 
     /**

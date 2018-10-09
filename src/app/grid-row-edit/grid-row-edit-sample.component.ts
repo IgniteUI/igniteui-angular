@@ -69,7 +69,7 @@ export class GridRowEditSampleComponent {
         switch (gridID) {
             case 'gridRowEdit':
             case 'grid':
-                this.data.splice(rowID - 1, 1);
+                this.grid.deleteRow(rowID);
                 break;
             case 'gridRowEditTransaction':
                 this.gridRowEditTransaction.deleteRow(rowID);

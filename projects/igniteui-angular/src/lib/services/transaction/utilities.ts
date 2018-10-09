@@ -51,7 +51,12 @@ export interface IgxTransactionService {
      * @param id The id of the record
      * @returns whether there are uncommitted changes for provided id
      */
-    hasState(id?: any): boolean;
+    hasState(id: any): boolean;
+
+    /**
+     * Returns whether transaction is enabled for this service
+     */
+    hasTransactions(): boolean;
 
     /**
      * Returns value of the required id including all uncommitted changes

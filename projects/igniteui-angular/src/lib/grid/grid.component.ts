@@ -2859,7 +2859,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        if (this.transactions.aggregatedState() !== null) {
+        if (this.transactions.hasTransactions()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
             const transaction: ITransaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
             this.transactions.add(transaction);
@@ -2886,39 +2886,61 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const index = this.data.map((record) => record[this.primaryKey]).indexOf(rowSelector);
-            if (this.transactions.hasState()) {
-                if (index !== -1) {
-                    const transaction: ITransaction = { id: rowSelector, type: TransactionType.DELETE, newValue: null };
-                    this.transactions.add(transaction, this.data[index]);
-                } else {
-                    const state = this.transactions.aggregatedState().get(rowSelector);
-                    if (state && state.type !== TransactionType.DELETE) {
-                        this.transactions.add({ id: rowSelector, type: TransactionType.DELETE, newValue: null }, state.recordRef);
-                    }
-                }
-            } else {
-                if (index !== -1) {
-                    const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                    if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                        this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                    }
-                    this.onRowDeleted.emit({ data: this.data[index] });
-                    this.data.splice(index, 1);
-                }
-            }
-            if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
-                this.deselectRows([rowSelector]);
-            } else {
-                this.checkHeaderCheckboxStatus();
-            }
-            this._pipeTrigger++;
-            this.cdr.markForCheck();
+            this.deleteRowById(rowSelector);
+        }
+    }
 
-            this.refreshSearch();
-            if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-                this.page--;
+    /**
+     * hidden
+     */
+    public deleteRowById(rowId: any) {
+        let index: number;
+        if (this.primaryKey) {
+            index = this.data.map((record) => record[this.primaryKey]).indexOf(rowId);
+        } else {
+            index = this.data.indexOf(rowId);
+        }
+        const state = this.transactions.aggregatedState().get(rowId);
+        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
+
+        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
+        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
+        //  Otherwise just exit - there is nothing to delete
+        if (index !== -1 || hasRowInNonDeletedState) {
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell && editableCell.cellID.rowID === rowId) {
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
             }
+        } else {
+            return;
+        }
+
+        this.onRowDeleted.emit({ data: this.data[index] });
+
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it state to DELETE
+        if (index !== -1) {
+            if (this.transactions.hasTransactions()) {
+                const transaction: ITransaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
+                this.transactions.add(transaction, this.data[index]);
+            } else {
+                this.data.splice(index, 1);
+            }
+        } else {
+            this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
+        }
+
+        if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowId)) {
+            this.deselectRows([rowId]);
+        } else {
+            this.checkHeaderCheckboxStatus();
+        }
+        this._pipeTrigger++;
+        this.cdr.markForCheck();
+
+        this.refreshSearch();
+        if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+            this.page--;
         }
     }
 
@@ -4322,7 +4344,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
-        if (!this.filteredData && this.transactions.hasState()) {
+        if (!this.filteredData && this.transactions.hasTransactions()) {
             data = new IgxGridTransactionPipe(this.gridAPI).transform(data, this.id, -1);
         }
 
@@ -4793,7 +4815,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public endRowTransaction(event, commit?: boolean) {
         const row = this.gridAPI.get_row_inEditMode(this.id);
         this.gridAPI.submit_value(this.id);
-        if (!this.transactions.aggregatedState() && commit) {
+        if (commit) {
             const state = this.transactions.getAggregatedValue(row.rowID);
             Object.assign(this.data[row.rowIndex], state);
             this.onRowEditDone.emit(state);
@@ -4816,7 +4838,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     private addRowsInTransactionCount(): number {
         let result = 0;
-        if (this.transactions.hasState()) {
+        if (this.transactions.hasTransactions()) {
             result += Array
                 .from(this.transactions.aggregatedState())
                 .filter(state => state['1'].type === TransactionType.ADD)
@@ -4828,7 +4850,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
     private get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
-        if (this.transactions.hasState()) {
+        if (this.transactions.hasTransactions()) {
             this.transactions.aggregatedState().forEach((state: IState, key) => {
                 if (state.type === TransactionType.ADD) {
                     result.push(this.transactions.getAggregatedValue(key));
