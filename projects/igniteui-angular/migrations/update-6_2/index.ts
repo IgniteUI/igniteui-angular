@@ -20,6 +20,19 @@ export default function(): Rule {
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
 
         const update = new UpdateChanges(__dirname, host, context);
+        update.addCondition("igxIcon_is_material_name", function(matchedOwner: string): boolean {
+            if (!matchedOwner) {
+                return true;
+            }
+
+            const fontSetMatches = matchedOwner.match(new RegExp(`fontSet=(["'])(.+?)${'\\1'}`));
+            if (fontSetMatches && fontSetMatches.length > 0) {
+                const fontSet = fontSetMatches[fontSetMatches.length-1];
+                return fontSet === 'material' || fontSet === 'material-icons';
+            }
+
+            return true;
+        });
         update.applyChanges();
     };
 }
