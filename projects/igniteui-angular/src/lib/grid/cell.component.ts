@@ -7,7 +7,6 @@
     HostBinding,
     HostListener,
     Input,
-    OnDestroy,
     OnInit,
     TemplateRef,
     ViewChild
@@ -17,6 +16,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
+import { isNavigationKey } from '../core/utils';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -742,14 +742,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
-        if (this.isNavigationKey(key)) {
+        if (this.inEditMode && isNavigationKey(key)) {
+            return;
+        }
+
+        if (isNavigationKey(key)) {
             event.preventDefault();
             event.stopPropagation();
         }
 
-        if (this.inEditMode && this.isNavigationKey(key)) {
-            return;
-        }
 
         switch (key) {
             case 'tab':
@@ -809,6 +810,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'esc':
                 this.onKeydownExitEditMode(event);
                 break;
+            case ' ':
+            case 'Spacebar':
+            case 'Space':
+                if (this.row.rowSelectable) {
+                    this.row.checkboxElement.toggle();
+                }
+                break;
             default:
                 return;
         }
@@ -854,10 +862,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
-    }
-
-    private isNavigationKey(key) {
-        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright', 'home', 'end'].indexOf(key) !== -1;
     }
 
 }

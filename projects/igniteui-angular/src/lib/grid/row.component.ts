@@ -222,22 +222,6 @@ export class IgxGridRowComponent implements DoCheck {
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    /**
-     * @hidden
-     */
-    @HostListener('focus', ['$event'])
-    public onFocus(event) {
-        this.isFocused = true;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('blur', ['$event'])
-    public onBlur(event) {
-        this.isFocused = false;
-    }
-
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
         if (this.rowSelectable && event.key.toLowerCase() === 'tab') {
