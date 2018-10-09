@@ -16,7 +16,7 @@ export interface State {
     type: TransactionType;
 }
 
-export interface IgxTransactionService {
+export interface TransactionService {
     /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added

@@ -8,6 +8,7 @@ import {
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
+    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -38,7 +39,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase, IgxNoOpTransactionService, OverlaySettings, AbsoluteScrollStrategy,
+import { IgxBaseExporter, IgxExporterOptionsBase, IgxBaseTransactionService, OverlaySettings, AbsoluteScrollStrategy,
     ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
@@ -55,7 +56,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { Transaction, TransactionType, IgxTransactionService, State } from '../services/transaction/utilities';
+import { Transaction, TransactionType, TransactionService, State } from '../services/transaction/utilities';
 import { IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
@@ -161,7 +162,7 @@ export interface IColumnMovingEndEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
     private _data;
 
     /**
@@ -369,7 +370,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.gridAPI.get(this.id)) {
             this.gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
-            and without overriding seperate sorting expressions */
+            and without overriding separate sorting expressions */
             this._applyGrouping();
             this.cdr.markForCheck();
         } else {
@@ -919,6 +920,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
             }
         }
+    }
+
+    /**
+     * An @Input property that sets whether the grouped columns should be hidden as well.
+     * The default value is "false"
+     * ```html
+     * <igx-grid #grid [data]="localData" [hideGroupedColumns]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get hideGroupedColumns() {
+        return this._hideGroupedColumns;
+    }
+
+    public set hideGroupedColumns(value: boolean) {
+        if (value) {
+            this.groupingDiffer = this.differs.find(this.groupingExpressions).create();
+        } else {
+            this.groupingDiffer = null;
+        }
+        if (this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(value);
+        }
+
+        this._hideGroupedColumns = value;
     }
 
     /**
@@ -1991,7 +2018,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Get/Set the text of the default IgxRowEditingOverlay.
      * ```typescript
      * // Get
-     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommited changes on this row'
+     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommitted changes on this row'
      * ...
      * // Set
      * const customText_MESSAGE = 'You changes have not been committed';
@@ -2191,6 +2218,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected groupingDiffer;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -2206,6 +2237,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+    private _hideGroupedColumns = false;
 
     private defaultRowEditingOverlayPS = new ConnectedPositioningStrategy({
         horizontalDirection: HorizontalAlignment.Left,
@@ -2227,7 +2259,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: IgxTransactionService,
+        @Inject(IgxGridTransaction) private _transactions: TransactionService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -2273,6 +2305,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+
+        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
@@ -2354,6 +2390,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer.observe(this.document.body, config);
         }
     }
+
+    public ngDoCheck(): void {
+        if (this.groupingDiffer) {
+            const changes = this.groupingDiffer.diff(this.groupingExpressions);
+            if (changes && this.columnList) {
+            changes.forEachAddedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = true;
+            });
+            changes.forEachRemovedItem((rec) => {
+                const col = this.getColumnByName(rec.item.fieldName);
+                col.hidden = false;
+            });
+            }
+        }
+      }
 
     /**
      * @hidden
@@ -3611,6 +3663,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const allItems = this.totalItemCount || (this.data.length + this.addRowsInTransactionCount());
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
+    }
+
+    private _setGroupColsVisibility(value) {
+        this.groupingExpressions.forEach((expr) => {
+            const col = this.getColumnByName(expr.fieldName);
+            col.hidden = value;
+        });
     }
 
     /**
@@ -4908,12 +4967,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public endRowTransaction(event, commit?: boolean) {
         const row = this.gridAPI.get_row_inEditMode(this.id);
+        const currentCell = this.gridAPI.get_cell_by_key(this.id, row.rowID, this.gridAPI.get_cell_inEditMode(this.id).cell.column.field);
         this.gridAPI.submit_value(this.id);
         if (commit) {
             const state = this.transactions.getAggregatedValue(row.rowID);
             Object.assign(this.data[row.rowIndex], state);
             this.onRowEditDone.emit(state);
         }
+        currentCell.nativeElement.focus();
         this.closeRowEditingOverlay(commit);
     }
 

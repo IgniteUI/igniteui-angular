@@ -1,6 +1,6 @@
-import { IgxTransactionService, Transaction, State } from './utilities';
+import { TransactionService, Transaction, State } from './utilities';
 
-export class IgxNoOpTransactionService implements IgxTransactionService {
+export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();

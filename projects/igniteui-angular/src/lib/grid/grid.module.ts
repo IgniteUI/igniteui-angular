@@ -55,8 +55,8 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
-import { IgxTransactionService } from '../services';
-import { IgxNoOpTransactionService } from '../services/transaction/noop-transaction';
+import { TransactionService } from '../services';
+import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
 @NgModule({
@@ -148,7 +148,7 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxGridAPIService,
         IgxSelectionAPIService,
         IgxColumnMovingService,
-        { provide: IgxGridTransaction, useClass: IgxNoOpTransactionService }
+        { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
 export class IgxGridModule {
