@@ -1,4 +1,4 @@
-﻿<div #chipArea class="igx-chip__item" [tabindex]="chipTabindex" igxDrop (onEnter)="onChipDragEnterHandler($event)" (onDrop)="onChipDrop($event)"
+﻿<div #chipArea class="igx-chip__item" igxDrop (onEnter)="onChipDragEnterHandler($event)" (onDrop)="onChipDrop($event)"
     [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
     (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd()" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked($event)">
 

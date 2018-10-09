@@ -9,7 +9,8 @@
     ViewChild,
     AfterViewInit,
     Renderer2,
-    Directive
+    Directive,
+    HostListener
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
 import {
@@ -65,7 +66,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * An @Input property that stores data related to the chip.
      * ```html
-     * <igx-chip [data]={ value: 'Country' }></igx-chip>
+     * <igx-chip [data]="{ value: 'Country' }"></igx-chip>
      * ```
      */
     @Input()
@@ -330,6 +331,18 @@ export class IgxChipComponent implements AfterViewInit {
     }
 
     /**
+     * Sets the `IgxChipComponent` to be selected.
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
+     * ```
+     */
+    @Input()
+    @HostBinding('class.igx-chip--selected')
+    public set selected(newValue: boolean) {
+        this.changeSelection(newValue);
+    }
+
+    /**
      * Returns if the `IgxChipComponent` is selected.
      * ```typescript
      * @ViewChild('myChip')
@@ -339,31 +352,20 @@ export class IgxChipComponent implements AfterViewInit {
      * }
      * ```
      */
-    @Input()
     public get selected() {
         return this._selected;
     }
 
     /**
-     * Sets the `IgxChipComponent` to be selected.
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
-     * ```
-     */
-    public set selected(newValue: boolean) {
-        this.changeSelection(newValue);
-    }
-
-    /**
      * @hidden
      */
+    @HostBinding('tabindex')
     public chipTabindex = 0;
+
     public removeBtnTabindex = 0;
 
     private _displayDensity = DisplayDensity.comfortable;
     private _selected = false;
-    private _dragging = false;
-    private _selectedItemClass = 'igx-chip__item--selected';
     private _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
@@ -372,9 +374,6 @@ export class IgxChipComponent implements AfterViewInit {
      * @hidden
      */
     ngAfterViewInit() {
-        this.chipArea.nativeElement.addEventListener('keydown', (args) => {
-            this.onChipKeyDown(args);
-        });
         if (this.removeBtn.nativeElement.children.length) {
             this.removeBtn.nativeElement.addEventListener('keydown', (args) => {
                 this.onRemoveBtnKeyDown(args);
@@ -385,6 +384,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
+    @HostListener('keydown', ['$event'])
     public onChipKeyDown(event: KeyboardEvent) {
         const keyDownArgs: IChipKeyDownEventArgs = {
             originalEvent: event,
@@ -473,14 +473,12 @@ export class IgxChipComponent implements AfterViewInit {
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
             }
         } else if (!newValue && this._selected) {
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
-                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
             }
         }
@@ -497,7 +495,6 @@ export class IgxChipComponent implements AfterViewInit {
             owner: this
         });
         event.cancel = !this.draggable;
-        this._dragging = true;
     }
 
     /**
@@ -505,7 +502,6 @@ export class IgxChipComponent implements AfterViewInit {
      */
     public onChipDragEnd() {
         this.dragDir.dropFinished();
-        this._dragging = false;
     }
 
     /**
