@@ -597,7 +597,7 @@
         flex-flow: row nowrap;
         width: 100%;
         background: --var($theme, 'header-background');
-        z-index: 24;
+        z-index: 10001;
     }
 
     %grid-scroll-start {
@@ -1376,6 +1376,7 @@
     }
 
     %igx-grid__row-editing-outlet {
-        z-index: 23;
+        z-index: 10000;
+        position: absolute;
     }
 }
