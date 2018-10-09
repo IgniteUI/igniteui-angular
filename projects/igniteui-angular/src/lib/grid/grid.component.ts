@@ -2024,7 +2024,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.zone.run(() => {
             this.cdr.detectChanges();
-            this.parentVirtDir.onChunkLoad.emit(this.parentVirtDir.state);
+            this.parentVirtDir.onChunkLoad.emit(this._horizontalForOfs[0].state);
         });
     }
 

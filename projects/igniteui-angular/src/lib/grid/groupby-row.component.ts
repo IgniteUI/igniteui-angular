@@ -142,7 +142,7 @@ export class IgxGridGroupByRowComponent {
     /**
      *@hidden
      */
-    @HostListener('focus', ['$event'])
+    @HostListener('focus')
     public onFocus() {
         this.isFocused = true;
     }
@@ -150,7 +150,7 @@ export class IgxGridGroupByRowComponent {
     /**
      *@hidden
      */
-    @HostListener('blur', ['$event'])
+    @HostListener('blur')
     public onBlur() {
         this.isFocused = false;
     }
