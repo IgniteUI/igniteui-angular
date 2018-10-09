@@ -183,7 +183,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 throw new Error('Invalid selection value');
         }
         this._onChangeCallback(this.selectedDates);
-        this._rangeStarted = false;
+        this.rangeStarted = false;
         this._selection = value;
     }
 
@@ -582,7 +582,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    private _rangeStarted = false;
+    private rangeStarted = false;
     /**
      *@hidden
      */
@@ -1111,18 +1111,18 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         let end: Date;
 
         if (Array.isArray(value)) {
-            this._rangeStarted = false;
+            this.rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
             start =  this.getDateOnly(value.shift());
             end =  this.getDateOnly(value.pop());
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
         } else {
             value = this.getDateOnly(value);
-            if (!this._rangeStarted) {
-                this._rangeStarted = true;
+            if (!this.rangeStarted) {
+                this.rangeStarted = true;
                 this.selectedDates = [value];
             } else {
-                this._rangeStarted = false;
+                this.rangeStarted = false;
 
                 if (this.selectedDates[0].getTime() === value.getTime()) {
                     this.selectedDates = [];
