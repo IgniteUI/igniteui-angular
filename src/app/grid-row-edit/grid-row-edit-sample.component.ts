@@ -13,6 +13,7 @@ export class GridRowEditSampleComponent {
     private pinFlag = false;
     private hideFlag = false;
     private summaryFlag = false;
+    private customTemplate = false;
     public currentActiveGrid: {
         id: string,
         transactions: any[]

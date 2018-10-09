@@ -31,6 +31,7 @@
                 <igx-checkbox [(ngModel)]="pinFlag"><br />Pinned Columns</igx-checkbox>
                 <igx-checkbox [(ngModel)]="hideFlag"><br />Hidden Columns</igx-checkbox>
                 <igx-checkbox [(ngModel)]="summaryFlag" (ngModelChange)="refreshAll()"><br />Summaries</igx-checkbox>
+                <igx-checkbox [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()"><br />Custom Template</igx-checkbox>
             </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px"
@@ -57,8 +58,8 @@
                         [hasSummary]="summaryFlag" editable="true"></igx-column>
                     <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag"
                         [hidden]="hideFlag" editable="true"></igx-column>
-                    <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'" [filterable]="true"
-                        [hasSummary]="summaryFlag" [pinned]="pinFlag" editable="true"></igx-column>
+                    <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'"
+                        [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" editable="true"></igx-column>
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
                         [hasSummary]="summaryFlag" editable="true">
                         <ng-template igxCellEditor let-cell="cell">
@@ -69,20 +70,24 @@
                         [pinned]="pinFlag"></igx-column>
                     <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'"
                         editable="true"></igx-column>
-                    <div igxRowEdit [className]="bannerClass">
-                        <div class="igx-banner__message">
-                            <!--<div class="igx-banner__illustration">-->
-                            <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
-                            <!--</div>-->
-                            <span class="igx-banner__text">This is a custom editing template</span>
-                        </div>
-                        <div class="igx-banner__actions">
-                            <div class="igx-banner__row">
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowTransaction($event)">Cancel</button>
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowTransaction($event, true)">Apply</button>
+                    <ng-template *ngIf="customTemplate" igxRowEdit>
+                        <div class='igx-banner'>
+                            <div class="igx-banner__message">
+                                <!--<div class="igx-banner__illustration">-->
+                                <!--<igx-icon fontSet="material" name="edit"></igx-icon>-->
+                                <!--</div>-->
+                                <span class="igx-banner__text">This is a custom editing template</span>
+                            </div>
+                            <div class="igx-banner__actions">
+                                <div class="igx-banner__row">
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowTransaction($event)">Cancel</button>
+                                    <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
+                                        Changes</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowTransaction($event, true)">Apply</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>
             <button (click)="addRow('gridRowEditTransaction')">Add Row</button>

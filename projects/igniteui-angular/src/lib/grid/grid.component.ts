@@ -1457,9 +1457,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
 
+    /**
+     * @hidden
+     */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
     public rowEditingOutletDirective: IgxOverlayOutletDirective;
 
+    /**
+     * @hidden
+     */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
     public defaultRowEditTemplate: TemplateRef<any>;
     /**
@@ -1511,8 +1517,24 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     @ViewChildren(IgxRowEditTabStopDirective)
-    public rowEditTabs: QueryList<IgxRowEditTabStopDirective>;
+    public rowEditTabsDEFAULT: QueryList<IgxRowEditTabStopDirective>;
 
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxRowEditTabStopDirective)
+    public rowEditTabsCUSTOM: QueryList<IgxRowEditTabStopDirective>;
+
+    /**
+     * @hidden
+     */
+    public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
+        return this.rowEditCustom ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
+    }
+
+    /**
+     * @hidden
+     */
     @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;
 
@@ -1965,12 +1987,57 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    /**
+     * Get/Set the text of the default IgxRowEditingOverlay.
+     * ```typescript
+     * // Get
+     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommited changes on this row'
+     * ...
+     * // Set
+     * const customText_MESSAGE = 'You changes have not been committed';
+     * this.grid.rowEditMessage = customText_MESSAGE;
+     * ```
+     * Set through markup:
+     * ```html
+     * <igx-grid [rowEditMessage]="'You changes have not been committed'">
+     * ```
+     */
     @Input()
     public rowEditMessage = `You have uncommited changes on this row`;
 
+    /**
+     * Get/Set the text of the default IgxRowEditingOverlay commit button.
+     * ```typescript
+     * // Get
+     * const defaultText_COMMIT = this.grid.rowEditButtonCommit; // == 'Commit'
+     * ...
+     * // Set
+     * const customText_COMMIT = 'Apply Changes';
+     * this.grid.rowEditButtonCommit = customText_COMMIT;
+     * ```
+     * Set through markup:
+     * ```html
+     * <igx-grid [rowEditButtonCommit]="'Apply Changes'">
+     * ```
+     */
     @Input()
     public rowEditButtonCommit = 'Commit';
 
+    /**
+     * Get/Set the text of the default IgxRowEditingOverlay discard button.
+     * ```typescript
+     * // Get
+     * const defaultText_CANCEL = this.grid.rowEditButtonDiscard; // == 'Discard'
+     * ...
+     * // Set
+     * const customText_CANCEL = 'Stop Editing';
+     * this.grid.rowEditButtonDiscard = customText_CANCEL;
+     * ```
+     * Set through markup:
+     * ```html
+     * <igx-grid [rowEditButtonDiscard]="'Stop Editing'">
+     * ```
+     */
     @Input()
     public rowEditButtonDiscard = 'Discard';
 
