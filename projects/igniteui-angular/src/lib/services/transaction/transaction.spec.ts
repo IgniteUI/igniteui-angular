@@ -1,11 +1,11 @@
-import { IgxTransactionBaseService } from './transaction-base';
+import { IgxTransactionService } from './transaction';
 import { ITransaction, TransactionType } from './utilities';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
             expect(trans['_transactions']).toBeDefined();
             expect(trans['_transactions'].length).toEqual(0);
@@ -16,7 +16,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should add transactions to the transactions log', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             const transactions: ITransaction[] = [
                 { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
@@ -42,7 +42,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should throw an error when trying to add duplicate transaction', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             const transactions: ITransaction[] = [
                 { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
@@ -68,7 +68,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should throw an error when trying to update transaction with no recordRef', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             const transactions: ITransaction[] = [
                 { id: '1', type: TransactionType.ADD, newValue: 1 },
                 { id: '2', type: TransactionType.ADD, newValue: 2 },
@@ -96,7 +96,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should throw an error when trying to delete an already deleted item', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             const recordRef = { key: 'Key1', value: 1 };
             const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
             trans.add(deleteTransaction, recordRef);
@@ -109,7 +109,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should throw an error when trying to update an already deleted item', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             const recordRef = { key: 'Key1', value: 1 };
             const deleteTransaction: ITransaction = { id: 'Key1', type: TransactionType.DELETE, newValue: null };
             trans.add(deleteTransaction, recordRef);
@@ -124,7 +124,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should get a transaction by transaction id', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             let transaction: ITransaction = { id: '1', type: TransactionType.ADD, newValue: 1 };
             trans.add(transaction);
             expect(trans.getTransactionLog('1')).toEqual(transaction);
@@ -161,7 +161,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should add ADD type transaction - all feasible paths', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
             // ADD
@@ -278,7 +278,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should add DELETE type transaction - all feasible paths', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
             // DELETE
@@ -318,7 +318,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should add UPDATE type transaction - all feasible paths', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
             // UPDATE
@@ -445,7 +445,7 @@ describe('IgxTransaction', () => {
 
         it('Should update data when data is list of objects', () => {
             const originalData = SampleTestData.generateProductData(50);
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
             const item0Update1: ITransaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Some new value' } };
@@ -478,7 +478,7 @@ describe('IgxTransaction', () => {
 
         it('Should update data when data is list of primitives', () => {
             const originalData = SampleTestData.generateListOfPrimitiveValues(50, 'String');
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
 
             const item0Update1: ITransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated Row' };
@@ -501,7 +501,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should add pending transaction and push it to transaction log', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };
@@ -544,7 +544,7 @@ describe('IgxTransaction', () => {
         });
 
         it('Should not add pending transaction and push it to transaction log', () => {
-            const trans = new IgxTransactionBaseService();
+            const trans = new IgxTransactionService();
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };

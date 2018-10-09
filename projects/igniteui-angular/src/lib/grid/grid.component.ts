@@ -39,7 +39,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase, IgxNoOpTransactionService, OverlaySettings, AbsoluteScrollStrategy,
+import { IgxBaseExporter, IgxExporterOptionsBase, IgxBaseTransactionService, OverlaySettings, AbsoluteScrollStrategy,
     ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
@@ -56,7 +56,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { ITransaction, TransactionType, IgxTransactionService, IState } from '../services/transaction/utilities';
+import { ITransaction, TransactionType, TransactionService, IState } from '../services/transaction/utilities';
 import { IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 
@@ -370,7 +370,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.gridAPI.get(this.id)) {
             this.gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
-            and without overriding seperate sorting expressions */
+            and without overriding separate sorting expressions */
             this._applyGrouping();
             this.cdr.markForCheck();
         } else {
@@ -2018,7 +2018,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Get/Set the text of the default IgxRowEditingOverlay.
      * ```typescript
      * // Get
-     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommited changes on this row'
+     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommitted changes on this row'
      * ...
      * // Set
      * const customText_MESSAGE = 'You changes have not been committed';
@@ -2259,7 +2259,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: IgxTransactionService,
+        @Inject(IgxGridTransaction) private _transactions: TransactionService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,

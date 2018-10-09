@@ -1,7 +1,7 @@
 import { ITransaction, IState, TransactionType } from './utilities';
-import { IgxNoOpTransactionService } from './noop-transaction';
+import { IgxBaseTransactionService } from './base-transaction';
 
-export class IgxTransactionBaseService extends IgxNoOpTransactionService {
+export class IgxTransactionService extends IgxBaseTransactionService {
     private _transactions: ITransaction[] = [];
     private _redoStack: { transaction: ITransaction, recordRef: any }[] = [];
     private _undoStack: { transaction: ITransaction, recordRef: any }[] = [];
