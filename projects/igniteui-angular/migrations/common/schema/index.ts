@@ -17,6 +17,10 @@ export interface BindingChange extends ChangeAction {
     name: string;
     /** Component that emits the output or accepts the input */
     owner: TemplateElement;
+    /** Move property value between owner's element tags. */
+    moveBetweenElementTags?: boolean;
+    /** An array of function names that will be executed as conditions. */
+    conditions?: string[];
 }
 
 export interface ClassChanges {
