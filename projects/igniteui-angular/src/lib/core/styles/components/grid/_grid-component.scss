@@ -248,6 +248,10 @@
         @extend %igx-grid__filtering-outlet !optional;
     }
 
+    @include e(toolbar-outlet) {
+        @extend %igx-grid__toolbar-outlet !optional;
+    }
+
     @for $i from 1 through 10 {
         @include e(row-indentation, $m: level-#{$i}) {
             @extend %igx-grid__row-indentation--level-#{$i} !optional;
