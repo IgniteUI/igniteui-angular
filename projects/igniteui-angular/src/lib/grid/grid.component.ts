@@ -2219,7 +2219,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         // requestAnimationFrame(() => {
         //    this.reflow();
-        //});
+        // });
     }
 
     /**
