@@ -32,11 +32,8 @@
         <div class="sample-holder">
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
                 <ng-container  *ngFor="let chipElem of chipList; let last = last;">
-                    <igx-chip #chipRef="chip" class="test" [id]="chipElem.id" [draggable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
+                    <igx-chip #chipRef="chip" class="test" [id]="chipElem.id" [draggable]="true" [selectable]="true" [removable]="true" (onRemove)="chipRemoved($event)" >
                         {{chipElem.text}}
-                        <igx-icon igxRemoveButton>
-                            cancel
-                        </igx-icon>
                     </igx-chip>
                     <igx-icon *ngIf="!last" class="igx-chip__dir-icon" fontSet="material">forward</igx-icon>
                 </ng-container>

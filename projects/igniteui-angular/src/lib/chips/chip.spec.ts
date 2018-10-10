@@ -14,18 +14,15 @@ import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/utils';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
-import { IgxRemoveButtonDirective } from './remove-button.directive';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [selectable]="chip.selectable"
+            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
-                <igx-icon *ngIf="chip.removable" igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                    class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -83,8 +80,8 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     const CHIP = 'igx-chip';
-    const CHIP_ITEM_AREA = 'igx-chip__item';
-    const CHIP_PREFIX = 'igx-chip-prefix';
+    const CHIP_PREFIX = 'igx-chip__prefix';
+    const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -116,7 +113,7 @@ describe('IgxChip', () => {
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // For this first chip there are 2 elements. The prefix and content span.
-        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
+        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(2);
         expect(chipElems[0].nativeElement.children[0].children[0].tagName).toEqual('IGX-ICON');
         expect(chipElems[0].nativeElement.children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
         expect(chipElems[0].nativeElement.children[0].children[0].classList).toContain(CHIP_PREFIX);
@@ -127,12 +124,11 @@ describe('IgxChip', () => {
         fix.detectChanges();
 
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-        const chipRemoveButton = chipElems[1].queryAll(By.directive(IgxRemoveButtonDirective))[0];
+        const chipRemoveButton = chipElems[1].queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
 
-        // For this second chip there are 3 elements. The prefix, content span and the remove button icon with igxButton directive.
+        // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
         expect(chipElems[1].nativeElement.children[0].children.length).toEqual(3);
         expect(chipRemoveButton).toBeTruthy();
-        expect(chipRemoveButton.nativeElement.hasAttribute('igxbutton')).toEqual(true);
     });
 
     it('should not trigger onRemove event when a chip is focused and delete button is pressed when not removable', () => {
@@ -321,11 +317,11 @@ describe('IgxChip', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.directive(IgxRemoveButtonDirective))[0];
-        deleteButtonElement.nativeElement.parentElement.focus();
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
+        deleteButtonElement.nativeElement.focus();
 
         // Removes chip with id City, because country chip is unremovable
-        deleteButtonElement.nativeElement.parentElement.dispatchEvent(spaceKeyEvent);
+        deleteButtonElement.nativeElement.dispatchEvent(spaceKeyEvent);
         fix.detectChanges();
 
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -348,11 +344,11 @@ describe('IgxChip', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
-        deleteButtonElement.nativeElement.parentElement.focus();
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
+        deleteButtonElement.nativeElement.focus();
 
         // Removes chip with id City, because country chip is unremovable
-        deleteButtonElement.nativeElement.parentElement.dispatchEvent(enterKeyEvent);
+        deleteButtonElement.nativeElement.dispatchEvent(enterKeyEvent);
         fix.detectChanges();
 
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -443,12 +439,13 @@ describe('IgxChip', () => {
 
         spyOn(secondChipComp.onSelection, 'emit');
 
-        const removeBtnTop = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().top;
-        const removeBtnLeft = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().left;
+        const chipRemoveButton = secondChipComp.elementRef.nativeElement.querySelectorAll('.' + CHIP_REMOVE_BUTTON)[0];
+        const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
+        const removeBtnLeft = chipRemoveButton.getBoundingClientRect().left;
 
-        UIInteractions.simulatePointerEvent('pointerdown', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        UIInteractions.simulatePointerEvent('pointerdown', chipRemoveButton, removeBtnLeft, removeBtnTop);
         fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        UIInteractions.simulatePointerEvent('pointerup', chipRemoveButton, removeBtnLeft, removeBtnTop);
         fix.detectChanges();
 
         expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();

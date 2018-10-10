@@ -13,17 +13,14 @@ import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
-import { IgxRemoveButtonDirective } from './remove-button.directive';
 
 @Component({
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [selectable]="chip.selectable">
+            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon *ngIf="chip.removable" igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                    class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -45,18 +42,14 @@ class TestChipComponent {
 @Component({
     template: `
         <igx-chips-area #chipsArea>
-            <igx-chip #chipElem [id]="1" [draggable]="true" [selectable]="true" [selected]="true">
+            <igx-chip #chipElem [id]="1" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
                 <span #label [class]="'igx-chip__text'">first chip</span>
-                <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                    class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
             <igx-chip #chipElem [id]="2" [draggable]="false" [selectable]="false" [selected]="true">
                 <span #label [class]="'igx-chip__text'">second chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="3" [draggable]="true" [selectable]="true" [selected]="false">
+            <igx-chip #chipElem [id]="3" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
                 <span #label [class]="'igx-chip__text'">third chip</span>
-                <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                    class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -70,11 +63,9 @@ class TestChipSelectComponent extends TestChipComponent {
         <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)"
             (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
             <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
-                [selectable]="true" (onRemove)="chipRemoved($event)">
+                [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                    class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -128,7 +119,7 @@ class TestChipReorderComponent {
 }
 
 describe('IgxChipsArea', () => {
-    const CHIP_ITEM_AREA = 'igx-chip__item';
+    const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -720,8 +711,8 @@ describe('IgxChipsArea', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.directive(IgxRemoveButtonDirective))[0];
-        deleteButtonElement.nativeElement.parentElement.click();
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
+        deleteButtonElement.nativeElement.click();
 
         fix.detectChanges();
 
