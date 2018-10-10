@@ -51,6 +51,7 @@ describe('IgxGrid - Cell component', () => {
             // if next row exists navigate next
             if (nextCell) {
                 await wait(10);
+                grid.cdr.detectChanges();
                 navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
