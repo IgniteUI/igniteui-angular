@@ -53,7 +53,6 @@ export class ChipsSampleComponent {
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
-        event.isValid = true;
         this.cdr.detectChanges();
     }
 
@@ -91,7 +90,6 @@ export class ChipsSampleComponent {
             newChipListTo.push(chipItem);
         }
         this.chipListTo = newChipListTo;
-        event.isValid = true;
         this.cdr.detectChanges();
     }
 
@@ -104,7 +102,6 @@ export class ChipsSampleComponent {
             newChipListCc.push(chipItem);
         }
         this.chipListCc = newChipListCc;
-        event.isValid = true;
         this.cdr.detectChanges();
     }
 
@@ -116,11 +113,10 @@ export class ChipsSampleComponent {
         this.dragEnteredArea = false;
     }
 
-    public onDropCc(event){
-        
+    public onDropCc(event) {
         event.cancel = true;
 
-        let chipSwapEl = this.chipListTo.find(val=> val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
+        let chipSwapEl = this.chipListTo.find(val => val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
         this.chipListCc.push(chipSwapEl);
 
         this.chipsAreaCc.cdr.detectChanges();
@@ -133,11 +129,10 @@ export class ChipsSampleComponent {
         this.dropCc.nativeElement.style.visibility = "hidden"
     }
 
-    public onDropTo(event){
-        
+    public onDropTo(event) {
         event.cancel = true;
 
-        let chipSwapEl = this.chipListCc.find(val=> val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
+        let chipSwapEl = this.chipListCc.find(val => val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
         this.chipListTo.push(chipSwapEl);
 
         this.chipsAreaTo.cdr.detectChanges();

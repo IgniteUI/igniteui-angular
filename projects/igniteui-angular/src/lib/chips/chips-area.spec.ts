@@ -103,7 +103,6 @@ class TestChipReorderComponent {
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
-        event.isValid = true;
     }
 
     chipMovingEnded() {

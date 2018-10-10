@@ -90,7 +90,6 @@ public chipsOrderChanged(event) {
         newChipList.push(chipItem);
     }
     this.chipList = newChipList;
-    event.isValid = true;
 }
 
 ```
