@@ -25,18 +25,11 @@
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
             <igx-chip  [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                <span class="igx-chip__label"
-                        [style.position]="'unset'"
-                        [style.width]="'unset'"
-                        [style.webkitTransform]="'unset'"
-                        [style.transform]="'unset'"
-                        [style.lineHeight]="'unset'"
-                        [style.height]="'unset'">
-                    <span class="igx-chip__text">{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
+                    {{ getColumnByName(expr.fieldName).header || expr.fieldName }}
+                <igx-icon igxRemoveButton *ngIf="getColumnByName(expr.fieldName).groupable">cancel</igx-icon>
+                <igx-suffix>
                     <igx-icon class="igx-chip__order-icon" fontSet="material">{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-                </span>
-                <igx-icon *ngIf="getColumnByName(expr.fieldName).groupable" igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
+                </igx-suffix>
             </igx-chip>
             <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" fontSet="material">forward</igx-icon>
         </ng-container>
@@ -105,7 +98,7 @@
         <ng-container *ngIf="summariesMargin">
             <div
             class="igx-grid__summaries-patch"
-            [style.min-width.px]="summariesMargin" 
+            [style.min-width.px]="summariesMargin"
             [style.flex-basis.px]="summariesMargin"
             ></div>
         </ng-container>

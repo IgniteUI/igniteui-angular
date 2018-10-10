@@ -243,9 +243,7 @@
             outline-style: none;
 
             %igx-chip__item {
-                color: --var($theme, 'focus-text-color');
-                background: --var($theme, 'focus-background');
-                border-color: --var($theme, 'hover-border-color');
+                @extend %igx-chip__item--focus;
             }
         }
     }
@@ -307,6 +305,13 @@
             opacity: 0;
         }
     }
+
+    %igx-chip__item--focus {
+        color: --var($theme, 'focus-text-color');
+        background: --var($theme, 'focus-background');
+        border-color: --var($theme, 'hover-border-color');
+    }
+
 
     %igx-chip__item--selected {
         color: --var($theme, 'selected-text-color');

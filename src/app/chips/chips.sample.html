@@ -22,9 +22,6 @@
                 <span>Like</span>
             </igx-chip>
             <igx-chip displayDensity="compact">
-                <!-- <igx-prefix>
-                    <igx-icon>favorite_border</igx-icon>
-                </igx-prefix> -->
                 <span>Like</span>
             </igx-chip>
         </article>
@@ -37,7 +34,7 @@
                 <ng-container  *ngFor="let chipElem of chipList; let last = last;">
                     <igx-chip #chipRef="chip" class="test" [id]="chipElem.id" [draggable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
                         {{chipElem.text}}
-                        <igx-icon igxRemoveButton [tabindex]="0">
+                        <igx-icon igxRemoveButton>
                             cancel
                         </igx-icon>
                     </igx-chip>

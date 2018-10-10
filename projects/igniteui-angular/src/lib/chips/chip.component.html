@@ -16,7 +16,7 @@
         (click)="onChipRemove($event)"
         (touchmove)="onChipRemoveMove()"
         (touchend)="onChipRemoveEnd($event)"
-    >
+        [tabindex]="0">
         <ng-content select="igx-remove-button,[igxRemoveButton]"></ng-content>
     </div>
 </div>
