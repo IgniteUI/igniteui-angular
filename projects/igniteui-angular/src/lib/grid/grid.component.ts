@@ -1481,7 +1481,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public get firstEditableColumnIndex(): number {
-        return [...this.pinnedColumns, ...this.unpinnedColumns].findIndex(e => e.editable);
+        const index = [...this.pinnedColumns, ...this.unpinnedColumns].findIndex(e => e.editable);
+        return index !== -1 ? index : null;
     }
 
     /**
@@ -1489,7 +1490,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public get lastEditableColumnIndex(): number {
         const orderedColumns = [...this.pinnedColumns, ...this.unpinnedColumns];
-        return orderedColumns.length - 1 - orderedColumns.reverse().findIndex(e => e.editable);
+        const index =  orderedColumns.reverse().findIndex(e => e.editable);
+        return index !== -1 ? orderedColumns.length - 1 - index : null;
     }
 
     /**
