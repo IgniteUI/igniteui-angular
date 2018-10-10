@@ -194,6 +194,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
+    @HostBinding('attr.data-rowIndex')
     get rowIndex(): number {
         return this.row.index;
     }
@@ -216,6 +217,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
+    @HostBinding('attr.data-visibleIndex')
     get visibleColumnIndex(): number {
         return this.column.visibleIndex;
     }
@@ -331,16 +333,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
         return !this.column.editable;
-    }
-
-    @HostBinding('attr.data-rowIndex')
-    get dataRowIndex() {
-        return this.rowIndex;
-    }
-
-    @HostBinding('attr.data-visibleIndex')
-    get dataColumnVisibleIndex() {
-        return this.visibleColumnIndex;
     }
 
     /**
@@ -747,7 +739,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.preventDefault();
             event.stopPropagation();
         }
-
 
         switch (key) {
             case 'tab':
