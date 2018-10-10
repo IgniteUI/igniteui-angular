@@ -2115,8 +2115,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
-        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
-        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     /**
@@ -2176,6 +2174,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
         );
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
+        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     public ngDoCheck(): void {
@@ -3977,7 +3977,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @HostListener('scroll', ['$event'])
+    // @HostListener('scroll', ['$event'])
     public scrollHandler(event) {
         this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;

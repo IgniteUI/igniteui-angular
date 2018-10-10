@@ -1058,7 +1058,7 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
-
+        const initialRowListLenght = grid.rowList.length;
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
 
@@ -1085,7 +1085,7 @@ describe('IgxGrid - multi-column headers', () => {
         grid.clearFilter('PostalCode');
         fixture.detectChanges();
 
-        expect(grid.rowList.length).toEqual(8);
+        expect(grid.rowList.length).toEqual(initialRowListLenght);
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
 
@@ -1100,7 +1100,7 @@ describe('IgxGrid - multi-column headers', () => {
         grid.clearFilter('ContactTitle');
         fixture.detectChanges();
 
-        expect(grid.rowList.length).toEqual(8);
+        expect(grid.rowList.length).toEqual(initialRowListLenght);
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
     });

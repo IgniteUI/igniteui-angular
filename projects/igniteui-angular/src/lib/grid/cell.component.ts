@@ -194,6 +194,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
+    @HostBinding('attr.data-rowIndex')
     get rowIndex(): number {
         return this.row.index;
     }
@@ -216,6 +217,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
+    @HostBinding('attr.data-visibleIndex')
     get visibleColumnIndex(): number {
         return this.column.visibleIndex;
     }
@@ -305,7 +307,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public tabindex = -1;
 
     /**
      * Sets/get the `role` property of the cell.
@@ -331,16 +333,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @HostBinding('attr.aria-readonly')
     get readonly(): boolean {
         return !this.column.editable;
-    }
-
-    @HostBinding('attr.data-rowIndex')
-    get dataRowIndex() {
-        return this.rowIndex;
-    }
-
-    @HostBinding('attr.data-visibleIndex')
-    get dataColumnVisibleIndex() {
-        return this.visibleColumnIndex;
     }
 
     /**
@@ -686,9 +678,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     @HostListener('click', ['$event'])
     public onClick(event) {
-        if (!this.selected) {
-            this._updateCellSelectionStatus(true, event);
-        }
         this.grid.onCellClick.emit({
             cell: this,
             event
@@ -735,7 +724,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
         if (key === 'tab') {
             event.preventDefault();
-            event.stopImmediatePropagation();
+            event.stopPropagation();
         }
 
         if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
@@ -750,7 +739,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.preventDefault();
             event.stopPropagation();
         }
-
 
         switch (key) {
             case 'tab':
