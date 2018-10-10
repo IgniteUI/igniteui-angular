@@ -909,35 +909,24 @@ describe('IgxGrid Component Tests', () => {
             expect(rowPosition - (bannerPosition + bannerHeight)).toBeLessThan(5);
         }));
 
-        // it('Correct class is added to the edited row', (async () => {
-        //     const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-        //     fix.detectChanges();
+        it('Correct class is added to the edited row', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
 
-        //     const grid = fix.componentInstance.gridRowEdit;
-        //     const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
-        //     const firstRow = grid.getRowByIndex(0);
-        //     const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
-        //     expect(row.classList).not.toContain('igx-grid__tr--edited');
+            const grid = fix.componentInstance.gridRowEdit;
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+            expect(row.classList).not.toContain('igx-grid__tr--edited');
 
-        //     rv.nativeElement.dispatchEvent(new Event('focus'));
-        //     fix.detectChanges();
+            cell.inEditMode = true;
+            // expect(rowEditBanned) to be visible
+            cell.update('IG');
+            cell.inEditMode = false;
 
-        //     UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-        //     await wait(DEBOUNCETIME);
-        //     expect(firstRow.inEditMode).toBe(true);
+            await wait(DEBOUNCETIME);
 
-        //     const input = fix.debugElement.queryAll(By.css('.igx-input-group'))[0];
-        //     input.nativeElement.dispatchEvent(new Event('focus'));
-        //     fix.detectChanges();
-
-
-            // UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
-
-            // UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-            // await wait(DEBOUNCETIME);
-
-            // expect(row.classList).toContain('igx-grid__tr--edited');
-        // }));
+            expect(row.classList).toContain('igx-grid__tr--edited');
+        }));
 
         // TODO
         // it('TAB key skips noneditable cells', (async () => {
