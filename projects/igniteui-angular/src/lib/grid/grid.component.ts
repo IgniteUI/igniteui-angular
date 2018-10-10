@@ -4544,7 +4544,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
             this.groupingExpressions = this.chipsGoupingExpressions;
         }
-        this.cdr.markForCheck();
+        this.markForCheck();
     }
 
     /**

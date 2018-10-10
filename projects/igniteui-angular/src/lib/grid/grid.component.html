@@ -23,10 +23,12 @@
 <div [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip  [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+            <igx-chip  [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity" [removeIcon]="removeButton"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
                     {{ getColumnByName(expr.fieldName).header || expr.fieldName }}
-                <igx-icon igxRemoveButton *ngIf="getColumnByName(expr.fieldName).groupable">cancel</igx-icon>
+                <ng-template #removeButton>
+                    <igx-icon>cancel</igx-icon>
+                </ng-template>
                 <igx-suffix>
                     <igx-icon class="igx-chip__order-icon" fontSet="material">{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
                 </igx-suffix>
