@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { data } from './data';
 
-import { IgxGridComponent, ITransaction, IgxToggleDirective } from 'igniteui-angular';
+import { IgxGridComponent, Transaction, IgxToggleDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-row-edit',
@@ -10,6 +10,10 @@ import { IgxGridComponent, ITransaction, IgxToggleDirective } from 'igniteui-ang
 })
 export class GridRowEditSampleComponent {
     private addProductId: number;
+    private pinFlag = false;
+    private hideFlag = false;
+    private summaryFlag = false;
+    private customTemplate = false;
     public currentActiveGrid: {
         id: string,
         transactions: any[]
@@ -66,7 +70,7 @@ export class GridRowEditSampleComponent {
         switch (gridID) {
             case 'gridRowEdit':
             case 'grid':
-                this.data.splice(rowID - 1, 1);
+                this.grid.deleteRow(rowID);
                 break;
             case 'gridRowEditTransaction':
                 this.gridRowEditTransaction.deleteRow(rowID);
@@ -95,7 +99,7 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         this.currentActiveGrid = {
             id: gridID,
-            transactions: (<ITransaction[]>currentGrid.transactions.getTransactionLog()).map(e => {
+            transactions: (<Transaction[]>currentGrid.transactions.getTransactionLog()).map(e => {
                 return `ID: ${e.id}, newValue: ${JSON.stringify(e.newValue)}, type: ${e.type}`;
             })
         };

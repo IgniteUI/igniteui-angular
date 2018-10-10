@@ -9,7 +9,6 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { TransactionType } from '../services/transaction/utilities';
-import { stat } from 'fs-extra';
 
 /**
  *@hidden
@@ -184,24 +183,22 @@ export class IgxGridTransactionPipe implements PipeTransform {
     constructor(private gridAPI: IgxGridAPIService) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
+        const grid: IgxGridComponent = this.gridAPI.get(id);
+        if (collection && grid.transactions.transactionsEnabled()) {
+            const copy = cloneArray(collection, true);
+            copy.forEach((value, index) => {
+                const rowId = grid.primaryKey ? copy[index][grid.primaryKey] : copy[index];
+                if (grid.transactions.getState(rowId)) {
+                    copy[index] = grid.transactions.getAggregatedValue(rowId, true);
+                }
+            });
+
+            copy.push(...grid.transactions
+                .aggregatedState()
+                .filter(state => state.type === TransactionType.ADD)
+                .map(state => state.newValue));
+            return copy;
+        }
         return collection;
-        // const grid = this.gridAPI.get(id);
-        // //  TODO: find faster way to copy the data source collection
-        // const copy = [...collection];
-        // const transactionsState = grid.transactions.aggregatedState();
-        // transactionsState.forEach((state, ket) => {
-        //     // TODO change to switch case
-        //     if (state.type === TransactionType.ADD) {
-        //         copy.push(state.value);
-        //     }
-        //     if (state.type === TransactionType.UPDATE) {
-        //         const index = collection.findIndex(v => v === state.recordRef);
-        //         copy.splice(index, 1, Object.assign({}, copy[index], state.value));
-        //     }
-        //     if (state.type === TransactionType.DELETE) {
-        //         //  TODO: mark row as deleted somehow
-        //     }
-        // });
-        // return copy;
     }
 }

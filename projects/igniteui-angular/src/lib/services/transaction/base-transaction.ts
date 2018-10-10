@@ -1,11 +1,11 @@
-import { IgxTransactionService, ITransaction, IState } from './utilities';
+import { TransactionService, Transaction, State } from './utilities';
 
-export class IgxNoOpTransactionService implements IgxTransactionService {
+export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
-    protected _pendingTransactions: ITransaction[] = [];
-    protected _pendingStates: Map<any, IState> = new Map();
+    protected _pendingTransactions: Transaction[] = [];
+    protected _pendingStates: Map<any, State> = new Map();
 
-    public add(transaction: ITransaction, recordRef?: any) {
+    public add(transaction: Transaction, recordRef?: any) {
         if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
@@ -14,19 +14,24 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
         return true;
     }
 
-    getTransactionLog(id?: any): ITransaction[] | ITransaction { return null; }
+    getTransactionLog(id?: any): Transaction[] | Transaction { return []; }
 
     undo() { }
 
     redo() { }
 
-    aggregatedState(): Map<any, IState> { return null; }
+    aggregatedState(): Transaction[] { return []; }
 
-    public hasState(id?: any): boolean {
-        if (id !== undefined) {
-            return this._pendingStates.has(id);
+    public getState(id: any): State {
+        if (id !== undefined && this._pendingStates.has(id)) {
+            return this._pendingStates.get(id);
         }
-        return this._pendingStates.size > 0;
+
+        return null;
+    }
+
+    public transactionsEnabled(): boolean {
+        return this._isPending;
     }
 
     public getAggregatedValue(id: any, mergeChanges = true) {
@@ -51,7 +56,7 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
-            this._pendingStates.forEach((s: IState, k: any) => {
+            this._pendingStates.forEach((s: State, k: any) => {
                 this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
             });
         }
@@ -65,7 +70,7 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, IState>, transaction: ITransaction, recordRef?: any): void {
+    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
         const state = states.get(transaction.id);
         if (state) {
             if (typeof state.value === 'object') {
@@ -83,7 +88,7 @@ export class IgxNoOpTransactionService implements IgxTransactionService {
      * @param state State to update value for
      * @returns updated value including all the changes in provided state
      */
-    protected updateValue(state: IState) {
+    protected updateValue(state: State) {
         if (typeof state.recordRef === 'object') {
             return Object.assign({}, state.recordRef, state.value);
         } else {

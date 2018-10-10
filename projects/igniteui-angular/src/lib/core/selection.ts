@@ -197,12 +197,12 @@ export class IgxSelectionAPIService {
     /**
      * Returns whether all items are selected.
      * @param componentID ID of the component.
-     * @param data Entire data array.
+     * @param dataCount: number Number of items in the data.
      *
      * @returns If all items are selected.
      */
-    public are_all_selected(componentID: string, data): boolean {
-        return this.size(componentID) === data.length;
+    public are_all_selected(componentID: string, dataCount: number): boolean {
+        return this.size(componentID) === dataCount;
     }
 
     /**

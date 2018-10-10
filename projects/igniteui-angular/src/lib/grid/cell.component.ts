@@ -19,7 +19,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
-import { IState } from '../services/transaction/utilities';
+import { State } from '../services/transaction/utilities';
 import { IgxGridComponent } from './grid.component';
 import { TransactionType } from '../services/transaction/utilities';
 import { IgxGridRowComponent } from './row.component';
@@ -517,11 +517,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
                 return rowCurrentState && rowCurrentState[this.column.field];
             }
         } else {
-            const states = this.grid.transactions.aggregatedState();
-            if (states) {
-                const rowTransaction: IState = states.get(this.row.rowID);
-                return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
-            }
+            const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
+            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
         }
 
         return false;
@@ -583,16 +580,32 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
 
+    private get belongsToEditRow(): boolean { // If the cell belongs to the row that is currently being edited
+        const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (cellInEditMode && this.grid.rowEditable) {
+            return this.cellID.rowID === cellInEditMode.cellID.rowID;
+        }
+        return false;
+    }
     public _updateCellSelectionStatus(fireFocus = true, event) {
         if (this.selected) {
             return;
         }
+        const rowInEdit = this.grid.rowEditable ? this.gridAPI.get_row_inEditMode(this.gridID) : null; // Get current editted row
+        const inEditRow = this.belongsToEditRow; // Check if cell is in current editable mode, if any
         this._clearCellSelection();
         this._saveCellSelection();
         const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
         if (hasFilteredResults) {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
+            }
+            if (rowInEdit) { // If there is a row being edited
+                if (inEditRow && !this.column.editable) { // and this cell is in the row and is NOT editable, submit the values and close
+                    this.exitRowEdit(true, true, rowInEdit);
+                } else if (!inEditRow) { // or this is not in the editted row
+                    this.exitRowEdit(true, !this.column.editable, rowInEdit); // submit data and close the overlay depending on editable
+                }
             }
             this.selected = true;
             if (fireFocus) {
@@ -841,7 +854,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable && target) {
                 addedIndex = target.column.editable ? 0 :
-                    [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                    [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup)
                     .splice(0, this.visibleColumnIndex).reverse().findIndex(e => e.editable);
                 target = target.column.editable ? target :
                     this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex - addedIndex);
@@ -920,9 +933,9 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    private exitRowEdit() {
+    private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
         if (this.grid.rowEditable) {
-            this.grid.closeRowEditingOverlay(true);
+            this.grid.endRowTransaction(commit, close, row);
         }
     }
     public onTabKey(event) {
@@ -938,14 +951,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable) {
+                const allColumns = [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(e => !e.columnGroup);
                 if (target) {
                     addedIndex = target.column.editable ? 0 :
-                        [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                        allColumns
                         .splice(this.visibleColumnIndex + 1, visibleColumns.length - 1).findIndex(e => e.editable);
                     target = target.column.editable ? target :
                         this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex + addedIndex);
                 } else {
-                    addedIndex = [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                    addedIndex = allColumns
                     .splice(this.visibleColumnIndex + 1, visibleColumns.length - 1).findIndex(e => e.editable);
                 }
             }
@@ -1054,8 +1068,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
+                this.exitRowEdit(true, true);
                 this.gridAPI.submit_value(this.gridID);
-                this.exitRowEdit();
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -1065,8 +1079,8 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
+            this.exitRowEdit(false, true);
             this.inEditMode = false;
-            this.exitRowEdit();
             this.nativeElement.focus();
         }
     }
