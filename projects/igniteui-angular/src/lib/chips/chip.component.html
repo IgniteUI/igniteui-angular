@@ -2,6 +2,10 @@
     [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
     (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd()" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked($event)">
 
+    <div class="igx-chip__select" *ngIf="selected">
+        <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
+    </div>
+
     <ng-content  select="igx-prefix,[igxPrefix]"></ng-content>
 
     <div class="igx-chip__content">
@@ -10,13 +14,22 @@
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 
-    <div class="igx-chip__remove" #removeBtn
-        (pointerdown)="onChipRemoveMouseDown($event)"
-        (mousedown)="onChipRemoveMouseDown($event)"
-        (click)="onChipRemove($event)"
-        (touchmove)="onChipRemoveMove()"
-        (touchend)="onChipRemoveEnd($event)"
+    <div class="igx-chip__remove" #removeBtn *ngIf="removable"
+        (keydown)="onRemoveBtnKeyDown($event)"
+        (pointerdown)="onRemoveMouseDown($event)"
+        (mousedown)="onRemoveMouseDown($event)"
+        (click)="onRemoveClick($event)"
+        (touchmove)="onRemoveTouchMove()"
+        (touchend)="onRemoveTouchEnd($event)"
         [tabindex]="0">
-        <ng-content select="igx-remove-button,[igxRemoveButton]"></ng-content>
+        <ng-container *ngTemplateOutlet="removeButtonTemplate"></ng-container>
     </div>
 </div>
+
+<ng-template #defaultSelectIcon>
+    <igx-icon>done</igx-icon>
+</ng-template>
+
+<ng-template #defaultRemoveIcon>
+    <igx-icon>cancel</igx-icon>
+</ng-template>

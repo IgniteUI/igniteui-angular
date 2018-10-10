@@ -4,7 +4,6 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxRemoveButtonDirective } from './remove-button.directive';
 import { IgxChipComponent, IgxChipComponentExporterDirective } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
@@ -13,16 +12,14 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
   declarations: [
     IgxChipsAreaComponent,
     IgxChipComponent,
-    IgxChipComponentExporterDirective,
-    IgxRemoveButtonDirective
+    IgxChipComponentExporterDirective
   ],
   entryComponents: [
   ],
   exports: [
     IgxChipsAreaComponent,
     IgxChipComponent,
-    IgxChipComponentExporterDirective,
-    IgxRemoveButtonDirective
+    IgxChipComponentExporterDirective
   ],
   imports: [
     CommonModule,

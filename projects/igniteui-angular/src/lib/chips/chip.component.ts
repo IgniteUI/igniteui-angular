@@ -10,7 +10,8 @@
     AfterViewInit,
     Renderer2,
     Directive,
-    HostListener
+    HostListener,
+    TemplateRef
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
 import {
@@ -51,7 +52,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent implements AfterViewInit {
+export class IgxChipComponent {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -83,14 +84,30 @@ export class IgxChipComponent implements AfterViewInit {
     public draggable = false;
 
     /**
+     * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
+     * By default it is set to false.
+     * ```html
+     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [removable]="true"></igx-chip>
+     * ```
+     */
+    @Input()
+    public removable = false;
+
+    @Input()
+    public removeIcon: TemplateRef<any>;
+
+    /**
      * An @Input property that defines if the `IgxChipComponent` can be selected on click or through navigation,
      * By default it is set to false.
      * ```html
-     * <igx-chip [id]="chip.id" [draggable]="true" [selectable]="true"></igx-chip>
+     * <igx-chip [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true"></igx-chip>
      * ```
      */
     @Input()
     public selectable = false;
+
+    @Input()
+    public selectIcon: TemplateRef<any>;
 
     @Input()
     public class = '';
@@ -313,8 +330,28 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    @ViewChild('removeBtn', { read: ElementRef })
-    public removeBtn: ElementRef;
+    @ViewChild('defaultRemoveIcon', { read: TemplateRef })
+    public defaultRemoveIcon: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultSelectIcon', { read: TemplateRef })
+    public defaultSelectIcon: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
+    public get removeButtonTemplate() {
+        return this.removeIcon || this.defaultRemoveIcon;
+    }
+
+    /**
+     * @hidden
+     */
+    public get selectIconTemplate() {
+        return this.selectIcon || this.defaultSelectIcon;
+    }
 
     /**
      * @hidden
@@ -337,7 +374,6 @@ export class IgxChipComponent implements AfterViewInit {
      * ```
      */
     @Input()
-    @HostBinding('class.igx-chip--selected')
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
     }
@@ -362,22 +398,12 @@ export class IgxChipComponent implements AfterViewInit {
     @HostBinding('tabindex')
     public chipTabindex = 0;
 
-    private _displayDensity = DisplayDensity.comfortable;
-    private _selected = false;
-    private _movedWhileRemoving = false;
+    protected _displayDensity = DisplayDensity.comfortable;
+    protected _selected = false;
+    protected _selectedItemClass = 'igx-chip__item--selected';
+    protected _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
-
-    /**
-     * @hidden
-     */
-    ngAfterViewInit() {
-        if (this.removeBtn.nativeElement.children.length) {
-            this.removeBtn.nativeElement.addEventListener('keydown', (args) => {
-                this.onRemoveBtnKeyDown(args);
-            });
-        }
-    }
 
     /**
      * @hidden
@@ -395,7 +421,7 @@ export class IgxChipComponent implements AfterViewInit {
             return;
         }
 
-        if ((event.key === 'Delete' || event.key === 'Del') && this.removeBtn.nativeElement.children.length) {
+        if ((event.key === 'Delete' || event.key === 'Del') && this.removable) {
             this.onRemove.emit({
                 originalEvent: event,
                 owner: this
@@ -426,14 +452,14 @@ export class IgxChipComponent implements AfterViewInit {
         }
     }
 
-    public onChipRemoveMouseDown(event: PointerEvent | MouseEvent) {
+    public onRemoveMouseDown(event: PointerEvent | MouseEvent) {
         event.stopPropagation();
     }
 
     /**
      * @hidden
      */
-    public onChipRemove(event: MouseEvent | TouchEvent) {
+    public onRemoveClick(event: MouseEvent | TouchEvent) {
         this.onRemove.emit({
             originalEvent: event,
             owner: this
@@ -443,7 +469,7 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemoveMove() {
+    public onRemoveTouchMove() {
         // We don't remove chip if user starting touch interacting on the remove button moves the chip
         this._movedWhileRemoving = true;
     }
@@ -451,9 +477,9 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
-    public onChipRemoveEnd(event: TouchEvent) {
+    public onRemoveTouchEnd(event: TouchEvent) {
         if (!this._movedWhileRemoving) {
-            this.onChipRemove(event);
+            this.onRemoveClick(event);
         }
         this._movedWhileRemoving = false;
     }
@@ -471,12 +497,14 @@ export class IgxChipComponent implements AfterViewInit {
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
+                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
             }
         } else if (!newValue && this._selected) {
             this.onSelection.emit(onSelectArgs);
 
             if (!onSelectArgs.cancel) {
+                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
             }
         }
