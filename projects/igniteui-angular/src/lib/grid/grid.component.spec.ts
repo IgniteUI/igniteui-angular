@@ -104,7 +104,7 @@ describe('IgxGrid Component Tests', () => {
             expect(rows.length).toEqual(10);
 
             const verticalScroll = fix.componentInstance.instance.verticalScrollContainer;
-            const elem =  verticalScroll['vh'].instance.elementRef.nativeElement;
+            const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
 
             // scroll down
             expect(() => {
@@ -909,6 +909,58 @@ describe('IgxGrid Component Tests', () => {
             expect(rowPosition - (bannerPosition + bannerHeight)).toBeLessThan(5);
         }));
 
+        describe('Row Editing - Navigation - Keyboard', () => {
+            it(`Should be able to move between cells normally`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column pinning is enabled`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column hiding is enabled`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column pinning & hiding is enabled`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column grouping is enabled`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column paging is enabled`, () => {
+                // TO DO
+            });
+            it(`Should skip non-editable columns when column when all column features are enabled`, () => {
+                // TO DO
+            });
+        });
+        describe('Row Editing - Exit row editing', () => {
+            it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND COMMIT on data operations`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND COMMIT on click on non-editable cell in same row`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND COMMIT on click on editable cell in other row`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND DISCARD on clicking the CANCEL button in row edit overlay`, () => {
+                // TO DO
+            });
+            it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
+                // TO DO
+            });
+        });
         // it('Correct class is added to the edited row', (async () => {
         //     const fix = TestBed.createComponent(IgxGridRowEditingComponent);
         //     fix.detectChanges();
@@ -1168,7 +1220,7 @@ export class LocalService {
     public generateData(start, end) {
         const dummyData = [];
         for (let i = start; i < end; i++) {
-            dummyData.push({ Col1: 10 * i});
+            dummyData.push({ Col1: 10 * i });
         }
         return dummyData;
     }
