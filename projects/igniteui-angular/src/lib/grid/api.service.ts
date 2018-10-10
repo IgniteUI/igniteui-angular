@@ -111,6 +111,10 @@ export class IgxGridAPIService {
                     this.editRowState.delete(gridId);
                 }
             } else {
+                const grid = this.get(gridId);
+                if (grid.rowEditable && !grid.rowEditingOverlay.collapsed) {
+                    grid.closeRowTransaction(true);
+                }
                 this.editCellState.delete(gridId);
                 this.editRowState.delete(gridId);
             }

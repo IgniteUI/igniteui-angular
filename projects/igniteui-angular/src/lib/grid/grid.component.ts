@@ -2941,6 +2941,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
+        // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
+        if (this.rowEditable && !this.rowEditingOverlay.collapsed) { // If there is a row in edit - > commit and close
+            this.closeRowTransaction(true);
+        }
         if (this.transactions.transactionsEnabled()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
