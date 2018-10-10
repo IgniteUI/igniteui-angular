@@ -4,12 +4,19 @@
 
     <ng-content  select="igx-prefix,[igxPrefix]"></ng-content>
 
-    <ng-content class="igx-chip__content"></ng-content>
+    <div class="igx-chip__content">
+        <ng-content></ng-content>
+    </div>
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 
-    <div #removeBtn (pointerdown)="onChipRemoveMouseDown($event)" (mousedown)="onChipRemoveMouseDown($event)" (click)="onChipRemove($event)"
-        (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd($event)">
+    <div class="igx-chip__remove" #removeBtn
+        (pointerdown)="onChipRemoveMouseDown($event)"
+        (mousedown)="onChipRemoveMouseDown($event)"
+        (click)="onChipRemove($event)"
+        (touchmove)="onChipRemoveMove()"
+        (touchend)="onChipRemoveEnd($event)"
+    >
         <ng-content select="igx-remove-button,[igxRemoveButton]"></ng-content>
     </div>
 </div>

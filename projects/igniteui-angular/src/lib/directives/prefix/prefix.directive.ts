@@ -9,7 +9,7 @@ export class IgxPrefixDirective {
     @HostBinding('class.igx-input-group__bundle-prefix')
     public childOfInputGroup = false;
 
-    @HostBinding('class.igx-chip-prefix')
+    @HostBinding('class.igx-chip__prefix')
     public childOfChip = false;
 
     constructor(private _viewContainerRef: ViewContainerRef) {

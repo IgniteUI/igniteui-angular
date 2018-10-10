@@ -1,13 +1,43 @@
 <div class="sample-wrapper">
-    <app-page-header title="Chips" description="Hello chips"></app-page-header>
+    <app-page-header title="Chips">Chips are compact elements that represent an input, attribute, or action.</app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <header>
+                <h4 class="sample-title">Action Chip</h4>
+            </header>
+            <igx-chip class="dark-chip">
+                <igx-prefix>
+                    <div class="chip-avatar">
+                        <igx-icon>person</igx-icon>
+                    </div>
+                </igx-prefix>
+                <span>This is some very long text that should be ellipsed?</span>
+            </igx-chip>
+            <igx-chip displayDensity="cosy">
+                <igx-prefix>
+                    <igx-icon>favorite_border</igx-icon>
+                </igx-prefix>
+                <span>Like</span>
+            </igx-chip>
+            <igx-chip displayDensity="compact">
+                <!-- <igx-prefix>
+                    <igx-icon>favorite_border</igx-icon>
+                </igx-prefix> -->
+                <span>Like</span>
+            </igx-chip>
+        </article>
+    </section>
+
+
     <section class="sample-content">
         <div class="sample-holder">
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
                 <ng-container  *ngFor="let chipElem of chipList; let last = last;">
                     <igx-chip #chipRef="chip" class="test" [id]="chipElem.id" [draggable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
-                        <span #label [class]="'igx-chip__text'">{{chipElem.text}}</span>
-                        <igx-icon igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
+                        {{chipElem.text}}
+                        <igx-icon igxRemoveButton [tabindex]="0">
+                            cancel
+                        </igx-icon>
                     </igx-chip>
                     <igx-icon *ngIf="!last" class="igx-chip__dir-icon" fontSet="material">forward</igx-icon>
                 </ng-container>
@@ -24,7 +54,7 @@
                 <igx-chips-area #chipsAreaTo class="chipAreaTo" (onReorder)="chipsOrderChangedTo($event)">
                     <span>To:</span>
                     <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()" (onMoveEnd)="moveEndedTo()">
-                        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                        {{chip.text}}
                     </igx-chip>
                     <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"></div>
                 </igx-chips-area>

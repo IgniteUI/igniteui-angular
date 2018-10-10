@@ -74,3 +74,8 @@ $tooltip-theme: igx-tooltip-theme(
 );
 
 // @include igx-tooltip($tooltip-theme);
+$chip-theme: igx-chip-theme($background: black);
+
+.dark-chip {
+    @include igx-chip($chip-theme);
+}

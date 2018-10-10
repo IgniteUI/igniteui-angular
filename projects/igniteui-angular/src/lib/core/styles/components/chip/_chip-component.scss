@@ -16,10 +16,6 @@
 
     @extend %igx-chip !optional;
 
-    @include m(disabled) {
-        @extend %igx-chip--disabled !optional;
-    }
-
     @include e(item) {
         @extend %igx-chip__item !optional;
     }
@@ -28,28 +24,20 @@
         @extend %igx-chip__item--selected !optional;
     }
 
-    @include e(label) {
-        @extend %igx-chip__label !optional;
+    @include e(content) {
+        @extend %igx-chip__content !optional;
     }
 
-    @include e(text) {
-        @extend %igx-chip__text !optional;
+    @include e(prefix) {
+        @extend %igx-chip__prefix !optional;
     }
 
-    @include e(order-icon) {
-        @extend %igx-chip__order-icon !optional;
+    @include e(suffix) {
+        @extend %igx-chip__suffix !optional;
     }
 
-    @include e(dir-icon) {
-        @extend %igx-chip__dir-icon !optional;
-    }
-
-    @include e(remove-icon) {
-        @extend %igx-chip__remove-icon  !optional;
-    }
-
-    @include e(connector) {
-        @extend %igx-chip__connector  !optional;
+    @include e(remove) {
+        @extend %igx-chip__remove !optional;
     }
 
     @include e(ghost) {
@@ -66,6 +54,7 @@
 
     @include m(cosy) {
         @extend %igx-chip !optional;
+
         @include e(item) {
             @extend %igx-chip__item--cosy !optional;
         }
@@ -73,9 +62,14 @@
 
     @include m(compact) {
         @extend %igx-chip !optional;
+
         @include e(item) {
             @extend %igx-chip__item--compact  !optional;
         }
+    }
+
+    @include m(disabled) {
+        @extend %igx-chip--disabled !optional;
     }
 }
 

@@ -51,6 +51,16 @@
     background-color: #f66604;
 }
 
-:host ::ng-deep .igx-chip__item {
+igx-chip {
     margin: 4px;
+}
+
+.chip-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .12);
 }
