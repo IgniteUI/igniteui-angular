@@ -64,29 +64,30 @@
 ) {
     $default-theme: (
         name: 'igx-chip',
-        text-color: igx-color($palette, grays, 700),
-        background: igx-color($palette, grays, 200),
+
+        text-color: igx-color($palette, 'grays', 700),
+        background: igx-color($palette, 'grays', 200),
         border-color: transparent,
 
-        hover-text-color: igx-color($palette, grays, 700),
-        hover-background: igx-color($palette, grays, 300),
+        hover-text-color: igx-color($palette, 'grays', 700),
+        hover-background: igx-color($palette, 'grays', 300),
         hover-border-color: transparent,
 
-        focus-text-color: igx-color($palette, grays, 700),
-        focus-background: igx-color($palette, grays, 300),
+        focus-text-color: igx-color($palette, 'grays', 700),
+        focus-background: igx-color($palette, 'grays', 400),
         focus-border-color: transparent,
 
-        selected-text-color: igx-contrast-color($palette, 'grays', 400),
-        selected-background: igx-color($palette, 'grays', 400),
-        selected-border-color: igx-color($palette, 'grays', 800),
+        selected-text-color: igx-color($palette, 'grays', 700),
+        selected-background: igx-color($palette, 'grays', 300),
+        selected-border-color: transparent,
 
-        hover-selected-text-color: igx-contrast-color($palette, 'secondary', 300),
-        hover-selected-background: igx-color($palette, secondary, 300),
-        hover-selected-border-color: igx-color($palette, secondary, 900),
+        hover-selected-text-color: igx-color($palette, 'grays', 700),
+        hover-selected-background: igx-color($palette, 'grays', 400),
+        hover-selected-border-color: transparent,
 
-        focus-selected-text-color: igx-contrast-color($palette, 'secondary', 300),
-        focus-selected-background: igx-color($palette, secondary, 300),
-        focus-selected-border-color: igx-color($palette, secondary, 900)
+        focus-selected-text-color: igx-color($palette, 'grays', 700),
+        focus-selected-background: igx-color($palette, 'grays', 400),
+        focus-selected-border-color: transparent
     );
 
     @if not($text-color) and $background {
@@ -94,27 +95,67 @@
     }
 
     @if not($hover-background) and $background {
-        $hover-background: darken($background, 5%);
+        $luminance: luminance($background);
+
+        @if $luminance + .05 < .5 {
+            $hover-background: lighten($background, 14%);
+        } @else {
+            $hover-background: darken($background, 4%);
+        }
     }
 
     @if not($hover-text-color) and $hover-background {
-        $hover-text-color: text-contrast($hover-background);
+        $hover-text-color: text-contrast(hexrgba($hover-background));
     }
 
     @if not($focus-background) and $background {
-        $focus-background: darken($background, 5%);
+        $luminance: luminance($background);
+
+        @if $luminance + .05 < .5 {
+            $focus-background: lighten($background, 22%);
+        } @else {
+            $focus-background: darken($background, 8%);
+        }
     }
 
     @if not($focus-text-color) and $focus-background {
-        $focus-text-color: text-contrast($focus-background);
+        $focus-text-color: text-contrast(hexrgba($focus-background));
+    }
+
+    @if not($selected-background) and $background {
+        $luminance: luminance($background);
+
+        @if $luminance + .05 < .5 {
+            $selected-background: lighten($background, 22%);
+        } @else {
+            $selected-background: darken($background, 8%);
+        }
     }
 
     @if not($selected-text-color) and $selected-background {
-        $selected-text-color: text-contrast($selected-background);
+        $selected-text-color: text-contrast(hexrgba($selected-background));
+    }
+
+    @if not($hover-selected-background) and $hover-background {
+        $hover-selected-background: $hover-background;
     }
 
     @if not($hover-selected-text-color) and $hover-selected-background {
-        $hover-selected-text-color: text-contrast($hover-selected-background);
+        $hover-selected-text-color: text-contrast(hexrgba($hover-selected-background));
+    }
+
+    @if not($focus-selected-background) and $selected-background {
+        $luminance: luminance($selected-background);
+
+        @if $luminance + .05 < .5 {
+            $focus-selected-background: lighten($background, 32%);
+        } @else {
+            $focus-selected-background: darken($background, 16%);
+        }
+    }
+
+    @if not($focus-selected-text-color) and $focus-selected-background {
+        $focus-selected-text-color: text-contrast(hexrgba($focus-selected-background));
     }
 
     @return extend($default-theme, (
@@ -171,7 +212,7 @@
 
     $transition: all 120ms $ease-in-out-cubic;
 
-    %igx-chips-area {
+    %igx-chip-area {
         display: flex;
         align-items: center;
         justify-content: flex-start;
@@ -186,6 +227,7 @@
     %igx-chip {
         position: relative;
         display: inline-flex;
+        transition: $transition;
         transition-property: top, left;
         touch-action: none;
 
@@ -196,8 +238,15 @@
             outline-style: none;
         }
 
-        &:focus {
+        &:focus,
+        &:focus-within {
             outline-style: none;
+
+            %igx-chip__item {
+                color: --var($theme, 'focus-text-color');
+                background: --var($theme, 'focus-background');
+                border-color: --var($theme, 'hover-border-color');
+            }
         }
     }
 
@@ -205,6 +254,27 @@
     %igx-chip__suffix {
         display: inline-flex;
         align-items: center;
+    }
+
+    %igx-chip__content {
+        @include ellipsis();
+        padding: 0 rem(8px);
+        max-width: $chip-max-width;
+    }
+
+    %igx-chip__remove {
+        display: inline-flex;
+        color: currentColor;
+        margin-right: rem(4px);
+
+        &:empty {
+            display: none;
+        }
+
+        &:focus-within {
+            outline-style: none;
+            color: igx-color(map-get($theme, 'palette'), error);
+        }
     }
 
     %igx-chip__item {
@@ -224,29 +294,43 @@
         &:hover {
             color: --var($theme, 'hover-text-color');
             background: --var($theme, 'hover-background');
+            border-color: --var($theme, 'hover-border-color');
         }
 
-        &:focus{
-            color: --var($theme, 'focus-text-color');
-            background: --var($theme, 'focus-background');
-            outline-style: none;
+        &::before {
+            width: 0;
+            content: '\e5ca';
+            font-family: 'Material Icons', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            transition: width 120ms $ease-in-out-cubic;
+            opacity: 0;
         }
     }
 
-    %igx-chip__content {
-        @include ellipsis();
-        padding: 0 rem(8px);
-        max-width: $chip-max-width;
+    %igx-chip__item--selected {
+        color: --var($theme, 'selected-text-color');
+        background: --var($theme, 'selected-background');
+        border-color: --var($theme, 'selected-border-color');
+
+        &:hover {
+            color: --var($theme, 'hover-selected-text-color');
+            background: --var($theme, 'hover-selected-background');
+            border-color: --var($theme, 'hover-selected-border-color');
+            transition: $transition;
+        }
+
+        &::before {
+            width: 18px;
+            opacity: 1;
+        }
     }
 
-    %igx-chip__remove {
-        display: inline-flex;
-        color: currentColor;
-        margin-right: rem(4px);
-
-        &:empty {
-            display: none;
-        }
+    %igx-chip__item--focus-selected {
+        color: --var($theme, 'focus-selected-text-color');
+        background: --var($theme, 'focus-selected-background');
+        border-color: --var($theme, 'focus-selected-border-color');
+        transition: $transition;
     }
 
     %igx-chip__item--cosy {
@@ -259,20 +343,6 @@
         border-radius: map-get($chip-height, 'compact') / 2;
         height: map-get($chip-height, 'compact');
         padding: map-get($chip-padding, 'compact');
-    }
-
-    %igx-chip__item--selected {
-        background: --var($theme, 'selected-background');
-
-        &:hover {
-            background: --var($theme, 'hover-selected-background');
-            border-color: --var($theme, 'hover-selected-border-color');
-        }
-
-        &:focus {
-            background: --var($theme, 'focus-selected-background');
-            border-color: --var($theme, 'focus-selected-border-color');
-        }
     }
 
     %igx-chip--cosy {

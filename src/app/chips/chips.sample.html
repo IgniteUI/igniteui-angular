@@ -5,15 +5,17 @@
             <header>
                 <h4 class="sample-title">Action Chip</h4>
             </header>
-            <igx-chip class="dark-chip">
-                <igx-prefix>
-                    <div class="chip-avatar">
-                        <igx-icon>person</igx-icon>
-                    </div>
-                </igx-prefix>
-                <span>This is some very long text that should be ellipsed?</span>
-            </igx-chip>
-            <igx-chip displayDensity="cosy">
+            <div class="dark-chip">
+                <igx-chip [selectable]="true">
+                    <igx-prefix>
+                        <div class="chip-avatar">
+                            <igx-icon>person</igx-icon>
+                        </div>
+                    </igx-prefix>
+                    <span>This is some very long text that should be ellipsed?</span>
+                </igx-chip>
+            </div>
+            <igx-chip displayDensity="cosy" [selectable]="true">
                 <igx-prefix>
                     <igx-icon>favorite_border</igx-icon>
                 </igx-prefix>

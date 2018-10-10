@@ -426,7 +426,7 @@ export class IgxChipComponent implements AfterViewInit {
         }
     }
 
-    public onChipRemoveMouseDown(event: PointerEvent|MouseEvent) {
+    public onChipRemoveMouseDown(event: PointerEvent | MouseEvent) {
         event.stopPropagation();
     }
 
@@ -567,4 +567,4 @@ export class IgxChipComponent implements AfterViewInit {
     selector: 'igx-chip',
     exportAs: 'chip'
 })
-export class IgxChipComponentExporterDirective {}
+export class IgxChipComponentExporterDirective { }
