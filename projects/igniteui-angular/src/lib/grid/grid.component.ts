@@ -2217,9 +2217,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.calcHeight = this.rowHeight;
         }
-        requestAnimationFrame(() => {
-            this.reflow();
-        });
+        // requestAnimationFrame(() => {
+        //    this.reflow();
+        //});
     }
 
     /**
