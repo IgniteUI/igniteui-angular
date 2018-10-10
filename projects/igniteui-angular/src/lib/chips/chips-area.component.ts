@@ -30,7 +30,6 @@ export interface IBaseChipsAreaEventArgs {
 
 export interface IChipsAreaReorderEventArgs extends IBaseChipsAreaEventArgs {
     chipsArray: IgxChipComponent[];
-    isValid: boolean;
 }
 
 export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
@@ -206,10 +205,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             if (event.originalEvent.key === 'ArrowLeft' || event.originalEvent.key === 'Left') {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false, event.originalEvent);
                 if (orderChanged) {
-                    // The `modifiedChipsArray` is out of date in the setTimeout sometimes.
-                    const chipArray = this.modifiedChipsArray;
                     setTimeout(() => {
-                        chipArray[dragChipIndex - 1].elementRef.nativeElement.focus();
+                        this.chipsList.toArray()[dragChipIndex - 1].elementRef.nativeElement.focus();
                     });
                 }
             } else if (event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') {
@@ -296,8 +293,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
         const eventData: IChipsAreaReorderEventArgs = {
             chipsArray: this.modifiedChipsArray,
             originalEvent: originalEvent,
-            owner: this,
-            isValid: true
+            owner: this
         };
         this.onReorder.emit(eventData);
         return true;
