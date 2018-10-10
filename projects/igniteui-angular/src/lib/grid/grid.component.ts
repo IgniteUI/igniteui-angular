@@ -2212,14 +2212,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     public chunkGenerated(event) {
-        if (event > 0) {
-            this.calcHeight = event;
-        } else {
-            this.calcHeight = this.rowHeight;
-        }
-        // requestAnimationFrame(() => {
-        //    this.reflow();
-        // });
+        this.calcHeight = event > 0 ? event : this.rowHeight;
+        requestAnimationFrame(() => {
+            this.reflow();
+        });
     }
 
     /**
