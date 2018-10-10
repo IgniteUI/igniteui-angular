@@ -1984,7 +1984,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      */
     @Input()
-    public rowEditMessage = `You have uncommited changes on this row`;
+    public rowEditMessage = `You have {0} uncommitted changes on this row`;
+    /**
+     * @hidden
+     */
+    public rowEditMessageValue;
 
     /**
      * Get/Set the text of the default IgxRowEditingOverlay commit button.
@@ -4879,6 +4883,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.rowEditingOverlaySettings) {
             this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
             this.rowEditingOverlaySettings.outlet = this.rowEditingOutletDirective;
+            this.calculateRowChangesCount(row.rowID);
             const lastIndex = this.rowList.length - 1;
             const rowList = this.rowList.toArray();
             if ((row.rowID === rowList[lastIndex].rowID ||
@@ -4897,6 +4902,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.rowEditingOverlay.element.style.display = 'block';
             }
         }
+    }
+
+    public calculateRowChangesCount(rowID) {
+        const rowChanges = this.transactions.getAggregatedValue(rowID, false);
+        const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
+        this.rowEditMessageValue = this.rowEditMessage.replace("{0}", rowChangedCount.toString());
     }
 
     /**
