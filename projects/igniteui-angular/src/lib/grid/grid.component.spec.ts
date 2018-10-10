@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable, OnInit, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -14,10 +14,16 @@ import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxRowEditTemplateDirective,
+    IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
+
+    const DEBOUNCETIME = 30;
 
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const CELL_CSS_CLASS = '.igx-grid__td';
 
     describe('IgxGrid - input properties', () => {
         beforeEach(async(() => {
@@ -806,6 +812,138 @@ describe('IgxGrid Component Tests', () => {
             expect(firstCellInputValue).toEqual('4');
         });
     });
+
+    describe('Row Editing', () => {
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridRowEditingComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule.forRoot()]
+            }).compileComponents();
+        }));
+
+        it('should be able to enter edit mode on dblclick, enter and f2', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.gridRowEdit;
+            const rv = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
+            const row = grid.getRowByIndex(0);
+
+            rv.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+
+            rv.triggerEventHandler('dblclick', {});
+            expect(row.inEditMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(false);
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            expect(row.inEditMode).toBe(false);
+
+            // UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
+            // await wait(DEBOUNCETIME);
+            // expect(row.inEditMode).toBe(true);
+
+            // UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
+            // await wait(DEBOUNCETIME);
+            // expect(row.inEditMode).toBe(false);
+        }));
+
+        it('should display the banner below the edited row if it is not the last one', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.gridRowEdit;
+            const rv = fix.debugElement.query(By.css(`${CELL_CSS_CLASS}:last-child`));
+            const firstRow: HTMLElement = grid.getRowByIndex(1).nativeElement;
+
+            rv.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+
+            rv.triggerEventHandler('dblclick', {});
+
+            const banner: HTMLElement = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+            const bannerPosition = banner.offsetTop;
+            const rowPosition = firstRow.offsetTop;
+            const rowHeight = firstRow.clientHeight;
+
+            // The banner appears below the row
+            expect(bannerPosition).toBeGreaterThanOrEqual(rowPosition + rowHeight);
+
+            // No much space between the row and the banner
+            expect(bannerPosition - (rowPosition + rowHeight)).toBeLessThan(5);
+        }));
+
+        it('should display the banner above the edited row if it is the last one', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.gridRowEdit;
+            const cell = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[28];
+            const editRow: HTMLElement = grid.getRowByIndex(6).nativeElement;
+
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+
+            cell.triggerEventHandler('dblclick', {});
+
+            const banner: HTMLElement = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+            const bannerPosition = banner.offsetTop;
+            const bannerHeight = banner.clientHeight;
+            const rowPosition = editRow.offsetTop;
+
+            // The banner appears above the row
+            expect(bannerPosition).toBeLessThanOrEqual(rowPosition - bannerHeight);
+
+            // No much space between the row and the banner
+            expect(rowPosition - (bannerPosition + bannerHeight)).toBeLessThan(5);
+        }));
+
+        // it('Correct class is added to the edited row', (async () => {
+        //     const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+        //     fix.detectChanges();
+
+        //     const grid = fix.componentInstance.gridRowEdit;
+        //     const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+        //     const firstRow = grid.getRowByIndex(0);
+        //     const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+        //     expect(row.classList).not.toContain('igx-grid__tr--edited');
+
+        //     rv.nativeElement.dispatchEvent(new Event('focus'));
+        //     fix.detectChanges();
+
+        //     UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+        //     await wait(DEBOUNCETIME);
+        //     expect(firstRow.inEditMode).toBe(true);
+
+        //     const input = fix.debugElement.queryAll(By.css('.igx-input-group'))[0];
+        //     input.nativeElement.dispatchEvent(new Event('focus'));
+        //     fix.detectChanges();
+
+
+            // UIInteractions.triggerKeyDownEvtUponElem('space', input.nativeElement, true);
+
+            // UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
+            // await wait(DEBOUNCETIME);
+
+            // expect(row.classList).toContain('igx-grid__tr--edited');
+        // }));
+
+        // TODO
+        // it('TAB key skips noneditable cells', (async () => {
+
+        // }));
+    });
 });
 
 @Component({
@@ -1093,3 +1231,42 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
         return this.value.toExponential().toString();
     }
 }
+
+@Component({
+    template: `
+    <igx-grid #gridRowEdit [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column>
+            <ng-template igxCell let-cell="cell" let-val>
+                <button (click)="deleteRow($event, 'gridRowEdit', cell.cellID.rowID)">Delete</button>
+            </ng-template>
+        </igx-column>
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" width="50px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'"
+            editable=" true"></igx-column>
+        <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
+        <igx-column field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingComponent {
+    public data = SampleTestData.foodProductData();
+
+    public changeInitColumns = false;
+
+    @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
+
+    public deleteRow(event, gridID, rowID) {
+        event.stopPropagation();
+            this.data.splice(rowID - 1, 1);
+            this.refreshAll();
+        }
+
+        refreshAll(): void {
+            this.refresh(this.gridRowEdit);
+        }
+
+        private refresh(grid: IgxGridComponent): void {
+            (<any>grid)._pipeTrigger++;
+            (<any>grid).cdr.markForCheck();
+        }
+    }
+
