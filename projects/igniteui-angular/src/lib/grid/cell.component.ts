@@ -854,7 +854,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable && target) {
                 addedIndex = target.column.editable ? 0 :
-                    [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                    [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup)
                     .splice(0, this.visibleColumnIndex).reverse().findIndex(e => e.editable);
                 target = target.column.editable ? target :
                     this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex - addedIndex);
@@ -951,14 +951,15 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             let target = this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex);
             let addedIndex = 0;
             if (this.inEditMode && this.grid.rowEditable) {
+                const allColumns = [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(e => !e.columnGroup);
                 if (target) {
                     addedIndex = target.column.editable ? 0 :
-                        [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                        allColumns
                         .splice(this.visibleColumnIndex + 1, visibleColumns.length - 1).findIndex(e => e.editable);
                     target = target.column.editable ? target :
                         this.gridAPI.get_cell_by_visible_index(this.gridID, rowIndex, columnIndex + addedIndex);
                 } else {
-                    addedIndex = [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns]
+                    addedIndex = allColumns
                     .splice(this.visibleColumnIndex + 1, visibleColumns.length - 1).findIndex(e => e.editable);
                 }
             }

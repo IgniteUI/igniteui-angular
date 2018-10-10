@@ -34,15 +34,15 @@ export class IgxRowEditTabStopDirective {
         event.preventDefault();
         const horizontalScroll = this.grid.parentVirtDir.getHorizontalScroll();
         const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        const targetVisibleCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
-        if (!targetVisibleCell) {
+        const targetCell = this.grid.rowInEditMode.cells.find(e => e.columnIndex === targetIndex);
+        if (!targetCell) {
             (<any>this.grid)._focusNextCell(this.grid.rowInEditMode.index, targetIndex, event.shiftKey ? 'right' : 'left', event);
             this.grid.rowInEditMode.cells.first.inEditMode = true;
             horizontalScroll.scrollLeft = event.shiftKey ? horizontalScroll.scrollWidth : 0;
         } else {
-            targetVisibleCell._updateCellSelectionStatus(true, event);
-            targetVisibleCell.inEditMode = true;
-            targetVisibleCell.nativeElement.focus();
+            targetCell._updateCellSelectionStatus(true, event);
+            targetCell.inEditMode = true;
+            targetCell.nativeElement.focus();
         }
     }
 }
