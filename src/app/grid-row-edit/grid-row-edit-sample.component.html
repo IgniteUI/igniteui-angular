@@ -54,12 +54,14 @@
                     <igx-column width="100px" field="OrderDate" [dataType]="'date'"></igx-column>
                     <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'"
                         [hidden]="hideFlag" [pinned]="pinFlag"></igx-column>
-                    <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'"
-                        [hasSummary]="summaryFlag" editable="true"></igx-column>
-                    <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag"
-                        [hidden]="hideFlag" editable="true"></igx-column>
-                    <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'"
-                        [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" editable="true"></igx-column>
+                    <igx-column-group [movable]="true" header="Column Group 1">
+                        <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'"
+                            [hasSummary]="summaryFlag" editable="true"></igx-column>
+                        <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag"
+                            [hidden]="hideFlag" editable="true"></igx-column>
+                        <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'"
+                            [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" editable="true"></igx-column>
+                    </igx-column-group>
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
                         [hasSummary]="summaryFlag" editable="true">
                         <ng-template igxCellEditor let-cell="cell">
