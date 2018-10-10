@@ -4,8 +4,8 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.0
 - `igxIcon`:
-    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. This means that the icon name should be explicitly defined between the opening and closing tags.
-    - Added support for custom SVG icons.
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
+    - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - `igxGrid`:
     - `onGroupingChanged` - A new event, emitted when a column or multiple columns get grouped or ungrouped. Returns the `ISortingExpression` related to the grouping or ungrouping operation.
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
