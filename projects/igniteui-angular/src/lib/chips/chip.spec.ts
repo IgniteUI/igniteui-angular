@@ -82,7 +82,9 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 describe('IgxChip', () => {
+    const CHIP = 'igx-chip';
     const CHIP_ITEM_AREA = 'igx-chip__item';
+    const CHIP_PREFIX = 'igx-chip-prefix';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -114,9 +116,10 @@ describe('IgxChip', () => {
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // For this first chip there are 2 elements. The prefix and content span.
-        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(2);
+        expect(chipElems[0].nativeElement.children[0].children.length).toEqual(3);
         expect(chipElems[0].nativeElement.children[0].children[0].tagName).toEqual('IGX-ICON');
         expect(chipElems[0].nativeElement.children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
+        expect(chipElems[0].nativeElement.children[0].children[0].classList).toContain(CHIP_PREFIX);
     });
 
     it('should render remove button when enabled after the content inside the chip', () => {
@@ -138,16 +141,16 @@ describe('IgxChip', () => {
 
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
         spyOn(firstChipComp.onRemove, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
+        firstChipComp.elementRef.nativeElement.focus();
 
-        const focusedElems = firstChipComp.elementRef.nativeElement.querySelectorAll(':focus');
+        const focusedElems = firstChipComp.elementRef.nativeElement.parentElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM_AREA);
+        expect(focusedElems[0].className).toEqual(CHIP);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
         });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
 
         expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
@@ -159,16 +162,16 @@ describe('IgxChip', () => {
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
         spyOn(secondChipComp.onRemove, 'emit');
-        secondChipComp.chipArea.nativeElement.focus();
+        secondChipComp.elementRef.nativeElement.focus();
 
-        const focusedElems = secondChipComp.elementRef.nativeElement.querySelectorAll(':focus');
+        const focusedElems = secondChipComp.elementRef.nativeElement.parentElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM_AREA);
+        expect(focusedElems[0].className).toEqual(CHIP);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
         });
-        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        secondChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
 
         expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
@@ -405,12 +408,12 @@ describe('IgxChip', () => {
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
-        secondChipComp.chipArea.nativeElement.focus();
+        secondChipComp.elementRef.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
-        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        secondChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
     });
@@ -422,12 +425,12 @@ describe('IgxChip', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
         spyOn(firstChipComp.onSelection, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
+        firstChipComp.elementRef.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
     });

@@ -35,6 +35,7 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -1508,7 +1509,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         IgxComboFooterDirective,
         IgxComboAddItemDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
+        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule,
+        IgxSuffixModule],
     providers: [IgxSelectionAPIService]
 })
 export class IgxComboModule { }

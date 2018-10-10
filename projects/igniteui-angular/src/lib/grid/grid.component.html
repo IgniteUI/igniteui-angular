@@ -34,9 +34,9 @@
                         [style.height]="'unset'">
                     <span class="igx-chip__text">{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
                     <igx-icon class="igx-chip__order-icon" fontSet="material">{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-                    <igx-icon *ngIf="getColumnByName(expr.fieldName).groupable" igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
-                            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
                 </span>
+                <igx-icon *ngIf="getColumnByName(expr.fieldName).groupable" igxRemoveButton igxButton="icon" igxRipple igxRippleCentered="true" [tabindex]="0"
+                            class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
             </igx-chip>
             <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon" fontSet="material">forward</igx-icon>
         </ng-container>
