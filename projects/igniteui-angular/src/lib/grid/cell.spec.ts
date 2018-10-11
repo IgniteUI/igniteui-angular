@@ -72,7 +72,6 @@ describe('IgxGrid - Cell component', () => {
                 GridWithEditableColumnComponent,
                 NoColumnWidthGridComponent,
                 CellEditingTestComponent,
-                ColumnEditablePropertyTestComponent,
                 CellEditingScrollTestComponent,
                 ConditionalCellStyleTestComponent
             ],
@@ -1079,21 +1078,6 @@ describe('IgxGrid - Cell component', () => {
         expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
         expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
     });
-
-    it('Cell editing (when rowEditable=true) - default column editable value is false', () => {
-        const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.grid;
-
-        const columns: IgxColumnComponent[] = grid.columnList.toArray();
-        expect(columns[0].editable).toBeFalsy();
-        expect(columns[1].editable).toBeFalsy();
-        expect(columns[2].editable).toBeTruthy();
-        expect(columns[3].editable).toBeTruthy();
-        expect(columns[4].editable).toBeFalsy();
-        expect(columns[5].editable).toBeFalsy();
-    });
 });
 
 @Component({
@@ -1381,28 +1365,4 @@ export class ConditionalCellStyleTestComponent implements OnInit {
         ];
         this.data = SampleTestData.foodProductDataExtended();
     }
-}
-
-@Component({
-    template: `
-        <igx-grid [data]="data" width="300px" height="250px">
-            <igx-column field="firstName"></igx-column>
-            <igx-column field="lastName"></igx-column>
-            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
-            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
-            <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
-            <igx-column field="fullName" [editable]="false"></igx-column>
-        </igx-grid>
-        <button class="btnTest">Test</button>
-    `
-})
-export class ColumnEditablePropertyTestComponent {
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-
-    public data = [
-        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
-        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
-        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
-    ];
 }

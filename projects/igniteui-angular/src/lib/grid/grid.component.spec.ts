@@ -1168,6 +1168,20 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
+		describe('Row Editing - GroupBy', () => {
+            it(`Should exit edit mode when Grouping`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+        });
+
+        describe('Row Editing - Summaries', () => {
+            it(`Should update summaries when editing a row`, () => {
+                // TO DO
+            });
+        });
+
+
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
                 // TO DO

@@ -3006,11 +3006,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (editableCell && editableCell.cellID.rowID === rowId) {
                 this.gridAPI.escape_editMode(this.id, editableCell.cellID);
             }
-
-            const editableRow = this.gridAPI.get_row_inEditMode(this.id);
-            if (editableRow) {
-                this.closeRowTransaction(true);
-            }
         } else {
             return;
         }
@@ -3954,11 +3949,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
             column.defaultWidth = this.columnWidth;
-
-            // When rowEditable is true, then all columns are editable by default.
-            if (column.editable === null) {
-                column.editable = this.rowEditable;
-            }
 
             if (cb) {
                 cb(column);
