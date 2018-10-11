@@ -909,6 +909,10 @@ describe('IgxGrid Component Tests', () => {
             expect(rowPosition - (bannerPosition + bannerHeight)).toBeLessThan(5);
         }));
 
+        it(`Updated value should be preserved inside the cell when it enters edit mode again`, () => {
+            // TO DO
+        });
+
         describe('Row Editing - Navigation - Keyboard', () => {
             it(`Should be able to move between cells normally`, () => {
                 // TO DO
@@ -961,26 +965,7 @@ describe('IgxGrid Component Tests', () => {
                 // TO DO
             });
         });
-        // it('Correct class is added to the edited row', (async () => {
-        //     const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-        //     fix.detectChanges();
 
-        //     const grid = fix.componentInstance.gridRowEdit;
-        //     const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
-        //     const firstRow = grid.getRowByIndex(0);
-        //     const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
-        //     expect(row.classList).not.toContain('igx-grid__tr--edited');
-
-        //     rv.nativeElement.dispatchEvent(new Event('focus'));
-        //     fix.detectChanges();
-
-        //     UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-        //     await wait(DEBOUNCETIME);
-        //     expect(firstRow.inEditMode).toBe(true);
-
-        //     const input = fix.debugElement.queryAll(By.css('.igx-input-group'))[0];
-        //     input.nativeElement.dispatchEvent(new Event('focus'));
-        //     fix.detectChanges();
         it('Correct class is added to the edited row', (async () => {
             const fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
@@ -1000,10 +985,27 @@ describe('IgxGrid Component Tests', () => {
             expect(row.classList).toContain('igx-grid__tr--edited');
         }));
 
-        // TODO
-        // it('TAB key skips noneditable cells', (async () => {
+        describe('Row Editing - Paging', () => {
+            it(`Should not apply edited classes to the same row on a different page`, () => {
+                // TO DO
+            });
 
-        // }));
+            it(`Should preserve the changes after page navigation`, () => {
+                // TO DO
+            });
+
+            it(`Should save changes when changing page while editing`, () => {
+                // TO DO
+            });
+
+            it(`Should/not stay in edit mode when changing the page size while editing`, () => {
+                // TO DO
+            });
+
+            it(`Should/not stay in edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+                // TO DO
+            });
+        });
     });
 });
 
