@@ -822,7 +822,8 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridRowEditingComponent
+                    IgxGridRowEditingComponent,
+                    IgxGridRowEditingWithoutEditableColumnsComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -1127,9 +1128,10 @@ describe('IgxGrid Component Tests', () => {
         describe('Row Editing - Filtering', () => {
             it(`Should exit edit mode when filtering`, () => {
                 // TO DO
+                // Verify the data source is updated
             });
 
-            it(`The new value should be included in the results when filtering`, () => {
+            it(`Should include the new value in the results when filtering`, () => {
                 // TO DO
             });
 
@@ -1140,6 +1142,37 @@ describe('IgxGrid Component Tests', () => {
                 // Remove filtering
                 // Verify the update is preserved
             });
+        });
+
+        describe('Row Editing - Sorting', () => {
+            it(`Should exit edit mode when Sorting`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+
+            it(`Should include the new value in the results when sorting`, () => {
+                // TO DO
+            });
+
+            it(`Editing a sorted row`, () => {
+                // TO DO
+                // Sort any column
+                // Edit any of the sorted rows so that the row position is changed
+            });
+        });
+
+        it('Default column editable value is true, when row editing is enabled', () => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
+            fixture.detectChanges();
+    
+            const grid = fixture.componentInstance.grid;
+    
+            const columns: IgxColumnComponent[] = grid.columnList.toArray();
+            expect(columns[0].editable).toBeFalsy();
+            expect(columns[1].editable).toBeFalsy();
+            expect(columns[2].editable).toBeTruthy();
+            expect(columns[3].editable).toBeTruthy();
+            expect(columns[4].editable).toBeTruthy();
         });
     });
 
@@ -1481,5 +1514,24 @@ export class IgxGridRowEditingComponent {
         (<any>grid)._pipeTrigger++;
         (<any>grid).cdr.markForCheck();
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column [editable]="false">
+            <ng-template igxCell let-cell="cell" let-val>
+                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+            </ng-template>
+        </igx-column>
+        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingWithoutEditableColumnsComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
 }
 
