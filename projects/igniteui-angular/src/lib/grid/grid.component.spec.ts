@@ -822,7 +822,8 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridRowEditingComponent
+                    IgxGridRowEditingComponent,
+                    IgxGridRowEditingWithoutEditableColumnsComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -1033,6 +1034,52 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
                 expect(cell.inEditMode).toBeFalsy();
             });
+            it(`Should exit row editing AND COMMIT on add row`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                grid.addRow({ ProductID: 99, ProductName: 'ADDED', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') });
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+            });
+            it(`Should exit row editing AND COMMIT on delete row`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                grid.deleteRow(grid.getRowByIndex(2).rowID);
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+            }));
             it(`Should exit row editing AND COMMIT on data operations`, () => {
                 // TO DO
             });
@@ -1097,6 +1144,20 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
+		describe('Row Editing - GroupBy', () => {
+            it(`Should exit edit mode when Grouping`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+        });
+
+        describe('Row Editing - Summaries', () => {
+            it(`Should update summaries when editing a row`, () => {
+                // TO DO
+            });
+        });
+
+
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
                 // TO DO
@@ -1114,17 +1175,18 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - GroupBy', () => {
-            it(`Should exit edit mode when Grouping`, () => {
-                // TO DO
-                // Verify the data source is updated
-            });
-        });
-
-        describe('Row Editing - Summaries', () => {
-            it(`Should update summaries when editing a row`, () => {
-                // TO DO
-            });
+        it('Default column editable value is true, when row editing is enabled', () => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
+            fixture.detectChanges();
+    
+            const grid = fixture.componentInstance.grid;
+    
+            const columns: IgxColumnComponent[] = grid.columnList.toArray();
+            expect(columns[0].editable).toBeFalsy();
+            expect(columns[1].editable).toBeFalsy();
+            expect(columns[2].editable).toBeTruthy();
+            expect(columns[3].editable).toBeTruthy();
+            expect(columns[4].editable).toBeTruthy();
         });
     });
 
@@ -1466,5 +1528,24 @@ export class IgxGridRowEditingComponent {
         (<any>grid)._pipeTrigger++;
         (<any>grid).cdr.markForCheck();
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column [editable]="false">
+            <ng-template igxCell let-cell="cell" let-val>
+                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
+            </ng-template>
+        </igx-column>
+        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingWithoutEditableColumnsComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
 }
 
