@@ -1968,7 +1968,8 @@ describe('igxCombo', () => {
             const scrollbarContainer = fixture.debugElement
                 .query(By.css('.' + CSS_CLASS_SCROLLBAR_VERTICAL))
                 .nativeElement as HTMLElement;
-            const hasScrollbar = scrollbarContainer.scrollHeight > scrollbarContainer.clientHeight;
+            const hasScrollbar = scrollbarContainer.offsetHeight && scrollbarContainer.offsetHeight <
+                (scrollbarContainer.children[0] as HTMLElement).offsetHeight;
             expect(hasScrollbar).toBeFalsy();
         }));
         it('Should display vertical scrollbar when items do not fit into the container', fakeAsync(() => {

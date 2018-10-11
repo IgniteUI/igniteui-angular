@@ -912,16 +912,16 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
                 this.removeLastElem();
             }
         }
+        this.state.chunkSize = chunkSize;
+        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
         if (this.dc && diff > 0) {
             this._zone.run(() => {
                 this.dc.changeDetectorRef.detectChanges();
                 if (this.igxForScrollOrientation === 'vertical') {
-                    requestAnimationFrame(() => this.notifyContainerChange());
+                    this.notifyContainerChange();
                 }
             });
         }
-        this.state.chunkSize = chunkSize;
-        this.dc.instance.notVirtual = this.igxForVisibleElements === null || this.state.chunkSize >= dataLength;
     }
 
     private _updateScrollOffset() {

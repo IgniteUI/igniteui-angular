@@ -494,12 +494,11 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     it('test hiding and pinning dropdowns height.', fakeAsync(() => {
         grid.visibleRows = 4;
-        tick(100);
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
-
-        expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(140);
+        tick(100);
+        expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(315);
 
         grid.visibleRows = 12;
         tick(100);

@@ -558,7 +558,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
 
         fix.componentInstance.width = '400px';
-        fix.componentInstance.height = '300px';
+        // fix.componentInstance.height = '300px';
         grid.columnWidth = '200px';
         fix.componentInstance.rowCount = 4;
         fix.detectChanges();
@@ -608,7 +608,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
 
         fix.componentInstance.width = '400px';
-        fix.componentInstance.height = '300px';
+        // fix.componentInstance.height = '300px';
         fix.componentInstance.rowCount = 4;
         grid.columnWidth = '200px';
         fix.detectChanges();
