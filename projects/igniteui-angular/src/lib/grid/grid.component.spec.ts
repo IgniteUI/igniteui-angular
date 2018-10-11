@@ -1113,6 +1113,19 @@ describe('IgxGrid Component Tests', () => {
                 // Edit any of the sorted rows so that the row position is changed
             });
         });
+
+        describe('Row Editing - GroupBy', () => {
+            it(`Should exit edit mode when Grouping`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+        });
+
+        describe('Row Editing - Summaries', () => {
+            it(`Should update summaries when editing a row`, () => {
+                // TO DO
+            });
+        });
     });
 
     /**
