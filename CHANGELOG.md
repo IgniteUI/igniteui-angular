@@ -7,6 +7,26 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - `igxGrid`:
+    - Row editing - allows modification of several cells in the row, before submitting, at once, all those changeds to the grid's data source.
+    
+    ```html
+    <igx-grid [data]="data" [rowEditable]="true">
+        <igx-column [field]="'ProductName'" [editable]="true"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [editable]="true"></igx-column>
+    </igx-grid>
+    ```
+
+    - Transactions - provider that accumulates pending changes, which are not directly applied to the grid's data source, but later are submitted at once. Those could be individual cell changes or accumulated row changes, when row editing feature is enabled.
+
+    ```typescript
+    @Component({
+        providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+        selector: "app-grid-with-transactions",
+        template: "<ng-content></ng-content>"
+    })
+    export class GridWithTransactionsComponent { }
+    ```
+
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
