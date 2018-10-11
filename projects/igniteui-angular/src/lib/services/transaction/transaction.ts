@@ -54,16 +54,20 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     }
 
     public getAggregatedValue(id: any, mergeChanges = true) {
-        //  if we pending changes for this id get the state from pendingStates
-        const state = this._pendingStates.get(id) || this._states.get(id);
-        if (!state) {
+        const state = this._states.get(id);
+        const pendingState = this._pendingStates.get(id);
+        if (!state && !pendingState) {
             return null;
         }
-        if (!mergeChanges) {
-            return state.value;
+        let value = state ? state.value : {};
+        let pendingValue = pendingState ? pendingState.value : {};
+        if (mergeChanges) {
+            //  if we have state update its recordRef and return the result
+            value = state ? this.updateValue(state) : {};
+            pendingValue = pendingState ? this.updateValue(pendingState) : {};
         }
-        //  if we have state update its recordRef and return the result
-        return this.updateValue(state);
+
+        return Object.assign({}, value, pendingValue);
     }
 
     public commit(data: any[]) {
@@ -182,9 +186,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                         }
                     } else {
                         state.value = transaction.newValue;
-                    }
-                    if (state.type === TransactionType.DELETE) {
-                        state.type = TransactionType.UPDATE;
                     }
                     return;
                 }
