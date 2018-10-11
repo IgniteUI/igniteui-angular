@@ -18,6 +18,27 @@
 
     @include e(item) {
         @extend %igx-chip__item !optional;
+
+        &:hover {
+            @extend %igx-chip__item--hover !optional;
+        }
+
+        &:focus,
+        &:focus-within {
+            @extend %igx-chip__item--focus !optional;
+        }
+    }
+
+    @include e(item, $m: 'selected') {
+        @extend %igx-chip__item--selected !optional;
+
+        &:hover {
+            @extend %igx-chip__item--hover-selected !optional;
+        }
+
+        &:focus {
+            @extend %igx-chip__item--focus-selected !optional;
+        }
     }
 
     @include e(content) {
@@ -60,31 +81,29 @@
         @extend %igx-chip__ghost--compact !optional;
     }
 
-    @include m(selected) {
-        @include e(item) {
-            @extend %igx-chip__item--selected !optional;
-        }
-
-        &:focus {
-            @include e(item) {
-                @extend %igx-chip__item--focus-selected !optional;
-            }
-        }
-    }
-
     @include m(cosy) {
         @extend %igx-chip !optional;
+        @extend %igx-chip--cosy !optional;
 
         @include e(item) {
             @extend %igx-chip__item--cosy !optional;
+        }
+
+        @include e(content) {
+            @extend %igx-chip__content--cosy !optional;
         }
     }
 
     @include m(compact) {
         @extend %igx-chip !optional;
+        @extend %igx-chip--compact !optional;
 
         @include e(item) {
             @extend %igx-chip__item--compact  !optional;
+        }
+
+        @include e(content) {
+            @extend %igx-chip__content--compact !optional;
         }
     }
 

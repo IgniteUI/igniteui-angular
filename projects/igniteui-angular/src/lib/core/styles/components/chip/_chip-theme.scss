@@ -158,6 +158,26 @@
         $focus-selected-text-color: text-contrast(hexrgba($focus-selected-background));
     }
 
+    @if not($hover-border-color) and $border-color {
+        $hover-border-color: $border-color;
+    }
+
+    @if not($focus-border-color) and $border-color {
+        $focus-border-color: $border-color;
+    }
+
+    @if not($selected-border-color) and $border-color {
+        $selected-border-color: $border-color;
+    }
+
+    @if not($hover-selected-border-color) and $border-color {
+        $hover-selected-border-color: $border-color;
+    }
+
+    @if not($focus-selected-border-color) and $border-color {
+        $focus-selected-border-color: $border-color;
+    }
+
     @return extend($default-theme, (
         palette: $palette,
 
@@ -194,14 +214,13 @@
 @mixin igx-chip($theme) {
     @include igx-root-css-vars($theme);
 
-    $transition: all 120ms $ease-in-out-cubic;
-    $chip-max-width: rem(170px);
-    $chip-min-width: rem(96px);
+    $transition: all 120ms $ease-in-out-quad;
+    $chip-max-width: rem(176px);
 
     $chip-height: (
         comfortable: rem(32px),
         cosy: rem(24px),
-        compact: rem(24px)
+        compact: rem(18px)
     );
 
     $chip-padding: (
@@ -210,7 +229,11 @@
         compact: 0 rem(2px)
     );
 
-    $transition: all 120ms $ease-in-out-cubic;
+    $chip-icon-size: (
+        comfortable: rem(18px),
+        cosy: rem(18px),
+        compact: rem(16px)
+    );
 
     %igx-chip-area {
         display: flex;
@@ -225,26 +248,58 @@
     }
 
     %igx-chip {
+        @extend  %igx-chip-custom-icon;
+
         position: relative;
         display: inline-flex;
         transition: $transition;
         transition-property: top, left;
         touch-action: none;
 
-        igx-icon {
-            width: rem(18px);
-            height: rem(18px);
-            font-size: rem(18px);
+        &:focus {
             outline-style: none;
         }
+    }
 
-        &:focus,
-        &:focus-within {
+    %igx-chip--cosy {
+        @extend  %igx-chip-custom-icon--cosy;
+    }
+
+    %igx-chip--compact {
+        @extend  %igx-chip-custom-icon--compact;
+    }
+
+    %igx-chip--disabled {
+        %igx-chip__item {
+            cursor: default;
+            pointer-events: none;
+        }
+    }
+
+    %igx-chip-custom-icon {
+        igx-icon {
+            width: map-get($chip-icon-size, 'comfortable');
+            height: map-get($chip-icon-size, 'comfortable');
+            font-size: map-get($chip-icon-size, 'comfortable');
             outline-style: none;
+        }
+    }
 
-            %igx-chip__item {
-                @extend %igx-chip__item--focus;
-            }
+    %igx-chip-custom-icon--cosy {
+        igx-icon {
+            width: map-get($chip-icon-size, 'cosy');
+            height: map-get($chip-icon-size, 'cosy');
+            font-size: map-get($chip-icon-size, 'cosy');
+            outline-style: none;
+        }
+    }
+
+    %igx-chip-custom-icon--compact {
+        igx-icon {
+            width: map-get($chip-icon-size, 'compact');
+            height: map-get($chip-icon-size, 'compact');
+            font-size: map-get($chip-icon-size, 'compact');
+            outline-style: none;
         }
     }
 
@@ -252,12 +307,31 @@
     %igx-chip__suffix {
         display: inline-flex;
         align-items: center;
+
+        + %igx-chip__prefix,
+        + %igx-chip__suffix,
+        + %igx-chip__remove {
+            margin-left: rem(4px);
+
+            [dir='rtl'] & {
+                margin-left: 0;
+                margin-right: rem(4px);
+            }
+        }
     }
 
     %igx-chip__content {
         @include ellipsis();
-        padding: 0 rem(8px);
+        padding: map-get($chip-padding, 'comfortable');
         max-width: $chip-max-width;
+    }
+
+    %igx-chip__content--cosy {
+        padding: map-get($chip-padding, 'cosy');
+    }
+
+    %igx-chip__content--compact {
+        padding: map-get($chip-padding, 'compact');
     }
 
     %igx-chip__remove {
@@ -273,6 +347,50 @@
             outline-style: none;
             color: igx-color(map-get($theme, 'palette'), error);
         }
+
+        [dir='rtl'] & {
+            margin-right: 0;
+            margin-left: rem(4px) !important;
+        }
+    }
+
+    %igx-chip__select {
+        display: inline-flex;
+        align-items: center;
+        z-index: 1;
+        opacity: 1;
+        transition: opacity 120ms $ease-in-out-quad;
+
+        > * {
+            width: 18px !important;
+            transition: width 120ms $ease-in-out-quad;
+        }
+
+        + %igx-chip__prefix {
+            margin-left: rem(4px);
+
+            [dir='rtl'] & {
+                margin-left: 0;
+                margin-right: rem(4px);
+            }
+        }
+    }
+
+    %igx-chip__select--hidden {
+        opacity: 0;
+        z-index: -1;
+
+        > * {
+            width: 0 !important;
+        }
+
+        + %igx-chip__prefix {
+            margin-left: 0;
+
+            [dir='rtl'] & {
+                margin-right: 0;
+            }
+        }
     }
 
     %igx-chip__item {
@@ -283,51 +401,39 @@
         padding: 0 rem(4px);
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
-        border: 1px solid transparent;
+        border-width: 1px;
+        border-style: solid;
+        border-color: --var($theme, 'border-color');
         border-radius: map-get($chip-height, 'comfortable') / 2;
         user-select: none;
         cursor: pointer;
-        transition: $transition;
-
-        &:hover {
-            color: --var($theme, 'hover-text-color');
-            background: --var($theme, 'hover-background');
-            border-color: --var($theme, 'hover-border-color');
-        }
     }
 
-    %igx-chip__select {
-        display: inline-flex;
-        width: 18px;
-        align-items: center;
-        opacity: 1;
-        transition: width 120ms $ease-in-out-quad,
-            opacity 120ms $ease-in-out-quad;
-    }
-
-    %igx-chip__select--hidden {
-        width: 0;
-        opacity: 0;
+    %igx-chip__item--hover {
+        color: --var($theme, 'hover-text-color');
+        background: --var($theme, 'hover-background');
+        border-color: --var($theme, 'hover-border-color');
+        transition: all 120ms ease-in;
     }
 
     %igx-chip__item--focus {
         color: --var($theme, 'focus-text-color');
         background: --var($theme, 'focus-background');
-        border-color: --var($theme, 'hover-border-color');
+        border-color: --var($theme, 'focus-border-color');
+        outline-style: none;
     }
-
 
     %igx-chip__item--selected {
         color: --var($theme, 'selected-text-color');
         background: --var($theme, 'selected-background');
         border-color: --var($theme, 'selected-border-color');
+    }
 
-        &:hover {
-            color: --var($theme, 'hover-selected-text-color');
-            background: --var($theme, 'hover-selected-background');
-            border-color: --var($theme, 'hover-selected-border-color');
-            transition: $transition;
-        }
+    %igx-chip__item--hover-selected {
+        color: --var($theme, 'hover-selected-text-color');
+        background: --var($theme, 'hover-selected-background');
+        border-color: --var($theme, 'hover-selected-border-color');
+        transition: $transition;
     }
 
     %igx-chip__item--focus-selected {
@@ -347,27 +453,6 @@
         border-radius: map-get($chip-height, 'compact') / 2;
         height: map-get($chip-height, 'compact');
         padding: map-get($chip-padding, 'compact');
-    }
-
-    %igx-chip--cosy {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'cosy') / 2;
-            height: map-get($chip-height, 'cosy');
-        }
-    }
-
-    %igx-chip--compact {
-        %igx-chip__item {
-            border-radius: map-get($chip-height, 'compact') / 2;
-            height: map-get($chip-height, 'compact');
-        }
-    }
-
-    %igx-chip--disabled {
-        %igx-chip__item {
-            cursor: default;
-            pointer-events: none;
-        }
     }
 
     %igx-chip__ghost {

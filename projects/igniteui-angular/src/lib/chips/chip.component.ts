@@ -54,6 +54,11 @@ let CHIP_ID = 0;
 })
 export class IgxChipComponent {
 
+    protected _displayDensity = DisplayDensity.comfortable;
+    protected _selected = false;
+    protected _selectedItemClass = 'igx-chip__item--selected';
+    protected _movedWhileRemoving = false;
+
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -403,17 +408,6 @@ export class IgxChipComponent {
     public get selected() {
         return this._selected;
     }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('tabindex')
-    public chipTabindex = 0;
-
-    protected _displayDensity = DisplayDensity.comfortable;
-    protected _selected = false;
-    protected _selectedItemClass = 'igx-chip__item--selected';
-    protected _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
 
