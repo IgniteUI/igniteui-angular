@@ -368,6 +368,18 @@ export class IgxChipComponent {
     }
 
     /**
+     * @hidden
+     */
+    public selectClass(condition: boolean): object {
+        const SELECT_CLASS = 'igx-chip__select';
+
+        return {
+            [SELECT_CLASS]: condition,
+            [`${SELECT_CLASS}--hidden`]: !condition
+        };
+    }
+
+    /**
      * Sets the `IgxChipComponent` to be selected.
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">

@@ -294,16 +294,20 @@
             background: --var($theme, 'hover-background');
             border-color: --var($theme, 'hover-border-color');
         }
+    }
 
-        &::before {
-            width: 0;
-            content: '\e5ca';
-            font-family: 'Material Icons', sans-serif;
-            font-size: 18px;
-            font-weight: 400;
-            transition: width 120ms $ease-in-out-cubic;
-            opacity: 0;
-        }
+    %igx-chip__select {
+        display: inline-flex;
+        width: 18px;
+        align-items: center;
+        opacity: 1;
+        transition: width 120ms $ease-in-out-quad,
+            opacity 120ms $ease-in-out-quad;
+    }
+
+    %igx-chip__select--hidden {
+        width: 0;
+        opacity: 0;
     }
 
     %igx-chip__item--focus {
@@ -323,11 +327,6 @@
             background: --var($theme, 'hover-selected-background');
             border-color: --var($theme, 'hover-selected-border-color');
             transition: $transition;
-        }
-
-        &::before {
-            width: 18px;
-            opacity: 1;
         }
     }
 

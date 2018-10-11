@@ -2,11 +2,11 @@
     [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
     (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd()" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked($event)">
 
-    <div class="igx-chip__select" *ngIf="selected">
+    <div [ngClass]="selectClass(selected)">
         <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
     </div>
 
-    <ng-content  select="igx-prefix,[igxPrefix]"></ng-content>
+    <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
     <div class="igx-chip__content">
         <ng-content></ng-content>

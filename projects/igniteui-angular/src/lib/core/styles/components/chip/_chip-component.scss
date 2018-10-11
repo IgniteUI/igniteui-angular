@@ -32,6 +32,15 @@
         @extend %igx-chip__suffix !optional;
     }
 
+    @include e(select) {
+        @extend %igx-chip__select !optional;
+    }
+
+    @include e(select, $m: 'hidden') {
+        @extend %igx-chip__select !optional;
+        @extend %igx-chip__select--hidden !optional;
+    }
+
     @include e(remove) {
         @extend %igx-chip__remove !optional;
     }
@@ -62,7 +71,6 @@
             }
         }
     }
-
 
     @include m(cosy) {
         @extend %igx-chip !optional;
