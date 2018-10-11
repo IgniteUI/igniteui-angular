@@ -73,8 +73,8 @@
         justify-content: space-between;
         padding: map-get($banner-padding, 'comfortable');
         background: --var($theme, 'banner-background');
-        border-bottom: 1px solid --var($theme, 'banner-border-color');
         align-items: center;
+        position: relative;
     }
 
     %igx-banner__illustration {
@@ -86,6 +86,16 @@
         border-radius: 50%;
         background: --var($theme, 'banner-illustration-background');
         color: --var($theme, 'banner-illustration-color');
+    }
+
+    %igx-banner__border-top {
+        border-top: 1px solid --var($theme, 'banner-border-color');
+        top: -1px
+    }
+
+    %igx-banner__border-bottom {
+        border-bottom: 1px solid --var($theme, 'banner-border-color');
+        top: 0px;
     }
 
     %igx-banner__text {

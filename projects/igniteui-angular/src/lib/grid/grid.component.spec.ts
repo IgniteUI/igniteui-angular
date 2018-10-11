@@ -951,6 +951,10 @@ describe('IgxGrid Component Tests', () => {
             expect(row.classList).toContain('igx-grid__tr--edited');
         }));
 
+        it(`Updated value should be preserved inside the cell when it enters edit mode again`, () => {
+            // TO DO
+        });
+
         describe('Row Editing - Navigation - Keyboard', () => {
             it(`Should be able to move between cells normally`, () => {
                 // TO DO
@@ -979,7 +983,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         fdescribe('Row Editing - Exit row editing', () => {
-            fit(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, fakeAsync(() => {
+            it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1026,10 +1030,46 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        // TODO
-        // it('TAB key skips noneditable cells', (async () => {
+        it('Correct class is added to the edited row', (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
 
-        // }));
+            const grid = fix.componentInstance.gridRowEdit;
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+            expect(row.classList).not.toContain('igx-grid__tr--edited');
+
+            cell.inEditMode = true;
+            // expect(rowEditBanned) to be visible
+            cell.update('IG');
+            cell.inEditMode = false;
+
+            await wait(DEBOUNCETIME);
+
+            expect(row.classList).toContain('igx-grid__tr--edited');
+        }));
+
+        describe('Row Editing - Paging', () => {
+            it(`Should not apply edited classes to the same row on a different page`, () => {
+                // TO DO
+            });
+
+            it(`Should preserve the changes after page navigation`, () => {
+                // TO DO
+            });
+
+            it(`Should save changes when changing page while editing`, () => {
+                // TO DO
+            });
+
+            it(`Should/not stay in edit mode when changing the page size while editing`, () => {
+                // TO DO
+            });
+
+            it(`Should/not stay in edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+                // TO DO
+            });
+        });
     });
 
     /**
