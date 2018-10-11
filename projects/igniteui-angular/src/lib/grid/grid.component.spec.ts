@@ -19,6 +19,7 @@ import {
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
+import { IgxGridRowComponent } from './row.component';
 
 const DEBOUNCETIME = 30;
 
@@ -983,8 +984,35 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Exit row editing', () => {
-            it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, fakeAsync(() => {
+        describe('Row Editing - Exit row editing', () => {
+            it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                spyOn(grid, 'closeRowTransaction');
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                //  ged DONE button and click it
+                const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
+                const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
+                const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonDone);
+                doneButtonElement.nativeElement.click();
+                expect(grid.closeRowTransaction).toHaveBeenCalled();
+                expect(grid.closeRowTransaction).toHaveBeenCalledWith(true);
+
+                //  ged CANCLE button and click it
+                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
+                cancelButtonElement.nativeElement.click();
+                expect(grid.closeRowTransaction).toHaveBeenCalled();
+                expect(grid.closeRowTransaction).toHaveBeenCalledWith(false);
+            }));
+            it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -994,20 +1022,18 @@ describe('IgxGrid Component Tests', () => {
                 spyOn(gridAPI, 'submit_value').and.callThrough();
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
-                const cell = getCellElementByRowAndColumnIndexes(fix.debugElement, 0, 2, grid.columnList.length);
-                const row = grid.getRowByIndex(0);
-
-                cell.triggerEventHandler('dblclick', {});
-                tick(DEBOUNCETIME);
-                expect(row.inEditMode).toBe(true);
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
 
                 // 'click' on Done button
                 grid.closeRowTransaction(true);
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 2, rowIndex: 0});
-            }));
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+            });
             it(`Should exit row editing AND COMMIT on data operations`, () => {
                 // TO DO
             });
@@ -1030,25 +1056,6 @@ describe('IgxGrid Component Tests', () => {
                 // TO DO
             });
         });
-
-        it('Correct class is added to the edited row', (async () => {
-            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-            fix.detectChanges();
-
-            const grid = fix.componentInstance.gridRowEdit;
-            const cell = grid.getCellByColumn(0, 'ProductName');
-            const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
-            expect(row.classList).not.toContain('igx-grid__tr--edited');
-
-            cell.inEditMode = true;
-            // expect(rowEditBanned) to be visible
-            cell.update('IG');
-            cell.inEditMode = false;
-
-            await wait(DEBOUNCETIME);
-
-            expect(row.classList).toContain('igx-grid__tr--edited');
-        }));
 
         describe('Row Editing - Paging', () => {
             it(`Should not apply edited classes to the same row on a different page`, () => {
@@ -1075,9 +1082,10 @@ describe('IgxGrid Component Tests', () => {
         describe('Row Editing - Filtering', () => {
             it(`Should exit edit mode when filtering`, () => {
                 // TO DO
+                // Verify the data source is updated
             });
 
-            it(`The new value should be included in the results when filtering`, () => {
+            it(`Should include the new value in the results when filtering`, () => {
                 // TO DO
             });
 
@@ -1087,6 +1095,23 @@ describe('IgxGrid Component Tests', () => {
                 // Edit any of the filtered rows so that the row is removed from the filtered columns
                 // Remove filtering
                 // Verify the update is preserved
+            });
+        });
+
+        describe('Row Editing - Sorting', () => {
+            it(`Should exit edit mode when Sorting`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+
+            it(`Should include the new value in the results when sorting`, () => {
+                // TO DO
+            });
+
+            it(`Editing a sorted row`, () => {
+                // TO DO
+                // Sort any column
+                // Edit any of the sorted rows so that the row position is changed
             });
         });
 
