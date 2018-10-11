@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/midnight/index';
 @import 'app-palettes';
 @import 'app-layout';
 
@@ -39,7 +40,11 @@ $exclude: (
 
 // Generating a theme
 @include igx-core();
-@include igx-theme($default-palette, $exclude, $legacy-support: true);
+@include igx-theme($default-palette, $preset: $midnight-theme, $exclude: $exclude, $legacy-support: true);
+
+body {
+    background: #222;
+}
 
 /// Typography samples
 // $button-type-style: igx-type-style(
@@ -68,9 +73,9 @@ $exclude: (
 //     }
 // }
 
-$tooltip-theme: igx-tooltip-theme(
-    $background: orange,
-    $text-color: red
-);
+//$tooltip-theme: igx-tooltip-theme(
+//    $background: orange,
+//    $text-color: red
+//);
 
 // @include igx-tooltip($tooltip-theme);

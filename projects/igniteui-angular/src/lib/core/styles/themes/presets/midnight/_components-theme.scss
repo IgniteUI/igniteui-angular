@@ -1,0 +1,202 @@
+@import 'vars';
+
+// AVATAR
+$avatar-midnight-theme: igx-avatar-theme(
+    $icon-background: $midnight-white-40,
+    $icon-color: $midnight-white-80,
+    $initials-background: $midnight-white-40,
+    $initials-color: $midnight-white-80,
+    $image-background: $midnight-white-40
+);
+
+// BADGE
+$badge-midnight-theme: igx-badge-theme(
+    $palette: $midnight-palett,
+    $background-color: $midnight-dark-text
+);
+
+// BUTTONS
+$button-midnight-theme: igx-button-theme(
+    $palette: $midnight-palett,
+    $disabled-color: $midnight-white-50,
+    $disabled-background: $midnight-white-20
+);
+
+// BUTTONS GROUP
+$button-group-midnight-theme: igx-button-group-theme(
+    $palette: $midnight-palett,
+    $item-background: $midnight-background-darker,
+    $item-hover-background: $midnight-white-30,
+    $item-selected-background: $midnight-white-30,
+    $item-border-color: $midnight-white-20
+);
+
+// ICONS
+$icon-midnight-theme: igx-icon-theme(
+    $palette: $midnight-palett,
+    $color: $midnight-white-70,
+    $disabled-color: $midnight-white-50
+);
+
+// INPUT GROUP
+$input-gruop-midnight-theme: igx-input-group-theme(
+    $palette: $midnight-palett,
+    $variant: 'light'
+);
+
+// RIPPLE
+$ripple-midnight-theme: igx-ripple-theme(
+    $palette: $midnight-palett,
+    $color: $midnight-white-70
+);
+
+// SLIDER
+$slider-midnight-theme: igx-slider-theme(
+    $palette: $midnight-palett,
+    $variant: 'light'
+);
+
+// CALENDAR
+$calendar-midnight-theme: igx-calendar-theme(
+    $palette: $midnight-palett,
+    $content-background: $midnight-background-darker
+);
+
+// DIALOG
+$dialog-midnight-theme: igx-dialog-theme(
+    $palette: $midnight-palett,
+    $background: $midnight-background-darker
+);
+
+// TIME PICKER
+$time-picker-midnight-theme: igx-time-picker-theme(
+    $palette: $midnight-palett,
+    $background-color: $midnight-background-darker,
+    $active-item-background: $midnight-background-darker
+);
+
+// EXPANSION PANEL
+$expansion-panel-midnight-theme: igx-expansion-panel-theme(
+    $palette: $midnight-palett,
+    $header-background: $midnight-background-darker,
+    $header-focus-background: $midnight-background-darker
+);
+
+// SWITCH
+$switch-midnight-theme: igx-switch-theme(
+    $palette: $midnight-palett,
+    $variant: 'light'
+);
+
+// RADIO
+$radio-midnight-theme: igx-radio-theme(
+    $palette: $midnight-palett,
+    $variant: 'light'
+);
+
+// CHECKBOX
+$checkbox-midnight-theme: igx-checkbox-theme(
+    $palette: $midnight-palett,
+    $variant: 'light'
+);
+
+// NAV-DRAWER
+$navdrawer-midnight-theme: igx-navdrawer-theme(
+    $palette: $midnight-palett,
+    $background: $midnight-background-darker,
+    $item-header-text-color: $midnight-white-70,
+    $item-icon-color: $midnight-white-50,
+    $item-hover-icon-color: $midnight-light-text,
+    $item-active-text-color: igx-color($midnight-palett, 'secondary'),
+    $item-active-icon-color: igx-color($midnight-palett, 'secondary'),
+    $item-active-background: $midnight-background-black
+);
+
+// CARD
+$card-midnight-theme: igx-card-theme(
+    $palette: $midnight-palett,
+    $background: $midnight-background-darker
+);
+
+// CAROUSEL
+$carousel-midnight-theme: igx-carousel-theme(
+    $palette: $midnight-palett,
+    $button-background: $midnight-background-darker,
+    $button-arrow-color: $midnight-white-80,
+    $button-hover-background: $midnight-background-black
+);
+
+// BOTTOM NAV
+$bottom-nav-midnight-theme: igx-bottom-nav-theme(
+    $palette: $midnight-palett,
+    $background: $midnight-background-darker
+);
+
+// LIST
+$list-midnight-theme: igx-list-theme(
+    $palette: $midnight-palett,
+    $background: $midnight-background-darker,
+    $header-text-color: igx-color($midnight-palett, 'secondary')
+);
+
+// DROP DOWN
+$dropdown-midnight-theme: igx-drop-down-theme(
+    $palette: $midnight-palett,
+    $background-color: $midnight-background-black
+);
+
+// COMBO
+$combo-midnight-theme: igx-combo-theme(
+    $palette: $midnight-palett,
+    $empty-list-placeholder-color: $midnight-white-50,
+    $empty-list-background: $midnight-background-black
+);
+
+// PROGRESSBAR LINEAR
+$progressbar-lin-midnight-theme: igx-progress-linear-theme(
+    $palette: $midnight-palett,
+    $track-color: $midnight-white-40,
+    $text-color: $midnight-white-90
+);
+
+// PROGRESS BARs
+$progressbar-cir-midnight-theme: igx-progress-circular-theme(
+    $palette: $midnight-palett,
+    $text-color: $midnight-white-90,
+    $base-circle-color: $midnight-white-40
+);
+
+// GRID
+$grid-midnight-theme: igx-grid-theme(
+    $content-background: #000,
+    $content-text-color: #fff,
+    $header-background: igx-color($midnight-palett, 'grays', 800),
+    $header-text-color: $midnight-white-70,
+    $header-border-color: $midnight-white-40,
+    $row-indentation-background: #000,
+    $row-selected-background: #fff,
+    $row-selected-text-color: igx-color($midnight-palett, 'grays', 900),
+    $row-hover-background: #4b4b4b,
+    $row-hover-text-color: #fff,
+    $row-border-color: #333,
+    $row-content-focus-background: rgba(106, 227, 104, .2),
+    $cell-selected-background: igx-color($midnight-palett, 'primary'),
+    $cell-selected-text-color: igx-color($midnight-palett, 'grays', 900),
+    $group-count-background: #333,
+    $group-label-icon: igx-color($midnight-palett, 'secondary', 500),
+    $group-label-column-name-text: igx-color($midnight-palett, 'secondary', 500),
+    $expand-icon-color: $midnight-white-60,
+    $expand-icon-hover-color: igx-color($midnight-palett, 'secondary', 500),
+    $expand-all-icon-color: $midnight-white-60,
+    $expand-all-icon-hover-color: igx-color($midnight-palett, 'secondary', 500),
+    $drop-area-text-color: $midnight-white-70,
+    $drop-area-icon-color: $midnight-white-50,
+    $drop-area-background: #333,
+    $drop-area-on-drop-background: $midnight-white-20,
+    $ghost-header-background: #333,
+    $ghost-header-icon-color: $midnight-white-70
+);
+
+
+
+
