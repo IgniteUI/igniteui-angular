@@ -34,7 +34,7 @@
                 <igx-checkbox [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()"><br />Custom Template</igx-checkbox>
             </div>
             <app-grid-with-transactions>
-                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px"
+                <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
                     [rowEditable]="true"  [paging]="true" [perPage]="10">
                     <igx-column width="100px">
                         <ng-template igxCell let-cell="cell" let-val>
@@ -51,7 +51,7 @@
                             <input name="units" [(ngModel)]="cell.value" style="color: black" />
                         </ng-template>
                     </igx-column>
-                    <igx-column width="100px" field="OrderDate" [dataType]="'date'"></igx-column>
+                    <igx-column width="100px" field="OrderDate" header="Order Date" [dataType]="'date'"></igx-column>
                     <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'"
                         [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true" ></igx-column>
                     <igx-column-group [movable]="true" header="Column Group 1">

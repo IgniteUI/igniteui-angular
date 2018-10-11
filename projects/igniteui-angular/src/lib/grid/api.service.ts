@@ -210,14 +210,13 @@ export class IgxGridAPIService {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
                 currentValue: grid.data[rowIndex][column.field], newValue: editValue
             };
-            const oldValue = grid.data[rowIndex][column.field];
-            grid.onEditDone.emit(args);
-
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
             if (!grid.transactions.add(transaction, grid.data[rowIndex])) {
+                const oldValue = grid.data[rowIndex][column.field];
+                grid.onEditDone.emit(args);
+                if (oldValue && oldValue === editValue) { return; }
                 grid.data[rowIndex][column.field] = args.newValue;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
