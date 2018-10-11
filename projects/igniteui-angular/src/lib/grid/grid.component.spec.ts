@@ -1042,12 +1042,30 @@ describe('IgxGrid Component Tests', () => {
                 // TO DO
             });
 
-            it(`Should/not stay in edit mode when changing the page size while editing`, () => {
+            it(`Should exit edit mode when changing the page size while editing`, () => {
                 // TO DO
             });
 
-            it(`Should/not stay in edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+            it(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
                 // TO DO
+            });
+        });
+
+        describe('Row Editing - Filtering', () => {
+            it(`Should exit edit mode when filtering`, () => {
+                // TO DO
+            });
+
+            it(`The new value should be included in the results when filtering`, () => {
+                // TO DO
+            });
+
+            it(`Editing a filtered row`, () => {
+                // TO DO
+                // Filter by any value
+                // Edit any of the filtered rows so that the row is removed from the filtered columns
+                // Remove filtering
+                // Verify the update is preserved
             });
         });
     });
