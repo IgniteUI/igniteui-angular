@@ -212,7 +212,6 @@ export class IgxGridAPIService {
             };
             let oldValue = grid.data[rowIndex][column.field];
             grid.onEditDone.emit(args);
-
             //  if edit (new) value is same as old value do nothing here
             const changeState = grid.transactions.getAggregatedValue(rowID);
             if (changeState) {
