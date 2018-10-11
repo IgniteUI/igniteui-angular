@@ -25,10 +25,11 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    ViewContainerRef
+    ViewContainerRef,
+    AfterViewChecked
 } from '@angular/core';
-import { Subject, of } from 'rxjs';
-import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -36,7 +37,7 @@ import { FilteringLogic, IFilteringExpression } from '../data-operations/filteri
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
@@ -55,10 +56,9 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxDropEnterEventArgs } from '../directives/dragdrop/dragdrop.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 let NEXT_ID = 0;
-const DEBOUNCE_TIME = 16;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export interface IGridCellEventArgs {
@@ -149,6 +149,7 @@ export interface IColumnMovingEndEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
+    providers: [IgxGridNavigationService],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
@@ -1329,14 +1330,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ViewChild('scrollContainer', { read: IgxForOfDirective })
-    public parentVirtDir: IgxForOfDirective<any>;
+    @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
+    public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('verticalScrollContainer', { read: IgxForOfDirective })
-    public verticalScrollContainer: IgxForOfDirective<any>;
+    @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
+    public verticalScrollContainer: IgxGridForOfDirective<any>;
+
+    @ViewChild('summaryContainer', { read: IgxGridForOfDirective })
+    protected summaryContainer: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
@@ -1353,8 +1357,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxForOfDirective })
-    public headerContainer: IgxForOfDirective<any>;
+    @ViewChild('headerContainer', { read: IgxGridForOfDirective })
+    public headerContainer: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
@@ -1998,12 +2002,33 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _rowHeight;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
+    private _horizontalForOfs;
 
     private _columnWidth: string;
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
     private _hideGroupedColumns = false;
+
+    private verticalScrollHandler(event) {
+        this.verticalScrollContainer.onScroll(event);
+        this.zone.run(() => {
+            this.cdr.detectChanges();
+            this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+        });
+    }
+
+    private horizontalScrollHandler(event) {
+        this.headerContainer.onHScroll(event);
+        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
+        if (this.summaryContainer) {
+            this.summaryContainer.onHScroll(event);
+        }
+        this.zone.run(() => {
+            this.cdr.detectChanges();
+            this.parentVirtDir.onChunkLoad.emit(this._horizontalForOfs[0].state);
+        });
+    }
 
     constructor(
         private gridAPI: IgxGridAPIService,
@@ -2014,8 +2039,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
-        private viewRef: ViewContainerRef) {
-
+        private viewRef: ViewContainerRef,
+        private navigation: IgxGridNavigationService) {
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -2027,6 +2052,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public ngOnInit() {
         this.gridAPI.register(this);
+        this.navigation.grid = this;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -2091,8 +2117,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 }
                 this.markForCheck();
             });
-        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
-        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     /**
@@ -2137,6 +2161,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             observer = new MutationObserver(callback);
             observer.observe(this.document.body, config);
         }
+
+        this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
+            this._horizontalForOfs = list.toArray()
+                .filter(item => item.element.nativeElement.parentElement !== null)
+                .map(row => row.virtDirRow)
+        );
+
+        this.zone.runOutsideAngular(() =>
+            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
+        );
+
+        this.zone.runOutsideAngular(() =>
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
+        );
+        this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
+        const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
 
     public ngDoCheck(): void {
@@ -2159,7 +2200,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public ngOnDestroy() {
-        this.zone.runOutsideAngular(() => this.document.defaultView.removeEventListener('resize', this.resizeHandler));
+        this.zone.runOutsideAngular(() => {
+            this.document.defaultView.removeEventListener('resize', this.resizeHandler);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+        });
         this.destroy$.next(true);
         this.destroy$.complete();
         this.gridAPI.unset(this.id);
@@ -3711,37 +3756,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected setEventBusSubscription() {
-        this.eventBus.pipe(
-            debounceTime(DEBOUNCE_TIME),
-            takeUntil(this.destroy$)
-        ).subscribe(() => this.cdr.detectChanges());
-    }
-
-    /**
-     * @hidden
-     */
-    protected setVerticalScrollSubscription() {
-        /*
-            Until the grid component is destroyed,
-            Take the first event and unsubscribe
-            then merge with an empty observable after DEBOUNCE_TIME,
-            re-subscribe and repeat the process
-        */
-        this.verticalScrollContainer.onChunkLoad.pipe(
-            takeUntil(this.destroy$),
-            take(1),
-            merge(of({})),
-            delay(DEBOUNCE_TIME),
-            repeat()
-        ).subscribe(() => {
-            this.eventBus.next();
-        });
-    }
-
-    /**
-     * @hidden
-     */
     public onHeaderCheckboxClick(event) {
         this.allRowsSelected = event.checked;
         const newSelection =
@@ -3965,129 +3979,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public navigateDown(rowIndex: number, columnIndex: number, event?) {
-        const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-        const target = row instanceof IgxGridGroupByRowComponent ?
-            row.groupContent :
-            this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
-        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
-        if (!verticalScroll && !target) {
-            return;
-        }
-
-        if (target) {
-            const containerHeight = this.calcHeight ?
-                Math.ceil(this.calcHeight) :
-                null; // null when there is no vertical virtualization
-            const containerTopOffset =
-                parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const targetEndTopOffset = row.element.nativeElement.offsetTop + this.rowHeight + containerTopOffset;
-            if (containerHeight && targetEndTopOffset > containerHeight) {
-                const scrollAmount = targetEndTopOffset - containerHeight;
-                this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
-            } else {
-                if (row instanceof IgxGridGroupByRowComponent) {
-                    target.nativeElement.focus();
-                } else {
-                    (target as any)._updateCellSelectionStatus(true, event);
-                }
-            }
-        } else {
-            const contentHeight = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.offsetHeight;
-            const scrollOffset = parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const lastRowOffset = contentHeight + scrollOffset - this.calcHeight;
-            const scrollAmount = this.rowHeight + lastRowOffset;
-            this.performVerticalScroll(scrollAmount, rowIndex, columnIndex, event);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public navigateUp(rowIndex: number, columnIndex: number, event?) {
-        const row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-        const target = row instanceof IgxGridGroupByRowComponent ?
-            row.groupContent :
-            this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
-        const verticalScroll = this.verticalScrollContainer.getVerticalScroll();
-
-        if (!verticalScroll && !target) {
-            return;
-        }
-        if (target) {
-            const containerTopOffset =
-                parseInt(row.grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            if (this.rowHeight > Math.abs(containerTopOffset) // not the entire row is visible, due to grid offset
-                && verticalScroll.scrollTop // the scrollbar is not at the first item
-                && row.element.nativeElement.offsetTop < this.rowHeight) { // the target is in the first row
-                const scrollAmount = containerTopOffset < 0 ?
-                    containerTopOffset :
-                    -this.rowHeight + Math.abs(containerTopOffset);
-                this.performVerticalScroll(scrollAmount, rowIndex - 1, columnIndex, event);
-            }
-            if (row instanceof IgxGridGroupByRowComponent) {
-                target.nativeElement.focus();
-            } else {
-                (target as any)._updateCellSelectionStatus(true, event);
-            }
-        } else {
-            const scrollOffset =
-                -parseInt(this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const scrollAmount = this.rowHeight + scrollOffset;
-            this.performVerticalScroll(-scrollAmount, rowIndex, columnIndex, event);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('scroll', ['$event'])
+    // @HostListener('scroll', ['$event'])
     public scrollHandler(event) {
         this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
-    }
-
-    private _focusNextCell(rowIndex: number, columnIndex: number, dir?: string, event?) {
-        let row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-        const virtualDir = dir !== undefined ? row.virtDirRow : this.verticalScrollContainer;
-        this.subscribeNext(virtualDir, () => {
-            let target;
-            this.cdr.detectChanges();
-            row = this.gridAPI.get_row_by_index(this.id, rowIndex);
-            target = this.gridAPI.get_cell_by_visible_index(this.id, rowIndex, columnIndex);
-
-            if (!target) {
-                if (dir) {
-                    target = dir === 'left' ? row.cells.first : row.cells.last;
-                } else if (row instanceof IgxGridGroupByRowComponent) {
-                    target = row.groupContent;
-                    target.nativeElement.focus();
-                    return;
-                } else if (row) {
-                    target = row.cells.first;
-                } else {
-                    return;
-                }
-            }
-            target._updateCellSelectionStatus(true, event);
-        });
-    }
-
-    private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
-        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
-            next: (e: any) => {
-                callback(e);
-            }
-        });
-    }
-
-    private performVerticalScroll(amount: number, rowIndex: number, columnIndex: number, event?) {
-        const scrolled = this.verticalScrollContainer.addScrollTop(amount);
-        if (scrolled) {
-            this._focusNextCell(rowIndex, columnIndex, undefined, event);
-        }
     }
 
     /**
@@ -4279,7 +4176,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    private scrollDirective(directive: IgxForOfDirective<any>, goal: number): void {
+    private scrollDirective(directive: IgxGridForOfDirective<any>, goal: number): void {
         if (!directive) {
             return;
         }
