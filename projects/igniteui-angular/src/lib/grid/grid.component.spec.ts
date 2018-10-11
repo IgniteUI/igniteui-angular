@@ -21,6 +21,7 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridRowComponent } from './row.component';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 const DEBOUNCETIME = 30;
 
@@ -1104,11 +1105,51 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
                 expect(cell.inEditMode).toBeFalsy();
             });
-            it(`Should exit row editing AND COMMIT on data operations`, () => {
-                // TO DO
+            it(`Should exit row editing AND COMMIT on sort`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                fix.detectChanges();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on non-editable cell in same row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                const nonEditableCell = grid.getCellByColumn(0, 'ProductID');
+                nonEditableCell.nativeElement.click();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, () => {
                 // TO DO
@@ -1168,7 +1209,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-		describe('Row Editing - GroupBy', () => {
+        describe('Row Editing - GroupBy', () => {
             it(`Should exit edit mode when Grouping`, () => {
                 // TO DO
                 // Verify the data source is updated
@@ -1180,7 +1221,6 @@ describe('IgxGrid Component Tests', () => {
                 // TO DO
             });
         });
-
 
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
@@ -1202,9 +1242,9 @@ describe('IgxGrid Component Tests', () => {
         it('Default column editable value is true, when row editing is enabled', () => {
             const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fixture.detectChanges();
-    
+
             const grid = fixture.componentInstance.grid;
-    
+
             const columns: IgxColumnComponent[] = grid.columnList.toArray();
             expect(columns[0].editable).toBeFalsy();
             expect(columns[1].editable).toBeFalsy();
