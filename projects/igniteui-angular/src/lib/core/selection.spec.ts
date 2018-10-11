@@ -12,12 +12,6 @@ describe('IgxSelectionAPIService', () => {
         }).toThrowError('Invalid value for component id!');
     });
 
-    it('call set method with componentID=0', () => {
-        const set = new Set();
-        service.set(0, set);
-        expect(service.get(0)).toEqual(set);
-    });
-
     it('call add_item method with undefined itemID', () => {
         const componentId = 'id1';
         service.set(componentId, new Set());

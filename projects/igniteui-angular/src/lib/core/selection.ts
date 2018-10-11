@@ -19,7 +19,7 @@ export class IgxSelectionAPIService {
      * @param newSelection The new component selection to be set.
      */
     public set(componentID: string, newSelection: Set<any>) {
-        if (componentID == null) {
+        if (!componentID) {
             throw Error('Invalid value for component id!');
         }
         this.selection.set(componentID, newSelection);
@@ -60,7 +60,7 @@ export class IgxSelectionAPIService {
         if (sel === undefined) {
             sel = this.get_empty();
         }
-        if (itemID == null) {
+        if (!itemID && itemID !== 0) {
             throw Error('Invalid value for item id!');
         }
         sel.add(itemID);
