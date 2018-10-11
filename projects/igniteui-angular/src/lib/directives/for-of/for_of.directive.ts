@@ -367,7 +367,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.vh.instance.elementRef.nativeElement.scrollTop += addTop / this._virtHeightRatio;
         if (Math.abs(addTop / this._virtHeightRatio) < 1) {
             // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
-            const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this._virtHeight);
+            const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
             // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         }
@@ -541,21 +541,22 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
         const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
         if (!this._bScrollInternal) {
-            const maxVirtScrollTop = this.vh.instance.height - containerSize;
+            const maxVirtScrollTop =  this._virtHeight - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
         } else {
             this._bScrollInternal = false;
         }
 
-        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop, this.vh.instance.height);
+        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
         if (scrollOffset === undefined) {
             return;
         }
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        this.dc.changeDetectorRef.detectChanges();
-        this.onChunkLoad.emit(this.state);
         // check if height/width has changes in views.
         this._recalcUpdateSizes();
+        this.dc.changeDetectorRef.detectChanges();
+
+        this.onChunkLoad.emit(this.state);
     }
 
     protected _recalcUpdateSizes() {
@@ -598,12 +599,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             if (this.igxForScrollOrientation === 'vertical') {
                 const scrToBottom = this._isScrolledToBottom;
-                this.vh.instance.height += totalDiff;
+                const reducer = (acc, val) => acc + val;
+                const hSum = this.heightCache.reduce(reducer);
+                if (hSum > this._maxHeight) {
+                    this._virtHeightRatio =  hSum / this._maxHeight;
+                }
+                this.vh.instance.height = Math.min(this.vh.instance.height + totalDiff, this._maxHeight);
+                this._virtHeight = hSum;
                 this.vh.instance.cdr.detectChanges();
-                // update virt height after changes.
-                this._virtHeight += totalDiff * this._virtHeightRatio;
-                if (scrToBottom) {
-                    this.vh.instance.elementRef.nativeElement.scrollTop += totalDiff;
+                if (scrToBottom && !this._isAtBottomIndex) {
+                    const containerSize = parseInt(this.igxForContainerSize, 10);
+                    const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
+                    this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
                 }
             }
         }
@@ -612,7 +619,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected fixedUpdateAllRows(inScrollTop: number, scrollHeight: number): number {
+    protected fixedUpdateAllRows(inScrollTop: number): number {
         const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
 
@@ -647,7 +654,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             cntx.index = this.igxForOf.indexOf(input);
         }
         const scrOffset = inScrollTop - this.sizesCache[this.state.startIndex];
-
         return scrOffset;
     }
 
