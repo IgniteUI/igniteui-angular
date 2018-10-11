@@ -109,7 +109,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public editable = false;
+    public editable = null;
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `false`.
