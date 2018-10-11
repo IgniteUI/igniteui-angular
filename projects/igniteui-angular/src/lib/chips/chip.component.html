@@ -1,15 +1,16 @@
-﻿<div #chipArea igxDrop class="igx-chip__item"
+﻿<div #chipArea class="igx-chip__item"
     tabindex="0"
     [igxDrag]="{chip: this}"
     [hideBaseOnDrag]="true"
     [animateOnRelease]="true"
     [ghostImageClass]="ghostClass"
-    (onEnter)="onChipDragEnterHandler($event)"
-    (onDrop)="onChipDrop($event)"
     (dragStart)="onChipDragStart($event)"
     (dragEnd)="onChipDragEnd()"
     (returnMoveEnd)="onChipMoveEnd($event)"
-    (dragClicked)="onChipDragClicked($event)">
+    (dragClicked)="onChipDragClicked($event)"
+    igxDrop
+    (onEnter)="onChipDragEnterHandler($event)"
+    (onDrop)="onChipDrop($event)">
 
     <div [ngClass]="selectClass(selected)">
         <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
@@ -23,7 +24,7 @@
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
 
-    <div class="igx-chip__remove" #removeBtn *ngIf="removable"
+    <div class="igx-chip__remove" *ngIf="removable"
         tabindex="0"
         (keydown)="onRemoveBtnKeyDown($event)"
         (pointerdown)="onRemoveMouseDown($event)"

@@ -116,7 +116,7 @@ export class ChipsSampleComponent {
     public onDropCc(event) {
         event.cancel = true;
 
-        let chipSwapEl = this.chipListTo.find(val => val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
+        const chipSwapEl = this.chipListTo.find(val => val.id === event.drag.data.chip.id);
         this.chipListCc.push(chipSwapEl);
 
         this.chipsAreaCc.cdr.detectChanges();
@@ -126,13 +126,13 @@ export class ChipsSampleComponent {
         });
 
         this.chipsAreaTo.cdr.detectChanges();
-        this.dropCc.nativeElement.style.visibility = "hidden"
+        this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
     public onDropTo(event) {
         event.cancel = true;
 
-        let chipSwapEl = this.chipListCc.find(val => val.text === event.drag.element.nativeElement.parentElement.children[0].textContent);
+        const chipSwapEl = this.chipListCc.find(val => val.id === event.drag.data.chip.id);
         this.chipListTo.push(chipSwapEl);
 
         this.chipsAreaTo.cdr.detectChanges();
@@ -142,28 +142,28 @@ export class ChipsSampleComponent {
         });
 
         this.chipsAreaCc.cdr.detectChanges();
-        this.dropTo.nativeElement.style.visibility = "hidden";
+        this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartTo(){
-        this.dropCc.nativeElement.style.visibility = "visible";
-        this.dropCc.nativeElement.textContent = "You can drop me here!";
-        this.dropTo.nativeElement.style.visibility = "hidden";
+    onMoveStartTo() {
+        this.dropCc.nativeElement.style.visibility = 'visible';
+        this.dropCc.nativeElement.textContent = 'You can drop me here!';
+        this.dropTo.nativeElement.style.visibility = 'hidden';
     }
 
-    onMoveStartCc(){
-        this.dropTo.nativeElement.style.visibility = "visible";
-        this.dropTo.nativeElement.textContent = "You can drop me here!";
-        this.dropCc.nativeElement.style.visibility = "hidden";
+    onMoveStartCc() {
+        this.dropTo.nativeElement.style.visibility = 'visible';
+        this.dropTo.nativeElement.textContent = 'You can drop me here!';
+        this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedTo(){
-        this.dropTo.nativeElement.style.visibility = "hidden";
-        this.dropCc.nativeElement.style.visibility = "hidden";
+    moveEndedTo() {
+        this.dropTo.nativeElement.style.visibility = 'hidden';
+        this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 
-    moveEndedCc(){
-        this.dropTo.nativeElement.style.visibility = "hidden";
-        this.dropCc.nativeElement.style.visibility = "hidden";
+    moveEndedCc() {
+        this.dropTo.nativeElement.style.visibility = 'hidden';
+        this.dropCc.nativeElement.style.visibility = 'hidden';
     }
 }

@@ -54,11 +54,6 @@ let CHIP_ID = 0;
 })
 export class IgxChipComponent {
 
-    protected _displayDensity = DisplayDensity.comfortable;
-    protected _selected = false;
-    protected _selectedItemClass = 'igx-chip__item--selected';
-    protected _movedWhileRemoving = false;
-
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -98,6 +93,13 @@ export class IgxChipComponent {
     @Input()
     public removable = false;
 
+    /**
+     * And @Input property that overrides the default icon that the chip applies to the remove button.
+     * ```html
+     * <igx-chip [id]="chip.id" [removable]="true" [removeIcon]="iconTemplate"></igx-chip>
+     * <ng-template #iconTemplate><igx-icon>delete</igx-icon></ng-template>
+     * ```
+     */
     @Input()
     public removeIcon: TemplateRef<any>;
 
@@ -111,32 +113,21 @@ export class IgxChipComponent {
     @Input()
     public selectable = false;
 
+    /**
+     * An @Input property that overrides the default icon that the chip applies when it is selected.
+     * ```html
+     * <igx-chip [id]="chip.id" [selectable]="true" [selectIcon]="iconTemplate"></igx-chip>
+     * <ng-template #iconTemplate><igx-icon>done_outline</igx-icon></ng-template>
+     * ```
+     */
     @Input()
     public selectIcon: TemplateRef<any>;
-
-    @Input()
-    public class = '';
 
     /**
      * @hidden
      */
-    @HostBinding('attr.class')
-    get hostClass(): string {
-        const classes = [];
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
-                classes.push('igx-chip--cosy');
-                break;
-            case DisplayDensity.compact:
-                classes.push('igx-chip--compact');
-                break;
-            default:
-                classes.push('igx-chip');
-        }
-        // The custom classes should be at the end.
-        classes.push(this.class);
-        return classes.join(' ');
-    }
+    @Input()
+    public class = '';
 
     /**
      * An @Input property that defines if the `IgxChipComponent` is disabled.
@@ -148,6 +139,31 @@ export class IgxChipComponent {
     @HostBinding('class.igx-chip--disabled')
     @Input()
     public disabled = false;
+
+    /**
+     * Sets the `IgxChipComponent` to be selected.
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
+     * ```
+     */
+    @Input()
+    public set selected(newValue: boolean) {
+        this.changeSelection(newValue);
+    }
+
+    /**
+     * Returns if the `IgxChipComponent` is selected.
+     * ```typescript
+     * @ViewChild('myChip')
+     * public chip: IgxChipComponent;
+     * selectedChip(){
+     *     let selectedChip = this.chip.selected;
+     * }
+     * ```
+     */
+    public get selected() {
+        return this._selected;
+    }
 
     /**
      * Returns the `IgxChipComponent` theme.
@@ -323,6 +339,27 @@ export class IgxChipComponent {
     /**
      * @hidden
      */
+    @HostBinding('attr.class')
+    get hostClass(): string {
+        const classes = [];
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                classes.push('igx-chip--cosy');
+                break;
+            case DisplayDensity.compact:
+                classes.push('igx-chip--compact');
+                break;
+            default:
+                classes.push('igx-chip');
+        }
+        // The custom classes should be at the end.
+        classes.push(this.class);
+        return classes.join(' ');
+    }
+
+    /**
+     * @hidden
+     */
     @ViewChild('chipArea', { read: ElementRef })
     public chipArea: ElementRef;
 
@@ -372,6 +409,13 @@ export class IgxChipComponent {
         }
     }
 
+    protected _displayDensity = DisplayDensity.comfortable;
+    protected _selected = false;
+    protected _selectedItemClass = 'igx-chip__item--selected';
+    protected _movedWhileRemoving = false;
+
+    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+
     /**
      * @hidden
      */
@@ -384,32 +428,31 @@ export class IgxChipComponent {
         };
     }
 
-    /**
-     * Sets the `IgxChipComponent` to be selected.
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
-     * ```
-     */
-    @Input()
-    public set selected(newValue: boolean) {
-        this.changeSelection(newValue);
-    }
+    protected changeSelection(newValue: boolean, srcEvent = null) {
+        const onSelectArgs: IChipSelectEventArgs = {
+            originalEvent: srcEvent,
+            owner: this,
+            selected: false,
+            cancel: false
+        };
 
-    /**
-     * Returns if the `IgxChipComponent` is selected.
-     * ```typescript
-     * @ViewChild('myChip')
-     * public chip: IgxChipComponent;
-     * selectedChip(){
-     *     let selectedChip = this.chip.selected;
-     * }
-     * ```
-     */
-    public get selected() {
-        return this._selected;
-    }
+        if (newValue && !this._selected) {
+            onSelectArgs.selected = true;
+            this.onSelection.emit(onSelectArgs);
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+            if (!onSelectArgs.cancel) {
+                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        } else if (!newValue && this._selected) {
+            this.onSelection.emit(onSelectArgs);
+
+            if (!onSelectArgs.cancel) {
+                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
+                this._selected = newValue;
+            }
+        }
+    }
 
     /**
      * @hidden
@@ -488,32 +531,6 @@ export class IgxChipComponent {
             this.onRemoveClick(event);
         }
         this._movedWhileRemoving = false;
-    }
-
-    protected changeSelection(newValue: boolean, srcEvent = null) {
-        const onSelectArgs: IChipSelectEventArgs = {
-            originalEvent: srcEvent,
-            owner: this,
-            selected: false,
-            cancel: false
-        };
-
-        if (newValue && !this._selected) {
-            onSelectArgs.selected = true;
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-            }
-        } else if (!newValue && this._selected) {
-            this.onSelection.emit(onSelectArgs);
-
-            if (!onSelectArgs.cancel) {
-                this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
-                this._selected = newValue;
-            }
-        }
     }
 
     /**
