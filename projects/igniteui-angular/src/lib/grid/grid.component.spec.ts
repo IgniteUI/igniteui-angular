@@ -1175,7 +1175,28 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on editable cell in other row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
+                otherEditableCell.nativeElement.click();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+                expect(otherEditableCell.inEditMode).toBeTruthy();
             });
             it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
                 // TO DO
