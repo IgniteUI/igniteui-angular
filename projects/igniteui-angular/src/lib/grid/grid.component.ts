@@ -1555,14 +1555,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     get bannerClass(): string {
+        let bannerClass = '';
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-banner--cosy';
+                bannerClass = 'igx-banner--cosy';
             case DisplayDensity.compact:
-                return 'igx-banner--compact';
+                bannerClass = 'igx-banner--compact';
             default:
-                return 'igx-banner';
+                bannerClass = 'igx-banner';
         }
+        bannerClass += this._isRowEditOverlayTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
+        return bannerClass;
     }
 
     /**
@@ -1742,6 +1745,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowEditable = false;
+    private _isRowEditOverlayTop = false;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -4891,9 +4895,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 row.rowID === rowList[lastIndex - 2].rowID)
                 // if row === rowList[0], then overlay should go to bottom, as otherwise it goes under the grid header
                 && row.rowID !== rowList[0].rowID) {
+                this._isRowEditOverlayTop = true;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
             } else {
+                this._isRowEditOverlayTop = false;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Bottom;
                 this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Bottom;
             }
