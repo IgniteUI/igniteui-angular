@@ -522,7 +522,7 @@ describe('IgxGrid - Row Selection', () => {
 
     // API Methods
 
-    it('Filtering and row selection', () => {
+    it('Simple and row selection', () => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
 
