@@ -583,7 +583,7 @@ export class IgxForOfDirective<T> implements AfterViewInit, OnInit, OnChanges, D
         }
 
         const maxRealScrollTop = event.target.children[0].scrollHeight - this.containerSize;
-        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        const realPercentScrolled = maxRealScrollTop !== 0 ? event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
             const maxVirtScrollTop = this._virtHeight - this.containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
