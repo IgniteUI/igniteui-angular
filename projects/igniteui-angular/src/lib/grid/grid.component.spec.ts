@@ -1034,7 +1034,7 @@ describe('IgxGrid Component Tests', () => {
             const fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
 
-            const grid = fix.componentInstance.gridRowEdit;
+            const grid = fix.componentInstance.grid;
             const cell = grid.getCellByColumn(0, 'ProductName');
             const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
             expect(row.classList).not.toContain('igx-grid__tr--edited');
@@ -1074,9 +1074,10 @@ describe('IgxGrid Component Tests', () => {
         describe('Row Editing - Filtering', () => {
             it(`Should exit edit mode when filtering`, () => {
                 // TO DO
+                // Verify the data source is updated
             });
 
-            it(`The new value should be included in the results when filtering`, () => {
+            it(`Should include the new value in the results when filtering`, () => {
                 // TO DO
             });
 
@@ -1086,6 +1087,23 @@ describe('IgxGrid Component Tests', () => {
                 // Edit any of the filtered rows so that the row is removed from the filtered columns
                 // Remove filtering
                 // Verify the update is preserved
+            });
+        });
+
+        describe('Row Editing - Sorting', () => {
+            it(`Should exit edit mode when Sorting`, () => {
+                // TO DO
+                // Verify the data source is updated
+            });
+
+            it(`Should include the new value in the results when sorting`, () => {
+                // TO DO
+            });
+
+            it(`Editing a sorted row`, () => {
+                // TO DO
+                // Sort any column
+                // Edit any of the sorted rows so that the row position is changed
             });
         });
     });
