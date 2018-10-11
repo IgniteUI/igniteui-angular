@@ -983,8 +983,35 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Exit row editing', () => {
-            fit(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
+        describe('Row Editing - Exit row editing', () => {
+            it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                spyOn(grid, 'closeRowTransaction');
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                //  ged DONE button and click it
+                const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
+                const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
+                const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonDone);
+                doneButtonElement.nativeElement.click();
+                expect(grid.closeRowTransaction).toHaveBeenCalled();
+                expect(grid.closeRowTransaction).toHaveBeenCalledWith(true);
+
+                //  ged CANCLE button and click it
+                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
+                cancelButtonElement.nativeElement.click();
+                expect(grid.closeRowTransaction).toHaveBeenCalled();
+                expect(grid.closeRowTransaction).toHaveBeenCalledWith(false);
+            }));
+            it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
