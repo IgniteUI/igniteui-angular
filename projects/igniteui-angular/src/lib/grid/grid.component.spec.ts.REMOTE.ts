@@ -1470,33 +1470,9 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Paging', () => {
-            fit(`Should not apply edited classes to the same row on a different page`, (async () => {
-                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
-                fix.detectChanges();
-
-                const grid = fix.componentInstance.grid;
-                const cell = grid.getCellByColumn(0, 'ProductName');
-                const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
-
-                expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
-
-                cell.inEditMode = true;
-                cell.update('IG');
-                cell.inEditMode = false;
-
-                await wait(DEBOUNCETIME);
-
-                expect(rowEl.classList).toContain('igx-grid__tr--edited');
-
-                const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
-
-                // Next page button click
-                pagingButtons[2].dispatchEvent(new Event('click'));
-                fix.detectChanges();
-                expect(grid.page).toEqual(1);
-                expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
-            }));
+            it(`Should not apply edited classes to the same row on a different page`, () => {
+                // TO DO
+            });
 
             it(`Should preserve the changes after page navigation`, () => {
                 // TO DO
@@ -1962,8 +1938,8 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
-     width="700px" height="400px" [rowEditable]="true" [paging]="true" [perPage]="7">
+    <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true"
+        toolbarTitle="Products" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
                 <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
