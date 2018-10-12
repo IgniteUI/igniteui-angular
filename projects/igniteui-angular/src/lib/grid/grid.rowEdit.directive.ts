@@ -1,7 +1,7 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridCellComponent } from './cell.component';
-import { take } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 @Directive({
     selector: '[igxRowEdit]'
@@ -17,7 +17,10 @@ export class IgxRowEditTabStopDirective {
     private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
-    constructor(@Inject(forwardRef(() => IgxGridComponent)) public grid: IgxGridComponent, public element: ElementRef) {}
+    constructor(
+        @Inject(forwardRef(() => IgxGridComponent)) public grid: IgxGridComponent,
+        public element: ElementRef,
+        @Inject(forwardRef(() => IgxGridNavigationService)) public navigationService: IgxGridNavigationService) {}
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
@@ -33,7 +36,7 @@ export class IgxRowEditTabStopDirective {
     }
     private focusNextCell(rowIndex, cellIndex) {
         const grid = this.grid as any;
-        grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+        grid.parentVirtDir.onChunkLoad.pipe(first()).subscribe(() => {
             grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
         });
     }
@@ -42,9 +45,12 @@ export class IgxRowEditTabStopDirective {
         const horizontalScroll = this.grid.parentVirtDir.getHorizontalScroll();
         const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
-        if (!targetCell) {
+        if (!targetCell ||
+            !this.navigationService.isColumnFullyVisible(targetIndex)
+            || !this.navigationService.isColumnLeftFullyVisible(targetIndex)) {
             this.focusNextCell(this.grid.rowInEditMode.index, targetIndex);
-            horizontalScroll.scrollLeft = event.shiftKey ? horizontalScroll.scrollWidth : 0;
+            horizontalScroll.scrollLeft =
+            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(targetIndex);
         } else {
             targetCell._updateCellSelectionStatus(true, event);
             targetCell.inEditMode = true;
