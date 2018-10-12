@@ -210,14 +210,14 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - verify vertical scrolling is not broken
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 200;
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             expect(grid.columnList.toArray()[0].cells[3].value).toBeTruthy('Rick');
 
             // step 3 - verify horizontal scrolling is not broken
             grid.parentVirtDir.getHorizontalScroll().scrollLeft = 200;
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
@@ -583,7 +583,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - scroll left to the end
             grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             // step 2 - start moving a column and verify columns are scrolled into view,
@@ -613,7 +613,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - scroll left to the end
             grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             // step 2 - start moving a column and verify columns are scrolled into view,
@@ -706,11 +706,12 @@ describe('IgxGrid - Column Moving', () => {
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
             // step 1 - scroll left to the end
             grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
-            grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
+            fixture.detectChanges();
 
             // step 2 - scroll down vertically and select a cell that was initially out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             const cell = grid.columnList.toArray()[9].cells[4];
@@ -720,7 +721,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 3 - scroll up vertically so that the selected cell becomes out of view
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
-            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
 
             // step 4 - reorder that column among columns that are currently out of view
@@ -742,7 +743,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(grid.columnList.toArray()[6].cells[4].selected).toBeFalsy();
 
             grid.verticalScrollContainer.getVerticalScroll().scrollTop = 1200;
-            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+            await wait(30);
             fixture.detectChanges();
             expect(grid.columnList.toArray()[4].cells[4].selected).toBeTruthy();
         }));

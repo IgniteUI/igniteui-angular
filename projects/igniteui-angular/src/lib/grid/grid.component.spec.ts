@@ -20,6 +20,8 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridRowComponent } from './row.component';
+import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 const DEBOUNCETIME = 30;
 
@@ -1080,17 +1082,121 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
                 expect(cell.inEditMode).toBeFalsy();
             }));
-            it(`Should exit row editing AND COMMIT on data operations`, () => {
-                // TO DO
+            it(`Should exit row editing AND COMMIT on filter`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                grid.filter('ProductName', 'a', IgxStringFilteringOperand.instance().condition('contains'), true);
+                fix.detectChanges();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+            });
+            it(`Should exit row editing AND COMMIT on sort`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                fix.detectChanges();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on non-editable cell in same row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                const nonEditableCell = grid.getCellByColumn(0, 'ProductID');
+                nonEditableCell.nativeElement.click();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                const nonEditableCell = grid.getCellByColumn(2, 'ProductID');
+                nonEditableCell.nativeElement.click();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND COMMIT on click on editable cell in other row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // put cell in edit mode
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
+                otherEditableCell.nativeElement.click();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, {rowID: 1, columnID: 3, rowIndex: 0});
+                expect(cell.inEditMode).toBeFalsy();
+                expect(otherEditableCell.inEditMode).toBeTruthy();
             });
             it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
                 // TO DO
@@ -1156,7 +1262,6 @@ describe('IgxGrid Component Tests', () => {
                 // TO DO
             });
         });
-
 
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {

@@ -1,6 +1,7 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridCellComponent } from './cell.component';
+import { take } from 'rxjs/operators';
 
 @Directive({
     selector: '[igxRowEdit]'
@@ -30,14 +31,19 @@ export class IgxRowEditTabStopDirective {
             this.move(event);
         }
     }
+    private focusNextCell(rowIndex, cellIndex) {
+        const grid = this.grid as any;
+        grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+            grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
+        });
+    }
     private move(event: KeyboardEvent) {
         event.preventDefault();
         const horizontalScroll = this.grid.parentVirtDir.getHorizontalScroll();
         const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
         const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
         if (!targetCell) {
-            (<any>this.grid)._focusNextCell(this.grid.rowInEditMode.index, targetIndex, event.shiftKey ? 'right' : 'left', event);
-            this.grid.rowInEditMode.cells.first.inEditMode = true;
+            this.focusNextCell(this.grid.rowInEditMode.index, targetIndex);
             horizontalScroll.scrollLeft = event.shiftKey ? horizontalScroll.scrollWidth : 0;
         } else {
             targetCell._updateCellSelectionStatus(true, event);

@@ -12,7 +12,7 @@ export class GridRowEditSampleComponent {
     private addProductId: number;
     private pinFlag = false;
     private hideFlag = false;
-    private summaryFlag = false;
+    private summaryFlag = true;
     private customTemplate = false;
     public currentActiveGrid: {
         id: string,
