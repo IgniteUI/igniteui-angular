@@ -1144,7 +1144,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-		describe('Row Editing - GroupBy', () => {
+        describe('Row Editing - GroupBy', () => {
             it(`Should exit edit mode when Grouping`, () => {
                 // TO DO
                 // Verify the data source is updated
@@ -1175,12 +1175,30 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
+        describe('Row Editing - Summaries', () => {
+            it(`Should update summaries when editing a row`, () => {
+                // TO DO
+            });
+        });
+
+        describe('Row Editing - Column Moving', () => {
+            it(`Should exit edit mode when moving a column`, () => {
+                // TO DO
+            });
+        });
+
+        describe('Row Editing - Column Pinning', () => {
+            it(`Should exit edit mode when pinning/unpinning a column`, () => {
+                // TO DO
+            });
+        });
+
         it('Default column editable value is true, when row editing is enabled', () => {
             const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fixture.detectChanges();
-    
+
             const grid = fixture.componentInstance.grid;
-    
+
             const columns: IgxColumnComponent[] = grid.columnList.toArray();
             expect(columns[0].editable).toBeFalsy();
             expect(columns[1].editable).toBeFalsy();
