@@ -89,5 +89,5 @@ export interface TransactionService {
      * commits pending states as single transaction
      * @param commit Should commit the pending states
      */
-    endPending(commit: boolean): boolean;
+    endPending(commit: boolean): void;
 }

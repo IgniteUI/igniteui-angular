@@ -69,7 +69,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return Object.assign({}, value, pendingValue);
     }
 
-    public endPending(commit: boolean): boolean {
+    public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
             this._pendingStates.forEach((s: State, k: any) => {
@@ -77,7 +77,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             });
         }
         super.endPending(commit);
-        return true;
     }
 
     public commit(data: any[]) {
