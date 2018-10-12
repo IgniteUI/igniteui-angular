@@ -49,6 +49,7 @@
               <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"100px"'
                 let-rowIndex="index">
                 <div [style.height.px]='item.height'>{{rowIndex}} : {{item.text}}</div>
                 </ng-template>
