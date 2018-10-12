@@ -197,7 +197,7 @@ export class IgxGridFilterExpressionComponent implements OnDestroy, AfterViewIni
     }
 
     public clearFiltering(resetCondition: boolean): void {
-        this.expression.condition = resetCondition ? undefined : this.expression.condition;
+        this.expression.condition = resetCondition ? this.getCondition(this.conditions[0]) : this.expression.condition;
         this.expression.searchVal = null;
         if (!resetCondition) {
             this.onExpressionChanged.emit();
