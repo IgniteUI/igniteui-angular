@@ -11,7 +11,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './api.service';
-import { IgxGridComponent } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,6 +100,7 @@ export class IgxGridGroupByRowComponent {
     /**
      * @hidden
      */
+    @HostBinding('attr.tabindex')
     public tabindex = 0;
 
     /**
@@ -112,13 +112,18 @@ export class IgxGridGroupByRowComponent {
         return this.gridID + '_' + grRowExpr;
     }
 
+    @HostBinding('attr.data-rowIndex')
+    get dataRowIndex() {
+        return this.index;
+    }
+
     /**
      * Returns a reference to the underlying HTML element.
      * ```typescript
      * const groupRowElement = this.nativeElement;
      * ```
      */
-    get nativeElement(): HTMLElement {
+    get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -130,7 +135,24 @@ export class IgxGridGroupByRowComponent {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level;
+        return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
+        (this.focused ? ` ${this.defaultCssClass}--active` : '');
+    }
+
+    /**
+     *@hidden
+     */
+    @HostListener('focus')
+    public onFocus() {
+        this.isFocused = true;
+    }
+
+    /**
+     *@hidden
+     */
+    @HostListener('blur')
+    public onBlur() {
+        this.isFocused = false;
     }
 
     /**
@@ -148,9 +170,34 @@ export class IgxGridGroupByRowComponent {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
-        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Space' || event.key === 'Enter') {
-            event.preventDefault();
+        event.preventDefault();
+        event.stopPropagation();
+        const shift = event.shiftKey;
+        const key = event.key.toLowerCase();
+        if (key === 'arrowleft' && this.expanded) {
             this.grid.toggleGroup(this.groupRow);
+            return;
+        }
+        if (key === 'arrowright' && !this.expanded) {
+            this.grid.toggleGroup(this.groupRow);
+            return;
+        }
+        const colIndex = this._getSelectedColIndex() || 0;
+        const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
+        this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
+        if (key === 'arrowdown') {
+            this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+        }
+        if (key === 'arrowup') {
+            this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+        }
+        if (key === 'tab') {
+            if (shift) {
+                this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+            } else {
+                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0, true);
+            }
         }
     }
 
@@ -160,7 +207,7 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.grid;
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -171,63 +218,10 @@ export class IgxGridGroupByRowComponent {
         return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event) {
-        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
-        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        event.preventDefault();
-        event.stopPropagation();
-        const rowIndex = this.index + 1;
-        this.grid.navigateDown(rowIndex, visibleColumnIndex, event);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event) {
-        const colIndex = this._getSelectedColIndex() || this._getPrevSelectedColIndex();
-        const visibleColumnIndex = colIndex ? this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        event.preventDefault();
-        event.stopPropagation();
-        if (this.index === 0) {
-            return;
-        }
-        const rowIndex = this.index - 1;
-        this.grid.navigateUp(rowIndex, visibleColumnIndex, event);
-    }
-
-    /**
-     * @hidden
-     */
-    public onFocus() {
-        this.isFocused = true;
-        if (this.grid.selectedCells.length) {
-            this.grid.selectedCells[0]._clearCellSelection();
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public onBlur() {
-        this.isFocused = false;
-    }
-
     private _getSelectedColIndex() {
         const cell = this.selection.first_item(this.gridID + '-cell');
         if (cell) {
             return cell.columnID;
-        }
-    }
-
-    private _getPrevSelectedColIndex() {
-        const prevCell = this.selection.first_item(this.gridID + '-prev-cell');
-        if (prevCell) {
-            return prevCell.columnID;
         }
     }
 }

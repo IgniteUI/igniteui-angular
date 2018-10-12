@@ -325,4 +325,53 @@ describe('UpdateChanges', () => {
 
         done();
     });
+
+    it('should move property value between element tags', done => {
+        const inputJson: BindingChanges = {
+            changes: [
+                {
+                    name: 'name',
+                    moveBetweenElementTags: true,
+                    conditions: ['igxIcon_is_material_name'],
+                    owner: { type: 'component' as any, selector: 'igx-icon' }
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+
+        const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
+<igx-icon fontSet="material-icons" name="build"></igx-icon>
+<igx-icon name="accessory"></igx-icon>`;
+        appTree.create('test.component.html', fileContent);
+
+        const fileContent1 = `<igx-icon fontSet="material" [name]="'phone'"></igx-icon>
+<igx-icon fontSet="material-icons" [name]="getName()"></igx-icon>`;
+        appTree.create('test1.component.html', fileContent1);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.addCondition('igxIcon_is_material_name', () => { return true; });
+
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getInputChanges()).toEqual(inputJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+`<igx-icon fontSet='material'>phone</igx-icon>
+<igx-icon fontSet="material-icons">build</igx-icon>
+<igx-icon>accessory</igx-icon>`);
+
+        expect(appTree.readContent('test1.component.html')).toEqual(
+`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
+<igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
+
+        done();
+    });
 });
