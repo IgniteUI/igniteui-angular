@@ -75,7 +75,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this._isPending = false;
         if (commit) {
             this._pendingStates.forEach((s: State, k: any) => {
-                this._isPending = false;
                 this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
             });
         }

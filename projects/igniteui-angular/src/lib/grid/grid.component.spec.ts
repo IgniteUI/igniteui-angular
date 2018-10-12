@@ -1221,10 +1221,47 @@ describe('IgxGrid Component Tests', () => {
                 expect(targetCell.inEditMode).toBeFalsy();
             });
             it(`Should exit row editing AND DISCARD on clicking the CANCEL button in row edit overlay`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
+                targetCell.inEditMode = true;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                // get the cancel button and click it
+                const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
+                const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
+                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
+                cancelButtonElement.nativeElement.click();
+
+                expect(gridAPI.submit_value).not.toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
             it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
+                targetCell.inEditMode = true;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                targetCell.dispatchEvent(new KeyboardEvent('keydown', {
+                    code: 'escape',
+                    key: 'escape'
+                }));
+
+                expect(gridAPI.submit_value).not.toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
         });
 
