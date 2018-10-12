@@ -742,7 +742,7 @@ describe('igxCombo', () => {
             }, 10);
         });
 
-        it('Should scroll down to the last item in the dropdown list with END key - combo with more records', (done) => {
+        it('Should scroll down to the last item in the dropdown list with END key - combo with more records', async () => {
             let dropdownContainer: HTMLElement;
             let firstVisibleItem: Element;
             let lastVisibleItem: Element;
@@ -766,12 +766,11 @@ describe('igxCombo', () => {
                     expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[combo.data.length - 1]);
                     expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
-                    done();
                 });
             });
         });
 
-        it('Should properly navigate to last item using END key when no virtScroll is necessary', (done) => {
+        it('Should properly navigate to last item using END key when no virtScroll is necessary', async () => {
             let dropdownContainer: HTMLElement;
             let firstVisibleItem: Element;
             let lastVisibleItem: Element;
@@ -818,12 +817,11 @@ describe('igxCombo', () => {
                     expect(scrollbar.scrollHeight - scrollbar.scrollTop).toEqual(scrollbar.clientHeight);
                     // Last item is focused again
                     expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
-                    done();
                 });
             });
         });
 
-        it('Should properly navigate to first item using HOME key', (done) => {
+        it('Should properly navigate to first item using HOME key', async () => {
             let dropdownContainer: HTMLElement;
             let firstVisibleItem: Element;
             const endEvent = new KeyboardEvent('keydown', { key: 'End' });
@@ -871,7 +869,6 @@ describe('igxCombo', () => {
                         dropdownContent.dispatchEvent(homeEvent);
                         fixture.detectChanges();
                         expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
-                        done();
                     });
                 });
             });
@@ -1139,7 +1136,7 @@ describe('igxCombo', () => {
             expectedOutput = dropdown.items[3].value + ', ' + dropdown.items[1].value;
             verifySelectedItem(7);
         }));
-        it('Should append selected items to the input in their selection order', (done) => {
+        it('Should append selected items to the input in their selection order', fakeAsync(() => {
             const event = new KeyboardEvent('keydown', { key: 'End' });
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1148,7 +1145,7 @@ describe('igxCombo', () => {
             const comboButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNBUTTON)).nativeElement;
             comboButton.click();
             fixture.detectChanges();
-            const dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            let dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
 
             clickItemCheckbox(dropdownList, 3);
@@ -1158,18 +1155,17 @@ describe('igxCombo', () => {
             clickItemCheckbox(dropdownList, 1);
             fixture.detectChanges();
             dropdownContent.dispatchEvent(event);
-            setTimeout(function () {
-                fixture.detectChanges();
-                clickItemCheckbox(dropdownList, 6);
-                fixture.detectChanges();
-                setTimeout(function () {
-                    fixture.detectChanges();
-                    const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-                    expect(input.nativeElement.value).toEqual(expectedOutput);
-                    done();
-                }, 20);
-            }, 20);
-        });
+            fixture.detectChanges();
+            tick(200);
+            fixture.detectChanges();
+            dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
+            clickItemCheckbox(dropdownList, 6);
+            fixture.detectChanges();
+            tick(200);
+            fixture.detectChanges();
+            const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
+            expect(input.nativeElement.value).toEqual(expectedOutput);
+        }));
         it('Should remove deselected items from the input', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
