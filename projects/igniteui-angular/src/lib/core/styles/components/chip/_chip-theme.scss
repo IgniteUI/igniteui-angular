@@ -406,7 +406,9 @@
         border-color: --var($theme, 'border-color');
         border-radius: map-get($chip-height, 'comfortable') / 2;
         user-select: none;
+        overflow: hidden;
         cursor: pointer;
+        filter: blur(0);
     }
 
     %igx-chip__item--hover {
@@ -458,18 +460,25 @@
     %igx-chip__ghost {
         position: absolute;
         z-index: 10;
+        box-shadow: igx-elevation($elevations, 8);
+        overflow: hidden;
+        background: hexrgba(--var($theme, 'focus-background')) !important;
     }
 
     %igx-chip__ghost--cosy {
-        border-radius: map-get($chip-height, 'cosy') / 2;
         height: map-get($chip-height, 'cosy');
-        padding: map-get($chip-padding, 'cosy');
+
+        %igx-chip__content {
+            padding: map-get($chip-padding, 'cosy');
+        }
     }
 
     %igx-chip__ghost--compact {
-        border-radius: map-get($chip-height, 'compact') / 2;
         height: map-get($chip-height, 'compact');
-        padding: map-get($chip-padding, 'compact');
+
+        %igx-chip__content {
+            padding: map-get($chip-padding, 'compact');
+        }
     }
 }
 
@@ -487,6 +496,15 @@
         %igx-chip {
             @include igx-type-style($type-scale, $text) {
                 font-weight: 600;
+            }
+        }
+
+        %igx-chip--compact {
+            %igx-chip__content {
+                @include igx-type-style($type-scale, $text) {
+                    font-size: rem(12px);
+                    font-weight: 600;
+                }
             }
         }
     }

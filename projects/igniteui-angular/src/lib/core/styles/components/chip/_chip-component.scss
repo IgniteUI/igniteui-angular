@@ -73,11 +73,13 @@
 
     @include e(ghost, $m: cosy) {
         @extend %igx-chip !optional;
+        @extend %igx-chip__ghost !optional;
         @extend %igx-chip__ghost--cosy !optional;
     }
 
     @include e(ghost, $m: compact) {
         @extend %igx-chip !optional;
+        @extend %igx-chip__ghost !optional;
         @extend %igx-chip__ghost--compact !optional;
     }
 
