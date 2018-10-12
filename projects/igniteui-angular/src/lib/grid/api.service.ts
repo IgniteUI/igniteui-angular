@@ -214,7 +214,7 @@ export class IgxGridAPIService {
             grid.onEditDone.emit(args);
 
             //  if we are editing the cell for second or next time, get the old value from transaction
-            const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID);
+            const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID, true);
             if (oldValueInTransaction) {
                 oldValue = oldValueInTransaction[column.field];
             }

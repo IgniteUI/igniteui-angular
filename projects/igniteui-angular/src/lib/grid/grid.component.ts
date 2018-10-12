@@ -4833,7 +4833,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.transactions.endPending(commit);
         const row = this.gridAPI.get_row_inEditMode(this.id);
         if (row) {
-            const value = this.transactions.getAggregatedValue(row.rowID);
+            const value = this.transactions.getAggregatedValue(row.rowID, true);
             this.onRowEditCancel.emit(value);
         }
         this.rowEditingOverlay.close();
@@ -4844,7 +4844,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: {rowID: any, rowIndex: number}) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
-        const value = this.transactions.getAggregatedValue(rowInEdit.rowID);
+        const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         if (commit) {
             this.onRowEditDone.emit(value);
         } else {
@@ -4891,7 +4891,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
         if (this.transactions.transactionsEnabled()) {
-            result.push(this.transactions.aggregatedState()
+            result.push(this.transactions.aggregatedState(true)
                 .filter(state => state.type === TransactionType.ADD));
         }
 

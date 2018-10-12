@@ -7,7 +7,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
 
-    public add(transaction: Transaction, recordRef?: any) {
+    public add(transaction: Transaction, recordRef?: any): boolean {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
         this.updateState(states, transaction, recordRef);
@@ -30,7 +30,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges = true): Transaction[] {
+    public aggregatedState(mergeChanges: boolean): Transaction[] {
         const result: Transaction[] = [];
         this._states.forEach((state: State, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
@@ -53,7 +53,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return true;
     }
 
-    public getAggregatedValue(id: any, mergeChanges = true) {
+    public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
         const pendingState = this._pendingStates.get(id);
         if (!state && !pendingState) {
@@ -79,7 +79,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         super.endPending(commit);
     }
 
-    public commit(data: any[]) {
+    public commit(data: any[]): void {
         this._states.forEach((s: State) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
@@ -101,14 +101,14 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this.clear();
     }
 
-    public clear() {
+    public clear(): void {
         this._transactions = [];
         this._states.clear();
         this._redoStack = [];
         this._undoStack = [];
     }
 
-    public undo() {
+    public undo(): void {
         if (this._transactions.length <= 0) {
             return;
         }
@@ -119,7 +119,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
     }
 
-    public redo() {
+    public redo(): void {
         if (this._redoStack.length > 0) {
             const undoItem = this._redoStack.pop();
             this.updateState(this._states, undoItem.transaction, undoItem.recordRef);

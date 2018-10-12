@@ -5,7 +5,7 @@ export class IgxBaseTransactionService implements TransactionService {
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();
 
-    public add(transaction: Transaction, recordRef?: any) {
+    public add(transaction: Transaction, recordRef?: any): boolean {
         if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
@@ -16,11 +16,11 @@ export class IgxBaseTransactionService implements TransactionService {
 
     getTransactionLog(id?: any): Transaction[] | Transaction { return []; }
 
-    undo() { }
+    undo(): void { }
 
-    redo() { }
+    redo(): void { }
 
-    aggregatedState(): Transaction[] { return []; }
+    aggregatedState(mergeChanges: boolean): Transaction[] { return []; }
 
     public getState(id: any): State {
         if (id !== undefined && this._pendingStates.has(id)) {
@@ -34,7 +34,7 @@ export class IgxBaseTransactionService implements TransactionService {
         return this._isPending;
     }
 
-    public getAggregatedValue(id: any, mergeChanges = true) {
+    public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._pendingStates.get(id);
         if (!state) {
             return {};
@@ -45,9 +45,12 @@ export class IgxBaseTransactionService implements TransactionService {
         return state.value;
     }
 
-    commit(data: any) { }
+    commit(data: any): void { }
 
-    clear() { }
+    clear(): void {
+        this._pendingStates.clear();
+        this._pendingTransactions = [];
+    }
 
     public startPending(): void {
         this._isPending = true;
@@ -55,8 +58,7 @@ export class IgxBaseTransactionService implements TransactionService {
 
     public endPending(commit: boolean): void {
         this._isPending = false;
-        this._pendingStates.clear();
-        this._pendingTransactions = [];
+        this.clear();
     }
 
 
