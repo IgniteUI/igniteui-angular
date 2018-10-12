@@ -70,6 +70,19 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return Object.assign({}, value, pendingValue);
     }
 
+
+    public endPending(commit: boolean): boolean {
+        this._isPending = false;
+        if (commit) {
+            this._pendingStates.forEach((s: State, k: any) => {
+                this._isPending = false;
+                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
+            });
+        }
+        super.endPending(commit);
+        return true;
+    }
+
     public commit(data: any[]) {
         this._states.forEach((s: State) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
@@ -89,11 +102,12 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     break;
             }
         });
+        this.clear();
     }
 
     public clear() {
         this._transactions = [];
-        this._states = new Map();
+        this._states.clear();
         this._redoStack = [];
         this._undoStack = [];
     }
