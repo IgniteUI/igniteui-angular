@@ -981,9 +981,8 @@ describe('IgxGrid Component Tests', () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
-                const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 const firstCellElement = targetCell.nativeElement;
-                targetCell.nativeElement.focus();
                 fixture.detectChanges();
                 targetCell.onKeydownEnterEditMode({});
                 fixture.detectChanges();
@@ -1031,12 +1030,49 @@ describe('IgxGrid Component Tests', () => {
                 expect(document.activeElement).toEqual(lastCellElement);
             }));
 
+            it(`Should scroll editable column into view whe navigating from buttons`, (async () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                let currentEditCell: IgxGridCellComponent;
+                const grid = fixture.componentInstance.grid;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                fixture.detectChanges();
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                await wait(500);
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // go to 'Cancel'
+                (<HTMLElement>document.activeElement.previousElementSibling).focus();
+                fixture.detectChanges();
+                // go to LAST editable cell
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true}));
+                fixture.detectChanges();
+                await wait(500);
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(currentEditCell.column.field).toEqual('Test');
+                // move to Cancel
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // move to DONE
+                (<HTMLElement>document.activeElement.nextElementSibling).focus();
+                fixture.detectChanges();
+                // move to FIRST editable cell
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: false}));
+                fixture.detectChanges();
+                await wait(500);
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toEqual(0);
+                expect(currentEditCell.column.field).toEqual('Downloads');
+            }));
+
             it(`Should skip non-editable columns`, () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
-                const targetCell = grid.rowList.first.cells.toArray()[0];
-                targetCell.nativeElement.dispatchEvent(new Event('focus'));
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
                 targetCell.onKeydownEnterEditMode({});
                 fixture.detectChanges();
