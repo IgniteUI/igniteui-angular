@@ -537,6 +537,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * Returns the size of the element at the specified index.
+     * ```typescript
+     * this.parentVirtDir.getSizeAt(1);
+     * ```
+     */
+    public getSizeAt(index: number) {
+        return this.sizesCache[index + 1] - this.sizesCache[index];
+    }
+
+    /**
      * @hidden
      * Function that is called when scrolling vertically
      */
