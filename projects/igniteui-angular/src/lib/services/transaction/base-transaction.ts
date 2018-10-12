@@ -37,7 +37,7 @@ export class IgxBaseTransactionService implements TransactionService {
     public getAggregatedValue(id: any, mergeChanges = true) {
         const state = this._pendingStates.get(id);
         if (!state) {
-            return null;
+            return {};
         }
         if (mergeChanges) {
             return this.updateValue(state);
@@ -67,16 +67,17 @@ export class IgxBaseTransactionService implements TransactionService {
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
     protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
-        const state = states.get(transaction.id);
+        let state = states.get(transaction.id);
         if (state) {
             if (typeof state.value === 'object') {
                 Object.assign(state.value, transaction.newValue);
             } else {
                 state.value = transaction.newValue;
             }
-            return;
+        } else {
+            state = { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            states.set(transaction.id, state);
         }
-        states.set(transaction.id, { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type });
     }
 
     /**

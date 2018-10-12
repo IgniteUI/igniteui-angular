@@ -69,7 +69,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return Object.assign({}, value, pendingValue);
     }
 
-
     public endPending(commit: boolean): boolean {
         this._isPending = false;
         if (commit) {
@@ -164,7 +163,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
     protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
-        const state = states.get(transaction.id);
+        let state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
         //    - if there is state with this id of type ADD remove it from the states;
@@ -175,19 +174,17 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         //    - if there is state with this id of type UPDATE merge new value into state new value
         //    - if there is state with this id and state type is DELETE change its type to UPDATE
         //    - if there is no state with this id add transaction to states;
-        switch (transaction.type) {
-            case TransactionType.DELETE:
-                if (state && state.type === TransactionType.ADD) {
-                    states.delete(transaction.id);
-                    return;
-                } else if (state && state.type === TransactionType.UPDATE) {
-                    state.value = transaction.newValue;
-                    state.type = TransactionType.DELETE;
-                    return;
-                }
-                break;
-            case TransactionType.UPDATE:
-                if (state) {
+        if (state) {
+            switch (transaction.type) {
+                case TransactionType.DELETE:
+                    if (state.type === TransactionType.ADD) {
+                        states.delete(transaction.id);
+                    } else if (state && state.type === TransactionType.UPDATE) {
+                        state.value = transaction.newValue;
+                        state.type = TransactionType.DELETE;
+                    }
+                    break;
+                case TransactionType.UPDATE:
                     //  TODO: move object.assign part in a method, probably change updateValue one!
                     if (typeof state.value === 'object') {
                         if (state.type === TransactionType.ADD) {
@@ -199,10 +196,45 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     } else {
                         state.value = transaction.newValue;
                     }
-                    return;
-                }
+            }
+        } else {
+            state = { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            states.set(transaction.id, state);
         }
 
-        states.set(transaction.id, { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type });
+        if (!this._isPending) {
+            this.cleanState(transaction.id, states);
+        }
+    }
+
+    /**
+     * Compares the state with recordRef and removes all
+     * @param state State to clean
+     */
+    protected cleanState(id: any, states: Map<any, State>): void {
+        const state = states.get(id);
+        //  if there is no state, or state has no recordRef do nothing
+        if (state && state.recordRef) {
+            //  if state's value is object compare each key with the ones in recordRef
+            //  if values in any key are the same delete it from state's value
+            //  if state's value is not object, simply compare with recordRef and remove
+            //  the state if they are equal
+            if (typeof state.recordRef === 'object') {
+                for (const key of Object.keys(state.value)) {
+                    if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
+                        delete state.value[key];
+                    }
+                }
+
+                //  if state's value is empty remove the state from the states
+                if (Object.keys(state.value).length === 0) {
+                    states.delete(id);
+                }
+            } else {
+                if (state.recordRef === state.value) {
+                    states.delete(id);
+                }
+            }
+        }
     }
 }
