@@ -1317,6 +1317,26 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
+        describe('Row Editing - Column Resizing', () => {
+            it(`Should exit edit mode when resizing a column`, () => {
+                // TO DO
+            });
+        });
+
+        describe('Row Editing - Column Hiding', () => {
+            it(`Should exit edit mode when hiding a column`, () => {
+                // TO DO
+            });
+
+            it(`Should show the updated value when showing the column again`, () => {
+                // TO DO
+            });
+
+            it(`Should be posible to update a cell that is hidden programatically`, () => {
+                // TO DO
+            });
+        });
+
         it('Default column editable value is true, when row editing is enabled', () => {
             const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fixture.detectChanges();
