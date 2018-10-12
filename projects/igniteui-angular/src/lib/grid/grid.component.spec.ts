@@ -1530,7 +1530,6 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Column Hiding', () => {
             it(`Should exit edit mode when hiding a column`, () => {
-                const targetCbText = 'Product ID';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1542,19 +1541,51 @@ describe('IgxGrid Component Tests', () => {
 
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
-                grid.toolbar.columnHidingButton.nativeElement.click();
+                targetCell.column.hidden = true;
                 fix.detectChanges();
-
-                const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
-                const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
-                const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
-                targetCheckbox.nativeElement.click();
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
 
             it('Should close the row editing overlay on column hiding', () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                targetCell.inEditMode = true;
+                targetCell.column.hidden = true;
+
+                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
+            });
+
+            it(`Should show the updated value when showing the column again`, () => {
                 const targetCbText = 'Product ID';
+                const newValue = '123';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                targetCell.inEditMode = true;
+                targetCell.update(newValue);
+
+                grid.toolbar.columnHidingButton.nativeElement.click();
+                const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
+                const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
+                const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
+                targetCheckbox.nativeElement.click();
+
+                grid.toolbar.columnHidingButton.nativeElement.click();
+                targetCheckbox.nativeElement.click();
+
+                expect(targetCell.value).toEqual(newValue);
+            });
+
+            // WIP
+            xit(`Should be posible to update a cell that is hidden programatically`, () => {
+                const targetCbText = 'Product ID';
+                const newValue = '123';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1563,22 +1594,15 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
 
                 grid.toolbar.columnHidingButton.nativeElement.click();
-                fix.detectChanges();
-
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
-                const targetCheckbox = checkboxes.find(lb => lb.nativeElement.innerText.trim() === targetCbText);
+                const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
 
-                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
-            });
+                targetCell.update(newValue);
+                fix.detectChanges();
 
-            it(`Should show the updated value when showing the column again`, () => {
-                // TO DO
-            });
-
-            it(`Should be posible to update a cell that is hidden programatically`, () => {
-                // TO DO
+                expect(targetCell.value).toEqual(newValue);
             });
         });
 
