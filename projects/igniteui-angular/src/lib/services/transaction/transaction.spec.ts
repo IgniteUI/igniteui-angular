@@ -330,7 +330,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction.newValue,
+                value: { value: 2 },
                 recordRef: recordRef,
                 type: updateTransaction.type
             });
@@ -354,7 +354,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction.newValue,
+                value: { value: 2 },
                 recordRef: recordRef,
                 type: updateTransaction.type
             });
@@ -362,26 +362,36 @@ describe('IgxTransaction', () => {
 
             // UPDATE -> UPDATE
             trans.add(updateTransaction, recordRef);
-            const newValue2 = { key: 'Key1', value: 2 };
+            const newValue2 = { key: 'Key1', value: 3 };
             const updateTransaction2: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: newValue2 };
-            trans.add(updateTransaction, recordRef);
+            trans.add(updateTransaction2, recordRef);
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction2);
-            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction]);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction2]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction2.newValue,
+                value: { value: 3 },
                 recordRef: recordRef,
                 type: updateTransaction2.type
             });
             trans.clear();
 
+            // UPDATE -> UPDATE (to initial recordRef)
+            trans.add(updateTransaction, recordRef);
+            const asRecordRefTransaction: Transaction = { id: 'Key1', type: TransactionType.UPDATE, newValue: recordRef };
+            trans.add(asRecordRefTransaction, recordRef);
+            expect(trans.getTransactionLog('Key1')).toEqual(asRecordRefTransaction);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, asRecordRefTransaction]);
+            expect(trans.getState(updateTransaction.id)).toBeNull();
+            expect(trans.aggregatedState(false)).toEqual([]);
+            trans.clear();
+
             // UPDATE -> UPDATE -> Undo
             trans.add(updateTransaction, recordRef);
-            trans.add(updateTransaction, recordRef);
+            trans.add(updateTransaction2, recordRef);
             trans.undo();
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction.newValue,
+                value: { value: 2 },
                 recordRef: recordRef,
                 type: updateTransaction.type
             });
@@ -389,13 +399,13 @@ describe('IgxTransaction', () => {
 
             // UPDATE -> UPDATE -> Undo -> Redo
             trans.add(updateTransaction, recordRef);
-            trans.add(updateTransaction, recordRef);
+            trans.add(updateTransaction2, recordRef);
             trans.undo();
             trans.redo();
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction2);
-            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction]);
+            expect(trans.getTransactionLog()).toEqual([updateTransaction, updateTransaction2]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction2.newValue,
+                value: { value: 3 },
                 recordRef: recordRef,
                 type: updateTransaction2.type
             });
@@ -421,7 +431,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(updateTransaction);
             expect(trans.getTransactionLog()).toEqual([updateTransaction]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: updateTransaction.newValue,
+                value: { value: 2 },
                 recordRef: recordRef,
                 type: updateTransaction.type
             });
@@ -536,7 +546,7 @@ describe('IgxTransaction', () => {
                     }
                 ]);
             expect(trans.getState(updateTransaction.id)).toEqual({
-                value: { key: 'Key1', value1: 10, value3: 30 },
+                value: { value1: 10, value3: 30 },
                 recordRef: recordRef,
                 type: updateTransaction.type
             });

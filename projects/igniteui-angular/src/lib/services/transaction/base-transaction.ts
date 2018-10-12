@@ -58,7 +58,8 @@ export class IgxBaseTransactionService implements TransactionService {
 
     public endPending(commit: boolean): void {
         this._isPending = false;
-        this.clear();
+        this._pendingStates.clear();
+        this._pendingTransactions = [];
     }
 
 

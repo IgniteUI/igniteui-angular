@@ -56,17 +56,28 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
         const pendingState = this._pendingStates.get(id);
+
+        //  if there is no state and there is no pending state return null
         if (!state && !pendingState) {
             return null;
         }
-        const value = state ? state.value : {};
-        const pendingValue = pendingState ? pendingState.value : {};
-        if (mergeChanges) {
-            const originalValue = state ? state.recordRef : pendingState.recordRef;
-            return Object.assign({}, originalValue, value, pendingValue);
+
+        const value = state ? state.value : undefined;
+        const pendingValue = pendingState ? pendingState.value : undefined;
+        const originalValue = state ? state.recordRef : pendingState.recordRef;
+        let result: any;
+        if (typeof value === 'object' || typeof pendingValue === 'object') {
+            if (mergeChanges) {
+                result = Object.assign({}, originalValue, value, pendingValue);
+            } else {
+                result = Object.assign({}, value, pendingValue);
+            }
+        } else {
+            result = state ? state.value :
+                     pendingState ? pendingState.value : originalValue;
         }
 
-        return Object.assign({}, value, pendingValue);
+        return result;
     }
 
     public endPending(commit: boolean): void {
@@ -212,8 +223,11 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      */
     protected cleanState(id: any, states: Map<any, State>): void {
         const state = states.get(id);
-        //  if there is no state, or state has no recordRef do nothing
-        if (state && state.recordRef) {
+        //  do nothing if
+        //  there is no state, or
+        //  there is no state value (e.g. DELETED transaction), or
+        //  there is no recordRef (e.g. ADDED transaction)
+        if (state && state.value && state.recordRef) {
             //  if state's value is object compare each key with the ones in recordRef
             //  if values in any key are the same delete it from state's value
             //  if state's value is not object, simply compare with recordRef and remove
@@ -225,8 +239,8 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     }
                 }
 
-                //  if state's value is empty remove the state from the states
-                if (Object.keys(state.value).length === 0) {
+                //  if state's value is empty remove the state from the states, only if state is not DELETE type
+                if (state.type !== TransactionType.DELETE && Object.keys(state.value).length === 0) {
                     states.delete(id);
                 }
             } else {
