@@ -955,9 +955,24 @@ describe('IgxGrid Component Tests', () => {
             expect(row.classList).toContain('igx-grid__tr--edited');
         }));
 
-        it(`Updated value should be preserved inside the cell when it enters edit mode again`, () => {
-            // TO DO
-        });
+        it(`Updated value should be preserved inside the cell when it enters edit mode again`, (async () => {
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+
+            cell.inEditMode = true;
+            cell.update('IG');
+            cell.inEditMode = false;
+
+            await wait(DEBOUNCETIME);
+
+            cell.inEditMode = true;
+            expect(cell.value).toEqual('IG');
+
+        }));
 
         describe('Row Editing - Navigation - Keyboard', () => {
             it(`Should be able to move between cells normally`, () => {
