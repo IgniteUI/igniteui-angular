@@ -1136,7 +1136,7 @@ describe('igxCombo', () => {
             expectedOutput = dropdown.items[3].value + ', ' + dropdown.items[1].value;
             verifySelectedItem(7);
         }));
-        it('Should append selected items to the input in their selection order', fakeAsync(() => {
+        it('Should append selected items to the input in their selection order',  (async () => {
             const event = new KeyboardEvent('keydown', { key: 'End' });
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1147,7 +1147,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             let dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-
+            await wait(10);
             clickItemCheckbox(dropdownList, 3);
             fixture.detectChanges();
             clickItemCheckbox(dropdownList, 7);
@@ -1156,12 +1156,12 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             dropdownContent.dispatchEvent(event);
             fixture.detectChanges();
-            tick(200);
+            await wait(10);
             fixture.detectChanges();
             dropdownContent = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTENT)).nativeElement;
             clickItemCheckbox(dropdownList, 6);
             fixture.detectChanges();
-            tick(200);
+            await wait(10);
             fixture.detectChanges();
             const input = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
             expect(input.nativeElement.value).toEqual(expectedOutput);
