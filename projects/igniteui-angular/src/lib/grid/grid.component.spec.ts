@@ -1196,7 +1196,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                spyOn(grid, 'closeRowTransaction');
+                spyOn(grid, 'endRowEdit');
 
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1209,14 +1209,14 @@ describe('IgxGrid Component Tests', () => {
                 const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
                 const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonDone);
                 doneButtonElement.nativeElement.click();
-                expect(grid.closeRowTransaction).toHaveBeenCalled();
-                expect(grid.closeRowTransaction).toHaveBeenCalledWith(true);
+                expect(grid.endRowEdit).toHaveBeenCalled();
+                expect(grid.endRowEdit).toHaveBeenCalledWith(true);
 
                 //  ged CANCLE button and click it
                 const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
                 cancelButtonElement.nativeElement.click();
-                expect(grid.closeRowTransaction).toHaveBeenCalled();
-                expect(grid.closeRowTransaction).toHaveBeenCalledWith(false);
+                expect(grid.endRowEdit).toHaveBeenCalled();
+                expect(grid.endRowEdit).toHaveBeenCalledWith(false);
             }));
             it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1233,7 +1233,7 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = true;
 
                 // 'click' on Done button
-                grid.closeRowTransaction(true);
+                grid.endRowEdit(true);
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();

@@ -1009,9 +1009,58 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
 
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(true)` is called.
+     * Emiited when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
+     * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
+     *
+     * Emitts the current row and it's state.
+     *
+     * Bind to the event in markup as follows:
+     * ```html
+     * <igx-grid #grid3 (onRowEditDone)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+     * ```typescript
+     *      editDone(emitted: { row: IgxGridRowComponent, state: state }): void {
+     *          const editedRow = emitted.row;
+     *          const editedState = emitted.state;
+     *      }
+     * ```
+	 * @memberof IgxGridComponent
+     */
     @Output()
     public onRowEditDone = new EventEmitter<IGridRowEditEventArgs>();
 
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(false)` is called.
+     * Emiited when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
+     * in the row editing overlay.
+     *
+     * Emitts the current row and it's state.
+     *
+     * Bind to the event in markup as follows:
+     * ```html
+     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+     * ```typescript
+     *      editCancel(emitted: { row: IgxGridRowComponent, state: state }): void {
+     *          const editedRow = emitted.row;
+     *          const canceledState = emitted.state;
+     *      }
+     * ```
+	 * @memberof IgxGridComponent
+     */
     @Output()
     public onRowEditCancel = new EventEmitter<IGridRowEditEventArgs>();
 
@@ -1562,8 +1611,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
                 bannerClass = 'igx-banner--cosy';
+                break;
             case DisplayDensity.compact:
                 bannerClass = 'igx-banner--compact';
+                break;
             default:
                 bannerClass = 'igx-banner';
         }
@@ -2996,7 +3047,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public addRow(data: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         if (this.rowEditable && !this.rowEditingOverlay.collapsed) { // If there is a row in edit - > commit and close
-            this.closeRowTransaction(true);
+            this.endRowEdit(true);
         }
         if (this.transactions.transactionsEnabled()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
@@ -4811,6 +4862,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
+    /**
+     * @hidden
+     */
     public calculateRowChangesCount(rowID) {
         const rowChanges = this.transactions.getAggregatedValue(rowID, false);
         const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
@@ -4862,9 +4916,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * Finishes the row transactions on the current row.
      * If `commit === true`, passes them from the pending state to the data (or transaction service)
+     *
+     * Binding to the event
+     * ```html
+     * <button igxButton (click)="grid.endRowEdit(true)">Commit Row</button>
+     * ```
      * @param commit
      */
-    public closeRowTransaction(commit?: boolean) {
+    public endRowEdit(commit = true) {
+        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+            return;
+        }
         const row = this.gridAPI.get_row_inEditMode(this.id);
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         this.gridAPI.submit_value(this.id);

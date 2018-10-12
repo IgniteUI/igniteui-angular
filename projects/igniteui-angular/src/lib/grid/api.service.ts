@@ -113,7 +113,7 @@ export class IgxGridAPIService {
             } else {
                 const grid = this.get(gridId);
                 if (grid.rowEditable && !grid.rowEditingOverlay.collapsed) {
-                    grid.closeRowTransaction(true);
+                    grid.endRowEdit(true);
                 }
                 this.editCellState.delete(gridId);
                 this.editRowState.delete(gridId);
