@@ -194,7 +194,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
             });
 
             copy.push(...grid.transactions
-                .aggregatedState()
+                .aggregatedState(true)
                 .filter(transaction => transaction.type === TransactionType.ADD)
                 .map(state => state.newValue));
             return copy;
