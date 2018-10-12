@@ -326,7 +326,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.initSizesCache(this.igxForOf);
         }
         const containerSize = 'igxForContainerSize';
-        if (containerSize in changes && !changes[containerSize].firstChange) {
+        if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
             this._recalcOnContainerChange(changes);
         }
     }
@@ -1105,7 +1105,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             this.initSizesCache(this.igxForOf);
         }
         const containerSize = 'igxForContainerSize';
-        if (containerSize in changes && !changes[containerSize].firstChange) {
+        if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
             this._recalcOnContainerChange(changes);
         }
     }
