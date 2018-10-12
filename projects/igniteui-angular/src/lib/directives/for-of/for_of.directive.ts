@@ -567,9 +567,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
 
         const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
-        if (scrollOffset === undefined) {
-            return;
-        }
+
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         // check if height/width has changes in views.
         this._recalcUpdateSizes();
@@ -590,7 +588,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const h = Math.max(rNode.offsetHeight, rNode.clientHeight, parseInt(this.igxForItemSize, 10));
                 updatedHeights.push(h);
                 const index = this.state.startIndex + i;
-                if (!this.igxForOf[index]) {
+                if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
                 }
                 const oldVal = dimension === 'height' ? this.heightCache[index] : this.igxForOf[index][dimension];
@@ -662,7 +660,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.onChunkPreload.emit(this.state);
         }
         if (this.isRemote) {
-            return;
+            return inScrollTop - this.sizesCache[this.state.startIndex];
         }
 
         for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
@@ -1142,9 +1140,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
 
         let scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
-        if (scrollOffset === undefined) {
-            return;
-        }
+
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         this._recalcUpdateSizes();
