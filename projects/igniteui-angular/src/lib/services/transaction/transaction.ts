@@ -59,12 +59,11 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         if (!state && !pendingState) {
             return null;
         }
-        let value = state ? state.value : {};
-        let pendingValue = pendingState ? pendingState.value : {};
+        const value = state ? state.value : {};
+        const pendingValue = pendingState ? pendingState.value : {};
         if (mergeChanges) {
-            //  if we have state update its recordRef and return the result
-            value = state ? this.updateValue(state) : {};
-            pendingValue = pendingState ? this.updateValue(pendingState) : {};
+            const originalValue = state ? state.recordRef : pendingState.recordRef;
+            return Object.assign({}, originalValue, value, pendingValue);
         }
 
         return Object.assign({}, value, pendingValue);
