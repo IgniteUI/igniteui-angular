@@ -212,11 +212,14 @@ export class IgxGridAPIService {
             };
             let oldValue = grid.data[rowIndex][column.field];
             grid.onEditDone.emit(args);
-            //  if edit (new) value is same as old value do nothing here
-            const changeState = grid.transactions.getAggregatedValue(rowID);
-            if (changeState) {
-                oldValue = changeState[column.field];
+
+            //  if we are editing the cell for second or next time, get the old value from transaction
+            const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID);
+            if (oldValueInTransaction) {
+                oldValue = oldValueInTransaction[column.field];
             }
+
+            //  if edit (new) value is same as old value do nothing here
             if (oldValue && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };

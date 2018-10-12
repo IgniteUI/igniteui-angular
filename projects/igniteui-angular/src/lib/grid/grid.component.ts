@@ -4816,7 +4816,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public calculateRowChangesCount(rowID) {
         const rowChanges = this.transactions.getAggregatedValue(rowID, false);
         const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
-        this.rowEditMessageValue = this.rowEditMessage.replace("{0}", rowChangedCount.toString());
+        this.rowEditMessageValue = this.rowEditMessage.replace('{0}', rowChangedCount.toString());
     }
 
     /**
