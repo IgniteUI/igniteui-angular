@@ -961,7 +961,7 @@ describe('IgxGrid - Cell component', () => {
         const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
         fix.componentInstance.scrollTop(25);
         await wait(50);
-      
+
         fix.detectChanges();
         expect(displayContainer.style.top).toEqual('-25px');
         const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
@@ -1078,7 +1078,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual(244510);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('49');
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(499);
-       
+
         selectedCellFromGrid = grid.selectedCells[0];
         expect(selectedCellFromGrid.value).toEqual(244510);
         expect(selectedCellFromGrid.column.field).toMatch('49');

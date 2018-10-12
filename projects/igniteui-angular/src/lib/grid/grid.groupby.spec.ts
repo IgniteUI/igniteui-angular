@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
 
-fdescribe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -574,13 +574,11 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(row.focused).toBe(true);
         expect(row.cells.toArray()[0].selected).toBe(true);
 
-
         await HelperUtils.navigateVerticallyToIndex(grid, 9, 0);
 
         row = grid.getRowByIndex(0);
         expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
         expect(row.focused).toBe(true);
-
     }));
 
     xit('should persist last selected cell column index when navigation down through group rows.', async() => {
@@ -610,7 +608,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(row.focused).toBe(true);
         expect(cell.selected).toBe(true);
     });
-    
+
     it('keyboard navigation - should focus grouped row when press Tab key and Shift + Tab on a cell', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -628,7 +626,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         await wait(100);
         fix.detectChanges();
 
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -637,17 +635,17 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
         expect(cell.selected).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
         await wait(300);
         fix.detectChanges();
-        
+
         expect(groupRow.expanded).toBe(false);
         cell = grid.getCellByColumn(2, 'Released');
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
         expect(cell.selected).toBe(true);
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -657,7 +655,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
         expect(cell.selected).toBe(true);
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', groupRow.nativeElement, true);
         await wait(300);
         fix.detectChanges();
 
@@ -682,14 +680,15 @@ fdescribe('IgxGrid - GroupBy', () => {
         cell = grid.getCellByColumn(7, 'Downloads');
         expect(groupRow.focused).toBe(true);
         expect(cell.selected).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
         await wait(30);
         fix.detectChanges();
-        
+
         expect(groupRow.expanded).toBe(false);
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
         await wait(30);
         fix.detectChanges();
 
@@ -721,7 +720,7 @@ fdescribe('IgxGrid - GroupBy', () => {
         groupRow = grid.groupsRowList.toArray()[0];
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+        UIInteractions.triggerKeyDownEvtUponElem('tab', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -746,6 +745,75 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(cell.focused).toBe(true);
     }));
 
+    it('keyboard navigation - should correct work when press tab and sft+tab on a grouped row when have row selectors', (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '600px';
+        fix.componentInstance.height = '600px';
+        grid.columnWidth = '100px';
+        grid.rowSelectable = true;
+        await wait(30);
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        await wait(30);
+        fix.detectChanges();
+
+        const groupRow = grid.groupsRowList.toArray()[0];
+        const firstRow = grid.getRowByIndex(1);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
+        const cell = grid.getCellByColumn(1, 'Downloads');
+
+        groupRow.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        UIInteractions.triggerKeyDownEvtUponElem('tab', groupRow.nativeElement, true);
+
+        await wait(100);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(false);
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', firstRow.nativeElement, true);
+        await wait(300);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeTruthy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeFalsy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
+
+        firstRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeFalsy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(groupRow.expanded).toBe(false);
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+    }));
+
     it('keyboard navigation - expand/colapse row with arrow keys', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -758,21 +826,21 @@ fdescribe('IgxGrid - GroupBy', () => {
         grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        let groupRow = grid.groupsRowList.toArray()[0];
+        const groupRow = grid.groupsRowList.toArray()[0];
         groupRow.nativeElement.dispatchEvent(new Event('focus'));
         await wait(50);
         fix.detectChanges();
 
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
         await wait(30);
         fix.detectChanges();
-        
+
         expect(groupRow.expanded).toBe(false);
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
         await wait(30);
         fix.detectChanges();
 
@@ -800,7 +868,7 @@ fdescribe('IgxGrid - GroupBy', () => {
 
         expect(cell.selected).toBe(true);
         expect(cell.focused).toBe(true);
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', cell.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -810,15 +878,15 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
         expect(cell.selected).toBe(true);
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
-        
+
         expect(groupRow.expanded).toBe(false);
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -835,7 +903,7 @@ fdescribe('IgxGrid - GroupBy', () => {
 
         expect(cell.focused).toBe(true);
         expect(cell.selected).toBe(true);
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown'}));
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', cell.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
@@ -844,14 +912,16 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
         expect(cell.selected).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
-        
+
         expect(groupRow.expanded).toBe(false);
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
         await wait(100);
         fix.detectChanges();
 
