@@ -4846,7 +4846,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.onRowEditCancel.emit(value);
         }
-        if (commit && value && !this.transactions.endPending(commit)) {
+        this.transactions.endPending(commit);
+        if (commit && value && !this.transactions.transactionsEnabled()) {
             this.data[rowInEdit.rowIndex] = value;
         }
         if (closeOverlay) {
