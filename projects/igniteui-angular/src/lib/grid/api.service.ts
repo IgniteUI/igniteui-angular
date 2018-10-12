@@ -113,7 +113,7 @@ export class IgxGridAPIService {
             } else {
                 const grid = this.get(gridId);
                 if (grid.rowEditable && !grid.rowEditingOverlay.collapsed) {
-                    grid.closeRowTransaction(true);
+                    grid.endRowEdit(true);
                 }
                 this.editCellState.delete(gridId);
                 this.editRowState.delete(gridId);
@@ -421,8 +421,8 @@ export class IgxGridAPIService {
             this.remove_summary(id);
         }
 
-        grid.filteringExpressionsTree = filteringState;
         grid.filteredData = null;
+        grid.filteringExpressionsTree = filteringState;
     }
 
     protected calculateSummaries(id: string, column, data) {

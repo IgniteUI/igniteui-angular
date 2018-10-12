@@ -82,10 +82,10 @@
                             </div>
                             <div class="igx-banner__actions">
                                 <div class="igx-banner__row">
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.closeRowTransaction()">Cancel</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowEdit()">Cancel</button>
                                     <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                         Changes</button>
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.closeRowTransaction(true)">Apply</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowEdit(true)">Apply</button>
                                 </div>
                             </div>
                         </div>
