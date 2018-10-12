@@ -1362,7 +1362,47 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Column Hiding', () => {
             it(`Should exit edit mode when hiding a column`, () => {
-                // TO DO
+                const targetCbText = 'Product ID';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                targetCell.inEditMode = true;
+
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                grid.toolbar.columnHidingButton.nativeElement.click();
+                fix.detectChanges();
+
+                const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
+                const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
+                const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
+                targetCheckbox.nativeElement.click();
+
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+            });
+
+            it('Should close the row editing overlay on column hiding', () => {
+                const targetCbText = 'Product ID';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                targetCell.inEditMode = true;
+
+                grid.toolbar.columnHidingButton.nativeElement.click();
+                fix.detectChanges();
+
+                const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
+                const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
+                const targetCheckbox = checkboxes.find(lb => lb.nativeElement.innerText.trim() === targetCbText);
+                targetCheckbox.nativeElement.click();
+
+                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
             });
 
             it(`Should show the updated value when showing the column again`, () => {
@@ -1694,7 +1734,8 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+    <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true"
+        toolbarTitle="Products" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
                 <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
