@@ -28,6 +28,7 @@ export interface TransactionService {
 
     /**
      * Returns an array of all transactions. If id is provided returns last transaction for provided id
+     * @returns All the transaction on last transaction for provided id
      */
     getTransactionLog(id?: any): Transaction[] | Transaction;
 
@@ -43,18 +44,22 @@ export interface TransactionService {
 
     /**
      * Returns aggregated state of all transactions
+     * @param mergeChanges If set to true will merge each state's value over relate recordRef
+     * and will record resulting value in the related transaction
+     * @returns Collection of aggregated transactions for each changed record
      */
-    aggregatedState(): Transaction[];
+    aggregatedState(mergeChanges: boolean): Transaction[];
 
     /**
      * Returns the state of the record with provided id
      * @param id The id of the record
-     * @returns state of the record if any
+     * @returns State of the record if any
      */
     getState(id: any): State;
 
     /**
      * Returns whether transaction is enabled for this service
+     * @returns If transaction is enabled
      */
     transactionsEnabled(): boolean;
 
@@ -63,9 +68,15 @@ export interface TransactionService {
      * @param id The id of the record
      * @returns updated recordRef
      */
-    getAggregatedValue(id: any, mergeChanges?: boolean): any;
+    /**
+     * Returns value of the required id including all uncommitted changes
+     * @param id The id of the record to return value for
+     * @param mergeChanges If set to true will merge state's value over relate recordRef
+     * and will return merged value
+     * @returns Record with all the changes for provided id
+     */
+    getAggregatedValue(id: any, mergeChanges: boolean): any;
 
-    // TODO rename to commit
     /**
      * Applies all transactions over the provided data
      * @param data Data source to update
