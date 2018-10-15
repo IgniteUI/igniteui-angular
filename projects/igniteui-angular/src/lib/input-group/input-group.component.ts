@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+    AfterContentInit,
     Component,
     ContentChild,
     ContentChildren,
@@ -13,8 +14,8 @@ import {
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 
 let NEXT_ID = 0;
 
@@ -29,7 +30,7 @@ enum IgxInputGroupType {
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html'
 })
-export class IgxInputGroupComponent {
+export class IgxInputGroupComponent implements AfterContentInit {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
 
@@ -140,6 +141,18 @@ export class IgxInputGroupComponent {
     /**
      * @hidden
      */
+    @ContentChildren(IgxPrefixDirective)
+    public prefixes: QueryList<IgxPrefixDirective>;
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxSuffixDirective)
+    public suffixes: QueryList<IgxSuffixDirective>;
+
+    /**
+     * @hidden
+     */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective })
     protected input: IgxInputDirective;
 
@@ -202,6 +215,17 @@ export class IgxInputGroupComponent {
 
     constructor(private _element: ElementRef) {
         this.element = _element;
+    }
+
+    ngAfterContentInit() {
+        this.prefixes.forEach((prefix) => {
+            prefix.childOfInputGroup = true;
+            prefix.cdr.detectChanges();
+        });
+        this.suffixes.forEach((suffix) => {
+            suffix.childOfInputGroup = true;
+            suffix.cdr.detectChanges();
+        });
     }
 
     /**
@@ -302,8 +326,8 @@ export class IgxInputGroupComponent {
  * The IgxInputGroupModule provides the {@link IgxInputGroupComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
+    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],
     exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxInputGroupModule { }

@@ -1,5 +1,8 @@
 ﻿import {
+    AfterContentInit,
+    AfterViewInit,
     Component,
+    ContentChildren,
     ChangeDetectorRef,
     EventEmitter,
     ElementRef,
@@ -7,7 +10,7 @@
     Input,
     Output,
     ViewChild,
-    AfterViewInit,
+    QueryList,
     Renderer2
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
@@ -18,6 +21,8 @@ import {
     IgxDropEnterEventArgs,
     IgxDropEventArgs
 } from '../directives/dragdrop/dragdrop.directive';
+import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 
 
 export interface IBaseChipEventArgs {
@@ -49,7 +54,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent implements AfterViewInit {
+export class IgxChipComponent implements AfterContentInit, AfterViewInit {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -309,6 +314,18 @@ export class IgxChipComponent implements AfterViewInit {
     /**
      * @hidden
      */
+    @ContentChildren(IgxPrefixDirective)
+    public prefixes: QueryList<IgxPrefixDirective>;
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxSuffixDirective)
+    public suffixes: QueryList<IgxSuffixDirective>;
+
+    /**
+     * @hidden
+     */
     public get ghostClass(): string {
         switch (this._displayDensity) {
             case DisplayDensity.cosy:
@@ -373,6 +390,20 @@ export class IgxChipComponent implements AfterViewInit {
     private _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+
+    /**
+     * @hidden
+     */
+    ngAfterContentInit() {
+        this.prefixes.forEach((prefix) => {
+            prefix.childOfChip = true;
+            prefix.cdr.detectChanges();
+        });
+        this.suffixes.forEach((suffix) => {
+            suffix.childOfChip = true;
+            suffix.cdr.detectChanges();
+        });
+    }
 
     /**
      * @hidden
