@@ -1470,13 +1470,15 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Paging', () => {
-            fit(`Should not apply edited classes to the same row on a different page`, (async () => {
+            it(`Should not apply edited classes to the same row on a different page`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
+                const gridElement: HTMLElement = grid.nativeElement;
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
+                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
 
                 expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
 
@@ -1488,9 +1490,6 @@ describe('IgxGrid Component Tests', () => {
 
                 expect(rowEl.classList).toContain('igx-grid__tr--edited');
 
-                const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
-
                 // Next page button click
                 pagingButtons[2].dispatchEvent(new Event('click'));
                 fix.detectChanges();
@@ -1499,11 +1498,56 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should preserve the changes after page navigation`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridElement: HTMLElement = grid.nativeElement;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
+                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+
+                expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
+
+                cell.inEditMode = true;
+                cell.update('IG');
+                cell.inEditMode = false;
+
+                // Next page button click
+                pagingButtons[2].dispatchEvent(new Event('click'));
+                fix.detectChanges();
+                expect(grid.page).toEqual(1);
+                expect(cell.value).toBe('Tofu');
+
+                // Previous page button click
+                pagingButtons[1].dispatchEvent(new Event('click'));
+                fix.detectChanges();
+                expect(cell.value).toBe('IG');
             });
 
-            it(`Should save changes when changing page while editing`, () => {
-                // TO DO
+            fit(`Should save changes when changing page while editing`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridElement: HTMLElement = grid.nativeElement;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+
+                cell.inEditMode = true;
+                cell.update('IG');
+                // Do not exit edit mode
+
+                // Next page button click
+                pagingButtons[2].dispatchEvent(new Event('click'));
+                fix.detectChanges();
+                expect(grid.page).toEqual(1);
+                expect(cell.value).toBe('Tofu');
+
+                // Previous page button click
+                pagingButtons[1].dispatchEvent(new Event('click'));
+                fix.detectChanges();
+                expect(cell.value).toBe('IG');
             });
 
             it(`Should exit edit mode when changing the page size while editing`, () => {
