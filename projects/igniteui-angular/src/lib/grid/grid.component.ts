@@ -4817,7 +4817,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public changeRowEditingOverlayStateOnScroll(row: IgxGridRowComponent) {
-        if(!row) {
+        if (!row) {
             this.hideRowEditingOverlay();
         } else {
             this.repositionRowEditingOverlay(row);
