@@ -8,21 +8,21 @@
 
 {{#if model.typeParameters}}
     <section class="tsd-panel tsd-type-parameters">
-        <h3>Type parameters</h3>
+        <h3>{{#localize}}Type parameters{{/localize}}</h3>
         {{#with model}}{{> typeParameters}}{{/with}}
     </section>
 {{/if}}
 
 {{#if model.typeHierarchy}}
     <section class="tsd-panel tsd-hierarchy">
-        <h3>Hierarchy</h3>
+        <h3>{{#localize}}Hierarchy{{/localize}}</h3>
         {{#with model.typeHierarchy}}{{> hierarchy}}{{/with}}
     </section>
 {{/if}}
 
 {{#if model.implementedTypes}}
     <section class="tsd-panel">
-        <h3>Implements</h3>
+        <h3>{{#localize}}Implements{{/localize}}</h3>
         <ul class="tsd-hierarchy">
             {{#each model.implementedTypes}}
                 <li>{{> type}}</li>
@@ -33,7 +33,7 @@
 
 {{#if model.implementedBy}}
     <section class="tsd-panel">
-        <h3>Implemented by</h3>
+        <h3>{{#localize}}Implemented by{{/localize}}</h3>
         <ul class="tsd-hierarchy">
             {{#each model.implementedBy}}
                 <li>{{> type}}</li>

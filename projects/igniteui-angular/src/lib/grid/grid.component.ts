@@ -254,11 +254,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
             this._filteringExpressionsTree = value;
             this._pipeTrigger++;
+            this.clearSummaryCache();
             this.cdr.markForCheck();
-            requestAnimationFrame(() => {
-                this.clearSummaryCache();
-                this.cdr.detectChanges();
-            });
+            this.cdr.detectChanges();
         }
     }
 
