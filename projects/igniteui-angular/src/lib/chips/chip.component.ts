@@ -8,7 +8,6 @@
     Input,
     Output,
     ViewChild,
-    QueryList,
     Renderer2
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
