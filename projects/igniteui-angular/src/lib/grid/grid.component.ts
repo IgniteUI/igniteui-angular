@@ -55,6 +55,7 @@ import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpr
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -126,6 +127,11 @@ export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
     cancel: boolean;
+}
+
+export interface IGroupingDoneEventArgs {
+    expressions: Array<ISortingExpression> | ISortingExpression;
+    columns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
 /**
@@ -1071,11 +1077,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
-    /**
+        /**
      * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
-     * Returns the `ISortingExpression` related to the grouping operation.
+     * Returns the `ISortingExpression` related to the grouping/ungrouping operation.
      * ```typescript
-     * groupingDone(event: any){
+     * groupingDone(event: IGroupingDoneEventArgs){
      *     const grouping = event;
      * }
      * ```
@@ -1085,23 +1091,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
-
-    /**
-     * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
-     * Returns the `ISortingExpression` related to the grouping or ungrouping operation.
-     * ```typescript
-     * groupingChanged(event: any){
-     *     const grouping = event;
-     * }
-     * ```
-     * ```html
-     * <igx-grid #grid [data]="localData" (onGroupingChanged)="groupingChanged($event)" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Output()
-    public onGroupingChanged = new EventEmitter<ISortingExpression[]>();
+    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
@@ -2935,10 +2925,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
         const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-            this.onGroupingDone.emit(this.sortingExpressions);
-            this.onGroupingChanged.emit(newSortingExpressions);
+            const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            newSortingExpressions.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newSortingExpressions,
+                columns: cols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
         }
-
         this.restoreHighlight();
     }
 
