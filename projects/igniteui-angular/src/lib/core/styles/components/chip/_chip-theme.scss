@@ -307,6 +307,7 @@
     %igx-chip__suffix {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
 
         + %igx-chip__prefix,
         + %igx-chip__suffix,
@@ -324,6 +325,10 @@
         @include ellipsis();
         padding: map-get($chip-padding, 'comfortable');
         max-width: $chip-max-width;
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-chip__content--cosy {
