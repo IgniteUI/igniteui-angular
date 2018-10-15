@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray, DisplayDensity, isObjectEmpty } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -4924,7 +4924,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onRowEditCancel.emit(value);
         }
         this.transactions.endPending(commit);
-        if (commit && value && !this.transactions.transactionsEnabled()) {
+        if (commit && value && !isObjectEmpty(value) && !this.transactions.transactionsEnabled()) {
             this.data[rowInEdit.rowIndex] = value;
         }
         if (closeOverlay) {
