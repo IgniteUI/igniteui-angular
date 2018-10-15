@@ -157,7 +157,7 @@
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
-<div igxToggle>
+<div *ngIf="rowEditable" igxToggle>
     <ng-container *ngTemplateOutlet="rowEditContainer; context: {$implicit: this}"></ng-container>
 </div>
 <ng-template #defaultRowEditTemplate >
