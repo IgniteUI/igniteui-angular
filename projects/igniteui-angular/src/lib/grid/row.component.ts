@@ -190,15 +190,8 @@ export class IgxGridRowComponent implements DoCheck {
 
     public get inEditMode(): boolean {
         const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-         if (this.grid.rowEditable && editableRow) {
-            if (editableRow.rowID === this.rowID) {
-                this.grid.repositionRowEditingOverlay(this);
-                return true;
-            } else if (!this.grid.rowList.find(row => row.rowID === editableRow.rowID) &&
-                !this.grid.rowEditingOverlay.collapsed) {
-                this.grid.hideRowEditingOverlay();
-                return false;
-            }
+         if (this.grid.rowEditable && editableRow && editableRow.rowID === this.rowID) {
+            return true;
         } else {
             return false;
         }
