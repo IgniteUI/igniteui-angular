@@ -1564,21 +1564,77 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Filtering', () => {
             it(`Should exit edit mode when filtering`, () => {
-                // TO DO
-                // Verify the data source is updated
+                const targetColumnName = 'ProductName';
+                const keyword = 'bob';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                const targetCell = grid.getCellByColumn(0, targetColumnName);
+                targetCell.inEditMode = true;
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+                fix.detectChanges();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
 
             it(`Should include the new value in the results when filtering`, () => {
-                // TO DO
-            });
+                const targetColumnName = 'ProductName';
+                const keyword = 'awesome';
+                const newValue = 'My Awesome Product';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
 
-            it(`Editing a filtered row`, () => {
-                // TO DO
-                // Filter by any value
-                // Edit any of the filtered rows so that the row is removed from the filtered columns
-                // Remove filtering
-                // Verify the update is preserved
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, targetColumnName);
+                targetCell.inEditMode = true;
+                targetCell.update(newValue);
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+                fix.detectChanges();
+
+                expect(targetCell.value).toEqual(newValue);
             });
+            // WIP
+            xit(`Should preserve the row's data if it has been modified while being filtered out`, fakeAsync(() => {
+                // Steps:
+                // 1) Filter by any value
+                // 2) Edit any of the filtered rows so that the row is removed from the filtered columns
+                // 3) Remove filtering
+                // 4) Verify the update is preserved
+
+                const targetColumnName = 'ProductName';
+                const keyword = 'awesome';
+                const newValue = 'My Awesome Product';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, targetColumnName);
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+
+                tick();
+                debugger;
+                targetCell.inEditMode = true;
+                tick();
+                targetCell.update(newValue);
+
+                // remove filtering
+                grid.clearFilter();
+                fix.detectChanges();
+                expect(targetCell.value).toEqual(newValue);
+            }));
         });
 
         describe('Row Editing - GroupBy', () => {
