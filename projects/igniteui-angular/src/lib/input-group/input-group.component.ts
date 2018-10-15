@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterContentInit,
     Component,
     ContentChild,
     ContentChildren,
@@ -30,7 +29,7 @@ enum IgxInputGroupType {
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html'
 })
-export class IgxInputGroupComponent implements AfterContentInit {
+export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
 
@@ -141,18 +140,6 @@ export class IgxInputGroupComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    @ContentChildren(IgxPrefixDirective)
-    public prefixes: QueryList<IgxPrefixDirective>;
-
-    /**
-     * @hidden
-     */
-    @ContentChildren(IgxSuffixDirective)
-    public suffixes: QueryList<IgxSuffixDirective>;
-
-    /**
-     * @hidden
-     */
     @ContentChild(IgxInputDirective, { read: IgxInputDirective })
     protected input: IgxInputDirective;
 
@@ -215,17 +202,6 @@ export class IgxInputGroupComponent implements AfterContentInit {
 
     constructor(private _element: ElementRef) {
         this.element = _element;
-    }
-
-    ngAfterContentInit() {
-        this.prefixes.forEach((prefix) => {
-            prefix.childOfInputGroup = true;
-            prefix.cdr.detectChanges();
-        });
-        this.suffixes.forEach((suffix) => {
-            suffix.childOfInputGroup = true;
-            suffix.cdr.detectChanges();
-        });
     }
 
     /**
