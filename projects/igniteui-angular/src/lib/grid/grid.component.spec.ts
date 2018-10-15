@@ -1275,7 +1275,8 @@ describe('IgxGrid Component Tests', () => {
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-
+                fix.detectChanges();
+                tick();
                 grid.deleteRow(grid.getRowByIndex(2).rowID);
                 fix.detectChanges();
                 tick(DEBOUNCETIME);
@@ -1345,10 +1346,10 @@ describe('IgxGrid Component Tests', () => {
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-
+                fix.detectChanges();
                 const nonEditableCell = grid.getCellByColumn(0, 'ProductID');
-                nonEditableCell.nativeElement.click();
-
+                nonEditableCell.onFocus({});
+                fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -1368,10 +1369,10 @@ describe('IgxGrid Component Tests', () => {
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-
+                fix.detectChanges();
                 const nonEditableCell = grid.getCellByColumn(2, 'ProductID');
-                nonEditableCell.nativeElement.click();
-
+                nonEditableCell.onFocus({});
+                fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -1391,10 +1392,10 @@ describe('IgxGrid Component Tests', () => {
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-
+                fix.detectChanges();
                 const otherEditableCell = grid.getCellByColumn(2, 'ProductName');
-                otherEditableCell.nativeElement.click();
-
+                otherEditableCell.onFocus({});
+                fix.detectChanges();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -1443,7 +1444,8 @@ describe('IgxGrid Component Tests', () => {
                 const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
                 cancelButtonElement.nativeElement.click();
 
-                expect(gridAPI.submit_value).not.toHaveBeenCalled();
+                // submit_value is called to exit edit mode of cell
+                expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
             it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
@@ -1464,7 +1466,8 @@ describe('IgxGrid Component Tests', () => {
                     key: 'escape'
                 }));
 
-                expect(gridAPI.submit_value).not.toHaveBeenCalled();
+                // submit_value is called to exit edit mode of cell
+                expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
         });
@@ -1734,9 +1737,10 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
-                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                const targetCell = grid.getCellByColumn(0, 'ProductName'); // Cell must be editable
                 targetCell.inEditMode = true;
-
+                fix.detectChanges();
+                expect(gridAPI.get_cell_inEditMode(grid.id)).toBeTruthy(); // check if there is cell in edit mode
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
                 targetCell.column.hidden = true;
@@ -2134,7 +2138,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                 <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
             </ng-template>
         </igx-column>
-        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="150px"></igx-column>
