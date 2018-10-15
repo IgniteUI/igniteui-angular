@@ -60,22 +60,30 @@ body {
 
 // @include igx-typography($type-scale: $my-type-scale);
 
-// @include igx-color-classes('background-color');
+// Button Themes
+$blue-green: #2ec4b6;
+$bright-yellow: #ff9f1c;
+$smoky-black: #0c120c;
+$boston-red: #d00000;
 
-// .my-cool-card {
-//     @include igx-card-typography($my-type-scale-1, (title: 'overline'));
-// }
+$red-sox-button: igx-button-theme(
+    $flat-background: $boston-red,
+    $raised-background: $boston-red,
+    $fab-background: $boston-red,
+    $icon-background: $boston-red
+);
 
-// .h1-mod {
-//     @include igx-type-style($my-type-scale, 'h1') {
-//         font-family: 'Arial', serif;
-//         color: red;
-//     }
-// }
+$smoky-black-button: igx-button-theme(
+    $flat-background: $smoky-black,
+    $raised-background: $smoky-black,
+    $fab-background: $smoky-black,
+    $icon-background: $smoky-black
+);
 
-//$tooltip-theme: igx-tooltip-theme(
-//    $background: orange,
-//    $text-color: red
-//);
+.red-sox-button {
+    @include igx-button($red-sox-button);
+}
 
-// @include igx-tooltip($tooltip-theme);
+.smoky-black-button {
+    @include igx-button($smoky-black-button);
+}
