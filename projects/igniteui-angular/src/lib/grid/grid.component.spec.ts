@@ -1002,7 +1002,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(document.activeElement).toEqual(firstCellElement);
             });
 
-            it(`Should jump from last editable columns to overlay buttons`, (async() => {
+            it(`Should jump from last editable columns to overlay buttons`, (async () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -1047,7 +1047,7 @@ describe('IgxGrid Component Tests', () => {
                 (<HTMLElement>document.activeElement.previousElementSibling).focus();
                 fixture.detectChanges();
                 // go to LAST editable cell
-                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true}));
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true }));
                 fixture.detectChanges();
                 await wait(500);
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
@@ -1060,7 +1060,7 @@ describe('IgxGrid Component Tests', () => {
                 (<HTMLElement>document.activeElement.nextElementSibling).focus();
                 fixture.detectChanges();
                 // move to FIRST editable cell
-                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: false}));
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: false }));
                 fixture.detectChanges();
                 await wait(500);
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
@@ -1525,7 +1525,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('IG');
             });
 
-            fit(`Should save changes when changing page while editing`, () => {
+            it(`Should save changes when changing page while editing`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1768,20 +1768,20 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
                 targetCell.update(newValue);
 
+                // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
-
+                // show column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 targetCheckbox.nativeElement.click();
 
                 expect(targetCell.value).toEqual(newValue);
             });
 
-            // WIP
-            xit(`Should be posible to update a cell that is hidden programatically`, () => {
+            it(`Should be posible to update a cell that is hidden programatically`, () => {
                 const targetCbText = 'Product ID';
                 const newValue = '123';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1790,14 +1790,17 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductID');
                 targetCell.inEditMode = true;
+                targetCell.column.hidden = true;
 
+                targetCell.update(newValue);
+
+                // show column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
 
-                targetCell.update(newValue);
                 fix.detectChanges();
 
                 expect(targetCell.value).toEqual(newValue);
@@ -2202,8 +2205,8 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent {
     </igx-grid>`
 })
 export class IgxGridWithEditingAndFeaturesComponent {
-        /* Data fields: Downloads:number, ID: number, ProductName: string, ReleaseDate: Date,
-                    Released: boolean, Category: string, Items: string, Test: string. */
+    /* Data fields: Downloads:number, ID: number, ProductName: string, ReleaseDate: Date,
+                Released: boolean, Category: string, Items: string, Test: string. */
     public pinnedFlag = false;
     public hiddenFlag = false;
     public data = SampleTestData.generateProductData(11);
