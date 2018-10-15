@@ -1474,7 +1474,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Paging', () => {
+        describe('Row Editing - Paging', () => {
             it(`Should not apply edited classes to the same row on a different page`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -1557,8 +1557,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('IG');
             });
 
-            // TODO: expect test fail. Waiting for actual implementation.
-            xit(`Should exit edit mode when changing the page size while editing`, () => {
+            it(`Should exit edit mode when changing the page size while editing`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1583,8 +1582,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(rowEditingBannerElement).toBeFalsy();
             });
 
-            // TODO: expect test fail. Waiting for actual implementation.
-            xit(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+            it(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1661,18 +1659,66 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                let cell = grid.getCellByColumn(0, 'ProductName');
+
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                // Do not exit edit mode
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+
+                expect(cell.inEditMode).toBe(false);
+                expect(cell.value).toBe('Don Juan De Marco');
+
                 // Verify the data source is updated
+                const expectedCellValue = fix.componentInstance.data[0].ProductName;
+                expect(expectedCellValue).toBe('Don Juan De Marco');
             });
 
             it(`Should include the new value in the results when sorting`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                let cell = grid.getCellByColumn(0, 'ProductName');
+
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                cell.inEditMode = false;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+                expect(cell.value).toBe('Don Juan De Marco');
             });
 
             it(`Editing a sorted row`, () => {
-                // TO DO
                 // Sort any column
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
                 // Edit any of the sorted rows so that the row position is changed
+                let cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                cell.inEditMode = false;
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+                expect(cell.value).toBe('Don Juan De Marco');
             });
         });
 
@@ -2222,8 +2268,10 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
-        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px"></igx-column>
-        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" width="150px"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
+        </igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" [sortable]="true" width="150px">
+        </igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="150px"></igx-column>
     </igx-grid>`
 })
