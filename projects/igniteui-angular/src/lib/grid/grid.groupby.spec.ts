@@ -1200,8 +1200,9 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grouparea').length).toEqual(1);
-        expect(gridElement.clientHeight).toEqual(700);
+        const groupArea = gridElement.querySelectorAll('.igx-grouparea');
+        expect(groupArea.length).toEqual(1);
+        expect(groupArea[0].clientHeight).toBeGreaterThan(0);
     });
 
     it('should allow collapsing and expanding all group rows', () => {

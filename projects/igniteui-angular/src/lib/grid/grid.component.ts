@@ -620,7 +620,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @HostBinding('style.height')
     @DeprecateProperty(`The input 'height' is deprecated. You can set the grid's element height inline with\n
         the style attribute (e.g. [style.height.px]="500"), with the ngStyle directive or through CSS.\n
         By default the grid will grow with its content.\n
