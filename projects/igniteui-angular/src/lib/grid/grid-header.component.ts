@@ -284,6 +284,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             }
 
             this.grid.markForCheck();
+            this.grid.endRowEdit(true);
             this.grid.reflow();
             this.grid.onColumnResized.emit({ column: this.column, prevWidth: currentColWidth.toString(), newWidth: this.column.width });
         }
@@ -318,6 +319,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             }
 
             this.grid.markForCheck();
+            this.grid.endRowEdit(true);
             this.grid.reflow();
 
             if (currentColWidth !== parseFloat(this.column.width)) {
