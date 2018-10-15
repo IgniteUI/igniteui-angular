@@ -1528,7 +1528,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('IG');
             });
 
-            fit(`Should save changes when changing page while editing`, () => {
+            it(`Should save changes when changing page while editing`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
