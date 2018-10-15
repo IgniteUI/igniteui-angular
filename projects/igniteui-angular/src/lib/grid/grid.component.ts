@@ -2950,8 +2950,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridSizes();
         const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-            this.onGroupingDone.emit(this.sortingExpressions);
-            this.onGroupingChanged.emit(newSortingExpressions);
+            const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            newSortingExpressions.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newSortingExpressions,
+                columns: cols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
         }
         this.restoreHighlight();
     }
