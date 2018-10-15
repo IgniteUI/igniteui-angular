@@ -4078,7 +4078,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             event.checked ?
                 this.filteredData ?
                     this.selection.add_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.dataWithTransactions(), this.primaryKey) :
+                    this.selection.get_all_ids(this.dataWithTransactions, this.primaryKey) :
                 this.filteredData ?
                     this.selection.delete_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selection.get_empty();
@@ -4263,7 +4263,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithTransactions(), this.primaryKey));
+        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithTransactions, this.primaryKey));
     }
 
     /**
