@@ -255,7 +255,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._pipeTrigger++;
             this.clearSummaryCache();
             this.cdr.markForCheck();
-            this.cdr.detectChanges();
+            // TODO this detectChanges call breaks tests because of
+            // returning detect changes caused by recalcing height
+            // this.cdr.detectChanges();
         }
     }
 
