@@ -1588,12 +1588,6 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - Summaries', () => {
-            it(`Should update summaries when editing a row`, () => {
-                // TO DO
-            });
-        });
-
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
                 // TO DO
@@ -1611,9 +1605,14 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - Summaries', () => {
+        fdescribe('Row Editing - Summaries', () => {
             it(`Should update summaries when editing a row`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
             });
         });
 
