@@ -579,17 +579,16 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should match width and height of parent container when width/height are set in %', () => {
+        it('should match width of parent container when width is set in %', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.outerWidth = 800;
             fix.componentInstance.outerHeight = 600;
             fix.componentInstance.grid.width = '50%';
-            fix.componentInstance.grid.height = '50%';
-
             fix.detectChanges();
 
-            expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
+            expect(grid.tbody.nativeElement.clientHeight + 'px').toMatch(
+                fix.componentInstance.grid.visibleRows * fix.componentInstance.grid.rowHeight + 'px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
