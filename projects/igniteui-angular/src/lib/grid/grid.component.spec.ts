@@ -1474,7 +1474,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Paging', () => {
+        describe('Row Editing - Paging', () => {
             it(`Should not apply edited classes to the same row on a different page`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
