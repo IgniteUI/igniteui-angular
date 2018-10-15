@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
@@ -8,11 +8,11 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxGridCellComponent } from './index';
 import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
-import { HelperUtils} from '../test-utils/helper-utils.spec';
+import { HelperUtils } from '../test-utils/helper-utils.spec';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -36,6 +36,40 @@ describe('IgxGrid - GroupBy', () => {
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
     }));
+
+    const expandCollapceGroupRow =
+    (fix: ComponentFixture<DefaultGridComponent>,
+        groupRow: IgxGridGroupByRowComponent,
+        cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        if (cell != null) {
+            expect(cell.selected).toBe(true);
+        }
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
+        await wait(300);
+        fix.detectChanges();
+
+        expect(groupRow.expanded).toBe(false);
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        if (cell != null) {
+            expect(cell.selected).toBe(true);
+        }
+
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+
+        expect(groupRow.expanded).toBe(true);
+        expect(groupRow.focused).toBe(true);
+        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        if (cell != null) {
+            expect(cell.selected).toBe(true);
+        }
+        resolve();
+    });
 
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
@@ -524,7 +558,7 @@ describe('IgxGrid - GroupBy', () => {
     });
 
     // GroupBy + Selection integration
-    it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', async() => {
+    it('should toggle expand/collapse state of group row with ArrowRight/ArrowLeft key.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '400px';
@@ -581,7 +615,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(row.focused).toBe(true);
     }));
 
-    xit('should persist last selected cell column index when navigation down through group rows.', async() => {
+    xit('should persist last selected cell column index when navigation down through group rows.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '400px';
@@ -632,34 +666,12 @@ describe('IgxGrid - GroupBy', () => {
 
         let groupRow = grid.groupsRowList.toArray()[1];
         cell = grid.getCellByColumn(2, 'Released');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(300);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        cell = grid.getCellByColumn(2, 'Released');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(true);
-        cell = grid.getCellByColumn(2, 'Released');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, cell);
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', groupRow.nativeElement, true);
         await wait(300);
         fix.detectChanges();
 
-        expect(groupRow.expanded).toBe(true);
         cell = grid.getCellByColumn(2, 'Released');
         expect(groupRow.focused).toBe(false);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(false);
@@ -678,25 +690,7 @@ describe('IgxGrid - GroupBy', () => {
 
         groupRow = grid.groupsRowList.toArray()[2];
         cell = grid.getCellByColumn(7, 'Downloads');
-        expect(groupRow.focused).toBe(true);
-        expect(cell.selected).toBe(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(true);
-        cell = grid.getCellByColumn(7, 'Downloads');
-        expect(groupRow.focused).toBe(true);
-        expect(cell.selected).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, cell);
     }));
 
     it('keyboard navigation - should correct work when press tab and sft+tab on a grouped row', (async () => {
@@ -802,16 +796,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(cell.selected).toBeTruthy();
         expect(cell.focused).toBeFalsy();
         expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, cell);
     }));
 
     it('keyboard navigation - expand/colapse row with arrow keys', (async () => {
@@ -831,22 +817,7 @@ describe('IgxGrid - GroupBy', () => {
         await wait(50);
         fix.detectChanges();
 
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(true);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, null);
     }));
 
     it('keyboard navigation - should focus grouped row when press arrow keys up or down', (async () => {
@@ -874,27 +845,7 @@ describe('IgxGrid - GroupBy', () => {
 
         let groupRow = grid.groupsRowList.toArray()[0];
         cell = grid.getCellByColumn(1, 'ID');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(true);
-        cell = grid.getCellByColumn(1, 'ID');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, cell);
 
         cell = grid.getCellByColumn(2, 'ProductName');
         cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -909,30 +860,66 @@ describe('IgxGrid - GroupBy', () => {
 
         cell = grid.getCellByColumn(2, 'ProductName');
         groupRow = grid.groupsRowList.toArray()[1];
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-
-        expect(groupRow.expanded).toBe(true);
-        cell = grid.getCellByColumn(2, 'ProductName');
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        expect(cell.selected).toBe(true);
+        await expandCollapceGroupRow(fix, groupRow, cell);
     }));
 
-    xit('should persist last selected cell column index when navigation up through group rows.', async() => {
+    it('keyboard navigation - should correct work when press tab and sft+tab when there is a horizontal scroll', (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+
+        fix.componentInstance.width = '600px';
+        fix.componentInstance.height = '600px';
+        grid.columnWidth = '200px';
+        await wait(30);
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        await wait(30);
+        fix.detectChanges();
+
+        const groupRow = grid.groupsRowList.toArray()[1];
+        const secondRow = grid.getRowByIndex(2);
+        let cell;
+
+        groupRow.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(groupRow.focused).toBe(true);
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(2, 'Released');
+        expect(cell.focused).toBe(true);
+        expect(cell.selected).toBe(true);
+
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+        expect(cell.selected).toBe(true);
+
+        await expandCollapceGroupRow(fix, groupRow, cell);
+
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', groupRow.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+
+        cell = grid.getCellByColumn(4, 'Downloads');
+        expect(cell.focused).toBe(true);
+        expect(cell.selected).toBe(true);
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(groupRow.focused).toBe(true);
+    }));
+
+
+    xit('should persist last selected cell column index when navigation up through group rows.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
@@ -961,7 +948,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(row.focused).toBe(true);
     });
 
-    xit('should NOT clear selection from data cells when a group row is focused via KB navigation.', async() => {
+    xit('should NOT clear selection from data cells when a group row is focused via KB navigation.', async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
 
@@ -2210,7 +2197,7 @@ describe('IgxGrid - GroupBy', () => {
         const hScrBar = grid.scr.nativeElement;
         expect(hScrBar.hidden).toBe(true);
 
-        grid.groupBy({fieldName: 'Downloads', dir: SortingDirection.Asc});
+        grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Asc });
         fix.detectChanges();
         expect(hScrBar.hidden).toBe(false);
     });
@@ -2245,8 +2232,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.hideGroupedColumns = true;
         fix.detectChanges();
         grid.groupBy([
-            {fieldName: 'Downloads', dir: SortingDirection.Asc},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+            { fieldName: 'Downloads', dir: SortingDirection.Asc },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc }
         ]);
         fix.detectChanges();
         // the two grouped columns should be hidden
@@ -2264,8 +2251,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.hideGroupedColumns = true;
         fix.detectChanges();
         grid.groupBy([
-            {fieldName: 'Downloads', dir: SortingDirection.Asc},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+            { fieldName: 'Downloads', dir: SortingDirection.Asc },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc }
         ]);
         fix.detectChanges();
         // the two grouped columns should be hidden initially
@@ -2286,22 +2273,25 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         grid.groupBy([
-            {fieldName: 'Downloads', dir: SortingDirection.Asc},
-            {fieldName: 'ProductName', dir: SortingDirection.Asc}
+            { fieldName: 'Downloads', dir: SortingDirection.Asc },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc }
         ]);
         fix.detectChanges();
-         // all columns, whether grouped or ungrouped, should be visible
-         expect(grid.getColumnByName('Downloads').hidden).toBe(false);
-         expect(grid.getColumnByName('ProductName').hidden).toBe(false);
-         expect(grid.getColumnByName('ID').hidden).toBe(false);
-         expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
-         expect(grid.getColumnByName('Released').hidden).toBe(false);
-         grid.hideGroupedColumns = true;
-         fix.detectChanges();
-          // the two grouped columns should now be hidden
+        // all columns, whether grouped or ungrouped, should be visible
+        expect(grid.getColumnByName('Downloads').hidden).toBe(false);
+        expect(grid.getColumnByName('ProductName').hidden).toBe(false);
+        expect(grid.getColumnByName('ID').hidden).toBe(false);
+        expect(grid.getColumnByName('ReleaseDate').hidden).toBe(false);
+        expect(grid.getColumnByName('Released').hidden).toBe(false);
+        grid.hideGroupedColumns = true;
+        fix.detectChanges();
+        // the two grouped columns should now be hidden
         expect(grid.getColumnByName('Downloads').hidden).toBe(true);
         expect(grid.getColumnByName('ProductName').hidden).toBe(true);
     });
+
+
+
 
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
@@ -2309,7 +2299,10 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         return fix.whenStable();
     }
+
+
 });
+
 
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
