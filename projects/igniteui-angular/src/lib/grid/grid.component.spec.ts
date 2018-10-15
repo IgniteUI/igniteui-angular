@@ -1649,8 +1649,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('IG');
             });
 
-            // TODO: expect test fail. Waiting for actual implementation.
-            xit(`Should exit edit mode when changing the page size while editing`, () => {
+            it(`Should exit edit mode when changing the page size while editing`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1675,8 +1674,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(rowEditingBannerElement).toBeFalsy();
             });
 
-            // TODO: expect test fail. Waiting for actual implementation.
-            xit(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+            it(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1713,20 +1711,74 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Filtering', () => {
             it(`Should exit edit mode when filtering`, () => {
-                // TO DO
-                // Verify the data source is updated
+                const targetColumnName = 'ProductName';
+                const keyword = 'bob';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                const targetCell = grid.getCellByColumn(0, targetColumnName);
+                targetCell.inEditMode = true;
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+                fix.detectChanges();
+
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
 
             it(`Should include the new value in the results when filtering`, () => {
-                // TO DO
+                const targetColumnName = 'ProductName';
+                const keyword = 'awesome';
+                const newValue = 'My Awesome Product';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const targetCell = grid.getCellByColumn(0, targetColumnName);
+                targetCell.inEditMode = true;
+                targetCell.update(newValue);
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+                fix.detectChanges();
+
+                expect(targetCell.value).toEqual(newValue);
             });
 
-            it(`Editing a filtered row`, () => {
-                // TO DO
-                // Filter by any value
-                // Edit any of the filtered rows so that the row is removed from the filtered columns
-                // Remove filtering
-                // Verify the update is preserved
+            it(`Should preserve the cell's data if it has been modified while being filtered out`, () => {
+                // Steps:
+                // 1) Filter by any value
+                // 2) Edit any of the filtered rows so that the row is removed from the filtered columns
+                // 3) Remove filtering
+                // 4) Verify the update is preserved
+
+                const targetColumnName = 'ProductName';
+                const keyword = 'ch';
+                const newValue = 'My Awesome Product';
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                let targetCell = grid.getCellByColumn(0, targetColumnName);
+
+                // search if the targeted column contains the keyword, ignoring case
+                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
+
+                fix.detectChanges();
+                targetCell.update(newValue);
+
+                // remove filtering
+                targetCell = grid.getCellByColumn(0, targetColumnName);
+                grid.clearFilter();
+                fix.detectChanges();
+                expect(targetCell.value).toEqual(newValue);
             });
         });
 
@@ -1753,18 +1805,66 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - Sorting', () => {
             it(`Should exit edit mode when Sorting`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                let cell = grid.getCellByColumn(0, 'ProductName');
+
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                // Do not exit edit mode
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+
+                expect(cell.inEditMode).toBe(false);
+                expect(cell.value).toBe('Don Juan De Marco');
+
                 // Verify the data source is updated
+                const expectedCellValue = fix.componentInstance.data[0].ProductName;
+                expect(expectedCellValue).toBe('Don Juan De Marco');
             });
 
             it(`Should include the new value in the results when sorting`, () => {
-                // TO DO
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                let cell = grid.getCellByColumn(0, 'ProductName');
+
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                cell.inEditMode = false;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+                expect(cell.value).toBe('Don Juan De Marco');
             });
 
             it(`Editing a sorted row`, () => {
-                // TO DO
                 // Sort any column
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+
+                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                fix.detectChanges();
+
                 // Edit any of the sorted rows so that the row position is changed
+                let cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+                cell.update('Don Juan De Marco');
+                cell.inEditMode = false;
+                fix.detectChanges();
+
+                cell = grid.getCellByColumn(3, 'ProductName');
+                expect(cell.value).toBe('Don Juan De Marco');
             });
         });
 
@@ -2314,8 +2414,10 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             </ng-template>
         </igx-column>
         <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
-        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px"></igx-column>
-        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" width="150px"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
+        </igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" [sortable]="true" width="150px">
+        </igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="150px"></igx-column>
     </igx-grid>`
 })
