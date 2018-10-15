@@ -36,12 +36,12 @@
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
                     [rowEditable]="true"  [paging]="true" [perPage]="10">
-                    <igx-column width="100px">
+                    <igx-column width="100px" [editable]="false" >
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
-                    <igx-column width="100px" field="ProductID" [sortable]="true" header="Product ID"></igx-column>
+                    <igx-column width="100px" field="ProductID" [editable]="false" [sortable]="true" header="Product ID"></igx-column>
                     <igx-column width="100px" field="ReorderLevel" [sortable]="true" header="ReorderLever" [dataType]="'number'"
                         [hasSummary]="summaryFlag" [hidden]="hideFlag" [sortable]="true" editable="true"></igx-column>
                     <igx-column width="100px" field="ProductName" [sortable]="true" header="ProductName" [hidden]="hideFlag" [dataType]="'string'"
