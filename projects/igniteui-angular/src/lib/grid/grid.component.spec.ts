@@ -32,6 +32,8 @@ describe('IgxGrid Component Tests', () => {
     const CELL_CLASS = '.igx-grid__td';
     const ROW_CLASS = '.igx-grid__tr';
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
+    const BANNER = 'igx-banner';
+    const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
 
     describe('IgxGrid - input properties', () => {
         beforeEach(async(() => {
@@ -1469,7 +1471,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - Paging', () => {
+        fdescribe('Row Editing - Paging', () => {
             it(`Should not apply edited classes to the same row on a different page`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -1525,7 +1527,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('IG');
             });
 
-            fit(`Should save changes when changing page while editing`, () => {
+            it(`Should save changes when changing page while editing`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1547,15 +1549,70 @@ describe('IgxGrid Component Tests', () => {
                 // Previous page button click
                 pagingButtons[1].dispatchEvent(new Event('click'));
                 fix.detectChanges();
+
+                expect(cell.inEditMode).toBeFalsy();
                 expect(cell.value).toBe('IG');
             });
 
-            it(`Should exit edit mode when changing the page size while editing`, () => {
-                // TO DO
+            // TODO: expect test fail. Waiting for actual implementation.
+            xit(`Should exit edit mode when changing the page size while editing`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const select = fix.debugElement.query(By.css('.igx-paginator > select'));
+
+                cell.inEditMode = true;
+                cell.update('IG');
+                // Do not exit edit mode
+                const rowEditingBannerElement = document.getElementsByClassName(BANNER);
+                const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+
+                expect(overlayContent).toBeTruthy();
+                expect(rowEditingBannerElement).toBeTruthy();
+                // Change page size
+                select.triggerEventHandler('change', { target: { value: 10 } });
+                fix.detectChanges();
+
+                expect(cell.inEditMode).toEqual(false);
+                expect(overlayContent).toBeFalsy();
+                expect(rowEditingBannerElement).toBeFalsy();
             });
 
-            it(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
-                // TO DO
+            // TODO: expect test fail. Waiting for actual implementation.
+            xit(`Should exit edit mode when changing the page size resulting in the edited cell going to the next page`, () => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridElement: HTMLElement = grid.nativeElement;
+                let cell = grid.getCellByColumn(3, 'ProductName');
+                const select = fix.debugElement.query(By.css('.igx-paginator > select'));
+                const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+
+                cell.inEditMode = true;
+                cell.update('IG');
+                // Do not exit edit mode
+                const rowEditingBannerElement: HTMLElement = document.getElementsByClassName(BANNER)[0] as HTMLElement;
+                const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeTruthy();
+                expect(rowEditingBannerElement).toBeTruthy();
+
+                // Change page size
+                select.triggerEventHandler('change', { target: { value: 2 } });
+                fix.detectChanges();
+
+                // Next page button click
+                pagingButtons[2].dispatchEvent(new Event('click'));
+                fix.detectChanges();
+
+                expect(grid.page).toEqual(1);
+                cell = grid.getCellByColumn(1, 'ProductName');
+
+                expect(cell.inEditMode).toEqual(false);
+                expect(overlayContent).toBeFalsy();
+                expect(rowEditingBannerElement).toBeFalsy();
             });
         });
 
