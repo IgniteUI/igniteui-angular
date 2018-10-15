@@ -14,7 +14,7 @@ export class UpdateChanges {
     protected outputChanges: BindingChanges;
     protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
-    protected conditionFunctions: Map<string, Function>;
+    protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
 
     private _templateFiles: string[] = [];
     public get templateFiles(): string[] {
@@ -94,11 +94,7 @@ export class UpdateChanges {
     }
 
     /** Add condition funtion. */
-    public addCondition(conditionName: string, callback: Function) {
-        if (!this.conditionFunctions) {
-            this.conditionFunctions = new Map<string, Function>();
-        }
-
+    public addCondition(conditionName: string, callback: (ownerMatch: string) => boolean) {
         this.conditionFunctions.set(conditionName, callback);
     }
 
