@@ -85,7 +85,8 @@ export class IgxGridRowComponent implements DoCheck {
      */
     @HostBinding('style.min-height.px')
     get rowHeight() {
-        return this.grid.rowHeight;
+        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
+        return this.grid.rowHeight - rowOffsetH;
     }
 
     /**

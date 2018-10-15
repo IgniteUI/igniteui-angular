@@ -336,11 +336,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * @hidden
-     */
+ * @hidden
+ */
     @HostBinding('style.min-height.px')
     get cellHeight() {
-        return this.grid.rowHeight;
+        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
+        return this.grid.rowHeight - rowOffsetH;
     }
 
     /**

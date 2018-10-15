@@ -569,8 +569,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        // check if height/width has changes in views.
-        this._recalcUpdateSizes();
+
+        requestAnimationFrame(() => {
+            // check if height/width has changes in views.
+            this._recalcUpdateSizes();
+        });
         this.dc.changeDetectorRef.detectChanges();
 
         this.onChunkLoad.emit(this.state);
@@ -1143,7 +1146,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        this._recalcUpdateSizes();
+        requestAnimationFrame(() => {
+            this._recalcUpdateSizes();
+        });
     }
 
     onHScroll(event) {
