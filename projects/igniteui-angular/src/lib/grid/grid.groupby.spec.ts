@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
 
-fdescribe('IgxGrid - GroupBy', () => {
+describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -340,6 +340,8 @@ fdescribe('IgxGrid - GroupBy', () => {
         const currExpr = fix.componentInstance.currentSortExpressions;
         expect(currExpr.expressions.length).toEqual(1);
         expect(currExpr.expressions[0].fieldName).toEqual('Released');
+        expect(currExpr.columns.length).toEqual(1);
+        expect(currExpr.columns[0].field).toEqual('Released');
     });
 
     it('should trigger an onGroupingDone event when a column is ungrouped with the correct params.', () => {
@@ -358,6 +360,8 @@ fdescribe('IgxGrid - GroupBy', () => {
         const currExpr = fix.componentInstance.currentSortExpressions;
         expect(currExpr.expressions.length).toEqual(1);
         expect(currExpr.expressions[0].fieldName).toEqual('ReleaseDate');
+        expect(currExpr.columns.length).toEqual(1);
+        expect(currExpr.columns[0].field).toEqual('ReleaseDate');
     });
 
      it('should trigger an onGroupingDone event when multiple columns are grouped with the correct params.', () => {
@@ -376,6 +380,10 @@ fdescribe('IgxGrid - GroupBy', () => {
         expect(currExpr.expressions[0].fieldName).toEqual('Released');
         expect(currExpr.expressions[1].fieldName).toEqual('ProductName');
         expect(currExpr.expressions[2].fieldName).toEqual('ReleaseDate');
+        expect(currExpr.columns.length).toEqual(3);
+        expect(currExpr.columns[0].field).toEqual('Released');
+        expect(currExpr.columns[1].field).toEqual('ProductName');
+        expect(currExpr.columns[2].field).toEqual('ReleaseDate');
      });
 
     it('should trigger an onGroupingDone event when multiple columns are ungrouped with the correct params.', () => {
@@ -395,6 +403,8 @@ fdescribe('IgxGrid - GroupBy', () => {
         const currExpr = fix.componentInstance.currentSortExpressions;
         expect(currExpr.expressions.length).toEqual(1);
         expect(currExpr.expressions[0].fieldName).toEqual('ReleaseDate');
+        expect(currExpr.columns.length).toEqual(1);
+        expect(currExpr.columns[0].field).toEqual('ReleaseDate');
     });
 
     it('should allow setting custom template for group row content.', () => {
