@@ -1583,8 +1583,22 @@ describe('IgxGrid Component Tests', () => {
 
         describe('Row Editing - GroupBy', () => {
             it(`Should exit edit mode when Grouping`, () => {
-                // TO DO
-                // Verify the data source is updated
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
+                const targetCell = grid.getCellByColumn(0, 'OrderDate');
+                targetCell.inEditMode = true;
+
+                grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true });
+
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalled();
             });
         });
 
@@ -1608,12 +1622,11 @@ describe('IgxGrid Component Tests', () => {
         describe('Row Editing - Summaries', () => {
             it(`Should update summaries when editing a row`, () => {
                 const newDate = '01/01/0001';
-
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                grid.enableSummaries([{ fieldName: 'OrderDate' }]);
+                grid.enableSummaries('OrderDate');
                 const targetCell = grid.getCellByColumn(0, 'OrderDate');
 
                 targetCell.inEditMode = true;
@@ -1626,6 +1639,7 @@ describe('IgxGrid Component Tests', () => {
                 const earliestDate = summaries.get('OrderDate')[1].summaryResult.toLocaleDateString();
 
                 expect(earliestDate).toEqual(newDate);
+                grid.disableSummaries('OrderDate');
             });
         });
 
