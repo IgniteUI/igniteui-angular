@@ -73,9 +73,9 @@ export class HelperUtils {
         });
 
         if (dir === 'ArrowDown') {
-            (elem as any).onKeydownArrowDown(keyboardEvent);
+            elem.nativeElement.dispatchEvent(keyboardEvent);
         } else {
-            (elem as any).onKeydownArrowUp(keyboardEvent);
+            elem.nativeElement.dispatchEvent(keyboardEvent);
         }
 
         if (nextRow) {
