@@ -79,6 +79,9 @@
     $warning-secondary-color: null,
     $error-secondary-color: null,
 
+    $placeholder-color: null,
+    $disabled-placeholder-color: null,
+
     $variant: 'dark'
 ) {
     $name: 'igx-input-group';
@@ -116,7 +119,9 @@
 
         success-secondary-color: igx-color($palette, 'success'),
         warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error')
+        error-secondary-color: igx-color($palette, 'error'),
+        placeholder-color: igx-color($palette, 'grays', 500),
+        disabled-placeholder-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: (
@@ -152,7 +157,11 @@
 
         success-secondary-color: igx-color($palette, 'success'),
         warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error')
+        error-secondary-color: igx-color($palette, 'error'),
+        placeholder-color: #999,
+        disabled-placeholder-color: #777
+
+
     );
 
     $default-theme: map-get((
@@ -194,6 +203,8 @@
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+        placeholder-color: $placeholder-color,
+        disabled-placeholder-color: $disabled-placeholder-color,
 
         variant: $variant
     ));
@@ -507,7 +518,7 @@
         }
 
         &::placeholder {
-            color: igx-color($palette, 'grays', 500);
+            color: --var($theme, 'placeholder-color');
             opacity: 1;
         }
     }
@@ -554,7 +565,7 @@
         color: --var($theme, 'disabled-text-color');
 
         &::placeholder {
-            color: igx-color($palette, 'grays', 400);
+            color: --var($theme, 'disabled-placeholder-color');
         }
     }
 
@@ -836,3 +847,4 @@
         }
     }
 }
+

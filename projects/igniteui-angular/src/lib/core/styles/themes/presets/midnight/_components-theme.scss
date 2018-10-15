@@ -18,8 +18,9 @@ $badge-midnight-theme: igx-badge-theme(
 // BUTTONS
 $button-midnight-theme: igx-button-theme(
     $palette: $midnight-palett,
-    $disabled-color: $midnight-white-50,
-    $disabled-background: $midnight-white-20
+    $disabled-color: $midnight-white-40,
+    $disabled-background: $midnight-white-10,
+    $icon-background: $midnight-background-darker
 );
 
 // BUTTONS GROUP
@@ -168,35 +169,63 @@ $progressbar-cir-midnight-theme: igx-progress-circular-theme(
 
 // GRID
 $grid-midnight-theme: igx-grid-theme(
-    $content-background: #000,
-    $content-text-color: #fff,
+    $palette: $midnight-palett,
+    $content-background: $content-background,
+    $content-text-color: $midnight-light-text,
+
     $header-background: igx-color($midnight-palett, 'grays', 800),
     $header-text-color: $midnight-white-70,
     $header-border-color: $midnight-white-40,
     $row-indentation-background: #000,
-    $row-selected-background: #fff,
-    $row-selected-text-color: igx-color($midnight-palett, 'grays', 900),
-    $row-hover-background: #4b4b4b,
-    $row-hover-text-color: #fff,
+    $row-selected-background: #333,
+    $row-selected-text-color: text-contrast(#333),
+    $row-hover-background: #222,
+    $row-hover-text-color: text-contrast(#222),
     $row-border-color: #333,
     $row-content-focus-background: rgba(106, 227, 104, .2),
+
     $cell-selected-background: igx-color($midnight-palett, 'primary'),
     $cell-selected-text-color: igx-color($midnight-palett, 'grays', 900),
+
     $group-count-background: #333,
     $group-label-icon: igx-color($midnight-palett, 'secondary', 500),
     $group-label-column-name-text: igx-color($midnight-palett, 'secondary', 500),
+
     $expand-icon-color: $midnight-white-60,
     $expand-icon-hover-color: igx-color($midnight-palett, 'secondary', 500),
     $expand-all-icon-color: $midnight-white-60,
     $expand-all-icon-hover-color: igx-color($midnight-palett, 'secondary', 500),
-    $drop-area-text-color: $midnight-white-70,
-    $drop-area-icon-color: $midnight-white-50,
+    $drop-area-text-color: #fff,
+    $drop-area-icon-color: #b4b4b4,
     $drop-area-background: #333,
-    $drop-area-on-drop-background: $midnight-white-20,
+    $drop-area-on-drop-background: #ddd,
     $ghost-header-background: #333,
-    $ghost-header-icon-color: $midnight-white-70
+    $ghost-header-icon-color: $midnight-white-70,
+    $pinned-border-color: $midnight-white-50
 );
 
+// FILTERING DIALOG
+$filtering-midnight-theme: igx-grid-filtering-theme(
+    $palette: $midnight-palett,
+    $toggle-icon-color: $midnight-white-70,
+    $toggle-icon-filtered-color: igx-color($midnight-palett, 'secondary', 500),
+    $menu-background: #111,
+    $menu-button-text-color: igx-color($midnight-palett, 'secondary', 500),
+    $toggle-icon-active-color: #000
+);
 
+// PAGINATOR
+$paginator-midnight-theme: igx-grid-paginator-theme(
+    $palette: $midnight-palett,
+    $background-color: $content-background,
+    $text-color: $midnight-white-70
+);
+
+// SUMMARY
+$summary-midnight-theme: igx-grid-summary-theme(
+    $palette: $midnight-palett,
+    $background-color: #111,
+    $label-color: igx-color($midnight-palett, 'secondary', 500)
+);
 
 

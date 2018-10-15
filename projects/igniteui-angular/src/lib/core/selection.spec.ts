@@ -20,8 +20,8 @@ describe('IgxSelectionAPIService', () => {
         }).toThrowError('Invalid value for item id!');
     });
 
-    it('call add_item method with itemID=0', () => {
-        const componentId = 'id1';
+    it("call add_item method with itemID=0", () => {
+        const componentId = "id1";
         service.set(componentId, new Set());
         const newSelection = service.add_item(componentId, 0);
         expect(newSelection.has(0)).toBe(true);
