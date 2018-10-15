@@ -1155,7 +1155,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
                 fixture.detectChanges();
-                // EXPECT focused cell to be 'ReleaseDate'
+                // EXPECT focused cell to be 'Items'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Items');
                 expect(editedCell.inEditMode).toEqual(true);
@@ -1173,23 +1173,115 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
                 fixture.detectChanges();
-                // EXPECT edited cell to be 'Released'
+                // EXPECT edited cell to be 'Downloads'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
             });
             it(`Should skip non-editable columns when column pinning & hiding is enabled`, () => {
-                // TO DO
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.hiddenFlag = true;
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                // jump over 1 hidden, pinned
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump from pinned to unpinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump back to pinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump over 1 hidden, pinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Downloads'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Downloads');
+                expect(editedCell.inEditMode).toEqual(true);
             });
             it(`Should skip non-editable columns when column grouping is enabled`, () => {
-                // TO DO
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.columnGroupingFlag = true;
+                fixture.detectChanges();
+                targetCell = fixture.componentInstance.focusGridCell(0, 'ReleaseDate');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // Should disregards the Igx-Column-Group component
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // Go forwards, jump over Category and group end
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                // Go backwards, jump over group end and return to 'Released'
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // Go to release date
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('ReleaseDate');
+                expect(editedCell.inEditMode).toEqual(true);
             });
-            it(`Should skip non-editable columns when column paging is enabled`, () => {
-                // TO DO
-            });
-            it(`Should skip non-editable columns when column when all column features are enabled`, () => {
-                // TO DO
-            });
+            // fit(`Should skip non-editable columns when column when all column features are enabled`, () => {
+            //     const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+            //     fixture.detectChanges();
+            //     const grid = fixture.componentInstance.grid;
+            //     let targetCell: IgxGridCellComponent;
+            //     let editedCell: IgxGridCellComponent;
+            //     fixture.componentInstance.hiddenFlag = true;
+            //     fixture.componentInstance.pinnedFlag = true;
+            //     fixture.componentInstance.columnGroupingFlag = true;
+            //     fixture.detectChanges();
+            //     debugger;
+            // });
         });
 
         describe('Row Editing - Exit row editing', () => {
@@ -2275,16 +2367,25 @@ export class IgxGridRowEditingWithoutEditableColumnsComponent {
         <igx-column
         field="Downloads" header="Downloads" [dataType]="'number'" [pinned]="pinnedFlag" [editable]="true">
         </igx-column>
-        <igx-column field="ID" header="ID" [dataType]="'number'" [editable]="false" [pinned]="pinnedFlag" width="60px">
+        <igx-column field="ID" header="ID" [dataType]="'number'"
+        [editable]="false" [pinned]="pinnedFlag" [hidden]="hiddenFlag" width="60px">
         </igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
         </igx-column>
         <igx-column field="ReleaseDate" header="Release Date" [dataType]="'date'" [editable]="true" [hidden]="hiddenFlag" width="150px">
         </igx-column>
-        <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
-        </igx-column>
-        <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
-        </igx-column>
+        <igx-column-group [movable]="true" header="Column Group 1" *ngIf="columnGroupingFlag">
+            <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
+            </igx-column>
+            <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
+            </igx-column>
+        </igx-column-group>
+        <ng-container *ngIf="!columnGroupingFlag">
+            <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
+            </igx-column>
+            <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
+            </igx-column>
+        </ng-container>
         <igx-column field="Items" header="Items" [dataType]="'string'" [editable]="true" width="150px">
         </igx-column>
         <igx-column field="Test" header="Test" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
@@ -2296,6 +2397,7 @@ export class IgxGridWithEditingAndFeaturesComponent {
                 Released: boolean, Category: string, Items: string, Test: string. */
     public pinnedFlag = false;
     public hiddenFlag = false;
+    public columnGroupingFlag = false;
     public data = SampleTestData.generateProductData(11);
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
     public moveNext(shiftKey: boolean): void {
