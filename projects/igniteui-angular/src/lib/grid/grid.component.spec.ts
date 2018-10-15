@@ -1605,14 +1605,27 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Summaries', () => {
+        describe('Row Editing - Summaries', () => {
             it(`Should update summaries when editing a row`, () => {
+                const newDate = '01/01/0001';
+
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+                grid.enableSummaries([{ fieldName: 'OrderDate' }]);
+                const targetCell = grid.getCellByColumn(0, 'OrderDate');
 
+                targetCell.inEditMode = true;
+                targetCell.update(newDate);
+                fix.detectChanges();
+                grid.recalculateSummaries();
+
+                // get the summaries for a particular column
+                const summaries = targetCell.gridAPI.get_summaries(targetCell.gridID);
+                const earliestDate = summaries.get('OrderDate')[1].summaryResult.toLocaleDateString();
+
+                expect(earliestDate).toEqual(newDate);
             });
         });
 
@@ -1753,7 +1766,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 targetCell.column.hidden = true;
 
@@ -1761,13 +1774,13 @@ describe('IgxGrid Component Tests', () => {
             });
 
             it(`Should show the updated value when showing the column again`, () => {
-                const targetCbText = 'Product ID';
-                const newValue = '123';
+                const targetCbText = 'Product Name';
+                const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 targetCell.update(newValue);
 
@@ -1785,13 +1798,13 @@ describe('IgxGrid Component Tests', () => {
             });
 
             it(`Should be posible to update a cell that is hidden programatically`, () => {
-                const targetCbText = 'Product ID';
-                const newValue = '123';
+                const targetCbText = 'Product Name';
+                const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                const targetCell = grid.getCellByColumn(0, 'ProductID');
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 targetCell.column.hidden = true;
 
@@ -2131,7 +2144,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
-     width="700px" height="400px" [rowEditable]="true" [paging]="true" [perPage]="7">
+     width="900px" height="600px" [rowEditable]="true" [paging]="true" [perPage]="7">
         <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
                 <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
