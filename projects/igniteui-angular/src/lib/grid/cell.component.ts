@@ -592,7 +592,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
-        this.grid.endRowEdit(commit, close, row);
+        const grid = this.grid;
+        if (grid.rowEditable) {
+            grid.endRowTransaction(commit, close, row);
+        }
     }
 
     private _clearCellSelection() {

@@ -64,7 +64,8 @@ export class IgxBaseTransactionService implements TransactionService {
 
 
     /**
-     * Updates the current state according to passed transaction and recordRef
+     * Updates the provided states collection according to passed transaction and recordRef
+     * @param states States collection to apply the update to
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */

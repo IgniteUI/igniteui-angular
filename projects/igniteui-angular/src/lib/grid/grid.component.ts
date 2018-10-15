@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray, DisplayDensity, isObjectEmpty } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -1618,7 +1618,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 bannerClass = 'igx-banner';
         }
-        bannerClass += this._isRowEditOverlayTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
+        bannerClass += this._isRowEditTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
         return bannerClass;
     }
 
@@ -1799,7 +1799,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowEditable = false;
-    private _isRowEditOverlayTop = false;
+    private _isRowEditTop = false;
+    private _initialRowEditPositionTop = false;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -2278,6 +2279,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+            this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
         });
     }
 
@@ -3046,9 +3048,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public addRow(data: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
-        if (this.rowEditable && !this.rowEditingOverlay.collapsed) { // If there is a row in edit - > commit and close
-            this.endRowEdit(true);
-        }
+        // If there is a row in edit - > commit and close
+        this.endRowEdit(true);
         if (this.transactions.transactionsEnabled()) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
@@ -3075,6 +3076,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public deleteRow(rowSelector: any): void {
+        this.endRowEdit(true);
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
             this.deleteRowById(rowSelector);
         }
@@ -4812,70 +4814,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.nativeElement.focus();
     }
 
+    private changeRowEditingOverlayStateOnScroll(row: IgxGridRowComponent) {
+        if (!row) {
+            this.hideRowEditingOverlay();
+        } else {
+            this.repositionRowEditingOverlay(row);
+        }
+    }
+
     /**
      * @hidden
      */
     public openRowEditingOverlay(row: IgxGridRowComponent) {
         this.transactions.startPending();
-        this.configureRowEditingOverlay(row);
+        this.configureRowEditingOverlay(row, this.showRowEditingTop(row));
+        this._initialRowEditPositionTop = this._isRowEditTop;
         this.rowEditingOverlay.open(this.rowEditingOverlaySettings);
-        this.rowEditingOverlay.element.addEventListener('wheel', (evt) => { this.onRowEditingOverlayScroll(evt); });
-    }
-
-    /**
-     * @hidden
-     */
-    public repositionRowEditingOverlay(row: IgxGridRowComponent) {
-        this.configureRowEditingOverlay(row);
-        if (!this.rowEditingOverlay.collapsed) {
-            this.rowEditingOverlay.reposition();
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public configureRowEditingOverlay(row: IgxGridRowComponent) {
-        if (this.rowEditingOverlaySettings) {
-            this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
-            this.rowEditingOverlaySettings.outlet = this.rowEditingOutletDirective;
-            this.calculateRowChangesCount(row.rowID);
-            const lastIndex = this.rowList.length - 1;
-            const rowList = this.rowList.toArray();
-            if ((row.rowID === rowList[lastIndex].rowID ||
-                row.rowID === rowList[lastIndex - 1].rowID ||
-                row.rowID === rowList[lastIndex - 2].rowID)
-                // if row === rowList[0], then overlay should go to bottom, as otherwise it goes under the grid header
-                && row.rowID !== rowList[0].rowID) {
-                this._isRowEditOverlayTop = true;
-                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
-                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
-            } else {
-                this._isRowEditOverlayTop = false;
-                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Bottom;
-                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Bottom;
-            }
-
-            if (this.rowEditingOverlay.element.style.display === 'none') {
-                this.rowEditingOverlay.element.style.display = 'block';
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public calculateRowChangesCount(rowID) {
-        const rowChanges = this.transactions.getAggregatedValue(rowID, false);
-        const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
-        this.rowEditMessageValue = this.rowEditMessage.replace('{0}', rowChangedCount.toString());
-    }
-
-    /**
-     * @hidden
-     */
-    public hideRowEditingOverlay() {
-        this.rowEditingOverlay.element.style.display = 'none';
+        this.rowEditingOverlay.element.addEventListener('wheel', this._rowEditingWheelHandler.bind(this));
     }
 
     /**
@@ -4888,13 +4843,67 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const value = this.transactions.getAggregatedValue(row.rowID, true);
             this.onRowEditCancel.emit(value);
         }
+        this.rowEditingOverlay.element.removeEventListener('wheel', this._rowEditingWheelHandler);
+        this._isRowEditTop = false;
         this.rowEditingOverlay.close();
+    }
+
+    private showRowEditingOverlay() {
+        this.rowEditingOverlay.element.style.display = 'block';
+    }
+
+    private hideRowEditingOverlay() {
+        this.rowEditingOverlay.element.style.display = 'none';
+    }
+
+    private repositionRowEditingOverlay(row: IgxGridRowComponent) {
+        this.configureRowEditingOverlay(row, this._initialRowEditPositionTop);
+        if (!this.rowEditingOverlay.collapsed) {
+            this.rowEditingOverlay.reposition();
+        }
+    }
+
+    private configureRowEditingOverlay(row: IgxGridRowComponent, showTop = false) {
+        if (this.rowEditingOverlaySettings) {
+            this.rowEditingOverlaySettings.positionStrategy.settings.target = row.element.nativeElement;
+            this.rowEditingOverlaySettings.outlet = this.rowEditingOutletDirective;
+            this.showRowEditingOverlay();
+            this.calculateRowChangesCount(row.rowID);
+            if (showTop) {
+                this._isRowEditTop = true;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Top;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Top;
+            } else {
+                this._isRowEditTop = false;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalDirection = VerticalAlignment.Bottom;
+                this.rowEditingOverlaySettings.positionStrategy.settings.verticalStartPoint = VerticalAlignment.Bottom;
+            }
+        }
+    }
+
+    private showRowEditingTop(row: IgxGridRowComponent) {
+        const lastIndex = this.rowList.length - 1;
+        const rowList = this.rowList.toArray();
+        return (row.rowID === rowList[lastIndex].rowID ||
+            row.rowID === rowList[lastIndex - 1].rowID ||
+            row.rowID === rowList[lastIndex - 2].rowID) &&
+            // if row === rowList[0], then overlay sould go to bottom, as otherwise it goes under the grid header
+            row.rowID !== rowList[0].rowID;
     }
 
     /**
      * @hidden
      */
-    public endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: {rowID: any, rowIndex: number}) {
+    private calculateRowChangesCount(rowID) {
+        const rowChanges = this.transactions.getAggregatedValue(rowID, false);
+        const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
+        this.rowEditMessageValue = this.rowEditMessage.replace('{0}', rowChangedCount.toString());
+    }
+
+    /**
+     * @hidden
+     */
+    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: {rowID: any, rowIndex: number}) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
         const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         if (commit) {
@@ -4903,7 +4912,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.onRowEditCancel.emit(value);
         }
         this.transactions.endPending(commit);
-        if (commit && value && !this.transactions.transactionsEnabled()) {
+        if (commit && value && !isObjectEmpty(value) && !this.transactions.transactionsEnabled()) {
             this.data[rowInEdit.rowIndex] = value;
         }
         if (closeOverlay) {
@@ -4924,7 +4933,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @param commit
      */
     public endRowEdit(commit = true) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+        if (!this.rowEditable  || this.rowEditingOverlay.collapsed) {
             return;
         }
         const row = this.gridAPI.get_row_inEditMode(this.id);
@@ -4940,7 +4949,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    private onRowEditingOverlayScroll(event: WheelEvent) {
+    private _rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {

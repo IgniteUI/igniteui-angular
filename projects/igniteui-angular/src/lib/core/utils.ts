@@ -21,6 +21,12 @@ export function cloneObject(object: any) {
 /**
  *@hidden
  */
+export function isObjectEmpty(object: any) {
+    return Object.keys(object).length === 0 && object.constructor === Object;
+}
+/**
+ *@hidden
+ */
 export const enum KEYCODES {
     ENTER = 13,
     SPACE = 32,

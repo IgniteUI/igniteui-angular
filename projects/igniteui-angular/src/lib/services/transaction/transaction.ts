@@ -120,7 +120,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     }
 
     public undo(): void {
-        if (this._transactions.length <= 0) {
+        if (this._undoStack.length <= 0) {
             return;
         }
         this._transactions.pop();
@@ -159,7 +159,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already deleted.`);
                 }
                 if (!state && !recordRef) {
-                    //  cannot initially transaction or delete item with no recordRef
+                    //  cannot initially add transaction or delete item with no recordRef
                     throw new Error(`Cannot add this transaction. This is first transaction of type ${transaction.type} ` +
                         `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
                 }
@@ -168,7 +168,8 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     }
 
     /**
-     * Updates the current state according to passed transaction and recordRef
+     * Updates the provided states collection according to passed transaction and recordRef
+     * @param states States collection to apply the update to
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
@@ -212,13 +213,15 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             states.set(transaction.id, state);
         }
 
+        //  should not clean pending state. This will happen automatically on endPending call
         if (!this._isPending) {
             this.cleanState(transaction.id, states);
         }
     }
 
     /**
-     * Compares the state with recordRef and removes all
+     * Compares the state with recordRef and clears all duplicated values. If any state ends as
+     * empty object removes it from states.
      * @param state State to clean
      */
     protected cleanState(id: any, states: Map<any, State>): void {
