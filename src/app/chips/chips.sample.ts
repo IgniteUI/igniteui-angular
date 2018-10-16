@@ -4,7 +4,7 @@ import { IChipSelectEventArgs, IChipsAreaReorderEventArgs, IBaseChipEventArgs } 
 
 @Component({
     selector: 'app-chips-sample',
-    styleUrls: ['chips.sample.css', '../app.component.css'],
+    styleUrls: ['chips.sample.scss', '../app.component.css'],
     templateUrl: 'chips.sample.html'
 })
 export class ChipsSampleComponent {
@@ -16,10 +16,26 @@ export class ChipsSampleComponent {
     ];
 
     public chipListTo = [
-        { id: '1', text: 'Allen' },
-        { id: '2', text: 'George' },
-        { id: '3', text: 'Jason' },
-        { id: '4', text: 'Dean' },
+        {
+            id: '1',
+            text: 'Allen',
+            picture: '../../assets/images/avatar/1.jpg'
+        },
+        {
+            id: '2',
+            text: 'George',
+            picture: '../../assets/images/avatar/2.jpg'
+        },
+        {
+            id: '3',
+            text: 'Jessica',
+            picture: '../../assets/images/avatar/3.jpg'
+        },
+        {
+            id: '4',
+            text: 'Dana',
+            picture: '../../assets/images/avatar/4.jpg'
+        },
     ];
 
     public chipListCc = [];
@@ -27,19 +43,19 @@ export class ChipsSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsAreaTo', { read: IgxChipsAreaComponent })
     public chipsAreaTo: IgxChipsAreaComponent;
 
-    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsAreaCc', { read: IgxChipsAreaComponent })
     public chipsAreaCc: IgxChipsAreaComponent;
 
-    @ViewChild('dropTo', { read: ElementRef})
+    @ViewChild('dropTo', { read: ElementRef })
     public dropTo: ElementRef;
 
-    @ViewChild('dropCc', { read: ElementRef})
+    @ViewChild('dropCc', { read: ElementRef })
     public dropCc: ElementRef;
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -64,6 +80,10 @@ export class ChipsSampleComponent {
             return item.id !== event.owner.id;
         });
         this.cdr.detectChanges();
+    }
+
+    removeChip(chip: IgxChipComponent) {
+        chip.elementRef.nativeElement.remove();
     }
 
     selectChip(chipId) {
