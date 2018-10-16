@@ -5,12 +5,12 @@
 {{> comment}}
 
 {{#if typeParameters}}
-    <h4 class="tsd-type-parameters-title">Type parameters</h4>
+    <h4 class="tsd-type-parameters-title">{{#localize}}Type parameters{{/localize}}</h4>
     {{> typeParameters}}
 {{/if}}
 
 {{#if parameters}}
-    <h4 class="tsd-parameters-title">Parameters</h4>
+    <h4 class="tsd-parameters-title">{{#localize}}Parameters{{/localize}}</h4>
     <ul class="tsd-parameters">
         {{#each parameters}}
             <li>
@@ -42,7 +42,7 @@
 {{/if}}
 
 {{#if type}}
-    <h4 class="tsd-returns-title">Returns {{#with type}}{{>type}}{{/with}}</h4>
+    <h4 class="tsd-returns-title"><span>{{#localize}}Returns{{/localize}}</span> {{#with type}}{{>type}}{{/with}}</h4>
 
     {{#if comment.returns}}
         {{#markdown}}{{{comment.returns}}}{{/markdown}}
