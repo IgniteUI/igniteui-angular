@@ -145,6 +145,14 @@ public deleteRow(event) {
 }
 ```
 
+- Аdd cell template to allow cells to grow according to their content.
+
+```
+        <ng-template igxCell let-cell="cell" let-val>
+        {{val}}
+        </ng-template>
+```
+
 ## API
 
 ### Inputs

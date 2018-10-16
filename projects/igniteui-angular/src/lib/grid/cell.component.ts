@@ -337,6 +337,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     /**
+ * @hidden
+ */
+    @HostBinding('style.min-height.px')
+    get cellHeight() {
+        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
+        return this.grid.rowHeight - rowOffsetH;
+    }
+
+    /**
      * Gets whether the cell is in edit mode.
      * If `true`, the `"igx_grid__cell--edit"` class is added to the cell.
      * ```typescript

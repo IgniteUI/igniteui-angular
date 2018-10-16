@@ -82,7 +82,9 @@ export class IgxGridAPIService {
         const lastEditRow = this.lastRowInEdit;
         if (grid.rowEditable) {
             if (lastEditRow && lastEditRow.rowID !== cell.cellID.rowID) {
-                grid.closeRowEditingOverlay(true);
+                if (!grid.rowEditingOverlay.collapsed) {
+                    grid.closeRowEditingOverlay(true);
+                }
                 grid.openRowEditingOverlay(cell.row);
             } else if (grid.rowEditingOverlay.collapsed) {
                 grid.openRowEditingOverlay(cell.row);
