@@ -55,6 +55,7 @@ import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpr
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;

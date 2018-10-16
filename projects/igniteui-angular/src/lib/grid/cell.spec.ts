@@ -931,8 +931,9 @@ describe('IgxGrid - Cell component', () => {
         const grid = fix.componentInstance.instance;
         const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
         const cell = rows[3].querySelectorAll('igx-grid-cell')[1];
+        const bottomRowHeight = rows[4].offsetHeight;
         const displayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
-        const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % grid.rowHeight;
+        const bottomCellVisibleHeight = displayContainer.parentElement.offsetHeight % bottomRowHeight;
 
         cell.dispatchEvent(new Event('focus'));
         await wait(50);
