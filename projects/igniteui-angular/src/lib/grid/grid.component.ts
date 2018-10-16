@@ -396,6 +396,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     private collapsedHighlightedItem: any = null;
+    private _destroyed = false;
 
     /**
      * An @Input property that determines whether created groups are rendered expanded or collapsed.
@@ -2247,6 +2248,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.destroy$.next(true);
         this.destroy$.complete();
         this.gridAPI.unset(this.id);
+        this._destroyed = true;
     }
 
     /**
@@ -2259,7 +2261,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public chunkGenerated(event) {
         this.calcHeight = event > 0 ? event : this.rowHeight;
         requestAnimationFrame(() => {
-            this.reflow();
+            if (!this._destroyed) {
+                this.reflow();
+            }
         });
     }
 
