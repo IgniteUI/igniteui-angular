@@ -1,5 +1,6 @@
 ﻿<div #chipArea class="igx-chip__item"
-    tabindex="0"
+    [attr.tabindex]="chipTabindex"
+    (keydown)="onChipKeyDown($event)"
     [igxDrag]="{chip: this}"
     [hideBaseOnDrag]="true"
     [animateOnRelease]="true"

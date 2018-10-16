@@ -130,13 +130,13 @@ export class IgxChipComponent {
     public class = '';
 
     /**
-     * An @Input property that defines if the `IgxChipComponent` is disabled.
+     * An @Input property that defines if the `IgxChipComponent` is disabled. When disabled it restricts user interactions
+     * like focusing on click or tab, selection on click or Space, dragging.
      * By default it is set to false.
      * ```html
      * <igx-chip [id]="chip.id" [disabled]="true"></igx-chip>
      * ```
      */
-    @HostBinding('class.igx-chip--disabled')
     @Input()
     public disabled = false;
 
@@ -352,6 +352,7 @@ export class IgxChipComponent {
             default:
                 classes.push('igx-chip');
         }
+        classes.push(this.disabled ? 'igx-chip--disabled' : '');
         // The custom classes should be at the end.
         classes.push(this.class);
         return classes.join(' ');
@@ -409,6 +410,10 @@ export class IgxChipComponent {
         }
     }
 
+    public get chipTabindex() {
+        return !this.disabled ? 0 : '';
+    }
+
     protected _displayDensity = DisplayDensity.comfortable;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
@@ -457,7 +462,6 @@ export class IgxChipComponent {
     /**
      * @hidden
      */
-    @HostListener('keydown', ['$event'])
     public onChipKeyDown(event: KeyboardEvent) {
         const keyDownArgs: IChipKeyDownEventArgs = {
             originalEvent: event,
@@ -477,7 +481,7 @@ export class IgxChipComponent {
             });
         }
 
-        if ((event.key === ' ' || event.key === 'Spacebar') && this.selectable) {
+        if ((event.key === ' ' || event.key === 'Spacebar') && this.selectable && !this.disabled) {
             this.changeSelection(!this.selected, event);
         }
 
@@ -543,7 +547,7 @@ export class IgxChipComponent {
             originalEvent: event.originalEvent,
             owner: this
         });
-        event.cancel = !this.draggable;
+        event.cancel = !this.draggable || this.disabled;
     }
 
     /**
@@ -579,7 +583,7 @@ export class IgxChipComponent {
         };
         this.onClick.emit(clickEventArgs);
 
-        if (!clickEventArgs.cancel && this.selectable) {
+        if (!clickEventArgs.cancel && this.selectable && !this.disabled) {
             this.changeSelection(!this.selected, event.originalEvent);
         }
     }

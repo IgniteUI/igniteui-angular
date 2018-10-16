@@ -9,10 +9,10 @@ import { IChipSelectEventArgs, IChipsAreaReorderEventArgs, IBaseChipEventArgs } 
 })
 export class ChipsSampleComponent {
     public chipList = [
-        { id: 'Country', text: 'Country' },
-        { id: 'City', text: 'City' },
-        { id: 'Town', text: 'Town' },
-        { id: 'FirstName', text: 'First Name' },
+        { id: 'Country', text: 'Country', disabled: false },
+        { id: 'City', text: 'City', disabled: true },
+        { id: 'Town', text: 'Town', disabled: false },
+        { id: 'FirstName', text: 'First Name', disabled: false },
     ];
 
     public chipListTo = [

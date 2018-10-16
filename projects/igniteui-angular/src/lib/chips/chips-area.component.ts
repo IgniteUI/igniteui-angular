@@ -206,7 +206,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false, event.originalEvent);
                 if (orderChanged) {
                     setTimeout(() => {
-                        this.chipsList.toArray()[dragChipIndex - 1].elementRef.nativeElement.focus();
+                        this.chipsList.toArray()[dragChipIndex - 1].chipArea.nativeElement.focus();
                     });
                 }
             } else if (event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') {
@@ -214,10 +214,10 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             }
         } else {
             if ((event.originalEvent.key === 'ArrowLeft' || event.originalEvent.key === 'Left') && dragChipIndex > 0) {
-                chipsArray[dragChipIndex - 1].elementRef.nativeElement.focus();
+                chipsArray[dragChipIndex - 1].chipArea.nativeElement.focus();
             } else if ((event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') &&
                         dragChipIndex < chipsArray.length - 1) {
-                chipsArray[dragChipIndex + 1].elementRef.nativeElement.focus();
+                chipsArray[dragChipIndex + 1].chipArea.nativeElement.focus();
             }
         }
     }

@@ -80,6 +80,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     const CHIP = 'igx-chip';
+    const CHIP_ITEM = 'igx-chip__item';
     const CHIP_PREFIX = 'igx-chip__prefix';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
@@ -127,7 +128,7 @@ describe('IgxChip', () => {
         const chipRemoveButton = chipElems[1].queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
 
         // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
-        expect(chipElems[1].nativeElement.children[0].children.length).toEqual(3);
+        expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
         expect(chipRemoveButton).toBeTruthy();
     });
 
@@ -137,11 +138,11 @@ describe('IgxChip', () => {
 
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
         spyOn(firstChipComp.onRemove, 'emit');
-        firstChipComp.elementRef.nativeElement.focus();
+        firstChipComp.chipArea.nativeElement.focus();
 
-        const focusedElems = firstChipComp.elementRef.nativeElement.parentElement.querySelectorAll(':focus');
+        const focusedElems = firstChipComp.elementRef.nativeElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP);
+        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
@@ -158,16 +159,16 @@ describe('IgxChip', () => {
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
         spyOn(secondChipComp.onRemove, 'emit');
-        secondChipComp.elementRef.nativeElement.focus();
+        secondChipComp.chipArea.nativeElement.focus();
 
-        const focusedElems = secondChipComp.elementRef.nativeElement.parentElement.querySelectorAll(':focus');
+        const focusedElems = secondChipComp.elementRef.nativeElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP);
+        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
         });
-        secondChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
 
         expect(secondChipComp.onRemove.emit).toHaveBeenCalled();
@@ -404,12 +405,12 @@ describe('IgxChip', () => {
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
-        secondChipComp.elementRef.nativeElement.focus();
+        secondChipComp.chipArea.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
-        secondChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
+        secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
     });
