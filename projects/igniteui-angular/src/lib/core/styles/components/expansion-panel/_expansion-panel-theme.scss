@@ -156,6 +156,8 @@
         justify-content: center;
         user-select: none;
 
+        color: --var($theme, 'header-icon-color');
+
         igx-icon {
             color: --var($theme, 'header-icon-color');
         }

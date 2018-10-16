@@ -208,7 +208,17 @@
 
         variant: $variant
     ));
+
+    @if not($placeholder-color) and $box-background {
+        $placeholder-color: text-contrast($box-background);
+    }
+
+    @if not($placeholder-color) and $search-background {
+        $placeholder-color: text-contrast($search-background);
+    }
 }
+
+
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars

@@ -69,6 +69,10 @@
         $selected-text-color: text-contrast($active-item-background);
     }
 
+    //@if not($active-item-background) and $background-color {
+    //    $active-item-background: lighten($background-color, 5%);
+    //}
+
     @return extend($default-theme, (
         palette: $palette,
         text-color: $text-color,

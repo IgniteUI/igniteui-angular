@@ -2,25 +2,26 @@
     margin-top: 24px;
 }
 
-[igxButton]+[igxButton] {
+[igxButton] + [igxButton] {
     margin-left: 8px;
 }
 
-
-:host::ng-deep {
+:host ::ng-deep {
     .test1 {
         color: red;
-        font-weight: bold;
+        font-weight: 900;
         background-color: yellow;
     }
+
     .test2 {
         color: blue;
-        font-weight: bold;
+        font-weight: 900;
         background-color: salmon;
     }
+
     .test3 {
-        color: black !important;
-        font-weight: bold !important;
-        background-color: greenyellow !important;
+        color: black;
+        font-weight: 900;
+        background-color: greenyellow;
     }
 }

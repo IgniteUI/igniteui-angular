@@ -86,6 +86,10 @@
         $item-text-color: text-contrast($item-background);
     }
 
+    @if not($item-hover-color) and $item-background {
+        $item-hover-color: text-contrast($item-background);
+    }
+
     @if not($item-hover-color) and $item-hover-background {
         $item-hover-color: text-contrast($item-hover-background);
     }
@@ -263,6 +267,10 @@
 
         %igx-tabs__header-menu-item-icon {
             color: --var($theme, 'item-active-icon-color');
+
+            igx-icon {
+                color: --var($theme, 'item-active-icon-color');
+            }
         }
     }
 

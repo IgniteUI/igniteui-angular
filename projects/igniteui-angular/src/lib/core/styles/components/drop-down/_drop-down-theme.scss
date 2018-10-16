@@ -67,15 +67,14 @@
         hover-item-background: igx-color($palette, 'grays', 100),
         focused-item-background: igx-color($palette, 'grays', 100),
         focused-item-text-color: igx-color($palette, 'grays', 800),
-
-        selected-item-background: igx-color($palette, 'secondary', 200),
+        selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         selected-hover-item-background: igx-color($palette, 'secondary', 300),
-        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 600),
+        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         selected-focus-item-background: igx-color($palette, 'secondary', 300),
-        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 600),
+        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         disabled-item-background: transparent,
         disabled-item-text-color: igx-color($palette, 'grays', 500)
