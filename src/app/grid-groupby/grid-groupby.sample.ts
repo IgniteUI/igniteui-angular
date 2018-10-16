@@ -1,7 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 
 import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
-import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
+import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { detectChanges } from '@angular/core/src/render3';
 
 @Component({
