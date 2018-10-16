@@ -9,7 +9,8 @@ module.exports = function (config) {
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
       { pattern: './test.css', watched: false },
-      { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
+      { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false },
+      { pattern: '../../src/app/shared/remote.combo.service.js', watched: false }
     ],
     plugins: [
       require('karma-jasmine'),
