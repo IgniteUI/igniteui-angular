@@ -1,4 +1,5 @@
 ﻿import {
+    AfterViewInit,
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -7,7 +8,6 @@
     Input,
     Output,
     ViewChild,
-    AfterViewInit,
     Renderer2
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
