@@ -65,6 +65,7 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;

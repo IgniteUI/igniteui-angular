@@ -160,7 +160,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(30);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1500px');
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1529px');
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             grid.height = '200px';
@@ -604,7 +604,7 @@ describe('IgxGrid Component Tests', () => {
             const recsCount = grid.data.length;
 
             // tbody should have height equal to all items * item height
-            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
+            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51 - 1);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
