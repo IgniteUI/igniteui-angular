@@ -1076,11 +1076,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
         /**
-     * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
-     * Returns the `ISortingExpression` related to the grouping/ungrouping operation.
+     * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped.
+     * The `onGroupingDone` event would be raised only once if the groupby() API method gets called and an array of columns
+     * gets passed as a parameter.
+     * The event arguments provide the "expressions" and "columns" properties, which contain the `ISortingExpression`
+     * and the `IgxColumnComponents` related to the grouping/ungrouping operation
      * ```typescript
      * groupingDone(event: IGroupingDoneEventArgs){
-     *     const grouping = event;
+     *     const expressions = event.expressions;
+     *     const columns = event.columns
      * }
      * ```
      * ```html
@@ -2898,8 +2902,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Groups by a new `IgxColumnComponent` based on the provided expression or modifies an existing one.
-     * Also allows for multiple columns to be grouped at once if an array of sorting expressions is passed.
+     * Groups by a new `IgxColumnComponent` based on the provided expression, or modifies an existing one.
+     * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
+     * The onGroupingDone event would get raised only **once** if this method gets called multiple times with the same arguments.
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * this.grid.groupBy([
