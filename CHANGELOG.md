@@ -37,7 +37,16 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - **Breaking change** Move the location of where the chip `suffix` is positioned. Now it is between the content and the `remove button` making the button last  element if visible by defautl.
+    - **Breaking change** Remove the chip `connector` rendered when using the `igxConnector` directive that is also removed.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
+    - Added `data` input for storing any data related to the chip itself.
+    - Added `select icon` with show/hide animation to indicate when a chip is being selected with ability to customize it while retaining the chip Material Design styling.
+    - Added `selectIcon` input to set custom template for the `select icon`.
+    - Update chip styling to match Material Design guidelines.
+    - Rework of the chip content styling so now by default text inside is styled to match the chip Material Design styling.
+    - Rework of the `remove button` rendered and now has the ability to customize its icon while retaining the chip Material Design.
+        - Added `removeIcon` input so a custom template cane be set for the remove button icon.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
