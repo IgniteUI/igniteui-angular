@@ -26,6 +26,9 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('virtDirRemote', { read: IgxForOfDirective })
     virtDirRemote: IgxForOfDirective<any>;
 
+    @ViewChild('virtDirVariableVertical', { read: IgxForOfDirective })
+    virtDirVariableVertical: IgxForOfDirective<any>;
+
     constructor(private remoteService: RemoteService) {
         this.remoteService.urlBuilder = (dataState) => {
             let qS = `?`;
@@ -50,7 +53,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '770-504-2217',
             text: 'Terrance Orta',
-            width: 100
+            width: 100,
+            height: 100
         }, {
             key: 2,
             avatar: 'assets/images/avatar/2.jpg',
@@ -58,7 +62,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '423-676-2869',
             text: 'Richard Mahoney',
-            width: 200
+            width: 200,
+            height: 200
         }, {
             key: 3,
             avatar: 'assets/images/avatar/3.jpg',
@@ -66,7 +71,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '859-496-2817',
             text: 'Donna Price',
-            width: 300
+            width: 300,
+            height: 300
         }, {
             key: 4,
             avatar: 'assets/images/avatar/4.jpg',
@@ -74,7 +80,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '901-747-3428',
             text: 'Lisa Landers',
-            width: 200
+            width: 200,
+            height: 200
         }, {
             key: 5,
             avatar: 'assets/images/avatar/12.jpg',
@@ -82,7 +89,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '573-394-9254',
             text: 'Dorothy H. Spencer',
-            width: 200
+            width: 200,
+            height: 200
         }, {
             key: 6,
             avatar: 'assets/images/avatar/13.jpg',
@@ -90,7 +98,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '323-668-1482',
             text: 'Stephanie May',
-            width: 100
+            width: 100,
+            height: 100
         }, {
             key: 7,
             avatar: 'assets/images/avatar/14.jpg',
@@ -98,7 +107,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '401-661-3742',
             text: 'Marianne Taylor',
-            width: 100
+            width: 100,
+            height: 100
         }, {
             key: 8,
             avatar: 'assets/images/avatar/15.jpg',
@@ -106,7 +116,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '662-374-2920',
             text: 'Tammie Alvarez',
-            width: 300
+            width: 300,
+            height: 300
         }, {
             key: 9,
             avatar: 'assets/images/avatar/16.jpg',
@@ -114,7 +125,8 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '240-455-2267',
             text: 'Charlotte Flores',
-            width: 200
+            width: 200,
+            height: 200
         }, {
             key: 10,
             avatar: 'assets/images/avatar/17.jpg',
@@ -122,9 +134,10 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             link: '#',
             phone: '724-742-0979',
             text: 'Ward Riley',
-            width: 100
+            width: 100,
+            height: 100
         }];
-        for (let i = 10; i < 1e5; i++) {
+        for (let i = 10; i < 1e6; i++) {
             const obj = Object.assign({}, data[i % 10]);
             obj['key'] = i;
             data.push(obj);
@@ -184,6 +197,10 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     scrHorizontalScrollTo(index) {
         this.virtDirHorizontal.scrollTo(index);
+    }
+
+    trackByKey(index, item) {
+        return item.key;
     }
 
 }

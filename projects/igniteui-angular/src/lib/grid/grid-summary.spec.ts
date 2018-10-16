@@ -424,16 +424,17 @@ describe('IgxGrid - Summaries', () => {
 
         rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
         tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
 
         expect(rowsRendered.length).toEqual(expectedRowLenght);
         grid.disableSummaries(summariedColumns);
+        fixture.detectChanges();
         await wait(50);
         fixture.detectChanges();
 
         rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
         tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
 
         fixture.detectChanges();
         const firstCells = rowsRendered.map((item) => {
@@ -464,7 +465,7 @@ describe('IgxGrid - Summaries', () => {
 
         rowsRendered = fixture.nativeElement.querySelectorAll('igx-grid-row');
         tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
         expect(rowsRendered.length).toEqual(expectedRowLenght);
 
         grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
@@ -473,7 +474,7 @@ describe('IgxGrid - Summaries', () => {
 
         rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
         tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
 
         firstCellsText = rowsRendered.map((item) => {
             return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
@@ -491,7 +492,7 @@ describe('IgxGrid - Summaries', () => {
 
         rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
         tbody = grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().height;
-        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight);
+        expectedRowLenght = Math.ceil(parseFloat(tbody) / grid.defaultRowHeight) + 1;
 
         firstCellsText = rowsRendered.map((item) => {
             return item.querySelectorAll('igx-grid-cell')[0].textContent.trim();
