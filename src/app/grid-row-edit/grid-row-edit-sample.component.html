@@ -35,7 +35,7 @@
             </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
-                    [rowEditable]="true"  [paging]="true" [perPage]="10">
+                    [rowEditable]="true"  [paging]="true" [perPage]="10" (onRowEditDone)="rowEditDone($event)" (onRowEditCancel)="rowEditCancel($event)">
                     <igx-column width="100px" [editable]="false" >
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>

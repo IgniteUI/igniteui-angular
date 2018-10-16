@@ -160,7 +160,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(30);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1500px');
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1529px');
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             grid.height = '200px';
@@ -604,7 +604,7 @@ describe('IgxGrid Component Tests', () => {
             const recsCount = grid.data.length;
 
             // tbody should have height equal to all items * item height
-            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 50);
+            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51 - 1);
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
@@ -1225,7 +1225,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
             });
-            it(`Should skip non-editable columns when column grouping is enabled`, () => {
+            it(`Should skip non-editable columns when column grouping is enabled`, (async () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -1247,6 +1247,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
+                await wait(DEBOUNCETIME);
                 fixture.detectChanges();
                 // EXPECT focused cell to be 'Items'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1261,6 +1262,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Released');
                 expect(editedCell.inEditMode).toEqual(true);
+                await wait(DEBOUNCETIME);
                 // Go to release date
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
@@ -1269,19 +1271,51 @@ describe('IgxGrid Component Tests', () => {
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('ReleaseDate');
                 expect(editedCell.inEditMode).toEqual(true);
+            }));
+            it(`Should skip non-editable columns when column when all column features are enabled`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.hiddenFlag = true;
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.componentInstance.columnGroupingFlag = true;
+                fixture.detectChanges();
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // Move from Downloads over hidden to Released in Column Group
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // Move from pinned 'Released' (in Column Group) to unpinned 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // Move back to pinned 'Released' (in Column Group)
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // Move back to pinned 'Downloads'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Downloads');
+                expect(editedCell.inEditMode).toEqual(true);
             });
-            // fit(`Should skip non-editable columns when column when all column features are enabled`, () => {
-            //     const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
-            //     fixture.detectChanges();
-            //     const grid = fixture.componentInstance.grid;
-            //     let targetCell: IgxGridCellComponent;
-            //     let editedCell: IgxGridCellComponent;
-            //     fixture.componentInstance.hiddenFlag = true;
-            //     fixture.componentInstance.pinnedFlag = true;
-            //     fixture.componentInstance.columnGroupingFlag = true;
-            //     fixture.detectChanges();
-            //     debugger;
-            // });
         });
 
         describe('Row Editing - Exit row editing', () => {
@@ -2098,6 +2132,105 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
+        describe('Row Editing - Events', () => {
+            it(`Should properly emit 'onRowEditDone' event - Button Click`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const component = fixture.componentInstance;
+                const initialRow = grid.getRowByKey(0);
+                let targetCell: IgxGridCellComponent;
+                spyOn(grid.onRowEditCancel, 'emit');
+                spyOn(grid.onRowEditDone, 'emit');
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.inEditMode = true;
+                component.cellInEditMode.editValue = 1337;
+                fixture.detectChanges();
+                // On button click
+                fixture.debugElement.queryAll(By.css('.igx-button--flat'))[1].nativeElement.click();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
+                    oldValue: initialRow.rowData,
+                    row: initialRow,
+                });
+            });
+            it(`Should properly emit 'onRowEditCancel' event - Button Click`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const component = fixture.componentInstance;
+                const initialRow = grid.getRowByKey(0);
+                let targetCell: IgxGridCellComponent;
+                spyOn(grid.onRowEditCancel, 'emit');
+                spyOn(grid.onRowEditDone, 'emit');
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.inEditMode = true;
+                component.cellInEditMode.editValue = 1337;
+                fixture.detectChanges();
+                // On button click
+                fixture.debugElement.queryAll(By.css('.igx-button--flat'))[0].nativeElement.click();
+                expect(grid.onRowEditCancel.emit).toHaveBeenCalled();
+                expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
+                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
+                    oldValue: initialRow.rowData,
+                    row: initialRow,
+                });
+            });
+            it(`Should properly emit 'onRowEditDone' event - Filtering`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const component = fixture.componentInstance;
+                const initialRow = grid.getRowByKey(0);
+                let targetCell: IgxGridCellComponent;
+                spyOn(grid.onRowEditDone, 'emit');
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.inEditMode = true;
+                component.cellInEditMode.editValue = 1337;
+                fixture.detectChanges();
+                // On button click
+                grid.filter('Downloads', 1330, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
+                fixture.detectChanges();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
+                    oldValue: initialRow.rowData,
+                    row: initialRow,
+                });
+            });
+            it(`Should properly emit 'onRowEditDone' event - Sorting`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const component = fixture.componentInstance;
+                const initialRow = grid.getRowByKey(0);
+                let targetCell: IgxGridCellComponent;
+                spyOn(grid.onRowEditDone, 'emit');
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.inEditMode = true;
+                component.cellInEditMode.editValue = 1337;
+                fixture.detectChanges();
+                // On button click
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                fixture.detectChanges();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
+                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
+                    oldValue: initialRow.rowData,
+                    row: initialRow,
+                });
+            });
+        });
+
         it('Default column editable value is true, when row editing is enabled', () => {
             const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
             fixture.detectChanges();
@@ -2535,5 +2668,13 @@ export class IgxGridWithEditingAndFeaturesComponent {
         const grid = this.grid as any;
         const currentCell = grid.gridAPI.get_cell_inEditMode(this.grid.id);
         return this.grid.getCellByColumn(currentCell.cellID.rowIndex, currentCell.cell.column.field);
+    }
+
+    public get gridAPI() {
+        return (<any>this.grid).gridAPI;
+    }
+
+    public get cellInEditMode() {
+        return this.gridAPI.get_cell_inEditMode(this.grid.id).cell;
     }
 }
