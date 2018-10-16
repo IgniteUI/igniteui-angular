@@ -7,14 +7,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            // "program": "${workspaceFolder}\\extras\\docs\\themes\\sassdoc\\index.js",
-            "program": "${workspaceFolder}/node_modules/sassdoc/bin/sassdoc",
+            "name": "Launch Node migration tests",
             "args": [
-                // "sassdoc",
-                "projects/igniteui-angular/src/lib/core/styles",
-                // "--local",
-                // "en"
+                "-r",
+                "ts-node/register",
+                "./node_modules/jasmine/bin/jasmine.js",
+                "./projects/igniteui-angular/migrations/common/UpdateChanges.spec.ts"
             ]
         }
     ]

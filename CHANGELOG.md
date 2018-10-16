@@ -4,11 +4,14 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.0
 - `igxIcon`:
-    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. This means that the icon name should be explicitly defined between the opening and closing tags.
-    - Added support for custom SVG icons.
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
+    - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - `igxGrid`:
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
+    - Exposing a mechanism for cells to grow according to their content.
+- `igxFor`
+    - Added support for variable heights.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`:
     - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.

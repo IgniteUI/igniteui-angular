@@ -14,6 +14,7 @@ export class UpdateChanges {
     protected outputChanges: BindingChanges;
     protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
+    protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
 
     private _templateFiles: string[] = [];
     public get templateFiles(): string[] {
@@ -90,6 +91,11 @@ export class UpdateChanges {
                 this.updateClasses(entryPath);
             }
         }
+    }
+
+    /** Add condition funtion. */
+    public addCondition(conditionName: string, callback: (ownerMatch: string) => boolean) {
+        this.conditionFunctions.set(conditionName, callback);
     }
 
     protected updateSelectors(entryPath: string) {
@@ -170,6 +176,7 @@ export class UpdateChanges {
             let replace;
             let groups = 1;
             let searchPattern;
+
             if (type === BindingType.output) {
                 base = String.raw`\(${change.name}\)`;
                 replace = `(${change.replaceWith})`;
@@ -180,7 +187,7 @@ export class UpdateChanges {
             }
 
             let reg = new RegExp(base, 'g');
-            if (change.remove) {
+            if (change.remove || change.moveBetweenElementTags) {
                 // Group match (\1) as variable as it looks like octal escape (error in strict)
                 reg = new RegExp(String.raw`\s*${base}=(["']).*?${'\\' + groups}(?=\s|\>)`, 'g');
                 replace = '';
@@ -197,6 +204,15 @@ export class UpdateChanges {
             const matches = fileContent.match(new RegExp(searchPattern, 'g'));
 
             for (const match of matches) {
+                if (!this.areConditionsFulfiled(match, change.conditions)) {
+                    continue;
+                }
+
+                if (change.moveBetweenElementTags) {
+                    const moveMatch = match.match(reg);
+                    fileContent = this.copyPropertyValueBetweenElementTags(fileContent, match, moveMatch);
+                }
+
                 fileContent = fileContent.replace(
                     match,
                     match.replace(reg, replace)
@@ -207,6 +223,39 @@ export class UpdateChanges {
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);
         }
+    }
+
+    private areConditionsFulfiled(match: string, conditions: string[]): boolean {
+        if (conditions) {
+            for (const condition of conditions) {
+                if (this.conditionFunctions && this.conditionFunctions.has(condition)) {
+                    const callback = this.conditionFunctions.get(condition);
+                    if (callback && !callback(match)) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private copyPropertyValueBetweenElementTags(fileContent: string, ownerMatch: string, propertyMatchArray: RegExpMatchArray): string {
+        if (ownerMatch && propertyMatchArray && propertyMatchArray.length > 0) {
+            const propMatch = propertyMatchArray[0].trim();
+            const propValueMatch = propMatch.match(new RegExp(`=(["'])(.+?)${'\\1'}`));
+            if (propValueMatch && propValueMatch.length > 0) {
+                const propValue = propValueMatch[propValueMatch.length-1];
+
+                if (propMatch.startsWith('[')) {
+                    return fileContent.replace(ownerMatch, ownerMatch + `{{${propValue}}}`);
+                } else {
+                    return fileContent.replace(ownerMatch, ownerMatch + propValue);
+                }
+            }
+        }
+
+        return fileContent;
     }
 
     private sourceDirsVisitor(visitor: FileVisitor) {

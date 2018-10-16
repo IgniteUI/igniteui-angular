@@ -1,5 +1,4 @@
-import { Component, ElementRef, forwardRef, ViewChild } from '@angular/core';
-
+import { Component, forwardRef, ViewChild } from '@angular/core';
 import {
     async,
     TestBed
@@ -39,19 +38,19 @@ describe('IgxHighlight', () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         let count = component.highlightText('a');
-        fix.detectChanges();
+
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(4);
         expect(count).toBe(4);
 
         count = component.highlightText('AM');
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(1);
         expect(count).toBe(1);
 
         count = component.highlightText('amxsxd');
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
@@ -63,13 +62,13 @@ describe('IgxHighlight', () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         let count = component.highlightText('Lorem', true);
-        fix.detectChanges();
+
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(1);
         expect(count).toBe(1);
 
         count = component.highlightText('quisque', true);
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
@@ -81,19 +80,19 @@ describe('IgxHighlight', () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         let count = component.highlightText('Lorem', false, true);
-        fix.detectChanges();
+
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
 
         count = component.highlightText('Lorem', false, false);
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(2);
         expect(count).toBe(2);
 
         count = component.highlightText('Lorem', true, true);
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
@@ -108,7 +107,7 @@ describe('IgxHighlight', () => {
             'LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
             ' Quisque sed suscipit lorem. Vestibulum sit.',
             false, true);
-        fix.detectChanges();
+
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(1);
         expect(count).toBe(1);
@@ -125,13 +124,13 @@ describe('IgxHighlight', () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         const count = component.highlightText('a');
-        fix.detectChanges();
+
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(4);
         expect(count).toBe(4);
 
         component.clearHighlight();
-        fix.detectChanges();
+
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
     });
@@ -144,12 +143,12 @@ describe('IgxHighlight', () => {
         const originalTextContent = component.textContent;
 
         component.highlightText('Lorem');
-        fix.detectChanges();
+
         const loremText = component.textContent;
         expect(loremText).toBe(originalTextContent);
 
         component.clearHighlight();
-        fix.detectChanges();
+
         const clearedText = component.textContent;
         expect(clearedText).toBe(originalTextContent);
     });
@@ -161,7 +160,7 @@ describe('IgxHighlight', () => {
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         component.highlightText('a');
         component.activate(0);
-        fix.detectChanges();
+
 
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         let activeSpan = fix.debugElement.nativeElement.querySelector('.' + component.activeHighlightClass);
@@ -169,7 +168,7 @@ describe('IgxHighlight', () => {
         expect(activeSpan).toBe(spans[0]);
 
         component.activate(1);
-        fix.detectChanges();
+
 
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         activeSpan = fix.debugElement.nativeElement.querySelector('.' + component.activeHighlightClass);
@@ -194,30 +193,30 @@ describe('IgxHighlight', () => {
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
         component.highlightText('a');
-        fix.detectChanges();
+
 
         let count = component.highlightText(null);
-        fix.detectChanges();
+
 
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
 
         component.highlightText('a');
-        fix.detectChanges();
+
 
         count = component.highlightText(undefined);
-        fix.detectChanges();
+
 
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
         expect(count).toBe(0);
 
         component.highlightText('a');
-        fix.detectChanges();
+
 
         count = component.highlightText('');
-        fix.detectChanges();
+
 
         spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(0);
@@ -262,7 +261,7 @@ describe('IgxHighlight', () => {
         expect(component.textContent).toBe('');
 
         component.clearHighlight();
-        fix.detectChanges();
+
         expect(component.textContent).toBe('');
 
         component.html = undefined;
@@ -271,7 +270,7 @@ describe('IgxHighlight', () => {
         expect(component.textContent).toBe('');
 
         component.clearHighlight();
-        fix.detectChanges();
+
         expect(component.textContent).toBe('');
     });
 });
