@@ -928,7 +928,7 @@ describe('IgxGrid - Cell component', () => {
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
         fix.componentInstance.visibleRows = 4;
-        //fix.componentInstance.gridHeight = '270px';
+        // fix.componentInstance.gridHeight = '270px';
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
