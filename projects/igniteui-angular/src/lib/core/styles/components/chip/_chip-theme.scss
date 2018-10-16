@@ -6,6 +6,7 @@
 
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $roundness [32px] - The chip roundness.
 /// @param {Color} $text-color [rgba(0, 0, 0, .74)] - The chip text color.
 /// @param {Color} $background [rgba(0, 0, 0, .04)] - The chip background color.
 /// @param {Color} $border-color [transparent] - The chip border color.
@@ -26,7 +27,6 @@
 /// @param {color} $focus-selected-background [secondary 300] - The selected chip focus background color.
 /// @param {color} $focus-selected-border-color [secondary 900] - The selected chip focus border color.
 ///
-///
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-color
@@ -37,6 +37,7 @@
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
     $palette: $default-palette,
+    $roundness: null,
 
     $text-color: null,
     $background: null,
@@ -65,6 +66,7 @@
     $default-theme: (
         name: 'igx-chip',
 
+        roundness: rem(32px),
         text-color: igx-color($palette, 'grays', 700),
         background: igx-color($palette, 'grays', 200),
         border-color: transparent,
@@ -180,6 +182,7 @@
 
     @return extend($default-theme, (
         palette: $palette,
+        roundness: $roundness,
 
         text-color: $text-color,
         background: $background,
@@ -215,7 +218,7 @@
     @include igx-root-css-vars($theme);
 
     $transition: all 120ms $ease-in-out-quad;
-    $chip-max-width: rem(176px);
+    $chip-max-width: 24ch;
 
     $chip-height: (
         comfortable: rem(32px),
@@ -258,6 +261,19 @@
 
         &:focus {
             outline-style: none;
+        }
+
+        // We target the tag selector directly to
+        // avoid having to set custom classes on the prefix
+        // and suffix based on the host element.
+        igx-prefix,
+        [igxPrefix] {
+            @extend %igx-chip__prefix;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %igx-chip__suffix;
         }
     }
 
@@ -308,10 +324,24 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+    }
 
-        + %igx-chip__prefix,
-        + %igx-chip__suffix,
+    %igx-chip__suffix {
+        + igx-suffix,
+        + [igxSuffix],
         + %igx-chip__remove {
+            margin-left: rem(4px);
+
+            [dir='rtl'] & {
+                margin-left: 0;
+                margin-right: rem(4px);
+            }
+        }
+    }
+
+    %igx-chip__prefix {
+        + igx-prefix,
+        + [igxPrefix] {
             margin-left: rem(4px);
 
             [dir='rtl'] & {
@@ -371,7 +401,8 @@
             transition: width 120ms $ease-in-out-quad;
         }
 
-        + %igx-chip__prefix {
+        + igx-prefix,
+        + [igxPrefix] {
             margin-left: rem(4px);
 
             [dir='rtl'] & {
@@ -389,7 +420,8 @@
             width: 0 !important;
         }
 
-        + %igx-chip__prefix {
+        + igx-prefix,
+        + [igxPrefix] {
             margin-left: 0;
 
             [dir='rtl'] & {
@@ -409,7 +441,7 @@
         border-width: 1px;
         border-style: solid;
         border-color: --var($theme, 'border-color');
-        border-radius: map-get($chip-height, 'comfortable') / 2;
+        border-radius: --var($theme, 'roundness');
         user-select: none;
         overflow: hidden;
         cursor: pointer;
@@ -451,13 +483,11 @@
     }
 
     %igx-chip__item--cosy {
-        border-radius: map-get($chip-height, 'cosy') / 2;
         height: map-get($chip-height, 'cosy');
         padding: map-get($chip-padding, 'cosy');
     }
 
     %igx-chip__item--compact {
-        border-radius: map-get($chip-height, 'compact') / 2;
         height: map-get($chip-height, 'compact');
         padding: map-get($chip-padding, 'compact');
     }

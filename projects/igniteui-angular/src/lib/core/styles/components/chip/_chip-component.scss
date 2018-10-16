@@ -45,14 +45,6 @@
         @extend %igx-chip__content !optional;
     }
 
-    @include e(prefix) {
-        @extend %igx-chip__prefix !optional;
-    }
-
-    @include e(suffix) {
-        @extend %igx-chip__suffix !optional;
-    }
-
     @include e(select) {
         @extend %igx-chip__select !optional;
     }
