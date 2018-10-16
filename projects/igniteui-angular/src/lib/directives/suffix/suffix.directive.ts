@@ -1,9 +1,12 @@
-import { Directive, HostBinding } from '@angular/core';
+import { NgModule, Directive } from '@angular/core';
 
 @Directive({
     selector: 'igx-suffix,[igxSuffix]'
 })
-export class IgxSuffixDirective {
-    @HostBinding('class.igx-input-group__bundle-suffix')
-    public defaultClass = true;
-}
+export class IgxSuffixDirective { }
+
+@NgModule({
+    declarations: [IgxSuffixDirective],
+    exports: [IgxSuffixDirective]
+})
+export class IgxSuffixModule { }
