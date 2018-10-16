@@ -156,7 +156,7 @@ class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
     public settings: ContainerPositionSettings;
-    position(contentElement: HTMLElement, size: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
+    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         super.position(contentElement, size, document, initialCall);
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row
@@ -167,8 +167,8 @@ class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         // which means that when scrolling then overlay may hide, while the row is still visible (UX requirement).
         this.isTop = this.isTopInitialPosition !== null ?
             this.isTopInitialPosition :
-                container.clientHeight <
-                    target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
+            container.clientHeight <
+            target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
         this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
         contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
@@ -545,7 +545,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this._perPage = val;
         this.page = 0;
-
+        this.endRowEdit(true);
         this.restoreHighlight();
     }
 
@@ -2373,7 +2373,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             }
         });
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
-        this.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
     }
 
     /**
@@ -3257,6 +3256,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        this.endRowEdit(true);
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -3266,7 +3266,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
-
         this.restoreHighlight();
     }
 
@@ -4931,19 +4930,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const change = this.transactions.getAggregatedValue(rowInEdit.rowID, false);
         const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const rowObj = rowInEdit ? this.getRowByIndex(rowInEdit.rowIndex) : null;
-        if (commit) {
-            this.onRowEditDone.emit({
-                newValue: Object.assign({}, this.data[rowObj.dataRowIndex], change),
-                oldValue: this.data[rowObj.dataRowIndex],
-                row: rowObj
-            });
-        } else {
-            this.onRowEditCancel.emit({
-                newValue: Object.assign({}, rowObj.rowData, change),
-                oldValue: this.data[rowObj.dataRowIndex],
-                row: rowObj
-            });
-        }
+        const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
+        emitter.emit({
+            newValue: Object.assign({}, this.data[rowObj.dataRowIndex], change),
+            oldValue: this.data[rowObj.dataRowIndex],
+            row: rowObj
+        });
         this.transactions.endPending(commit);
         if (commit && value && !isObjectEmpty(value) && !this.transactions.transactionsEnabled()) {
             this.data[rowInEdit.rowIndex] = value;

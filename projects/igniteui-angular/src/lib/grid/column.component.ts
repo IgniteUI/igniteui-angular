@@ -171,6 +171,7 @@ export class IgxColumnComponent implements AfterContentInit {
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            this.grid.endRowEdit(true);
             const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
             if (cellInEditMode) {
                 if (cellInEditMode.cell.column.field === this.field) {
@@ -851,6 +852,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
+        this.grid.endRowEdit(true);
         this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
@@ -910,6 +912,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public unpin(index?) {
+        this.grid.endRowEdit();
         this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;
