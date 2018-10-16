@@ -607,7 +607,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
         }
         // update cache
-        if (totalDiff > 0) {
+        if (Math.abs(totalDiff) > 0) {
             for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
                 this.sizesCache[j] += totalDiff;
             }
