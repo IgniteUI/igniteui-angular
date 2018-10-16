@@ -214,11 +214,12 @@ export class IgxGridNavigationService {
             (!Math.abs(containerTopOffset) && this.grid.rowList.first.index >= currentRowIndex)) {
             (document.activeElement as any).blur();
             let scrollAmount = 0;
+            const rowHeight =  this.grid.verticalScrollContainer.getSizeAt(currentRowIndex - 1);
             if (this.grid.rowList.first.index === currentRowIndex && containerTopOffset < 0) {
-                scrollAmount =  -this.grid.rowHeight - Math.abs(containerTopOffset);
+                scrollAmount =  -rowHeight - Math.abs(containerTopOffset);
             } else {
             scrollAmount = containerTopOffset < 0 ? containerTopOffset :
-                    -this.grid.rowHeight + Math.abs(containerTopOffset);
+                    -rowHeight + Math.abs(containerTopOffset);
             }
             this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
             this.grid.verticalScrollContainer.onChunkLoad
@@ -273,8 +274,9 @@ export class IgxGridNavigationService {
         if (!rowElement.nextElementSibling) {
             return;
         }
+        const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex + 1);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : null;
-        const targetEndTopOffset = rowElement.nextElementSibling.offsetTop + this.grid.rowHeight +
+        const targetEndTopOffset = rowElement.nextElementSibling.offsetTop + rowHeight +
         parseInt(this.verticalDisplayContainerElement.style.top, 10);
         if (containerHeight && containerHeight < targetEndTopOffset) {
             (document.activeElement as any).blur();
