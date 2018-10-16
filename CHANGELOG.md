@@ -10,6 +10,9 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` could now be accessed through the "expressions" event property. A new "columns" property has been added, which provides references to the grouped columns as an array of `IgxColumnComponent`.
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
+    - Exposing a mechanism for cells to grow according to their content.
+- `igxFor`
+    - Added support for variable heights.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`:
     - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
