@@ -1600,7 +1600,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - Paging', () => {
+       describe('Row Editing - Paging', () => {
             it(`Should not apply edited classes to the same row on a different page`, (async () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -1845,6 +1845,11 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.grid;
                 let cell = grid.getCellByColumn(0, 'ProductName');
 
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                spyOn(gridAPI, 'submit_value').and.callThrough();
+                spyOn(gridAPI, 'escape_editMode').and.callThrough();
+
                 cell.inEditMode = true;
                 cell.update('Don Juan De Marco');
                 // Do not exit edit mode
@@ -1858,8 +1863,15 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe('Don Juan De Marco');
 
                 // Verify the data source is updated
-                const expectedCellValue = fix.componentInstance.data[0].ProductName;
-                expect(expectedCellValue).toBe('Don Juan De Marco');
+                // Failing as cell.update currently does not call submit_value())
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                const newDataCellValue = fix.componentInstance.data[0].ProductName;
+                expect(newDataCellValue).toBe('Don Juan De Marco');
+
+                expect(gridAPI.escape_editMode).toHaveBeenCalled();
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(cell.inEditMode).toBeFalsy();
             });
 
             it(`Should include the new value in the results when sorting`, () => {
