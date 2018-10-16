@@ -25,8 +25,6 @@ export * from './lib/directives/text-highlight/text-highlight.directive';
 export * from './lib/directives/text-selection/text-selection.directive';
 export * from './lib/directives/toggle/toggle.directive';
 export * from './lib/directives/tooltip/tooltip.directive';
-export * from './lib/directives/prefix/prefix.directive';
-export * from './lib/directives/suffix/suffix.directive';
 
 /**
  * Data operations

@@ -35,7 +35,6 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import { OverlaySettings } from '../services';
 import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
-import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -700,6 +699,6 @@ class Constants {
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
     entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule, IgxPrefixModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
 })
 export class IgxDatePickerModule { }
