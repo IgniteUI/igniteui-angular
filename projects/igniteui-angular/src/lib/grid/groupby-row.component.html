@@ -1,10 +1,10 @@
-<ng-container #defaultGroupRow (focus)="onFocus()" (blur)="onBlur()">
-    <div (click)="toggle()" igxRipple class="igx-grid__grouping-indicator" [tabIndex]="tabindex">
+<ng-container #defaultGroupRow>
+    <div (click)="toggle()" igxRipple class="igx-grid__grouping-indicator">
         <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
     </div>
 
-    <div [tabIndex]="tabindex" class="igx-grid__group-content" #groupContent (focus)="onFocus()" (blur)="onBlur()">
+    <div class="igx-grid__group-content" #groupContent>
         <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
         </ng-container>
     </div>

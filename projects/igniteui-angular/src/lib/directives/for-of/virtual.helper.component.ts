@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'igx-virtual-helper',
@@ -12,7 +12,7 @@ export class VirtualHelperComponent implements OnInit {
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
 
-    constructor(public elementRef: ElementRef) { }
+    constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit() {
     }
