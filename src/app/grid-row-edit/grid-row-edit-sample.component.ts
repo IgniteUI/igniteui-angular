@@ -145,4 +145,12 @@ export class GridRowEditSampleComponent {
         (<any>grid)._pipeTrigger++;
         (<any>grid).cdr.markForCheck();
     }
+
+    rowEditDone(evt) {
+        console.log('Row edit done:\n', evt);
+    }
+
+    rowEditCancel(evt) {
+        console.log('Row edit cancel:\n', evt);
+    }
 }

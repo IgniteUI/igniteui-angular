@@ -85,7 +85,8 @@ export interface IGridEditEventArgs {
 
 export interface IGridRowEditEventArgs {
     row: IgxGridRowComponent;
-    state: State;
+    newValue: any;
+    oldValue: any;
 }
 
 export interface IPinColumnEventArgs {
@@ -1031,9 +1032,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * </igx-grid>
      * ```
      * ```typescript
-     *      editDone(emitted: { row: IgxGridRowComponent, state: state }): void {
+     *      editDone(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
      *          const editedRow = emitted.row;
-     *          const editedState = emitted.state;
+     *          const newValue = emitted.newValue;
+     *          const oldValue = emitted.oldValue;
      *      }
      * ```
 	 * @memberof IgxGridComponent
@@ -1058,9 +1060,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * </igx-grid>
      * ```
      * ```typescript
-     *      editCancel(emitted: { row: IgxGridRowComponent, state: state }): void {
+     *      editCancel(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
      *          const editedRow = emitted.row;
-     *          const canceledState = emitted.state;
+     *          const cancelValue = emitted.newValue;
+     *          const oldValue = emitted.oldValue;
      *      }
      * ```
 	 * @memberof IgxGridComponent
@@ -4854,11 +4857,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public closeRowEditingOverlay(commit?: boolean) {
         this.transactions.endPending(commit);
-        const row = this.gridAPI.get_row_inEditMode(this.id);
-        if (row) {
-            const value = this.transactions.getAggregatedValue(row.rowID, true);
-            this.onRowEditCancel.emit(value);
-        }
         this.rowEditingOverlay.element.removeEventListener('wheel', this._rowEditingWheelHandler);
         this._isRowEditTop = false;
         this.rowEditingOverlay.close();
@@ -4919,13 +4917,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: { rowID: any, rowIndex: number }) {
+    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
-        const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
+        const value = this.transactions.getAggregatedValue(rowInEdit.rowID, false);
+        const rowObj = rowInEdit ? this.getRowByIndex(rowInEdit.rowIndex) : null;
         if (commit) {
-            this.onRowEditDone.emit(value);
+            this.onRowEditDone.emit({
+                newValue: Object.assign({}, this.data[rowObj.dataRowIndex], value),
+                oldValue: rowObj.rowData,
+                row: rowObj
+            });
         } else {
-            this.onRowEditCancel.emit(value);
+            this.onRowEditCancel.emit({
+                newValue: Object.assign({}, rowObj.rowData, value),
+                oldValue: this.data[rowObj.dataRowIndex],
+                row: rowObj
+            });
         }
         this.transactions.endPending(commit);
         if (commit && value && !isObjectEmpty(value) && !this.transactions.transactionsEnabled()) {
@@ -4954,7 +4961,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         const row = this.gridAPI.get_row_inEditMode(this.id);
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
-        if (this.gridAPI.get_cell_inEditMode(this.id)) {
+        if (cellInEdit) {
             this.gridAPI.submit_value(this.id);
         }
         this.endRowTransaction(commit, true, row);
