@@ -2129,6 +2129,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
+                const initialData = initialRow.rowData;
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditCancel, 'emit');
                 spyOn(grid.onRowEditDone, 'emit');
@@ -2140,8 +2141,8 @@ describe('IgxGrid Component Tests', () => {
                 fixture.debugElement.queryAll(By.css('.igx-button--flat'))[1].nativeElement.click();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
-                    oldValue: initialRow.rowData,
+                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
+                    oldValue: initialData,
                     row: initialRow,
                 });
             });
@@ -2153,6 +2154,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
+                const initialData = initialRow.rowData;
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditCancel, 'emit');
                 spyOn(grid.onRowEditDone, 'emit');
@@ -2164,7 +2166,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.debugElement.queryAll(By.css('.igx-button--flat'))[0].nativeElement.click();
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalled();
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
+                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
                     oldValue: initialRow.rowData,
                     row: initialRow,
                 });
@@ -2177,6 +2179,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
+                const initalData = initialRow.rowData;
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditDone, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
@@ -2188,8 +2191,8 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
-                    oldValue: initialRow.rowData,
+                    newValue: Object.assign({}, initalData, { Downloads: 1337}),
+                    oldValue: initalData,
                     row: initialRow,
                 });
             });
@@ -2201,6 +2204,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 const component = fixture.componentInstance;
                 const initialRow = grid.getRowByKey(0);
+                const initialData = initialRow.rowData;
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditDone, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
@@ -2212,8 +2216,8 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialRow.rowData, { Downloads: 1337}),
-                    oldValue: initialRow.rowData,
+                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
+                    oldValue: initialData,
                     row: initialRow,
                 });
             });

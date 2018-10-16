@@ -177,7 +177,7 @@ export class IgxGridAPIService {
         }
     }
 
-    public submit_value(gridId) {
+    public submit_value(gridId, detectChanges = true) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
@@ -193,7 +193,9 @@ export class IgxGridAPIService {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
-            this.get(gridId).cdr.detectChanges();
+            if (detectChanges) {
+                this.get(gridId).cdr.detectChanges();
+            }
         }
     }
 

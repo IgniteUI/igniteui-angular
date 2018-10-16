@@ -2372,6 +2372,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.gridAPI.submit_value(this.id);
             }
         });
+        this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
     }
 
     /**
@@ -4931,7 +4933,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (commit) {
             this.onRowEditDone.emit({
                 newValue: Object.assign({}, this.data[rowObj.dataRowIndex], value),
-                oldValue: rowObj.rowData,
+                oldValue: this.data[rowObj.dataRowIndex],
                 row: rowObj
             });
         } else {
@@ -4948,8 +4950,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);
         }
-        this._pipeTrigger++;
-        this.cdr.detectChanges();
+        if (!commit) {
+            this._pipeTrigger++;
+        }
+        // this.cdr.detectChanges();
     }
 
     /**
@@ -4969,7 +4973,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const row = this.gridAPI.get_row_inEditMode(this.id);
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         if (cellInEdit) {
-            this.gridAPI.submit_value(this.id);
+            this.gridAPI.submit_value(this.id, commit);
         }
         this.endRowTransaction(commit, true, row);
         const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cellInEdit.cellID.columnID) : null;
