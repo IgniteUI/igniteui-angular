@@ -13,6 +13,8 @@ import {
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
+import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 
 let NEXT_ID = 0;
 
@@ -301,7 +303,7 @@ export class IgxInputGroupComponent {
  */
 @NgModule({
     declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],
-    exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective],
-    imports: [CommonModule]
+    exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxInputGroupModule { }

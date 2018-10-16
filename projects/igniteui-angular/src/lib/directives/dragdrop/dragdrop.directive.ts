@@ -756,9 +756,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         // using window.pageXOffset for IE9 compatibility
         const viewPortX = pageX - window.pageXOffset;
         const viewPortY = pageY - window.pageYOffset;
-        if (document.msElementsFromPoint) {
+        if (document['msElementsFromPoint']) {
             // Edge and IE special snowflakes
-            return document.msElementsFromPoint(viewPortX, viewPortY);
+            return document['msElementsFromPoint'](viewPortX, viewPortY);
         } else {
             // Other browsers like Chrome, Firefox, Opera
             return document.elementsFromPoint(viewPortX, viewPortY);

@@ -89,8 +89,6 @@ describe('IgxChip', () => {
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
-                IgxPrefixDirective,
-                IgxSuffixDirective,
                 IgxLabelDirective
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
@@ -117,7 +115,6 @@ describe('IgxChip', () => {
         expect(chipElems[0].nativeElement.children[0].children.length).toEqual(2);
         expect(chipElems[0].nativeElement.children[0].children[0].tagName).toEqual('IGX-ICON');
         expect(chipElems[0].nativeElement.children[0].children[0].hasAttribute('igxprefix')).toEqual(true);
-        expect(chipElems[0].nativeElement.children[0].children[0].classList).toContain(CHIP_PREFIX);
     });
 
     it('should render remove button when enabled after the content inside the chip', () => {

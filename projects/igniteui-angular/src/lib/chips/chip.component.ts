@@ -1,4 +1,5 @@
 ﻿import {
+    AfterViewInit,
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -7,10 +8,7 @@
     Input,
     Output,
     ViewChild,
-    AfterViewInit,
     Renderer2,
-    Directive,
-    HostListener,
     TemplateRef
 } from '@angular/core';
 import { DisplayDensity } from '../core/utils';
@@ -616,10 +614,3 @@ export class IgxChipComponent {
     }
     // End chip igxDrop behaviour
 }
-
-/* tslint:disable directive-selector */
-@Directive({
-    selector: 'igx-chip',
-    exportAs: 'chip'
-})
-export class IgxChipComponentExporterDirective { }

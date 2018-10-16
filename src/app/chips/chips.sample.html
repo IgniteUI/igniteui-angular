@@ -107,7 +107,7 @@
             </header>
             <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
                 <ng-container *ngFor="let chipElem of chipList; let last = last;">
-                    <igx-chip #chipRef="chip"
+                    <igx-chip
                         [id]="chipElem.id"
                         [draggable]="true"
                         [selectable]="true"

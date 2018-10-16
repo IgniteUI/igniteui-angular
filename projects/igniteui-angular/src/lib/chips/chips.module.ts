@@ -4,22 +4,22 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxChipComponent, IgxChipComponentExporterDirective } from './chip.component';
+import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
+import { IgxPrefixModule, IgxPrefixDirective} from '../directives/prefix/prefix.directive';
+import { IgxSuffixModule, IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 
 @NgModule({
   declarations: [
     IgxChipsAreaComponent,
-    IgxChipComponent,
-    IgxChipComponentExporterDirective
-  ],
-  entryComponents: [
+    IgxChipComponent
   ],
   exports: [
     IgxChipsAreaComponent,
     IgxChipComponent,
-    IgxChipComponentExporterDirective
+    IgxPrefixDirective,
+    IgxSuffixDirective
   ],
   imports: [
     CommonModule,
@@ -27,13 +27,9 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxIconModule,
     IgxButtonModule,
     IgxAvatarModule,
-    IgxDragDropModule
+    IgxDragDropModule,
+    IgxPrefixModule,
+    IgxSuffixModule
   ]
 })
-export class IgxChipsModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxChipsModule
-        };
-    }
-}
+export class IgxChipsModule { }
