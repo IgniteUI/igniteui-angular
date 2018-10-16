@@ -1,0 +1,56 @@
+<div class="sample-wrapper">
+    <div class="sample-content">
+        <article class="sample-column">
+            <div class="tabbar-wrapper" #tabbarEl>
+                <igx-bottom-nav>
+                    <igx-tab-panel icon="reorder">
+                        <div class="tab1">
+                            <igx-grid #grid1 [data]="data" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+                                <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
+                            </igx-grid>
+                            <br />
+                            <button igxButton="raised" (click)="setComfortable(0)">Comfortable</button>
+                            <button igxButton="raised" (click)="setCosy(0)">Cosy</button>
+                            <button igxButton="raised" (click)="setCompact(0)">Compact</button>
+                            <button igxButton="raised" (click)="toggleSummaries(0)">Toggle Summaries</button>
+                        </div>
+                    </igx-tab-panel>
+                    <igx-tab-panel icon="dashboard">
+                        <div class="tab2">
+                            <igx-grid #grid2 [data]="data" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+                                <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
+                            </igx-grid>
+                            <br />
+                            <button igxButton="raised" (click)="setComfortable(1)">Comfortable</button>
+                            <button igxButton="raised" (click)="setCosy(1)">Cosy</button>
+                            <button igxButton="raised" (click)="setCompact(1)">Compact</button>
+                            <button igxButton="raised" (click)="toggleSummaries(1)">Toggle Summaries</button>
+                        </div>
+                    </igx-tab-panel>
+                    <igx-tab-panel icon="view_day">
+                        <div class="tab3">
+                            <igx-grid #grid3 [data]="data" [height]="'800px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+                                <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
+                            </igx-grid>
+                            <br />
+                            <button igxButton="raised" (click)="setComfortable(2)">Comfortable</button>
+                            <button igxButton="raised" (click)="setCosy(2)">Cosy</button>
+                            <button igxButton="raised" (click)="setCompact(2)">Compact</button>
+                            <button igxButton="raised" (click)="toggleSummaries(2)">Toggle Summaries</button>
+                        </div>
+                    </igx-tab-panel>
+                    <igx-tab-panel style="height: 100%" icon="view_day">
+                        <igx-grid #grid4 [data]="data" [height]="'100%'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="'compact'">
+                            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"></igx-column>
+                        </igx-grid>
+                        <br />
+                        <button igxButton="raised" (click)="setComfortable(3)">Comfortable</button>
+                        <button igxButton="raised" (click)="setCosy(3)">Cosy</button>
+                        <button igxButton="raised" (click)="setCompact(3)">Compact</button>
+                        <button igxButton="raised" (click)="toggleSummaries(3)">Toggle Summaries</button>
+                    </igx-tab-panel>
+                </igx-bottom-nav>
+            </div>
+        </article>
+    </div>
+</div>

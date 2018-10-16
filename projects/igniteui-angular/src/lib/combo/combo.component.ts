@@ -554,6 +554,17 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @Input()
     public itemsMaxHeight = 480;
 
+        /**
+     * Gets/sets the number of rows to be visible at once in the dropdown of the `IgxComboComponent`.
+     * If the data source contains more records than this number, a vertical scrollbar will be shown.
+     * ```typescript
+     * let visibleRows = this.combo.visibleRows;
+     * ```	     * ```
+     * @memberof IgxComboComponent
+     */
+    @Input()
+    public visibleRows = 10;
+
     /**
      * Configures the drop down list width
      *

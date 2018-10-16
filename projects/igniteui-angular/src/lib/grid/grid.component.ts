@@ -54,6 +54,7 @@ import { IgxGridRowComponent } from './row.component';
 import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
 let NEXT_ID = 0;
@@ -254,7 +255,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this._pipeTrigger++;
             this.clearSummaryCache();
             this.cdr.markForCheck();
-            this.cdr.detectChanges();
+            // TODO this detectChanges call breaks tests because of
+            // returning detect changes caused by recalcing height
+            // this.cdr.detectChanges();
         }
     }
 
@@ -619,27 +622,61 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    @HostBinding('style.height')
+    @DeprecateProperty(`The input 'height' is deprecated. You can set the grid's element height inline with\n
+        the style attribute (e.g. [style.height.px]="500"), with the ngStyle directive or through CSS.\n
+        By default the grid will grow with its content.\n
+        The amount of rows to be rendered can be set with the visibleRows input`)
     @Input()
-    public get height() {
-        return this._height;
-    }
+    public height: string;
 
     /**
-     * Sets the height of the `IgxGridComponent`.
-     * ```html
-     * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * Gets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
+     * If the data source contains more records than this number, a vertical scrollbar will be shown.
+     * ```typescript
+     * let visibleRows = this.grid.visibleRows;
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set height(value: any) {
-        if (this._height !== value) {
-            this._height = value;
+    @Input()
+    public get visibleRows(): number {
+        return this._visibleRows;
+    }
+
+    /**
+     * Sets the number of rows to be visible at once in the table body of the `IgxGridComponent`.
+     * If the data source contains more records than this number, a vertical scrollbar will be shown.
+     * ```typescript
+     * let visibleRows = this.grid.visibleRows;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public set visibleRows(value) {
+        if (this._visibleRows !== value) {
+            this._visibleRows = value;
             requestAnimationFrame(() => {
-                this.calculateGridHeight();
-                this.cdr.markForCheck();
+                this.reflow();
             });
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public get horizontalChunkSize(): number {
+        if (!this._horizontalChunkSize) {
+            this._horizontalChunkSize = this.getCalcHorizontalSize(this.notGroups(this.unpinnedColumns));
+        }
+        return this._horizontalChunkSize;
+    }
+
+    /**
+     * @hidden
+     */
+    public get headerChunkSize(): number {
+        if (!this._headerChunkSize) {
+            this._headerChunkSize = this.getCalcHorizontalSize(this.onlyTopLevel(this.unpinnedColumns));
+        }
+        return this._headerChunkSize;
     }
 
     /**
@@ -650,6 +687,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @HostBinding('style.width')
+    @DeprecateProperty(`The input 'width' is deprecated. You can set the grid's element width inline with\n
+        the style attribute (e.g. [style.width.px]="500"), with the ngStyle directive or through CSS`)
     @Input()
     public get width() {
         return this._width;
@@ -713,7 +752,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
@@ -1231,7 +1270,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1535,7 +1574,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -1993,9 +2032,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private columnListDiffer;
     private _hiddenColumnsText = '';
     private _pinnedColumnsText = '';
-    private _height = '100%';
     private _width = '100%';
     private _rowHeight;
+    private _horizontalChunkSize = 0;
+    private _headerChunkSize = 0;
+    private _visibleRows = 10;
     private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
     private _horizontalForOfs;
@@ -2083,6 +2124,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
         this._derivePossibleHeight();
+        this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         this.markForCheck();
 
         this.columnList.changes
@@ -2211,6 +2254,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public dataLoading(event) {
         this.onDataPreLoad.emit(event);
+    }
+
+    public chunkGenerated(event) {
+        this.calcHeight = event > 0 ? event : this.rowHeight;
+        requestAnimationFrame(() => {
+            this.reflow();
+        });
     }
 
     /**
@@ -3380,16 +3430,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height) {
-            return;
-        }
-        if (!this.nativeElement.parentNode.clientHeight) {
-            const viewPortHeight = document.documentElement.clientHeight;
-            this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
-        } else {
-            const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
-            this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
-        }
         this.calculateGridHeight();
         this.cdr.detectChanges();
     }
@@ -3424,51 +3464,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridHeight() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-
-        // TODO: Calculate based on grid density
-        if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
-        }
-
-        if (!this._height) {
-            this.calcHeight = null;
-            if (this.hasSummarizedColumns && !this.summariesHeight) {
-                this.summariesHeight = this.summaries ?
-                    this.calcMaxSummaryHeight() : 0;
-            }
-            return;
-        }
-
-        let toolbarHeight = 0;
-        if (this.showToolbar && this.toolbarHtml != null) {
-            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                this.toolbarHtml.nativeElement.offsetHeight : 0;
-        }
-
-        let pagingHeight = 0;
-        let groupAreaHeight = 0;
-        if (this.paging && this.paginator) {
-            pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.offsetHeight : 0;
-        }
-
+        // this.calcHeight = this.visibleRows * this.rowHeight;
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
                 this.calcMaxSummaryHeight() : 0;
-        }
-
-        if (this.groupArea) {
-            groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
-        }
-
-        if (this._height && this._height.indexOf('%') !== -1) {
-            /*height in %*/
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight, groupAreaHeight);
-        } else {
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(this._height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
         }
     }
 
@@ -3522,6 +3521,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     protected calculateGridWidth() {
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
 
+        this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
             const width = parseInt(computed.getPropertyValue('width'), 10);
@@ -3558,6 +3559,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     protected calculateGridSizes() {
+        this._horizontalChunkSize = 0;
+        this._headerChunkSize = 0;
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
@@ -3785,9 +3788,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public getContext(rowData): any {
         return {
             $implicit: rowData,
@@ -4191,7 +4194,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             if (isColumn) {
                 directive.getHorizontalScroll().scrollLeft =
                     directive.getColumnScrollLeft(goal) -
-                    parseInt(directive.igxForContainerSize, 10) +
+                    directive.igxForDisplayContainerWidth +
                     parseInt(this.columns[goal].width, 10);
             } else {
                 directive.scrollTo(goal - size + 1);
@@ -4321,6 +4324,55 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             return null;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected getCalcHorizontalSize(columns): number {
+        let i = 0;
+        let length = 0;
+        let maxLength = 0;
+        const arr = [];
+        let sum = 0;
+        const reducer = (accumulator, currentItem) => accumulator +
+            (currentItem.width === 'Infinity' ? Infinity : parseInt(currentItem.width, 10));
+        const availableSize = this.unpinnedWidth;
+        for (i; i < columns.length; i++) {
+            const column = columns[i];
+            sum = arr.reduce(reducer, column.width === 'Infinity' ? Infinity : parseInt(column.width, 10));
+            if (isNaN(sum)) {
+                return maxLength;
+            }
+            if (sum <= availableSize) {
+                arr.push(column);
+                length = arr.length;
+                if (i === columns.length - 1) {
+                    // reached end without exceeding
+                    // include prev items until size is filled or first item is reached.
+                    let prevIndex = columns.indexOf(arr[0]) - 1;
+                    while (prevIndex >= 0 && sum <= availableSize) {
+                        prevIndex = columns.indexOf(arr[0]) - 1;
+                        if (prevIndex < 0) {
+                            maxLength++;
+                            return maxLength;
+                        }
+                        const prevItem = columns[prevIndex];
+                        sum = arr.reduce(reducer, parseInt(prevItem.width, 10));
+                        arr.unshift(prevItem);
+                        length = arr.length;
+                    }
+                }
+            } else {
+                arr.push(column);
+                length = arr.length + 1;
+                arr.splice(0, 1);
+            }
+            if (length > maxLength) {
+                maxLength = length;
+            }
+        }
+        return maxLength;
     }
 
     // For paging we need just the increment between the start of the page and the current row

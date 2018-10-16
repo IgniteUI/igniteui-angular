@@ -171,7 +171,7 @@ describe('IgxGrid - Grid Paging', () => {
         const grid = fix.componentInstance.grid;
         grid.paging = true;
         grid.perPage = 2;
-        grid.height = '300px';
+        grid.visibleRows = 5;
         fix.detectChanges();
         grid.page = 1;
         fix.detectChanges();

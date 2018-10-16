@@ -62,6 +62,7 @@ import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
+import { GridHeightTestComponent } from './grid-height-test/grid-height-test.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
@@ -114,6 +115,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
+    GridHeightTestComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,

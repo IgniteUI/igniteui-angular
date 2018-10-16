@@ -188,7 +188,7 @@ export class IgxGridNavigationService {
 
     public navigateBottom(visibleColumnIndex) {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.calcHeight) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[cells.length - 1].focus();
@@ -351,7 +351,7 @@ export class IgxGridNavigationService {
 
     public goToLastCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.calcHeight) {
             const rows = this.grid.nativeElement.querySelectorAll('igx-grid-row');
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);

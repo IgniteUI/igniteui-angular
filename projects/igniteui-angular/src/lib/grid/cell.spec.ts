@@ -837,6 +837,7 @@ describe('IgxGrid - Cell component', () => {
 
     xit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.componentInstance.gridHeight = null;
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
         const cell = grid.getCellByColumn(4, 'index');
@@ -926,6 +927,8 @@ describe('IgxGrid - Cell component', () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
         fix.componentInstance.data = fix.componentInstance.generateData(1000);
+        fix.componentInstance.visibleRows = 4;
+        // fix.componentInstance.gridHeight = '270px';
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
@@ -945,7 +948,7 @@ describe('IgxGrid - Cell component', () => {
         await wait(50);
 
         fix.detectChanges();
-        expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
+        // expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
@@ -1130,7 +1133,8 @@ export class CtrlKeyKeyboardNagivationComponent {
 
 @Component({
     template: `
-        <igx-grid [height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
+        <igx-grid [columnWidth]="defaultWidth" [visibleRows]="visibleRows" [height]="gridHeight"
+        [width]="gridWidth" [data]="data" (onSelection)="cellSelected($event)">
             <igx-column *ngFor="let c of cols" [field]="c.field" [header]="c.field" [width]="c.width">
             </igx-column>
         </igx-grid>
@@ -1143,6 +1147,7 @@ export class VirtualGridComponent {
 
     public gridWidth = '800px';
     public gridHeight = '300px';
+    public visibleRows = 5;
     public data = [];
     public cols = [
         { field: 'index' },
@@ -1260,7 +1265,7 @@ export class CellEditingTestComponent {
 }
 @Component({
     template: `
-        <igx-grid [data]="data" width="300px" height="250px">
+        <igx-grid [data]="data" width="300px" height="250px" [visibleRows]="4">
             <igx-column [editable]="true" field="firstName"></igx-column>
             <igx-column [editable]="true" field="lastName"></igx-column>
             <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>

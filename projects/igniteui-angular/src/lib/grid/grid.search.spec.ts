@@ -840,6 +840,7 @@ describe('IgxGrid - search API', () => {
             fix.detectChanges();
 
             component = fix.componentInstance;
+            fix.componentInstance.grid.visibleRows = Infinity;
             grid = component.grid;
             fixNativeElement = fix.debugElement.nativeElement;
         });
@@ -849,9 +850,10 @@ describe('IgxGrid - search API', () => {
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc
             });
+            await wait(200);
             grid.findNext('Software');
-            await wait();
             fix.detectChanges();
+            await wait(200);
 
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
             let highlight = fixNativeElement.querySelector('.' + component.activeClass);

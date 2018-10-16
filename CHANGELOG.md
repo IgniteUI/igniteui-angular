@@ -31,6 +31,17 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`: The `findNext` and `findPrev` methods now have a new optional parameter called `exactMatch` (defaults to false).
     - If its value is false, all occurrences of the search text will be highlighted in the grid's cells.
     - If its value is true, the entire value of each cell should equals the search text in order to be highlighted (caseSensitive argument is respected as well).
+- `IgxGrid`: Changed how sizing of the grid works
+    - **Breaking change** the `width` and `height` properties are now deprecated. Instead you can size the grid's host element through CSS rules. By default
+    the width is set to 100% and the height is not specified. The grid will grow in height based on its content.
+    - a new input `visibleRows` is introduced. The user may use it to specify how many rows should be visible at once. A vertical scrollbar will be shown if the number
+    of data records to be displayed is higher than this number. Setting it to `null` results in all rows being visible without a scrollbar rendered by `IgxGrid`
+- `IgxForOf`: Changed how sizing of the virtual directive container works
+    - **Breaking chnage** the `containerSize` input is deprecated. Instead you can size the directive's host element through CSS rules.
+    - a new input `visibleElements` is introduced. The user may use it to specify how many elements should be visible at once. A virtual scrollbar will appear
+    if the total number of elements is higher than this number. Setting the input to `null` results in all elements being visible without a virtual scrollbar.
+    - a new output `onChunkGenerated` is introduced. It is emitted after a virtual chunk of elements is first generated. An argument for the event is their
+    total size in pixels along the axis of virtualization.
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
