@@ -370,8 +370,8 @@ export class IgxGridAPIService {
             this.remove_summary(id);
         }
 
-        grid.filteringExpressionsTree = filteringState;
         grid.filteredData = null;
+        grid.filteringExpressionsTree = filteringState;
     }
 
     protected calculateSummaries(id: string, column, data) {

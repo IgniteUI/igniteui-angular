@@ -1329,7 +1329,8 @@
     }
 
     %igx-grid__filtering-outlet {
-        z-index: 99999;
+        z-index: 2;
+        position: fixed;
     }
 
     %igx-grid__filtering-cell {

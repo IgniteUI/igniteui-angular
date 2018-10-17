@@ -46,10 +46,10 @@ export class IgxScrollInertiaDirective implements OnInit {
     private _lastMovedX;
     private _lastMovedY;
     private _gestureObject;
-    private setPointerCaptureFName = typeof Element.prototype.msSetPointerCapture === 'function' ?
+    private setPointerCaptureFName = typeof Element.prototype['msSetPointerCapture'] === 'function' ?
     'msSetPointerCapture' :
     'setPointerCapture';
-    private releasePointerCaptureFName = typeof Element.prototype.msReleasePointerCapture === 'function' ?
+    private releasePointerCaptureFName = typeof Element.prototype['msReleasePointerCapture'] === 'function' ?
     'msReleasePointerCapture' :
     'releasePointerCapture';
     private _pointer;

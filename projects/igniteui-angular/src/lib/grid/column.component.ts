@@ -180,6 +180,9 @@ export class IgxColumnComponent implements AfterContentInit {
             this.check();
             if (this.grid) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.grid.id);
+                if (!activeInfo) {
+                    return;
+                }
                 const oldIndex = activeInfo.columnIndex;
 
                 if (this.grid.lastSearchInfo.searchText) {
@@ -603,7 +606,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get visibleIndex(): number {
-        const grid = this.gridAPI.get(this.gridID);
         const unpinnedColumns = this.grid.unpinnedColumns.filter(c => !c.columnGroup);
         const pinnedColumns = this.grid.pinnedColumns.filter(c => !c.columnGroup);
         let col = this;

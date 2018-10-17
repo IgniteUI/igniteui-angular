@@ -43,6 +43,19 @@
             <button (click)="horizontalVisibleItemCount()">Get visible item count</button>
     </article>
     <article class="sample-column">
+        <span>Variable heights</span>
+        <br/>
+        <div style='height:500px; position: relative; overflow: hidden'>
+              <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
+                [igxForScrollOrientation]="'vertical'"
+                [igxForContainerSize]='"500px"'
+                [igxForItemSize]='"100px"'
+                let-rowIndex="index">
+                <div [style.height.px]='item.height'>{{rowIndex}} : {{item.text}}</div>
+                </ng-template>
+            </div>
+</article>
+    <article class="sample-column">
             <span>Remote Virtualization</span>
             <br/>
             <div style='height:500px; position: relative; overflow: hidden'>
