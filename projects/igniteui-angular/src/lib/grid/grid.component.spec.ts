@@ -894,8 +894,26 @@ describe('IgxGrid Component Tests', () => {
             expect(bannerTop - editRowBottom).toBeLessThan(2);
         }));
 
-        it('should display yhe banner after the edited row if it is the last one, but has room underneath it', () => {
-            // TO DO
+        it('should display the banner after the edited row if it is the last one, but has room underneath it', () => {
+            const lastItemIndex = 6;
+            const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const cell = grid.getCellByColumn(lastItemIndex, 'ProductName');
+            cell.inEditMode = true;
+            const editRow = cell.row.nativeElement;
+            const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+            fix.detectChanges();
+
+            const bannerTop = banner.getBoundingClientRect().top;
+            const editRowBottom = editRow.getBoundingClientRect().bottom;
+
+            // The banner appears below the row
+            expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
+
+            // No much space between the row and the banner
+            expect(bannerTop - editRowBottom).toBeLessThan(2);
         });
 
         it('should display the banner above the edited row if it is the last one', (async () => {
