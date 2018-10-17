@@ -2265,7 +2265,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(columns[1].editable).toBeFalsy();
                 expect(columns[2].editable).toBeTruthy();
                 expect(columns[3].editable).toBeTruthy();
-                expect(columns[4].editable).toBeTruthy();
+                expect(columns[4].editable).toBeFalsy();
             });
         });
 
@@ -2613,7 +2613,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="300px" [rowEditable]="true">
-        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
+        <igx-column field="ProductID" header="Product ID"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" width="100px">
         </igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true" width="150px">
@@ -2670,15 +2670,15 @@ export class IgxGridRowEditingComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
-        <igx-column [editable]="false">
+        <igx-column>
             <ng-template igxCell let-cell="cell" let-val>
                 <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
             </ng-template>
         </igx-column>
-        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
+        <igx-column field="ProductID" header="Product ID"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
     </igx-grid>`
 })
 export class IgxGridRowEditingWithoutEditableColumnsComponent {

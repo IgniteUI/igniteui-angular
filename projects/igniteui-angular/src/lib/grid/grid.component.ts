@@ -4095,10 +4095,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
             column.defaultWidth = this.columnWidth;
-            // When rowEditable is true, then all columns are editable by default.
-            if (column.editable === null) {
-                column.editable = this.rowEditable;
-            }
+            this.setColumnEditState(column);
 
             if (cb) {
                 cb(column);
@@ -4106,6 +4103,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this.reinitPinStates();
+    }
+
+    private setColumnEditState(column: IgxColumnComponent) {
+        // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
+        if (this.rowEditable && column.editable === null &&
+            column.field && column.field !== this.primaryKey) {
+            column.editable = this.rowEditable;
+        }
     }
 
     /**
