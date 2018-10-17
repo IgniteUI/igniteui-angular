@@ -5,7 +5,7 @@ import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand} from '../../public_api';
+import { IgxStringFilteringOperand } from '../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { wait } from '../test-utils/ui-interactions.spec';
@@ -82,6 +82,8 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
+
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide individual column
@@ -103,6 +105,8 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
+
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -123,6 +127,8 @@ describe('IgxGrid - multi-column headers', () => {
         const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
+
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -978,6 +984,7 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').sortable = true;
@@ -985,7 +992,7 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
 
         // Sort column
-        grid.sort({fieldName: 'ContactTitle', dir: SortingDirection.Asc});
+        grid.sort({ fieldName: 'ContactTitle', dir: SortingDirection.Asc });
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1012,7 +1019,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({fieldName: 'Fax', dir: SortingDirection.Asc});
+        grid.sort({ fieldName: 'Fax', dir: SortingDirection.Asc });
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1033,6 +1040,7 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').sortable = true;
@@ -1060,6 +1068,7 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         const initialRowListLenght = grid.rowList.length;
         // Verify columns and groups
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').filterable = true;
@@ -1111,6 +1120,7 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
+        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         const allColumns = grid.columnList;
@@ -1155,17 +1165,17 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grExprs.length).toEqual(1);
         expect(grExprs[0].fieldName).toEqual('ContactTitle');
 
-         // verify rows
-         const groupRows = grid.groupsRowList.toArray();
-         const dataRows = grid.dataRowList.toArray();
+        // verify rows
+        const groupRows = grid.groupsRowList.toArray();
+        const dataRows = grid.dataRowList.toArray();
 
-         expect(groupRows.length).toEqual(5);
-         expect(dataRows.length).toEqual(11);
+        expect(groupRows.length).toEqual(5);
+        expect(dataRows.length).toEqual(11);
 
-         // Verify first grouped row
-         const firstGroupedRow = groupRows[0].groupRow;
-         expect(firstGroupedRow.value).toEqual('Sales Representative');
-         expect(firstGroupedRow.records.length).toEqual(4);
+        // Verify first grouped row
+        const firstGroupedRow = groupRows[0].groupRow;
+        expect(firstGroupedRow.value).toEqual('Sales Representative');
+        expect(firstGroupedRow.records.length).toEqual(4);
     });
 
     it('Should not render empty column group.', () => {
@@ -1436,11 +1446,11 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-            this.contactNameCol, this.contactTitleCol];
+        this.contactNameCol, this.contactTitleCol];
 
         this.addressColsAndGroups = [this.addrInfoColGroup, this.locationColGroup, this.countryCol,
         this.regionCol, this.locCityColGroup, this.cityCol, this.addressCol, this.contactInfoColGroup,
-            this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
+        this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
 
         this.colsAndGroupsNaturalOrder = [this.idCol].concat(this.genInfoColsAndGroups)
             .concat(this.addressColsAndGroups);
@@ -1727,7 +1737,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-            this.contactNameCol, this.contactTitleCol];
+        this.contactNameCol, this.contactTitleCol];
         this.postalCodeColList = [this.postalCodeColGroup, this.postalCodeCol];
         this.cityColList = [this.cityColGroup, this.cityCol];
         this.countryColList = [this.countryColGroup, this.countryCol];
@@ -1972,6 +1982,11 @@ function testGroupsAndColumns(groups: number, columns: number) {
 function testColumnPinning(column: IgxColumnComponent, isPinned: boolean) {
     expect(column.pinned).toBe(isPinned);
     expect(column.allChildren.every(c => c.pinned === isPinned)).toEqual(true);
+}
+
+function resetGridColumnState(grid: IgxGridComponent) {
+    grid.getColumnByName('ID').hidden = true;
+    grid.getColumnByName('ID').hidden = false;
 }
 
 type PinUnpinFunc = (component: ColumnGroupFourLevelTestComponent) => void;
