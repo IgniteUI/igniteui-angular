@@ -335,17 +335,6 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should scroll render one row less when scrolled to bottom', () => {
-
-            let rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(9);
-
-            fix.componentInstance.scrollTop(2500000);
-
-            rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(8);
-        });
-
         it('should scroll to wheel event correctly', async() => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
@@ -819,7 +808,7 @@ describe('IgxForOf directive -', () => {
                 const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
                 for (let i = 0; i < 8; i++) {
                     expect(rowsRendered[i].children[1].textContent)
-                        .toBe(fix.componentInstance.data[49992 + i][1].toString());
+                        .toBe(fix.componentInstance.data[49991 + i][1].toString());
                 }
                 done();
             });
@@ -837,7 +826,7 @@ describe('IgxForOf directive -', () => {
                 fix.detectChanges();
             }).not.toThrow();
 
-            expect(fix.componentInstance.parentVirtDir.getItemCountInView()).toBe(8);
+            expect(fix.componentInstance.parentVirtDir.getItemCountInView()).toBe(7);
             const hDirective = fix.componentInstance.childVirtDirs.toArray()[0];
             expect(hDirective.getItemCountInView()).toBe(2);
         });
@@ -1064,7 +1053,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     }
 
     public testInitHCache(cols: any[]): number {
-        return super.initHCache(cols);
+        return super.initSizesCache(cols);
     }
 
     public testGetHorizontalScroll(viewref, nodeName) {
@@ -1072,7 +1061,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
     }
 
     public testGetHorizontalIndexAt(left, set, index) {
-        super.getHorizontalIndexAt(left, set, index);
+        super.getIndexAt(left, set, index);
     }
 }
 

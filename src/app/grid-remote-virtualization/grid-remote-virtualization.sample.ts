@@ -24,7 +24,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
 
                 requiredChunkSize = dataState.chunkSize === 0 ?
                     // Set initial chunk size, the best value is igxForContainerSize divided on igxForItemSize
-                    10 : dataState.chunkSize;
+                    12 : dataState.chunkSize;
                 const top = requiredChunkSize;
                 qS += `$skip=${skip}&$top=${top}&$count=true`;
             }
