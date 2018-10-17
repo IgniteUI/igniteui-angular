@@ -4930,6 +4930,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        if (!rowInEdit) {
+            return;
+        }
         const change = this.transactions.getAggregatedValue(rowInEdit.rowID, false);
         const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const rowObj = rowInEdit ? this.getRowByIndex(rowInEdit.rowIndex) : null;
