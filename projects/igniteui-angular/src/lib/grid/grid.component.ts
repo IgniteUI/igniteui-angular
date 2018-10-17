@@ -4871,20 +4871,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
         this.showRowEditingOverlay();
-        this.calculateRowChangesCount(row.rowID);
     }
 
     /**
      * @hidden
      */
-    public calculateRowChangesCount(rowID) {
-        if (!this.rowEditable) {
-            return;
+    public get rowChangesCount() {
+        if (!this.rowInEditMode) {
+            return 0;
         }
-        const message = `You have {0} uncommitted changes on this row`;
-        const rowChanges = this.transactions.getAggregatedValue(rowID, false);
-        const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
-        this.rowEditMessage = message.replace('{0}', rowChangedCount.toString());
+        const rowChanges = this.transactions.getAggregatedValue(this.rowInEditMode.rowID, false);
+        return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
     /**

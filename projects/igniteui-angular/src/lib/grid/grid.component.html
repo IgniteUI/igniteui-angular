@@ -158,12 +158,12 @@
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
-    <ng-container *ngTemplateOutlet="rowEditContainer; context: {$implicit: this}"></ng-container>
+    <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit }"></ng-container>
 </div>
 <ng-template #defaultRowEditTemplate >
-    <div igxRowEdit [className]="bannerClass">
+    <div [className]="bannerClass">
         <div class="igx-banner__message">
-            <span class="igx-banner__text">{{ rowEditMessage }}</span>
+            <span class="igx-banner__text">You have {{ rowChangesCount }} uncommitted changes on this row</span>
         </div>
         <div class="igx-banner__actions">
             <div class="igx-banner__row">

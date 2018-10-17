@@ -257,7 +257,6 @@ export class IgxGridAPIService {
             } else {
                 grid.data[rowIndex][column.field] = editValue;
             }
-            grid.calculateRowChangesCount(rowID);
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
