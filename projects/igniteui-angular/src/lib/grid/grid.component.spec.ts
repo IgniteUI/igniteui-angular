@@ -878,49 +878,49 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const rv = fix.debugElement.query(By.css(`${CELL_CLASS}:last-child`));
-            const firstRow: HTMLElement = grid.getRowByIndex(1).nativeElement;
-
-            rv.nativeElement.dispatchEvent(new Event('focus'));
+            const cell = grid.getCellByColumn(0, 'ProductName');
+            cell.inEditMode = true;
+            const editRow = cell.row.nativeElement;
+            const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
             fix.detectChanges();
 
-            rv.triggerEventHandler('dblclick', {});
-
-            const banner: HTMLElement = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
-            const bannerPosition = banner.offsetTop;
-            const rowPosition = firstRow.offsetTop;
-            const rowHeight = firstRow.clientHeight;
+            const bannerTop = banner.getBoundingClientRect().top;
+            const editRowBottom = editRow.getBoundingClientRect().bottom;
 
             // The banner appears below the row
-            expect(bannerPosition).toBeGreaterThanOrEqual(rowPosition + rowHeight);
+            expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
 
             // No much space between the row and the banner
-            expect(bannerPosition - (rowPosition + rowHeight)).toBeLessThan(5);
+            expect(bannerTop - editRowBottom).toBeLessThan(2);
         }));
+
+        it('should display yhe banner after the edited row if it is the last one, but has room underneath it', () => {
+            // TO DO
+        });
 
         it('should display the banner above the edited row if it is the last one', (async () => {
             const fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const cell = fix.debugElement.queryAll(By.css(CELL_CLASS))[28];
-            const editRow: HTMLElement = grid.getRowByIndex(6).nativeElement;
-
-            cell.nativeElement.dispatchEvent(new Event('focus'));
+            // have the grid display more items at once, so that there is no room after the last item
+            grid.perPage = 100;
             fix.detectChanges();
 
-            cell.triggerEventHandler('dblclick', {});
+            const cell = grid.getCellByColumn(grid.data.length - 1, 'ProductName');
+            cell.inEditMode = true;
+            const editRow = cell.row.nativeElement;
+            const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+            fix.detectChanges();
 
-            const banner: HTMLElement = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
-            const bannerPosition = banner.offsetTop;
-            const bannerHeight = banner.clientHeight;
-            const rowPosition = editRow.offsetTop;
+            const bannerBottom = banner.getBoundingClientRect().bottom;
+            const editRowTop = editRow.getBoundingClientRect().top;
 
             // The banner appears above the row
-            expect(bannerPosition).toBeLessThanOrEqual(rowPosition - bannerHeight);
+            expect(bannerBottom).toBeLessThanOrEqual(editRowTop);
 
             // No much space between the row and the banner
-            expect(rowPosition - (bannerPosition + bannerHeight)).toBeLessThan(5);
+            expect(editRowTop - bannerBottom).toBeLessThan(2);
         }));
         // it('Should add correct class to the edited row', (async () => {
         //     const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1864,7 +1864,7 @@ describe('IgxGrid Component Tests', () => {
                 // cell.update('Don Juan De Marco');
                 // Do not exit edit mode
 
-                grid.sort({fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true});
+                grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true });
                 fix.detectChanges();
 
                 cell = grid.getCellByColumn(0, 'Downloads');
@@ -1895,7 +1895,7 @@ describe('IgxGrid Component Tests', () => {
                 cell.update('Don Juan De Marco');
                 cell.inEditMode = false;
 
-                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
                 fix.detectChanges();
 
                 cell = grid.getCellByColumn(3, 'ProductName');
@@ -1909,7 +1909,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fix.componentInstance.grid;
 
-                grid.sort({fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true});
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
                 fix.detectChanges();
 
                 // Edit any of the sorted rows so that the row position is changed
@@ -2171,7 +2171,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.debugElement.queryAll(By.css('.igx-button--flat'))[1].nativeElement.click();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
+                    newValue: Object.assign({}, initialData, { Downloads: 1337 }),
                     oldValue: initialData,
                     row: initialRow,
                 });
@@ -2196,7 +2196,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.debugElement.queryAll(By.css('.igx-button--flat'))[0].nativeElement.click();
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalled();
                 expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
+                    newValue: Object.assign({}, initialData, { Downloads: 1337 }),
                     oldValue: initialRow.rowData,
                     row: initialRow,
                 });
@@ -2221,7 +2221,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initalData, { Downloads: 1337}),
+                    newValue: Object.assign({}, initalData, { Downloads: 1337 }),
                     oldValue: initalData,
                     row: initialRow,
                 });
@@ -2246,7 +2246,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalled();
                 expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
-                    newValue: Object.assign({}, initialData, { Downloads: 1337}),
+                    newValue: Object.assign({}, initialData, { Downloads: 1337 }),
                     oldValue: initialData,
                     row: initialRow,
                 });
