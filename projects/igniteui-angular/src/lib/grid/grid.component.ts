@@ -4939,21 +4939,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
-        if (!rowInEdit) {
+        if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
-        const change = this.transactions.getAggregatedValue(rowInEdit.rowID, false);
-        const value = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
-        const rowObj = rowInEdit ? this.getRowByIndex(rowInEdit.rowIndex) : null;
+        const rowObj = this.getRowByKey(rowInEdit.rowID);
+        let oldValue = Object.assign({}, this.data[rowObj.index]);
+        if (this.transactions.enabled) {
+            const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
+            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
+        }
+        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue: Object.assign({}, this.data[rowObj.dataRowIndex], change),
-            oldValue: this.data[rowObj.dataRowIndex],
+            newValue: rowObj.rowData,
+            oldValue: oldValue,
             row: rowObj
         });
         this.transactions.endPending(commit);
-        if (commit && value && !isObjectEmpty(value) && !this.transactions.enabled) {
-            this.data[rowInEdit.rowIndex] = value;
+        if (commit && newValue && !isObjectEmpty(newValue) && !this.transactions.enabled) {
+            this.data[rowInEdit.rowIndex] = newValue;
         }
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);
