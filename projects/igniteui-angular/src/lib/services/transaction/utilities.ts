@@ -27,10 +27,8 @@ export interface TransactionService {
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
-     *
-     * @returns If operation is successful.
      */
-    add(transaction: Transaction, recordRef?: any): boolean;
+    add(transaction: Transaction, recordRef?: any): void;
 
     /**
      * Returns an array of all transactions. If id is provided returns last transaction for provided id

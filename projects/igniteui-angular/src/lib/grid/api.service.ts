@@ -246,7 +246,9 @@ export class IgxGridAPIService {
             if (oldValue && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
-            if (!grid.transactions.add(transaction, rowData)) {
+            if (grid.transactions.enabled) {
+                grid.transactions.add(transaction, rowData);
+            } else {
                 oldValue = args.newValue;
             }
             grid.calculateRowChangesCount(rowID);

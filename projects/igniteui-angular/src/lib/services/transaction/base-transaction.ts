@@ -5,13 +5,11 @@ export class IgxBaseTransactionService implements TransactionService {
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();
 
-    public add(transaction: Transaction, recordRef?: any): boolean {
+    public add(transaction: Transaction, recordRef?: any): void {
         if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
-            return true;
         }
-        return false;
     }
 
     getTransactionLog(id?: any): Transaction[] | Transaction { return []; }
