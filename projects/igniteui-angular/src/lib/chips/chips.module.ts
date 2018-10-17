@@ -10,6 +10,8 @@ import { IgxConnectorDirective } from './connector.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
+import { IgxPrefixModule, IgxPrefixDirective} from '../directives/prefix/prefix.directive';
+import { IgxSuffixModule, IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 
 @NgModule({
   declarations: [
@@ -17,12 +19,12 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxChipComponent,
     IgxConnectorDirective
   ],
-  entryComponents: [
-  ],
   exports: [
     IgxChipsAreaComponent,
     IgxChipComponent,
-    IgxConnectorDirective
+    IgxConnectorDirective,
+    IgxPrefixDirective,
+    IgxSuffixDirective
   ],
   imports: [
     CommonModule,
@@ -30,13 +32,9 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
     IgxIconModule,
     IgxButtonModule,
     IgxAvatarModule,
-    IgxDragDropModule
+    IgxDragDropModule,
+    IgxPrefixModule,
+    IgxSuffixModule
   ]
 })
-export class IgxChipsModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxChipsModule
-        };
-    }
-}
+export class IgxChipsModule { }
