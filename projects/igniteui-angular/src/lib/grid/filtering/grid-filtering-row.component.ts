@@ -171,10 +171,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         return this.column.filters.instance().conditionList();
     }
 
-    get gridOutlet(): any {
-        return this.filteringService.gridOutlet
-    }
-
     get isUnaryCondition(): boolean {
         if (this.expression.condition) {
             return this.expression.condition.isUnary;
@@ -370,6 +366,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filteringService.clearFilter(this.column.field);
         this.expressionsList = [];
         this.resetExpression();
+        this.cdr.detectChanges();
     }
 
     public clearInput(): void {
