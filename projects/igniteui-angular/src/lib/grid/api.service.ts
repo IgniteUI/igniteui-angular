@@ -199,6 +199,8 @@ export class IgxGridAPIService {
         }
     }
 
+    //  TODO: refactor update_cell. Maybe separate logic in two methods - one with transaction
+    //  and one without transaction
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
@@ -206,13 +208,32 @@ export class IgxGridAPIService {
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
             editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+        let rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+        let oldValue: any;
+        let rowData: any;
         if (rowIndex !== -1) {
+            oldValue = grid.data[rowIndex][column.field];
+            rowData = grid.data[rowIndex];
+        }
+
+        //  if we have transactions and add row was edited look for old value and row data in added rows
+        if (rowIndex < 0 && grid.transactions.transactionsEnabled()) {
+            const dataWithTransactions = grid.dataWithTransactions;
+            rowIndex = grid.primaryKey ?
+            dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+            dataWithTransactions.indexOf(rowID);
+            if (rowIndex !== -1) {
+                oldValue = dataWithTransactions[rowIndex][column.field];
+                rowData = dataWithTransactions[rowIndex];
+            }
+        }
+
+        if (oldValue && rowData) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
-                currentValue: grid.data[rowIndex][column.field], newValue: editValue
+                currentValue: oldValue,
+                newValue: editValue
             };
-            let oldValue = grid.data[rowIndex][column.field];
             grid.onEditDone.emit(args);
 
             //  if we are editing the cell for second or next time, get the old value from transaction
@@ -225,8 +246,8 @@ export class IgxGridAPIService {
             if (oldValue && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
-            if (!grid.transactions.add(transaction, grid.data[rowIndex])) {
-                grid.data[rowIndex][column.field] = args.newValue;
+            if (!grid.transactions.add(transaction, rowData)) {
+                oldValue = args.newValue;
             }
             grid.calculateRowChangesCount(rowID);
             if (grid.primaryKey === column.field && isRowSelected) {

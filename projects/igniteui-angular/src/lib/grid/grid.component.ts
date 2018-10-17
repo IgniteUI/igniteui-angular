@@ -4995,11 +4995,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    private get dataWithTransactions() {
+    /**
+     * @hidden
+     */
+    public get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
         if (this.transactions.transactionsEnabled()) {
-            result.push(this.transactions.aggregatedState(true)
-                .filter(state => state.type === TransactionType.ADD));
+            result.push(...this.transactions.aggregatedState(true)
+                .filter(t => t.type === TransactionType.ADD)
+                .map(t => t.newValue));
         }
 
         return result;
