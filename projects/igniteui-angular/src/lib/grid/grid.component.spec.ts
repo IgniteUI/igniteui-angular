@@ -2654,16 +2654,6 @@ export class IgxGridRowEditingComponent {
     public deleteRow(event, rowID) {
         event.stopPropagation();
         this.data.splice(rowID - 1, 1);
-        this.refreshAll();
-    }
-
-    refreshAll(): void {
-        this.refresh(this.grid);
-    }
-
-    private refresh(grid: IgxGridComponent): void {
-        (<any>grid)._pipeTrigger++;
-        (<any>grid).cdr.markForCheck();
     }
 }
 

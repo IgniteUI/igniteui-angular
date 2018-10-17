@@ -65,7 +65,6 @@ export class GridRowEditSampleComponent {
             OrderDate2: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
                 .toISOString().slice(0, 10)
         });
-        this.refresh(currentGrid);
     }
 
     public deleteRow(event, gridID, rowID) {
@@ -82,20 +81,16 @@ export class GridRowEditSampleComponent {
                 this.gridTransaction.deleteRow(rowID);
                 break;
         }
-
-        this.refreshAll();
     }
 
     public undo(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.undo();
-        this.refresh(currentGrid);
     }
 
     public redo(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.redo();
-        this.refresh(currentGrid);
     }
 
     public openCommitDialog(gridID) {
@@ -112,7 +107,6 @@ export class GridRowEditSampleComponent {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.commit(this.data);
         this.toggle.close();
-        this.refreshAll();
     }
 
     private getRandomInt(min, max) {
@@ -132,18 +126,6 @@ export class GridRowEditSampleComponent {
         }
 
         return null;
-    }
-
-    refreshAll(): void {
-        this.refresh(this.getGridById('grid'));
-        this.refresh(this.getGridById('gridRowEdit'));
-        this.refresh(this.getGridById('gridTransaction'));
-        this.refresh(this.getGridById('gridRowEditTransaction'));
-    }
-
-    private refresh(grid: IgxGridComponent): void {
-        (<any>grid)._pipeTrigger++;
-        (<any>grid).cdr.markForCheck();
     }
 
     rowEditDone(evt) {

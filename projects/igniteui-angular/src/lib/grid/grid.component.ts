@@ -2374,6 +2374,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.markForCheck();
+            this._pipeTrigger++;
+        });
     }
 
     /**
