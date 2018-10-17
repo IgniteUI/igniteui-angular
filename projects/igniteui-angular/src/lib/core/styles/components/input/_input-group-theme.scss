@@ -240,10 +240,80 @@
         position: relative;
         display: block;
         color: --var($theme, 'idle-text-color');
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix;
+        }
+    }
+
+    %form-group-display--cosy {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--cosy;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--cosy;
+        }
+    }
+
+    %form-group-display--compact {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--compact;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--compact;
+        }
     }
 
     %form-group-display--no-margin {
         margin-top: 0;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--box;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--box;
+        }
+    }
+
+    %form-group-display--no-margin-cosy {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--box-cosy;
+        }
+    }
+
+    %form-group-display--no-margin-compact {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--box-compact;
+        }
+    }
+
+    %form-group-display--error {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--error;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--error;
+        }
     }
 
     %form-group-box-wrapper {
