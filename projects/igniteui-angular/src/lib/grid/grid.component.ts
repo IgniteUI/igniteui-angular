@@ -2364,7 +2364,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onRowEditDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.rowEditable) {
                 this.endRowEdit(true);
@@ -2372,7 +2371,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.gridAPI.submit_value(this.id);
             }
         });
+        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
     }
 
     /**

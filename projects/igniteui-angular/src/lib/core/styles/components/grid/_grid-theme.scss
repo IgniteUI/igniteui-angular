@@ -562,6 +562,7 @@
     %grid-tfoot {
         grid-row: 5;
         border-top: $grid-header-border;
+        z-index: 10001;
     }
 
     %grid-display-container-thead {
