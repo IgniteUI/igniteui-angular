@@ -3,6 +3,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from './column.component';
 import { IForOfState} from '../directives/for-of/for_of.directive';
@@ -13,7 +14,6 @@ import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
-import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
@@ -242,7 +242,7 @@ describe('IgxGrid Component Tests', () => {
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
         }));
 
-        it('should render empty message', (async () => {
+        it('should render empty message', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.data = [];
             fixture.detectChanges();
@@ -253,14 +253,14 @@ describe('IgxGrid Component Tests', () => {
             // Check for loaded rows in grid's container
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
-            await wait(100);
+            tick(1000);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columns;
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            await wait(100);
+            tick(100);
             expect(gridBody.nativeElement.innerText.substr(0,
                 gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
@@ -268,13 +268,13 @@ describe('IgxGrid Component Tests', () => {
             // Clear filter and check if grid's body height is restored based on all loaded rows
             grid.clearFilter(columns[0].field);
             fixture.detectChanges();
-            await wait(10);
+            tick(100);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
 
             // Clearing grid's data and check for empty grid message
             fixture.componentInstance.clearData();
             fixture.detectChanges();
-            await wait(10);
+            tick(100);
             expect(gridBody.nativeElement.innerText.substr(0,
                 gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
         }));
