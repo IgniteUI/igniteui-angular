@@ -63,7 +63,7 @@ describe('IgxGrid - GroupBy', () => {
     function checkChips(chips, grExpr, sortExpr) {
         for (let i = 0; i < chips.length; i++) {
             const chip = chips[i].querySelector('div.igx-chip__content').innerText;
-            const chipDirection = chips[i].querySelector('igx-suffix>igx-icon').innerText;
+            const chipDirection = chips[i].querySelector('[igxsuffix]').innerText;
             const grp = grExpr[i];
             const s = sortExpr[i];
             expect(chip).toBe(grp.fieldName);
@@ -1189,7 +1189,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const groupRows = grid.groupsRowList.toArray();
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grouparea').length).toEqual(1);
+        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
     });
 
     it('should apply group area if a column is groupable.', () => {
@@ -1198,7 +1198,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grouparea').length).toEqual(1);
+        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
         expect(gridElement.clientHeight).toEqual(700);
     });
 
@@ -1424,8 +1424,8 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.cdr.detectChanges();
 
-        const fChipDirection = chips[0].querySelector('igx-suffix>igx-icon').innerText;
-        const sChipDirection = chips[1].querySelector('igx-suffix>igx-icon').innerText;
+        const fChipDirection = chips[0].querySelector('[igxsuffix]').innerText;
+        const sChipDirection = chips[1].querySelector('[igxsuffix]').innerText;
 
         expect(fChipDirection).toEqual('arrow_upward');
         expect(sChipDirection).toEqual('arrow_downward');
