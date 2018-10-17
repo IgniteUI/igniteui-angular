@@ -10,7 +10,7 @@
     ViewChild,
     Renderer2
 } from '@angular/core';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,

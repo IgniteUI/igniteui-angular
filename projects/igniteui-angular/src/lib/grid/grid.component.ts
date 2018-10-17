@@ -31,7 +31,8 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
