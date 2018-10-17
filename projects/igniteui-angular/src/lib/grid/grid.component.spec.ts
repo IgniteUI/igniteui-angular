@@ -23,6 +23,7 @@ import { IgxGridRowComponent } from './row.component';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
+import { take } from 'rxjs/operators';
 
 const DEBOUNCETIME = 30;
 
@@ -827,6 +828,7 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
+                    IgxBasicGridRowEditingComponent,
                     IgxGridRowEditingComponent,
                     IgxGridRowEditingWithoutEditableColumnsComponent,
                     IgxGridWithEditingAndFeaturesComponent
@@ -2251,18 +2253,57 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        it('Default column editable value is true, when row editing is enabled', () => {
-            const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
-            fixture.detectChanges();
+        describe('Row editing - column editable property', () => {
+            it('Default column editable value is true, when row editing is enabled', () => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
+                fixture.detectChanges();
 
-            const grid = fixture.componentInstance.grid;
+                const grid = fixture.componentInstance.grid;
 
-            const columns: IgxColumnComponent[] = grid.columnList.toArray();
-            expect(columns[0].editable).toBeFalsy();
-            expect(columns[1].editable).toBeFalsy();
-            expect(columns[2].editable).toBeTruthy();
-            expect(columns[3].editable).toBeTruthy();
-            expect(columns[4].editable).toBeTruthy();
+                const columns: IgxColumnComponent[] = grid.columnList.toArray();
+                expect(columns[0].editable).toBeFalsy();
+                expect(columns[1].editable).toBeFalsy();
+                expect(columns[2].editable).toBeTruthy();
+                expect(columns[3].editable).toBeTruthy();
+                expect(columns[4].editable).toBeTruthy();
+            });
+        });
+
+        describe('Row Editing - Row Editing Overlay position', () => {
+            it('Open overlay for top row', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+                let cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+
+                let overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                cell.inEditMode = false;
+
+                row = grid.getRowByIndex(2).nativeElement;
+                cell = grid.getCellByColumn(2, 'ProductName');
+                cell.inEditMode = true;
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                cell.inEditMode = false;
+
+                row = grid.getRowByIndex(3).nativeElement;
+                cell = grid.getCellByColumn(3, 'ProductName');
+                cell.inEditMode = true;
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(row.getBoundingClientRect().top === overlayContent.getBoundingClientRect().bottom).toBeTruthy();
+                cell.inEditMode = false;
+
+                row = grid.getRowByIndex(0).nativeElement;
+                cell = grid.getCellByColumn(0, 'ProductName');
+                cell.inEditMode = true;
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                cell.inEditMode = false;
+            }));
         });
     });
 
@@ -2567,6 +2608,23 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     public formatNum() {
         return this.value.toExponential().toString();
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="300px" [rowEditable]="true">
+        <igx-column field="ProductID" header="Product ID" [editable]="false"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" width="100px">
+        </igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [sortable]="true" width="150px">
+        </igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px"></igx-column>
+    </igx-grid>`
+})
+export class IgxBasicGridRowEditingComponent {
+    public data = SampleTestData.foodProductData();
+
+    @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
 }
 
 @Component({
