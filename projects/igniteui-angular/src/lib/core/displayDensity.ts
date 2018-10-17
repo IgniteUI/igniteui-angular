@@ -10,13 +10,13 @@ export const enum DisplayDensity {
 }
 
 /**
- * Defines the DisplayDensity DI token.
- */
-export const DisplayDensityToken = new InjectionToken<DisplayDensity>('DisplayDensity');
-
-/**
  * Describes the object used to configure the DisplayDensity in Angular DI.
  */
 export interface IDisplayDensity {
     displayDensity: DisplayDensity;
 }
+
+/**
+ * Defines the DisplayDensity DI token.
+ */
+export const DisplayDensityToken = new InjectionToken<IDisplayDensity>('DisplayDensity');
