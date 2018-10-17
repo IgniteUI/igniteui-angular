@@ -10,7 +10,7 @@ import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './row.component';
-import { IgxChipComponent } from '../chips/chip.component';
+import { IgxChipComponent, IChipClickEventArgs } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
 
@@ -22,7 +22,7 @@ describe('IgxGrid - GroupBy', () => {
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
     const DISABLED_CHIP = 'igx-chip--disabled';
-    const CHIP_REMOVE_ICON = '.igx-chip__remove-icon';
+    const CHIP_REMOVE_ICON = '.igx-chip__remove';
     const CHIP = 'igx-chip';
 
     beforeEach(async(() => {
@@ -62,8 +62,8 @@ describe('IgxGrid - GroupBy', () => {
 
     function checkChips(chips, grExpr, sortExpr) {
         for (let i = 0; i < chips.length; i++) {
-            const chip = chips[i].querySelector('span.igx-chip__label>span').innerText;
-            const chipDirection = chips[i].querySelector('span.igx-chip__label>igx-icon').innerText;
+            const chip = chips[i].querySelector('div.igx-chip__content').innerText;
+            const chipDirection = chips[i].querySelector('igx-suffix>igx-icon').innerText;
             const grp = grExpr[i];
             const s = sortExpr[i];
             expect(chip).toBe(grp.fieldName);
@@ -1284,7 +1284,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click close button
-        UIInteractions.simulateMouseEvent('click', chips[0].querySelector('igx-icon[igxbutton]'), 0, 0);
+        UIInteractions.simulateMouseEvent('click', chips[0].querySelector(CHIP_REMOVE_ICON), 0, 0);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(0);
@@ -1301,7 +1301,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event = { owner: { id: 'ProductName' } };
+        const event: IChipClickEventArgs = { owner: chips[0], originalEvent: null, cancel: false };
         grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -1424,8 +1424,8 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         grid.cdr.detectChanges();
 
-        const fChipDirection = chips[0].querySelector('span.igx-chip__label>igx-icon').innerText;
-        const sChipDirection = chips[1].querySelector('span.igx-chip__label>igx-icon').innerText;
+        const fChipDirection = chips[0].querySelector('igx-suffix>igx-icon').innerText;
+        const sChipDirection = chips[1].querySelector('igx-suffix>igx-icon').innerText;
 
         expect(fChipDirection).toEqual('arrow_upward');
         expect(sChipDirection).toEqual('arrow_downward');
@@ -1632,8 +1632,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows[1].expanded).toEqual(true);
 
         let chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-        expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
-        expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
+        expect(chipsElems[0].querySelector('div.igx-chip__content').textContent.trim()).toEqual('ProductName');
+        expect(chipsElems[1].querySelector('div.igx-chip__content').textContent.trim()).toEqual('Released');
 
         // reorder chips again to revert them in original state
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -1652,8 +1652,8 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-        expect(chipsElems[0].querySelector('span.igx-chip__label>span').textContent).toEqual('Released');
-        expect(chipsElems[1].querySelector('span.igx-chip__label>span').textContent).toEqual('ProductName');
+        expect(chipsElems[0].querySelector('div.igx-chip__content').textContent.trim()).toEqual('Released');
+        expect(chipsElems[1].querySelector('div.igx-chip__content').textContent.trim()).toEqual('ProductName');
 
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows[0].expanded).toEqual(true);
@@ -1717,7 +1717,7 @@ describe('IgxGrid - GroupBy', () => {
 
         const chips = fix.nativeElement.querySelectorAll(CHIP);
         expect(chips.length).toBe(1);
-        const chipText = chips[0].querySelector('span.igx-chip__text').innerText;
+        const chipText = chips[0].querySelector('div.igx-chip__content').innerText;
         expect(chipText).toEqual('Custom Header Text');
     });
 
