@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray } from '../core/utils';
+import { cloneArray, isObjectEmpty } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -228,6 +228,7 @@ export class IgxGridAPIService {
             if (!grid.transactions.add(transaction, grid.data[rowIndex])) {
                 grid.data[rowIndex][column.field] = args.newValue;
             }
+            grid.calculateRowChangesCount(rowID);
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
