@@ -218,7 +218,7 @@ export class IgxGridAPIService {
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
         if (rowIndex < 0 && grid.transactions.enabled) {
-            const dataWithTransactions = grid.dataWithTransactions;
+            const dataWithTransactions = grid.dataWithAddedInTransactionRows;
             rowIndex = grid.primaryKey ?
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);

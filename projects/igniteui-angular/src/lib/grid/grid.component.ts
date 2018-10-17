@@ -3736,7 +3736,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected get rowBasedHeight() {
         if (this.data && this.data.length) {
-            return this.dataWithTransactions.length * this.rowHeight;
+            return this.dataLength * this.rowHeight;
         }
         return 0;
     }
@@ -3773,7 +3773,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || this.dataWithTransactions.length;
+        const allItems = this.totalItemCount || this.dataLength;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
@@ -4132,7 +4132,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             event.checked ?
                 this.filteredData ?
                     this.selection.add_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.dataWithTransactions, this.primaryKey) :
+                    this.selection.get_all_ids(this.dataWithAddedInTransactionRows, this.primaryKey) :
                 this.filteredData ?
                     this.selection.delete_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selection.get_empty();
@@ -4154,7 +4154,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.data && this.dataWithTransactions.length === 0) {
+        if (this.data && this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
@@ -4186,12 +4186,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.dataWithTransactions.length);
+            this.allRowsSelected = this.selection.are_all_selected(this.id, this.dataLength);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
                     this.headerCheckbox.checked =
-                        this.selection.are_all_selected(this.id, this.dataWithTransactions.length);
+                        this.selection.are_all_selected(this.id, this.dataLength);
                 }
             }
             this.cdr.markForCheck();
@@ -4317,7 +4317,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithTransactions, this.primaryKey));
+        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithAddedInTransactionRows, this.primaryKey));
     }
 
     /**
@@ -5004,7 +5004,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public get dataWithTransactions() {
+    public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.data);
         if (this.transactions.enabled) {
             result.push(...this.transactions.aggregatedState(true)
@@ -5013,5 +5013,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         return result;
+    }
+
+    private get dataLength() {
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.data.length;
     }
 }
