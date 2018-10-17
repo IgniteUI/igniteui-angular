@@ -180,6 +180,10 @@
         @extend %igx-grid__group-row !optional;
     }
 
+    @include e(group-row, $m: active) {
+        @extend %igx-grid__group-row--active !optional;
+    }
+
     @include e(group-content) {
         @extend %igx-grid__group-content !optional;
     }
