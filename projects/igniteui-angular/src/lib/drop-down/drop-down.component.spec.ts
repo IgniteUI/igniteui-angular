@@ -1104,7 +1104,7 @@ describe('IgxDropDown ', () => {
 @Component({
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
-    <igx-drop-down igxDropDownItemNavigation (onSelecting)="onSelecting($event)" (onSelection)="onSelection($event)" 
+    <igx-drop-down igxDropDownItemNavigation (onSelecting)="onSelecting($event)" (onSelection)="onSelection($event)"
     [allowItemsFocus]="true"
     (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
