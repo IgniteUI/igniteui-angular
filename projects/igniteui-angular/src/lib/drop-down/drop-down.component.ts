@@ -32,6 +32,11 @@ export interface ISelectionEventArgs {
     newSelection: IgxDropDownItemBase;
 }
 
+/**
+ * Interface that encapsulates onSelecting event arguments
+ *
+ * @export
+ */
 export interface ISelectingEventArgs {
     currentSelection: IgxDropDownItemBase;
     cancel: boolean;

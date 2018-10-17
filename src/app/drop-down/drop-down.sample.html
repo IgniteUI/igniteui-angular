@@ -38,7 +38,7 @@
             <div>
                 <label igxLabel>Menu Selected Text: {{ selectedText }}</label>
             </div>
-            <igx-drop-down #menu (onSelecting)="onSelecting($event)" (onSelection)="onSelection($event)" height='400px'>
+            <igx-drop-down #menu (onSelecting)="onSelecting($event)" height='400px'>
                 <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                     <div class="igx-drop-down__item-template">
                         {{ item.field }}

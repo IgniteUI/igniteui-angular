@@ -6,6 +6,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule, ISelectionEventArgs, ISelectingEventArgs } from './drop-down.component';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -250,30 +251,26 @@ describe('IgxDropDown ', () => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
 
-            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const button = fixture.debugElement.query(By.css('button'));
             const list = fixture.componentInstance.dropdown;
-            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             spyOn(list.onSelecting, 'emit').and.callThrough();
             spyOn(list.onSelection, 'emit').and.callThrough();
             spyOn(list.onClosed, 'emit').and.callThrough();
-            spyOn(fixture.componentInstance, 'onSelecting');
             spyOn(fixture.componentInstance, 'onSelection');
             expect(list).toBeDefined();
             expect(list.items.length).toEqual(4);
 
-            button.click(mockObj);
+            UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
 
-            lastListItem.click({});
+            UIInteractions.clickElement(list.items[3].element);
             tick();
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(list.items[3]);
             expect(list.onSelecting.emit).toHaveBeenCalledTimes(1);
             expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
             expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSelecting).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
         }));
 
@@ -281,29 +278,16 @@ describe('IgxDropDown ', () => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
 
-            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const button = fixture.debugElement.query(By.css('button'));
             const list = fixture.componentInstance.dropdown;
-            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             spyOn(list.onSelecting, 'emit').and.callThrough();
             spyOn(list.onSelection, 'emit').and.callThrough();
-            spyOn(fixture.componentInstance, 'onSelecting');
-            spyOn(fixture.componentInstance, 'onSelection');
-            expect(list).toBeDefined();
 
-            button.click(mockObj);
+            UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
 
-            lastListItem.click({});
-            tick();
-            fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[3]);
-            expect(list.onSelecting.emit).toHaveBeenCalledTimes(1);
-            expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSelecting).toHaveBeenCalledTimes(1);
-            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
-
+            UIInteractions.clickElement(list.items[3].element);
             tick();
             fixture.detectChanges();
             const selectingArgs: ISelectingEventArgs = {
@@ -318,19 +302,15 @@ describe('IgxDropDown ', () => {
             };
             expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs);
 
-            button.click(mockObj);
+            UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
-            const secondListItem = list.items[1].element.nativeElement;
 
-            secondListItem.click({});
+            UIInteractions.clickElement(list.items[1].element);
             tick();
             fixture.detectChanges();
-            expect(list.selectedItem).toEqual(list.items[1]);
             expect(list.onSelecting.emit).toHaveBeenCalledTimes(2);
             expect(list.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(fixture.componentInstance.onSelecting).toHaveBeenCalledTimes(2);
-            expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(2);
 
             tick();
             fixture.detectChanges();
@@ -351,19 +331,16 @@ describe('IgxDropDown ', () => {
             const fixture = TestBed.createComponent(IgxDropDownSelectComponent);
             fixture.detectChanges();
 
-            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const button = fixture.debugElement.query(By.css('button'));
             const list = fixture.componentInstance.dropdown;
-            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
             spyOn(list.onSelecting, 'emit').and.callThrough();
             spyOn(list.onSelection, 'emit').and.callThrough();
-            expect(list).toBeDefined();
 
-            button.click(mockObj);
+            UIInteractions.clickElement(button);
             tick();
             fixture.detectChanges();
-            const lastListItem = list.items[3].element.nativeElement;
 
-            lastListItem.click({});
+            UIInteractions.clickElement(list.items[3].element);
             tick();
             fixture.detectChanges();
             expect(list.selectedItem).toEqual(null);
