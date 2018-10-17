@@ -912,7 +912,7 @@ describe('IgxGrid - Column Moving', () => {
         }));
     });
 
-    describe('', () => {
+    xdescribe('', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();
