@@ -7,6 +7,7 @@
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Color} $roundness [32px] - The chip roundness.
+///
 /// @param {Color} $text-color [rgba(0, 0, 0, .74)] - The chip text color.
 /// @param {Color} $background [rgba(0, 0, 0, .04)] - The chip background color.
 /// @param {Color} $border-color [transparent] - The chip border color.
@@ -30,9 +31,11 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-color
+/// @requires luminance
+/// @requires hexrgba
 ///
 /// @example scss Change the background color
-///   $my-chip-theme: igx-chip-theme($chip-background: black);
+///   $my-chip-theme: igx-chip-theme($background: black);
 ///   // Pass the theme to the igx-chip component mixin
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
