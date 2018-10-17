@@ -13,7 +13,7 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxConnectorDirective } from './connector.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
 
 @Component({

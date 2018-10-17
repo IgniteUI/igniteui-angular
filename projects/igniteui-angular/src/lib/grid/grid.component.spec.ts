@@ -9,7 +9,7 @@ import { IgxColumnComponent } from './column.component';
 import { IForOfState} from '../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
