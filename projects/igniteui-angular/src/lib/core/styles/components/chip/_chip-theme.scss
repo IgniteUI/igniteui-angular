@@ -512,6 +512,7 @@
     }
 
     %igx-chip__ghost--compact {
+        @extend  %igx-chip-custom-icon--compact;
         height: map-get($chip-height, 'compact');
 
         %igx-chip__content {
@@ -537,7 +538,8 @@
             }
         }
 
-        %igx-chip--compact {
+        %igx-chip--compact,
+        %igx-chip__ghost--compact {
             %igx-chip__content {
                 @include igx-type-style($type-scale, $text) {
                     font-size: rem(12px);

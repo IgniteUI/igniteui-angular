@@ -6,7 +6,7 @@
 /// @requires {mixin} bem-mod
 ////
 
-@include b(igx-chips-area) {
+@include b(igx-chip-area) {
     @extend %igx-chip-area !optional;
 }
 
