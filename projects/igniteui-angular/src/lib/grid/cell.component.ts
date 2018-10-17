@@ -861,8 +861,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
-                this.exitRowEdit(true, true);
+                const rowInEdit = this.gridAPI.get_row_inEditMode(this.gridID);
                 this.gridAPI.submit_value(this.gridID);
+                this.exitRowEdit(true, true, rowInEdit);
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -872,8 +873,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
-            this.exitRowEdit(false, true);
+            const rowInEdit = this.gridAPI.get_row_inEditMode(this.gridID);
             this.inEditMode = false;
+            this.exitRowEdit(false, true, rowInEdit);
             this.nativeElement.focus();
         }
     }

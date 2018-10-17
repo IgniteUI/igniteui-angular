@@ -54,12 +54,18 @@ export class IgxGridAPIService {
             this.summaryCacheMap.set(id, new Map<string, any[]>());
         }
         const column = this.get_column_by_name(id, name);
-        if (this.get(id).filteredData && this.get(id).filteredData.length >= 0) {
-            this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
-        } else {
-            if (this.get(id).data) {
-                this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+        const grid = this.get(id);
+        let data = grid.filteredData;
+        if (!data) {
+            if (grid.transactions.enabled) {
+                data = DataUtil.mergeTransactions(cloneArray(grid.data, true), grid.transactions.aggregatedState(true), grid.primaryKey);
+            } else {
+                data = grid.data;
             }
+        }
+        if (data) {
+            const columnValues = data.map((rec) => rec[column.field]);
+            this.calculateSummaries(id, column, columnValues);
         }
     }
 
@@ -218,7 +224,7 @@ export class IgxGridAPIService {
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
         if (rowIndex < 0 && grid.transactions.enabled) {
-            const dataWithTransactions = grid.dataWithTransactions;
+            const dataWithTransactions = grid.dataWithAddedInTransactionRows;
             rowIndex = grid.primaryKey ?
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
@@ -228,7 +234,7 @@ export class IgxGridAPIService {
             }
         }
 
-        if (oldValue && rowData) {
+        if (oldValue !== undefined && rowData !== undefined) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
                 currentValue: oldValue,
@@ -243,13 +249,13 @@ export class IgxGridAPIService {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue && oldValue === editValue) { return; }
+            if (oldValue !== undefined && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                oldValue = args.newValue;
+                grid.data[rowIndex][column.field] = editValue;
             }
             grid.calculateRowChangesCount(rowID);
             if (grid.primaryKey === column.field && isRowSelected) {
