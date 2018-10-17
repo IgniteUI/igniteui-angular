@@ -59,14 +59,6 @@
         }
     }
 
-    @include e(bundle-prefix) {
-        @extend %form-group-prefix !optional;
-    }
-
-    @include e(bundle-suffix) {
-        @extend %form-group-suffix !optional;
-    }
-
     @include e(border) {
         @extend %form-group-border !optional;
     }
@@ -87,36 +79,6 @@
     @include e(hint-item, $m: end) {
         @extend %form-group-helper-item !optional;
         @extend %form-group-helper-item--end !optional;
-    }
-
-    @include m(cosy) {
-        @include e(bundle) {
-            @extend %form-group-bundle--cosy !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--cosy !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--cosy !optional;
-        }
-
-        @include e(label) {
-            @extend %form-group-label--cosy !optional;
-        }
-
-        @include e(input) {
-            @extend %form-group-input--cosy !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--cosy !optional;
-        }
-
-        @include e(hint) {
-            @extend %form-group-hint--cosy !optional;
-        }
     }
 
     @include m(focused) {
@@ -156,6 +118,8 @@
     }
 
     @include m(invalid) {
+        @extend %form-group-display--error !optional;
+
         @include e(label) {
             @extend %form-group-label--error !optional;
         }
@@ -170,14 +134,6 @@
 
         @include e(bundle) {
             @extend %form-group-bundle--error !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--error !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--error !optional;
         }
     }
 
@@ -215,17 +171,35 @@
         }
     }
 
+    @include m(cosy) {
+        @extend %form-group-display--cosy !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--cosy !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--cosy !optional;
+        }
+
+        @include e(input) {
+            @extend %form-group-input--cosy !optional;
+        }
+
+        @include e(textarea) {
+            @extend %form-group-textarea--cosy !optional;
+        }
+
+        @include e(hint) {
+            @extend %form-group-hint--cosy !optional;
+        }
+    }
+
     @include m(compact) {
+        @extend %form-group-display--compact !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle--compact !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--compact !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--compact !optional;
         }
 
         @include e(label) {
@@ -242,32 +216,6 @@
 
         @include e(hint) {
             @extend %form-group-hint--compact !optional;
-        }
-    }
-
-    @include m(compact) {
-        @include e(bundle) {
-            @extend %form-group-bundle--compact !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--compact !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--compact !optional;
-        }
-
-        @include e(label) {
-            @extend %form-group-label--compact !optional;
-        }
-
-        @include e(input) {
-            @extend %form-group-input--compact !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--compact !optional;
         }
     }
 
@@ -298,20 +246,14 @@
             @extend %form-group-textarea--box !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--box !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper--box !optional;
         }
     }
 
     @include mx(box, cosy) {
+        @extend %form-group-display--no-margin-cosy !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle--box-cosy !optional;
         }
@@ -320,26 +262,20 @@
             @extend %form-group-bundle-main--box-cosy !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-cosy !optional;
-        }
-
         @include e(textarea) {
             @extend %form-group-textarea--box-cosy !optional;
         }
     }
 
     @include mx(box, compact) {
+        @extend %form-group-display--no-margin-compact !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle--box-compact !optional;
         }
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-compact !optional;
         }
 
         @include e(textarea) {
@@ -384,20 +320,14 @@
             @extend %form-group-textarea--box !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--box !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper--box !optional;
         }
     }
 
     @include mx(border, cosy) {
+        @extend %form-group-display--no-margin-cosy !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle--border-cosy !optional;
         }
@@ -406,26 +336,20 @@
             @extend %form-group-bundle-main--box-cosy !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-cosy !optional;
-        }
-
         @include e(textarea) {
             @extend %form-group-textarea--box-cosy !optional;
         }
     }
 
     @include mx(border, compact) {
+        @extend %form-group-display--no-margin-compact !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle--border-compact !optional;
         }
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-compact !optional;
         }
 
         @include e(textarea) {
@@ -488,20 +412,14 @@
             @extend %form-group-textarea--box !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box !optional;
-        }
-
-        @include e(bundle-suffix) {
-            @extend %form-group-suffix--box !optional;
-        }
-
         @include e(hint) {
             @extend %form-group-helper--box !optional;
         }
     }
 
     @include mx(search, cosy) {
+        @extend %form-group-display--no-margin-cosy !optional;
+
         @include b(bundle) {
             @extend %form-group-bundle--search-cosy !optional;
         }
@@ -510,26 +428,20 @@
             @extend %form-group-bundle-main--box-cosy !optional;
         }
 
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-cosy !optional;
-        }
-
         @include e(textarea) {
             @extend %form-group-textarea--box-cosy !optional;
         }
     }
 
     @include mx(search, compact) {
+        @extend %form-group-display--no-margin-compact !optional;
+
         @include b(bundle) {
             @extend %form-group-bundle--search-compact !optional;
         }
 
         @include e(bundle-main) {
             @extend %form-group-bundle-main--box-compact !optional;
-        }
-
-        @include e(bundle-prefix) {
-            @extend %form-group-prefix--box-compact !optional;
         }
 
         @include e(textarea) {

@@ -22,9 +22,9 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
+                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
-                <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -87,8 +87,6 @@ describe('IgxChip', () => {
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
-                IgxPrefixDirective,
-                IgxSuffixDirective,
                 IgxLabelDirective
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
