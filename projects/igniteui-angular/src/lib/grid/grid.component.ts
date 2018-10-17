@@ -2063,62 +2063,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Get/Set the text of the default IgxRowEditingOverlay.
-     * ```typescript
-     * // Get
-     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommitted changes on this row'
-     * ...
-     * // Set
-     * const customText_MESSAGE = 'You changes have not been committed';
-     * this.grid.rowEditMessage = customText_MESSAGE;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditMessage]="'You changes have not been committed'">
-     * ```
-     */
-    @Input()
-    public rowEditMessage = `You have {0} uncommitted changes on this row`;
-    /**
      * @hidden
      */
-    public rowEditMessageValue;
-
-    /**
-     * Get/Set the text of the default IgxRowEditingOverlay commit button.
-     * ```typescript
-     * // Get
-     * const defaultText_DONE = this.grid.rowEditButtonDone; // == 'Done'
-     * ...
-     * // Set
-     * const customText_DONE = 'Apply Changes';
-     * this.grid.rowEditButtonDone = customText_COMMIT;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditButtonDone]="'Apply Changes'">
-     * ```
-     */
-    @Input()
-    public rowEditButtonDone = 'Done';
-
-    /**
-     * Get/Set the text of the default IgxRowEditingOverlay discard button.
-     * ```typescript
-     * // Get
-     * const defaultText_CANCEL = this.grid.rowEditButtonCancel; // == 'Cancel'
-     * ...
-     * // Set
-     * const customText_CANCEL = 'Stop Editing';
-     * this.grid.rowEditButtonCancel = customText_CANCEL;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditButtonCancel]="'Stop Editing'">
-     * ```
-     */
-    @Input()
-    public rowEditButtonCancel = 'Cancel';
+    public rowEditMessage;
 
     /**
      * Emitted when an export process is initiated by the user.
@@ -4934,9 +4881,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowEditable) {
             return;
         }
+        const message = `You have {0} uncommitted changes on this row`;
         const rowChanges = this.transactions.getAggregatedValue(rowID, false);
         const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
-        this.rowEditMessageValue = this.rowEditMessage.replace('{0}', rowChangedCount.toString());
+        this.rowEditMessage = message.replace('{0}', rowChangedCount.toString());
     }
 
     /**

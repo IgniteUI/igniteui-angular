@@ -163,12 +163,12 @@
 <ng-template #defaultRowEditTemplate >
     <div igxRowEdit [className]="bannerClass">
         <div class="igx-banner__message">
-            <span class="igx-banner__text">{{ rowEditMessageValue }}</span>
+            <span class="igx-banner__text">{{ rowEditMessage }}</span>
         </div>
         <div class="igx-banner__actions">
             <div class="igx-banner__row">
-                <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">{{ rowEditButtonCancel }}</button>
-                <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">{{ rowEditButtonDone }}</button>
+                <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+                <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Done</button>
             </div>
         </div>
     </div>
