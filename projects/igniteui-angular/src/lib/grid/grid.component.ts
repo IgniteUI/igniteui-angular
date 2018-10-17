@@ -151,10 +151,9 @@ export interface IColumnMovingEndEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService],
+    providers: [IgxGridNavigationService, IgxFilteringService],
     selector: 'igx-grid',
-    templateUrl: './grid.component.html',
-    providers: [IgxFilteringService]
+    templateUrl: './grid.component.html'
 })
 export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
 
@@ -2072,6 +2071,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private resolver: ComponentFactoryResolver,
         private differs: IterableDiffers,
         private viewRef: ViewContainerRef,
+        private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService) {
 
         this.resizeHandler = () => {

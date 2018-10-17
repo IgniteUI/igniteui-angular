@@ -14,6 +14,7 @@ import { IBaseChipEventArgs } from '../../chips';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
 export class ExpressionUI {
     public expression: IFilteringExpression;

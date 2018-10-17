@@ -54,14 +54,17 @@
     <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
     <igx-chips-area #chipsArea (onSelection)="onChipsSelectionChanged($event)">
-        <igx-chip *ngFor="let item of expressionsList; index as i"
-            (onSelection)="onChipSelected($event, item.expression)"
-            (onRemove)="onChipRemoved($event, item)"
-            [selectable]="true"
-            [selected]="item.isSelected"
-            [removable]="true">
-            <span [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
-            <span igxConnector>
+        <ng-container *ngFor="let item of expressionsList; index as i; let last = last;">
+            <igx-chip
+                (onSelection)="onChipSelected($event, item.expression)"
+                (onRemove)="onChipRemoved($event, item)"
+                [selectable]="true"
+                [selected]="item.isSelected"
+                [removable]="true">
+                <igx-icon igxPrefix fontSet="filtering-icons" [name]="item.expression.condition.iconName"></igx-icon>
+                <span [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
+            </igx-chip>
+            <span *ngIf="!last" class="chip-area-connector">
                 <button igxButton (click)="toggleOperatorsDropDown($event, i)">
                     <igx-icon>expand_more</igx-icon>
                     <span>{{getOperator(item.afterOperator)}}</span>
@@ -71,7 +74,7 @@
                         <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
                 </igx-drop-down>
             </span>
-        </igx-chip>
+        </ng-container>
     </igx-chips-area>
 </div>
 
