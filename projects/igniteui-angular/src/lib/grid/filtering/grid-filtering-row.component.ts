@@ -327,13 +327,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public conditionChangedCallback(): void {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.filter();
-        } else {
+        } else if (this.value) {
             this.value = null;
         }
     }
 
     public unaryConditionChangedCallback(): void {
-        this.value = null;
+        if (this.value) {
+            this.value = null;
+        }
         if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
             this.addExpression(true);
         }
