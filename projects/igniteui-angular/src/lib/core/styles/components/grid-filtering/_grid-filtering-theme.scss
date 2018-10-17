@@ -190,7 +190,6 @@
         border: 1px solid --var($theme, 'menu-background');
         border-radius: $filtering-menu-radius;
         padding: $grid-filtering-options-padding;
-        z-index: 10;
 
         .igx-button-group {
             margin: 24px 0;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
@@ -12,6 +12,9 @@ export class AppComponent implements OnInit {
 
     @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent })
     navdrawer;
+
+    @HostBinding('attr.id')
+    appId = 'igniteui-demo-app';
 
     drawerState = {
         enableGestures: true,
@@ -272,6 +275,11 @@ export class AppComponent implements OnInit {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
+        },
+        {
+            link: '/tooltip',
+            icon: 'info',
+            name: 'Tooltip'
         }
     ];
 

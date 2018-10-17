@@ -21,7 +21,7 @@ import { animationFrameScheduler, fromEvent, interval, Observable, Subject } fro
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 
 /**
@@ -385,7 +385,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this._column = val;
         }
 
-        if (val instanceof IgxForOfDirective) {
+        if (val instanceof IgxGridForOfDirective) {
             this._hVirtDir = val;
         }
     }
@@ -408,7 +408,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _dropIndicator: any = null;
     private _lastDropIndicator: any = null;
     private _column: IgxColumnComponent;
-    private _hVirtDir: IgxForOfDirective<any>;
+    private _hVirtDir: IgxGridForOfDirective<any>;
     private _dragLeave = new Subject<boolean>();
     private _dropIndicatorClass = 'igx-grid__th-drop-indicator--active';
 

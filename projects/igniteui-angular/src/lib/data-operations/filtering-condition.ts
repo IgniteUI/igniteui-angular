@@ -11,12 +11,14 @@ export class IgxFilteringOperand {
         this.operations = [{
             name: 'null',
             isUnary: true,
+            iconName: 'null',
             logic: (target: any) => {
                 return target === null;
             }
         }, {
             name: 'notNull',
             isUnary: true,
+            iconName: 'notNull',
             logic: (target: any) => {
                 return target !== null;
             }
@@ -49,30 +51,35 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'all',
             isUnary: true,
+            iconName: 'all',
             logic: (target: boolean) => {
                 return true;
             }
         }, {
             name: 'true',
             isUnary: true,
+            iconName: 'true',
             logic: (target: boolean) => {
                 return !!(target && target !== null && target !== undefined);
             }
         }, {
             name: 'false',
             isUnary: true,
+            iconName: 'false',
             logic: (target: boolean) => {
                 return !target && target !== null && target !== undefined;
             }
         }, {
             name: 'empty',
             isUnary: true,
+            iconName: 'empty',
             logic: (target: boolean) => {
                 return target === null || target === undefined;
             }
         }, {
             name: 'notEmpty',
             isUnary: true,
+            iconName: 'notEmpty',
             logic: (target: boolean) => {
                 return target !== null && target !== undefined;
             }
@@ -97,6 +104,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'equals',
             isUnary: false,
+            iconName: 'equals',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
                     return false;
@@ -113,6 +121,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            iconName: 'doesNotEqual',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
                     return true;
@@ -129,6 +138,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'before',
             isUnary: false,
+            iconName: 'before',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
                     return false;
@@ -141,6 +151,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'after',
             isUnary: false,
+            iconName: 'after',
             logic: (target: Date, searchVal: Date) => {
                 if (!target) {
                     return false;
@@ -153,6 +164,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'today',
             isUnary: true,
+            iconName: 'today',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -169,6 +181,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'yesterday',
             isUnary: true,
+            iconName: 'yesterday',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -186,6 +199,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'thisMonth',
             isUnary: true,
+            iconName: 'thisMonth',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -201,6 +215,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'lastMonth',
             isUnary: true,
+            iconName: 'lastMonth',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -222,6 +237,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'nextMonth',
             isUnary: true,
+            iconName: 'nextMonth',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -243,6 +259,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'thisYear',
             isUnary: true,
+            iconName: 'thisYear',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -257,6 +274,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'lastYear',
             isUnary: true,
+            iconName: 'lastYear',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -271,6 +289,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'nextYear',
             isUnary: true,
+            iconName: 'nextYear',
             logic: (target: Date) => {
                 if (!target) {
                     return false;
@@ -285,12 +304,14 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'empty',
             isUnary: true,
+            iconName: 'empty',
             logic: (target: Date) => {
                 return target === null || target === undefined;
             }
         }, {
             name: 'notEmpty',
             isUnary: true,
+            iconName: 'notEmpty',
             logic: (target: Date) => {
                 return target !== null && target !== undefined;
             }
@@ -363,48 +384,56 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'equals',
             isUnary: false,
+            iconName: 'equals',
             logic: (target: number, searchVal: number) => {
                 return target === searchVal;
             }
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            iconName: 'doesNotEqual',
             logic: (target: number, searchVal: number) => {
                 return target !== searchVal;
             }
         }, {
             name: 'greaterThan',
             isUnary: false,
+            iconName: 'greaterThan',
             logic: (target: number, searchVal: number) => {
                 return target > searchVal;
             }
         }, {
             name: 'lessThan',
             isUnary: false,
+            iconName: 'lessThan',
             logic: (target: number, searchVal: number) => {
                 return target < searchVal;
             }
         }, {
             name: 'greaterThanOrEqualTo',
             isUnary: false,
+            iconName: 'greaterThanOrEqualTo',
             logic: (target: number, searchVal: number) => {
                 return target >= searchVal;
             }
         }, {
             name: 'lessThanOrEqualTo',
             isUnary: false,
+            iconName: 'lessThanOrEqualTo',
             logic: (target: number, searchVal: number) => {
                 return target <= searchVal;
             }
         }, {
             name: 'empty',
             isUnary: true,
+            iconName: 'empty',
             logic: (target: number) => {
                 return target === null || target === undefined || isNaN(target);
             }
         }, {
             name: 'notEmpty',
             isUnary: true,
+            iconName: 'notEmpty',
             logic: (target: number) => {
                 return target !== null && target !== undefined && !isNaN(target);
             }
@@ -429,6 +458,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         this.operations = [{
             name: 'contains',
             isUnary: false,
+            iconName: 'contains',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -437,6 +467,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'doesNotContain',
             isUnary: false,
+            iconName: 'doesNotContain',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -445,6 +476,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'startsWith',
             isUnary: false,
+            iconName: 'startsWith',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -453,6 +485,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'endsWith',
             isUnary: false,
+            iconName: 'endsWith',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -461,6 +494,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'equals',
             isUnary: false,
+            iconName: 'equals',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -469,6 +503,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'doesNotEqual',
             isUnary: false,
+            iconName: 'doesNotEqual',
             logic: (target: string, searchVal: string, ignoreCase?: boolean) => {
                 const search = IgxStringFilteringOperand.applyIgnoreCase(searchVal, ignoreCase);
                 target = IgxStringFilteringOperand.applyIgnoreCase(target, ignoreCase);
@@ -477,12 +512,14 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }, {
             name: 'empty',
             isUnary: true,
+            iconName: 'empty',
             logic: (target: string) => {
                 return target === null || target === undefined || target.length === 0;
             }
         }, {
             name: 'notEmpty',
             isUnary: true,
+            iconName: 'notEmpty',
             logic: (target: string) => {
                 return target !== null && target !== undefined && target.length > 0;
             }
@@ -513,6 +550,7 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
 export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
+    iconName: string;
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 

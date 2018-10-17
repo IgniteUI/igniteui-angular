@@ -13,14 +13,13 @@ import {
     ViewChild,
     ViewChildren
 } from '@angular/core';
-import { take } from 'rxjs/operators';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridComponent, IRowSelectionEventArgs } from './grid.component';
+import { first } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,8 +60,8 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild('igxDirRef', { read: IgxForOfDirective })
-    public virtDirRow: IgxForOfDirective<any>;
+    @ViewChild('igxDirRef', { read: IgxGridForOfDirective })
+    public virtDirRow: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
@@ -84,22 +83,22 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    @HostBinding('style.height.px')
+    @HostBinding('style.min-height.px')
     get rowHeight() {
-        return this.grid.rowHeight;
+        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
+        return this.grid.rowHeight - rowOffsetH;
     }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
 
     /**
      * @hidden
      */
     @HostBinding('attr.role')
     public role = 'row';
+
+    @HostBinding('attr.data-rowIndex')
+    get dataRowIndex() {
+        return this.index;
+    }
 
     /**
      * @hidden
@@ -177,7 +176,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -224,20 +223,19 @@ export class IgxGridRowComponent implements DoCheck {
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    /**
-     * @hidden
-     */
-    @HostListener('focus', ['$event'])
-    public onFocus(event) {
-        this.isFocused = true;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('blur', ['$event'])
-    public onBlur(event) {
-        this.isFocused = false;
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event) {
+        if (this.rowSelectable && event.key.toLowerCase() === 'tab') {
+            event.preventDefault();
+            event.stopPropagation();
+            const shift = event.shiftKey;
+            if (shift) {
+                this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+            } else {
+                this.grid.navigation.onKeydownHome(this.index);
+            }
+        }
     }
 
     /**

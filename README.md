@@ -110,8 +110,7 @@ The output of the API docs build is located under `dist/igniteui-angular/docs`.
 The repository includes a sample application featuring the showcasing the different components/directives.
 In order to run the demo samples, build the library first and start the application.
 ```
-npm run build:lib
-ng serve
+npm start
 ```
 
 **NOTE**: Experimental demos are not always stable.
