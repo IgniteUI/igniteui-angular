@@ -1,6 +1,7 @@
 
 const process = require('process');
 const fs = require('fs');
+const constants = require('./utils/constants').Constants;
 
 const filepath = './extras/sassdoc';
 const locale = 'en';
@@ -56,27 +57,27 @@ function getData(fileData) {
     const res = {};
     
     if (fileData.description) {
-        res['description'] = splitString(fileData.description);
+        res[constants.DESCRIPTION] = splitString(fileData.description);
     }
 
     if (fileData.parameter && fileData.parameter.length) {
-        res['parameters'] = {}
+        res[constants.PARAMETERS] = {}
         fileData.parameter.forEach(e => {
-            res['parameters'][e.name] = {'description': JSON.stringify(splitString(e.description), null, 4), 'type': e.type};
+            res[constants.PARAMETERS][e.name] = {'description': JSON.stringify(splitString(e.description), null, 4), 'type': e.type};
         })
         // JSON.stringify(fileData.parameter);
     }
 
     if (fileData.return) {
         if (typeof(fileData.return) === 'object') {
-            res['return'] = JSON.stringify(fileData.return);
+            res[constants.RETURN] = JSON.stringify(fileData.return);
         } else {
-            res['return'] = JSON.stringify(splitString(fileData.return), null, 4);
+            res[constants.RETURN] = JSON.stringify(splitString(fileData.return), null, 4);
         }
     }
 
     if (fileData.context) {
-        res['context'] = { 'code': JSON.stringify(splitString(fileData.context.code), null, 4)};
+        res[constants.CONTEXT] = { 'code': JSON.stringify(splitString(fileData.context.code), null, 4)};
     }
 
     return res;
