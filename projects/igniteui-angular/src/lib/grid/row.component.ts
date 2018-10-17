@@ -111,7 +111,7 @@ export class IgxGridRowComponent implements DoCheck {
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass}${editClass} ${dirtyClass} ${deletedClass}`.trim();
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
     }
 
 
