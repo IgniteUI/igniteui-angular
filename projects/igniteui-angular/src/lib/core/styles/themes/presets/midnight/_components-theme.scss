@@ -32,13 +32,6 @@ $button-group-midnight-theme: igx-button-group-theme(
     $item-border-color: $midnight-white-20
 );
 
-// ICONS
-$icon-midnight-theme: igx-icon-theme(
-    $palette: $midnight-palett,
-    $color: $midnight-white-70,
-    $disabled-color: $midnight-white-50
-);
-
 // INPUT GROUP
 $input-gruop-midnight-theme: igx-input-group-theme(
     $palette: $midnight-palett,

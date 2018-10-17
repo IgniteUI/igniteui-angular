@@ -56,6 +56,8 @@
 ///   @include igx-button($my-button-theme);
 @function igx-button-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $button-roundness: null,
 
     $flat-text-color: null,
@@ -125,6 +127,10 @@
         disabled-color: igx-color($palette, 'grays', 400),
         disabled-background: igx-color($palette, 'grays', 100)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -351,33 +357,18 @@
         width: $button-floating-width;
         height: $button-floating-height;
         color: --var($theme, 'fab-text-color');
-
-        igx-icon {
-            color: --var($theme, 'fab-text-color');
-        }
-
         background: --var($theme, 'fab-background');
         box-shadow: $button-floating-shadow;
 
         &:hover {
             box-shadow: $button-floating-hover-shadow;
             color: --var($theme, 'fab-hover-text-color');
-
-            igx-icon {
-                color: --var($theme, 'fab-hover-text-color');
-            }
-
             background: --var($theme, 'fab-hover-background');
         }
 
         &:focus,
         &:active {
             color: --var($theme, 'fab-focus-text-color');
-
-            igx-icon {
-                color: --var($theme, 'fab-focus-text-color');
-            }
-
             background: --var($theme, 'fab-focus-background');
         }
     }
@@ -388,43 +379,23 @@
         font-size: $button-icon-font-size;
         padding: $button-icon-padding;
         color: --var($theme, 'icon-color');
-
-        igx-icon {
-            color: --var($theme, 'icon-color');
-        }
-
         background: --var($theme, 'icon-background');
 
         &:hover {
             transition: $button-transition;
-
             color: --var($theme, 'icon-hover-color');
-
-            igx-icon {
-                color: --var($theme, 'icon-hover-color');
-            }
-
             background: --var($theme, 'icon-hover-background');
         }
 
         &:focus,
         &:active {
             color: --var($theme, 'icon-focus-color');
-
-            igx-icon {
-                color: --var($theme, 'icon-focus-color');
-            }
             background: --var($theme, 'icon-focus-background');
         }
     }
 
     %igx-button--disabled {
         color: --var($theme, 'disabled-color') !important;
-
-        igx-icon {
-            color: --var($theme, 'disabled-color') !important;
-        }
-
         background: --var($theme, 'disabled-background') !important;
         pointer-events: none;
         box-shadow: $button-disabled-shadow;

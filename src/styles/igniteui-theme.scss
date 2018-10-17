@@ -44,6 +44,7 @@ $exclude: (
 
 body {
     background: #222;
+    color: text-contrast(#222);
 }
 
 /// Typography samples
@@ -67,6 +68,7 @@ $smoky-black: #0c120c;
 $boston-red: #d00000;
 
 $red-sox-button: igx-button-theme(
+    $preset: $midnight-theme,
     $flat-background: $boston-red,
     $raised-background: $boston-red,
     $fab-background: $boston-red,
@@ -74,6 +76,7 @@ $red-sox-button: igx-button-theme(
 );
 
 $smoky-black-button: igx-button-theme(
+    $preset: $midnight-theme,
     $flat-background: $smoky-black,
     $raised-background: $smoky-black,
     $fab-background: $smoky-black,
