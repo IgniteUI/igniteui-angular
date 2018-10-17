@@ -92,7 +92,7 @@ export class IgxChipComponent {
     public removable = false;
 
     /**
-     * And @Input property that overrides the default icon that the chip applies to the remove button.
+     * An @Input property that overrides the default icon that the chip applies to the remove button.
      * ```html
      * <igx-chip [id]="chip.id" [removable]="true" [removeIcon]="iconTemplate"></igx-chip>
      * <ng-template #iconTemplate><igx-icon>delete</igx-icon></ng-template>
@@ -139,7 +139,7 @@ export class IgxChipComponent {
     public disabled = false;
 
     /**
-     * Sets the `IgxChipComponent` to be selected.
+     * Sets the `IgxChipComponent` selected state.
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
      * ```

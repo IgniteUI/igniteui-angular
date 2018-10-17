@@ -24,7 +24,7 @@ Selection can be enabled by setting an input called `selectable`. The selecting 
 
 An event `onSelection` is fired when the selection state of the `igxChip` changes. It provides the new `selected` value so you can get the new state and the original event in `originalEvent` that triggered this selection change. If this is not done through user interaction but instead is done by setting the `selected` property programmatically the `originalEvent` argument has value `null`.
 
-Also by default an icon is shown indicating that the chip is being selected. It is fully customizable and that can be done through the `selectIcon` input. It accepts values of type `TemplateRef` and overrides the default icon while retaining the same functionality.
+Also by default an icon is shown indicating that the chip is being selected. It is fully customizable and can be done through the `selectIcon` input. It accepts values of type `TemplateRef` and overrides the default icon while retaining the same functionality.
 
 Example of customizing the select icon:
 
@@ -43,9 +43,9 @@ Example of customizing the select icon:
 
 Removing can be enabled by setting the `removable` input to `true`. When enabled a remove button is rendered at the end of the chip. When the end-users performs any interaction like clicking on the remove button or pressing the `Delete` key while the chip is focused the `onRemove` event is emitted.
 
-By default the chip does not remove itself from the template when the user want to delete a chip. This needs to be handled manually using the `onRemove` event.
+By default the chip does not remove itself from the template when the user wants to delete a chip. This needs to be handled manually using the `onRemove` event.
 
-If you need to customize the remove icon it can be done through the `removeIcon` input. It takes a value of type `TemplateRef` and renders it instead of the default remove icon. This means that you can customize the remove button in any way while all the handling of it is still handled by the chip itself.
+If you need to customize the remove icon use the `removeIcon` input. It takes a value of type `TemplateRef` and renders it instead of the default remove icon. This means that you can customize the remove button in any way while all the handling of it is still handled by the chip itself.
 
 Example of handling chip removing and custom remove icon:
 ```html
@@ -124,7 +124,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 
 - Keyboard controls when the chip is focused:
 
-  - <kbd>LEFT</kbd> - Moves focus  the chip on the left.
+  - <kbd>LEFT</kbd> - Moves the focus to the chip on the left.
   - <kbd>RIGHT</kbd> - Focuses the chip on the right.
   - <kbd>SPACE</kbd> - Toggles chip selection if it is selectable.
   - <kbd>DELETE</kbd> - Triggers the `onRemove` event for the `igxChip` so the chip deletion can be handled manually
