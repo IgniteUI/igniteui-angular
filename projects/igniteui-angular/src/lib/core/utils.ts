@@ -37,14 +37,7 @@ export const enum KEYCODES {
     DOWN_ARROW = 40,
     F2 = 113
 }
-/**
- *@hidden
- */
-export const enum DisplayDensity {
-    comfortable = 'comfortable',
-    cosy = 'cosy',
-    compact = 'compact'
-}
+
 /**
  *@hidden
 * Returns the actual size of the node content, using Range

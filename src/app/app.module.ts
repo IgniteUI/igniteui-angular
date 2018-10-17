@@ -26,6 +26,7 @@ import { MaskSampleComponent } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
+import { InputGroupChildSampleComponent } from './input-group/input-group-child.sample';
 import { LayoutSampleComponent } from './layout/layout.sample';
 import { ListSampleComponent } from './list/list.sample';
 import { ListPanningSampleComponent } from './list-panning/list-panning.sample';
@@ -67,6 +68,7 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
+import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 
@@ -88,6 +90,7 @@ const components = [
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
+    InputGroupChildSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,
@@ -152,8 +155,8 @@ const components = [
         RemoteService,
         IgxExcelExporterService,
         IgxCsvExporterService,
-        // { provide: IgxGridTransaction, useClass: IgxTransactionBaseService },
-        IgxOverlayService
+        IgxOverlayService,
+        { provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.comfortable } }
     ],
     bootstrap: [AppComponent]
 })
