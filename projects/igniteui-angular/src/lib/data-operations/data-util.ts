@@ -19,6 +19,7 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
+import { Transaction, TransactionType } from '../services';
 
 export enum DataType {
     String = 'string',
@@ -182,5 +183,22 @@ export class DataUtil {
         return h1.every((level, index): boolean => {
             return level.fieldName === h2[index].fieldName && level.value === h2[index].value;
         });
+    }
+
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
+        data.forEach((value, index) => {
+            const rowId = primaryKey ? value[primaryKey] : value;
+            const transaction = transactions.find(t => t.id === rowId);
+            if (transaction && transaction.type === TransactionType.UPDATE) {
+                data[index] = transaction.newValue;
+            }
+        });
+
+        transactions.forEach(t => {
+            if (t.type === TransactionType.ADD) {
+                data.push(t.newValue);
+            }
+        });
+        return data;
     }
 }
