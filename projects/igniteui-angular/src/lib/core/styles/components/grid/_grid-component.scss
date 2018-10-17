@@ -244,12 +244,8 @@
         @extend %igx-grid__group-expand-btn !optional;
     }
 
-    @include e(filtering-outlet) {
-        @extend %igx-grid__filtering-outlet !optional;
-    }
-
-    @include e(toolbar-outlet) {
-        @extend %igx-grid__toolbar-outlet !optional;
+    @include e(outlet) {
+        @extend %igx-grid__outlet !optional;
     }
 
     @for $i from 1 through 10 {

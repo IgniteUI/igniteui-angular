@@ -1408,14 +1408,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ViewChild('outletFiltering', { read: IgxOverlayOutletDirective })
+    @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('outletToolbar', { read: IgxOverlayOutletDirective })
-    public toolbarOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
