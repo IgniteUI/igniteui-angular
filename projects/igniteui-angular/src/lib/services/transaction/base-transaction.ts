@@ -33,11 +33,7 @@ export class IgxBaseTransactionService implements TransactionService {
     }
 
     public getState(id: any): State {
-        if (id !== undefined && this._pendingStates.has(id)) {
-            return this._pendingStates.get(id);
-        }
-
-        return null;
+        return this._pendingStates.get(id);
     }
 
     public get enabled(): boolean {
@@ -47,7 +43,7 @@ export class IgxBaseTransactionService implements TransactionService {
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._pendingStates.get(id);
         if (!state) {
-            return {};
+            return null;
         }
         if (mergeChanges) {
             return this.updateValue(state);

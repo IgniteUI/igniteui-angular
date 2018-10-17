@@ -44,13 +44,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     }
 
     public getState(id: any): State {
-        if (id !== undefined) {
-            if (this._states.has(id)) {
-                return this._states.get(id);
-            }
-            return super.getState(id);
-        }
-        return null;
+        return this._states.get(id);
     }
 
     public get enabled(): boolean {
@@ -59,29 +53,21 @@ export class IgxTransactionService extends IgxBaseTransactionService {
 
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
-        const pendingState = this._pendingStates.get(id);
+        const pendingState = super.getState(id);
 
         //  if there is no state and there is no pending state return null
         if (!state && !pendingState) {
             return null;
         }
 
-        const value = state ? state.value : undefined;
-        const pendingValue = pendingState ? pendingState.value : undefined;
-        const originalValue = state ? state.recordRef : pendingState.recordRef;
-        let result: any;
-        if (typeof value === 'object' || typeof pendingValue === 'object') {
-            if (mergeChanges) {
-                result = Object.assign({}, originalValue, value, pendingValue);
-            } else {
-                result = Object.assign({}, value, pendingValue);
-            }
-        } else {
-            result = state ? state.value :
-                     pendingState ? pendingState.value : originalValue;
+        const pendingChange = super.getAggregatedValue(id, false);
+        const change = state && state.value;
+        let aggregatedValue = Object.assign({}, change, pendingChange);
+        if (mergeChanges) {
+            const originalValue = state ? state.recordRef : pendingState.recordRef;
+            aggregatedValue = Object.assign({}, originalValue, aggregatedValue);
         }
-
-        return result;
+        return aggregatedValue;
     }
 
     public endPending(commit: boolean): void {
