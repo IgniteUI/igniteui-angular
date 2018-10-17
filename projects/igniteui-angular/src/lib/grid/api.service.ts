@@ -228,7 +228,7 @@ export class IgxGridAPIService {
             }
         }
 
-        if (oldValue && rowData) {
+        if (oldValue !== undefined && rowData !== undefined) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
                 currentValue: oldValue,
@@ -243,13 +243,13 @@ export class IgxGridAPIService {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue && oldValue === editValue) { return; }
+            if (oldValue !== undefined && oldValue === editValue) { return; }
 
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                oldValue = args.newValue;
+                grid.data[rowIndex][column.field] = editValue;
             }
             grid.calculateRowChangesCount(rowID);
             if (grid.primaryKey === column.field && isRowSelected) {

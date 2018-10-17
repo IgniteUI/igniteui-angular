@@ -4951,8 +4951,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue: rowObj.rowData,
-            oldValue: oldValue,
+            newValue,
+            oldValue,
             row: rowObj
         });
         this.transactions.endPending(commit);
