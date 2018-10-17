@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity, isObjectEmpty } from '../core/utils';
+import { cloneArray, isObjectEmpty } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -67,6 +67,7 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { getPointFromPositionsSettings } from '../services/overlay/utilities';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DisplayDensity } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
