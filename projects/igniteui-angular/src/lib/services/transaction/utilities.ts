@@ -18,6 +18,12 @@ export interface State {
 
 export interface TransactionService {
     /**
+     * Returns whether transaction is enabled for this service
+     * @returns If transaction is enabled
+     */
+    readonly enabled: boolean;
+
+    /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
@@ -56,12 +62,6 @@ export interface TransactionService {
      * @returns State of the record if any
      */
     getState(id: any): State;
-
-    /**
-     * Returns whether transaction is enabled for this service
-     * @returns If transaction is enabled
-     */
-    transactionsEnabled(): boolean;
 
     /**
      * Returns value of the required id including all uncommitted changes

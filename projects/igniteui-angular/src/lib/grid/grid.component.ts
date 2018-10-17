@@ -3091,7 +3091,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public addRow(data: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
-        if (this.transactions.transactionsEnabled()) {
+        if (this.transactions.enabled) {
             const transactionId = this.primaryKey ? data[this.primaryKey] : data;
             const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
             this.transactions.add(transaction);
@@ -3153,7 +3153,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         //  if there is a row (index !== 0) delete it
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
-            if (this.transactions.transactionsEnabled()) {
+            if (this.transactions.enabled) {
                 const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
                 this.transactions.add(transaction, this.data[index]);
             } else {
@@ -4447,7 +4447,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
-        if (!this.filteredData && this.transactions.transactionsEnabled()) {
+        if (!this.filteredData && this.transactions.enabled) {
             data = new IgxGridTransactionPipe(this.gridAPI).transform(data, this.id, -1);
         }
 
@@ -4947,7 +4947,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             row: rowObj
         });
         this.transactions.endPending(commit);
-        if (commit && value && !isObjectEmpty(value) && !this.transactions.transactionsEnabled()) {
+        if (commit && value && !isObjectEmpty(value) && !this.transactions.enabled) {
             this.data[rowInEdit.rowIndex] = value;
         }
         if (closeOverlay) {
@@ -5001,7 +5001,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public get dataWithTransactions() {
         const result = <any>cloneArray(this.data);
-        if (this.transactions.transactionsEnabled()) {
+        if (this.transactions.enabled) {
             result.push(...this.transactions.aggregatedState(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
