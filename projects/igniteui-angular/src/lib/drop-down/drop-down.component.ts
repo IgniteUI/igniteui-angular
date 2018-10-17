@@ -16,9 +16,7 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject,
-    AfterContentInit,
-    AfterContentChecked
+    Inject
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -34,12 +32,16 @@ export interface ISelectionEventArgs {
     newSelection: IgxDropDownItemBase;
 }
 
+export interface ISelectingEventArgs {
+    currentSelection: IgxDropDownItemBase;
+    cancel: boolean;
+}
+
 /** @hidden */
 export enum Navigate {
     Up = -1,
     Down = 1
 }
-
 
 export class IgxDropDownBase implements OnInit, IToggleView {
     private _initiallySelectedItem: IgxDropDownItemComponent = null;
@@ -696,15 +698,34 @@ export class IgxDropDownComponent extends IgxDropDownBase {
         super(elementRef, cdr, selection);
     }
 
-    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
-        const oldSelection = this.selectedItem;
-        super.changeSelectedItem(newSelection);
+    /**
+     * Emitted when selecting an item, before the selection completes.
+     *
+     * ```html
+     * <igx-drop-down (onSelecting)='onSelecting($event)'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onSelecting = new EventEmitter<ISelectingEventArgs>();
 
-        if (oldSelection) {
-            oldSelection.isSelected = false;
-        }
-        if (newSelection) {
-            newSelection.isSelected = true;
+    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
+        const selectingEventArgs: ISelectingEventArgs = {
+            currentSelection: newSelection,
+            cancel: false
+        };
+
+        this.onSelecting.emit(selectingEventArgs);
+
+        if (!selectingEventArgs.cancel) {
+            const oldSelection = this.selectedItem;
+            super.changeSelectedItem(newSelection);
+
+            if (oldSelection) {
+                oldSelection.isSelected = false;
+            }
+            if (newSelection) {
+                newSelection.isSelected = true;
+            }
         }
     }
 }
