@@ -9,10 +9,22 @@ import { IChipSelectEventArgs, IChipsAreaReorderEventArgs, IBaseChipEventArgs } 
 })
 export class ChipsSampleComponent {
     public chipList = [
-        { id: 'Country', text: 'Country', disabled: false },
-        { id: 'City', text: 'City', disabled: true },
-        { id: 'Town', text: 'Town', disabled: false },
-        { id: 'FirstName', text: 'First Name', disabled: false },
+        {
+            id: 'Country', text: 'Country',
+            disabled: false, icon: 'location_on'
+        },
+        {
+            id: 'City', text: 'City',
+            disabled: true, icon: 'location_city'
+        },
+        {
+            id: 'Town', text: 'Town',
+            disabled: false, icon: 'store_mall_directory'
+        },
+        {
+            id: 'FirstName', text: 'First Name',
+            disabled: false, icon: 'person_pin'
+        },
     ];
 
     public chipListTo = [

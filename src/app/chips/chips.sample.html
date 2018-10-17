@@ -113,6 +113,7 @@
                         [selectable]="true"
                         [removable]="true"
                         (onRemove)="chipRemoved($event)">
+                        <igx-icon igxPrefix>{{chipElem.icon}}</igx-icon>
                         {{chipElem.text}}
                     </igx-chip>
                     <igx-icon *ngIf="!last" class="chip-area-connector">keyboard_arrow_right</igx-icon>
