@@ -4470,6 +4470,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
+        const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        newGrouping.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newGrouping,
+                columns: cols
+            };
+        this.onGroupingDone.emit(groupingDoneArgs);
         event.isValid = true;
         this.markForCheck();
     }
@@ -4490,6 +4497,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
         columnExpr.dir = 3 - columnExpr.dir;
         this.sort(columnExpr);
+        const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        sortingExpr.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: sortingExpr,
+                columns: cols
+            };
+        this.onGroupingDone.emit(groupingDoneArgs);
         this.markForCheck();
     }
 
@@ -4502,6 +4516,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
             columnExpr.dir = 3 - columnExpr.dir;
             this.sort(columnExpr);
+            const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            sortingExpr.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: sortingExpr,
+                columns: cols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
             this.markForCheck();
         }
     }
