@@ -248,6 +248,20 @@ $tabs-midnight-theme: igx-tabs-theme(
     $button-hover-background: igx-color($midnight-palette, 'primary', 600)
 );
 
+// PAGINATOR
+$pchips-midnight-theme: igx-chip-theme(
+    $palette: $midnight-palette,
+    $background: #222,
+    $selected-background: #222,
+
+    $hover-selected-background: #555,
+    $hover-background: #444,
+    $focus-selected-background: #444,
+    $focus-background: #444
+
+);
+
+
 body {
     background: #333;
     color: text-contrast(#222);
