@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - `igxGrid`:
-    - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` could now be accessed through the "expressions" event property. A new "columns" property has been added, which provides references to the grouped columns as an array of `IgxColumnComponent`.
+    - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` could now be accessed through the "expressions" event property. Two new "groupedColumns" and "ungroupedColumns" properties have been added - they provide references to the columns which have changed their state because of the **last** grouping/ungrouping operation (the **newly** grouped/ungrouped columns) as an array of `IgxColumnComponent`.
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.

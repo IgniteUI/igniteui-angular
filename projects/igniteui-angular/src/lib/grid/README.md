@@ -205,7 +205,7 @@ A list of the events emitted by the **igx-grid**:
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
-|`onGroupingDone`|Emitted when a a new column or multiple columns get grouped or ungrouped. Returns the `ISortingExpression` and `IgxColumnComponent` related to the grouping/ungrouping operation.
+|`onGroupingDone`|Emitted when a a new column or multiple columns get grouped/ungrouped. Returns the `ISortingExpression` and the **newly** grouped/ungrouped `IgxColumnComponent` related to the grouping/ungrouping operation.
 
 
 Defining handlers for these event emitters is done using declarative event binding:
