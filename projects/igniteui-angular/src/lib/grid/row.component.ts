@@ -202,7 +202,7 @@ export class IgxGridRowComponent implements DoCheck {
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
             const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-            return editableRow && editableRow.rowID === this.rowID;
+            return (editableRow && editableRow.rowID === this.rowID) || false;
         } else {
             return false;
         }
