@@ -4940,7 +4940,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @param commit
      */
     public endRowEdit(commit = true) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed) {
             return;
         }
         const row = this.gridAPI.get_row_inEditMode(this.id);
