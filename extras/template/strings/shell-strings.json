@@ -1,0 +1,26 @@
+{
+    "jp": {
+        "Returns": "Returns test",
+        "Parameters": "Parameters test",
+        "Type parameters": "Type parameters test",
+        "Globals": "Globals test",
+        "Hierarchy": "Hierarchy test",
+        "Implements": "Implements test",
+        "Implemented by": "Implemented by test",
+        "Callable": "Callable test",
+        "Implementation of": "Implementation of test",
+        "Inherited from": "Inherited from test",
+        "Overrides": "Overrides test",
+        "Defined in": "Defined in test",
+        "Properties": "Properties test",
+        "Methods": "Methods test",
+        "Accessors": "Accessors test",
+        "Constructor": "Constructor test",
+        "Constructors": "Constructors test",
+        "Enumeration members": "Enumeration members test",
+        "Class": "Class test",
+        "Interface": "Interface test",
+        "Enumeration": "Enumeration test",
+        "Static": "Static test"
+    }
+}   
