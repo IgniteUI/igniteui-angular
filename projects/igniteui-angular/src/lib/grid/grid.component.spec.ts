@@ -836,7 +836,7 @@ describe('IgxGrid Component Tests', () => {
             }).compileComponents();
         }));
 
-        it('should be able to enter edit mode on dblclick, enter and f2', (async () => {
+        it('should be able to enter edit mode on dblclick, enter and f2', () => {
             const fix = TestBed.createComponent(IgxGridRowEditingComponent);
             fix.detectChanges();
 
@@ -851,15 +851,12 @@ describe('IgxGrid Component Tests', () => {
             expect(row.inEditMode).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
-            await wait(DEBOUNCETIME);
             expect(row.inEditMode).toBe(false);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', rv.nativeElement, true);
-            await wait(DEBOUNCETIME);
             expect(row.inEditMode).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
-            await wait(DEBOUNCETIME);
             expect(row.inEditMode).toBe(false);
 
             // UIInteractions.triggerKeyDownEvtUponElem('f2', rv.nativeElement, true);
@@ -869,7 +866,7 @@ describe('IgxGrid Component Tests', () => {
             // UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
             // await wait(DEBOUNCETIME);
             // expect(row.inEditMode).toBe(false);
-        }));
+        });
 
         it('should display the banner below the edited row if it is not the last one', (async () => {
             const fix = TestBed.createComponent(IgxGridRowEditingComponent);
