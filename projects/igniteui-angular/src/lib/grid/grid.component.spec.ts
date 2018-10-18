@@ -9,7 +9,7 @@ import { IgxColumnComponent } from './column.component';
 import { IForOfState} from '../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
@@ -261,8 +261,7 @@ describe('IgxGrid Component Tests', () => {
             grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.innerText.substr(0,
-                gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyFilteredGridMessage);
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
 
             // Clear filter and check if grid's body height is restored based on all loaded rows
@@ -275,8 +274,7 @@ describe('IgxGrid Component Tests', () => {
             fixture.componentInstance.clearData();
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.innerText.substr(0,
-                gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyGridMessage);
         }));
     });
 
