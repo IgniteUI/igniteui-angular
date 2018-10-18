@@ -1,29 +1,34 @@
 <ng-template #emptyFilter>
         <igx-chip (click)="onChipClicked()">
             <igx-icon igxPrefix>add</igx-icon>
-            <span>Add Filters</span>
+            <span>Filter</span>
         </igx-chip>
 </ng-template>
 
 <ng-template #defaultFilter>
-    <igx-chips-area>
+    <igx-chips-area class="igx-filtering-chips">
         <ng-container *ngFor="let item of expressionsList; let last = last;">
             <igx-chip
                 [removable]="true"
                 (click)="onChipClicked(item.expression)"
                 (onRemove)="onChipRemoved($event, item)">
-                <igx-icon igxPrefix fontSet="filtering-icons" [name]="item.expression.condition.iconName"></igx-icon>
-                <span #label>{{getChipLabel(item.expression)}}</span>
+                <igx-icon igxPrefix
+                    fontSet="filtering-icons"
+                    [name]="item.expression.condition.iconName">
+                </igx-icon>
+                <span class="igx-filtering-chips__connector" #label>
+                    {{getChipLabel(item.expression)}}
+                </span>
             </igx-chip>
-            <span *ngIf="!last" class="chip-area-connector">{{getOperator(item.afterOperator)}}</span>
+            <span *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
     </igx-chips-area>
 </ng-template>
 
 <ng-template #complexFilter>
     <igx-chip [removable]="true" (onRemove)="clearFiltering()">
-        <igx-icon>filter_list</igx-icon>
-        <span [class]="'igx-chip__text'">Complex Filter</span>
+        <igx-icon igxPrefix>filter_list</igx-icon>
+        <span>Complex Filter</span>
     </igx-chip>
 </ng-template>
 

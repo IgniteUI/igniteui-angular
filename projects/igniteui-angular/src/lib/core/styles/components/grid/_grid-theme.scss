@@ -1353,6 +1353,11 @@
         border-top: $grid-header-border;
         height: map-get($grid-header-height, 'comfortable');
         padding: map-get($grid-header-padding, 'comfortable');
+
+        igx-chips-area {
+            flex-wrap: nowrap;
+            overflow: hidden;
+        }
     }
 
     %igx-grid__filtering-cell--cosy {
@@ -1369,6 +1374,7 @@
         position: absolute;
         display: flex;
         width: 100%;
+        padding: map-get($grid-cell-padding, 'comfortable');
         align-items: center;
         justify-content: space-between;
         background: #fff;
@@ -1379,5 +1385,19 @@
     %igx-grid__filtering-row-main {
         display: flex;
         flex: 1;
+        max-width: calc(100% - 176px);
+
+        igx-chips-area {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+
+        igx-input-group {
+            flex: 0 0 250px;
+        }
+
+        igx-chip {
+            margin: 0 rem(4px);
+        }
     }
 }
