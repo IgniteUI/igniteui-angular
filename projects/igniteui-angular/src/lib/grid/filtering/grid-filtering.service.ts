@@ -4,6 +4,7 @@ import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridComponent } from '../grid.component';
 import icons from './svgIcons';
+import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -16,7 +17,7 @@ export class IgxFilteringService {
     public gridId: string;
     public isFilterRowVisible = false;
     public filteredColumn = null;
-    public selectedExpression = null;
+    public selectedExpression: IFilteringExpression = null;
     public columsWithComplexFilter = [];
 
     constructor(private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {

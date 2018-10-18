@@ -22,6 +22,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
 
 /**
  * @hidden
@@ -64,6 +65,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             }
         });
         return defaultClasses.join(' ');
+    }
+
+    @HostBinding('class.igx-grid__th--filtering')
+    get isFilteringInEditMode() {
+        return this.filteringService.filteredColumn === this.column;
     }
 
     @HostBinding('style.min-width')
@@ -146,7 +152,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,
-        private cms: IgxColumnMovingService
+        private cms: IgxColumnMovingService,
+        private filteringService: IgxFilteringService
     ) { }
 
     public ngOnInit() {
