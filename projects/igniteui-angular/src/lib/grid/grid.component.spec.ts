@@ -275,8 +275,8 @@ describe('IgxGrid Component Tests', () => {
             fixture.componentInstance.clearData();
             fixture.detectChanges();
             tick(100);
-            expect(gridBody.nativeElement.innerText.substr(0,
-                gridBody.nativeElement.innerText.length - 1)).toEqual(grid.emptyGridMessage);
+
+            expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
     });
 
