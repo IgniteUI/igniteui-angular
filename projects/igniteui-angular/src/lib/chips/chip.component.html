@@ -1,18 +1,46 @@
-﻿<div #chipArea class="igx-chip__item" [tabindex]="chipTabindex" igxDrop (onEnter)="onChipDragEnterHandler($event)" (onDrop)="onChipDrop($event)"
-    [igxDrag]="{ chip: this }" [hideBaseOnDrag]="true" [animateOnRelease]="true" [ghostImageClass]="ghostClass"
-    (dragStart)="onChipDragStart($event)" (dragEnd)="onChipDragEnd()" (returnMoveEnd)="onChipMoveEnd($event)" (dragClicked)="onChipDragClicked($event)">
+﻿<div #chipArea class="igx-chip__item"
+    [attr.tabindex]="chipTabindex"
+    (keydown)="onChipKeyDown($event)"
+    [igxDrag]="{chip: this}"
+    [hideBaseOnDrag]="true"
+    [animateOnRelease]="true"
+    [ghostImageClass]="ghostClass"
+    (dragStart)="onChipDragStart($event)"
+    (dragEnd)="onChipDragEnd()"
+    (returnMoveEnd)="onChipMoveEnd($event)"
+    (dragClicked)="onChipDragClicked($event)"
+    igxDrop
+    (onEnter)="onChipDragEnterHandler($event)"
+    (onDrop)="onChipDrop($event)">
+
+    <div [ngClass]="selectClass(selected)" *ngIf="selectable">
+        <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
+    </div>
+
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
-    <ng-content class="igx-chip__label"></ng-content>
-
-    <igx-icon #removeBtn [tabindex]="removeBtnTabindex" #cancelContainer *ngIf="removable" igxButton="icon" igxRipple igxRippleCentered="true"
-        (pointerdown)="onChipRemoveMouseDown($event)" (mousedown)="onChipRemoveMouseDown($event)" (click)="onChipRemove($event)"
-        (touchmove)="onChipRemoveMove()" (touchend)="onChipRemoveEnd($event)"
-        class="igx-chip__remove-icon" fontSet="material">cancel</igx-icon>
+    <div class="igx-chip__content">
+        <ng-content></ng-content>
+    </div>
 
     <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+
+    <div class="igx-chip__remove" *ngIf="removable"
+        tabindex="0"
+        (keydown)="onRemoveBtnKeyDown($event)"
+        (pointerdown)="onRemoveMouseDown($event)"
+        (mousedown)="onRemoveMouseDown($event)"
+        (click)="onRemoveClick($event)"
+        (touchmove)="onRemoveTouchMove()"
+        (touchend)="onRemoveTouchEnd($event)">
+        <ng-container *ngTemplateOutlet="removeButtonTemplate"></ng-container>
+    </div>
 </div>
 
-<span *ngIf="!isLastChip" [style.visibility]="areaMovingPerforming ? 'hidden' : 'visible' " class="igx-chip__connector">
-    <ng-content select="igx-connector,[igxConnector]"></ng-content>
-</span>
+<ng-template #defaultSelectIcon>
+    <igx-icon>done</igx-icon>
+</ng-template>
+
+<ng-template #defaultRemoveIcon>
+    <igx-icon>cancel</igx-icon>
+</ng-template>

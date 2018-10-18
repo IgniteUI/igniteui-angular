@@ -2,7 +2,6 @@ import { Injectable} from '@angular/core';
 import { IgxGridAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
 import { IgxGridComponent } from '../grid.component';
 import { CONTAINS } from './svgIcons';
 
@@ -25,10 +24,6 @@ export class IgxFilteringService {
 
     get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridId);
-    }
-
-    get gridOutlet(): IgxOverlayOutletDirective {
-        return this.grid.outletDirective;
     }
 
     public filter(field: string, expressionsTree: FilteringExpressionsTree): void {

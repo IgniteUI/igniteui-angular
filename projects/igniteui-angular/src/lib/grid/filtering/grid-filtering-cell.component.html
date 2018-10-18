@@ -7,11 +7,16 @@
 
 <ng-template #defaultFilter>
     <igx-chips-area>
-        <igx-chip *ngFor="let item of expressionsList" (click)="onChipClicked(item.expression)" [removable]="true" (onRemove)="onChipRemoved($event, item)">
-            <!-- <igx-avatar igxPrefix fontSet="material" [src]="expression.photo" roundShape="true"></igx-avatar> -->
-            <span #label [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
-            <span igxConnector>{{getOperator(item.afterOperator)}}</span>
-        </igx-chip>
+        <ng-container *ngFor="let item of expressionsList; let last = last;">
+            <igx-chip
+                [removable]="true"
+                (click)="onChipClicked(item.expression)"
+                (onRemove)="onChipRemoved($event, item)">
+                <igx-icon igxPrefix fontSet="filtering-icons" [name]="item.expression.condition.iconName"></igx-icon>
+                <span #label [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
+            </igx-chip>
+            <span *ngIf="!last" class="chip-area-connector">{{getOperator(item.afterOperator)}}</span>
+        </ng-container>
     </igx-chips-area>
 </ng-template>
 
