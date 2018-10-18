@@ -30,7 +30,6 @@ export interface IBaseChipsAreaEventArgs {
 
 export interface IChipsAreaReorderEventArgs extends IBaseChipsAreaEventArgs {
     chipsArray: IgxChipComponent[];
-    isValid: boolean;
 }
 
 export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
@@ -47,7 +46,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
      * @hidden
      */
     @HostBinding('attr.class')
-    public cssClass = 'igx-chips-area';
+    public cssClass = 'igx-chip-area';
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
@@ -143,7 +142,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
     private selectedChips: IgxChipComponent[] = [];
 
     constructor(public cdr: ChangeDetectorRef,
-                private _iterableDiffers: IterableDiffers) {
+        private _iterableDiffers: IterableDiffers) {
         this._differ = this._iterableDiffers.find([]).create(null);
     }
 
@@ -206,10 +205,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             if (event.originalEvent.key === 'ArrowLeft' || event.originalEvent.key === 'Left') {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false, event.originalEvent);
                 if (orderChanged) {
-                    // The `modifiedChipsArray` is out of date in the setTimeout sometimes.
-                    const chipArray = this.modifiedChipsArray;
                     setTimeout(() => {
-                        chipArray[dragChipIndex - 1].chipArea.nativeElement.focus();
+                        this.chipsList.toArray()[dragChipIndex - 1].chipArea.nativeElement.focus();
                     });
                 }
             } else if (event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') {
@@ -219,7 +216,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             if ((event.originalEvent.key === 'ArrowLeft' || event.originalEvent.key === 'Left') && dragChipIndex > 0) {
                 chipsArray[dragChipIndex - 1].chipArea.nativeElement.focus();
             } else if ((event.originalEvent.key === 'ArrowRight' || event.originalEvent.key === 'Right') &&
-                        dragChipIndex < chipsArray.length - 1) {
+                dragChipIndex < chipsArray.length - 1) {
                 chipsArray[dragChipIndex + 1].chipArea.nativeElement.focus();
             }
         }
@@ -229,10 +226,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
      * @hidden
      */
     protected onChipMoveStart(event: IBaseChipEventArgs) {
-        this.chipsList.forEach((chip) => {
-            chip.areaMovingPerforming = true;
-            chip.cdr.detectChanges();
-        });
         this.onMoveStart.emit({
             originalEvent: event.originalEvent,
             owner: this
@@ -243,10 +236,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
      * @hidden
      */
     protected onChipMoveEnd(event: IBaseChipEventArgs) {
-        this.chipsList.forEach((chip) => {
-            chip.areaMovingPerforming = false;
-            chip.cdr.detectChanges();
-        });
         this.onMoveEnd.emit({
             originalEvent: event.originalEvent,
             owner: this
@@ -304,8 +293,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
         const eventData: IChipsAreaReorderEventArgs = {
             chipsArray: this.modifiedChipsArray,
             originalEvent: originalEvent,
-            owner: this,
-            isValid: true
+            owner: this
         };
         this.onReorder.emit(eventData);
         return true;
