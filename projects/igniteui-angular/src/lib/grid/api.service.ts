@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isObjectEmpty } from '../core/utils';
+import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -248,7 +248,7 @@ export class IgxGridAPIService {
 
             //  if we are editing the cell for second or next time, get the old value from transaction
             const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID, true);
-            if (oldValueInTransaction  && !isObjectEmpty(oldValueInTransaction)) {
+            if (oldValueInTransaction) {
                 oldValue = oldValueInTransaction[column.field];
             }
 

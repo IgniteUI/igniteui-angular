@@ -69,15 +69,10 @@ export interface TransactionService {
 
     /**
      * Returns value of the required id including all uncommitted changes
-     * @param id The id of the record
-     * @returns updated recordRef
-     */
-    /**
-     * Returns value of the required id including all uncommitted changes
      * @param id The id of the record to return value for
      * @param mergeChanges If set to true will merge state's value over relate recordRef
      * and will return merged value
-     * @returns Record with all the changes for provided id
+     * @returns Value with changes or **null**
      */
     getAggregatedValue(id: any, mergeChanges: boolean): any;
 
