@@ -4318,7 +4318,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public trackColumnChanges(col) {
+    public trackColumnChanges(index, col) {
         return col.field + col.width;
     }
 
