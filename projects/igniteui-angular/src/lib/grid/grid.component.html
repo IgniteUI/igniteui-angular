@@ -23,22 +23,18 @@
     </select>
 </ng-template>
 
-<div [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns"
-    #groupArea>
-    <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
-        <igx-chip *ngFor="let expr of chipsGoupingExpressions; let last = last;" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable"
-            [removable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity" (onKeyDown)="onChipKeyDown($event)"
-            (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null"
-            [disabled]='!getColumnByName(expr.fieldName).groupable'>
-            <span class="igx-chip__label" [style.position]="'unset'" [style.width]="'unset'" [style.webkitTransform]="'unset'"
-                [style.transform]="'unset'" [style.lineHeight]="'unset'" [style.height]="'unset'">
-                <span class="igx-chip__text">{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
-                <igx-icon class="igx-chip__order-icon" fontSet="material">{{ expr.dir == 1 ? 'arrow_upward' :
-                    'arrow_downward' }}</igx-icon>
+<div [style.width.px]='calcWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+    <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
+        <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
+            <igx-chip [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+                (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
+                    <span>{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
+                    <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+            </igx-chip>
+            <span class="igx-grid__grouparea-connector">
+                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" >arrow_forward</igx-icon>
             </span>
-            <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" class="igx-chip__dir-icon"
-                igxConnector fontSet="material">forward</igx-icon>
-        </igx-chip>
+        </ng-container>
         <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass">
             <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
