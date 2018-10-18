@@ -4405,7 +4405,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
         if (!this.filteredData && this.transactions.enabled) {
-            data = new IgxGridTransactionPipe(this.gridAPI).transform(data, this.id, -1);
+            data = DataUtil.mergeTransactions(
+                cloneArray(data, true),
+                this.transactions.aggregatedState(true),
+                this.primaryKey
+            );
         }
 
         if (this.sortingExpressions &&

@@ -58,7 +58,11 @@ export class IgxGridAPIService {
         let data = grid.filteredData;
         if (!data) {
             if (grid.transactions.enabled) {
-                data = DataUtil.mergeTransactions(cloneArray(grid.data, true), grid.transactions.aggregatedState(true), grid.primaryKey);
+                data = DataUtil.mergeTransactions(
+                    cloneArray(grid.data, true),
+                    grid.transactions.aggregatedState(true, false),
+                    grid.primaryKey
+                );
             } else {
                 data = grid.data;
             }

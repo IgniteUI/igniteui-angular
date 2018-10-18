@@ -31,9 +31,11 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges: boolean): Transaction[] {
+    public aggregatedState(mergeChanges: boolean, includePending = true): Transaction[] {
         const result: Transaction[] = [];
-        result.push(...super.aggregatedState(mergeChanges));
+        if (includePending) {
+            result.push(...super.aggregatedState(mergeChanges));
+        }
         this._states.forEach((state: State, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
             result.push({ id: key, newValue: value, type: state.type });

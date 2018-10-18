@@ -58,7 +58,7 @@ export interface TransactionService {
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
      */
-    aggregatedState(mergeChanges: boolean): Transaction[];
+    aggregatedState(mergeChanges: boolean, includePending?: boolean): Transaction[];
 
     /**
      * Returns the state of the record with provided id
