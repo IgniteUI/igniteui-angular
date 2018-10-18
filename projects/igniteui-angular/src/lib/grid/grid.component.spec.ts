@@ -1982,25 +1982,25 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when moving a column`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-    
+
                 spyOn(gridAPI, 'submit_value').and.callThrough();
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
-    
+
                 const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
                 const targetColumn = grid.columnList.filter(c => c.field === 'ProductID')[0];
                 column.movable = true;
                 fix.detectChanges();
-    
+
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-    
+
                 grid.moveColumn(column, targetColumn);
                 fix.detectChanges();
-    
+
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -2047,36 +2047,36 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when resizing a column`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-    
+
                 spyOn(gridAPI, 'submit_value').and.callThrough();
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
-    
+
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(3, 'ProductName');
                 cell.inEditMode = true;
-    
+
                 const column = grid.columnList.filter(c => c.field === 'ProductName')[0];
                 column.resizable = true;
                 fix.detectChanges();
-    
+
                 const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
                 const headerResArea = headers[3].nativeElement.children[2];
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
                 tick();
                 fix.detectChanges();
-    
+
                 const resizer = headers[3].nativeElement.children[2].children[0];
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
                 tick();
-    
+
                 UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
                 tick(100);
                 fix.detectChanges();
-    
+
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -2087,26 +2087,26 @@ describe('IgxGrid Component Tests', () => {
             it(`Should exit edit mode when hiding a column`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-    
+
                 const targetCell = grid.getCellByColumn(0, 'ProductName'); // Cell must be editable
                 targetCell.inEditMode = true;
                 fix.detectChanges();
                 expect(gridAPI.get_cell_inEditMode(grid.id)).toBeTruthy(); // check if there is cell in edit mode
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
-    
+
                 targetCell.column.hidden = true;
                 fix.detectChanges();
-    
+
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             });
 
             it('Should close the row editing overlay on column hiding', () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
@@ -2120,12 +2120,12 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 targetCell.update(newValue);
-    
+
                 // hide column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
@@ -2135,7 +2135,7 @@ describe('IgxGrid Component Tests', () => {
                 // show column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 targetCheckbox.nativeElement.click();
-    
+
                 expect(targetCell.value).toEqual(newValue);
             });
 
@@ -2144,23 +2144,23 @@ describe('IgxGrid Component Tests', () => {
                 const newValue = 'Tea';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
-    
+
                 const grid = fix.componentInstance.grid;
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.inEditMode = true;
                 targetCell.column.hidden = true;
-    
+
                 targetCell.update(newValue);
-    
+
                 // show column
                 grid.toolbar.columnHidingButton.nativeElement.click();
                 const overlay = fix.debugElement.query(By.css('.igx-column-hiding__columns'));
                 const checkboxes = overlay.queryAll(By.css('.igx-checkbox__label'));
                 const targetCheckbox = checkboxes.find(el => el.nativeElement.innerText.trim() === targetCbText);
                 targetCheckbox.nativeElement.click();
-    
+
                 fix.detectChanges();
-    
+
                 expect(targetCell.value).toEqual(newValue);
             });
         });
