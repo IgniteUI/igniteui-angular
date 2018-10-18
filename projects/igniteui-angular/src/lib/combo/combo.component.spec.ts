@@ -1404,6 +1404,7 @@ describe('igxCombo', () => {
 
             const verifySelectedItem = function (dropdownItemIndex: number, dataItemIndex: number) {
                 clickItemCheckbox(dropdown, dropdownItemIndex);
+                tick();
                 fixture.detectChanges();
                 const checkbox = getCheckbox(dropdown, dropdownItemIndex);
                 verifyItemIsSelected(combo, dataItemIndex, ++selectedItemIndex, checkbox);
