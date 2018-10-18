@@ -182,6 +182,11 @@ export class IgxGridGroupByRowComponent {
             this.grid.toggleGroup(this.groupRow);
             return;
         }
+        const args = {cell: this, groupRow: null, event: event, cancel: false };
+        this.grid.onFocusChange.emit(args);
+        if (args.cancel) {
+            return;
+        }
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
         this.grid.columnList.toArray()[colIndex].visibleIndex : 0;

@@ -29,7 +29,7 @@ import {
     AfterViewChecked
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
@@ -126,6 +126,13 @@ export interface IColumnMovingEventArgs {
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
+    cancel: boolean;
+}
+
+export interface IFocusChangeEventArgs {
+    cell: IgxGridCellComponent;
+    groupRow: IgxGridGroupByRowComponent;
+    event: Event;
     cancel: boolean;
 }
 
@@ -1205,6 +1212,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+
+    @Output()
+    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     /**
      * @hidden
