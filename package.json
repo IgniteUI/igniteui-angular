@@ -17,6 +17,7 @@
         "build:migration": "gulp copy-migrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
         "build:docs:export": "gulp typedoc-build:export",
         "build:docs:import": "gulp typedoc-build:import",
+        "build:import:shell:jp": "gulp typedoc-build:import:shell:jp",
         "build:docs": "gulp typedoc-build:theme && sassdoc projects/igniteui-angular/src/lib/core/styles",
         "lint:lib": "tslint 'projects/igniteui-angular/src/**/*.ts' && stylelint 'projects/igniteui-angular/src/lib/core/styles'",
         "typedoc:dev": "gulp typedoc-serve --silent",
@@ -85,8 +86,8 @@
         "tsickle": ">=0.25.5",
         "tslib": "^1.9.3",
         "tslint": "~5.11.0",
-        "typedoc": "^0.12.0",
-        "typedoc-plugin-localization": "^1.0.4",
+        "typedoc": "^0.13.0",
+        "typedoc-plugin-localization": "^1.2.0",
         "typescript": "~2.7.2",
         "webpack-sources": "1.2.0"
     }
