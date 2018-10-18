@@ -2321,8 +2321,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this.gridAPI.submit_value(this.id);
             }
         });
-        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.cdr.markForCheck();
@@ -4854,6 +4854,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public closeRowEditingOverlay(commit?: boolean) {
+        this.gridAPI.set_row_inEditMode(this.id, null);
         this.transactions.endPending(commit);
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
@@ -4896,13 +4897,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any) {
+    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxGridRowComponent) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
-        const rowObj = this.getRowByKey(rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowObj.index]);
+        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
+        let oldValue = Object.assign({}, this.data[rowObj.dataRowIndex]);
         if (this.transactions.enabled) {
             const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
@@ -4942,11 +4943,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         const row = this.gridAPI.get_row_inEditMode(this.id);
+        const rowObject = row ? this.getRowByKey(row.rowID) : null;
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         if (cellInEdit) {
             this.gridAPI.submit_value(this.id, commit);
         }
-        this.endRowTransaction(commit, true, row);
+        this.endRowTransaction(commit, true, row, rowObject);
         const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cellInEdit.cellID.columnID) : null;
         if (currentCell) {
             currentCell.nativeElement.focus();

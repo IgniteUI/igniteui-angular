@@ -21,6 +21,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { first } from 'rxjs/operators';
 import { TransactionType, State } from '../services';
+import { IgxGridComponent } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,7 @@ import { TransactionType, State } from '../services';
 })
 export class IgxGridRowComponent implements DoCheck {
 
+    private _rowData: any;
     /**
      *  The data passed to the row component.
      *
@@ -39,8 +41,16 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     @Input()
-    public rowData: any;
+    public get rowData(): any {
+        if (this.inEditMode) {
+            return Object.assign({}, this._rowData, this.grid.transactions.getAggregatedValue(this.rowID, false));
+        }
+        return this._rowData;
+    }
 
+    public set rowData(v: any) {
+        this._rowData = v;
+    }
     /**
      * The index of the row.
      *
@@ -190,9 +200,9 @@ export class IgxGridRowComponent implements DoCheck {
     }
 
     public get inEditMode(): boolean {
-        const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-         if (this.grid.rowEditable && editableRow && editableRow.rowID === this.rowID) {
-            return true;
+        if (this.grid.rowEditable) {
+            const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
+            return editableRow && editableRow.rowID === this.rowID;
         } else {
             return false;
         }
@@ -215,7 +225,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): any {
+    get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -227,7 +237,7 @@ export class IgxGridRowComponent implements DoCheck {
         // primaryKey data value,
         // or if the primaryKey is omitted, then the whole rowData is used instead.
         const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this.rowData[primaryKey] : this.rowData;
+        return primaryKey ? this._rowData[primaryKey] : this._rowData;
     }
 
     /**
@@ -269,10 +279,10 @@ export class IgxGridRowComponent implements DoCheck {
             event.stopPropagation();
             const shift = event.shiftKey;
             if (shift) {
-                this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                (<any>this.grid).navigation.navigateUp(this.nativeElement, this.index,
                     this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
             } else {
-                this.grid.navigation.onKeydownHome(this.index);
+                (<any>this.grid).navigation.onKeydownHome(this.index);
     }
     }
     }
@@ -300,6 +310,7 @@ export class IgxGridRowComponent implements DoCheck {
     public update(value: any) {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
+            this.grid.endRowEdit(true);
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.gridAPI.update_row(value, this.gridID, this.rowID);

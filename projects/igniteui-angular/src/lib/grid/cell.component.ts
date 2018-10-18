@@ -686,6 +686,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
             && editableCell.cellID.columnID === this.cellID.columnID) {
+            this.grid.endRowEdit(true);
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);

@@ -182,13 +182,13 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    transform(collection: any[], id: string, getPending: boolean, pipeTrigger: number) {
+    transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridComponent = this.gridAPI.get(id);
 
         if (collection && grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection, true),
-                grid.transactions.aggregatedState(true, getPending),
+                grid.transactions.aggregatedState(true),
                 grid.primaryKey);
             return result;
         }
