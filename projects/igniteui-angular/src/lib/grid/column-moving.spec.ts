@@ -451,7 +451,6 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 350, 135);
             await wait();
-            debugger;
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
