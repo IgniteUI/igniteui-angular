@@ -42,10 +42,6 @@ $exclude: (
 @include igx-core();
 @include igx-theme($default-palette, $preset: $midnight-theme, $exclude: $exclude, $legacy-support: true);
 
-body {
-    background: #222;
-    color: text-contrast(#222);
-}
 
 /// Typography samples
 // $button-type-style: igx-type-style(

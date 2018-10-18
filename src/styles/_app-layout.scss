@@ -53,7 +53,6 @@
 
         &-title {
             @include igx-type-style($default-type-scale, 'h6');
-            color: #0375be;
             margin-bottom: 24px;
 
             .light {
@@ -64,7 +63,6 @@
         &-description {
             font-size: 14px;
             font-weight: 400;
-            color: #717171;
         }
 
         &-content {
