@@ -82,7 +82,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
     - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element.
     - Combined they provide a way to move elements around the page by dragging them. For more detail see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/dragdrop/README.md).
--`IgxGrid` keyboard navigation
+- `IgxGrid` keyboard navigation
 When you focus a specific cell and press one of the following key combinations, the described behaviour is now performed:
     - `Ctrl + Arrow Key Up` - navigates to the first cell in the current column;
     - `Ctrl + Arrow Down` - navigates to the last cell in the current column;
@@ -98,8 +98,8 @@ When you focus a specific cell and press one of the following key combinations, 
     - on mouse `wheel` the focused element is blurred;
     - **Breaking change**  `space` handler for the group row has been removed; so `Space` does not toggle the group row;
     - **Breaking change** cell selection is preserved when the focus is moved to group row.
-For more detailed information see the [official keyboard navigation spacification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
     - Introduced `onFocusChange` event. The event is cancelable and output argument from type `IFocusChangeEventArgs`;
+    - For more detailed information see the [official keyboard navigation spacification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
 ## 6.1.5
 - **General**
     - `IgxChip`
