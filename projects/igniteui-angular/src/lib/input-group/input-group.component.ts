@@ -35,6 +35,7 @@ enum IgxInputGroupType {
 export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
+    private _displayDensity: DisplayDensity | string;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -183,6 +184,42 @@ export class IgxInputGroupComponent {
         }
     }
 
+    /**
+     * Returns the theme of the `IgxInputGroupComponent`.
+     * The default theme is `comfortable`.
+     * Available options are `comfortable`, `cosy`, `compact`.
+     * ```typescript
+     * let inputGroupTheme = this.inputGroup.displayDensity;
+     * ```
+     */
+    @Input()
+    public get displayDensity(): DisplayDensity | string {
+        return this._displayDensity;
+    }
+
+    /**
+     * Sets the theme of the `IgxInputGroupComponent`.
+     * ```html
+     * <igx-input-group [displayDensity]="'compact'"></igx-input-group>
+     * ```
+     */
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
+    }
+
+    /**
+     *@hidden
+     */
     @HostBinding('class.igx-input-group--filled')
     get isFilled() {
         return this._filled || (this.input && this.input.value);
@@ -193,7 +230,8 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--cosy')
     get isDisplayDensityCosy() {
-        return this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy;
+        return this._displayDensity === DisplayDensity.cosy ||
+            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy);
     }
 
     /**
@@ -201,7 +239,9 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--comfortable')
     get isDisplayDensityComfortable() {
-        return !this.displayDensityOptions || this.displayDensityOptions.displayDensity === DisplayDensity.comfortable;
+        return this._displayDensity === DisplayDensity.comfortable ||
+            (!this._displayDensity && (!this.displayDensityOptions ||
+             this.displayDensityOptions.displayDensity === DisplayDensity.comfortable));
     }
 
     /**
@@ -209,7 +249,8 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--compact')
     get isDisplayDensityCompact() {
-        return this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact;
+        return this._displayDensity === DisplayDensity.compact ||
+            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact);
     }
 
     /**

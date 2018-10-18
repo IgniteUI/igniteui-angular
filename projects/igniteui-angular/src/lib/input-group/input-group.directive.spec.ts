@@ -23,7 +23,8 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
-                InputGroupCompactDisplayDensityComponent
+                InputGroupCompactDisplayDensityComponent,
+                InputGroupInputDisplayDensityComponent
             ],
             imports: [
                 IgxInputGroupModule
@@ -157,6 +158,16 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
     });
+
+    it('compact Display Density applied via input', () => {
+        const fixture = TestBed.createComponent(InputGroupInputDisplayDensityComponent);
+        fixture.detectChanges();
+
+        const inputGroup = fixture.componentInstance.igxInputGroup;
+        const inputGroupElement = inputGroup.element.nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
+    });
 });
 
 @Component({
@@ -270,5 +281,14 @@ class InputGroupCosyDisplayDensityComponent {
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
 })
 class InputGroupCompactDisplayDensityComponent {
+    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+}
+
+@Component({
+    template: `<igx-input-group #igxInputGroup displayDensity="compact">
+                    <input igxInput />
+                </igx-input-group>`
+})
+class InputGroupInputDisplayDensityComponent {
     @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
 }
