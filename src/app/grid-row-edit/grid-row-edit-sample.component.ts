@@ -22,10 +22,13 @@ export class GridRowEditSampleComponent {
             transactions: []
         };
     data: any[];
+    performanceData: any[] = [];
+    columns;
     @ViewChild('gridRowEdit', { read: IgxGridComponent }) public gridRowEdit: IgxGridComponent;
     @ViewChild('gridRowEditTransaction', { read: IgxGridComponent }) public gridRowEditTransaction: IgxGridComponent;
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
     @ViewChild('gridTransaction', { read: IgxGridComponent }) public gridTransaction: IgxGridComponent;
+    @ViewChild('gridPerformance', { read: IgxGridComponent }) public gridPerformance: IgxGridComponent;
     @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
 
     constructor() {
@@ -36,10 +39,11 @@ export class GridRowEditSampleComponent {
             ReorderLevel2: this.getRandomInt(10, 20),
             Discontinued2: this.getRandomInt(1, 10) % 2 === 0
         }));
-        const doubleData = [...enhancedData].map(e => Object.assign({}, e, { ProductID: e.ProductID + 1000}));
+        const doubleData = [...enhancedData].map(e => Object.assign({}, e, { ProductID: e.ProductID + 1000 }));
         console.log(enhancedData, doubleData);
         this.data = [...enhancedData, ...doubleData];
         this.addProductId = this.data.length + 1;
+        this.generatePerformanceData(10000, 100);
     }
 
     public addRow(gridID) {
@@ -134,5 +138,33 @@ export class GridRowEditSampleComponent {
 
     rowEditCancel(evt) {
         console.log('Row edit cancel:\n', evt);
+    }
+
+    private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {
+        const cols = [];
+        cols.push({
+            field: 'ID',
+            width: 90
+        });
+        for (let col = 0; col < colsCount - 1; col++) {
+            cols.push({
+                field: (col + 1).toString(),
+                width: (Math.random() * 80) + 90
+            });
+        }
+
+        this.columns = cols;
+
+        const rowData = {};
+        for (let col = 0; col < cols.length; col++) {
+            const colData = cols[col].field;
+            rowData[colData] = col;
+        }
+
+        for (let row = 0; row < rowsCount; row++) {
+            const newObj = Object.assign({}, rowData);
+            newObj['ID'] = row + 1;
+            this.performanceData.push(newObj);
+        }
     }
 }
