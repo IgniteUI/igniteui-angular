@@ -16,7 +16,7 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
 
 @Component({
     template: `
-        <igx-chips-area #chipsArea>
+        <igx-chips-area #chipsArea class="customClass">
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
@@ -139,7 +139,7 @@ describe('IgxChipsArea', () => {
         const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         const chipAreaComponent = fix.componentInstance;
 
-        expect(chipArea[0].nativeElement.className).toEqual('igx-chip-area');
+        expect(chipArea[0].nativeElement.className).toEqual('igx-chip-area customClass');
         expect(chipArea[0].nativeElement.children.length).toEqual(2);
 
         chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
