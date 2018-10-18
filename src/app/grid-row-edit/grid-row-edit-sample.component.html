@@ -18,7 +18,7 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
@@ -48,7 +48,7 @@
                         editable="true"></igx-column>
                     <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column width="100px" field="OrderDate" header="Order Date" [dataType]="'date'"></igx-column>
@@ -65,7 +65,7 @@
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
                         [hasSummary]="summaryFlag" editable="true" [sortable]="true" >
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column width="100px" field="OrderDate2" [dataType]="'date'" header="PINNED DATE" editable="true"
@@ -110,7 +110,7 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="OrderDate" [dataType]="'date'"></igx-column>
@@ -122,7 +122,7 @@
                     editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="PINNED ORDER DATE" [dataType]="'date'" editable="true" pinned="true"></igx-column>
@@ -143,7 +143,7 @@
                     <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                     <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.value" style="color: black" />
+                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
