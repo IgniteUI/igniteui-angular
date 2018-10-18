@@ -1,7 +1,7 @@
 # igx-overlay
 
 The overlay service allows users to show components on overlay div above all other elements in the page.
-A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
 
 ## Usage
 
