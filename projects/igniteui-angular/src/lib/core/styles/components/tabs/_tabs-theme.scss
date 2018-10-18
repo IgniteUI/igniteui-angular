@@ -38,6 +38,7 @@
 
 @function igx-tabs-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $item-text-color: null,
     $item-background: null,
@@ -81,6 +82,10 @@
         tab-ripple-color: igx-color($palette, 'grays', 100),
         button-ripple-color: igx-color($palette, 'grays', 100)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($item-text-color) and $item-background {
         $item-text-color: text-contrast($item-background);

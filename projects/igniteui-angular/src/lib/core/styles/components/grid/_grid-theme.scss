@@ -59,6 +59,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -181,6 +182,10 @@
         grouping-indicator-hover-background: hexrgba(igx-color($palette, 'grays', 100)),
         grouping-indicator-focus-background: igx-color($palette, grays, 100)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);

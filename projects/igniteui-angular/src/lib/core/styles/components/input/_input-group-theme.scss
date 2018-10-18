@@ -47,6 +47,7 @@
 ///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -168,6 +169,10 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,

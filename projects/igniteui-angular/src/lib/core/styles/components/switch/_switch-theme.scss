@@ -28,6 +28,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $thumb-on-color: null,
     $track-on-color: null,
@@ -81,6 +82,10 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,

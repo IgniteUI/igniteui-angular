@@ -32,6 +32,8 @@
 ///   @include igx-time-picker($my-button-theme);
 @function igx-time-picker-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $text-color: null,
     $hover-text-color: null,
     $selected-text-color: null,
@@ -52,6 +54,10 @@
         header-time-period-color: rgba(igx-contrast-color($palette, 'secondary', 500), .8),
         background-color: white
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);

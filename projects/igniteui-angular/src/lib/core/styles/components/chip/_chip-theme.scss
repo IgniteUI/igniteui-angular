@@ -40,6 +40,7 @@
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $chip-background: null,
     $chip-hover-background: null,
@@ -113,6 +114,10 @@
         selected-chip-focus-border-color: igx-color($palette, secondary, 900),
         selected-chip-hover-border-color: igx-color($palette, secondary, 900)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($text-color) and $chip-background{
         $text-color: text-contrast($chip-background);

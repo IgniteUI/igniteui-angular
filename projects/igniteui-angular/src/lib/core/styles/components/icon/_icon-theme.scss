@@ -20,6 +20,8 @@
 ///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $color: null,
     $size: null,
     $disabled-color: null
@@ -30,6 +32,10 @@
         size: rem(24px),
         disabled-color: igx-color($palette, 'grays', 500)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,
