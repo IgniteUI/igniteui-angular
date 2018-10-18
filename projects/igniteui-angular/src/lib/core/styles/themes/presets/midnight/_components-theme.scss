@@ -236,12 +236,16 @@ $tabs-midnight-theme: igx-tabs-theme(
     $palette: $midnight-palette,
     $item-background: igx-color($midnight-palette, 'primary'),
     $button-background: igx-color($midnight-palette, 'primary'),
-    $item-hover-background: igx-color($midnight-palette, 'primary', 400),
+    $item-hover-background: igx-color($midnight-palette, 'primary', 300),
     $item-text-color: $midnight-white-80,
     $item-active-color: #fff,
+    $item-hover-color: #fff,
     $item-active-icon-color: #fff,
     $item-active-background: $midnight-white-30,
-    $indicator-color: #fff
+    $indicator-color: #fff,
+    $button-color: #fff,
+    $button-hover-color: #fff,
+    $button-hover-background: igx-color($midnight-palette, 'primary', 600)
 );
 
 body {
