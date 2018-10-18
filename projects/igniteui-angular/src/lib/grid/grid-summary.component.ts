@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, Input
 } from '@angular/core';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';

@@ -3,8 +3,15 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- `igxIcon`:
+    - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
+    - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - `igxGrid`:
+    - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
+    - Exposing a mechanism for cells to grow according to their content.
+- `igxFor`
+    - Added support for variable heights.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
 - `igxOverlay`:
     - `OverlaySettings` now also accepts an optional `outlet` to specify the container where the overlay should be attached.
@@ -30,7 +37,18 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - **Breaking change** Move the location of where the chip `suffix` is positioned. Now it is between the content and the `remove button` making the button last element if visible by default.
+    - **Breaking change** Remove the chip `connector` rendered when using the `igxConnector` directive that is also removed.
+    - **Breaking change** The chip theme has been rewritten. Most theme input properties have been renamed for consistency
+    and better legibility. New properties have been added. Please, refer to the updated igx-chip-theme documentation to see all updates.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
+    - Added `data` input for storing any data related to the chip itself.
+    - Added `select icon` with show/hide animation to indicate when a chip is being selected with ability to customize it while retaining the chip Material Design styling.
+    - Added `selectIcon` input to set custom template for the `select icon`.
+    - Update chip styling to match Material Design guidelines.
+    - Rework of the chip content styling so now by default text inside is styled to match the chip Material Design styling.
+    - Rework of the `remove button` rendered and now has the ability to customize its icon while retaining the chip Material Design.
+    - Added `removeIcon` input so a custom template cane be set for the remove button icon.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
@@ -61,6 +79,20 @@ All notable changes for each version of this project will be documented in this 
         - **item** of type `IgxListItemComponent`
         - **direction** of type `IgxListPanState`
         - **keepItem** of type `boolean`
+- `igxTooltip` and `igxTooltipTarget` directives:
+    - Added `IgxTooltipDirective`.
+        - An element that uses the `igxTooltip` directive is used as a tooltip for a specific target (anchor).
+        - Extends `IgxToggleDirective`.
+        - Exported with the name **tooltip**.
+    - Added `IgxTooltipTargetDirective`.
+        - An element that uses the `igxTooltipTarget` directive is used as a target (anchor) for a specific tooltip.
+        - Extends `IgxToggleActionDirective`.
+        - Exported with the name **tooltipTarget**.
+    - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `IgxDrag` and `IgxDrop` directives available.
+    - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
+    - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element. 
+    - Combined they provide a way to move elements around the page by dragging them. For more detail see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/dragdrop/README.md).
 
 ## 6.1.5
 - **General**

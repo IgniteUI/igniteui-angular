@@ -172,6 +172,8 @@ describe('IgxCalendar', () => {
 
     describe('Rendered Component', () => {
         let fixture;
+        let calendar;
+        let dom;
         beforeEach(
             async(() => {
                 TestBed.configureTestingModule({
@@ -181,6 +183,8 @@ describe('IgxCalendar', () => {
                 .then(() => {
                     fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                     fixture.detectChanges();
+                    calendar = fixture.componentInstance.calendar;
+                    dom = fixture.debugElement;
                  });
             })
         );
@@ -190,21 +194,19 @@ describe('IgxCalendar', () => {
         });
 
         it('should initialize a calendar component with `id` property', () => {
-            const domCalendar = fixture.debugElement.query(By.css('igx-calendar')).nativeElement;
+            const domCalendar = dom.query(By.css('igx-calendar')).nativeElement;
 
-            expect(fixture.componentInstance.calendar.id).toBe('igx-calendar-1');
+            expect(calendar.id).toBe('igx-calendar-1');
             expect(domCalendar.id).toBe('igx-calendar-1');
 
-            fixture.componentInstance.calendar.id = 'customCalendar';
+            calendar.id = 'customCalendar';
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.calendar.id).toBe('customCalendar');
+            expect(calendar.id).toBe('customCalendar');
             expect(domCalendar.id).toBe('customCalendar');
         });
 
         it('should properly set @Input properties and setters', () => {
-            const calendar = fixture.componentInstance.calendar;
-
             expect(calendar.weekStart).toEqual(WEEKDAYS.SUNDAY);
             expect(calendar.selection).toEqual('single');
 
@@ -228,13 +230,10 @@ describe('IgxCalendar', () => {
         });
 
         it('should properly set formatOptions and formatViews', () => {
-            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.componentInstance.viewDate = new Date(2018, 8, 17);
             fixture.componentInstance.model = new Date();
             fixture.detectChanges();
 
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             const defaultOptions = {
                 day: 'numeric',
                 month: 'short',
@@ -291,12 +290,47 @@ describe('IgxCalendar', () => {
             expect(bodyMonth.nativeElement.textContent.trim()).toMatch('8');
         });
 
+        it('should properly set locale', () => {
+            fixture.componentInstance.viewDate = new Date(2018, 8, 17);
+            fixture.componentInstance.model = new Date();
+            fixture.detectChanges();
+
+            const bodyMonth = dom.query(By.css('.date .date__el'));
+            const headerYear = dom.query(By.css('.igx-calendar__header-year'));
+            const bodyYear = dom.queryAll(By.css('.date .date__el'))[1];
+            const headerWeekday = dom.queryAll(By.css('.igx-calendar__header-date span'))[0];
+            const headerDate = dom.queryAll(By.css('.igx-calendar__header-date span'))[1];
+            let bodyWeekday = dom.query(By.css('.igx-calendar__label'));
+
+            calendar.selectDate(calendar.viewDate);
+            fixture.detectChanges();
+
+            expect(headerYear.nativeElement.textContent.trim()).toMatch('2018');
+            expect(headerWeekday.nativeElement.textContent.trim()).toMatch('Mon');
+            expect(headerDate.nativeElement.textContent.trim()).toMatch('Sep 17');
+            expect(bodyYear.nativeElement.textContent.trim()).toMatch('2018');
+            expect(bodyMonth.nativeElement.textContent.trim()).toMatch('Sep');
+            expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Sun');
+
+            // change formatOptions and formatViews
+            const locale = 'fr';
+            calendar.locale = locale;
+            fixture.detectChanges();
+
+            bodyWeekday = dom.query(By.css('.igx-calendar__label'));
+            expect(calendar.locale).toEqual(locale);
+            expect(headerYear.nativeElement.textContent.trim()).toMatch('18');
+            expect(headerWeekday.nativeElement.textContent.trim()).toMatch('lun.,');
+            expect(headerDate.nativeElement.textContent.trim()).toMatch('17 sept.');
+            expect(bodyYear.nativeElement.textContent.trim()).toMatch('18');
+            expect(bodyMonth.nativeElement.textContent.trim()).toMatch('sept.');
+            expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
+        });
+
         it('should properly render calendar DOM structure', () => {
-            const calendar = fixture.componentInstance.calendar;
             const today = new Date(Date.now());
             calendar.viewDate = today;
             fixture.detectChanges();
-            const dom = fixture.debugElement;
             const calendarRows = dom.queryAll(By.css('.igx-calendar__body-row'));
 
             // 6 weeks + week header
@@ -323,9 +357,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar DOM structure - year view | month view', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             const collection = dom.queryAll(By.css('.date__el'));
             const monthButton = collection[0];
             const yearButton = collection[1];
@@ -362,9 +393,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - single with event', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
@@ -402,8 +430,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - outside of current month - 1', () => {
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const parent = dom.query(
                 By.css('.igx-calendar__body-row:last-child')
@@ -424,8 +450,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - outside of current month - 2', () => {
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const parent = dom.queryAll(By.css('.igx-calendar__body-row'))[1];
             const target = parent.queryAll(By.css('span')).shift();
@@ -444,8 +468,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - single through API', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             fixture.detectChanges();
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
@@ -479,8 +501,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - multiple with event', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             fixture.detectChanges();
 
             const target = dom.query(By.css('.igx-calendar__date--selected'));
@@ -532,9 +552,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - multiple through API', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
@@ -584,9 +601,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - range with event', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
@@ -659,9 +673,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar selection - range through API', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
-
             fixture.detectChanges();
             const target = dom.query(By.css('.igx-calendar__date--selected'));
             const weekDiv = target.parent;
@@ -722,8 +733,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar keyboard navigation - PageUp/PageDown', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             const component = dom.query(By.css('.igx-calendar'));
 
             UIInteractions.simulateKeyDownEvent(component.nativeElement, 'PageUp');
@@ -753,8 +762,6 @@ describe('IgxCalendar', () => {
 
         it('Calendar keyboard navigation - Home/End/Enter', () => {
             fixture.detectChanges();
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             const component = dom.query(By.css('.igx-calendar'));
 
             const days = calendar.dates.filter((day) => day.isCurrentMonth);
@@ -780,8 +787,6 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar keyboard navigation - Arrow keys', () => {
-            const calendar = fixture.componentInstance.calendar;
-            const dom = fixture.debugElement;
             const component = dom.query(By.css('.igx-calendar'));
 
             const days = calendar.dates.filter((day) => day.isCurrentMonth);
@@ -815,8 +820,7 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar date should persist the focus when select date in the (next/prev) month.', async () => {
-            const component = fixture.debugElement.query(By.css('.igx-calendar'));
-            const calendar = fixture.componentInstance.calendar;
+            const component = dom.query(By.css('.igx-calendar'));
             const calendarMonth = calendar.getCalendarMonth;
             let value = calendarMonth[0][4];
 
@@ -1203,7 +1207,7 @@ describe('IgxCalendar', () => {
         fixture.detectChanges();
 
         let selectedDate = calendar.value;
-        expect(selectedDate).toBe(date);
+        expect(selectedDate).toEqual(date);
 
         calendar.deselectDate(date);
         fixture.detectChanges();
@@ -1240,7 +1244,8 @@ describe('IgxCalendar', () => {
         const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
         const selectedDates: Date[] = calendar.value as Date[];
         for (const selectedDate of selectedDates) {
-            expect(oddDates.indexOf(selectedDate)).toBeGreaterThan(-1);
+            const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+            expect(fdate).toBeTruthy();
         }
     });
 
@@ -1299,7 +1304,7 @@ describe('IgxCalendar', () => {
         fixture.detectChanges();
 
         let selectedDate = calendar.value;
-        expect(selectedDate).toBe(date);
+        expect(selectedDate).toEqual(date);
 
         calendar.deselectDate();
         fixture.detectChanges();
