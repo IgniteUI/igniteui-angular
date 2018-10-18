@@ -184,22 +184,13 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridComponent = this.gridAPI.get(id);
-        if (collection && grid.transactions.enabled) {
-            const copy = cloneArray(collection, true);
-            //  TODO: make it work with DataUtil.mergeTransactions
-            // DataUtil.mergeTransactions(copy, grid.transactions.aggregatedState(true), grid.primaryKey);
-            copy.forEach((value, index) => {
-                const rowId = grid.primaryKey ? copy[index][grid.primaryKey] : copy[index];
-                if (grid.transactions.getState(rowId)) {
-                    copy[index] = grid.transactions.getAggregatedValue(rowId, true);
-                }
-            });
 
-            copy.push(...grid.transactions
-                .aggregatedState(true)
-                .filter(transaction => transaction.type === TransactionType.ADD)
-                .map(state => state.newValue));
-            return copy;
+        if (collection && grid.transactions.enabled) {
+            const result = DataUtil.mergeTransactions(
+                cloneArray(collection, true),
+                grid.transactions.aggregatedState(true),
+                grid.primaryKey);
+            return result;
         }
         return collection;
     }

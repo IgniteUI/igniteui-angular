@@ -19,7 +19,6 @@ export interface State {
 export interface TransactionService {
     /**
      * Returns whether transaction is enabled for this service
-     * @returns If transaction is enabled
      */
     readonly enabled: boolean;
 
@@ -47,7 +46,7 @@ export interface TransactionService {
     redo(): void;
 
     /**
-     * Returns aggregated state of all transactions
+     * Returns aggregated state of all transactions including pending ones
      * @param mergeChanges If set to true will merge each state's value over relate recordRef
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
@@ -88,8 +87,7 @@ export interface TransactionService {
 
     /**
      * Starts pending transactions. All transactions passed after call to startPending
-     * will not be added to transaction log and will not be reflected in aggregated
-     * state
+     * will not be added to transaction log
      */
     startPending(): void;
 

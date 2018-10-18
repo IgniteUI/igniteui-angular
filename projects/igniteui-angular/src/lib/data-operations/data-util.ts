@@ -185,6 +185,12 @@ export class DataUtil {
         });
     }
 
+    /**
+     * Merges all changes from provided transactions into provided data collection
+     * @param data Collection to merge
+     * @param transactions Transactions to merge into data
+     * @param primaryKey Primary key of the collection, if any
+     */
     public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
         data.forEach((value, index) => {
             const rowId = primaryKey ? value[primaryKey] : value;
@@ -194,11 +200,9 @@ export class DataUtil {
             }
         });
 
-        transactions.forEach(t => {
-            if (t.type === TransactionType.ADD) {
-                data.push(t.newValue);
-            }
-        });
+        data.push(...transactions
+            .filter(t => t.type === TransactionType.ADD)
+            .map(t => t.newValue));
         return data;
     }
 }

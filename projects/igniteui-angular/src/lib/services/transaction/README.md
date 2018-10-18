@@ -32,15 +32,15 @@ and then inject it in the component's constructor:
 
    | Name                  | Description                                                   | Parameters                |
    |-----------------------|---------------------------------------------------------------|---------------------------|
+   |enabled                | Returns whether transaction is enabled for this service       | -                         |
    |add                    | Adds provided  transaction with recordRef if any              | transaction, recordRef?   |
-   |getTransactionLog      | Returns an array of all transactions. If id is provided returns last transaction for provided id | id?                       |
+   |getTransactionLog      | Returns an array of all transactions. If id is provided returns last transaction for provided id | id? |
    |undo                   | Remove the last transaction if any                            | -                         |
    |redo                   | Applies the last undone transaction if any                    | -                         |
-   |aggregatedState        | Returns aggregated state of all transactions                  | -                         |
+   |aggregatedState        | Returns aggregated state of all transactions including pending ones| mergeChanges         |
    |getState               | Returns the state of the record with provided id              | id                        |
-   |hasTransactions        | Returns whether transaction is enabled for this service       | -                         |
-   |getAggregatedValue     | Returns value of the required id including all uncommitted changes| id                    |
+   |getAggregatedValue     | Returns value of the required id including all uncommitted changes| id, mergeChanges      |
    |commit                 | Applies all transactions over the provided data               | data                      |
    |clear                  | Clears all transactions                                       | -                         |
-   |startPending           | Starts pending transactions. All transactions passed after call to startPending will not be added to transaction log and will not be reflected in aggregated state | -                         |
-   |endPending             | Clears all pending transactions and aggregated pending state. If commit is set to true commits pending states as single transaction | -                         |
+   |startPending           | Starts pending transactions. All transactions passed after call to startPending will not be added to transaction log | - |
+   |endPending             | Clears all pending transactions and aggregated pending state. If commit is set to true commits pending states as single transaction | commit |
