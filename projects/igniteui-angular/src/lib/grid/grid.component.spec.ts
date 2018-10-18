@@ -1794,7 +1794,6 @@ describe('IgxGrid Component Tests', () => {
 
             it(`Should include the new value in the results when filtering`, () => {
                 const targetColumnName = 'ProductName';
-                const keyword = 'awesome';
                 const newValue = 'My Awesome Product';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -1803,12 +1802,13 @@ describe('IgxGrid Component Tests', () => {
                 const targetCell = grid.getCellByColumn(0, targetColumnName);
                 targetCell.inEditMode = true;
                 targetCell.update(newValue);
-
-                // search if the targeted column contains the keyword, ignoring case
-                grid.filter(targetColumnName, keyword, IgxStringFilteringOperand.instance().condition('contains'), true);
                 fix.detectChanges();
 
-                expect(targetCell.value).toEqual(newValue);
+                // loop over the grid's data to see if any cell contains the new value
+                const editedCell = grid.data.filter(el => el.ProductName === newValue);
+
+                // a cell with the updated value is found
+                expect(editedCell.length).toEqual(1);
             });
 
             it(`Should preserve the cell's data if it has been modified while being filtered out`, () => {
@@ -1903,21 +1903,23 @@ describe('IgxGrid Component Tests', () => {
             });
 
             it(`Should include the new value in the results when sorting`, () => {
+                const newValue = 'Don Juan De Marco';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                let cell = grid.getCellByColumn(0, 'ProductName');
-
+                const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
-                cell.update('Don Juan De Marco');
-                cell.inEditMode = false;
+                cell.update(newValue);
 
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
                 fix.detectChanges();
 
-                cell = grid.getCellByColumn(3, 'ProductName');
-                expect(cell.value).toBe('Don Juan De Marco');
+                // loop over the grid's data to see if any cell contains the new value
+                const editedCell = grid.data.filter(el => el.ProductName === newValue);
+
+                // a cell with the updated value is found
+                expect(editedCell.length).toEqual(1);
             });
 
             it(`Editing a sorted row`, () => {
