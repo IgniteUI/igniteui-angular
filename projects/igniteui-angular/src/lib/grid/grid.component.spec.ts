@@ -9,7 +9,7 @@ import { IgxColumnComponent } from './column.component';
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand } from '../../public_api';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
@@ -1355,13 +1355,13 @@ describe('IgxGrid Component Tests', () => {
                 //  ged DONE button and click it
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
                 const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
-                const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonDone);
+                const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Done');
                 doneButtonElement.nativeElement.click();
                 expect(grid.endRowEdit).toHaveBeenCalled();
                 expect(grid.endRowEdit).toHaveBeenCalledWith(true);
 
                 //  ged CANCLE button and click it
-                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
+                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Cancel');
                 cancelButtonElement.nativeElement.click();
                 expect(grid.endRowEdit).toHaveBeenCalled();
                 expect(grid.endRowEdit).toHaveBeenCalledWith(false);
@@ -1589,7 +1589,7 @@ describe('IgxGrid Component Tests', () => {
                 // get the cancel button and click it
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
                 const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
-                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === grid.rowEditButtonCancel);
+                const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Cancel');
                 cancelButtonElement.nativeElement.click();
 
                 // submit_value is called to exit edit mode of cell
@@ -2672,16 +2672,6 @@ export class IgxGridRowEditingComponent {
     public deleteRow(event, rowID) {
         event.stopPropagation();
         this.data.splice(rowID - 1, 1);
-        this.refreshAll();
-    }
-
-    refreshAll(): void {
-        this.refresh(this.grid);
-    }
-
-    private refresh(grid: IgxGridComponent): void {
-        (<any>grid)._pipeTrigger++;
-        (<any>grid).cdr.markForCheck();
     }
 }
 

@@ -1,9 +1,11 @@
 import { TransactionService, Transaction, State } from './utilities';
+import { EventEmitter } from '@angular/core';
 
 export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();
+    public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: Transaction, recordRef?: any): void {
         if (this._isPending) {

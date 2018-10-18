@@ -1,3 +1,5 @@
+import { EventEmitter } from '@angular/core';
+
 export enum TransactionType {
     ADD = 'add',
     DELETE = 'delete',
@@ -21,6 +23,11 @@ export interface TransactionService {
      * Returns whether transaction is enabled for this service
      */
     readonly enabled: boolean;
+
+    /**
+     * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo.
+     */
+    onStateUpdate?: EventEmitter<void>;
 
     /**
      * Adds provided  transaction with recordRef if any

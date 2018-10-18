@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity, isObjectEmpty } from '../core/utils';
+import { cloneArray, isObjectEmpty } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -67,6 +67,7 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { getPointFromPositionsSettings } from '../services/overlay/utilities';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DisplayDensity } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -2062,62 +2063,9 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
-     * Get/Set the text of the default IgxRowEditingOverlay.
-     * ```typescript
-     * // Get
-     * const defaultText_MESSAGE = this.grid.rowEditMessage; // == 'You have uncommitted changes on this row'
-     * ...
-     * // Set
-     * const customText_MESSAGE = 'You changes have not been committed';
-     * this.grid.rowEditMessage = customText_MESSAGE;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditMessage]="'You changes have not been committed'">
-     * ```
-     */
-    @Input()
-    public rowEditMessage = `You have {0} uncommitted changes on this row`;
-    /**
      * @hidden
      */
-    public rowEditMessageValue;
-
-    /**
-     * Get/Set the text of the default IgxRowEditingOverlay commit button.
-     * ```typescript
-     * // Get
-     * const defaultText_DONE = this.grid.rowEditButtonDone; // == 'Done'
-     * ...
-     * // Set
-     * const customText_DONE = 'Apply Changes';
-     * this.grid.rowEditButtonDone = customText_COMMIT;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditButtonDone]="'Apply Changes'">
-     * ```
-     */
-    @Input()
-    public rowEditButtonDone = 'Done';
-
-    /**
-     * Get/Set the text of the default IgxRowEditingOverlay discard button.
-     * ```typescript
-     * // Get
-     * const defaultText_CANCEL = this.grid.rowEditButtonCancel; // == 'Cancel'
-     * ...
-     * // Set
-     * const customText_CANCEL = 'Stop Editing';
-     * this.grid.rowEditButtonCancel = customText_CANCEL;
-     * ```
-     * Set through markup:
-     * ```html
-     * <igx-grid [rowEditButtonCancel]="'Stop Editing'">
-     * ```
-     */
-    @Input()
-    public rowEditButtonCancel = 'Cancel';
+    public rowEditMessage;
 
     /**
      * Emitted when an export process is initiated by the user.
@@ -2374,6 +2322,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.markForCheck();
+            this._pipeTrigger++;
+        });
     }
 
     /**
@@ -4919,19 +4871,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
         this.showRowEditingOverlay();
-        this.calculateRowChangesCount(row.rowID);
     }
 
     /**
      * @hidden
      */
-    public calculateRowChangesCount(rowID) {
-        if (!this.rowEditable) {
-            return;
+    public get rowChangesCount() {
+        if (!this.rowInEditMode) {
+            return 0;
         }
-        const rowChanges = this.transactions.getAggregatedValue(rowID, false);
-        const rowChangedCount = rowChanges ? Object.keys(rowChanges).length : 0;
-        this.rowEditMessageValue = this.rowEditMessage.replace('{0}', rowChangedCount.toString());
+        const rowChanges = this.transactions.getAggregatedValue(this.rowInEditMode.rowID, false);
+        return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
     /**

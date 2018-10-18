@@ -181,9 +181,6 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
 |`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
 |`rowEditable` | enables/disables row editing overlay |
-|`rowEditMessage`| information message related to the currently editing row |
-|`rowEditButtonDone` | customizable title of the Commit button |
-|`rowEditButtonCancel`| customizable title of the Discard button |
 |`transactions`| all transactions and states of the modified rows. |
 
 ### Outputs

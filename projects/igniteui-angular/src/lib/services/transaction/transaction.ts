@@ -1,11 +1,13 @@
 import { Transaction, State, TransactionType } from './utilities';
 import { IgxBaseTransactionService } from './base-transaction';
+import { EventEmitter } from '@angular/core';
 
 export class IgxTransactionService extends IgxBaseTransactionService {
     private _transactions: Transaction[] = [];
     private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
+    public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: Transaction, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
@@ -18,6 +20,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         if (!this._isPending) {
             this._undoStack.push({ transaction, recordRef });
             this._redoStack = [];
+            this.onStateUpdate.emit();
         }
     }
 
@@ -109,6 +112,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             }
         });
         this.clear();
+        this.onStateUpdate.emit();
     }
 
     public clear(): void {
@@ -127,6 +131,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this._redoStack.push(action);
         this._states.clear();
         this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
+        this.onStateUpdate.emit();
     }
 
     public redo(): void {
@@ -135,6 +140,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
             this._transactions.push(undoItem.transaction);
             this._undoStack.push(undoItem);
+            this.onStateUpdate.emit();
         }
     }
 
