@@ -3,6 +3,9 @@ import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
+import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxIconModule } from '../icon';
+import { IgxInputDirective } from '../directives/input/input.directive';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -24,10 +27,11 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledByDefaultComponent,
                 InputGroupCosyDisplayDensityComponent,
                 InputGroupCompactDisplayDensityComponent,
-                InputGroupInputDisplayDensityComponent
+                InputGroupInputDisplayDensityComponent,
+                InputGroupSupressInputFocusComponent
             ],
             imports: [
-                IgxInputGroupModule
+                IgxInputGroupModule, IgxIconModule
             ]
         })
         .compileComponents();
@@ -168,6 +172,18 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS)).toBeFalsy();
         expect(inputGroupElement.classList.contains(INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS)).toBeTruthy();
     });
+
+    it('suppress focus on input when clicked', async () => {
+        const fixture = TestBed.createComponent(InputGroupSupressInputFocusComponent);
+        fixture.detectChanges();
+
+        const inputGroup = fixture.componentInstance.igxInputGroup;
+        UIInteractions.clickElement(inputGroup.element);
+        await wait();
+        fixture.detectChanges();
+
+        expect(document.activeElement).not.toEqual(fixture.componentInstance.igxInput.nativeElement);
+    });
 });
 
 @Component({
@@ -291,4 +307,15 @@ class InputGroupCompactDisplayDensityComponent {
 })
 class InputGroupInputDisplayDensityComponent {
     @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+}
+
+@Component({
+    template: `<igx-input-group #igxInputGroup [supressInputAutofocus]="true">
+                    <igx-icon>phone</igx-icon>
+                    <input igxInput #igxInput/>
+                </igx-input-group>`
+})
+class InputGroupSupressInputFocusComponent {
+    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective }) public igxInput: IgxInputDirective;
 }

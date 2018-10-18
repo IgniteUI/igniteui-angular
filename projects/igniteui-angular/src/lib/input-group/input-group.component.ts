@@ -36,6 +36,7 @@ export class IgxInputGroupComponent {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
     private _displayDensity: DisplayDensity | string;
+    private _supressInputAutofocus: boolean = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -152,7 +153,9 @@ export class IgxInputGroupComponent {
      */
     @HostListener('click', ['$event'])
     public onClick(event) {
-        this.input.focus();
+        if (!this._supressInputAutofocus) {
+            this.input.focus();
+        }
     }
 
     /**
@@ -215,6 +218,27 @@ export class IgxInputGroupComponent {
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+    }
+
+    /**
+     * Returns whether the input element of the input group will be automatically focused on click.
+     * ```typescript
+     * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
+     * ```
+     */
+    @Input()
+    public get supressInputAutofocus(): boolean {
+        return this._supressInputAutofocus;
+    }
+
+    /**
+     * Sets whether the input element of the input group will be automatically focused on click.
+     * ```html
+     * <igx-input-group [supressInputAutofocus]="true"></igx-input-group>
+     * ```
+     */
+    public set supressInputAutofocus(value: boolean) {
+        this._supressInputAutofocus = value;
     }
 
     /**
