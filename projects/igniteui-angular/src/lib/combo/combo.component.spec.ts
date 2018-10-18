@@ -1567,7 +1567,6 @@ describe('igxCombo', () => {
 
             const dropDownButton = inputGroupBundle.children[1];
             expect(dropDownButton.classList.contains(CSS_CLASS_DROPDOWNBUTTON)).toBeTruthy();
-            expect(dropDownButton.classList.contains(CSS_CLASS_INPUTGROUP_BUNDLESUFFIX)).toBeTruthy();
             expect(dropDownButton.childElementCount).toEqual(1);
 
             const inputGroupBorder = inputGroupWrapper.children[1];

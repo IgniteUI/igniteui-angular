@@ -1,42 +1,176 @@
 <div class="sample-wrapper">
-    <app-page-header title="Chips" description="Hello chips"></app-page-header>
+    <app-page-header title="Chips">Chips are compact elements that represent an input, attribute, or action.</app-page-header>
     <section class="sample-content">
-        <div class="sample-holder">
-            <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
-                <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true" [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)" >
-                    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                    <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
+        <article class="sample-column">
+            <header>
+                <h4 class="sample-title">Intro to Chips</h4>
+            </header>
+
+            <section class="chip-storyboard">
+                <igx-chip>Hi! My name is Chip!</igx-chip>
+
+                <igx-chip>
+                    <igx-icon igxPrefix>sentiment_satisfied_alt</igx-icon>
+                    <span>I can be prefixed!</span>
                 </igx-chip>
+
+                <igx-chip>
+                    <igx-icon igxSuffix>sentiment_satisfied_alt</igx-icon>
+                    <span>And suffixed, too!</span>
+                </igx-chip>
+
+                <igx-chip>
+                    <igx-icon igxPrefix>insert_emoticon</igx-icon>
+                    <igx-icon igxSuffix style="transform: rotate(180deg)">insert_emoticon</igx-icon>
+                    <span>Why not both?</span>
+                </igx-chip>
+
+                <igx-chip selectable="true">
+                    <igx-icon igxPrefix>touch_app</igx-icon>
+                    You can select me. Click!
+                </igx-chip>
+
+                <igx-chip #me removable="true" (onRemove)="removeChip(me)">
+                    <igx-icon igxPrefix>mood_bad</igx-icon>
+                    <span>You can remove me.</span>
+                </igx-chip>
+
+                <div dir="rtl">
+                    <igx-chip [selectable]="true">
+                        <igx-icon igxPrefix>insert_emoticon</igx-icon>
+                        <igx-icon igxSuffix style="transform: rotate(180deg)">insert_emoticon</igx-icon>
+                        <span>מימין לשמאל</span>
+                    </igx-chip>
+                </div>
+
+                <igx-chip>
+                    <igx-icon igxPrefix>short_text</igx-icon>
+                    <span>
+                        I am only 24 characters long!
+                    </span>
+                </igx-chip>
+
+                <igx-chip [selectable]="true" [selected]="true" [selectIcon]="mySelectIcon">
+                    With a custom select icon.
+                </igx-chip>
+
+                <igx-chip #me2 [removable]="true" [removeIcon]="myRemoveIcon" (onRemove)="removeChip(me2)">
+                    With a custom remove icon.
+                </igx-chip>
+
+                <ng-template #mySelectIcon>
+                    <igx-icon fontSet="fa-solid" name="fa-check-circle"></igx-icon>
+                </ng-template>
+
+                <ng-template #myRemoveIcon>
+                    <igx-icon fontSet="fa-solid" name="fa-trash-alt"></igx-icon>
+                </ng-template>
+
+                <igx-chip displayDensity="cosy">
+                    I can be smaller!
+                </igx-chip>
+
+                <igx-chip displayDensity="compact">
+                    <igx-icon igxPrefix>child_care</igx-icon>
+                    Even tiny!
+                </igx-chip>
+
+                <div class="chip-border-theme">
+                    <igx-chip>
+                        <igx-icon igxPrefix>palette</igx-icon>
+                        I can be different!
+                    </igx-chip>
+                </div>
+
+                <div class="chip-dark-theme">
+                    <igx-chip displayDensity="cosy" [selectable]="true">
+                        <igx-icon igxSuffix>brush</igx-icon>
+                        <span>Very different!</span>
+                    </igx-chip>
+                </div>
+
+            </section>
+
+            <igx-chip>
+                <span>See what else I can do</span>
+                <igx-icon igxSuffix>arrow_downward</igx-icon>
+            </igx-chip>
+
+        </article>
+    </section>
+
+
+    <section class="sample-content">
+        <article class="sample-column">
+            <header>
+                <h4 class="sample-title">Chips in Chip Area</h4>
+            </header>
+            <igx-chips-area #chipsArea (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipMovingEnded()" (onSelection)="onChipsSelected($event)">
+                <ng-container *ngFor="let chipElem of chipList; let last = last;">
+                    <igx-chip
+                        [id]="chipElem.id"
+                        [draggable]="true"
+                        [selectable]="true"
+                        [removable]="true"
+                        (onRemove)="chipRemoved($event)">
+                        <igx-icon igxPrefix>{{chipElem.icon}}</igx-icon>
+                        {{chipElem.text}}
+                    </igx-chip>
+                    <igx-icon *ngIf="!last" class="chip-area-connector">keyboard_arrow_right</igx-icon>
+                </ng-container>
             </igx-chips-area>
-            <br>
-            <button igxButton="flat" (click)="selectChip('City')">Select 'City'</button>
-        </div>
+        </article>
     </section>
 
     <section class="sample-content">
-        <div class="sample-holder">
-
+        <article class="sample-column">
+            <header>
+                <h4 class="sample-title">Chips in a Custom Scenario</h4>
+            </header>
             <div class="wrapperAreaTo">
                 <igx-chips-area #chipsAreaTo class="chipAreaTo" (onReorder)="chipsOrderChangedTo($event)">
                     <span>To:</span>
-                    <igx-chip *ngFor="let chip of chipListTo" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartTo()" (onMoveEnd)="moveEndedTo()">
-                        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                    <igx-chip *ngFor="let chip of chipListTo"
+                        [id]="chip.id"
+                        [draggable]="true"
+                        (onMoveStart)="onMoveStartTo()"
+                        (onMoveEnd)="moveEndedTo()">
+                        <igx-avatar igxPrefix class="chip-area-avatar"
+                            [src]="chip.picture"
+                            [roundShape]="true">
+                        </igx-avatar>
+                        <span>{{chip.text}}</span>
                     </igx-chip>
-                    <div class="dropAreaTo" igxDrop #dropTo (onDrop)="onDropTo($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"></div>
+                    <div class="dropAreaTo" igxDrop #dropTo
+                        (onDrop)="onDropTo($event)"
+                        (igxDragEnter)="onDragEnterCc()"
+                        (igxDragLeave)="onDragLeaveCc()">
+                    </div>
                 </igx-chips-area>
             </div>
 
             <div class="wrapperAreaCc">
                 <igx-chips-area #chipsAreaCc class="chipAreaCc" (onReorder)="chipsOrderChangedCc($event)">
                     <span>Cc:</span>
-                    <igx-chip *ngFor="let chip of chipListCc" [id]="chip.id" [draggable]="true" (onMoveStart)="onMoveStartCc()" (onMoveEnd)="moveEndedCc()">
-                        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+                    <igx-chip *ngFor="let chip of chipListCc"
+                        [id]="chip.id"
+                        [draggable]="true"
+                        (onMoveStart)="onMoveStartCc()"
+                        (onMoveEnd)="moveEndedCc()">
+                        <igx-avatar igxPrefix class="chip-area-avatar"
+                            [src]="chip.picture"
+                            [roundShape]="true">
+                        </igx-avatar>
+                        <span>{{chip.text}}</span>
                     </igx-chip>
-                    <div igxDrop #dropCc (onDrop)="onDropCc($event)" (igxDragEnter)="onDragEnterCc()" (igxDragLeave)="onDragLeaveCc()"
-                        class="dropAreaCc"></div>
+                    <div igxDrop #dropCc
+                        (onDrop)="onDropCc($event)"
+                        (igxDragEnter)="onDragEnterCc()"
+                        (igxDragLeave)="onDragLeaveCc()"
+                        class="dropAreaCc">
+                    </div>
                 </igx-chips-area>
             </div>
-
-        </div>
+        </article>
     </section>
 </div>
