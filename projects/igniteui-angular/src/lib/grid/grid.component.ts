@@ -683,6 +683,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     */
     set rowEditable(val: boolean) {
         this._rowEditable = val;
+        this.refreshGridState();
     }
 
     /**
