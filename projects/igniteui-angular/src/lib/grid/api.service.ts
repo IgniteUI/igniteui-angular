@@ -276,9 +276,12 @@ export class IgxGridAPIService {
                         return val.hierarchy && val.hierarchy.length <= grExprIndex;
                     });
             } else {
-                for (let i = 0; i < name.length; i++) {
-                    this.clear_groupby(id, name[i]);
-                }
+                //these are the columns that should stay grouped
+                const groupedCols: Array<ISortingExpression> = groupingState.filter((expr) => {
+                    return name.indexOf(expr.fieldName) < 0;
+                });
+                this.get(id).groupingExpressions = groupedCols;
+                this.get(id).sortingExpressions = sortingState;
             }
         } else {
             // clear all

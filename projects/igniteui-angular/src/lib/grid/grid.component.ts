@@ -131,7 +131,8 @@ export interface IColumnMovingEndEventArgs {
 
 export interface IGroupingDoneEventArgs {
     expressions: Array<ISortingExpression> | ISortingExpression;
-    columns: Array<IgxColumnComponent> | IgxColumnComponent;
+    groupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
+    ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
 /**
@@ -322,8 +323,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
+        const oldExpressions: Array<ISortingExpression> = this.groupingExpressions;
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
+        const newExpressions: Array<ISortingExpression> = this.groupingExpressions;
+        
         if (this.gridAPI.get(this.id)) {
             this.gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
@@ -333,6 +337,32 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             // setter called before grid is registered in grid API service
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
+        }
+        if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions)) {
+            const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const groupedColsArr = newExpressions.filter(function(obj) {
+                return !oldExpressions.some(function(obj2) {
+                    return obj.fieldName === obj2.fieldName;
+                });
+            });
+            groupedColsArr.forEach(function(elem) {
+                groupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const ungroupedColsArr = oldExpressions.filter(function(obj) {
+                return !newExpressions.some(function(obj2) {
+                    return obj.fieldName === obj2.fieldName;
+                });
+            });
+            ungroupedColsArr.forEach(function(elem) {
+                ungroupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newExpressions,
+                groupedColumns: groupedCols,
+                ungroupedColumns: ungroupedCols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
         }
     }
 
@@ -2917,7 +2947,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
-        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        //const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2926,16 +2956,33 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
-        if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-            const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-            newSortingExpressions.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
-            const groupingDoneArgs: IGroupingDoneEventArgs = {
-                expressions: newSortingExpressions,
-                columns: cols
-            };
-            this.onGroupingDone.emit(groupingDoneArgs);
-        }
+        // const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        // if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
+        //     const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        //     const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        //     const groupedColsArr = newSortingExpressions.filter(function(obj) {
+        //         return !oldSortingExpressions.some(function(obj2) {
+        //             return obj.fieldName === obj2.fieldName;
+        //         });
+        //     });
+        //     groupedColsArr.forEach(function(elem) {
+        //         groupedCols.push(this.getColumnByName(elem.fieldName));
+        //     }, this);
+        //     const ungroupedColsArr = oldSortingExpressions.filter(function(obj) {
+        //         return !newSortingExpressions.some(function(obj2) {
+        //             return obj.fieldName === obj2.fieldName;
+        //         });
+        //     });
+        //     ungroupedColsArr.forEach(function(elem) {
+        //         ungroupedCols.push(this.getColumnByName(elem.fieldName));
+        //     }, this);
+        //     const groupingDoneArgs: IGroupingDoneEventArgs = {
+        //         expressions: newSortingExpressions,
+        //         groupedColumns: groupedCols,
+        //         ungroupedColumns: ungroupedCols
+        //     };
+        //     this.onGroupingDone.emit(groupingDoneArgs);
+        // }
         this.restoreHighlight();
     }
 
@@ -2950,19 +2997,27 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      *
      */
     public clearGrouping(name?: string | Array<string>): void {
-        const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        // const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-        const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
-        if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-            const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-            newSortingExpressions.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
-            const groupingDoneArgs: IGroupingDoneEventArgs = {
-                expressions: newSortingExpressions,
-                columns: cols
-            };
-            this.onGroupingDone.emit(groupingDoneArgs);
-        }
+        // const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
+        // if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
+        //     const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        //     const changedColsArr = oldSortingExpressions.filter(function(obj) {
+        //         return !newSortingExpressions.some(function(obj2) {
+        //             return obj.fieldName === obj2.fieldName;
+        //         });
+        //     });
+        //     changedColsArr.forEach(function(elem) {
+        //         ungroupedCols.push(this.getColumnByName(elem.fieldName));
+        //     }, this);
+        //     const groupingDoneArgs: IGroupingDoneEventArgs = {
+        //         expressions: newSortingExpressions,
+        //         groupedColumns: null,
+        //         ungroupedColumns: ungroupedCols
+        //     };
+        //     this.onGroupingDone.emit(groupingDoneArgs);
+        // }
         this.restoreHighlight();
     }
 
@@ -4470,13 +4525,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
-        const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-        newGrouping.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
-            const groupingDoneArgs: IGroupingDoneEventArgs = {
-                expressions: newGrouping,
-                columns: cols
-            };
-        this.onGroupingDone.emit(groupingDoneArgs);
+        // const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+        // newGrouping.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+        //     const groupingDoneArgs: IGroupingDoneEventArgs = {
+        //         expressions: newGrouping,
+        //         groupedColumns: null,
+        //         ungroupedColumns: null
+        //     };
+        // this.onGroupingDone.emit(groupingDoneArgs);
         event.isValid = true;
         this.markForCheck();
     }
@@ -4498,10 +4554,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         columnExpr.dir = 3 - columnExpr.dir;
         this.sort(columnExpr);
         const cols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-        sortingExpr.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
+        const groupingExpr = this.groupingExpressions;
+        groupingExpr.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: sortingExpr,
-                columns: cols
+                groupedColumns: null,
+                ungroupedColumns: null
             };
         this.onGroupingDone.emit(groupingDoneArgs);
         this.markForCheck();
@@ -4511,7 +4569,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public onChipKeyDown(event) {
-        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
+        if (event.originalEvent.key === ' ' || event.originalEvent.key === 'Spacebar' || event.originalEvent.key === 'Enter') {
             const sortingExpr = this.sortingExpressions;
             const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
             columnExpr.dir = 3 - columnExpr.dir;
@@ -4520,7 +4578,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             sortingExpr.forEach((expr) => { cols.push(this.getColumnByName(expr.fieldName)); }, this);
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: sortingExpr,
-                columns: cols
+                groupedColumns: null,
+                ungroupedColumns: null
             };
             this.onGroupingDone.emit(groupingDoneArgs);
             this.markForCheck();

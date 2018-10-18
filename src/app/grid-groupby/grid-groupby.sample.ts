@@ -112,10 +112,17 @@ export class GridGroupBySampleComponent implements OnInit {
             {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
             {fieldName: "Address", dir: 2, ignoreCase: true},
             {fieldName: "Country", dir: 2, ignoreCase: true}
-        ]
+        ];
         this.grid1.groupBy(expr);
     }
     ungroupMultiple() {
         this.grid1.clearGrouping(["Address", "Country"]);
+    }
+    groupUngroupMultiple() {
+        const expr = [
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
+        ];
+        this.grid1.groupingExpressions = expr;
     }
 }
