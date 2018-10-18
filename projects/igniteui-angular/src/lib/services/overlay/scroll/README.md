@@ -1,6 +1,6 @@
 # Scroll strategies
 
-Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService. A walk through of how to get started can be found [here](https://www.infragistics.com/angularsite/components/overlay_scroll.html).
+Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService. A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_scroll.html).
 
 There are four scroll strategies:
 1) **NoOperation** - does nothing. 
