@@ -4,14 +4,14 @@ The **igxChip** is a compact visual component that displays information in an ob
 
 #### Initializing Chips
 
-The `IgxChipComponent` is the main class for a chip elemenent and the `IgxChipsAreaComponent` is the main class for the chip area. The chip area is used when handling more complex scenarios that require interaction between chips (dragging, selection, navigation, etc.). The `IgxChipComponent` requires an `id` to be defined so that the different chips can be easily distinguished.
+The `IgxChipComponent` is the main class for a chip element and the `IgxChipsAreaComponent` is the main class for the chip area. The chip area is used for handling more complex scenarios that require interaction between chips (dragging, selection, navigation, etc.). The `IgxChipComponent` has an `id` input so that the different chips can be easily distinguished. If `id` is not provided it will be automatically generated.
 
 Example of using `igxChip` with `igxChipArea`:
 
 ```html
 <igx-chips-area>
     <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+        {{chip.text}}
     </igx-chip>
 </igx-chips-area>
 ```
@@ -20,43 +20,46 @@ Example of using `igxChip` with `igxChipArea`:
 
 #### Selection
 
-Selection is disabled by default, but it can be enabled by setting an option called `selectable`. The selecting is done either by clicking on the chip itself or by using the `Tab` key to focus the chip and then pressing the `Space` key. An event `onSelection` is fired when the selection state of the `igxChip` changes. If a chip is already selected it can be deselected by pressing the `Space` key again while the chip is focused or by clicking on it.
+Selection can be enabled by setting an input called `selectable`. The selecting is done either by clicking on the chip itself or by using the `Tab` key to focus the chip and then pressing the `Space` key. If a chip is already selected it can be deselected by pressing the `Space` key again while the chip is focused or by clicking on it.
+
+An event `onSelection` is fired when the selection state of the `igxChip` changes. It provides the new `selected` value so you can get the new state and the original event in `originalEvent` that triggered this selection change. If this is not done through user interaction but instead is done by setting the `selected` property programmatically the `originalEvent` argument has value `null`.
+
+Also by default an icon is shown indicating that the chip is being selected. It is fully customizable and can be done through the `selectIcon` input. It accepts values of type `TemplateRef` and overrides the default icon while retaining the same functionality.
+
+Example of customizing the select icon:
 
 ```html
 <igx-chips-area #chipsArea>
-    <igx-chip *ngFor="let chip of chipList" [selectable]="'true'">
-        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+    <igx-chip *ngFor="let chip of chipList" [selectable]="'true'" [selectIcon]="selectTemplate">
+        {{chip.text}}
     </igx-chip>
 </igx-chips-area>
-```
-
-```ts
-public ngOnInit() {
-    chipsArea.forEach((chip) => {
-        chip.selectable = true;
-    });
-}
+<ng-template #selectTemplate>
+    <igx-icon>done_outline</igx-icon>
+</ng-template>
 ```
 
 #### Removing
 
-The `remove button` is a part of the chip as well. You can control the remove button visibility by setting the `removable` boolean option. An event `onRemove` gets fired when the end-user deletes a chip.
+Removing can be enabled by setting the `removable` input to `true`. When enabled a remove button is rendered at the end of the chip. When the end-users performs any interaction like clicking on the remove button or pressing the `Delete` key while the chip is focused the `onRemove` event is emitted.
 
+By default the chip does not remove itself from the template when the user wants to delete a chip. This needs to be handled manually using the `onRemove` event.
+
+If you need to customize the remove icon use the `removeIcon` input. It takes a value of type `TemplateRef` and renders it instead of the default remove icon. This means that you can customize the remove button in any way while all the handling of it is still handled by the chip itself.
+
+Example of handling chip removing and custom remove icon:
 ```html
 <igx-chips-area #chipsArea>
-    <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [removable]="'true'" (onRemove)="chipRemoved($event)">
-        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+    <igx-chip *ngFor="let chip of chipList" [id]="chip.id" [removable]="true" [removeIcon]="removeTemplate" (onRemove)="chipRemoved($event)">
+        {{chip.text}}
     </igx-chip>
 </igx-chips-area>
+<ng-template #removeTemplate>
+    <igx-icon>delete</igx-icon>
+</ng-template>
 ```
 
 ```ts
-public ngOnInit() {
-    chipsArea.forEach((chip) => {
-        chip.removable = true;
-    });
-}
-
 public chipRemoved(event) {
     this.chipList = this.chipList.filter((item) => {
         return item.id !== event.owner.id;
@@ -67,12 +70,12 @@ public chipRemoved(event) {
 
 #### Moving/Dragging
 
-The chip can be dragged by the end-user in order to change its position. The moving/dragging is disabled by default, but can be enabled by setting an option called `draggable`. The actual moving of the chip in the data source has to be handled manually by the developer.
+The chip can be dragged by the end-user in order to change its position. The moving/dragging is disabled by default, but can be enabled by setting an input `draggable`. The actual moving of the chip in the template has to be handled manually by the developer.
 
 ```html
 <igx-chips-area #chipArea (onReorder)="chipsOrderChanged($event)">
     <igx-chip *ngFor="let chip of chipList" [draggable]="'true'">
-        <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
+        {{chip.text}}
     </igx-chip>
 </igx-chips-area>
 ```
@@ -93,48 +96,25 @@ public chipsOrderChanged(event) {
         newChipList.push(chipItem);
     }
     this.chipList = newChipList;
-    event.isValid = true;
 }
 
 ```
 
 #### Chip Templates
 
-The `IgxChipComponent`'s main structure consists of chip content, a `remove button`, a `prefix`, a `suffix` and a `connector`. All of those elements are templatable except the `remove button`.
+The `IgxChipComponent`'s main structure consists of chip content, `select icon`, `remove button`, `prefix` and `suffix`. All of those elements are templatable.
 
-The content of the chip is taken by the content defined inside the chip template except elements that define the `prefix`, `suffix` or `connector` of the chip. You can define any type of content you need.
+The content of the chip is taken by the content defined inside the chip template except elements that define the `prefix`or `suffix` of the chip. You can define any type of content you need.
 
 The `prefix` and `suffix` are also elements inside the actual chip area where they can be templated by your preference. The way they can be specified is by using the `IgxPrefix` and `IxgSuffix` directives respectively.
 
-Example of using an icon for a `prefix`, text for a `label` and a custom icon button for a `suffix`:
+Example of using an icon for a `prefix`, text for content and a custom icon again for a `suffix`:
 
 ```html
 <igx-chip *ngFor="let chip of chipList" [id]="chip.id">
     <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
-    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-    <span igxSuffix *ngIf="removable" igxButton="icon" (click)="onClick()">
-        <igx-icon fontSet="material">close</igx-icon>
-    </span>
-</igx-chip>
-```
-
-The `connectors` of the `igxChip` are fully templatable and are positioned after each chip. Their purpose is to provide a way to link two chips next to each other with an icon/text or anything you would like to use. The last chip (most right) does not have a connector applied. Connectors hide while dragging chips around and show again when interactions with the chips have finished. The connector is defined by using the `IgxConnector` directive.
-
-Example of using a prefix connector:
-
-```html
-<igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-    <span igxConnector> -> </span>
-</igx-chip>
-```
-
-Example of using a suffix connector:
-
-```html
-<igx-chip *ngFor="let chip of chipList" [id]="chip.id">
-    <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-    <span igxSuffixConnector> -> </span>
+    {{chip.text}}
+    <igx-icon igxSuffix fontSet="material">close</igx-icon>
 </igx-chip>
 ```
 
@@ -144,16 +124,16 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 
 - Keyboard controls when the chip is focused:
 
-  - <kbd>LEFT</kbd> - Focuses the chip on the left
-  - <kbd>RIGHT</kbd> - Focuses the chip on the right
-  - <kbd>SPACE</kbd> - Toggles chip selection if it is selectable
-  - <kbd>DELETE</kbd> - Fires the `onRemove` output so the chip deletion can be handled manually
-  - <kbd>SHIFT</kbd> + <kbd>LEFT</kbd> - Moves the focused chip one position to the left
-  - <kbd>SHIFT</kbd> + <kbd>RIGHT</kbd> - Moves the focused chip one position to the right
+  - <kbd>LEFT</kbd> - Moves the focus to the chip on the left.
+  - <kbd>RIGHT</kbd> - Focuses the chip on the right.
+  - <kbd>SPACE</kbd> - Toggles chip selection if it is selectable.
+  - <kbd>DELETE</kbd> - Triggers the `onRemove` event for the `igxChip` so the chip deletion can be handled manually
+  - <kbd>SHIFT</kbd> + <kbd>LEFT</kbd> - Triggers `onReorder` event for the `igxChipArea` when the currently focused chip should move position to the left.
+  - <kbd>SHIFT</kbd> + <kbd>RIGHT</kbd> - Triggers `onReorder` event for the `igxChipArea` when the currently focused chip should move one position to the right
 
 - Keyboard controls when the remove button is focused:
 
-  - <kbd>SPACE</kbd> or <kbd>ENTER</kbd> Fires the `onRemove` output so the chip deletion can be handled manually
+  - <kbd>SPACE</kbd> or <kbd>ENTER</kbd> Triggers the `onRemove` event so the chip deletion can be handled manually
 
 # API
 
@@ -163,11 +143,14 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `id` | `string` | Unique identifier of the component. |
+| `data` | `any` | Stores data related to the chip. |
 | `draggable ` | `boolean` | Defines if the chip can be dragged in order to change its position. |
 | `removable ` | `boolean` | Defines if the chip should render remove button and throw remove events. |
+| `removeIcon ` | `TemplateRef` | Overrides the default remove icon when `removable` is set to `true`. |
 | `selectable ` | `boolen` | Defines if the chip can be selected on click or through navigation. |
+| `selectIcon ` | `TemplateRef` | Overrides the default select icon when `selectable` is set to `true`. |
 | `selected` | `boolen` | Sets if the chip is selected. |
-| `disabled` | `boolean` | Defines if the chip is disabled. |
+| `disabled` | `boolean` | Sets if the chip is disabled. |
 | `displayDensity`| `DisplayDensity | string` | Sets the chip theme. Available options are `compact`, `cosy`, `comfortable`. |
 | `color` | `string` | Sets the chip background color. |
 

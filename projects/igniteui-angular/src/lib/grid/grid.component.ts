@@ -31,7 +31,8 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -45,6 +46,8 @@ import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
+import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
+import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -4391,14 +4394,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public onChipRemoved(event) {
+    public onChipRemoved(event: IBaseChipEventArgs) {
         this.clearGrouping(event.owner.id);
     }
 
     /**
      * @hidden
      */
-    public chipsOrderChanged(event) {
+    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
         const newGrouping = [];
         for (let i = 0; i < event.chipsArray.length; i++) {
             const expr = this.groupingExpressions.filter((item) => {
@@ -4407,14 +4410,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
             if (!this.getColumnByName(expr.fieldName).groupable) {
                 // disallow changing order if there are columns with groupable: false
-                event.isValid = false;
                 return;
             }
             newGrouping.push(expr);
         }
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
-        event.isValid = true;
+
+        if (event.originalEvent instanceof KeyboardEvent) {
+            // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
+            this.groupingExpressions = this.chipsGoupingExpressions;
+        }
         this.markForCheck();
     }
 
@@ -4429,7 +4435,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public onChipClicked(event) {
+    public onChipClicked(event: IChipClickEventArgs) {
         const sortingExpr = this.sortingExpressions;
         const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
         columnExpr.dir = 3 - columnExpr.dir;
@@ -4440,8 +4446,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public onChipKeyDown(event) {
-        if (event.key === ' ' || event.key === 'Spacebar' || event.key === 'Enter') {
+    public onChipKeyDown(event: IChipKeyDownEventArgs) {
+        if (event.originalEvent.key === ' ' || event.originalEvent.key === 'Spacebar' || event.originalEvent.key === 'Enter') {
             const sortingExpr = this.sortingExpressions;
             const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
             columnExpr.dir = 3 - columnExpr.dir;
