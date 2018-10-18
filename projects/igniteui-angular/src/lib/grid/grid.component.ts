@@ -298,7 +298,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions() {
+    get groupingExpressions(): ISortingExpression[] {
         return this._groupingExpressions;
     }
 
