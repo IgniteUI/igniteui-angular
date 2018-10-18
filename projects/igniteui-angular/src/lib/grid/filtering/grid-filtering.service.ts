@@ -1,9 +1,9 @@
-import { Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IgxGridAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridComponent } from '../grid.component';
-import { CONTAINS } from './svgIcons';
+import icons from './svgIcons';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -19,7 +19,7 @@ export class IgxFilteringService {
     public selectedExpression = null;
     public columsWithComplexFilter = [];
 
-    constructor (private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {
+    constructor(private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {
     }
 
     get grid(): IgxGridComponent {
@@ -35,15 +35,10 @@ export class IgxFilteringService {
     }
 
     public registerSVGIcons(): void {
-        if (this.iconService.isSvgIconCached('contains', FILTERING_ICONS_FONT_SET) === false) {
-        this.iconService.addSvgIconFromText('contains', CONTAINS, FILTERING_ICONS_FONT_SET);
-        // iconsService.addSvgIcon('doesNotContain', '../../../src/assets/svg/filtering/does_not_contain.svg', fontSet);
-        // iconsService.addSvgIcon('doesNotEqual', '../../../src/assets/svg/filtering/does_not_equal.svg', fontSet);
-        // iconsService.addSvgIcon('endsWith', '../../../src/assets/svg/filtering/ends_with.svg', fontSet);
-        // iconsService.addSvgIcon('equals', '../../../src/assets/svg/filtering/equals.svg', fontSet);
-        // iconsService.addSvgIcon('isEmpty', '../../../src/assets/svg/filtering/is_empty.svg', fontSet);
-        // iconsService.addSvgIcon('startsWith', '../../src/assets/svg/filtering/starts_with.svg', fontSet);
+        for (const icon of icons) {
+            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
+                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+            }
         }
     }
-
 }

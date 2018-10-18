@@ -1348,6 +1348,7 @@
 
     %igx-grid__filtering-cell {
         display: flex;
+        align-items: center;
         border-right: $grid-header-border;
         border-top: $grid-header-border;
         height: map-get($grid-header-height, 'comfortable');

@@ -1,13 +1,11 @@
 <igx-drop-down #operands [allowItemsFocus]="true" (onSelection)="onOperandChanged($event)">
     <igx-drop-down-item
-    *ngFor="let condition of conditions"
-    [value]="condition"
-    [igxDropDownItemNavigation]="operands"
-    [isSelected]="isConditionSelected(condition)">
-        <div>
-            <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-            <span>{{ condition | filterCondition | titlecase }}</span>
-        </div>
+        *ngFor="let condition of conditions"
+        [value]="condition"
+        [igxDropDownItemNavigation]="operands"
+        [isSelected]="isConditionSelected(condition)">
+        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <span>{{ condition | filterCondition | titlecase }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
@@ -61,7 +59,7 @@
                 [selected]="item.isSelected"
                 [removable]="true">
                 <igx-icon igxPrefix fontSet="filtering-icons" [name]="item.expression.condition.iconName"></igx-icon>
-                <span [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
+                <span>{{getChipLabel(item.expression)}}</span>
             </igx-chip>
             <span *ngIf="!last" class="chip-area-connector">
                 <button igxButton (click)="toggleOperatorsDropDown($event, i)">

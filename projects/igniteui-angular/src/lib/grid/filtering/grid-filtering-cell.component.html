@@ -1,7 +1,7 @@
 <ng-template #emptyFilter>
         <igx-chip (click)="onChipClicked()">
-            <igx-icon>add</igx-icon>
-            <span [class]="'igx-chip__text'">Add Filters</span>
+            <igx-icon igxPrefix>add</igx-icon>
+            <span>Add Filters</span>
         </igx-chip>
 </ng-template>
 
@@ -13,7 +13,7 @@
                 (click)="onChipClicked(item.expression)"
                 (onRemove)="onChipRemoved($event, item)">
                 <igx-icon igxPrefix fontSet="filtering-icons" [name]="item.expression.condition.iconName"></igx-icon>
-                <span #label [class]="'igx-chip__text'">{{getChipLabel(item.expression)}}</span>
+                <span #label>{{getChipLabel(item.expression)}}</span>
             </igx-chip>
             <span *ngIf="!last" class="chip-area-connector">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
