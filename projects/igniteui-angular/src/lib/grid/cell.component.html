@@ -22,7 +22,7 @@
         <igx-checkbox [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [checked]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-datePicker [outlet]="grid.outletDirective" [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
+        <igx-datePicker [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
     </ng-container>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context">

@@ -110,20 +110,6 @@ gulp.task('copy-git-hooks', () => {
         './.git/hooks/prepare-commit-msg');
 });
 
-gulp.task('watch', () => {
-    gulp.watch('./projects/igniteui-angular/src/lib/**/*', () => {
-        try {
-            spawnSync('npm run build:lib', {
-                stdio: 'inherit',
-                shell: true,
-                cwd: process.cwd()
-            });
-        } catch (err) {
-            console.error(`Exception: ${err}`);
-        }
-    });
-});
-
 gulp.task('copy-migrations', () => {
     return gulp.src([
             './projects/igniteui-angular/migrations/**/*.json',
@@ -220,6 +206,7 @@ gulp.task('typedoc-build', [
 
 const EXPORT_PATH = 'dist/igniteui-angular/docs/typescript-exported';
 const PROJECT_PATH = 'projects/igniteui-angular/src';
+const TEMPLATE_STRINGS = 'extras/template/strings/shell-strings.json'
 
 gulp.task('typedoc-build:export', ['typedoc-build'],
     shell.task(`typedoc ${PROJECT_PATH} --generate-json ${EXPORT_PATH}`)
@@ -227,6 +214,10 @@ gulp.task('typedoc-build:export', ['typedoc-build'],
 
 gulp.task('typedoc-build:import', ['typedoc-build'],
     shell.task(`typedoc ${PROJECT_PATH} --generate-from-json ${EXPORT_PATH}`)
+);
+
+gulp.task('typedoc-build:import:shell:jp', ['typedoc-build'],
+    shell.task(`typedoc ${PROJECT_PATH} --gen-from-json ${EXPORT_PATH} --templateStrings ${TEMPLATE_STRINGS} --localize jp`)
 );
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],

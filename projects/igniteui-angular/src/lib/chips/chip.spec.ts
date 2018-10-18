@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ViewChildren, QueryList } from '@angular/core';
+﻿import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import {
     async,
     TestBed
@@ -10,10 +10,9 @@ import { IgxChipsModule } from './chips.module';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
-import { IgxConnectorDirective } from './connector.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
-import { DisplayDensity } from 'dist/igniteui-angular/lib/core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
 
 @Component({
@@ -23,7 +22,6 @@ import { UIInteractions} from '../test-utils/ui-interactions.spec';
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
             </igx-chip>
         </igx-chips-area>
@@ -38,6 +36,8 @@ class TestChipComponent {
         { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' },
     ];
 
+    constructor(public cdr: ChangeDetectorRef) { }
+
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
     public chipsArea: IgxChipsAreaComponent;
 
@@ -48,7 +48,7 @@ class TestChipComponent {
         this.chipList = this.chipList.filter((item) => {
             return item.id !== event.owner.id;
         });
-        this.chipsArea.cdr.detectChanges();
+        this.cdr.detectChanges();
     }
 }
 
@@ -79,16 +79,16 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 describe('IgxChip', () => {
-    const CHIP_ITEM_AREA = 'igx-chip__item';
-    const CHIP_CONNECTOR = 'igx-chip__connector';
+    const CHIP = 'igx-chip';
+    const CHIP_ITEM = 'igx-chip__item';
+    const CHIP_PREFIX = 'igx-chip__prefix';
+    const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
-                IgxPrefixDirective,
-                IgxSuffixDirective,
                 IgxLabelDirective
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
@@ -122,27 +122,11 @@ describe('IgxChip', () => {
         fix.detectChanges();
 
         const chipElems = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const chipRemoveButton = chipElems[1].queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
 
-        // For this second chip there are 3 elements. The prefix, content span and the remove button icon with igxButton directive.
-        expect(chipElems[1].nativeElement.children[0].children.length).toEqual(3);
-        expect(chipElems[1].nativeElement.children[0].children[2].tagName).toEqual('IGX-ICON');
-        expect(chipElems[1].nativeElement.children[0].children[2].hasAttribute('igxbutton')).toEqual(true);
-    });
-
-    it('should render connector after each chip except the last one', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipAreaElem = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const connectors = chipAreaElem[0].queryAll(By.directive(IgxConnectorDirective));
-
-        expect(connectors.length).toEqual(3);
-
-        // The last 4th chip shouldn't have a connector.
-        const lastChipComponent = chipAreaElem[0].queryAll(By.directive(IgxChipComponent))[3];
-        const lastChipConnectors = lastChipComponent.queryAll(By.directive(IgxConnectorDirective));
-
-        expect(lastChipConnectors.length).toEqual(0);
+        // For this second chip there are 3 elements. The prefix, content span and the remove button icon .
+        expect(chipElems[1].nativeElement.children[0].children.length).toEqual(4);
+        expect(chipRemoveButton).toBeTruthy();
     });
 
     it('should not trigger onRemove event when a chip is focused and delete button is pressed when not removable', () => {
@@ -155,12 +139,12 @@ describe('IgxChip', () => {
 
         const focusedElems = firstChipComp.elementRef.nativeElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM_AREA);
+        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
         });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
 
         expect(firstChipComp.onRemove.emit).not.toHaveBeenCalled();
@@ -176,7 +160,7 @@ describe('IgxChip', () => {
 
         const focusedElems = secondChipComp.elementRef.nativeElement.querySelectorAll(':focus');
         expect(focusedElems.length).toEqual(1);
-        expect(focusedElems[0].className).toEqual(CHIP_ITEM_AREA);
+        expect(focusedElems[0].className).toEqual(CHIP_ITEM);
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': 'Delete'
@@ -238,18 +222,6 @@ describe('IgxChip', () => {
         const firstChipSuffixText = firstChipSuffix[0].nativeElement.innerHTML;
 
         expect(firstChipSuffixText).toEqual('suf');
-    });
-
-    it('should set chips suffix connector correctly', () => {
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipElements = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const firstChipSuffixConnector = chipElements[0].queryAll(By.directive(IgxConnectorDirective));
-        const firstChipSuffixConnectorIconName = firstChipSuffixConnector[0].nativeElement.textContent;
-
-        expect(firstChipSuffixConnectorIconName).toContain('forward');
     });
 
     it('should make chip comfortable when density is not set', () => {
@@ -343,7 +315,7 @@ describe('IgxChip', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
         deleteButtonElement.nativeElement.focus();
 
         // Removes chip with id City, because country chip is unremovable
@@ -370,7 +342,7 @@ describe('IgxChip', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
         deleteButtonElement.nativeElement.focus();
 
         // Removes chip with id City, because country chip is unremovable
@@ -447,12 +419,12 @@ describe('IgxChip', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
         spyOn(firstChipComp.onSelection, 'emit');
-        firstChipComp.chipArea.nativeElement.focus();
+        firstChipComp.elementRef.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });
-        firstChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
+        firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
     });
@@ -465,12 +437,13 @@ describe('IgxChip', () => {
 
         spyOn(secondChipComp.onSelection, 'emit');
 
-        const removeBtnTop = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().top;
-        const removeBtnLeft = secondChipComp.removeBtn.nativeElement.getBoundingClientRect().left;
+        const chipRemoveButton = secondChipComp.elementRef.nativeElement.querySelectorAll('.' + CHIP_REMOVE_BUTTON)[0];
+        const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
+        const removeBtnLeft = chipRemoveButton.getBoundingClientRect().left;
 
-        UIInteractions.simulatePointerEvent('pointerdown', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        UIInteractions.simulatePointerEvent('pointerdown', chipRemoveButton, removeBtnLeft, removeBtnTop);
         fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', secondChipComp.removeBtn.nativeElement, removeBtnLeft, removeBtnTop);
+        UIInteractions.simulatePointerEvent('pointerup', chipRemoveButton, removeBtnLeft, removeBtnTop);
         fix.detectChanges();
 
         expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();

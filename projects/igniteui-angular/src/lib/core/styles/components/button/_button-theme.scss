@@ -11,26 +11,26 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {String} $button-roundness [2px]- The edge roundness (border-radius) for flat and raised buttons.
 ///
-/// @param {Color} $flat-text-color [secondary 500] - The idle text color of a flat button.
-/// @param {Color} $flat-hover-text-color [secondary 500] - The hover text color of a flat button.
 /// @param {Color} $flat-background [transparent] - The background color of a flat button.
+/// @param {Color} $flat-text-color [secondary 500] - The idle text color of a flat button.
 /// @param {Color} $flat-hover-background [5% of secondary 500] - The hover background color of a flat button.
-/// @param {Color} $flat-focus-text-color [secondary 500] - The focus text color of a flat button.
+/// @param {Color} $flat-hover-text-color [secondary 500] - The hover text color of a flat button.
 /// @param {Color} $flat-focus-background [12% of secondary 400] - The focus background color of a flat button.
+/// @param {Color} $flat-focus-text-color [secondary 500] - The focus text color of a flat button.
 ///
-/// @param {Color} $raised-text-color [igx-contrast-color of secondary 500] - The idle text color of a raised button.
-/// @param {Color} $raised-hover-text-color [igx-contrast-color of secondary 500] - The hover text color of a raised button.
 /// @param {Color} $raised-background [secondary 500] - The background color of a raised button.
-/// @param {Color} $raised-hover-background [secondary 600] - The hover background of a raised button.
-/// @param {Color} $raised-focus-text-color [igx-contrast-color of secondary 500] - The focus text color of a raised button.
-/// @param {Color} $raised-focus-background [secondary 600] - The focus background color of a raised button.
+/// @param {Color} $raised-text-color [igx-contrast-color of secondary 500] - The idle text color of a raised button.
+/// @param {Color} $raised-hover-background [secondary 300] - The hover background of a raised button.
+/// @param {Color} $raised-hover-text-color [igx-contrast-color of secondary 300] - The hover text color of a raised button.
+/// @param {Color} $raised-focus-background [secondary 300] - The focus background color of a raised button.
+/// @param {Color} $raised-focus-text-color [igx-contrast-color of secondary 300] - The focus text color of a raised button.
 ///
-/// @param {Color} $fab-text-color [igx-contrast-color of secondary 500] - The text color of a floating action button.
-/// @param {Color} $fab-hover-text-color [igx-contrast color of secondary 500] - The hover text color of a floating action button.
 /// @param {Color} $fab-background [secondary 500] - The background color of a floating action button.
-/// @param {Color} $fab-hover-background [secondary 600] - The hover background color of a floating action button.
-/// @param {Color} $fab-focus-text-color [igx-contrast color of secondary 500] - The focus text color of a floating action button.
-/// @param {Color} $fab-focus-background [secondary 600] - The focus background color of floating action button.
+/// @param {Color} $fab-text-color [igx-contrast-color of secondary 500] - The text color of a floating action button.
+/// @param {Color} $fab-hover-background [secondary 300] - The hover background color of a floating action button.
+/// @param {Color} $fab-hover-text-color [igx-contrast color of secondary 300] - The hover text color of a floating action button.
+/// @param {Color} $fab-focus-background [secondary 300] - The focus background color of floating action button.
+/// @param {Color} $fab-focus-text-color [igx-contrast color of secondary 300] - The focus text color of a floating action button.
 ///
 /// @param {Color} $icon-color [rgba(0, 0, 0, .74)] - The icon color of an icon button.
 /// @param {Color} $icon-hover-color [rgba(0, 0, 0, .74)] - The hover icon color of an icon button.
@@ -91,7 +91,7 @@
 ) {
     $default-theme: (
         name: 'igx-button',
-        button-roundness: 2px,
+        button-roundness: 4px,
 
         flat-text-color: igx-color($palette, 'secondary', 500),
         flat-background: transparent,
@@ -102,19 +102,19 @@
         flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
         flat-focus-text-color: igx-color($palette, 'secondary', 500),
 
-        raised-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-background: igx-color($palette, 'secondary', 500),
-        raised-hover-background: igx-color($palette, 'secondary', 600),
-        raised-hover-text-color: igx-contrast-color($palette, 'secondary', 500),
-        raised-focus-background: igx-color($palette, 'secondary', 600),
-        raised-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
+        raised-text-color: igx-contrast-color($palette, 'secondary', 500),
+        raised-hover-background: igx-color($palette, 'secondary', 300),
+        raised-hover-text-color: igx-contrast-color($palette, 'secondary', 300),
+        raised-focus-background: igx-color($palette, 'secondary', 300),
+        raised-focus-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         fab-text-color: igx-contrast-color($palette, 'secondary', 500),
         fab-background: igx-color($palette, 'secondary', 500),
-        fab-hover-text-color: igx-contrast-color($palette, 'secondary', 500),
-        fab-hover-background: igx-color($palette, 'secondary', 600),
-        fab-focus-background: igx-color($palette, 'secondary', 600),
-        fab-focus-text-color: igx-contrast-color($palette, 'secondary', 500),
+        fab-hover-text-color: igx-contrast-color($palette, 'secondary', 300),
+        fab-hover-background: igx-color($palette, 'secondary', 300),
+        fab-focus-background: igx-color($palette, 'secondary', 300),
+        fab-focus-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         icon-color: igx-color($palette, 'grays', 800),
         icon-background: transparent,
@@ -131,6 +131,14 @@
         $flat-text-color: text-contrast($flat-background);
     }
 
+    @if not($flat-hover-background) and $flat-background {
+        $flat-hover-background: lighten($flat-background, 5%);
+    }
+
+    @if not($flat-focus-background) and $flat-background {
+        $flat-focus-background: lighten($flat-background, 5%);
+    }
+
     @if not($flat-hover-text-color) and $flat-hover-background {
         $flat-hover-text-color: text-contrast($flat-hover-background);
     }
@@ -141,6 +149,14 @@
 
     @if not($raised-text-color) and $raised-background {
         $raised-text-color: text-contrast($raised-background);
+    }
+
+    @if not($raised-hover-background) and $raised-background {
+        $raised-hover-background: lighten($raised-background, 5%);
+    }
+
+    @if not($raised-focus-background) and $raised-background {
+        $raised-focus-background: lighten($raised-background, 5%);
     }
 
     @if not($raised-hover-text-color) and $raised-hover-background {
@@ -155,6 +171,14 @@
         $fab-text-color: text-contrast($fab-background);
     }
 
+    @if not($fab-hover-background) and $fab-background {
+        $fab-hover-background: lighten($fab-background, 5%);
+    }
+
+    @if not($fab-focus-background) and $fab-background {
+        $fab-focus-background: lighten($fab-background, 5%);
+    }
+
     @if not($fab-hover-text-color) and $fab-hover-background {
         $fab-hover-text-color: text-contrast($fab-hover-background);
     }
@@ -165,6 +189,14 @@
 
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
+    }
+
+    @if not($icon-hover-background) and $icon-background {
+        $icon-hover-background: lighten($icon-background, 5%);
+    }
+
+    @if not($icon-focus-background) and $icon-background {
+        $icon-focus-background: lighten($icon-background, 5%);
     }
 
     @if not($icon-focus-color) and $icon-focus-background {
@@ -259,6 +291,7 @@
         outline: none;
         -webkit-tap-highlight-color: transparent;
         overflow: hidden;
+        white-space: nowrap;
         transition: $button-transition;
     }
 
