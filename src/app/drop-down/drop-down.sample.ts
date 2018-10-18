@@ -21,6 +21,8 @@ export class DropDownSampleComponent implements OnInit {
 
     items: any[] = [];
 
+    selectedText = '';
+
     ngOnInit() {
         this.igxDropDown.height = '400px';
         this.igxDropDown.width = '180px';
@@ -133,6 +135,11 @@ export class DropDownSampleComponent implements OnInit {
         const old = event.oldSelection;
         event.oldSelection = event.newSelection;
         event.newSelection = old;
+    }
+
+    onSelecting(event) {
+        event.cancel = true;
+        this.selectedText = event.currentSelection.element.nativeElement.textContent;
     }
 
     onOpening(event) {
