@@ -117,7 +117,7 @@ export class Calendar {
      * @memberof Calendar
      */
     public monthdates(year: number, month: number, extraWeek: boolean = false): ICalendarDate[] {
-        let date = new Date(year, month, 1, 12, 0, 0, 0);
+        let date = new Date(year, month, 1);
         let days = (date.getDay() - this.firstWeekDay) % 7;
         if (days < 0) {
             days = 7 - Math.abs(days);
