@@ -2326,7 +2326,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.refreshGridState();
+            this.clearSummaryCache();
             this.cdr.markForCheck();
             this._pipeTrigger++;
         });
@@ -4906,14 +4906,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
         let oldValue = Object.assign({}, this.data[rowObj.dataRowIndex]);
-        if (this.transactions.enabled) {
+        if (!rowObj) {
             const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
         }
         const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue,
+            newValue: rowObj.rowData,
             oldValue,
             row: rowObj
         });
