@@ -937,7 +937,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(editRowTop - bannerBottom).toBeLessThan(2);
             }));
 
-            it('Should add correct class to the edited row', (async () => {
+            xit('Should add correct class to the edited row', (async () => {
+                // NOT APPLICABLE, SINCE GRID DOES NOT HAVE TRANSACTIONS
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
