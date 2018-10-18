@@ -1024,7 +1024,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - try reordering simple column level 1 and simple column level 0
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[2].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 100);
-            await wait(100);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 106);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 106);
@@ -1185,11 +1185,12 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[4].field).toEqual('Missing');
         }));
 
-        it('MCH - should not break selection and keyboard navigation navigation when reordering columns .', (async() => {
+        it('MCH - should not break selection and keyboard navigation when reordering columns.', (async() => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
             cell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait();
             fixture.detectChanges();
 
             // step 2 - reorder the parent column and verify selection is preserved
@@ -1208,7 +1209,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 3 - navigate right and verify cell selection is updated
             const cellEl = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cellEl.nativeElement, true);
-            await wait(20);
+            await wait();
 
             expect(grid.getCellByColumn(0, 'ContactTitle').selected).toBeTruthy();
         }));
