@@ -31,7 +31,8 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, DisplayDensity } from '../core/utils';
+import { cloneArray } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -55,6 +56,7 @@ import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpr
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;

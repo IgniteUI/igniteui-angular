@@ -8,13 +8,16 @@ import {
     HostListener,
     Input,
     NgModule,
-    QueryList
+    QueryList,
+    Inject,
+    Optional
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective } from '../directives/prefix/prefix.directive';
-import { IgxSuffixDirective } from '../directives/suffix/suffix.directive';
+import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
+import { DisplayDensity, IDisplayDensity, DisplayDensityToken } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 
@@ -186,6 +189,30 @@ export class IgxInputGroupComponent {
     }
 
     /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--cosy')
+    get isDisplayDensityCosy() {
+        return this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--comfortable')
+    get isDisplayDensityComfortable() {
+        return !this.displayDensityOptions || this.displayDensityOptions.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-input-group--compact')
+    get isDisplayDensityCompact() {
+        return this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
      * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
      * Values are `line` - 0, `box` - 1, `border` - 2  and `search` - 3. The default is `line`.
      * ```typescript
@@ -200,7 +227,7 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    constructor(private _element: ElementRef) {
+    constructor(private _element: ElementRef, @Optional() @Inject(DisplayDensityToken) protected displayDensityOptions: IDisplayDensity) {
         this.element = _element;
     }
 
@@ -302,8 +329,8 @@ export class IgxInputGroupComponent {
  * The IgxInputGroupModule provides the {@link IgxInputGroupComponent} inside your application.
  */
 @NgModule({
-    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
+    declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],
     exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
-    imports: [CommonModule]
+    imports: [CommonModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxInputGroupModule { }
