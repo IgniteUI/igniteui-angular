@@ -492,18 +492,18 @@ describe('IgxGrid - Grid Toolbar', () => {
         toolbar.toggleColumnHidingUI();
     });
 
-    it('test hiding and pinning dropdowns height.', (async () => {
+    it('test hiding and pinning dropdowns height.', fakeAsync(() => {
         grid.height = '300px';
+        tick(100);
         grid.showToolbar = true;
         grid.columnHiding = true;
         fixture.detectChanges();
-        await wait(200);
 
         expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(134);
 
         grid.height = '600px';
+        tick(100);
         fixture.detectChanges();
-        await wait(200);
 
         expect(grid.toolbar.columnHidingUI.columnsAreaMaxHeight).toBe(grid.calcHeight * 0.7 + 'px');
     }));

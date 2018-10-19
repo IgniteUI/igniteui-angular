@@ -153,7 +153,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(componentInstance.gridWrapperWidthPx);
     });
 
-    it('Width should be correct. Column group with column. Width in px.', (async () => {
+    it('Width should be correct. Column group with column. Width in px.', () => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const gridWidth = '600px';
         const gridWidthPx = parseInt(gridWidth, 10);
@@ -161,22 +161,20 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = componentInstance.grid;
         grid.width = gridWidth;
         fixture.detectChanges();
-        await wait(200);
 
         const locationColGroup = getColGroup(grid, 'Location');
         expect(locationColGroup.width).toBe(gridWidthPx.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridWidthPx.toString());
-    }));
+    });
 
-    it('Width should be correct. Column group with column. Width in percent.', (async () => {
+    it('Width should be correct. Column group with column. Width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
         const gridWidth = '50%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.width = gridWidth;
         fixture.detectChanges();
-        await wait(200);
 
         const locationColGroup = getColGroup(grid, 'Location');
         const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
@@ -184,7 +182,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(locationColGroup.width).toBe(gridWidthInPx.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridWidthInPx.toString());
-    }));
+    });
 
     it('Width should be correct. Column group with column. Column width in px.', () => {
         const fixture = TestBed.createComponent(OneGroupOneColGridComponent);
@@ -261,7 +259,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(cityColumn.width).toBe(colWidth.toString());
     });
 
-    it('Width should be correct. Column group with three columns. Width in px.', (async () => {
+    it('Width should be correct. Column group with three columns. Width in px.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridWidth = '600px';
         const gridWidthInPx = parseInt(gridWidth, 10);
@@ -269,7 +267,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = componentInstance.grid;
         grid.width = gridWidth;
         fixture.detectChanges();
-        await wait(200);
 
         const locationColGroup = getColGroup(grid, 'Location');
         expect(locationColGroup.width).toBe(gridWidthInPx.toString());
@@ -280,16 +277,15 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(colWidth.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(colWidth.toString());
-    }));
+    });
 
-    it('Width should be correct. Column group with three columns. Width in percent.', (async () => {
+    it('Width should be correct. Column group with three columns. Width in percent.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
         const gridWidth = '50%';
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         grid.width = gridWidth;
         fixture.detectChanges();
-        await wait(200);
 
         const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
             parseInt(componentInstance.gridWrapperWidthPx, 10);
@@ -302,7 +298,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(regionColumn.width).toBe(colWidth.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(colWidth.toString());
-    }));
+    });
 
     it('Width should be correct. Column group with three columns. Column width in px.', () => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
