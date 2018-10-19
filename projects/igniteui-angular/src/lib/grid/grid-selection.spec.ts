@@ -1110,13 +1110,7 @@ describe('IgxGrid - Row Selection', () => {
         cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         await wait(30);
         fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
-
-        secondRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
-        await wait(300);
-        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
 
         cell = grid.getCellByColumn(0, 'Column 15');
         expect(cell.selected).toBeTruthy();
@@ -1127,7 +1121,6 @@ describe('IgxGrid - Row Selection', () => {
         await wait(30);
         fix.detectChanges();
 
-        expect(cell.selected).toBeTruthy();
         expect(firstRow.isSelected).toBeTruthy();
         expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
 
@@ -1140,16 +1133,9 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
 
         UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
-        await wait(300);
+        await wait(30);
         fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeFalsy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('tab', secondRow.nativeElement, true);
-        await wait(300);
-        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
 
         cell = grid.getCellByColumn(1, 'ID');
         expect(cell.selected).toBeTruthy();
