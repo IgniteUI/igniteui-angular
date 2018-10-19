@@ -2389,7 +2389,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Transaction',  () => {
-            it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
+            fit('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
@@ -2454,6 +2454,16 @@ describe('IgxGrid Component Tests', () => {
                 expect(state.length).toEqual(0);
                 tick(100);
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
+
+                cell = grid.getCellByColumn(0, 'ProductName');
+                updateValue = 'Chaiwe';
+                cell.inEditMode = true;
+                cell.update(updateValue);
+                cell.inEditMode = false;
+                trans.clear();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(0);
+                expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
         });
     });
