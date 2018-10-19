@@ -77,14 +77,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
-            this.clearFiltering();
         } else {
             this.expression.searchVal = this.transformValue(val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
-            this.filter();
         }
+
+        this.filter();
     }
 
     @ViewChild('defaultFilterUI', { read: TemplateRef })
