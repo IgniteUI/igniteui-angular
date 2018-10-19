@@ -822,7 +822,7 @@ describe('IgxGrid Component Tests', () => {
             });
     });
 
-    describe('Row Editing', () => {
+    describe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -2327,8 +2327,10 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = false;
             }));
         });
+    });
 
-        describe('Row Editing - Manipulate data via API', () => {
+    describe('IgxGrid - Transactions', () => {
+        it('Should add row to transaction on grid.addRow() in grid with transactions', () => {
 
         });
     });
