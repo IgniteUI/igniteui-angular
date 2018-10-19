@@ -824,6 +824,7 @@ describe('IgxGrid Component Tests', () => {
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
             });
+
         it(`Should not commit added row to grid's data in grid with transactions`, () => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fixture.detectChanges();
@@ -844,6 +845,36 @@ describe('IgxGrid Component Tests', () => {
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(1);
             expect(trans.add).toHaveBeenCalledWith({id: 100, type: 'add', newValue: addRowData});
+            expect(grid.data.length).toBe(10);
+        });
+
+        it(`Should not delete deleted row from grid's data in grid with transactions`, () => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const trans = grid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            grid.deleteRow(5);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            expect(trans.add).toHaveBeenCalledWith({id: 5, type: 'delete', newValue: null}, grid.data[4]);
+            expect(grid.data.length).toBe(10);
+        });
+
+        it(`Should not update updated cell in grid's data in grid with transactions`, () => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const trans = grid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            grid.updateCell('Updated Cell', 3, 'ProductName');
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            expect(trans.add).toHaveBeenCalledWith({id: 3, type: 'update', newValue: { ProductName: 'Updated Cell'}}, grid.data[2]);
             expect(grid.data.length).toBe(10);
         });
     });
