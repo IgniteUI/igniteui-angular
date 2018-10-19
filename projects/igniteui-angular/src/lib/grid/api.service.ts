@@ -258,13 +258,13 @@ export class IgxGridAPIService {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue !== undefined && oldValue === editValue) { return; }
+            if (oldValue !== undefined && oldValue === args.newValue) { return; }
 
-            const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: editValue } };
+            const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                grid.data[rowIndex][column.field] = editValue;
+                grid.data[rowIndex][column.field] = args.newValue;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
