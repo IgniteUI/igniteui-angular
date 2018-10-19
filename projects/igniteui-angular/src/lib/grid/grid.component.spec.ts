@@ -2389,7 +2389,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Transaction',  () => {
-            fit('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
+            it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
