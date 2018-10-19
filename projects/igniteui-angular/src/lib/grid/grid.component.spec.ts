@@ -29,7 +29,7 @@ import { TransactionType } from '../services';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid Component Tests', () => {
+xdescribe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CLASS = '.igx-grid__td';
@@ -298,7 +298,7 @@ describe('IgxGrid Component Tests', () => {
         }));
     });
 
-    xdescribe('IgxGrid - default rendering for rows and columns', () => {
+    describe('IgxGrid - default rendering for rows and columns', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
