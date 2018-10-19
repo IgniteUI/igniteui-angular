@@ -375,6 +375,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     public close(): void {
         this.filteringService.isFilterRowVisible = false;
+        this.filteringService.filteredColumn = null;
+        this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
     }
 
