@@ -308,7 +308,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions() {
+    get groupingExpressions(): ISortingExpression[] {
         return this._groupingExpressions;
     }
 
@@ -323,7 +323,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    set groupingExpressions(value) {
+    set groupingExpressions(value: ISortingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -1417,6 +1417,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ViewChild('summaries')
     public summaries: ElementRef;
+
     /**
      * @hidden
      */
@@ -2036,7 +2037,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.zone.run(() => {
             this.cdr.detectChanges();
-            this.parentVirtDir.onChunkLoad.emit(this._horizontalForOfs[0].state);
+            this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
         });
     }
 
@@ -4011,6 +4012,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public wheelHandler() {
+        // tslint:disable-next-line:no-bitwise
+        if (document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS) {
+            (document.activeElement as HTMLElement).blur();
+        }
     }
 
     /**
