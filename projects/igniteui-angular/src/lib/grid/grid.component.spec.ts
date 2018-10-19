@@ -1090,7 +1090,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(document.activeElement).toEqual(lastCellElement);
             }));
 
-            it(`Should scroll editable column into view whe navigating from buttons`, (async () => {
+            it(`Should scroll editable column into view when navigating from buttons`, (async () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 let currentEditCell: IgxGridCellComponent;
@@ -1829,7 +1829,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Filtering', () => {
-            it(`Should exit edit mode when filtering`, () => {
+            it(`Should exit edit mode on filter applied`, () => {
                 const targetColumnName = 'ProductName';
                 const keyword = 'bob';
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
