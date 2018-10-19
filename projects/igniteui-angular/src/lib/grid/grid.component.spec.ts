@@ -2496,6 +2496,49 @@ describe('IgxGrid Component Tests', () => {
                 expect(state.length).toEqual(0);
                 expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
+
+            it('Should allow change value of cell with initial value of 0', () => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const cell = grid.getCellByColumn(3, 'UnitsInStock');
+                expect(cell.value).toBe(0);
+
+                cell.update(50);
+                fixture.detectChanges();
+                expect(cell.value).toBe(50);
+            });
+
+            it('Should allow change value of cell with initial value of false', () => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const cell = grid.getCellByColumn(3, 'InStock');
+                expect(cell.value).toBeFalsy();
+
+                cell.update(true);
+                fixture.detectChanges();
+                expect(cell.value).toBeTruthy();
+            });
+
+            it('Should allow change value of cell with initial value of empty string', () => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                expect(cell.value).toBe('Chai');
+
+                cell.update('');
+                fixture.detectChanges();
+                expect(cell.value).toBe('');
+
+                cell.update('Updated value');
+                fixture.detectChanges();
+                expect(cell.value).toBe('Updated value');
+            });
         });
     });
 });
@@ -2963,12 +3006,11 @@ export class IgxGridCustomOverlayComponent {
     template: `
     <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
      width="900px" height="600px" [rowEditable]="true" [paging]="true" [perPage]="7">
-        <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
-        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
-        </igx-column>
-        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" [sortable]="true" width="200px">
-        </igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="200px"></igx-column>
+        <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
+        <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
+        <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'number'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
     </igx-grid>`,
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
 })
