@@ -116,6 +116,12 @@ export class GridRowEditSampleComponent {
         this.toggle.close();
     }
 
+    public discard(gridID) {
+        const currentGrid: IgxGridComponent = this.getGridById(gridID);
+        currentGrid.transactions.clear();
+        this.toggle.close();
+    }
+
     private getRandomInt(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }

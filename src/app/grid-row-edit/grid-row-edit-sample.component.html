@@ -183,7 +183,7 @@
             <button (click)="addRow('gridTransaction')">Add Row</button>
             <button (click)="undo('gridTransaction')">Undo</button>
             <button (click)="redo('gridTransaction')">Redo</button>
-            <button (click)="openCommitDialog('gridRowEditTransaction')">Commit</button>
+            <button (click)="openCommitDialog('gridTransaction')">Commit</button>
         </article>
         <article class="grid-row-edit-wrapper">
             <h4>Performance grid with transactions and row edit</h4>
@@ -205,6 +205,7 @@
             </div>
             <div class="dialog__buttons">
                 <button igxButton (click)="commit(currentActiveGrid.id)">Commit</button>
+                <button igxButton (click)="discard(currentActiveGrid.id)">Discard</button>
                 <button igxButton (click)="toggle.close()">Cancel</button>
             </div>
         </div>
