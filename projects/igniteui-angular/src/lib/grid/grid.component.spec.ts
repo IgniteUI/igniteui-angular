@@ -2335,13 +2335,14 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Custom overlay',  () => {
-            it('Custom overlay', () => {
+            fit('Custom overlay', () => {
                 const fixture = TestBed.createComponent(IgxGridCustomOverlayComponent);
                 fixture.detectChanges();
 
                 const grid = fixture.componentInstance.grid;
                 let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
                 let cell = grid.getCellByColumn(0, 'ProductName');
+                spyOn(grid, 'endRowEdit').and.callThrough();
                 cell.inEditMode = true;
                 fixture.detectChanges();
 
@@ -2356,20 +2357,20 @@ describe('IgxGrid Component Tests', () => {
                 overlayText = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(1);
 
-                spyOn(grid, 'endRowEdit').and.callThrough();
                 fixture.componentInstance.buttons.last.element.nativeElement.click();
                 expect(grid.endRowEdit).toHaveBeenCalled();
             });
         });
 
         describe('Row Editing - Transaction',  () => {
-            it('Transaction Update, Delete, Add', () => {
+            it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
                 const grid = fixture.componentInstance.grid;
                 const trans = grid.transactions;
-                spyOn(trans.onStateUpdate, 'emit');
+                spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+                let row = null;
                 let cell = grid.getCellByColumn(0, 'ProductName');
                 let updateValue = 'Chaiiii';
                 cell.inEditMode = true;
@@ -2395,12 +2396,39 @@ describe('IgxGrid Component Tests', () => {
                 expect(state[1].newValue['ProductName']).toEqual(updateValue);
 
                 grid.deleteRow(grid.getRowByIndex(2).rowID);
+
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue['ProductName']).toBeUndefined();
-            });
+
+                trans.undo();
+
+                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(2);
+                expect(state[1].type).toEqual(TransactionType.UPDATE);
+                expect(state[1].newValue['ProductName']).toEqual(updateValue);
+                row = grid.getRowByIndex(2).nativeElement;
+                expect(row.classList).not.toContain('igx -grid__tr--deleted');
+
+                trans.redo();
+
+                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(3);
+                expect(state[2].type).toEqual(TransactionType.DELETE);
+                expect(state[2].newValue['ProductName']).toBeUndefined();
+                tick(100);
+                expect(row.classList).toContain('igx-grid__tr--deleted');
+
+                trans.commit(grid.data);
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(0);
+                tick(100);
+                expect(row.classList).not.toContain('igx-grid__tr--deleted');
+            }));
         });
 
         describe('Row Editing - Manipulate data via API', () => {
@@ -2926,9 +2954,4 @@ export class IgxGridRowEditingTransactionComponent {
     public changeInitColumns = false;
 
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
-
-    public deleteRow(event, rowID) {
-        event.stopPropagation();
-        this.data.splice(rowID - 1, 1);
-    }
 }
