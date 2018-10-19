@@ -181,4 +181,9 @@ export class GridRowEditSampleComponent {
         row = parseInt(row, 10); // primaryKey is type number
         this.gridRowEditTransaction.updateCell(value, row, column);
     }
+
+    refreshAll() {
+        this.gridRowEditTransaction.markForCheck();
+    }
 }
+
