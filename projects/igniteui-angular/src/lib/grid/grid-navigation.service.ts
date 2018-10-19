@@ -211,19 +211,10 @@ export class IgxGridNavigationService {
             return;
         }
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
-        if ((!!Math.abs(containerTopOffset) && (this.grid.rowList.first.index === currentRowIndex - 1 ||
-            this.grid.rowList.first.index === currentRowIndex)) ||
-            (!Math.abs(containerTopOffset) && this.grid.rowList.first.index >= currentRowIndex)) {
+        if (!rowElement.previousElementSibling ||
+            rowElement.previousElementSibling.offsetTop < Math.abs(containerTopOffset)) {
             this.grid.nativeElement.focus({ preventScroll: true });
-            let scrollAmount = 0;
-            const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex - 1);
-            if (this.grid.rowList.first.index === currentRowIndex && containerTopOffset < 0) {
-                scrollAmount = -rowHeight - Math.abs(containerTopOffset);
-            } else {
-                scrollAmount = containerTopOffset < 0 ? containerTopOffset :
-                    -rowHeight + Math.abs(containerTopOffset);
-            }
-            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
+            this.grid.verticalScrollContainer.scrollTo(currentRowIndex - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
