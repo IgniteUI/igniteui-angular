@@ -14,6 +14,9 @@ export class GridRowEditSampleComponent {
     private hideFlag = false;
     private summaryFlag = true;
     private customTemplate = false;
+    private update_value;
+    private update_row;
+    private update_column;
     public currentActiveGrid: {
         id: string,
         transactions: any[]
@@ -166,5 +169,10 @@ export class GridRowEditSampleComponent {
             newObj['ID'] = row + 1;
             this.performanceData.push(newObj);
         }
+    }
+
+    updateCell(value: any, row: any, column: string): void {
+        row = parseInt(row, 10); // primaryKey is type number
+        this.gridRowEditTransaction.updateCell(value, row, column);
     }
 }
