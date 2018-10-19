@@ -98,7 +98,6 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             }
         });
         this.clear();
-        this.onStateUpdate.emit();
     }
 
     public clear(): void {
@@ -106,6 +105,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this._states.clear();
         this._redoStack = [];
         this._undoStack = [];
+        this.onStateUpdate.emit();
     }
 
     public undo(): void {

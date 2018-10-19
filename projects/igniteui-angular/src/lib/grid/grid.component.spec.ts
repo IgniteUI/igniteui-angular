@@ -2485,6 +2485,16 @@ describe('IgxGrid Component Tests', () => {
                 expect(state.length).toEqual(0);
                 tick(100);
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
+
+                cell = grid.getCellByColumn(0, 'ProductName');
+                updateValue = 'Chaiwe';
+                cell.inEditMode = true;
+                cell.update(updateValue);
+                cell.inEditMode = false;
+                trans.clear();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(0);
+                expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
         });
     });
