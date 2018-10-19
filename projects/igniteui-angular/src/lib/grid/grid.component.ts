@@ -31,7 +31,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray } from '../core/utils';
+import { cloneArray, isNavigationKey } from '../core/utils';
 import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -2040,6 +2040,20 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
     }
 
+    private keydownHandler(event) {
+        const key = event.key.toLowerCase();
+        if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
+            event.preventDefault();
+            if (key === 'pagedown') {
+                this.verticalScrollContainer.scrollNextPage();
+                this.nativeElement.focus();
+            } else if (key === 'pageup') {
+                this.verticalScrollContainer.scrollPrevPage();
+                this.nativeElement.focus();
+            }
+        }
+    }
+
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
@@ -2135,6 +2149,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
+            this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2212,6 +2227,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
+            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
         });
@@ -4486,23 +4502,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.pagedown', ['$event'])
+/*     @HostListener('keydown.pagedown', ['$event'])
     public onKeydownPageDown(event) {
         event.preventDefault();
-        this.verticalScrollContainer.scrollNextPage();
+
         this.nativeElement.focus();
     }
 
-    /**
-     * @hidden
-     */
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageUp(event) {
         event.preventDefault();
         this.verticalScrollContainer.scrollPrevPage();
         this.nativeElement.focus();
-    }
+    } */
 }
