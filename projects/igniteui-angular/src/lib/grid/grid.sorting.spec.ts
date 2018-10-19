@@ -14,7 +14,7 @@ const SORTING_ICON_NONE_CONTENT = 'none';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
-xdescribe('IgxGrid - Grid Sorting', () => {
+describe('IgxGrid - Grid Sorting', () => {
     let fixture;
     let grid;
     beforeEach(async(() => {
