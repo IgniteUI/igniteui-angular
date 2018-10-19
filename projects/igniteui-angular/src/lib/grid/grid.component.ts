@@ -543,7 +543,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public set displayDensity(val: DisplayDensity | string) {
-        const currentDisplayDensity: DisplayDensity | string = this._displayDensity;
+        const currentDisplayDensity = this._displayDensity;
         switch (val) {
             case 'compact':
                 this._displayDensity = DisplayDensity.compact;
@@ -557,11 +557,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
 
         if(currentDisplayDensity && currentDisplayDensity !== this._displayDensity) {
-            // To Do: Emit object with old and new value
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: currentDisplayDensity,
                 newDensity: this._displayDensity
-            }
+            };
+
             this.onDensityChanged.emit(densityChangedArgs);
         }
     }
