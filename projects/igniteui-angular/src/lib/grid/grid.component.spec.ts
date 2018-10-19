@@ -2369,13 +2369,14 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Transaction',  () => {
-            it('Transaction Update, Delete, Add', () => {
+            it('Transaction Update, Delete, Add, Undo, Redo, Commit check transaction and grid state', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
                 const grid = fixture.componentInstance.grid;
                 const trans = grid.transactions;
-                spyOn(trans.onStateUpdate, 'emit');
+                spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+                let row = null;
                 let cell = grid.getCellByColumn(0, 'ProductName');
                 let updateValue = 'Chaiiii';
                 cell.inEditMode = true;
@@ -2401,12 +2402,39 @@ describe('IgxGrid Component Tests', () => {
                 expect(state[1].newValue['ProductName']).toEqual(updateValue);
 
                 grid.deleteRow(grid.getRowByIndex(2).rowID);
+
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue['ProductName']).toBeUndefined();
-            });
+
+                trans.undo();
+
+                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(2);
+                expect(state[1].type).toEqual(TransactionType.UPDATE);
+                expect(state[1].newValue['ProductName']).toEqual(updateValue);
+                row = grid.getRowByIndex(2).nativeElement;
+                expect(row.classList).not.toContain('igx -grid__tr--deleted');
+
+                trans.redo();
+
+                expect(trans.onStateUpdate.emit).toHaveBeenCalled();
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(3);
+                expect(state[2].type).toEqual(TransactionType.DELETE);
+                expect(state[2].newValue['ProductName']).toBeUndefined();
+                tick(100);
+                expect(row.classList).toContain('igx-grid__tr--deleted');
+
+                trans.commit(grid.data);
+                state = trans.aggregatedState(false);
+                expect(state.length).toEqual(0);
+                tick(100);
+                expect(row.classList).not.toContain('igx-grid__tr--deleted');
+            }));
         });
     });
 

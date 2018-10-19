@@ -28,10 +28,36 @@
         <article class="grid-row-edit-wrapper">
             <h4>Grid with rowEditing and with transactions</h4>
             <div>
-                <igx-checkbox [(ngModel)]="pinFlag"><br />Pinned Columns</igx-checkbox>
-                <igx-checkbox [(ngModel)]="hideFlag"><br />Hidden Columns</igx-checkbox>
-                <igx-checkbox [(ngModel)]="summaryFlag" (ngModelChange)="refreshAll()"><br />Summaries</igx-checkbox>
-                <igx-checkbox [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()"><br />Custom Template</igx-checkbox>
+                <igx-checkbox class="properties-toggle" [(ngModel)]="pinFlag">Pinned Columns</igx-checkbox>
+                <igx-checkbox class="properties-toggle" [(ngModel)]="hideFlag">Hidden Columns</igx-checkbox>
+                <igx-checkbox class="properties-toggle" [(ngModel)]="summaryFlag" (ngModelChange)="refreshAll()">Summaries</igx-checkbox>
+                <igx-checkbox class="properties-toggle" [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()">Custom Template</igx-checkbox>
+            </div>
+            <div>
+                <label>Cell Update API</label>
+                <div class="properties-input">
+                    <label>
+                        Value
+                    </label>
+                    <input [(ngModel)]="update_value">
+                </div>
+                <div class="properties-input">
+                    <label>
+                        Row
+                    </label>
+                    <select [(ngModel)]="update_row">
+                        <option *ngFor="let row of gridRowEditTransaction.data" [value]="row[gridRowEditTransaction.primaryKey]">{{ row[gridRowEditTransaction.primaryKey] }}</option>
+                    </select>
+                </div>
+                <div class="properties-input">
+                    <label>
+                        Column
+                    </label>
+                    <select [(ngModel)]="update_column">
+                        <option *ngFor="let column of gridRowEditTransaction.columns" [value]="column.field">{{ column.field }}</option>
+                    </select>
+                </div>
+                <button igxButton class="igx-button--raised" (click)="updateCell(update_value, update_row, update_column)">Update</button>
             </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
