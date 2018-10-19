@@ -29,7 +29,7 @@ import { TransactionType } from '../services';
 
 const DEBOUNCETIME = 30;
 
-xdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CLASS = '.igx-grid__td';
@@ -400,13 +400,14 @@ xdescribe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should account for columns with set width when determining default column width when grid has px width', () => {
+        it('should account for columns with set width when determining default column width when grid has px width', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
             grid.width = '600px';
             fix.componentInstance.initColumnsRows(5, 5);
             fix.componentInstance.changeInitColumns = true;
             fix.detectChanges();
+            tick();
 
             expect(grid.width).toEqual('600px');
             expect(grid.columns[0].width).toEqual('100px');
@@ -433,7 +434,7 @@ xdescribe('IgxGrid Component Tests', () => {
 
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
             expect(grid.rowList.length).toBeGreaterThan(0);
-        });
+        }));
 
         it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are enough rows to cover the grid's height`, () => {
@@ -508,13 +509,14 @@ xdescribe('IgxGrid Component Tests', () => {
             });
 
         it(`should account for columns with set width when determining default column width when grid has px width
-            and there are enough rows to cover the grid's height and enough columns to cover the grid's width`, () => {
+            and there are enough rows to cover the grid's height and enough columns to cover the grid's width`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 const grid = fix.componentInstance.grid;
                 grid.width = '800px';
                 fix.componentInstance.initColumnsRows(1000, 30);
                 fix.componentInstance.changeInitColumns = true;
                 fix.detectChanges();
+                tick();
 
                 expect(grid.width).toEqual('800px');
                 expect(grid.columns[0].width).toEqual('200px');
@@ -537,7 +539,7 @@ xdescribe('IgxGrid Component Tests', () => {
                 });
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 expect(grid.rowList.length).toBeGreaterThan(0);
-            });
+            }));
 
         it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are 10000 rows and 150 columns`, () => {
@@ -568,13 +570,14 @@ xdescribe('IgxGrid Component Tests', () => {
             });
 
         it(`should account for columns with set width when determining default column width when grid has px width
-            and there are 10000 rows and 150 columns`, () => {
+            and there are 10000 rows and 150 columns`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
                 const grid = fix.componentInstance.grid;
                 grid.width = '800px';
                 fix.componentInstance.initColumnsRows(10000, 150);
                 fix.componentInstance.changeInitColumns = true;
                 fix.detectChanges();
+                tick();
 
                 expect(grid.width).toEqual('800px');
                 expect(grid.columns[0].width).toEqual('500px');
@@ -594,7 +597,7 @@ xdescribe('IgxGrid Component Tests', () => {
 
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 expect(grid.rowList.length).toBeGreaterThan(0);
-            });
+            }));
 
         it('should render all records if height is explicitly set to null.', () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
@@ -610,20 +613,20 @@ xdescribe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should match width and height of parent container when width/height are set in %', () => {
+        it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.outerWidth = 800;
             fix.componentInstance.outerHeight = 600;
             fix.componentInstance.grid.width = '50%';
             fix.componentInstance.grid.height = '50%';
-
             fix.detectChanges();
+            tick();
 
             expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
             expect(window.getComputedStyle(grid.nativeElement).width).toMatch('400px');
             expect(grid.rowList.length).toBeGreaterThan(0);
-        });
+        }));
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -635,37 +638,40 @@ xdescribe('IgxGrid Component Tests', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        it('should render 10 records if height is 100% and parent container\'s height is unset', () => {
+        it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '700px';
             fix.detectChanges();
+            tick();
             const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
-        });
+        }));
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
-            there are fewer than 10 records in the data view`, () => {
+            there are fewer than 10 records in the data view`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.componentInstance.grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
                 fix.detectChanges();
+                tick();
                 const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
                 expect(defaultHeight).not.toBeNull();
                 expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(fix.componentInstance.grid.rowList.length).toEqual(5);
-            });
+            }));
 
         it(`should render 10 records if height is 100% and parent container\'s height is unset and
-            display density is changed`, () => {
+            display density is changed`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.componentInstance.grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
                 fix.componentInstance.density = DisplayDensity.compact;
                 fix.detectChanges();
+                tick();
                 const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
@@ -673,7 +679,7 @@ xdescribe('IgxGrid Component Tests', () => {
                 expect(defaultHeightNum).toBeLessThan(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-            });
+            }));
 
         it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
