@@ -1108,12 +1108,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
 
         /**
-     * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get 
+     * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get
      * grouped/ungrouped at once by using the Group By API.
      * The `onGroupingDone` event would be raised only once if the `groupby()` API method gets called and an array of columns
      * gets passed as a parameter.
-     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain 
-     * the `ISortingExpression` and the `IgxColumnComponents` related to the grouping/ungrouping operation. 
+     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
+     * the `ISortingExpression` and the `IgxColumnComponents` related to the grouping/ungrouping operation.
      * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
      * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
      * columns.
@@ -2956,7 +2956,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
-        //const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2965,33 +2964,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        // const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
-        // if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-        //     const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-        //     const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-        //     const groupedColsArr = newSortingExpressions.filter(function(obj) {
-        //         return !oldSortingExpressions.some(function(obj2) {
-        //             return obj.fieldName === obj2.fieldName;
-        //         });
-        //     });
-        //     groupedColsArr.forEach(function(elem) {
-        //         groupedCols.push(this.getColumnByName(elem.fieldName));
-        //     }, this);
-        //     const ungroupedColsArr = oldSortingExpressions.filter(function(obj) {
-        //         return !newSortingExpressions.some(function(obj2) {
-        //             return obj.fieldName === obj2.fieldName;
-        //         });
-        //     });
-        //     ungroupedColsArr.forEach(function(elem) {
-        //         ungroupedCols.push(this.getColumnByName(elem.fieldName));
-        //     }, this);
-        //     const groupingDoneArgs: IGroupingDoneEventArgs = {
-        //         expressions: newSortingExpressions,
-        //         groupedColumns: groupedCols,
-        //         ungroupedColumns: ungroupedCols
-        //     };
-        //     this.onGroupingDone.emit(groupingDoneArgs);
-        // }
         this.restoreHighlight();
     }
 
@@ -3006,27 +2978,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      *
      */
     public clearGrouping(name?: string | Array<string>): void {
-        // const oldSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
         this.gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-        // const newSortingExpressions: Array<ISortingExpression> = this.sortingExpressions;
-        // if (JSON.stringify(oldSortingExpressions) !== JSON.stringify(newSortingExpressions)) {
-        //     const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-        //     const changedColsArr = oldSortingExpressions.filter(function(obj) {
-        //         return !newSortingExpressions.some(function(obj2) {
-        //             return obj.fieldName === obj2.fieldName;
-        //         });
-        //     });
-        //     changedColsArr.forEach(function(elem) {
-        //         ungroupedCols.push(this.getColumnByName(elem.fieldName));
-        //     }, this);
-        //     const groupingDoneArgs: IGroupingDoneEventArgs = {
-        //         expressions: newSortingExpressions,
-        //         groupedColumns: null,
-        //         ungroupedColumns: ungroupedCols
-        //     };
-        //     this.onGroupingDone.emit(groupingDoneArgs);
-        // }
         this.restoreHighlight();
     }
 

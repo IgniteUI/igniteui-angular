@@ -276,7 +276,7 @@ export class IgxGridAPIService {
                         return val.hierarchy && val.hierarchy.length <= grExprIndex;
                     });
             } else {
-                //these are the columns that should stay grouped
+                // these are the columns that should stay grouped
                 const groupedCols: Array<ISortingExpression> = groupingState.filter((expr) => {
                     return name.indexOf(expr.fieldName) < 0;
                 });
