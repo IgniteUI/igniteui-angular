@@ -409,30 +409,23 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length)) {
             return;
         }
-        // this.state.startIndex = index;
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const scr = this.igxForScrollOrientation === 'horizontal' ?
-        this.hScroll.scrollLeft :
-        this.vh.instance.elementRef.nativeElement.scrollTop;
+            this.hScroll.scrollLeft : this.vh.instance.elementRef.nativeElement.scrollTop;
         const isPrevItem = index < this.state.startIndex || scr >  this.sizesCache[index];
+        let nextScroll = isPrevItem ? this.sizesCache[index] : this.sizesCache[index + 1] - containerSize;
+        if (nextScroll < 0) {
+            return;
+        }
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.hScroll.scrollLeft = isPrevItem ?
-            this.sizesCache[index] :
-            this.sizesCache[index] - containerSize + parseInt(this.igxForOf[index].width, 10);
+            this.hScroll.scrollLeft = nextScroll;
         } else {
             const maxVirtScrollTop = this._virtHeight - containerSize;
-            let nextScrollTop = isPrevItem ?
-            this.sizesCache[index] :
-            this.sizesCache[index] - containerSize + this.heightCache[index];
-            if (nextScrollTop > maxVirtScrollTop) {
-                nextScrollTop = maxVirtScrollTop;
+            if (nextScroll > maxVirtScrollTop) {
+                nextScroll = maxVirtScrollTop;
             }
-            if (nextScrollTop < 0 ) {
-                nextScrollTop = 0;
-            }
-
             this._bScrollInternal = true;
-            this._virtScrollTop = nextScrollTop;
+            this._virtScrollTop = nextScroll;
             this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
         }
     }
