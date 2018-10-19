@@ -1534,6 +1534,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ViewChild('summaries')
     public summaries: ElementRef;
+
     /**
      * @hidden
      */
