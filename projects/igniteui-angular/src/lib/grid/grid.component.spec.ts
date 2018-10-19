@@ -599,19 +599,20 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.rowList.length).toBeGreaterThan(0);
             }));
 
-        it('should render all records if height is explicitly set to null.', () => {
+        it('should render all records if height is explicitly set to null.', (async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.initColumnsRows(20, 5);
             grid.height = null;
             fix.detectChanges();
+            await wait(200);
 
             const recsCount = grid.data.length;
 
             // tbody should have height equal to all items * item height
             expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51 - 1);
             expect(grid.rowList.length).toBeGreaterThan(0);
-        });
+        }));
 
         it('should match width and height of parent container when width/height are set in %', (async () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);

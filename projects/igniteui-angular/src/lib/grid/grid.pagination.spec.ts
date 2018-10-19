@@ -6,6 +6,7 @@ import { PagingComponent } from '../test-utils/grid-base-components.spec';
 import { IgxNumberFilteringOperand } from '../../public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Paging', () => {
 
@@ -166,7 +167,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
     });
 
-    it('change paging pages per page API', () => {
+    it('change paging pages per page API', (async () => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         grid.paging = true;
@@ -175,6 +176,7 @@ describe('IgxGrid - Grid Paging', () => {
         fix.detectChanges();
         grid.page = 1;
         fix.detectChanges();
+        await wait(200);
 
         const vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
 
@@ -203,7 +205,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.children[0].style.height).toEqual('500px');
-    });
+    }));
 
     it('change paging with button', () => {
         const fix = TestBed.createComponent(PagingAndEditingComponent);

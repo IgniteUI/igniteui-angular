@@ -678,9 +678,10 @@ describe('Column Hiding UI', () => {
             expect(columnChooserElement.nativeElement.offsetHeight).toBe(252);
         });
 
-        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
+        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', (async () => {
             grid.height = '200px';
             fix.detectChanges();
+            await wait(200);
             grid.reflow();
             expect(grid.scr.nativeElement.hidden).toBe(false);
             const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
@@ -702,7 +703,7 @@ describe('Column Hiding UI', () => {
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
-        });
+        }));
     });
 
     describe('', () => {
