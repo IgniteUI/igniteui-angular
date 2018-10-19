@@ -876,6 +876,10 @@ describe('igxCombo', () => {
 
 
     describe('Selection tests: ', () => {
+        function getIndexOfVisibleItem(dropDownitems: any[], valueKey, value) {
+            const item = dropDownitems.find((el) => el.value[valueKey] === value);
+            return dropDownitems.indexOf(item);
+        }
         function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
             const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
@@ -1410,9 +1414,12 @@ describe('igxCombo', () => {
                 verifyItemIsSelected(combo, dataItemIndex, ++selectedItemIndex, checkbox);
             };
 
-            verifySelectedItem(3, 9);
-            verifySelectedItem(7, 33);
-            verifySelectedItem(1, 12);
+            let index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Michigan');
+            verifySelectedItem(index, 9);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Tennessee');
+            verifySelectedItem(index, 33);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Illinois');
+            verifySelectedItem(index, 12);
             tick();
             fixture.detectChanges();
             const expectedOutput = combo.data[9].field + ', ' + combo.data[33].field + ', ' + combo.data[12].field;
