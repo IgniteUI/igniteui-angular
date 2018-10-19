@@ -848,8 +848,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
                 this.onKeydownExitEditMode(event);
                 break;
             case ' ':
-            case 'Spacebar':
-            case 'Space':
+            case 'spacebar':
+            case 'space':
                 if (this.row.rowSelectable) {
                     this.row.checkboxElement.toggle();
                 }

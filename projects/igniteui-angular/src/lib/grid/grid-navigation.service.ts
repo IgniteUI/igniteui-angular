@@ -118,12 +118,12 @@ export class IgxGridNavigationService {
                 if (this.isColumnLeftFullyVisible(visibleColumnIndex + 1)) {
                     element.nextElementSibling.firstElementChild.focus();
                 } else {
-                    this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
                     this.grid.parentVirtDir.onChunkLoad
                         .pipe(first())
                         .subscribe(() => {
                             element.nextElementSibling.firstElementChild.focus();
                         });
+                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
                 }
             } else {
                 element.nextElementSibling.focus();
@@ -141,7 +141,6 @@ export class IgxGridNavigationService {
                 scrollAmount = parseInt(this.grid.columnList.filter(c => !c.columnGroup)
                     .find((column) => column.visibleIndex === visibleColumnIndex + 1).width, 10);
             }
-
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -254,12 +253,12 @@ export class IgxGridNavigationService {
         if (this.grid.pinnedColumns.length || this.displayContainerScrollLeft === 0) {
             firstCell.focus();
         } else {
-            this.horizontalScroll(rowIndex).scrollTo(0);
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
                     firstCell.focus();
                 });
+            this.horizontalScroll(rowIndex).scrollTo(0);
         }
     }
 
@@ -271,14 +270,13 @@ export class IgxGridNavigationService {
         if (this.isColumnFullyVisible(index)) {
             lastCell.focus();
         } else {
-            this.horizontalScroll(rowIndex).scrollTo(this.getColumnUnpinnedIndex(index));
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
                     lastCell.focus();
                 });
+            this.horizontalScroll(rowIndex).scrollTo(this.getColumnUnpinnedIndex(index));
         }
-
     }
 
     public navigateTop(visibleColumnIndex) {
@@ -294,7 +292,7 @@ export class IgxGridNavigationService {
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
-                    cells[0].focus();
+                if (cells.length > 0) { cells[0].focus(); }
                 });
         }
     }
@@ -312,7 +310,7 @@ export class IgxGridNavigationService {
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
-                    cells[cells.length - 1].focus();
+                if (cells.length > 0) {cells[cells.length - 1].focus(); }
                 });
         }
     }
@@ -361,27 +359,9 @@ export class IgxGridNavigationService {
                 currentRowEl.previousElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
                 return;
             }
-            const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
-            const cells = currentRowEl.previousElementSibling.querySelectorAll(`igx-grid-cell`);
-            const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
-            const lastVisibleIndex = parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
-            const middle = (firstVisibleIndex + lastVisibleIndex) / 2;
-            if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
-                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                    this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
-            } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
-                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                    (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index + 1) -
-                        this.displayContainerWidth);
+            this.performHorizontalScrollToCell(currentRowEl.previousElementSibling, visibleColumnIndex);
             }
-            this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    currentRowEl.previousElementSibling
-                        .querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
-                });
         }
-    }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex, tabKey = false) {
         if (!rowElement.nextElementSibling) {
@@ -425,25 +405,9 @@ export class IgxGridNavigationService {
                 rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
                 return;
             }
-            const cells = rowElement.nextElementSibling.querySelectorAll(`igx-grid-cell`);
-            const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
-            const lastVisibleIndex = parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
-            const middle = (firstVisibleIndex + lastVisibleIndex) / 2;
-            if (middle > visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
-                this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
-                    this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex);
-            } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
-                this.horizontalScroll(this.grid.dataRowList.first.index).getHorizontalScroll().scrollLeft =
-                    (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(visibleColumnIndex + 1) -
-                        this.displayContainerWidth);
+            this.performHorizontalScrollToCell(rowElement.nextElementSibling, visibleColumnIndex);
             }
-            this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
-                });
         }
-    }
 
     public goToFirstCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
@@ -475,8 +439,10 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.grid.nativeElement.querySelectorAll('igx-grid-row');
+                if (rows.length > 0) {
                     const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
                     this.onKeydownEnd(rowIndex);
+                }
                 });
         }
     }
@@ -523,6 +489,27 @@ export class IgxGridNavigationService {
                 }
                 this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex);
             }
+        }
+    }
+
+    private performHorizontalScrollToCell(rowElement, visibleColumnIndex) {
+        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
+        const cells = rowElement.querySelectorAll(`igx-grid-cell`);
+        const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
+        const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
+        const middle = (firstVisibleIndex + lastVisibleIndex ) / 2;
+        this.grid.parentVirtDir.onChunkLoad
+        .pipe(first())
+        .subscribe(() => {
+            rowElement.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+        });
+        if (middle >= visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+            this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex);
+        } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+            (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex + 1) -
+            this.displayContainerWidth);
         }
     }
 

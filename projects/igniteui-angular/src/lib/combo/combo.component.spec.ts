@@ -1726,10 +1726,10 @@ describe('igxCombo', () => {
             let errorMessage = '';
             try {
                 combo.data = null;
-                fixture.detectChanges();
             } catch (ex) {
                 errorMessage = ex.message;
             }
+            fixture.detectChanges();
             expect(errorMessage).toBe('');
             expect(combo.data).not.toBeUndefined();
             expect(combo.data).not.toBeNull();
