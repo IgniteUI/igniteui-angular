@@ -15,7 +15,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { element } from 'protractor';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -878,7 +877,7 @@ describe('igxCombo', () => {
 
     describe('Selection tests: ', () => {
         function getIndexOfVisibleItem(dropDownitems: any[], valueKey, value) {
-            const item = dropDownitems.filter((el) => el.value[valueKey] === value)[0];
+            const item = dropDownitems.find((el) => el.value[valueKey] === value);
             return dropDownitems.indexOf(item);
         }
         function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
