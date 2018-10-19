@@ -4,8 +4,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
+import { IgxDropDownComponent, IgxDropDownModule, ISelectionEventArgs } from './drop-down.component';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -29,7 +30,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownInputTestComponent,
                 IgxDropDownImageTestComponent,
                 IgxDropDownTabsTestComponent,
-                DropDownWithValuesComponent
+                DropDownWithValuesComponent,
+                IgxDropDownSelectComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -270,6 +272,84 @@ describe('IgxDropDown ', () => {
             expect(list.onSelection.emit).toHaveBeenCalledTimes(1);
             expect(list.onClosed.emit).toHaveBeenCalledTimes(1);
             expect(fixture.componentInstance.onSelection).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should check if selection event return the proper eventArgs', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+            const list = fixture.componentInstance.dropdown;
+            spyOn(list.onSelection, 'emit').and.callThrough();
+
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(list.items[3].element);
+            tick();
+            fixture.detectChanges();
+            const selectionArgs: ISelectionEventArgs = {
+                newSelection: list.items[3],
+                oldSelection: null,
+                cancel: false
+            };
+            expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs);
+
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(list.items[1].element);
+            tick();
+            fixture.detectChanges();
+            expect(list.onSelection.emit).toHaveBeenCalledTimes(2);
+
+            tick();
+            fixture.detectChanges();
+            const selectionArgs1: ISelectionEventArgs = {
+                oldSelection: list.items[3],
+                newSelection: list.items[1],
+                cancel: false
+            };
+            expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs1);
+        }));
+
+        it('Should check if selection event return the proper eventArgs if cancelled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownSelectComponent);
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+            const list = fixture.componentInstance.dropdown;
+            spyOn(list.onSelection, 'emit').and.callThrough();
+
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(list.items[3].element);
+            tick();
+            fixture.detectChanges();
+            const selectionArgs: ISelectionEventArgs = {
+                oldSelection: null,
+                newSelection: list.items[3],
+                cancel: true
+            };
+            expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs);
+
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(list.items[1].element);
+            tick();
+            fixture.detectChanges();
+            const selectionArgs1: ISelectionEventArgs = {
+                oldSelection: null,
+                newSelection: list.items[1],
+                cancel: true
+            };
+            expect(list.onSelection.emit).toHaveBeenCalledWith(selectionArgs1);
         }));
 
         it('Should persist selection through scrolling', fakeAsync(() => {
@@ -1383,6 +1463,36 @@ class IgxDropDownTabsTestComponent {
     public onToggleClosed() { }
 }
 
+@Component({
+    template: `
+    <button (click)="toggleDropDown()">Toggle</button>
+    <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" [allowItemsFocus]="true"
+    [width]="'400px'" [height]="'400px'">
+        <igx-drop-down-item *ngFor="let item of items">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    `
+})
+class IgxDropDownSelectComponent {
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { field: 'Nav1' },
+        { field: 'Nav2' },
+        { field: 'Nav3' },
+        { field: 'Nav4' }
+    ];
+
+    public toggleDropDown() {
+        this.dropdown.toggle();
+    }
+
+    public onSelection(eventArgs) {
+        eventArgs.cancel = true;
+    }
+}
 @Component({
     template: ` <input #inputElement [igxDropDownItemNavigation]="dropdownElement" class='test-input' type='text' value='Focus Me!'/>
     <igx-drop-down #dropdownElement [width]="'400px'" [height]="'400px'" [allowItemsFocus]="true">
