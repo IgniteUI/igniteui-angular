@@ -17,7 +17,7 @@ import { IgxInputDirective, IgxInputState } from '../directives/input/input.dire
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
-import { DisplayDensity, IDisplayDensity, DisplayDensityToken } from '../core/displayDensity';
+import { DisplayDensity, IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 
@@ -32,11 +32,10 @@ enum IgxInputGroupType {
     selector: 'igx-input-group',
     templateUrl: 'input-group.component.html'
 })
-export class IgxInputGroupComponent {
+export class IgxInputGroupComponent extends DisplayDensityBase {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
-    private _displayDensity: DisplayDensity | string;
-    private _supressInputAutofocus: boolean = false;
+    private _supressInputAutofocus = false;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
@@ -188,39 +187,6 @@ export class IgxInputGroupComponent {
     }
 
     /**
-     * Returns the theme of the `IgxInputGroupComponent`.
-     * The default theme is `comfortable`.
-     * Available options are `comfortable`, `cosy`, `compact`.
-     * ```typescript
-     * let inputGroupTheme = this.inputGroup.displayDensity;
-     * ```
-     */
-    @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    /**
-     * Sets the theme of the `IgxInputGroupComponent`.
-     * ```html
-     * <igx-input-group [displayDensity]="'compact'"></igx-input-group>
-     * ```
-     */
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-    }
-
-    /**
      * Returns whether the input element of the input group will be automatically focused on click.
      * ```typescript
      * let supressInputAutofocus = this.inputGroup.supressInputAutofocus;
@@ -254,8 +220,7 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--cosy')
     get isDisplayDensityCosy() {
-        return this._displayDensity === DisplayDensity.cosy ||
-            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy);
+        return this.isCosy();
     }
 
     /**
@@ -263,9 +228,7 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--comfortable')
     get isDisplayDensityComfortable() {
-        return this._displayDensity === DisplayDensity.comfortable ||
-            (!this._displayDensity && (!this.displayDensityOptions ||
-             this.displayDensityOptions.displayDensity === DisplayDensity.comfortable));
+        return this.isComfortable();
     }
 
     /**
@@ -273,8 +236,7 @@ export class IgxInputGroupComponent {
      */
     @HostBinding('class.igx-input-group--compact')
     get isDisplayDensityCompact() {
-        return this._displayDensity === DisplayDensity.compact ||
-            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact);
+        return this.isCompact();
     }
 
     /**
@@ -292,7 +254,8 @@ export class IgxInputGroupComponent {
         return this._type.toString();
     }
 
-    constructor(private _element: ElementRef, @Optional() @Inject(DisplayDensityToken) protected displayDensityOptions: IDisplayDensity) {
+    constructor(private _element: ElementRef, @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensity) {
+        super(_displayDensityOptions);
         this.element = _element;
     }
 
