@@ -928,7 +928,7 @@ describe('IgxGrid Component Tests', () => {
                 // expect(row.inEditMode).toBe(false);
             });
 
-            it('Should display the banner below the edited row if it is not the last one', (async () => {
+            it('Should display the banner below the edited row if it is not the last one', () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -947,7 +947,7 @@ describe('IgxGrid Component Tests', () => {
 
                 // No much space between the row and the banner
                 expect(bannerTop - editRowBottom).toBeLessThan(2);
-            }));
+            });
 
             it('Should display the banner after the edited row if it is the last one, but has room underneath it', () => {
                 const lastItemIndex = 6;
@@ -971,7 +971,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(bannerTop - editRowBottom).toBeLessThan(2);
             });
 
-            it('Should display the banner above the edited row if it is the last one', (async () => {
+            it('Should display the banner above the edited row if it is the last one', () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -994,7 +994,7 @@ describe('IgxGrid Component Tests', () => {
 
                 // No much space between the row and the banner
                 expect(editRowTop - bannerBottom).toBeLessThan(2);
-            }));
+            });
 
             xit('Should add correct class to the edited row', (async () => {
                 // NOT APPLICABLE, SINCE GRID DOES NOT HAVE TRANSACTIONS
@@ -1067,7 +1067,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
                 grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
-                await wait(500);
+                await wait(DEBOUNCETIME);
                 const targetCell = fixture.componentInstance.getCell(0, 'Test');
                 const lastCellElement = targetCell.nativeElement;
                 targetCell.nativeElement.focus();
@@ -1382,7 +1382,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Exit row editing', () => {
-            it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, fakeAsync(() => {
+            it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1393,7 +1393,6 @@ describe('IgxGrid Component Tests', () => {
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
                 fix.detectChanges();
-                tick(DEBOUNCETIME);
 
                 //  ged DONE button and click it
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
@@ -1408,7 +1407,7 @@ describe('IgxGrid Component Tests', () => {
                 cancelButtonElement.nativeElement.click();
                 expect(grid.endRowEdit).toHaveBeenCalled();
                 expect(grid.endRowEdit).toHaveBeenCalledWith(false);
-            }));
+            });
 
             it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1456,7 +1455,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBeFalsy();
             });
 
-            it(`Should exit row editing AND COMMIT on delete row`, fakeAsync(() => {
+            it(`Should exit row editing AND COMMIT on delete row`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
 
@@ -1470,17 +1469,15 @@ describe('IgxGrid Component Tests', () => {
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 cell.inEditMode = true;
                 fix.detectChanges();
-                tick();
                 grid.deleteRow(grid.getRowByIndex(2).rowID);
                 fix.detectChanges();
-                tick(DEBOUNCETIME);
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
-            }));
+            });
 
             it(`Should exit row editing AND COMMIT on filter`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -2352,7 +2349,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Row Editing Overlay position', () => {
-            it('Open overlay for top row', fakeAsync(() => {
+            it('Open overlay for top row', () => {
                 const fixture = TestBed.createComponent(IgxBasicGridRowEditingComponent);
                 fixture.detectChanges();
 
@@ -2385,7 +2382,7 @@ describe('IgxGrid Component Tests', () => {
                 overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
                 expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
                 cell.inEditMode = false;
-            }));
+            });
         });
 
         describe('Row Editing - Custom overlay',  () => {
@@ -2477,13 +2474,13 @@ describe('IgxGrid Component Tests', () => {
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue['ProductName']).toBeUndefined();
-                tick(100);
+                tick();
                 expect(row.classList).toContain('igx-grid__tr--deleted');
 
                 trans.commit(grid.data);
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(0);
-                tick(100);
+                tick();
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
 
                 cell = grid.getCellByColumn(0, 'ProductName');
