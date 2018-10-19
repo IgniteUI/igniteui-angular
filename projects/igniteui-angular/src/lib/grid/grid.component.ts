@@ -1235,7 +1235,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList:  QueryList<IgxGridRowComponent>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1289,7 +1289,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public get groupsRowList() {
-        const res = new QueryList<any>();
+        const res = new QueryList<IgxGridGroupByRowComponent>();
         if (!this._groupsRowList) {
             return res;
         }
@@ -3729,7 +3729,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
