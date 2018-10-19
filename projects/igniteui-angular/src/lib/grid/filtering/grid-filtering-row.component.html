@@ -10,16 +10,16 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group type="box" >
-        <igx-prefix (click)="toggleDropDown($event.target)">
-            <igx-icon #operandsIcon>filter_list</igx-icon>
+    <igx-input-group type="box">
+        <igx-prefix tabindex="1" (click)="toggleDropDown($event.target)">
+            <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
-        <input #input igxInput
+        <input #input igxInput tabindex="1"
             [placeholder]="placeholder"
             autocomplete="off"
             [(ngModel)]="value"
             [readonly]="isUnaryCondition"/>
-        <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+        <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
     </igx-input-group>
@@ -31,7 +31,7 @@
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
                 <igx-prefix (click)="toggleDropDown($event.target)">
-                    <igx-icon #operandsIcon>filter_list</igx-icon>
+                    <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input igxInput
                 (click)="openDialog()"
