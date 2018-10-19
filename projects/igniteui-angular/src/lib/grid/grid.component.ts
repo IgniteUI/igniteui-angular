@@ -347,7 +347,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions() {
+    get groupingExpressions(): ISortingExpression[] {
         return this._groupingExpressions;
     }
 
@@ -362,7 +362,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    set groupingExpressions(value) {
+    set groupingExpressions(value: ISortingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }

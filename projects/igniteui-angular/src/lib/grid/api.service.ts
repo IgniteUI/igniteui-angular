@@ -23,7 +23,6 @@ export class IgxGridAPIService {
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected editCellState: Map<string, any> = new Map<string, any>();
     protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
-    protected lastRowInEdit: { rowID: any, rowIndex: number } = null;
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
