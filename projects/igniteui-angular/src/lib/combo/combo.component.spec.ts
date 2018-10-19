@@ -15,6 +15,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { element } from 'protractor';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -42,7 +43,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -876,6 +877,10 @@ describe('igxCombo', () => {
 
 
     describe('Selection tests: ', () => {
+        function getIndexOfVisibleItem(dropDownitems: any[], valueKey, value) {
+            const item = dropDownitems.filter((el) => el.value[valueKey] === value)[0];
+            return dropDownitems.indexOf(item);
+        }
         function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
             const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
@@ -1409,9 +1414,12 @@ describe('igxCombo', () => {
                 verifyItemIsSelected(combo, dataItemIndex, ++selectedItemIndex, checkbox);
             };
 
-            verifySelectedItem(3, 9);
-            verifySelectedItem(7, 33);
-            verifySelectedItem(1, 12);
+            let index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Michigan');
+            verifySelectedItem(index, 9);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Tennessee');
+            verifySelectedItem(index, 33);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Illinois');
+            verifySelectedItem(index, 12);
             tick();
             fixture.detectChanges();
             const expectedOutput = combo.data[9].field + ', ' + combo.data[33].field + ', ' + combo.data[12].field;
