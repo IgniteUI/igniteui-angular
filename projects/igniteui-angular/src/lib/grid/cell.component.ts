@@ -285,7 +285,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     set inEditMode(value: boolean) {
         if (this.column.editable && value) {
             this.editValue = this.value;
-            this.gridAPI.set_cell_inEditMode(this.gridID, this, value);
+            this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
             }

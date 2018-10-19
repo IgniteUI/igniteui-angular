@@ -86,29 +86,25 @@ export class IgxGridAPIService {
         }
     }
 
-    public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
+    public set_cell_inEditMode(gridId: string, cell) {
         const grid = this.get(gridId);
-        const lastEditRow = this.get_row_inEditMode(gridId);
         if (grid.rowEditable) {
-            if (lastEditRow && lastEditRow.rowID !== cell.cellID.rowID) {
+            const currentEditRow = this.get_row_inEditMode(gridId);
+            if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
                 grid.endRowEdit(true);
-                grid.openRowEditingOverlay(cell.row);
-            } else if (grid.rowEditingOverlay.collapsed) {
-                grid.openRowEditingOverlay(cell.row);
+                grid.startRowEdit(cell.row);
             }
-
+            if (!currentEditRow) {
+                grid.startRowEdit(cell.row);
+            }
+            const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
+            this.set_row_inEditMode(gridId, rowState);
         }
 
-        if (!this.editCellState.has(gridId)) {
-            this.editCellState.set(gridId, null);
-            this.set_row_inEditMode(gridId, null);
-        }
-        if (!this.get_cell_inEditMode(gridId) && editMode) {
+        if (!this.get_cell_inEditMode(gridId)) {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
             this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
-            const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
-            this.set_row_inEditMode(gridId, rowState);
         }
     }
 

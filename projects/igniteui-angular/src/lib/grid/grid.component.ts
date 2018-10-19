@@ -4855,7 +4855,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    public openRowEditingOverlay(row: IgxGridRowComponent) {
+    public startRowEdit(row: IgxGridRowComponent) {
         this.transactions.startPending();
         this.configureRowEditingOverlay(row);
         this.rowEditingOverlay.open(this.rowEditSettings);
