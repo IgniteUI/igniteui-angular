@@ -823,6 +823,9 @@ describe('IgxGrid Component Tests', () => {
                 const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
                 expect(firstCellInputValue).toEqual('4');
             });
+        it(`Should not commit added row to grid's data in grid with transactions`, () => {
+
+        });
     });
 
     describe('IgxGrid - Row Editing', () => {
@@ -1375,7 +1378,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1398,7 +1401,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1424,7 +1427,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -1448,7 +1451,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1472,7 +1475,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1496,7 +1499,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1520,7 +1523,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -1544,7 +1547,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
                 expect(otherEditableCell.inEditMode).toBeTruthy();
             });
@@ -2010,7 +2013,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -2033,7 +2036,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
 
                 // put cell in edit mode
@@ -2046,7 +2049,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 3, columnID: 3, rowIndex: 2 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 3, columnID: 2, rowIndex: 2 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -2069,12 +2072,12 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                const headerResArea = headers[3].nativeElement.children[2];
+                const headerResArea = headers[2].nativeElement.children[2];
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
                 tick();
                 fix.detectChanges();
 
-                const resizer = headers[3].nativeElement.children[2].children[0];
+                const resizer = headers[2].nativeElement.children[2].children[0];
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
                 tick();
@@ -2086,7 +2089,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 4, columnID: 3, rowIndex: 3 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 4, columnID: 2, rowIndex: 3 });
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
@@ -2342,6 +2345,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
                 let cell = grid.getCellByColumn(0, 'ProductName');
+                spyOn(grid, 'endRowEdit').and.callThrough();
                 cell.inEditMode = true;
                 fixture.detectChanges();
 
@@ -2351,14 +2355,16 @@ describe('IgxGrid Component Tests', () => {
                 fixture.componentInstance.cellInEditMode.editValue = 'Spiro';
                 fixture.componentInstance.moveNext(true);
 
+                fixture.detectChanges();
+
                 row = grid.getRowByIndex(0).nativeElement;
                 cell = grid.getCellByColumn(0, 'ReorderLevel');
                 overlayText = document.getElementsByClassName('igx-banner__text')[0] as HTMLElement;
                 expect(parseInt(overlayText.textContent, 10)).toEqual(1);
 
-                spyOn(grid, 'endRowEdit').and.callThrough();
                 fixture.componentInstance.buttons.last.element.nativeElement.click();
                 expect(grid.endRowEdit).toHaveBeenCalled();
+                expect(grid.endRowEdit).toHaveBeenCalledTimes(1);
             });
         });
 
@@ -2401,10 +2407,6 @@ describe('IgxGrid Component Tests', () => {
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue['ProductName']).toBeUndefined();
             });
-        });
-
-        describe('Row Editing - Manipulate data via API', () => {
-
         });
     });
 
@@ -2732,11 +2734,6 @@ export class IgxBasicGridRowEditingComponent {
     template: `
     <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
      width="900px" height="600px" [rowEditable]="true" [paging]="true" [perPage]="7">
-        <igx-column width="200px">
-            <ng-template igxCell let-cell="cell" let-val>
-                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
-            </ng-template>
-        </igx-column>
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
         </igx-column>
@@ -2747,15 +2744,7 @@ export class IgxBasicGridRowEditingComponent {
 })
 export class IgxGridRowEditingComponent {
     public data = SampleTestData.foodProductData();
-
-    public changeInitColumns = false;
-
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
-
-    public deleteRow(event, rowID) {
-        event.stopPropagation();
-        this.data.splice(rowID - 1, 1);
-    }
 }
 
 @Component({
@@ -2851,11 +2840,6 @@ export class IgxGridWithEditingAndFeaturesComponent {
 @Component({
     template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
-        <igx-column>
-            <ng-template igxCell let-cell="cell" let-val>
-                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
-            </ng-template>
-        </igx-column>
         <igx-column field="ProductID" header="Product ID"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
@@ -2906,11 +2890,6 @@ export class IgxGridCustomOverlayComponent {
     template: `
     <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
      width="900px" height="600px" [rowEditable]="true" [paging]="true" [perPage]="7">
-        <igx-column width="200px">
-            <ng-template igxCell let-cell="cell" let-val>
-                <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
-            </ng-template>
-        </igx-column>
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
         </igx-column>
@@ -2922,13 +2901,5 @@ export class IgxGridCustomOverlayComponent {
 })
 export class IgxGridRowEditingTransactionComponent {
     public data = SampleTestData.foodProductData();
-
-    public changeInitColumns = false;
-
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
-
-    public deleteRow(event, rowID) {
-        event.stopPropagation();
-        this.data.splice(rowID - 1, 1);
-    }
 }
