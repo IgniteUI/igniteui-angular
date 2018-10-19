@@ -2335,7 +2335,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Custom overlay',  () => {
-            fit('Custom overlay', () => {
+            it('Custom overlay', () => {
                 const fixture = TestBed.createComponent(IgxGridCustomOverlayComponent);
                 fixture.detectChanges();
 
