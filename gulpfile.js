@@ -219,8 +219,12 @@ gulp.task('typedoc-build:theme', ['typedoc-build'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH}`)
 );
 
-gulp.task('typedoc-build:export', ['typedoc-build'],
+gulp.task('typedoc-build:export',
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH}`)
+);
+
+gulp.task('typedoc-build:import',
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.EXPORT_JSON_PATH}`)
 );
 
 gulp.task('typedoc:clean-translations', () => { 
