@@ -132,6 +132,11 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
+export interface IDensityChangedEventArgs {
+    oldDensity: DisplayDensity | string,
+    newDensity: DisplayDensity | string
+}
+
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -538,6 +543,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public set displayDensity(val: DisplayDensity | string) {
+        const currentDisplayDensity: DisplayDensity | string = this._displayDensity;
         switch (val) {
             case 'compact':
                 this._displayDensity = DisplayDensity.compact;
@@ -549,7 +555,15 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
-        this.onDensityChanged.emit();
+
+        if(currentDisplayDensity && currentDisplayDensity !== this._displayDensity) {
+            // To Do: Emit object with old and new value
+            const densityChangedArgs: IDensityChangedEventArgs = {
+                oldDensity: currentDisplayDensity,
+                newDensity: this._displayDensity
+            }
+            this.onDensityChanged.emit(densityChangedArgs);
+        }
     }
 
     /**
@@ -1213,7 +1227,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     @Output()
-    protected onDensityChanged = new EventEmitter<any>();
+    protected onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
 
     /**
      * @hidden
