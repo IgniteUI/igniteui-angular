@@ -792,7 +792,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - API methods', () => {
+    fdescribe('IgxGrid - API methods', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -879,7 +879,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - Row Editing', () => {
+    fdescribe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -2494,7 +2494,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
 
-            it('Should allow change value of cell with initial value of 0', () => {
+            it('Should allow to change value of a cell with initial value of 0', () => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
@@ -2507,7 +2507,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe(50);
             });
 
-            it('Should allow change value of cell with initial value of false', () => {
+            it('Should allow to change value of a cell with initial value of false', () => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
@@ -2520,7 +2520,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBeTruthy();
             });
 
-            it('Should allow change value of cell with initial value of empty string', () => {
+            it('Should allow to change value of a cell with initial value of empty string', () => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
 
@@ -2535,6 +2535,28 @@ describe('IgxGrid Component Tests', () => {
                 cell.update('Updated value');
                 fixture.detectChanges();
                 expect(cell.value).toBe('Updated value');
+            });
+
+            it('Should allow to change of a cell in added row in grid with transactions', () => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const addRowData = {
+                    ProductID: 99,
+                    ProductName: 'Added product',
+                    InStock: false,
+                    UnitsInStock: 0,
+                    OrderDate: new Date()};
+                grid.addRow(addRowData);
+                fixture.detectChanges();
+
+                const cell = grid.getCellByColumn(10, 'ProductName');
+                expect(cell.value).toBe(addRowData.ProductName);
+
+                cell.update('Changed product');
+                fixture.detectChanges();
+                expect(cell.value).toBe('Changed product');
             });
         });
     });
@@ -3001,8 +3023,7 @@ export class IgxGridCustomOverlayComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [showToolbar]="true" [columnHiding]="true" toolbarTitle="Products" [primaryKey]="'ProductID'"
-     width="900px" height="600px" [rowEditable]="true" [paging]="true" [perPage]="7">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
