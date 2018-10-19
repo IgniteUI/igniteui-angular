@@ -35,17 +35,20 @@
             </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
-                    [rowEditable]="true"  [paging]="true" [perPage]="10" (onRowEditDone)="rowEditDone($event)" (onRowEditCancel)="rowEditCancel($event)">
-                    <igx-column width="100px" [editable]="false" >
+                    [rowEditable]="true" [paging]="true" [perPage]="10" (onRowEditDone)="rowEditDone($event)"
+                    (onRowEditCancel)="rowEditCancel($event)">
+                    <igx-column width="100px" [editable]="false">
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
                     </igx-column>
-                    <igx-column width="100px" field="ProductID" [editable]="false" [filterable]="true" [sortable]="true" header="Product ID"></igx-column>
-                    <igx-column width="100px" field="ReorderLevel" [filterable]="true" [sortable]="true" header="ReorderLever" [dataType]="'number'"
-                        [hasSummary]="summaryFlag" [hidden]="hideFlag" [filterable]="true" [sortable]="true" editable="true"></igx-column>
-                    <igx-column width="100px" field="ProductName" [filterable]="true" [sortable]="true" header="ProductName" [hidden]="hideFlag" [dataType]="'string'"
-                        editable="true"></igx-column>
+                    <igx-column width="100px" field="ProductID" [editable]="false" [filterable]="true" [sortable]="true"
+                        header="Product ID"></igx-column>
+                    <igx-column width="100px" field="ReorderLevel" [filterable]="true" [sortable]="true" header="ReorderLever"
+                        [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [filterable]="true"
+                        [sortable]="true" editable="true"></igx-column>
+                    <igx-column width="100px" field="ProductName" [filterable]="true" [sortable]="true" header="ProductName"
+                        [hidden]="hideFlag" [dataType]="'string'" editable="true"></igx-column>
                     <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                         <ng-template igxCellEditor let-cell="cell">
                             <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
@@ -53,17 +56,18 @@
                     </igx-column>
                     <igx-column width="100px" field="OrderDate" header="Order Date" [dataType]="'date'"></igx-column>
                     <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'"
-                        [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true" ></igx-column>
+                        [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true"></igx-column>
                     <igx-column-group [movable]="true" header="Column Group 1">
                         <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'"
                             [hasSummary]="summaryFlag" editable="true"></igx-column>
-                        <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [hasSummary]="summaryFlag"
-                            [hidden]="hideFlag" editable="true"></igx-column>
+                        <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'"
+                            [hasSummary]="summaryFlag" [hidden]="hideFlag" editable="true"></igx-column>
                         <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'"
-                            [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true" editable="true"></igx-column>
+                            [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true"
+                            editable="true"></igx-column>
                     </igx-column-group>
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
-                        [hasSummary]="summaryFlag" editable="true" [sortable]="true" >
+                        [hasSummary]="summaryFlag" editable="true" [sortable]="true">
                         <ng-template igxCellEditor let-cell="cell">
                             <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
                         </ng-template>
@@ -154,6 +158,17 @@
             <button (click)="undo('gridTransaction')">Undo</button>
             <button (click)="redo('gridTransaction')">Redo</button>
             <button (click)="openCommitDialog('gridRowEditTransaction')">Commit</button>
+        </article>
+        <article class="grid-row-edit-wrapper">
+            <h4>Performance grid with transactions and row edit</h4>
+            <app-grid-with-transactions>
+                <igx-grid #gridPerformance  [primaryKey]="'ID'" [data]="performanceData" [rowEditable]="true" [width]="'1200px'" [height]="'800px'"
+                    [rowSelectable]="true">
+                    <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field"
+                        [header]="c.field" [width]="c.width">
+                    </igx-column>
+                </igx-grid>
+            </app-grid-with-transactions>
         </article>
         <div igxToggle class="dialog__container">
             <div class="dialog__header">Submit the following transactions?</div>

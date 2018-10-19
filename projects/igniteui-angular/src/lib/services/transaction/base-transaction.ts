@@ -1,6 +1,7 @@
 import { TransactionService, Transaction, State } from './utilities';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
+@Injectable()
 export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
     protected _pendingTransactions: Transaction[] = [];

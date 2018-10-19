@@ -83,7 +83,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide individual column
@@ -106,7 +105,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -128,7 +126,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -984,7 +981,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').sortable = true;
@@ -1040,7 +1036,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').sortable = true;
@@ -1068,7 +1063,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         const initialRowListLenght = grid.rowList.length;
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').filterable = true;
@@ -1120,7 +1114,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         const allColumns = grid.columnList;
@@ -1984,10 +1977,6 @@ function testColumnPinning(column: IgxColumnComponent, isPinned: boolean) {
     expect(column.allChildren.every(c => c.pinned === isPinned)).toEqual(true);
 }
 
-function resetGridColumnState(grid: IgxGridComponent) {
-    grid.getColumnByName('ID').hidden = true;
-    grid.getColumnByName('ID').hidden = false;
-}
 
 type PinUnpinFunc = (component: ColumnGroupFourLevelTestComponent) => void;
 
