@@ -12,7 +12,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
-describe('IgxGrid - Filtering actions', () => {
+xdescribe('IgxGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
