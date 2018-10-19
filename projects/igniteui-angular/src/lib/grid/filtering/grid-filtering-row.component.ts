@@ -8,7 +8,6 @@ import {
     OnDestroy,
     ViewChildren,
     QueryList,
-    HostListener,
     ElementRef,
     HostBinding
 } from '@angular/core';
@@ -28,6 +27,7 @@ import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe } from '@angular/common';
 import { IgxIconComponent } from '../../icon';
 import { IgxFilteringService } from './grid-filtering.service';
+import { KEYCODES } from '../../core/utils';
 
 /**
  * @hidden
@@ -93,8 +93,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @ViewChild('defaultDateUI', { read: TemplateRef })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('datePickerInput', { read: ElementRef })
-    protected datePickerInput: ElementRef;
+    @ViewChild('input', { read: ElementRef })
+    protected input: ElementRef;
 
     @ViewChild('operands', { read: IgxDropDownComponent })
     protected igxDropDown: IgxDropDownComponent;
@@ -107,6 +107,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('operandsIcon', { read: IgxIconComponent })
     protected operandsIcon: IgxIconComponent;
+
+    @ViewChild('inputGroupPrefix', { read: ElementRef })
+    protected inputGroupPrefix: ElementRef;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -144,7 +147,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
         }
 
-        this.toggleDropDown(this.operandsIcon.el.nativeElement);
+        if (this.inputGroupPrefix) {
+            this.inputGroupPrefix.nativeElement.focus();
+            this.toggleConditionsDropDown();
+        }
     }
 
     ngOnDestroy(): void {
@@ -187,23 +193,32 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    @HostListener('keydown.Enter')
-    public onInputKeyDown(): void {
-        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+    public onPrefixKeyDown(event: KeyboardEvent) {
+        if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.SPACE) &&
+            this.igxDropDown.collapsed) {
+            this.toggleConditionsDropDown();
+            event.stopImmediatePropagation();
+        }
+    }
 
-        let indexToDeselect = -1;
-        for (let index = 0; index < this.expressionsList.length; index++) {
-            const expression = this.expressionsList[index].expression;
-            if (expression.searchVal === null && !expression.condition.isUnary) {
-                indexToDeselect = index;
+    public onInputKeyDown(event: KeyboardEvent): void {
+        if (event.keyCode === KEYCODES.ENTER) {
+            this.chipsArea.chipsList.filter(chip => chip.selected = false);
+
+            let indexToDeselect = -1;
+            for (let index = 0; index < this.expressionsList.length; index++) {
+                const expression = this.expressionsList[index].expression;
+                if (expression.searchVal === null && !expression.condition.isUnary) {
+                    indexToDeselect = index;
+                }
             }
-        }
 
-        if (indexToDeselect !== -1) {
-            this.removeExpression(indexToDeselect, this.expression);
-        }
+            if (indexToDeselect !== -1) {
+                this.removeExpression(indexToDeselect, this.expression);
+            }
 
-        this.resetExpression();
+            this.resetExpression();
+        }
     }
 
     private generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth: number): void {
@@ -315,8 +330,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.expression.condition = this.getCondition(this.conditions[0]);
         }
 
-        if (this.column.dataType === DataType.Date && this.datePickerInput) {
-            this.datePickerInput.nativeElement.value = null;
+        if (this.column.dataType === DataType.Date && this.input) {
+            this.input.nativeElement.value = null;
         }
     }
 
@@ -380,8 +395,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    public toggleDropDown(target: any): void {
-        this._overlaySettings.positionStrategy.settings.target = target;
+    public toggleConditionsDropDown(): void {
+        this._overlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
         this.igxDropDown.toggle(this._overlaySettings);
     }
 
@@ -414,6 +429,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         } else {
             this.conditionChanged.next(value);
         }
+
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
     }
 
     public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
@@ -421,7 +440,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.expression = expression;
             setTimeout(() => {
                 if (eventArgs.originalEvent) {
-                    this.toggleDropDown(this.operandsIcon.el.nativeElement);
+                    this.inputGroupPrefix.nativeElement.focus();
+                    this.toggleConditionsDropDown();
                 }
             });
         } else if (this.expression === expression) {

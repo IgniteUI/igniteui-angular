@@ -1,8 +1,7 @@
-<igx-drop-down #operands [allowItemsFocus]="true" (onSelection)="onOperandChanged($event)">
+<igx-drop-down #operands (onSelection)="onOperandChanged($event)">
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
-        [igxDropDownItemNavigation]="operands"
         [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ condition | filterCondition | titlecase }}</span>
@@ -11,14 +10,16 @@
 
 <ng-template #defaultFilterUI>
     <igx-input-group type="box">
-        <igx-prefix tabindex="1" (click)="toggleDropDown($event.target)">
+        <igx-prefix #inputGroupPrefix tabindex="1" (click)="toggleConditionsDropDown()" (keydown)="onPrefixKeyDown($event)"
+            [igxDropDownItemNavigation]="operands">
             <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <input #input igxInput tabindex="1"
             [placeholder]="placeholder"
             autocomplete="off"
             [(ngModel)]="value"
-            [readonly]="isUnaryCondition"/>
+            [readonly]="isUnaryCondition"
+            (keydown)="onInputKeyDown($event)"/>
         <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
@@ -30,7 +31,7 @@
         [(ngModel)]="value">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
-                <igx-prefix (click)="toggleDropDown($event.target)">
+                <igx-prefix #inputGroupPrefix (click)="toggleConditionsDropDown()" [igxDropDownItemNavigation]="operands">
                     <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input igxInput

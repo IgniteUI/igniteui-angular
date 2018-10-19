@@ -55,8 +55,14 @@
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-header *ngFor="let col of onlyTopLevel(pinnedColumns)" [igxColumnMovingDrag]="col" [attr.droppable]="true"
-                [igxColumnMovingDrop]="col" [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
+            <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
+                <div class="igx-grid__thead-item">
+                    <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
+                    <igx-grid-filtering-cell *ngIf="allowFiltering && !filteringService.isFilterRowVisible"
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
+                </div>
+            </ng-template>
         </ng-container>
         <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
