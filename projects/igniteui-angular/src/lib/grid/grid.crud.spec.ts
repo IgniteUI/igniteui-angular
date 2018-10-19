@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { wait } from '../test-utils/ui-interactions.spec';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 describe('IgxGrid - CRUD operations', () => {
@@ -18,7 +17,7 @@ describe('IgxGrid - CRUD operations', () => {
             declarations: [
                 DefaultCRUDGridComponent
             ],
-            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot()]
         }).compileComponents();
     }));
 
