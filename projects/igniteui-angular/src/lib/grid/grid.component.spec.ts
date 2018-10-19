@@ -139,7 +139,7 @@ describe('IgxGrid Component Tests', () => {
             }, 500);
         });
 
-        it('height/width should be calculated depending on number of records', (async () => {
+        it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
 
@@ -169,14 +169,14 @@ describe('IgxGrid Component Tests', () => {
             grid.height = '200px';
             fix.detectChanges();
 
-            await wait(DEBOUNCETIME);
+            tick(200);
             fix.detectChanges();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
             grid.width = '200px';
 
-            await wait(DEBOUNCETIME);
+            tick(200);
             fix.detectChanges();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
@@ -191,12 +191,12 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
             grid.height = '50%';
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            tick(200);
             fix.detectChanges();
 
             grid.width = '50%';
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            tick(200);
             fix.detectChanges();
 
             expect(window.getComputedStyle(grid.nativeElement).height).toMatch('300px');
@@ -228,7 +228,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.rowList.length).toBeGreaterThan(0);
         });
 
-        it('should change displayDensity runtime correctly', (async () => {
+        it('should change displayDensity runtime correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             fixture.componentInstance.columns[1].hasSummary = true;
             fixture.detectChanges();
@@ -245,7 +245,7 @@ describe('IgxGrid Component Tests', () => {
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
             grid.displayDensity = 'cosy';
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            tick(200);
             expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
@@ -253,7 +253,7 @@ describe('IgxGrid Component Tests', () => {
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
             grid.displayDensity = 'compact';
             fixture.detectChanges();
-            await wait(DEBOUNCETIME);
+            tick(200);
             expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
