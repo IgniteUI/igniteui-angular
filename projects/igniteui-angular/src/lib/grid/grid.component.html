@@ -141,7 +141,7 @@
 
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass"> 
-        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit }"></ng-container>
+        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit.bind(this) }"></ng-container>
     </div>
 </div>
 <ng-template #defaultRowEditTemplate >
@@ -156,4 +156,4 @@
     </div>
 </ng-template>
 
-<div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>
+<div class="igx-grid__outlet" igxOverlayOutlet></div>

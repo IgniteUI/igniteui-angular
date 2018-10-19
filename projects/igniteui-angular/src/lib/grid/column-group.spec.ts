@@ -83,7 +83,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide individual column
@@ -106,7 +105,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -128,7 +126,6 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
 
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         // Hide 2 columns in the group
@@ -984,27 +981,25 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
-        grid.getColumnByName('ContactTitle').sortable = true;
-        grid.getColumnByName('Fax').sortable = true;
+        grid.getColumnByName('CompanyName').sortable = true;
+        grid.getColumnByName('ContactName').sortable = true;
         fixture.detectChanges();
-
         // Sort column
-        grid.sort({ fieldName: 'ContactTitle', dir: SortingDirection.Asc });
+        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc});
         fixture.detectChanges();
 
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
 
         // Verify cells
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual('BOTTM');
-        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual('Accounting Manager');
-        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Bottom-Dollar Markets');
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual('FRANR');
-        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual('Marketing Manager');
-        expect(grid.getCellByColumn(4, 'Country').value).toEqual('France');
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual('Sales Representative');
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Alfreds Futterkiste');
+        expect(grid.getCellByColumn(4, 'ID').value).toEqual('BSBEV');
+        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual('Sales Representative');
+        expect(grid.getCellByColumn(4, 'Country').value).toEqual('UK');
 
         grid.clearSort();
         fixture.detectChanges();
@@ -1019,16 +1014,16 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({ fieldName: 'Fax', dir: SortingDirection.Asc });
+        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc});
         fixture.detectChanges();
 
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
 
         // Verify cells
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual('CHOPS');
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual('ANATR');
         expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual('Owner');
-        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Chop-suey Chinese');
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Ana Trujillo Emparedados y helados');
         expect(grid.getCellByColumn(3, 'ID').value).toEqual('FAMIA');
         expect(grid.getCellByColumn(3, 'ContactTitle').value).toEqual('Marketing Assistant');
         expect(grid.getCellByColumn(3, 'Country').value).toEqual('Brazil');
@@ -1040,10 +1035,9 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
-        grid.getColumnByName('ContactTitle').sortable = true;
+        grid.getColumnByName('CompanyName').sortable = true;
         fixture.detectChanges();
 
         // Sort column by clicking on it
@@ -1054,12 +1048,12 @@ describe('IgxGrid - multi-column headers', () => {
         // Verify columns and groups
         testGroupsAndColumns(18, 11);
         // Verify cells
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual('BOTTM');
-        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual('Accounting Manager');
-        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Bottom-Dollar Markets');
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual('FRANR');
-        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual('Marketing Manager');
-        expect(grid.getCellByColumn(4, 'Country').value).toEqual('France');
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
+        expect(grid.getCellByColumn(0, 'ContactTitle').value).toEqual('Sales Representative');
+        expect(grid.getCellByColumn(0, 'CompanyName').value).toEqual('Alfreds Futterkiste');
+        expect(grid.getCellByColumn(4, 'ID').value).toEqual('BERGS');
+        expect(grid.getCellByColumn(4, 'ContactTitle').value).toEqual('Order Administrator');
+        expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
     });
 
     it('filtering - filter a grouped column', () => {
@@ -1068,7 +1062,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
         const initialRowListLenght = grid.rowList.length;
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         grid.getColumnByName('ContactTitle').filterable = true;
@@ -1120,7 +1113,6 @@ describe('IgxGrid - multi-column headers', () => {
         const grid = fixture.componentInstance.grid;
 
         // Verify columns and groups
-        resetGridColumnState(grid);
         testGroupsAndColumns(18, 11);
 
         const allColumns = grid.columnList;
@@ -1984,10 +1976,6 @@ function testColumnPinning(column: IgxColumnComponent, isPinned: boolean) {
     expect(column.allChildren.every(c => c.pinned === isPinned)).toEqual(true);
 }
 
-function resetGridColumnState(grid: IgxGridComponent) {
-    grid.getColumnByName('ID').hidden = true;
-    grid.getColumnByName('ID').hidden = false;
-}
 
 type PinUnpinFunc = (component: ColumnGroupFourLevelTestComponent) => void;
 

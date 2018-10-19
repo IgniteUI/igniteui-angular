@@ -1,7 +1,8 @@
 import { Transaction, State, TransactionType } from './utilities';
 import { IgxBaseTransactionService } from './base-transaction';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 
+@Injectable()
 export class IgxTransactionService extends IgxBaseTransactionService {
     private _transactions: Transaction[] = [];
     private _redoStack: { transaction: Transaction, recordRef: any }[] = [];

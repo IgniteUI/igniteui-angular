@@ -1,6 +1,6 @@
 # igx-transaction
 
-`TransactionService` allows the developers to plug a middle ware between given component and its data source. While plugged in `TransactionService` should collect all the transactions performed in the component without send them to the data source. `TransactionService` should be able to update the data source and commit all the transactions when needed.
+`TransactionService` allows the developers to plug a middleware between given component and its data source. While plugged in `TransactionService` should collect all the transactions performed in the component without send them to the data source. `TransactionService` should be able to update the data source and commit all the transactions when needed.
 A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/transaction.html)
 
 ## Usage
