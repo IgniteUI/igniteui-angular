@@ -7,7 +7,7 @@ import {
     ViewChild
 } from '@angular/core';
 
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -318,8 +318,8 @@ export class IgxGridToolbarComponent {
      * ```
      */
     public exportClicked() {
-
         this._overlaySettings.positionStrategy.settings.target = this.exportButton.nativeElement;
+        this._overlaySettings.outlet = this.grid.outletDirective;
         this.exportDropdown.toggle(this._overlaySettings);
     }
 
@@ -368,6 +368,7 @@ export class IgxGridToolbarComponent {
      */
     public toggleColumnHidingUI() {
         this._overlaySettings.positionStrategy.settings.target = this.columnHidingButton.nativeElement;
+        this._overlaySettings.outlet = this.grid.outletDirective;
         this.columnHidingDropdown.toggle(this._overlaySettings);
     }
 
@@ -379,6 +380,7 @@ export class IgxGridToolbarComponent {
      */
     public toggleColumnPinningUI() {
         this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
+        this._overlaySettings.outlet = this.grid.outletDirective;
         this.columnPinningDropdown.toggle(this._overlaySettings);
     }
 }

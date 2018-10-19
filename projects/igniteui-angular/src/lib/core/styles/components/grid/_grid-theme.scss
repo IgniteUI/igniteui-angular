@@ -1158,6 +1158,19 @@
         }
     }
 
+    %igx-grid__grouparea-connector {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 rem(4px);
+
+        igx-icon {
+            width: 16px;
+            height: 16px;
+            font-size: 16px;
+        }
+    }
+
     %igx-grid__grouparea--cosy {
         min-height: map-get($grouparea-min-height, 'cosy');
         padding: map-get($grouparea-padding, 'cosy');
@@ -1305,7 +1318,7 @@
         }
     }
 
-    %igx-grid__filtering-outlet {
+    %igx-grid__outlet {
         z-index: 2;
         position: fixed;
     }

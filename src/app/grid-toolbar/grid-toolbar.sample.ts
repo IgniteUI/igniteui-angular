@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { IgxGridComponent, IgxCsvExporterService, IgxExcelExporterService, IgxColumnComponent } from 'igniteui-angular';
-import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
+import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 
 @Component({
     selector: 'app-grid-toolbar-sample',
