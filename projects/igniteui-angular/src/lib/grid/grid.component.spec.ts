@@ -841,7 +841,7 @@ describe('IgxGrid Component Tests', () => {
             }).compileComponents();
         }));
 
-        describe('Row Edit - General tests', () => {
+        describe('Row Editing - General tests', () => {
             it('Should be able to enter edit mode on dblclick, enter and f2', () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
@@ -2333,12 +2333,7 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = false;
             }));
         });
-    });
 
-<<<<<<< HEAD
-    describe('IgxGrid - Transactions', () => {
-        it('Should add row to transaction on grid.addRow() in grid with transactions', () => {
-=======
         describe('Row Editing - Custom overlay',  () => {
             it('Custom overlay', () => {
                 const fixture = TestBed.createComponent(IgxGridCustomOverlayComponent);
@@ -2409,7 +2404,6 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Manipulate data via API', () => {
->>>>>>> c5c8d64c7ceec3b243cd5c1a94d2051e50ad4695
 
         });
     });
