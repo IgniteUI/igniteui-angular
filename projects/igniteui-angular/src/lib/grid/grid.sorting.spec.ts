@@ -9,6 +9,7 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const SORTING_ICON_NONE_CONTENT = 'none';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -23,7 +24,7 @@ describe('IgxGrid - Grid Sorting', () => {
             declarations: [
                 GridDeclaredColumnsComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         })
         .compileComponents();
     }));
