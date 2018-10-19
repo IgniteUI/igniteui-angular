@@ -180,9 +180,11 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public onClick(event) {
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
-            if (this.grid.filteringService.isFilterRowVisible && 
-                this.grid.filteringService.columsWithComplexFilter.find((field) => field === this.column.field) === undefined) {
-                this.grid.filteringService.filteredColumn = this.column;
+            if (this.grid.filteringService.isFilterRowVisible) {
+                if (this.column.filterable &&
+                    this.grid.filteringService.columsWithComplexFilter.find((field) => field === this.column.field) === undefined) {
+                    this.grid.filteringService.filteredColumn = this.column;
+                }
             }
             else if (this.column.sortable) {
                 const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
