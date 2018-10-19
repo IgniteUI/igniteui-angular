@@ -796,7 +796,8 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridDefaultRenderingComponent
+                    IgxGridDefaultRenderingComponent,
+                    IgxGridRowEditingTransactionComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -824,7 +825,26 @@ describe('IgxGrid Component Tests', () => {
                 expect(firstCellInputValue).toEqual('4');
             });
         it(`Should not commit added row to grid's data in grid with transactions`, () => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
 
+            const grid = fixture.componentInstance.grid;
+            const trans = grid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            const addRowData = {
+                ProductID: 100,
+                ProductName: 'Added',
+                InStock: true,
+                UnitsInStock: 20000,
+                OrderDate: new Date(1)
+            };
+
+            grid.addRow(addRowData);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            expect(trans.add).toHaveBeenCalledWith({id: 100, type: 'add', newValue: addRowData});
+            expect(grid.data.length).toBe(10);
         });
     });
 
@@ -2437,22 +2457,6 @@ describe('IgxGrid Component Tests', () => {
             }));
         });
     });
-
-    /**
-     * Finds visible cell's element by provided row and column indexes
-     * @param debugElement Parent element where to look for the cell
-     * @param rowIndex Visible index of the cell's row
-     * @param columnIndex Visible index of cell's column
-     */
-    function getCellElementByRowAndColumnIndexes(
-        debugElement: DebugElement,
-        rowIndex: number,
-        columnIndex: number,
-        totalCols: number): DebugElement {
-        const cells = debugElement.queryAll(By.css(CELL_CLASS));
-        const cell = cells[rowIndex * totalCols + columnIndex];
-        return cell;
-    }
 });
 
 @Component({
