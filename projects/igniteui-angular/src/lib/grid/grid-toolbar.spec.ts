@@ -6,7 +6,7 @@ import { first } from 'rxjs/operators';
 import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../services/index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { DisplayDensity } from '../core/utils';
+import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Toolbar', () => {
@@ -513,8 +513,8 @@ describe('IgxGrid - Grid Toolbar', () => {
     }
 
     function getOverlay() {
-        const div = fixture.debugElement.nativeElement.parentElement.lastChild;
-        return div.classList.contains('igx-overlay') ? div : null;
+        const div = fixture.debugElement.query(By.css('div.igx-grid__outlet'));
+        return div.nativeElement;
     }
 
     function getColumnHidingButton() {

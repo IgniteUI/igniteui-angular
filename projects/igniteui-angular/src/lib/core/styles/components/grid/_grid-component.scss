@@ -192,6 +192,10 @@
         @extend %igx-grid__grouparea !optional;
     }
 
+    @include e(grouparea-connector) {
+        @extend %igx-grid__grouparea-connector !optional;
+    }
+
     @include e(grouping-indicator) {
         @extend %igx-grid__grouping-indicator !optional;
     }
@@ -244,8 +248,8 @@
         @extend %igx-grid__group-expand-btn !optional;
     }
 
-    @include e(filtering-outlet) {
-        @extend %igx-grid__filtering-outlet !optional;
+    @include e(outlet) {
+        @extend %igx-grid__outlet !optional;
     }
 
     @for $i from 1 through 10 {

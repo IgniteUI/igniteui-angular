@@ -206,6 +206,7 @@ gulp.task('typedoc-build', [
 
 const EXPORT_PATH = 'dist/igniteui-angular/docs/typescript-exported';
 const PROJECT_PATH = 'projects/igniteui-angular/src';
+const TEMPLATE_STRINGS = 'extras/template/strings/shell-strings.json'
 
 gulp.task('typedoc-build:export', ['typedoc-build'],
     shell.task(`typedoc ${PROJECT_PATH} --generate-json ${EXPORT_PATH}`)
@@ -213,6 +214,10 @@ gulp.task('typedoc-build:export', ['typedoc-build'],
 
 gulp.task('typedoc-build:import', ['typedoc-build'],
     shell.task(`typedoc ${PROJECT_PATH} --generate-from-json ${EXPORT_PATH}`)
+);
+
+gulp.task('typedoc-build:import:shell:jp', ['typedoc-build'],
+    shell.task(`typedoc ${PROJECT_PATH} --gen-from-json ${EXPORT_PATH} --templateStrings ${TEMPLATE_STRINGS} --localize jp`)
 );
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],
