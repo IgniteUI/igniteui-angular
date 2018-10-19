@@ -1108,7 +1108,7 @@ describe('IgxGrid - Row Selection', () => {
 
         cell = grid.getCellByColumn(1, 'ID');
         cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
-        await wait(30);
+        await wait(100);
         fix.detectChanges();
         expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
 
@@ -1133,7 +1133,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
 
         UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
-        await wait(30);
+        await wait(100);
         fix.detectChanges();
         expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
 

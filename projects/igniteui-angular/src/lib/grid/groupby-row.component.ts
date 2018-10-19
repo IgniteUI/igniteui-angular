@@ -182,7 +182,7 @@ export class IgxGridGroupByRowComponent {
             this.grid.toggleGroup(this.groupRow);
             return;
         }
-        const args = {cell: this, groupRow: null, event: event, cancel: false };
+        const args = {cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
             return;
