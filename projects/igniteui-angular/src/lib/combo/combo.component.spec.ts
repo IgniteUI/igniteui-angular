@@ -15,6 +15,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -871,6 +872,10 @@ describe('igxCombo', () => {
 
 
     describe('Selection tests: ', () => {
+        function getIndexOfVisibleItem(dropDownitems: IgxDropDownItemBase[], valueKey: any, value: any) {
+            const item = dropDownitems.find((el) => el.itemData[valueKey] === value);
+            return dropDownitems.indexOf(item);
+        }
         function getCheckbox(dropdownElement: any, itemIndex: number): HTMLElement {
             const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
             const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
@@ -1400,9 +1405,12 @@ describe('igxCombo', () => {
                 verifyItemIsSelected(combo, dataItemIndex, ++selectedItemIndex, checkbox);
             };
 
-            verifySelectedItem(3, 9);
-            verifySelectedItem(7, 33);
-            verifySelectedItem(1, 12);
+            let index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Michigan');
+            verifySelectedItem(index, 9);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Tennessee');
+            verifySelectedItem(index, 33);
+            index = getIndexOfVisibleItem(combo.dropdown.items, combo.valueKey, 'Illinois');
+            verifySelectedItem(index, 12);
             tick();
             fixture.detectChanges();
             const expectedOutput = combo.data[9].field + ', ' + combo.data[33].field + ', ' + combo.data[12].field;
