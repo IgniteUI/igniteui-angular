@@ -792,7 +792,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    fdescribe('IgxGrid - API methods', () => {
+    describe('IgxGrid - API methods', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -879,7 +879,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    fdescribe('IgxGrid - Row Editing', () => {
+    describe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [

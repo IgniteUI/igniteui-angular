@@ -97,7 +97,7 @@ export class IgxGridNavigationService {
 
     public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex) {
         return this.grid.nativeElement.querySelector(
-            `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+            `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`) || { focus: () => {}};
     }
 
     public getScrollToNextEditableColumn(startIndex, endIndex) {
