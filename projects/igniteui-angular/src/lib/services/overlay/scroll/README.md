@@ -1,6 +1,8 @@
 # Scroll strategies
 
-Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService. There are four scroll strategies:
+Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService. A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_scroll.html).
+
+There are four scroll strategies:
 1) **NoOperation** - does nothing. 
 2) **Block** - the component do not scroll with the window. The event is canceled. No scrolling happens.
 3) **Close** - uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.
