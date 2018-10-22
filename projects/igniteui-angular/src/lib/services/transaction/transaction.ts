@@ -60,10 +60,10 @@ export class IgxTransactionService extends IgxBaseTransactionService {
 
         const pendingChange = super.getAggregatedValue(id, false);
         const change = state && state.value;
-        let aggregatedValue = Object.assign({}, change, pendingChange);
+        let aggregatedValue = this.mergeValues(change, pendingChange);
         if (mergeChanges) {
             const originalValue = state ? state.recordRef : pendingState.recordRef;
-            aggregatedValue = Object.assign({}, originalValue, aggregatedValue);
+            aggregatedValue = this.mergeValues(originalValue, aggregatedValue);
         }
         return aggregatedValue;
     }
@@ -243,5 +243,21 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                 }
             }
         }
+    }
+
+    /**
+     * Merges second values in first value and the result in empty object. If values are primitive type
+     * returns second value if exists, or first value.
+     * @param first Value to merge into
+     * @param second Value to merge
+     */
+    protected mergeValues<T>(first: T, second: T): T {
+        let result: T;
+        if ((first && typeof first === 'object') || (second && typeof second === 'object')) {
+            result = Object.assign({}, first, second);
+        } else {
+            result = second ? second : first;
+        }
+        return result;
     }
 }
