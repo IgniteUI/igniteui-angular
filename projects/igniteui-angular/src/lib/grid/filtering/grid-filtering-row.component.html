@@ -1,8 +1,9 @@
-<igx-drop-down #operands (onSelection)="onOperandChanged($event)" >
+<igx-drop-down #operands (onSelection)="onOperandChanged($event)" [allowItemsFocus]="true">
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
-        [isSelected]="isConditionSelected(condition)">
+        [isSelected]="isConditionSelected(condition)"
+        [igxDropDownItemNavigation]="operands">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ condition | filterCondition | titlecase }}</span>
     </igx-drop-down-item>
@@ -12,22 +13,22 @@
     <igx-input-group type="box">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown()"
-                    (keydown)="onPrefixKeyDown($event)"
-            [igxDropDownItemNavigation]="operands">
+                    (keydown)="onPrefixKeyDown($event)">
             <igx-icon tabindex="0" fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
-        <input #input
-               igxInput
-               tabindex="0"
+        <input 
+            #input
+            igxInput
+            tabindex="0"
             [placeholder]="placeholder"
             autocomplete="off"
             [(ngModel)]="value"
             [type]="type"
             [readonly]="isUnaryCondition"
             (keydown)="onInputKeyDown($event)"/>
-        <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown()" (click)="clearInput()" tabindex="0">
-            <igx-icon>clear</igx-icon>
-        </igx-suffix>
+            <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown()" (click)="clearInput()" tabindex="0">
+                <igx-icon>clear</igx-icon>
+            </igx-suffix>
     </igx-input-group>
 </ng-template>
 
