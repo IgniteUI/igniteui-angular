@@ -117,13 +117,11 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     }));
 
-    afterAll(async(() => {
+    afterAll(() => {
         UIInteractions.clearOverlay();
-        TestBed.resetTestingModule();
-    }));
+    });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite();
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -745,7 +743,6 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite();
 
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
