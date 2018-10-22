@@ -683,6 +683,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (!this.isKeySupportedInCell(key)) {
+            return;
+        }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
 
@@ -819,6 +822,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
+    }
+    private isKeySupportedInCell(key) {
+        return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
+
     }
 
 }
