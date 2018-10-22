@@ -231,7 +231,11 @@ gulp.task('typedoc:clean-translations', () => {
         del.sync(`${TYPEDOC.OUTPUT_PATH}/${TYPEDOC.REPO.TRANSLATIONS_REPO_NAME}`)
 });
 
-gulp.task('typedoc:copy-translations', ['typedoc:clean-translations'], 
+gulp.task('typedoc:create-output-path', () => {
+    !fs.existsSync(TYPEDOC.OUTPUT_PATH) && fs.mkdirSync(TYPEDOC.OUTPUT_PATH);
+});
+
+gulp.task('typedoc:copy-translations', ['typedoc:clean-translations', 'typedoc:create-output-path'], 
     shell.task(`git -C ${TYPEDOC.OUTPUT_PATH} clone ${TYPEDOC.REPO.TRANSLATIONS_REPO_LINK}`)
 );
 
