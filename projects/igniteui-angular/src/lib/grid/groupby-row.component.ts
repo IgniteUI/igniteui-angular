@@ -11,7 +11,6 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './api.service';
-import { isNavigationKey } from '../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -178,12 +177,12 @@ export class IgxGridGroupByRowComponent {
         if (!this.isKeySupportedInGroupRow(key)) {
             return;
         }
-        if ((key === 'arrowleft' || key === 'right')) {
+        if ((key === 'arrowleft' ||  key === 'left')) {
             if (this.expanded) {
                 this.grid.toggleGroup(this.groupRow);
             }
             return;
-        } else if ((key === 'arrowright' || key === 'left')) {
+        } else if ((key === 'arrowright' || key === 'right')) {
             if (!this.expanded) {
                 this.grid.toggleGroup(this.groupRow);
             }
