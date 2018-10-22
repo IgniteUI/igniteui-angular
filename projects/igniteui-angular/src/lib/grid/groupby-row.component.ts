@@ -201,7 +201,7 @@ export class IgxGridGroupByRowComponent {
                 this.grid.navigation.navigateUp(this.nativeElement, this.index,
                     this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
             } else {
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0, true);
+                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
             }
         }
     }
