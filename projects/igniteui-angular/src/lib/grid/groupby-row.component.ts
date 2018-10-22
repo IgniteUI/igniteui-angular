@@ -11,6 +11,7 @@ import {
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxGridAPIService } from './api.service';
+import { isNavigationKey } from '../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -174,11 +175,13 @@ export class IgxGridGroupByRowComponent {
         event.stopPropagation();
         const shift = event.shiftKey;
         const key = event.key.toLowerCase();
-        if (key === 'arrowleft' && this.expanded) {
-            this.grid.toggleGroup(this.groupRow);
+        if (!this.isKeySupportedInGroupRow(key)) {
             return;
         }
-        if (key === 'arrowright' && !this.expanded) {
+        if ((key === 'arrowleft' || key === 'right') && this.expanded) {
+            this.grid.toggleGroup(this.groupRow);
+            return;
+        } else if ((key === 'arrowright' || key === 'left') && !this.expanded) {
             this.grid.toggleGroup(this.groupRow);
             return;
         }
@@ -190,11 +193,13 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
         this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        if (key === 'arrowdown') {
+        if (key === 'arrowdown' || key === 'down') {
             this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+            return;
         }
-        if (key === 'arrowup') {
+        if (key === 'arrowup' || key === 'up') {
             this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+            return;
         }
         if (key === 'tab') {
             if (shift) {
@@ -228,5 +233,9 @@ export class IgxGridGroupByRowComponent {
         if (cell) {
             return cell.columnID;
         }
+    }
+    private isKeySupportedInGroupRow(key) {
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
+        'tab'].indexOf(key) !== -1;
     }
 }
