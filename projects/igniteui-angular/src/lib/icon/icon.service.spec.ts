@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DOCUMENT } from '@angular/common';
@@ -18,6 +18,10 @@ describe('Icon Service', () => {
             providers: [IgxIconService]
         }).compileComponents();
     });
+
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
 
     it('should set the default icon set', () => {
         const iconService = TestBed.get(IgxIconService);

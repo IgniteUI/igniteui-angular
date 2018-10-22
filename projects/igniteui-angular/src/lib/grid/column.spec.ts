@@ -26,6 +26,10 @@ describe('IgxGrid - Column properties', () => {
             .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('should correctly initialize column templates', () => {
         const fix = TestBed.createComponent(TemplatedColumnsComponent);
         fix.detectChanges();

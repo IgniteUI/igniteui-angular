@@ -21,6 +21,10 @@ describe('IgxSlider', () => {
         }).compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     describe('Base tests', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;

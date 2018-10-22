@@ -21,12 +21,16 @@ describe('IgxGrid - CRUD operations', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;
         data = fix.componentInstance.data;
-    });
+    }));
+
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
 
     it('should support adding rows through the grid API', () => {
         expect(grid.data.length).toEqual(data.length);

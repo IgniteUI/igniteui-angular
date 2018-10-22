@@ -51,6 +51,10 @@ describe('IgxGrid Component Tests', () => {
             }).compileComponents();
         }));
 
+        afterEach(async(() => {
+            TestBed.resetTestingModule();
+        }));
+
         it('should initialize a grid with columns from markup', () => {
             const fix = TestBed.createComponent(IgxGridMarkupDeclarationComponent);
             fix.detectChanges();
@@ -309,6 +313,10 @@ describe('IgxGrid Component Tests', () => {
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
             }).compileComponents();
+        }));
+
+        afterEach(async(() => {
+            TestBed.resetTestingModule();
         }));
 
         it('should init columns with width >= 136px when 5 rows and 5 columns are rendered', () => {
@@ -754,6 +762,10 @@ describe('IgxGrid Component Tests', () => {
             }).compileComponents();
         }));
 
+        afterEach(async(() => {
+            TestBed.resetTestingModule();
+        }));
+
         it('should allow pageup/pagedown navigation when the grid is focused', (done) => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
@@ -801,6 +813,10 @@ describe('IgxGrid Component Tests', () => {
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
             }).compileComponents();
+        }));
+
+        afterEach(async(() => {
+            TestBed.resetTestingModule();
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
@@ -878,7 +894,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    xdescribe('IgxGrid - Row Editing', () => {
+    describe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -892,6 +908,10 @@ describe('IgxGrid Component Tests', () => {
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
             }).compileComponents();
+        }));
+
+        afterEach(async(() => {
+            TestBed.resetTestingModule();
         }));
 
         describe('Row Editing - General tests', () => {

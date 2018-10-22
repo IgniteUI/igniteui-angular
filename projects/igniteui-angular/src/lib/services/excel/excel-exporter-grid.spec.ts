@@ -28,7 +28,7 @@ describe('Excel Exporter', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions('GridExcelExport');
@@ -39,12 +39,13 @@ describe('Excel Exporter', () => {
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    });
+    }));
 
-    afterEach(() => {
+    afterEach(async(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
-    });
+        TestBed.resetTestingModule();
+    }));
 
     it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;

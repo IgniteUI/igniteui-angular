@@ -43,6 +43,10 @@ describe('Column Hiding UI', () => {
             .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     beforeAll(() => {
         UIInteractions.clearOverlay();
     });

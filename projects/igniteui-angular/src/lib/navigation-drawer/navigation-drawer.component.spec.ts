@@ -38,6 +38,7 @@ describe('Navigation Drawer', () => {
 
         afterEach(() => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
+            TestBed.resetTestingModule();
         });
 
         it('should initialize without DI service', async(() => {

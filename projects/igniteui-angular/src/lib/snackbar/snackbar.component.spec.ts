@@ -17,13 +17,17 @@ describe('IgxSnackbar', () => {
         }).compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     let fixture, domSnackbar, snackbar;
-    beforeEach(() => {
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
         domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
-    });
+    }));
 
     it('should properly initialize properties', () => {
         expect(snackbar.id).toContain('igx-snackbar-');

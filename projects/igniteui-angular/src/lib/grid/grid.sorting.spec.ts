@@ -28,11 +28,15 @@ describe('IgxGrid - Grid Sorting', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
-    });
+    }));
+
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
 
     it('Should sort grid ascending by column name', () => {
         const currentColumn = 'Name';

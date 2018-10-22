@@ -58,6 +58,10 @@ describe('IgxGrid - Row Selection', () => {
         ];
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('Should be able to select row through primaryKey and index', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();

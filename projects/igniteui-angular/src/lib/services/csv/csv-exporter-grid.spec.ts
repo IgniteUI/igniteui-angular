@@ -31,19 +31,20 @@ describe('CSV Grid Exporter', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxCsvExporterService();
         actualData = new FileContentData();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    });
+    }));
 
-    afterEach(() => {
+    afterEach(async(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
-    });
+        TestBed.resetTestingModule();
+    }));
 
     it('should export grid as displayed.', () => {
         const currentGrid: IgxGridComponent = null;

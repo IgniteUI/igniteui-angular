@@ -23,6 +23,10 @@ describe('IgxNavbar', () => {
         domNavbar = fixture.debugElement.query(By.css('igx-navbar')).nativeElement;
     });
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('should properly initialize properties', () => {
         expect(component.navbar.id).toContain('igx-navbar-');
         expect(domNavbar.id).toContain('igx-navbar-');

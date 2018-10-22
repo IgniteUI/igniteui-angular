@@ -13,6 +13,10 @@ describe('IgxTabs', () => {
             .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('should initialize igx-tabs, igx-tabs-group and igx-tab-item', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTestComponent);
         const tabs = fixture.componentInstance.tabs;

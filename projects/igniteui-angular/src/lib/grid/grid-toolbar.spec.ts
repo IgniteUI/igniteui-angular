@@ -38,6 +38,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
     afterEach(() => {
         UIInteractions.clearOverlay();
+        TestBed.resetTestingModule();
     });
 
     it('testing toolbar visibility', () => {

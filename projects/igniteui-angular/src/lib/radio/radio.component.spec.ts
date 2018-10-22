@@ -28,6 +28,10 @@ describe('IgxRadio', () => {
             .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
         const testInstance = fixture.componentInstance;

@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent, IgxColumnPinningModule } from './column-pinning.component';
@@ -20,7 +20,7 @@ describe('Column Pinning UI', () => {
     const verifyCheckbox = HelperUtils.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
@@ -34,7 +34,11 @@ describe('Column Pinning UI', () => {
             ]
         })
         .compileComponents();
-    });
+    }));
+
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
 
     describe('', () => {
         beforeEach(() => {

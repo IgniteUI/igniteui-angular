@@ -36,6 +36,10 @@ describe('IgxGrid - Deferred Column Resizing', () => {
             .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('should define grid with resizable columns.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();

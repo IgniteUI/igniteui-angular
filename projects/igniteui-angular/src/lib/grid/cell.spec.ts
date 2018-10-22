@@ -81,6 +81,10 @@ describe('IgxGrid - Cell component', () => {
         }).compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('@Input properties and getters', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();

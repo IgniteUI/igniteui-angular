@@ -32,6 +32,10 @@ describe('IgxGrid - Column Pinning ', () => {
         }).compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('should correctly initialize when there are initially pinned columns.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();

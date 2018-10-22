@@ -26,6 +26,10 @@ describe('IgCircularBar', () => {
         .compileComponents();
     }));
 
+    afterEach(async(() => {
+        TestBed.resetTestingModule();
+    }));
+
     it('Initialize circularProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
 
