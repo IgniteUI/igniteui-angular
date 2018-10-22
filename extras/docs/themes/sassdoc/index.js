@@ -23,6 +23,22 @@ const extras = require('sassdoc-extras');
 const lunr = require('lunr');
 const fs = require('fs');
 const convert = require('./localization');
+const render = require('./localization/render');
+
+themeleon.use({
+
+/**
+ * Log current source directory, destination directory, and context
+ * variables.
+ */
+    convert: (context) => {
+        convert(context._data);
+    },
+
+    render: (context) => {
+        render(context._data);
+    }
+});
 
 // const {convert} = require('./localization/index');
 /**
@@ -36,6 +52,7 @@ const convert = require('./localization');
  * The theme function describes the steps to render the theme.
  */
 const theme = themeleon(__dirname, function (t) {
+    return t.convert(t.ctx); 
   /**
    * Copy the assets folder from the theme's directory in the
    * destination directory.
@@ -94,6 +111,7 @@ const theme = themeleon(__dirname, function (t) {
    * as `index.html` in the destination directory.
    */
   t.handlebars('views/index.hbs', 'index.html', options);
+  t.render(t.ctx);
 });
 
 /**
@@ -203,8 +221,11 @@ module.exports = function (dest, ctx) {
   // Avoid key collision with Handlebars default `data`.
   // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
   ctx._data = ctx.data;
-  convert(ctx._data);
+//   convert(ctx._data);
   delete ctx.data;
+//   return new Promise();
+//   return new themeleon("", ctx).apply({}, arguments);
+//   return theme.apply({}, arguments);
 
   /**
    * Now we have prepared the data, we can proxy to the Themeleon

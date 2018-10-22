@@ -42,13 +42,21 @@ function buildJson(data) {
     let json = {};
     let fileName = '';
     data.forEach(e => {
-        if (!json[e.file.name]) {
-            fs.writeFileSync(`${fullPath}/${e.group[0]}/${fileName}.json`, JSON.stringify(json, null, 4));
-            json = {};
-            json[e.file.name] = {};
-            fileName = e.file.name;
+        if (!json[e.context.name]) {
+            // if (!fs.existsSync(`${fullPath}/${e.group[0]}/${e.context.type}`)) {
+            //     fs.mkdirSync(`${fullPath}/${e.group[0]}/${e.context.type}`);
+            // }
+            
+            const data = getData(e);
+            if (data) {
+                json[e.context.name] = data;
+                fs.writeFileSync(`${fullPath}/${e.group[0]}/${e.context.type}.json`, JSON.stringify(json, null, 4));
+            }
+            // json = {};
+            // json[e.context.name] = {};
+            // fileName = e.context.name;
         } else {
-            json[e.file.name][e.context.name] = getData(e);
+            // json[e.context.name] = getData(e);
         }
     });
 }
@@ -76,11 +84,12 @@ function getData(fileData) {
         }
     }
 
-    if (fileData.context) {
-        res[constants.CONTEXT] = { 'code': JSON.stringify(splitString(fileData.context.code), null, 4)};
-    }
+    // if (fileData.context && fileData.context.code) {
+    //     res[constants.CONTEXT] = { 'code': JSON.stringify(splitString(fileData.context.code), null, 4)};
+    // }
 
-    return res;
+    return Object.keys(res).length ? res : null
+    // return res;
 }
 
 function splitString(val) {
