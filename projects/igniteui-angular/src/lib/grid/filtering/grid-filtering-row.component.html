@@ -10,17 +10,22 @@
 
 <ng-template #defaultFilterUI>
     <igx-input-group type="box">
-        <igx-prefix #inputGroupPrefix tabindex="1" (click)="toggleConditionsDropDown()" (keydown)="onPrefixKeyDown($event)"
-            [igxDropDownItemNavigation]="operands">
+        <igx-prefix #inputGroupPrefix
+                    tabindex="1"
+                    (click)="toggleConditionsDropDown()"
+                    (keydown)="onPrefixKeyDown($event)"
+                    [igxDropDownItemNavigation]="operands">
             <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
-        <input #input igxInput tabindex="1"
-            [placeholder]="placeholder"
-            autocomplete="off"
-            [(ngModel)]="value"
-            [type]="type"
-            [readonly]="isUnaryCondition"
-            (keydown)="onInputKeyDown($event)"/>
+        <input #input
+               igxInput
+               tabindex="1"
+               [placeholder]="placeholder"
+               autocomplete="off"
+               [(ngModel)]="value"
+               [type]="type"
+               [readonly]="isUnaryCondition"
+               (keydown)="onInputKeyDown($event)"/>
         <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
@@ -28,20 +33,25 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker
-        [(ngModel)]="value">
+    <igx-datePicker tabindex="1" [(ngModel)]="value" [locale]="locale">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
-                <igx-prefix #inputGroupPrefix (click)="toggleConditionsDropDown()" [igxDropDownItemNavigation]="operands">
+                <igx-prefix #inputGroupPrefix
+                            tabindex="1"
+                            (click)="toggleConditionsDropDown()"
+                            [igxDropDownItemNavigation]="operands"
+                            (keydown)="onPrefixKeyDown($event)">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
-                <input #input igxInput
-                (click)="openDialog()"
-                [placeholder]="placeholder"
-                autocomplete="off"
-                [value]="displayData"
-                [readonly]="true"/>
-                <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()">
+                <input #input
+                       igxInput
+                       tabindex="1"
+                       (click)="openDialog()"
+                       [placeholder]="placeholder"
+                       autocomplete="off"
+                       [value]="displayData | date"
+                       [readonly]="true"/>
+                <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>

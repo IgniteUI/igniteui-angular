@@ -24,8 +24,7 @@ import { IChipsAreaSelectEventArgs, IChipSelectEventArgs, IBaseChipEventArgs, Ig
 import { ExpressionUI } from './grid-filtering-cell.component';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
-import { TitleCasePipe } from '@angular/common';
-import { IgxIconComponent } from '../../icon';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYCODES } from '../../core/utils';
 
@@ -87,6 +86,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filter();
     }
 
+    get locale() {
+        return window.navigator.language;
+    }
+
     @ViewChild('defaultFilterUI', { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -123,6 +126,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private rootExpressionsTree: FilteringExpressionsTree;
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
+    private datePipe = new DatePipe(this.locale);
 
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
@@ -384,6 +388,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
             return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+        } else if (expression.searchVal instanceof Date) {
+            return this.datePipe.transform(expression.searchVal);
         } else {
             return expression.searchVal;
         }

@@ -12,7 +12,7 @@ import { FilteringLogic, IFilteringExpression } from '../../data-operations/filt
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IBaseChipEventArgs } from '../../chips';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 
@@ -49,6 +49,7 @@ export class IgxGridFilteringCellComponent implements OnInit {
     private rootExpressionsTree: FilteringExpressionsTree;
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
+    private datePipe = new DatePipe(window.navigator.language);
 
     public expressionsList: Array<ExpressionUI>;
 
@@ -161,6 +162,8 @@ export class IgxGridFilteringCellComponent implements OnInit {
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
             return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+        } else if (expression.searchVal instanceof Date) {
+            return this.datePipe.transform(expression.searchVal);
         } else {
             return expression.searchVal;
         }
