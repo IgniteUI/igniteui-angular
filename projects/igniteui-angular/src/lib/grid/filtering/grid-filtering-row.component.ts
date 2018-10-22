@@ -237,6 +237,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    public datePickerClose() {
+        this.input.nativeElement.focus();
+    }
+
     private generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth: number): void {
         if (expressionsTree.filteringOperands) {
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {

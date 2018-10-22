@@ -33,7 +33,7 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker tabindex="1" [(ngModel)]="value" [locale]="locale">
+    <igx-datePicker tabindex="1" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
                 <igx-prefix #inputGroupPrefix
@@ -50,7 +50,8 @@
                        [placeholder]="placeholder"
                        autocomplete="off"
                        [value]="displayData | date"
-                       [readonly]="true"/>
+                       [readonly]="true"
+                       (keydown)="onInputKeyDown($event)"/>
                 <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
