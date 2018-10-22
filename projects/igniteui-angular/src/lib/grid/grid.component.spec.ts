@@ -1918,8 +1918,8 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        describe('Row Editing - Sorting', () => {
-            xit(`Should exit edit mode when Sorting`, () => {
+        fdescribe('Row Editing - Sorting', () => {
+            fit(`Should exit edit mode when Sorting`, () => {
                 // TO DO: FIX
                 const fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fix.detectChanges();
@@ -1934,27 +1934,23 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 fix.detectChanges();
-                fix.componentInstance.cellInEditMode.value = 1231;
-                // cell.update('Don Juan De Marco');
+                cell.update(111);
                 // Do not exit edit mode
-
                 grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true });
                 fix.detectChanges();
 
                 cell = grid.getCellByColumn(0, 'Downloads');
-
                 expect(cell.inEditMode).toBe(false);
-                expect(cell.value).toBe(1231);
+                expect(cell.value).toBe(111);
 
                 // Verify the data source is updated
-                // Failing as cell.update currently does not call submit_value())
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
-                const newDataCellValue = fix.componentInstance.data[0].ProductName;
-                expect(newDataCellValue).toBe('Don Juan De Marco');
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                const newDataCellValue = fix.componentInstance.data[0].Downloads;
+                expect(newDataCellValue).toBe(111);
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 0, columnID: 0, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
