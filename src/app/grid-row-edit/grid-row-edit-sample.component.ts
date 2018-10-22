@@ -51,27 +51,7 @@ export class GridRowEditSampleComponent {
 
     public addRow(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
-        currentGrid.addRow({
-            ProductID: this.addProductId++,
-            ProductName: 'Product with index ' + this.getRandomInt(0, 20),
-            SupplierID: this.getRandomInt(1, 20),
-            CategoryID: this.getRandomInt(1, 10),
-            QuantityPerUnit: (this.getRandomInt(1, 10) * 10).toString() + ' pcs.',
-            UnitPrice: this.getRandomInt(10, 1000),
-            UnitsInStock: this.getRandomInt(1, 100),
-            UnitsOnOrder: this.getRandomInt(1, 20),
-            ReorderLevel: this.getRandomInt(10, 20),
-            Discontinued: this.getRandomInt(1, 10) % 2 === 0,
-            OrderDate: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
-                .toISOString().slice(0, 10),
-            UnitPrice2: this.getRandomInt(10, 1000),
-            UnitsInStock2: this.getRandomInt(1, 100),
-            UnitsOnOrder2: this.getRandomInt(1, 20),
-            ReorderLevel2: this.getRandomInt(10, 20),
-            Discontinued2: this.getRandomInt(1, 10) % 2 === 0,
-            OrderDate2: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
-                .toISOString().slice(0, 10)
-        });
+        currentGrid.addRow(this.generateRow());
     }
 
     public deleteRow(event, gridID, rowID) {
@@ -110,6 +90,7 @@ export class GridRowEditSampleComponent {
         };
         this.toggle.open();
     }
+
     public commit(gridID) {
         const currentGrid: IgxGridComponent = this.getGridById(gridID);
         currentGrid.transactions.commit(this.data);
@@ -182,8 +163,38 @@ export class GridRowEditSampleComponent {
         this.gridRowEditTransaction.updateCell(value, row, column);
     }
 
+    update(grid: IgxGridComponent) {
+        const editRowValue = this.generateRow();
+        editRowValue.ProductID = 3;
+        this.getGridById(grid).updateRow(editRowValue, 3);
+    }
+
     refreshAll() {
         this.gridRowEditTransaction.markForCheck();
+    }
+
+    private generateRow() {
+        return {
+            ProductID: this.addProductId++,
+            ProductName: 'Product with index ' + this.getRandomInt(0, 20),
+            SupplierID: this.getRandomInt(1, 20),
+            CategoryID: this.getRandomInt(1, 10),
+            QuantityPerUnit: (this.getRandomInt(1, 10) * 10).toString() + ' pcs.',
+            UnitPrice: this.getRandomInt(10, 1000),
+            UnitsInStock: this.getRandomInt(1, 100),
+            UnitsOnOrder: this.getRandomInt(1, 20),
+            ReorderLevel: this.getRandomInt(10, 20),
+            Discontinued: this.getRandomInt(1, 10) % 2 === 0,
+            OrderDate: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
+                .toISOString().slice(0, 10),
+            UnitPrice2: this.getRandomInt(10, 1000),
+            UnitsInStock2: this.getRandomInt(1, 100),
+            UnitsOnOrder2: this.getRandomInt(1, 20),
+            ReorderLevel2: this.getRandomInt(10, 20),
+            Discontinued2: this.getRandomInt(1, 10) % 2 === 0,
+            OrderDate2: new Date(this.getRandomInt(2000, 2050), this.getRandomInt(0, 11), this.getRandomInt(1, 25))
+                .toISOString().slice(0, 10)
+        };
     }
 }
 
