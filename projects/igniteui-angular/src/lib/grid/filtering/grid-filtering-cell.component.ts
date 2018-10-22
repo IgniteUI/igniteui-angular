@@ -15,6 +15,7 @@ import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
+import { IgxGridAPIService } from '../api.service';
 
 export class ExpressionUI {
     public expression: IFilteringExpression;
@@ -34,6 +35,9 @@ export class IgxGridFilteringCellComponent implements OnInit {
 
     @Input()
     public column: IgxColumnComponent;
+
+    @Input()
+    public gridID: string;
 
     @ViewChild('emptyFilter', { read: TemplateRef })
     protected emptyFilter: TemplateRef<any>;
@@ -56,7 +60,21 @@ export class IgxGridFilteringCellComponent implements OnInit {
     @HostBinding('class.igx-grid__filtering-cell')
     public cssClass = 'igx-grid__filtering-cell';
 
-    constructor(private filteringService: IgxFilteringService, public cdr: ChangeDetectorRef) {
+    @HostBinding('class.igx-grid__th--pinned-last')
+    get isLastPinned() {
+        const pinnedCols = this.grid.pinnedColumns;
+        if (pinnedCols.length === 0) {
+            return false;
+        } else {
+            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+        }
+    }
+
+    get grid(): any {
+        return this.gridAPI.get(this.gridID);
+    }
+
+    constructor(private filteringService: IgxFilteringService, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this.expressionsMap = new Map<number, ExpressionUI[]>();
         this.expressionsList = new Array<ExpressionUI>();
     }

@@ -55,7 +55,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sorted': this.sorted,
             'igx-grid__drag-col-header': this.dragged,
-            'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
         };
 

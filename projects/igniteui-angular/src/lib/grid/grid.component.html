@@ -56,10 +56,10 @@
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
-                <div class="igx-grid__thead-item">
+                <div class="igx-grid__thead-item igx-grid__th--pinned">
                     <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
-                    <igx-grid-filtering-cell *ngIf="allowFiltering && !filteringService.isFilterRowVisible"
+                    <igx-grid-filtering-cell *ngIf="allowFiltering && !filteringService.isFilterRowVisible" [gridID]="id"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
                 </div>
             </ng-template>
@@ -69,7 +69,7 @@
             <div class="igx-grid__thead-item">
                 <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
                     [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
-                <igx-grid-filtering-cell *ngIf="allowFiltering && !filteringService.isFilterRowVisible" [column]="col"
+                <igx-grid-filtering-cell *ngIf="allowFiltering && !filteringService.isFilterRowVisible" [column]="col" [gridID]="id"
                     [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
             </div>
         </ng-template>
