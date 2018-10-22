@@ -178,11 +178,15 @@ export class IgxGridGroupByRowComponent {
         if (!this.isKeySupportedInGroupRow(key)) {
             return;
         }
-        if ((key === 'arrowleft' || key === 'right') && this.expanded) {
-            this.grid.toggleGroup(this.groupRow);
+        if ((key === 'arrowleft' || key === 'right')) {
+            if (this.expanded) {
+                this.grid.toggleGroup(this.groupRow);
+            }
             return;
-        } else if ((key === 'arrowright' || key === 'left') && !this.expanded) {
-            this.grid.toggleGroup(this.groupRow);
+        } else if ((key === 'arrowright' || key === 'left')) {
+            if (!this.expanded) {
+                this.grid.toggleGroup(this.groupRow);
+            }
             return;
         }
         const args = {cell: null, groupRow: this, event: event, cancel: false };
