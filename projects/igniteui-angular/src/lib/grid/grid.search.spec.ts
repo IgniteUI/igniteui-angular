@@ -656,12 +656,6 @@ describe('IgxGrid - search API', () => {
             await wait(30);
             fix.detectChanges();
         });
-
-        afterAll(() => {
-            if (grid && grid.getCellByColumn(4, 'JobTitle')) {
-                grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
-            }
-        });
     });
 
     /* ScrollableGrid */
