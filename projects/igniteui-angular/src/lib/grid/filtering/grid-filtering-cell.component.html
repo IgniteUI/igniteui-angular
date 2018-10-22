@@ -1,8 +1,10 @@
 <ng-template #emptyFilter>
-        <igx-chip (click)="onChipClicked()" (keydown)="onKeyDown($event)">
-            <igx-icon igxPrefix>add</igx-icon>
-            <span>Filter</span>
-        </igx-chip>
+        <igx-chips-area class="igx-filtering-chips">
+            <igx-chip (click)="onChipClicked()">
+                <igx-icon igxPrefix>add</igx-icon>
+                <span>Filter</span>
+            </igx-chip>
+        </igx-chips-area>
 </ng-template>
 
 <ng-template #defaultFilter>

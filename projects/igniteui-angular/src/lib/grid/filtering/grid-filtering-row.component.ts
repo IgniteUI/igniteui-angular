@@ -27,6 +27,7 @@ import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYCODES } from '../../core/utils';
+import { IgxInputGroupComponent } from '../../input-group';
 
 /**
  * @hidden
@@ -66,6 +67,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 this.resetExpression();
             }
         }
+
+        setTimeout(()=> {
+            this.showHideArrowButtons();
+            this.cdr.detectChanges();
+        });
+
+        this.transform(0);
     }
 
     @Input()
@@ -111,6 +119,18 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
 
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent })
+    protected inputGroup: IgxInputGroupComponent;
+
+    @ViewChild('buttonsContainer')
+    protected buttonsContainer: ElementRef;
+
+    @ViewChild('container')
+    protected container: ElementRef;
+
+    @ViewChild('operand')
+    protected operand: ElementRef;
+
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
         verticalStartPoint: VerticalAlignment.Bottom
@@ -128,17 +148,24 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(this.locale);
 
+    private filterRowWidth: number;
+    private inputGroupWidth: number;
+    private buttonsContainerWidth: number;
+    private chipsAreaWidth: number;
+    private offset:number = 0;
+
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
     protected _column = null;
 
+    public showArrows: boolean;
     public expression: IFilteringExpression;
     public expressionsList: Array<ExpressionUI>;
 
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(private filteringService: IgxFilteringService, public cdr: ChangeDetectorRef) {
+    constructor(private filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
@@ -147,6 +174,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.column.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
+
+        this.filterRowWidth = parseInt(this.element.nativeElement.offsetWidth, 10);
+        this.inputGroupWidth = parseInt(this.inputGroup.element.nativeElement.offsetWidth, 10);
+        this.buttonsContainerWidth = parseInt(this.buttonsContainer.nativeElement.offsetWidth, 10);
 
         if (this.inputGroupPrefix) {
             requestAnimationFrame(() => {
@@ -241,6 +272,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.input.nativeElement.focus();
     }
 
+    private showHideArrowButtons() {
+        this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
+        this.showArrows = this.chipsAreaWidth >= this.filterRowWidth - (this.inputGroupWidth + this.buttonsContainerWidth) ? true : false;
+    }
+
     private generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth: number): void {
         if (expressionsTree.filteringOperands) {
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
@@ -300,6 +336,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.expressionsList[length - 2].afterOperator = this.expressionsList[length - 1].beforeOperator;
         }
 
+        setTimeout(() => {
+            this.showHideArrowButtons();
+            this.cdr.detectChanges();
+        });
     }
 
     private createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI): void {
@@ -335,7 +375,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.resetExpression();
         }
 
-        this.cdr.detectChanges();
+        setTimeout(() => {
+            this.showHideArrowButtons();
+            this.cdr.detectChanges();
+        });
     }
 
     private resetExpression(): void {
@@ -353,6 +396,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.column.dataType === DataType.Date && this.input) {
             this.input.nativeElement.value = null;
         }
+
+        setTimeout(() => {
+            this.showHideArrowButtons();
+            this.cdr.detectChanges();
+        });
     }
 
     public conditionChangedCallback(): void {
@@ -404,6 +452,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.expressionsList = [];
         this.resetExpression();
         this.cdr.detectChanges();
+
+        this.transform(0);
     }
 
     public clearInput(): void {
@@ -422,6 +472,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
+
+        this.transform(0);
     }
 
     public toggleConditionsDropDown(): void {
@@ -439,7 +491,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
         this._overlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
         this.dropDownOperands.toggle(this._overlaySettings);
-        
+
         // if (openAnimation) {
         //     this._overlaySettings.positionStrategy.settings.openAnimation = openAnimation;
         // }
@@ -509,6 +561,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
+        this.scrollChipsOnRemove();
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove, item.expression);
     }
@@ -526,6 +579,88 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filter();
         if (eventArgs.oldSelection) {
             operatorsButton.focus();
+        }
+    }
+
+    public scrollChips(event) {
+        let lastVisibleElement, lastVisibleElementRect, elementsFromPoint;
+
+        const containerRect = this.container.nativeElement.getBoundingClientRect();
+        const chipsAreaRect = this.chipsArea.element.nativeElement.getBoundingClientRect();
+
+        if (event === 'right') {
+            elementsFromPoint = document.elementsFromPoint(containerRect.right - 1, containerRect.top + containerRect.height / 2);
+            for (let i = 0; i < elementsFromPoint.length; i++) {
+                if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
+                    lastVisibleElement = elementsFromPoint[i];
+                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                    break;
+                }
+            }
+
+            if (lastVisibleElement && chipsAreaRect.right > containerRect.right) {
+                this.offset += -(lastVisibleElementRect.width - (containerRect.right - lastVisibleElementRect.left) + 5);
+            }
+        }
+
+        if (event === 'left') {
+            elementsFromPoint = document.elementsFromPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
+            for (let i = 0; i < elementsFromPoint.length; i++) {
+                if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
+                    lastVisibleElement = elementsFromPoint[i];
+                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                    break;
+                }
+            }
+
+            if (lastVisibleElement && chipsAreaRect.left < containerRect.left) {
+                this.offset += containerRect.left - lastVisibleElementRect.left + 5;
+            } else {
+                this.offset = event === 'left' ? 5 : -5;
+            }
+        }
+
+        this.transform(this.offset);
+    }
+
+    private transform(offset: number) {
+        requestAnimationFrame(() => {
+            this.chipsArea.element.nativeElement.style.transform = `translate(${offset}px)`;
+        });
+    }
+
+    private scrollChipsOnRemove() {
+        const containerRect = this.container.nativeElement.getBoundingClientRect();
+        const chipsAreaRect = this.chipsArea.element.nativeElement.getBoundingClientRect();
+
+        let lastVisibleElement, lastVisibleElementRect, elementsFromPoint;
+        if (chipsAreaRect.left < containerRect.left) {
+            elementsFromPoint = document.elementsFromPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
+            for (let i = 0; i < elementsFromPoint.length; i++) {
+                if (elementsFromPoint[i].id === 'chip') {
+                    lastVisibleElement = elementsFromPoint[i];
+                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                    break;
+                }
+
+                if (elementsFromPoint[i].id === 'operand') {
+                    lastVisibleElement = this.chipsArea.chipsList.toArray().filter((chip) =>
+                        elementsFromPoint[i].getBoundingClientRect().left - chip.elementRef.nativeElement.getBoundingClientRect().right < 5 &&
+                        elementsFromPoint[i].getBoundingClientRect().left - chip.elementRef.nativeElement.getBoundingClientRect().right > 0 )[0];
+
+                    lastVisibleElementRect = lastVisibleElement.elementRef.nativeElement.getBoundingClientRect();
+                    break;
+                }
+            }
+
+            if (lastVisibleElement) {
+                this.offset += containerRect.left - lastVisibleElementRect.left + 5;
+                this.transform(this.offset);
+            }
+
+            if (chipsAreaRect.width <= containerRect.width) {
+                this.transform(0);
+            }
         }
     }
 }

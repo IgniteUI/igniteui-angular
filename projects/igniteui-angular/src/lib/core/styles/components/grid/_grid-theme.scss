@@ -1385,11 +1385,12 @@
     %igx-grid__filtering-row-main {
         display: flex;
         flex: 1;
+        overflow: hidden;
         max-width: calc(100% - 176px);
 
         igx-chips-area {
             flex-wrap: nowrap;
-            overflow-x: auto;
+            // overflow-x: auto;
         }
 
         igx-input-group {

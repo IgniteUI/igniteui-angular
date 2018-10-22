@@ -9,14 +9,14 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group type="box">
+    <igx-input-group #inputGroup type="box">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown()"
                     (keydown)="onPrefixKeyDown($event)"
                     [igxDropDownItemNavigation]="operands">
             <igx-icon tabindex="0" fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
-        <input 
+        <input
             #input
             igxInput
             tabindex="0"
@@ -60,42 +60,48 @@
     </igx-datePicker>
 </ng-template>
 
-<div class="igx-grid__filtering-row-main">
-    <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-    <igx-chips-area #chipsArea (onSelection)="onChipsSelectionChanged($event)">
-        <ng-container *ngFor="let item of expressionsList; index as i; let last = last;">
+<ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+<button *ngIf="showArrows" style="min-width: 20px; max-width: 20px" (click)="scrollChips('left')" igxButton>
+    <igx-icon fontSet="material">navigate_before</igx-icon>
+</button>
+<div #container class="igx-grid__filtering-row-main">
+    <div style="display:flex;">
+        <igx-chips-area #chipsArea style="display:flex; transition: transform .2s cubic-bezier(.35, 0, .25, 1)" (onSelection)="onChipsSelectionChanged($event)">
+            <ng-container *ngFor="let item of expressionsList; index as i; let last = last;">
 
-            <igx-chip #chip
-                (onSelection)="onChipSelected($event, item)"
-                (keydown)="onChipKeyDown($event, chip)"
-                (onRemove)="onChipRemoved($event, item)"
-                [selectable]="true"
-                [selected]="item.isSelected"
-                [removable]="true">
-                <igx-icon
-                    igxPrefix
-                    fontSet="filtering-icons"
-                    [name]="item.expression.condition.iconName">
-                </igx-icon>
-                <span>{{getChipLabel(item.expression)}}</span>
-            </igx-chip>
+                <igx-chip id='chip'
+                    (onSelection)="onChipSelected($event, item.expression)"
+                    (onRemove)="onChipRemoved($event, item)"
+                    [selectable]="true"
+                    [selected]="item.isSelected"
+                    [removable]="true">
+                    <igx-icon
+                        igxPrefix
+                        fontSet="filtering-icons"
+                        [name]="item.expression.condition.iconName">
+                    </igx-icon>
+                    <span>{{getChipLabel(item.expression)}}</span>
+                </igx-chip>
 
-            <span *ngIf="!last">
-                <button #operatorsButton igxButton (click)="toggleOperatorsDropDown($event, i)">
-                    <igx-icon>expand_more</igx-icon>
-                    <span>{{getOperator(item.afterOperator)}}</span>
-                </button>
-                <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item, operatorsButton)" [allowItemsFocus]="true">
-                        <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
-                        <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
-                </igx-drop-down>
-            </span>
+                <span id='operand' *ngIf="!last">
+                    <button igxButton (click)="toggleOperatorsDropDown($event, i)">
+                        <igx-icon>expand_more</igx-icon>
+                        <span>{{getOperator(item.afterOperator)}}</span>
+                    </button>
+                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)" [allowItemsFocus]="true">
+                            <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
+                            <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
+                    </igx-drop-down>
+                </span>
 
-        </ng-container>
-    </igx-chips-area>
+            </ng-container>
+        </igx-chips-area>
+    </div>
 </div>
-
-<div class="igx-grid__filtering-row-editing-buttons">
+<button *ngIf="showArrows" style="min-width: 20px; max-width: 20px" (click)="scrollChips('right')" igxButton>
+    <igx-icon fontSet="material">navigate_next</igx-icon>
+</button>
+<div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
     <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
     <button igxButton igxRipple (click)="close()">Close</button>
 </div>

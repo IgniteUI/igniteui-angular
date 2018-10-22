@@ -56,6 +56,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             'igx-grid__th--sorted': this.sorted,
             'igx-grid__drag-col-header': this.dragged,
             'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__th--filtering':this.filteringService.filteredColumn === this.column
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -66,12 +67,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         return defaultClasses.join(' ');
     }
 
-    @HostBinding('class.igx-grid__th--filtering')
-    get isFilteringInEditMode() {
-        return this.filteringService.filteredColumn === this.column;
-    }
-
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
         return this.column.width;

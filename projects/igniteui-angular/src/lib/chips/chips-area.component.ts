@@ -10,7 +10,8 @@
     Output,
     QueryList,
     DoCheck,
-    AfterViewInit
+    AfterViewInit,
+    ElementRef
 } from '@angular/core';
 import {
     IgxChipComponent,
@@ -141,7 +142,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
     private selectedChips: IgxChipComponent[] = [];
 
-    constructor(public cdr: ChangeDetectorRef,
+    constructor(public cdr: ChangeDetectorRef, public element: ElementRef,
         private _iterableDiffers: IterableDiffers) {
         this._differ = this._iterableDiffers.find([]).create(null);
     }

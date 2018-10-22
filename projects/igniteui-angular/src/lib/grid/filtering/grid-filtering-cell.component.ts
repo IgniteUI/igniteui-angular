@@ -58,6 +58,13 @@ export class IgxGridFilteringCellComponent implements OnInit {
 
     public expressionsList: Array<ExpressionUI>;
 
+    @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
+    @HostBinding('style.flex-basis')
+    get width() {
+        return this.column.width;
+    }
+
     @HostBinding('class.igx-grid__filtering-cell')
     public cssClass = 'igx-grid__filtering-cell';
 
