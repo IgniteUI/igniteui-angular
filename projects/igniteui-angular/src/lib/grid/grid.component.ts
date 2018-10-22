@@ -2205,6 +2205,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
             this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+            vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         });
         this.destroy$.next(true);
         this.destroy$.complete();
