@@ -12,7 +12,7 @@
     <igx-input-group type="box">
         <igx-prefix #inputGroupPrefix tabindex="1" (click)="toggleConditionsDropDown()" (keydown)="onPrefixKeyDown($event)"
             [igxDropDownItemNavigation]="operands">
-            <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
+            <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <input #input igxInput tabindex="1"
             [placeholder]="placeholder"
@@ -32,7 +32,7 @@
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
                 <igx-prefix #inputGroupPrefix (click)="toggleConditionsDropDown()" [igxDropDownItemNavigation]="operands">
-                    <igx-icon #operandsIcon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
+                    <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input igxInput
                 (click)="openDialog()"

@@ -97,16 +97,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     protected input: ElementRef;
 
     @ViewChild('operands', { read: IgxDropDownComponent })
-    protected igxDropDown: IgxDropDownComponent;
+    protected dropDownOperands: IgxDropDownComponent;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('operators', { read: IgxDropDownComponent })
-    protected dropDownList: QueryList<IgxDropDownComponent>;
-
-    @ViewChild('operandsIcon', { read: IgxIconComponent })
-    protected operandsIcon: IgxIconComponent;
+    protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
@@ -148,8 +145,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
 
         if (this.inputGroupPrefix) {
-            this.inputGroupPrefix.nativeElement.focus();
-            this.toggleConditionsDropDown();
+            requestAnimationFrame(() => {
+                this.inputGroupPrefix.nativeElement.focus();
+                this.toggleConditionsDropDown();
+            });
         }
     }
 
@@ -195,7 +194,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.SPACE) &&
-            this.igxDropDown.collapsed) {
+            this.dropDownOperands.collapsed) {
             this.toggleConditionsDropDown();
             event.stopImmediatePropagation();
         }
@@ -396,13 +395,32 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public toggleConditionsDropDown(): void {
+        //let openAnimation, closeAnimation;
+
+        //if (!this.dropDownOperands.collapsed) {
+            // openAnimation = this._overlaySettings.positionStrategy.settings.openAnimation;
+            // closeAnimation = this._overlaySettings.positionStrategy.settings.closeAnimation;
+
+            // this._overlaySettings.positionStrategy.settings.closeAnimation = null;
+            // this._overlaySettings.positionStrategy.settings.openAnimation = null;
+
+            // this.dropDownOperands.close();
+        //}
+
         this._overlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-        this.igxDropDown.toggle(this._overlaySettings);
+        this.dropDownOperands.toggle(this._overlaySettings);
+        
+        // if (openAnimation) {
+        //     this._overlaySettings.positionStrategy.settings.openAnimation = openAnimation;
+        // }
+        // if (closeAnimation) {
+        //     this._overlaySettings.positionStrategy.settings.closeAnimation = closeAnimation;
+        // }
     }
 
     public toggleOperatorsDropDown(eventArgs, index): void {
         this._overlaySettings.positionStrategy.settings.target = eventArgs.target;
-        this.dropDownList.toArray()[index].toggle(this._overlaySettings);
+        this.dropDownOperators.toArray()[index].toggle(this._overlaySettings);
     }
 
     public filter(): void {
@@ -438,12 +456,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
         if (eventArgs.selected) {
             this.expression = expression;
-            setTimeout(() => {
-                if (eventArgs.originalEvent) {
+            if (eventArgs.originalEvent) {
+                requestAnimationFrame(() => {
                     this.inputGroupPrefix.nativeElement.focus();
                     this.toggleConditionsDropDown();
-                }
-            });
+                });
+            }
         } else if (this.expression === expression) {
             this.resetExpression();
         }
