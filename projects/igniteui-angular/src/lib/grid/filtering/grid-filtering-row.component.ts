@@ -14,13 +14,13 @@ import {
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
-import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/drop-down.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IChipsAreaSelectEventArgs, IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent } from '../../chips';
+import { IChipsAreaSelectEventArgs, IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { ExpressionUI } from './grid-filtering-cell.component';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
@@ -410,6 +410,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.value = null;
     }
 
+    public onClearKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === 'Enter') {
+            eventArgs.preventDefault();
+            this.clearInput();
+        }
+    }
+
     public close(): void {
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
@@ -476,17 +483,28 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
+    public onChipSelected(eventArgs: IChipSelectEventArgs, item: ExpressionUI): void {
         if (eventArgs.selected) {
-            this.expression = expression;
+            this.expression = item.expression;
             if (eventArgs.originalEvent) {
                 requestAnimationFrame(() => {
                     this.inputGroupPrefix.nativeElement.focus();
                     this.toggleConditionsDropDown();
                 });
             }
-        } else if (this.expression === expression) {
+        } else if (this.expression === item.expression) {
             this.resetExpression();
+        }
+    }
+
+    public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
+        if (eventArgs.key === 'Enter') {
+            eventArgs.preventDefault();
+            chip.selected = !chip.selected;
+            if (chip.selected) {
+                this.inputGroupPrefix.nativeElement.focus();
+                this.toggleConditionsDropDown();
+            }
         }
     }
 
@@ -502,9 +520,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    public onLogicOperatorChanged(eventArgs, expression: ExpressionUI): void {
+    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI, operatorsButton: any): void {
         expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
         this.filter();
+        if (eventArgs.oldSelection) {
+            operatorsButton.focus();
+        }
     }
 }
