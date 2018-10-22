@@ -2,8 +2,7 @@
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
-        [isSelected]="isConditionSelected(condition)"
-        [igxDropDownItemNavigation]="operands">
+        [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ condition | filterCondition | titlecase }}</span>
     </igx-drop-down-item>
@@ -13,7 +12,8 @@
     <igx-input-group type="box">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown()"
-                    (keydown)="onPrefixKeyDown($event)">
+                    (keydown)="onPrefixKeyDown($event)"
+                    [igxDropDownItemNavigation]="operands">
             <igx-icon tabindex="0" fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <input 

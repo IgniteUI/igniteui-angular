@@ -16,6 +16,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridAPIService } from '../api.service';
+import { KEYCODES } from '../../core/utils';
 
 export class ExpressionUI {
     public expression: IFilteringExpression;
@@ -216,7 +217,7 @@ export class IgxGridFilteringCellComponent implements OnInit {
     }
 
     public onKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
-        if (eventArgs.key === 'Enter') {
+        if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             this.onChipClicked(expression);
         }

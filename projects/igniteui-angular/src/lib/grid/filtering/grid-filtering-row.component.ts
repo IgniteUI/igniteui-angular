@@ -411,7 +411,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === 'Enter') {
+        if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             this.clearInput();
         }
@@ -498,7 +498,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
-        if (eventArgs.key === 'Enter') {
+        if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             chip.selected = !chip.selected;
             if (chip.selected) {
