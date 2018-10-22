@@ -849,7 +849,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
     });
 
-    xit('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
+   xit('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
 
@@ -950,7 +950,7 @@ describe('IgxGrid - Cell component', () => {
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
-    });
+        });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating up', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -985,6 +985,107 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
     });
 
+    it('keyboard navigation - should allow navigating first/last cell in column with down/up and Cntr key.', async() => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.verticalScrollContainer.addScrollTop(5000);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(104, 'value');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        let selectedCellFromGrid = grid.selectedCells[0];
+        expect(fix.componentInstance.selectedCell.value).toEqual(9990);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(999);
+        expect(selectedCellFromGrid.value).toEqual(9990);
+        expect(selectedCellFromGrid.column.field).toMatch('value');
+        expect(selectedCellFromGrid.rowIndex).toEqual(999);
+
+        cell = grid.getCellByColumn(998, 'other');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(0);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('other');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop ).toEqual(0);
+        selectedCellFromGrid = grid.selectedCells[0];
+        expect(selectedCellFromGrid.value).toEqual(0);
+        expect(selectedCellFromGrid.column.field).toMatch('other');
+        expect(selectedCellFromGrid.rowIndex).toEqual(0);
+    });
+
+    it('keyboard navigation - should allow navigating first/last cell in column with home/end and Cntr key.', async() => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(50);
+        fix.componentInstance.data = fix.componentInstance.generateData(500);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.verticalScrollContainer.addScrollTop(5000);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(101, '2');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        let selectedCellFromGrid = grid.selectedCells[0];
+        expect(fix.componentInstance.selectedCell.value).toEqual(0);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('0');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+        expect(selectedCellFromGrid.value).toEqual(0);
+        expect(selectedCellFromGrid.column.field).toMatch('0');
+        expect(selectedCellFromGrid.rowIndex).toEqual(0);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop ).toEqual(0);
+
+        cell = grid.getCellByColumn(4, '2');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(244510);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('49');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(499);
+
+        selectedCellFromGrid = grid.selectedCells[0];
+        expect(selectedCellFromGrid.value).toEqual(244510);
+        expect(selectedCellFromGrid.column.field).toMatch('49');
+        expect(selectedCellFromGrid.rowIndex).toEqual(499);
+    });
+
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating left', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
@@ -1014,7 +1115,7 @@ describe('IgxGrid - Cell component', () => {
         expect(rowDisplayContainer.style.left).toEqual('0px');
         expect(fix.componentInstance.selectedCell.value).toEqual(0);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('0');
-        });
+    });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating right', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
