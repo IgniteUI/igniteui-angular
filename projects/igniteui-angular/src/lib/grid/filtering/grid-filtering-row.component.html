@@ -26,7 +26,7 @@
             [type]="type"
             [readonly]="isUnaryCondition"
             (keydown)="onInputKeyDown($event)"/>
-            <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown()" (click)="clearInput()" tabindex="0">
+            <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
     </igx-input-group>
@@ -84,11 +84,11 @@
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
-                    <button igxButton (click)="toggleOperatorsDropDown($event, i)">
+                    <button #operatorsButton igxButton (click)="toggleOperatorsDropDown($event, i)">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{getOperator(item.afterOperator)}}</span>
                     </button>
-                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)" [allowItemsFocus]="true">
+                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item, operatorsButton)" [allowItemsFocus]="true">
                             <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
                             <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
                     </igx-drop-down>
