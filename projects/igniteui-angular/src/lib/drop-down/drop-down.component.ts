@@ -16,9 +16,7 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject,
-    AfterContentInit,
-    AfterContentChecked
+    Inject
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -29,6 +27,11 @@ import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
 
 let NEXT_ID = 0;
 
+/**
+ * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.
+ *
+ * @export
+ */
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
