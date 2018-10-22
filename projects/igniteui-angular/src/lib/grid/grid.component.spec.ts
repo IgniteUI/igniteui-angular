@@ -878,7 +878,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - Row Editing', () => {
+    xdescribe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1670,9 +1670,9 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Paging', () => {
-            xit(`Should not apply edited classes to the same row on a different page`, (async () => {
+            it(`Should not apply edited classes to the same row on a different page`, () => {
                 // This is not a valid scenario if the grid does not have transactions enabled
-                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -1691,11 +1691,10 @@ describe('IgxGrid Component Tests', () => {
 
                 // Next page button click
                 pagingButtons[2].dispatchEvent(new Event('click'));
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 expect(grid.page).toEqual(1);
                 expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
-            }));
+            });
 
             it(`Should preserve the changes after page navigation`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1918,9 +1917,8 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fdescribe('Row Editing - Sorting', () => {
-            fit(`Should exit edit mode when Sorting`, () => {
-                // TO DO: FIX
+        describe('Row Editing - Sorting', () => {
+            it(`Should exit edit mode when Sorting`, () => {
                 const fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fix.detectChanges();
 
@@ -3018,7 +3016,8 @@ export class IgxGridCustomOverlayComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
+    [paging]="true" [perPage]="7">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
