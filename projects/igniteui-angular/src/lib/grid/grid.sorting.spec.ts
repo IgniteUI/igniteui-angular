@@ -9,12 +9,14 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const SORTING_ICON_NONE_CONTENT = 'none';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
 describe('IgxGrid - Grid Sorting', () => {
+    configureTestSuite();
     let fixture;
     let grid;
     beforeEach(async(() => {

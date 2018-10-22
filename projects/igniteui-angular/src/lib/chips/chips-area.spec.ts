@@ -13,6 +13,7 @@ import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 @Component({
     template: `
@@ -118,7 +119,9 @@ class TestChipReorderComponent {
     }
 }
 
+
 describe('IgxChipsArea', () => {
+    configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {

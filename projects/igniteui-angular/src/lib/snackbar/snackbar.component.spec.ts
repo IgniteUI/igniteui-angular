@@ -4,7 +4,10 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxSnackbar', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

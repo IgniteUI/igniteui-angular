@@ -11,7 +11,10 @@ import { HelperUtils } from '../test-utils/helper-utils.spec';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Column Pinning UI', () => {
+    configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnPinningComponent;

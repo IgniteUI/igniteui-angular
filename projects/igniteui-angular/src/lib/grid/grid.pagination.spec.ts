@@ -7,7 +7,10 @@ import { IgxNumberFilteringOperand } from '../../public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Grid Paging', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

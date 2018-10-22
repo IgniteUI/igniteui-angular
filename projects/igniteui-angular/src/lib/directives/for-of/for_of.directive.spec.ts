@@ -24,7 +24,10 @@ import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directi
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('IgxForOf directive -', () => {
+    configureTestSuite();
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
     let displayContainer: HTMLElement;
     let verticalScroller: HTMLElement;
@@ -37,6 +40,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('empty virtual component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<EmptyVirtualComponent>;
 
         beforeEach(async(() => {
@@ -61,6 +65,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('horizontal virtual component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
         beforeEach(async(() => {
@@ -174,6 +179,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical virtual component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<VerticalVirtualComponent>;
 
         beforeEach(async(() => {
@@ -261,6 +267,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical and horizontal virtual component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<VirtualComponent>;
 
         beforeEach(async(() => {
@@ -833,6 +840,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('variable size component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<VirtualVariableSizeComponent>;
 
         beforeEach(async(() => {
@@ -882,6 +890,7 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
+        configureTestSuite();
         let fix: ComponentFixture<RemoteVirtualizationComponent>;
 
         beforeEach(async(() => {

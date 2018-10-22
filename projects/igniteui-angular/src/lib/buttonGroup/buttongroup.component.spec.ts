@@ -5,6 +5,7 @@ import {
 } from '@angular/core/testing';
 import { ButtonGroupAlignment, IgxButtonGroupComponent, IgxButtonGroupModule } from './buttonGroup.component';
 import { IgxButtonModule } from '../directives/button/button.directive';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 interface IButton {
     type?: string;
@@ -42,7 +43,9 @@ class Button {
     }
 }
 
+
 describe('IgxButtonGroup', () => {
+    configureTestSuite();
    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

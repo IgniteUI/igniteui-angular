@@ -15,6 +15,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -43,6 +44,7 @@ const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
 describe('igxCombo', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -71,6 +73,7 @@ describe('igxCombo', () => {
     }));
 
     describe('General tests: ', () => {
+        configureTestSuite();
         it('Should initialize the combo component properly', fakeAsync(() => {
             const fixture: ComponentFixture<IgxComboSampleComponent> = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -179,6 +182,7 @@ describe('igxCombo', () => {
     });
 
     describe('Template tests: ', () => {
+        configureTestSuite();
         it('Should properly initialize templates', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -227,6 +231,7 @@ describe('igxCombo', () => {
     });
 
     describe('Dropdown tests: ', () => {
+        configureTestSuite();
         it('Should properly call dropdown methods', () => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -876,6 +881,7 @@ describe('igxCombo', () => {
 
 
     describe('Selection tests: ', () => {
+        configureTestSuite();
         function getIndexOfVisibleItem(dropDownitems: any[], valueKey, value) {
             const item = dropDownitems.find((el) => el.value[valueKey] === value);
             return dropDownitems.indexOf(item);
@@ -1524,6 +1530,7 @@ describe('igxCombo', () => {
     });
 
     describe('Rendering tests: ', () => {
+        configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', () => {
             const defaultComboWidth = '100%';
             const defaultComboDDWidth = '100%';
@@ -1912,6 +1919,7 @@ describe('igxCombo', () => {
     });
 
     describe('Virtualization tests: ', () => {
+        configureTestSuite();
         it('Should properly return a reference to the VirtScrollContainer', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -1989,6 +1997,7 @@ describe('igxCombo', () => {
     });
 
     describe('Binding tests: ', () => {
+        configureTestSuite();
         it('Should bind combo data to array of primitive data', () => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -2175,6 +2184,7 @@ describe('igxCombo', () => {
     });
 
     describe('Grouping tests: ', () => {
+        configureTestSuite();
         it('Should group items correctly', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
@@ -2277,6 +2287,7 @@ describe('igxCombo', () => {
     });
 
     describe('Filtering tests: ', () => {
+        configureTestSuite();
         it('Should properly get/set filteredData', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -2911,6 +2922,7 @@ describe('igxCombo', () => {
     });
 
     describe('Form control tests: ', () => {
+        configureTestSuite();
         it('Should properly initialize when used as a form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();

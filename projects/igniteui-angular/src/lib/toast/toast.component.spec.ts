@@ -4,7 +4,10 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IgxToastComponent, IgxToastModule, IgxToastPosition} from './toast.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxToast', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

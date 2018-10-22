@@ -30,6 +30,8 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
 const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
@@ -106,6 +108,7 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
 }
 
 describe('igxOverlay', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -120,6 +123,7 @@ describe('igxOverlay', () => {
     }));
 
     describe('Unit Tests: ', () => {
+        configureTestSuite();
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -741,6 +745,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
+        configureTestSuite();
 
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).

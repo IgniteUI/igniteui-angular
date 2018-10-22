@@ -9,7 +9,10 @@ import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Grid Toolbar', () => {
+    configureTestSuite();
     let fixture;
     let grid;
 

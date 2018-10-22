@@ -9,6 +9,7 @@ import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -25,6 +26,7 @@ let data = [
 ];
 
 describe('IgxGrid - Row Selection', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.resetTestingModule();

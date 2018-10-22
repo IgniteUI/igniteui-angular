@@ -3,7 +3,10 @@ import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('IgxHint', () => {
+    configureTestSuite();
     const HINT_START_CSS_CLASS = 'igx-input-group__hint-item--start';
     const HINT_END_CSS_CLASS = 'igx-input-group__hint-item--end';
 

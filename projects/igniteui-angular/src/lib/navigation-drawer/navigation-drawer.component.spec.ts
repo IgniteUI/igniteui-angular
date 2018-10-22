@@ -10,12 +10,14 @@ import { Component, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import * as Infragistics from '../../public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 // HammerJS simulator from https://github.com/hammerjs/simulator, manual typings TODO
 declare var Simulator: any;
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
+    configureTestSuite();
         beforeEach(async(() => {
             jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
             TestBed.configureTestingModule({

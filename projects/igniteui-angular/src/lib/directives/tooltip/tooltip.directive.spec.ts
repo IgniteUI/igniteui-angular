@@ -5,11 +5,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from './tooltip.directive';
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
 
 describe('IgxTooltip', () => {
+    configureTestSuite();
     let fix;
     let tooltipNativeElement;
     let tooltipTarget: IgxTooltipTargetDirective;
@@ -31,6 +33,7 @@ describe('IgxTooltip', () => {
     });
 
     describe('Single target with single tooltip', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTooltipSingleTargetComponent);
             fix.detectChanges();
@@ -234,6 +237,7 @@ describe('IgxTooltip', () => {
         }));
 
         describe('Tooltip events', () => {
+        configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
                 spyOn(tooltipTarget.onTooltipShow, 'emit');
                 spyOn(tooltipTarget.onTooltipHide, 'emit');
@@ -336,6 +340,7 @@ describe('IgxTooltip', () => {
         });
 
         describe('Tooltip touch', () => {
+        configureTestSuite();
             it('IgxTooltip is shown/hidden when touching/untouching its target', fakeAsync(() => {
                 touchElement(button);
                 flush();
@@ -403,6 +408,7 @@ describe('IgxTooltip', () => {
     });
 
     describe('Multiple targets with single tooltip', () => {
+        configureTestSuite();
         let targetOne: IgxTooltipTargetDirective;
         let targetTwo: IgxTooltipTargetDirective;
         let buttonOne;

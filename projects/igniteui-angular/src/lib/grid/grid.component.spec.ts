@@ -26,6 +26,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxGridCellComponent } from './cell.component';
 import { take } from 'rxjs/operators';
 import { TransactionType } from '../services';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
@@ -39,6 +40,7 @@ describe('IgxGrid Component Tests', () => {
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
 
     describe('IgxGrid - input properties', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -303,6 +305,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -756,6 +759,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - keyboard navigation tests', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -808,6 +812,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - API methods', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -927,6 +932,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - Row Editing', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
