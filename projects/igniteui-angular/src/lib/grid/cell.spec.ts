@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -730,27 +730,28 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
     }));
 
-    it('should fit last cell in the available display container when there is vertical scroll.', () => {
+    it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('182px');
         });
-    });
+    }));
 
-    it('should use default column width for cells with width in %.', () => {
+    it('should use default column width for cells with width in %.', fakeAsync(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols.forEach(() => {
             delete this.width;
         });
         fix.componentInstance.defaultWidth = '25%';
+        tick();
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('25%');
         });
-    });
+    }));
 
     it('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -814,12 +815,13 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
     }));
 
-    it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
+    it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
         lastCol.pinned = true;
+        tick();
         fix.detectChanges();
         lastCol.cells.forEach((cell) => {
             expect(cell.width).toEqual('200px');
@@ -828,9 +830,9 @@ describe('IgxGrid - Cell component', () => {
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('182px');
         });
-    });
+    }));
 
-    it('should not make last column width 0 when no column width is set', () => {
+    it('should not make last column width 0 when no column width is set', async(() => {
         const fix = TestBed.createComponent(NoColumnWidthGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
@@ -838,7 +840,7 @@ describe('IgxGrid - Cell component', () => {
         lastCol.cells.forEach((cell) => {
             expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
-    });
+    }));
 
     xit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -1148,7 +1150,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('3');
     });
 
-    it('should be able to conditionally style cells', () => {
+    it('should be able to conditionally style cells', async(() => {
         const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
         fixture.detectChanges();
 
@@ -1168,9 +1170,9 @@ describe('IgxGrid - Cell component', () => {
         expect(grid.getColumnByName('ProductName').cells[4].nativeElement.classList).toContain('test2');
         expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
         expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
-    });
+    }));
 
-    it('Cell editing (when rowEditable=false) - default column editable value is false', () => {
+    it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
          const grid = fixture.componentInstance.grid;
@@ -1181,7 +1183,7 @@ describe('IgxGrid - Cell component', () => {
         expect(columns[3].editable).toBeTruthy();
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
-    });
+    }));
 });
 
 @Component({
