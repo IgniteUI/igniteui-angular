@@ -878,7 +878,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    xdescribe('IgxGrid - Row Editing', () => {
+    describe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
