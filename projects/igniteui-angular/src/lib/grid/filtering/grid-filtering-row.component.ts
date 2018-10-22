@@ -172,6 +172,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    get type() {
+        switch (this.column.dataType) {
+            case DataType.String:
+            case DataType.Boolean:
+                return 'text';
+            case DataType.Number:
+                return 'number';
+        }
+    }
+
     get conditions(): any {
         return this.column.filters.instance().conditionList();
     }

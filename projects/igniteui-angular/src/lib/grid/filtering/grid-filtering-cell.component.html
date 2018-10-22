@@ -1,5 +1,5 @@
 <ng-template #emptyFilter>
-        <igx-chip (click)="onChipClicked()">
+        <igx-chip (click)="onChipClicked()" (keydown)="onKeyDown($event)">
             <igx-icon igxPrefix>add</igx-icon>
             <span>Filter</span>
         </igx-chip>
@@ -11,6 +11,7 @@
             <igx-chip
                 [removable]="true"
                 (click)="onChipClicked(item.expression)"
+                (keydown)="onKeyDown($event, item.expression)"
                 (onRemove)="onChipRemoved($event, item)">
                 <igx-icon igxPrefix
                     fontSet="filtering-icons"

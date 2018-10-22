@@ -5,7 +5,7 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
-    HostBinding,
+    HostBinding
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -192,5 +192,12 @@ export class IgxGridFilteringCellComponent implements OnInit {
     public clearFiltering(): void {
         this.filteringService.clearFilter(this.column.field);
         this.expressionsList = [];
+    }
+
+    public onKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
+        if (eventArgs.key === 'Enter') {
+            eventArgs.preventDefault();
+            this.onChipClicked(expression);
+        }
     }
 }
