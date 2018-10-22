@@ -6,7 +6,7 @@ import {
     ViewChild,
     ComponentRef
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect } from '@angular/core/testing';
+import { async as asyncWrapper, TestBed, fakeAsync, tick, ComponentFixtureAutoDetect, async } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -106,13 +106,13 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
 }
 
 describe('igxOverlay', () => {
-    beforeEach(async () => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
             declarations: DIRECTIVE_COMPONENTS
         }).compileComponents();
         UIInteractions.clearOverlay();
-    });
+    }));
 
     afterAll(() => {
         UIInteractions.clearOverlay();

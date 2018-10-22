@@ -5,20 +5,21 @@ import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { async } from '@angular/core/testing';
 
 describe('Excel Exporter', () => {
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
     let actualData: FileContentData;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions('ExcelExport');
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities, 'saveBlobToFile');
-    });
+    }));
 
     /* ExportData() tests */
     it('should not fail when data is empty.', async () => {

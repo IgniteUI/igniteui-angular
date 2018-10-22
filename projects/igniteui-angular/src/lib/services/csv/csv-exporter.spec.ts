@@ -5,19 +5,20 @@ import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { async } from '@angular/core/testing';
 
 describe('CSV exporter', () => {
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
     const fileTypes = [ CsvFileTypes.CSV, CsvFileTypes.TSV, CsvFileTypes.TAB ];
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxCsvExporterService();
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    });
+    }));
     afterEach(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
