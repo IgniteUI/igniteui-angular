@@ -1690,9 +1690,9 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Paging', () => {
-            xit(`Should not apply edited classes to the same row on a different page`, (async () => {
+            it(`Should not apply edited classes to the same row on a different page`, () => {
                 // This is not a valid scenario if the grid does not have transactions enabled
-                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
@@ -1711,11 +1711,10 @@ describe('IgxGrid Component Tests', () => {
 
                 // Next page button click
                 pagingButtons[2].dispatchEvent(new Event('click'));
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 expect(grid.page).toEqual(1);
                 expect(rowEl.classList).not.toContain('igx-grid__tr--edited');
-            }));
+            });
 
             it(`Should preserve the changes after page navigation`, () => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1939,8 +1938,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Sorting', () => {
-            xit(`Should exit edit mode when Sorting`, () => {
-                // TO DO: FIX
+            it(`Should exit edit mode when Sorting`, () => {
                 const fix = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fix.detectChanges();
 
@@ -1954,27 +1952,23 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 fix.detectChanges();
-                fix.componentInstance.cellInEditMode.value = 1231;
-                // cell.update('Don Juan De Marco');
+                cell.update(111);
                 // Do not exit edit mode
-
                 grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true });
                 fix.detectChanges();
 
                 cell = grid.getCellByColumn(0, 'Downloads');
-
                 expect(cell.inEditMode).toBe(false);
-                expect(cell.value).toBe(1231);
+                expect(cell.value).toBe(111);
 
                 // Verify the data source is updated
-                // Failing as cell.update currently does not call submit_value())
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
-                const newDataCellValue = fix.componentInstance.data[0].ProductName;
-                expect(newDataCellValue).toBe('Don Juan De Marco');
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                const newDataCellValue = fix.componentInstance.data[0].Downloads;
+                expect(newDataCellValue).toBe(111);
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 3, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 0, columnID: 0, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
             });
 
@@ -3042,7 +3036,8 @@ export class IgxGridCustomOverlayComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
+    [paging]="true" [perPage]="7">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
