@@ -1166,7 +1166,7 @@ describe('IgxGrid - Cell component', () => {
         expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
     });
 
-    it('Cell editing (when rowEditable=true) - default column editable value is false', () => {
+    it('Cell editing (when rowEditable=false) - default column editable value is false', () => {
         const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
         fixture.detectChanges();
          const grid = fixture.componentInstance.grid;

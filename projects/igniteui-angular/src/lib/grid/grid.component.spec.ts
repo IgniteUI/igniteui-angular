@@ -298,7 +298,7 @@ describe('IgxGrid Component Tests', () => {
         }));
     });
 
-    xdescribe('IgxGrid - default rendering for rows and columns', () => {
+    describe('IgxGrid - default rendering for rows and columns', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -878,7 +878,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - Row Editing', () => {
+    xdescribe('IgxGrid - Row Editing', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
