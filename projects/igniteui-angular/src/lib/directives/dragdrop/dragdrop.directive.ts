@@ -389,8 +389,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(this.element.nativeElement, 'pointermove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
@@ -401,8 +401,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'touchmove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
@@ -413,8 +413,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'mousemove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
