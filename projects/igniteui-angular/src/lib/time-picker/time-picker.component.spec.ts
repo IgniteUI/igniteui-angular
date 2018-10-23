@@ -8,7 +8,10 @@ import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.compo
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxTimePicker', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -27,9 +30,9 @@ describe('IgxTimePicker', () => {
             .compileComponents();
     }));
 
-    afterEach(() => {
+    afterEach(async(() => {
         UIInteractions.clearOverlay();
-    });
+    }));
 
     it('Initialize a TimePicker component', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);

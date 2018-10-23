@@ -4,9 +4,12 @@ import { By } from '@angular/platform-browser';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
+
 describe('IgxGrid - CRUD operations', () => {
+    configureTestSuite();
 
     let fix;
     let grid;
@@ -21,12 +24,12 @@ describe('IgxGrid - CRUD operations', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);
         fix.detectChanges();
         grid = fix.componentInstance.instance;
         data = fix.componentInstance.data;
-    });
+    }));
 
     it('should support adding rows through the grid API', () => {
         expect(grid.data.length).toEqual(data.length);
