@@ -587,6 +587,9 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown.Escape', ['$event'])
     @HostListener('keydown.Tab', ['$event'])
     onEscapeKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.close();
         event.preventDefault();
     }
@@ -596,6 +599,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Space', ['$event'])
     onSpaceKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
         this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
         event.preventDefault();
@@ -606,6 +612,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Spacebar', ['$event'])
     onSpaceKeyDownIE(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.selectItem(this.target.focusedItem, event);
         event.preventDefault();
     }
@@ -615,6 +624,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         if (!(this.target instanceof IgxDropDownComponent)) {
             if (this.target.focusedItem.value === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
@@ -634,6 +646,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDownKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.navigateNext();
         event.preventDefault();
         event.stopPropagation();
@@ -644,6 +659,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.ArrowUp', ['$event'])
     onArrowUpKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.navigatePrev();
         event.preventDefault();
         event.stopPropagation();
@@ -654,6 +672,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.End', ['$event'])
     onEndKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.navigateLast();
         event.preventDefault();
     }
@@ -663,6 +684,9 @@ export class IgxDropDownItemNavigationDirective {
      */
     @HostListener('keydown.Home', ['$event'])
     onHomeKeyDown(event) {
+        if (this.target.collapsed) {
+            return;
+        }
         this.target.navigateFirst();
         event.preventDefault();
     }
