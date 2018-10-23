@@ -1074,6 +1074,99 @@ describe('IgxGrid - Row Selection', () => {
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
     }));
 
+    it('keyboard navigation - Should properly handle TAB / SHIFT + TAB on row selectors', (async () => {
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
+        const secondRow = grid.getRowByIndex(1);
+        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox');
+        let cell = grid.getCellByColumn(1, 'ID');
+
+        cell.onFocus(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(secondRow.isSelected).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(secondRow.isSelected).toBeFalsy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+
+        cell = grid.getCellByColumn(1, 'ID');
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        cell = grid.getCellByColumn(0, 'Column 15');
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(firstRow.isSelected).toBeTruthy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        cell = grid.getCellByColumn(1, 'ID');
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+    }));
+
+    it('keyboard navigation - Should properly blur the focused cell when scroll with mouse wheeel', (async () => {
+        pending('This scenario need to be tested manually');
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+        const firstCell = grid.rowList.first.cells.toArray()[0];
+
+        firstCell.onFocus(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(firstCell.selected).toBeTruthy();
+        expect(firstCell.focused).toBeTruthy();
+
+        const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
+        const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 500 });
+        displayContainer.dispatchEvent(event);
+        await wait(300);
+
+        expect(firstCell.isSelected).toBeFalsy();
+        expect(firstCell.selected).toBeFalsy();
+        expect(firstCell.focused).toBeFalsy();
+    }));
+
 });
 
 @Component({

@@ -448,7 +448,9 @@
         user-select: none;
         overflow: hidden;
         cursor: pointer;
-        filter: blur(0);
+        //hacking overflow hidden with border radius
+        // not playing nicely together
+        filter: opacity(1);
     }
 
     %igx-chip__item--hover {

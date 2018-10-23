@@ -78,7 +78,7 @@
     <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
 </div>
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'>
+<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxGridFor let-rowData [igxGridForOf]="data | gridFiltering:filteringExpressionsTree:id:pipeTrigger
@@ -149,5 +149,4 @@
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
-<div class="igx-grid__filtering-outlet" igxOverlayOutlet></div>
-
+<div class="igx-grid__outlet" igxOverlayOutlet></div>

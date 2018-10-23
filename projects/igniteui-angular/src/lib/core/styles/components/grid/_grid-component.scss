@@ -252,8 +252,8 @@
         @extend %igx-grid__group-expand-btn !optional;
     }
 
-    @include e(filtering-outlet) {
-        @extend %igx-grid__filtering-outlet !optional;
+    @include e(outlet) {
+        @extend %igx-grid__outlet !optional;
     }
 
     @include e(filtering-cell) {
