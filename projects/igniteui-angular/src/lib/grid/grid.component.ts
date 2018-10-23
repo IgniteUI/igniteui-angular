@@ -3496,7 +3496,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
         }
 
         if (!this._height) {

@@ -36,9 +36,6 @@ export class IgxGridFilteringCellComponent implements OnInit {
     @Input()
     public column: IgxColumnComponent;
 
-    @Input()
-    public gridID: string;
-
     @ViewChild('emptyFilter', { read: TemplateRef })
     protected emptyFilter: TemplateRef<any>;
 
