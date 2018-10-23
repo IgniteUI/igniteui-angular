@@ -28,8 +28,7 @@ import { CancelableEventArgs } from '../../core/utils';
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayId: string;
     private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
-        filter(x => x.id === this._overlayId),
-        take(1),
+        filter(x => x.id === this._overlayId)
     ];
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;

@@ -448,9 +448,6 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         const eventArgs = { cancel: false};
         this.onClosing.emit(eventArgs);
         e.cancel = eventArgs.cancel;
-        if (eventArgs.cancel) {
-            return;
-        }
     }
 
     /**
