@@ -260,6 +260,10 @@
         @extend %igx-grid__filtering-cell !optional;
     }
 
+    @include e(filtering-cell-indicator) {
+        @extend %igx-grid__filtering-cell-indicator !optional;
+    }
+
     @include e(filtering-row) {
         @extend %igx-grid__filtering-row !optional;
     }

@@ -1360,6 +1360,20 @@
         }
     }
 
+    %igx-grid__filtering-cell-indicator {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 16px;
+        cursor: pointer;
+
+        igx-badge {
+            position: absolute;
+            right: 0;
+        }
+    }
+
     %igx-grid__filtering-cell--cosy {
         height: map-get($grid-header-height, 'cosy');
         padding: map-get($grid-header-padding, 'comfortable');
