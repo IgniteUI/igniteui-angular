@@ -8,7 +8,7 @@
     <div class="igx-grid__thead-title">{{ column.header }}</div>
     <div class="igx-grid__thead-group">
         <ng-container *ngFor="let child of column.children">
-            <div class="igx-grid__thead-item">
+            <div>
                 <igx-grid-header [igxColumnMovingDrag]="child" [attr.droppable]="true" [igxColumnMovingDrop]="child" *ngIf="!child.hidden" [gridID]="column.gridID" [column]="child" [style.min-width.px]="child.width" [style.flex-basis.px]='child.width'></igx-grid-header>
                 <igx-grid-filtering-cell *ngIf="grid.allowFiltering && !filteringService.isFilterRowVisible && !child.children" [column]="child" [gridID]="column.gridID"
                     [style.min-width.px]="child.width" [style.flex-basis.px]='child.width'></igx-grid-filtering-cell>

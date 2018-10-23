@@ -14,7 +14,6 @@ import { IBaseChipEventArgs } from '../../chips';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
-import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { IgxGridAPIService } from '../api.service';
 import { KEYCODES } from '../../core/utils';
 
@@ -71,16 +70,12 @@ export class IgxGridFilteringCellComponent implements OnInit {
 
     @HostBinding('class.igx-grid__th--pinned-last')
     get isLastPinned() {
-        const pinnedCols = this.grid.pinnedColumns;
+        const pinnedCols = this.filteringService.grid.pinnedColumns;
         if (pinnedCols.length === 0) {
             return false;
         } else {
             return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
         }
-    }
-
-    get grid(): any {
-        return this.gridAPI.get(this.gridID);
     }
 
     constructor(private filteringService: IgxFilteringService, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
