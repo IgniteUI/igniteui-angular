@@ -29,7 +29,6 @@ describe('IgxGrid - Row Selection', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
-        TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
                 GridWithPrimaryKeyComponent,
