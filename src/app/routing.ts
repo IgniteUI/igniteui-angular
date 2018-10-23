@@ -52,6 +52,7 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
+import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 
 const appRoutes = [
     {
@@ -267,6 +268,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'gridRowEdit',
+        component: GridRowEditSampleComponent
     },
     {
         path: 'tooltip',

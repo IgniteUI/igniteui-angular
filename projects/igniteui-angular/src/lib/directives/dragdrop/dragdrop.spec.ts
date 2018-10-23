@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDragDropModule, IgxDragDirective, IgxDropDirective } from './dragdrop.directive';
 import { UIInteractions} from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 @Component({
     styles: [`
@@ -50,6 +51,7 @@ class TestDragDropComponent {
 }
 
 describe('IgxDrag/IgxDrop', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

@@ -5,7 +5,10 @@ import { IgxListItemComponent } from '../../list/list-item.component';
 import { IgxListComponent, IgxListModule } from '../../list/list.component';
 import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('Filter', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
