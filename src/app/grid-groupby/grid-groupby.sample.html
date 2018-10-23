@@ -1,7 +1,8 @@
 <div class="wrapper">
     <igx-switch [(ngModel)]="hideGroupedColumns" (change)="toggleGroupedVisibility($event)">Toggle Hiding Of Grouped Columns</igx-switch>
     <div class="separator"></div>
-    <igx-grid #grid1 [data]="data" [width]="'1200px'" [hideGroupedColumns]="hideGroupedColumns" [groupingExpressions]='groupingExpressions' [height]="'800px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="density">
+    <igx-grid #grid1 [data]="data" [width]="'1200px'" [hideGroupedColumns]="hideGroupedColumns" [groupingExpressions]='groupingExpressions'
+    [height]="'800px'" [rowSelectable]='true'  [primaryKey]="'ID'" [displayDensity]="density" (onFocusChange)="changeFocus($event)">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'>
         </igx-column>
