@@ -1,9 +1,12 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DOCUMENT } from '@angular/common';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Icon Service', () => {
+    configureTestSuite();
     const MY_FONT = 'my-awesome-icons';
     const ALIAS = 'awesome';
 

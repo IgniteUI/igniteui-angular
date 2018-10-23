@@ -10,7 +10,9 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
-import { IFilteringOperation, FilteringExpressionsTree, IFilteringExpressionsTree } from '../../public_api';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { Transaction, TransactionType } from '../services/index';
 /**
  *@hidden
  */
@@ -20,6 +22,7 @@ export class IgxGridAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
     protected editCellState: Map<string, any> = new Map<string, any>();
+    protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
     public register(grid: IgxGridComponent) {
@@ -38,6 +41,7 @@ export class IgxGridAPIService {
         this.state.delete(id);
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
+        this.editRowState.delete(id);
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -49,12 +53,22 @@ export class IgxGridAPIService {
             this.summaryCacheMap.set(id, new Map<string, any[]>());
         }
         const column = this.get_column_by_name(id, name);
-        if (this.get(id).filteredData && this.get(id).filteredData.length >= 0) {
-            this.calculateSummaries(id, column, this.get(id).filteredData.map((rec) => rec[column.field]));
-        } else {
-            if (this.get(id).data) {
-                this.calculateSummaries(id, column, this.get(id).data.map((rec) => rec[column.field]));
+        const grid = this.get(id);
+        let data = grid.filteredData;
+        if (!data) {
+            if (grid.transactions.enabled) {
+                data = DataUtil.mergeTransactions(
+                    cloneArray(grid.data, true),
+                    grid.transactions.aggregatedState(true),
+                    grid.primaryKey
+                );
+            } else {
+                data = grid.data;
             }
+        }
+        if (data) {
+            const columnValues = data.map((rec) => rec[column.field]);
+            this.calculateSummaries(id, column, columnValues);
         }
     }
 
@@ -72,11 +86,22 @@ export class IgxGridAPIService {
         }
     }
 
-    public set_cell_inEditMode(gridId: string, cell, editMode: boolean) {
-        if (!this.editCellState.has(gridId)) {
-            this.editCellState.set(gridId, null);
+    public set_cell_inEditMode(gridId: string, cell) {
+        const grid = this.get(gridId);
+        if (grid.rowEditable) {
+            const currentEditRow = this.get_row_inEditMode(gridId);
+            if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
+                grid.endRowEdit(true);
+                grid.startRowEdit(cell.row);
+            }
+            if (!currentEditRow) {
+                grid.startRowEdit(cell.row);
+            }
+            const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
+            this.set_row_inEditMode(gridId, rowState);
         }
-        if (!this.get_cell_inEditMode(gridId) && editMode) {
+
+        if (!this.get_cell_inEditMode(gridId)) {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
             this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
@@ -92,6 +117,8 @@ export class IgxGridAPIService {
                     this.editCellState.delete(gridId);
                 }
             } else {
+                const grid = this.get(gridId);
+                grid.endRowEdit(true);
                 this.editCellState.delete(gridId);
             }
         }
@@ -122,6 +149,21 @@ export class IgxGridAPIService {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
+    public get_row_inEditMode(gridId) {
+        const editRow = this.editRowState.get(gridId);
+        return editRow ? editRow : null;
+
+    }
+
+    public set_row_inEditMode(gridId, row: { rowID: any, rowIndex: number }) {
+        if (!row) {
+            this.editRowState.delete(gridId);
+        } else {
+            this.editRowState.set(gridId, row);
+        }
+    }
+
+
     public get_cell_by_key(id: string, rowSelector: any, field: string): IgxGridCellComponent {
         const row = this.get_row_by_key(id, rowSelector);
         if (row && row.cells) {
@@ -143,7 +185,7 @@ export class IgxGridAPIService {
         }
     }
 
-    public submit_value(gridId) {
+    public submit_value(gridId, detectChanges = true) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
@@ -159,31 +201,71 @@ export class IgxGridAPIService {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
-            this.get(gridId).cdr.detectChanges();
+            if (detectChanges) {
+                this.get(gridId).cdr.detectChanges();
+            }
         }
     }
 
+    //  TODO: refactor update_cell. Maybe separate logic in two methods - one with transaction
+    //  and one without transaction
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
-        editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        const rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+            editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+        let rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+        let oldValue: any;
+        let rowData: any;
         if (rowIndex !== -1) {
+            oldValue = grid.data[rowIndex][column.field];
+            rowData = grid.data[rowIndex];
+        }
+
+        //  if we have transactions and add row was edited look for old value and row data in added rows
+        if (rowIndex < 0 && grid.transactions.enabled) {
+            const dataWithTransactions = grid.dataWithAddedInTransactionRows;
+            rowIndex = grid.primaryKey ?
+            dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
+            dataWithTransactions.indexOf(rowID);
+            if (rowIndex !== -1) {
+                oldValue = dataWithTransactions[rowIndex][column.field];
+                rowData = dataWithTransactions[rowIndex];
+            }
+        }
+
+        if (oldValue !== undefined && rowData !== undefined) {
             const args: IGridEditEventArgs = {
                 row: cellObj ? cellObj.row : null, cell: cellObj,
-                currentValue: grid.data[rowIndex][column.field], newValue: editValue
+                currentValue: oldValue,
+                newValue: editValue
             };
             grid.onEditDone.emit(args);
-            grid.data[rowIndex][column.field] = args.newValue;
+
+            //  if we are editing the cell for second or next time, get the old value from transaction
+            const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID, true);
+            if (oldValueInTransaction) {
+                oldValue = oldValueInTransaction[column.field];
+            }
+
+            //  if edit (new) value is same as old value do nothing here
+            if (oldValue !== undefined && oldValue === args.newValue) { return; }
+
+            const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
+            if (grid.transactions.enabled) {
+                grid.transactions.add(transaction, rowData);
+            } else {
+                grid.data[rowIndex][column.field] = args.newValue;
+            }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, args.newValue);
             }
-            (grid as any)._pipeTrigger++;
+            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
+                (grid as any)._pipeTrigger++;
+            }
         }
     }
 
@@ -191,12 +273,20 @@ export class IgxGridAPIService {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-        grid.data.indexOf(rowID);
+            grid.data.indexOf(rowID);
         if (index !== -1) {
-            const args: IGridEditEventArgs = { row: this.get_row_by_key(id, rowID), cell: null,
-                currentValue: this.get(id).data[index], newValue: value };
+            const args: IGridEditEventArgs = {
+                row: this.get_row_by_key(id, rowID),
+                cell: null,
+                currentValue: this.get(id).data[index],
+                newValue: value
+            };
             grid.onEditDone.emit(args);
-            grid.data[index] = args.newValue;
+            if (grid.transactions.enabled) {
+                grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
+            } else {
+                grid.data[index] = args.newValue;
+            }
             if (isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;

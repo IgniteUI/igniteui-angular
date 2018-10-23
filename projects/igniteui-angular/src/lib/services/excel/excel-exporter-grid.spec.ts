@@ -13,7 +13,10 @@ import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../te
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('Excel Exporter', () => {
+    configureTestSuite();
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
@@ -28,7 +31,7 @@ describe('Excel Exporter', () => {
         }).compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
         options = new IgxExcelExporterOptions('GridExcelExport');
@@ -39,12 +42,12 @@ describe('Excel Exporter', () => {
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    });
+    }));
 
-    afterEach(() => {
+    afterEach(async(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
-    });
+    }));
 
     it('should export grid as displayed.', async () => {
         const currentGrid: IgxGridComponent = null;
