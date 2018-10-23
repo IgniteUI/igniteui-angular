@@ -759,15 +759,12 @@ describe('igxOverlay', () => {
             tick();
 
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
-
-            tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
 
             overlayInstance.hide(firstCallId);
             tick();
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
 
-            tick();
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(0);
 
             overlayInstance.onOpening.subscribe((e: OverlayCancelableEventArgs) => {
@@ -776,9 +773,8 @@ describe('igxOverlay', () => {
 
             overlayInstance.show(fix.componentInstance.item);
             tick();
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
 
-            tick();
+            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
     });
