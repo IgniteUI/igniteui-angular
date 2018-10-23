@@ -48,7 +48,8 @@ Ignite UI for Angular Hint provides a helper text placed below the input. The hi
 | Name | Description |
 | :--- | :--- |
 | type | How the input will be styled. The allowed values are line, box, border and search. The default is line.|
-| position  | **`Hint` API**. Where the hint will be placed. The allowed values are start and end. The default value is start. |
+| position | **`Hint` API**. Where the hint will be placed. The allowed values are start and end. The default value is start. |
+| displayDensity | Allows the user to change the default display density of the input group. |
 
 
 ### Methods
