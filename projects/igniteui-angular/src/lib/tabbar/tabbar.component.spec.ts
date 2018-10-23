@@ -19,10 +19,6 @@ describe('TabBar', () => {
             .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should initialize igx-bottom-nav, igx-tab-panel and igx-tab', () => {
         const fixture = TestBed.createComponent(TabBarTestComponent);
         const tabbar = fixture.componentInstance.tabbar;

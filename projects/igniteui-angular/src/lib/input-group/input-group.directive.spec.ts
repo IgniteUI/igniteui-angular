@@ -39,10 +39,6 @@ describe('IgxInputGroup', () => {
         .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('Initializes an input group.', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();

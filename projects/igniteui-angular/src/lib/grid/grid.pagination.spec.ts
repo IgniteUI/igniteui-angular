@@ -24,10 +24,6 @@ describe('IgxGrid - Grid Paging', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should paginate data UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();

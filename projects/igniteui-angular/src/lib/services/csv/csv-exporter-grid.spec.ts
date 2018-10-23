@@ -46,7 +46,6 @@ describe('CSV Grid Exporter', () => {
     afterEach(async(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
-        TestBed.resetTestingModule();
     }));
 
     it('should export grid as displayed.', () => {

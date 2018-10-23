@@ -31,10 +31,6 @@ describe('IgxGrid - CRUD operations', () => {
         data = fix.componentInstance.data;
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should support adding rows through the grid API', () => {
         expect(grid.data.length).toEqual(data.length);
         expect(grid.rowList.length).toEqual(grid.data.length);

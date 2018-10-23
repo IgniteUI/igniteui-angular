@@ -29,7 +29,6 @@ describe('IgxGrid - Filtering actions', () => {
 
     afterEach(() => {
         UIInteractions.clearOverlay();
-        TestBed.resetTestingModule();
     });
 
     // UI tests string column, empty input

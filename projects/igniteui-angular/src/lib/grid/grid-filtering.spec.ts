@@ -27,10 +27,6 @@ describe('IgxGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should correctly filter by \'string\' filtering conditions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();

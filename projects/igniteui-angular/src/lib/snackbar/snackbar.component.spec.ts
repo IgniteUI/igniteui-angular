@@ -20,10 +20,6 @@ describe('IgxSnackbar', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     let fixture, domSnackbar, snackbar;
     beforeEach(async(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);

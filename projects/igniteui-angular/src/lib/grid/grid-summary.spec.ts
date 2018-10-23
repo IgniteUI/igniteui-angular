@@ -32,10 +32,6 @@ describe('IgxGrid - Summaries', () => {
             .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should not have summary if no summary is active ', () => {
         const fixture = TestBed.createComponent(NoActiveSummariesComponent);
         fixture.detectChanges();

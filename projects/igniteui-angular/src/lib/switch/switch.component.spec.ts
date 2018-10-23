@@ -28,10 +28,6 @@ describe('IgxSwitch', () => {
             .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);
         fixture.detectChanges();

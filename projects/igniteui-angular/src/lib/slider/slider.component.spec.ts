@@ -23,10 +23,6 @@ describe('IgxSlider', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     describe('Base tests', () => {
         configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;

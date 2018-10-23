@@ -29,7 +29,6 @@ describe('IgxGrid - Row Selection', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
-        TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
                 GridWithPrimaryKeyComponent,
@@ -58,10 +57,6 @@ describe('IgxGrid - Row Selection', () => {
             { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
             { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
         ];
-    }));
-
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
     }));
 
     it('Should be able to select row through primaryKey and index', () => {
