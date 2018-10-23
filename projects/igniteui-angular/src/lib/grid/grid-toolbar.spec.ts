@@ -9,7 +9,10 @@ import { IgxGridModule } from './index';
 import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Grid Toolbar', () => {
+    configureTestSuite();
     let fixture;
     let grid;
 
@@ -513,8 +516,8 @@ describe('IgxGrid - Grid Toolbar', () => {
     }
 
     function getOverlay() {
-        const div = fixture.debugElement.nativeElement.parentElement.lastChild;
-        return div.classList.contains('igx-overlay') ? div : null;
+        const div = fixture.debugElement.query(By.css('div.igx-grid__outlet'));
+        return div.nativeElement;
     }
 
     function getColumnHidingButton() {

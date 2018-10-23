@@ -8,7 +8,10 @@ import {By} from '@angular/platform-browser';
 import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventArgs} from './carousel.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Carousel', () => {
+    configureTestSuite();
     let fixture: ComponentFixture<CarouselTestComponent>;
     let carousel: IgxCarouselComponent;
 

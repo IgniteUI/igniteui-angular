@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
@@ -9,10 +9,12 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Cell component', () => {
+    configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (
@@ -74,7 +76,8 @@ describe('IgxGrid - Cell component', () => {
                 NoColumnWidthGridComponent,
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
-                ConditionalCellStyleTestComponent
+                ConditionalCellStyleTestComponent,
+                ColumnEditablePropertyTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -190,8 +193,10 @@ describe('IgxGrid - Cell component', () => {
     });
 
     describe('Cell Editing', () => {
+        configureTestSuite();
 
         describe('Cell Editing - test edit templates, sorting and filtering', () => {
+            configureTestSuite();
             let fixture;
             let grid;
             beforeEach(() => {
@@ -440,6 +445,7 @@ describe('IgxGrid - Cell component', () => {
         });
 
         describe('EditMode - on scroll, pin, blur', () => {
+            configureTestSuite();
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx_grid__cell--edit';
@@ -725,27 +731,28 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('index');
     }));
 
-    it('should fit last cell in the available display container when there is vertical scroll.', () => {
+    it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('182px');
         });
-    });
+    }));
 
-    it('should use default column width for cells with width in %.', () => {
+    it('should use default column width for cells with width in %.', fakeAsync(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols.forEach(() => {
             delete this.width;
         });
         fix.componentInstance.defaultWidth = '25%';
+        tick();
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('25%');
         });
-    });
+    }));
 
     it('should fit last cell in the available display container when there is vertical and horizontal scroll.', (async () => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -809,12 +816,13 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
     }));
 
-    it('should not reduce the width of last pinned cell when there is vertical scroll.', () => {
+    it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
         const lastCol: IgxColumnComponent = columns.last;
         lastCol.pinned = true;
+        tick();
         fix.detectChanges();
         lastCol.cells.forEach((cell) => {
             expect(cell.width).toEqual('200px');
@@ -823,9 +831,9 @@ describe('IgxGrid - Cell component', () => {
         rows.forEach((item) => {
             expect(item.cells.last.width).toEqual('182px');
         });
-    });
+    }));
 
-    it('should not make last column width 0 when no column width is set', () => {
+    it('should not make last column width 0 when no column width is set', async(() => {
         const fix = TestBed.createComponent(NoColumnWidthGridComponent);
         fix.detectChanges();
         const columns = fix.componentInstance.instance.columnList;
@@ -833,7 +841,7 @@ describe('IgxGrid - Cell component', () => {
         lastCol.cells.forEach((cell) => {
             expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
         });
-    });
+    }));
 
     xit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -849,7 +857,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
     });
 
-    xit('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
+   xit('keyboard navigation - should allow navigating up in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
 
@@ -950,7 +958,7 @@ describe('IgxGrid - Cell component', () => {
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
-    });
+        });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating up', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -985,6 +993,107 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
     });
 
+    it('keyboard navigation - should allow navigating first/last cell in column with down/up and Cntr key.', async() => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.verticalScrollContainer.addScrollTop(5000);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(104, 'value');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        let selectedCellFromGrid = grid.selectedCells[0];
+        expect(fix.componentInstance.selectedCell.value).toEqual(9990);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(999);
+        expect(selectedCellFromGrid.value).toEqual(9990);
+        expect(selectedCellFromGrid.column.field).toMatch('value');
+        expect(selectedCellFromGrid.rowIndex).toEqual(999);
+
+        cell = grid.getCellByColumn(998, 'other');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(0);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('other');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop ).toEqual(0);
+        selectedCellFromGrid = grid.selectedCells[0];
+        expect(selectedCellFromGrid.value).toEqual(0);
+        expect(selectedCellFromGrid.column.field).toMatch('other');
+        expect(selectedCellFromGrid.rowIndex).toEqual(0);
+    });
+
+    it('keyboard navigation - should allow navigating first/last cell in column with home/end and Cntr key.', async() => {
+        const fix = TestBed.createComponent(VirtualGridComponent);
+        fix.componentInstance.cols = fix.componentInstance.generateCols(50);
+        fix.componentInstance.data = fix.componentInstance.generateData(500);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        grid.verticalScrollContainer.addScrollTop(5000);
+
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        let cell = grid.getCellByColumn(101, '2');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        expect(cell.selected).toBe(true);
+        expect(cell.focused).toBe(true);
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        let selectedCellFromGrid = grid.selectedCells[0];
+        expect(fix.componentInstance.selectedCell.value).toEqual(0);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('0');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(0);
+        expect(selectedCellFromGrid.value).toEqual(0);
+        expect(selectedCellFromGrid.column.field).toMatch('0');
+        expect(selectedCellFromGrid.rowIndex).toEqual(0);
+        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop ).toEqual(0);
+
+        cell = grid.getCellByColumn(4, '2');
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
+        await wait(200);
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual(244510);
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('49');
+        expect(fix.componentInstance.selectedCell.rowIndex).toEqual(499);
+
+        selectedCellFromGrid = grid.selectedCells[0];
+        expect(selectedCellFromGrid.value).toEqual(244510);
+        expect(selectedCellFromGrid.column.field).toMatch('49');
+        expect(selectedCellFromGrid.rowIndex).toEqual(499);
+    });
+
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating left', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols = fix.componentInstance.generateCols(100);
@@ -1014,7 +1123,7 @@ describe('IgxGrid - Cell component', () => {
         expect(rowDisplayContainer.style.left).toEqual('0px');
         expect(fix.componentInstance.selectedCell.value).toEqual(0);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('0');
-        });
+    });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating right', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -1042,7 +1151,7 @@ describe('IgxGrid - Cell component', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('3');
     });
 
-    it('should be able to conditionally style cells', () => {
+    it('should be able to conditionally style cells', async(() => {
         const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
         fixture.detectChanges();
 
@@ -1062,7 +1171,20 @@ describe('IgxGrid - Cell component', () => {
         expect(grid.getColumnByName('ProductName').cells[4].nativeElement.classList).toContain('test2');
         expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
         expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
-    });
+    }));
+
+    it('Cell editing (when rowEditable=false) - default column editable value is false', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ColumnEditablePropertyTestComponent);
+        fixture.detectChanges();
+         const grid = fixture.componentInstance.grid;
+         const columns: IgxColumnComponent[] = grid.columnList.toArray();
+        expect(columns[0].editable).toBeFalsy();
+        expect(columns[1].editable).toBeFalsy();
+        expect(columns[2].editable).toBeTruthy();
+        expect(columns[3].editable).toBeTruthy();
+        expect(columns[4].editable).toBeFalsy();
+        expect(columns[5].editable).toBeFalsy();
+    }));
 });
 
 @Component({
@@ -1350,4 +1472,26 @@ export class ConditionalCellStyleTestComponent implements OnInit {
         ];
         this.data = SampleTestData.foodProductDataExtended();
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column field="firstName"></igx-column>
+            <igx-column field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="false" [dataType]="'date'"></igx-column>
+            <igx-column field="fullName" [editable]="false"></igx-column>
+        </igx-grid>
+        <button class="btnTest">Test</button>
+    `
+})
+export class ColumnEditablePropertyTestComponent {
+     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+     public data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
 }
