@@ -9,7 +9,10 @@ import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxDatePicker', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -31,6 +34,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Base Tests', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerTestComponent>;
         let datePicker: IgxDatePickerComponent;
 
@@ -174,6 +178,7 @@ describe('IgxDatePicker', () => {
     });
 
     describe('DatePicker with passed date', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<IgxDatePickerWithPassedDateComponent>;
         let datePicker: IgxDatePickerComponent;
         let inputTarget;

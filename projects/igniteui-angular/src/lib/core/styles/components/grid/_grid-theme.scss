@@ -51,6 +51,9 @@
 /// @param {Color} $grouping-indicator-hover-background [#fefefe] - grouping indicator hover background color.
 /// @param {Color} $grouping-indicator-focus-background [rgba(0, 0, 0, .04)] - grouping indicator focus background color.
 /// @param {Color} $row-content-focus-background [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+/// @param {Color} $edited-row-indicator [rgba(0, 0, 0, .04)] - edited row indicator color.
+/// @param {Color} $edit-mode-color [rgba(0, 0, 0, .04)] - edit row border color for the row and the input.
+/// @param {Color} $cell-edited-value-color [rgba(0, 0, 0, .04)] - edit cell input bottom border color.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -90,6 +93,10 @@
     $cell-selected-background: null,
     $cell-selected-text-color: null,
     $cell-editing-background: null,
+
+    $edit-mode-color: null,
+    $edited-row-indicator: null,
+    $cell-edited-value-color: null,
 
     $resize-line-color: null,
     $drop-indicator-color: null,
@@ -153,6 +160,10 @@
         cell-selected-background: igx-color($palette, 'primary'),
         cell-selected-text-color: igx-contrast-color($palette, 'primary'),
         cell-editing-background: #fff,
+
+        edit-mode-color: igx-color($palette, 'secondary'),
+        edited-row-indicator: igx-color($palette, 'grays', 400),
+        cell-edited-value-color: igx-color($palette, 'grays', 600),
 
         resize-line-color: igx-color($palette, 'secondary'),
 
@@ -335,6 +346,10 @@
         cell-selected-background: $cell-selected-background,
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
+
+        edit-mode-row-border-color: $edit-mode-color,
+        edited-row-indicator: $edited-row-indicator,
+        cell-edited-value-color: $cell-edited-value-color,
 
         resize-line-color: $resize-line-color,
 
@@ -547,6 +562,7 @@
     %grid-tfoot {
         grid-row: 5;
         border-top: $grid-header-border;
+        z-index: 10001;
     }
 
     %grid-display-container-thead {
@@ -582,6 +598,7 @@
         flex-flow: row nowrap;
         width: 100%;
         background: --var($theme, 'header-background');
+        z-index: 10001;
     }
 
     %grid-scroll-start {
@@ -603,6 +620,7 @@
         background-color: --var($theme, 'content-background');
         border-bottom: 1px solid --var($theme, 'row-border-color');
         outline-style: none;
+        position: relative;
 
         &:last-of-type {
             border-bottom: 0;
@@ -631,6 +649,44 @@
         &:hover {
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
+        }
+    }
+
+    %igx-grid__tr--edit {
+        border-bottom: 1px solid --var($theme, 'edit-mode-color');
+        position: relative;
+
+        &::after {
+            content: '';
+            position: absolute;
+            height: rem(1);
+            width: 100%;
+            top: rem(-1);
+            left: 0;
+            background: --var($theme, 'edit-mode-color');
+        }
+
+        %igx-grid__td--editing {
+            border: none;
+
+            %form-group-bundle--focus {
+                caret-color: --var($theme, 'edit-mode-color') !important;
+            }
+
+            %form-group-border {
+                background: --var($theme, 'edit-mode-color') !important;
+            }
+        }
+    }
+
+    %igx-grid__tr--edited {
+        &::before {
+            content: '';
+            position: absolute;
+            width: rem(2);
+            height: 100%;
+            z-index: 2;
+            background: --var($theme, 'edited-row-indicator');
         }
     }
 
@@ -676,9 +732,18 @@
         border-bottom: 0;
     }
 
-    %grid-cell--editing {
+    %igx-grid__td--edited {
+        font-style: italic;
+        color: --var($theme, 'cell-edited-value-color');
+    }
+
+    %igx-grid__tr--deleted {
+        text-decoration-line: line-through;
+    }
+
+    %igx-grid__td--editing {
         background-color: --var($theme, 'cell-editing-background') !important;
-        border: 2px solid --var($theme, 'cell-selected-background');
+        border: rem(2px) solid --var($theme, 'cell-selected-background');
 
         igx-input-group {
             width: 100%;
@@ -1323,5 +1388,10 @@
     %igx-grid__outlet {
         z-index: 2;
         position: fixed;
+    }
+
+    %igx-grid__row-editing-outlet {
+        z-index: 10000;
+        position: absolute;
     }
 }

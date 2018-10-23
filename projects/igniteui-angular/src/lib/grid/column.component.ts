@@ -24,12 +24,13 @@ import {
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
-import {
-    IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand
-} from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
+import {
+    IgxBooleanFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -108,7 +109,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public editable = false;
+    public editable = null;
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `false`.
@@ -170,6 +171,9 @@ export class IgxColumnComponent implements AfterContentInit {
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            if (this.grid) {
+                this.grid.endRowEdit(true);
+            }
             const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
             if (cellInEditMode) {
                 if (cellInEditMode.cell.column.field === this.field) {
@@ -850,6 +854,9 @@ export class IgxColumnComponent implements AfterContentInit {
     public pin(index?) {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
+        if (this.grid) {
+            this.grid.endRowEdit(true);
+        }
         this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
@@ -909,6 +916,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     public unpin(index?) {
+        if (this.grid) {
+            this.grid.endRowEdit();
+        }
         this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;

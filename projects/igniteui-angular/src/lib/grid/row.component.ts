@@ -17,6 +17,8 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
+import { TransactionType, State } from '../services';
+import { IgxGridComponent } from './grid.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +28,7 @@ import { IgxColumnComponent } from './column.component';
 })
 export class IgxGridRowComponent implements DoCheck {
 
+    private _rowData: any;
     /**
      *  The data passed to the row component.
      *
@@ -35,8 +38,16 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     @Input()
-    public rowData: any;
+    public get rowData(): any {
+        if (this.inEditMode) {
+            return Object.assign({}, this._rowData, this.grid.transactions.getAggregatedValue(this.rowID, false));
+        }
+        return this._rowData;
+    }
 
+    public set rowData(v: any) {
+        this._rowData = v;
+    }
     /**
      * The index of the row.
      *
@@ -63,7 +74,7 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild(forwardRef(() => IgxCheckboxComponent), {read: IgxCheckboxComponent})
+    @ViewChild(forwardRef(() => IgxCheckboxComponent), { read: IgxCheckboxComponent })
     public checkboxElement: IgxCheckboxComponent;
 
     /**
@@ -104,7 +115,10 @@ export class IgxGridRowComponent implements DoCheck {
     get styleClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
         const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass}`;
+        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
+        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
+        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
     }
 
 
@@ -143,6 +157,41 @@ export class IgxGridRowComponent implements DoCheck {
     public isSelected: boolean;
 
     /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-dirty')
+    public get dirty(): boolean {
+        const row: State = this.grid.transactions.getState(this.rowID);
+        if (row) {
+            return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
+        }
+
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-deleted')
+    public get deleted(): boolean {
+        const row: State = this.grid.transactions.getState(this.rowID);
+        if (row) {
+            return row.type === TransactionType.DELETE;
+        }
+
+        return false;
+    }
+
+    public get inEditMode(): boolean {
+        if (this.grid.rowEditable) {
+            const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
+            return (editableRow && editableRow.rowID === this.rowID) || false;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get a reference to the grid that contains the selected row.
      *
      * ```typescript
@@ -159,7 +208,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): any {
+    get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -171,7 +220,7 @@ export class IgxGridRowComponent implements DoCheck {
         // primaryKey data value,
         // or if the primaryKey is omitted, then the whole rowData is used instead.
         const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this.rowData[primaryKey] : this.rowData;
+        return primaryKey ? this._rowData[primaryKey] : this._rowData;
     }
 
     /**
@@ -202,9 +251,9 @@ export class IgxGridRowComponent implements DoCheck {
     protected _rowSelection = false;
 
     constructor(public gridAPI: IgxGridAPIService,
-                private selection: IgxSelectionAPIService,
-                public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+        private selection: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
 
     /**
@@ -212,8 +261,8 @@ export class IgxGridRowComponent implements DoCheck {
      */
     public onCheckboxClick(event) {
         const newSelection = (event.checked) ?
-                            this.selection.add_item(this.gridID, this.rowID) :
-                            this.selection.delete_item(this.gridID, this.rowID);
+            this.selection.add_item(this.gridID, this.rowID) :
+            this.selection.delete_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);
     }
 
@@ -230,6 +279,7 @@ export class IgxGridRowComponent implements DoCheck {
     public update(value: any) {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
+            this.grid.endRowEdit(true);
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.gridAPI.update_row(value, this.gridID, this.rowID);
@@ -247,25 +297,7 @@ export class IgxGridRowComponent implements DoCheck {
      * ```
      */
     public delete() {
-        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell && editableCell.cellID.rowID === this.rowID) {
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
-        }
-        const index = this.grid.data.indexOf(this.rowData);
-        this.grid.onRowDeleted.emit({ data: this.rowData });
-        this.grid.data.splice(index, 1);
-        if (this.grid.rowSelectable === true && this.isSelected) {
-            this.grid.deselectRows([this.rowID]);
-        } else {
-            this.grid.checkHeaderCheckboxStatus();
-        }
-        (this.grid as any)._pipeTrigger++;
-        this.cdr.markForCheck();
-        this.grid.refreshSearch();
-
-        if (this.grid.data.length % this.grid.perPage === 0 && this.grid.isLastPage && this.grid.page !== 0) {
-            this.grid.page--;
-        }
+        this.grid.deleteRowById(this.rowID);
     }
 
     /**
@@ -284,7 +316,7 @@ export class IgxGridRowComponent implements DoCheck {
         this.isSelected = this.rowSelectable ?
             this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
             this.selection.is_item_selected(this.gridID, this.rowID);
-            this.cdr.markForCheck();
+        this.cdr.markForCheck();
         if (this.checkboxElement) {
             this.checkboxElement.checked = this.isSelected;
         }

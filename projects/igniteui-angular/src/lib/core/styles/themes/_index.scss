@@ -12,6 +12,7 @@
 @import '../components/bottom-nav/bottom-nav-theme';
 @import '../components/button/button-theme';
 @import '../components/button-group/button-group-theme';
+@import '../components/banner/banner-theme';
 @import '../components/calendar/calendar-theme';
 @import '../components/card/card-theme';
 @import '../components/carousel/carousel-theme';
@@ -128,6 +129,10 @@
 
     @if not(index($exclude, 'igx-button-group')) {
         @include igx-button-group($theme: get-theme($preset, 'igx-button-group'));
+    }
+
+    @if not(index($exclude, 'igx-banner')) {
+        @include igx-banner($theme: igx-banner-theme());
     }
 
     @if not(index($exclude, 'igx-calendar')) {
