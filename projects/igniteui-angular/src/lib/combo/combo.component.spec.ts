@@ -13,7 +13,6 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, F
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -3356,57 +3355,6 @@ export class IgxComboBindingTestComponent {
                 this.items = data;
             }
         );
-    }
-}
-
-@Component({
-    template: `
-<label id="mockID">Combo Label</label>
-<igx-combo #combo class="input-container" width="300px" [itemsMaxHeight]="250"
-[data]="rData | async" [valueKey]="'ID'" [displayKey]="'ProductName'"
-(onDataPreLoad)="dataLoading($event)" (onSearchInput)="searchInput($event)" (onOpening)="searchInput('')"
-placeholder="Location(s)" searchPlaceholder="Search..." [filterable]="false">
-</igx-combo>
-`,
-    providers: [RemoteService, HttpClient]
-})
-export class IgxComboRemoteBindingTestComponent implements OnInit, AfterViewInit {
-
-    @ViewChild('combo', { read: IgxComboComponent })
-    public combo: IgxComboComponent;
-    public rData: any;
-    public prevRequest: any;
-
-    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
-
-    }
-
-    public ngOnInit() {
-        this.rData = this.remoteService.remoteData;
-    }
-
-    public ngAfterViewInit() {
-        this.remoteService.getData(this.combo.virtualizationState, null, (data) => {
-            this.combo.totalItemCount = data.Count;
-            this.cdr.detectChanges();
-        });
-    }
-
-    public dataLoading(evt) {
-        if (this.prevRequest) {
-            this.prevRequest.unsubscribe();
-        }
-
-        this.prevRequest = this.remoteService.getData(this.combo.virtualizationState, null, () => {
-            this.cdr.detectChanges();
-            this.combo.triggerCheck();
-        });
-    }
-
-    public searchInput(searchText) {
-        this.remoteService.getData(this.combo.virtualizationState, searchText, (data) => {
-            this.combo.totalItemCount = searchText ? data.Results.length : data.Count;
-        });
     }
 }
 
