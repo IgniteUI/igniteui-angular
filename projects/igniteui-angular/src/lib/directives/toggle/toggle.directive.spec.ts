@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output,
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective, CancelableEventArgs } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
 
@@ -133,6 +133,7 @@ describe('IgxToggle', () => {
         expect(fixture.componentInstance.toggle.collapsed).toBe(false);
         expect(divEl.classes[TOGGLER_CLASS]).toBe(true);
     }));
+
     it('should close toggle when IgxToggleActionDiretive is clicked and toggle is opened', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
         fixture.detectChanges();
@@ -210,6 +211,49 @@ describe('IgxToggle', () => {
 
         expect(toggle.onClosed.emit).toHaveBeenCalled();
         expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
+    }));
+
+    it('fix for #2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+
+        spyOn(toggle.onOpening, 'emit').and.callThrough();
+        spyOn(toggle.onOpened, 'emit').and.callThrough();
+        spyOn(toggle.onClosing, 'emit').and.callThrough();
+        spyOn(toggle.onClosed, 'emit').and.callThrough();
+
+        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+        toggle.open();
+        fixture.detectChanges();
+
+        tick();
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+
+        tick();
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        fixture.detectChanges();
+
+        tick();
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+
+        tick();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+
+        toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+        toggle.open();
+        fixture.detectChanges();
+
+        tick();
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
+
+        tick();
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
     }));
 
     describe('overlay settings', () => {

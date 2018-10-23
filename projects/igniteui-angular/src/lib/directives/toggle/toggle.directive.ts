@@ -18,6 +18,14 @@ import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
 import { filter, take } from 'rxjs/operators';
 import { Subscription, OperatorFunction } from 'rxjs';
+import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
+
+export interface CancelableEventArgs {
+    /**
+     * Provides the ability to cancel the event.
+     */
+    cancel: boolean;
+}
 
 @Directive({
     exportAs: 'toggle',
@@ -69,7 +77,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter();
+    public onOpening = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emits an event after the toggle container is closed.
@@ -107,7 +115,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter();
+    public onClosing = new EventEmitter<CancelableEventArgs>();
 
     private _collapsed = true;
     /**
@@ -171,7 +179,15 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     public open(overlaySettings?: OverlaySettings) {
         this._collapsed = false;
         this.cdr.detectChanges();
-        this.onOpening.emit();
+
+        const openEventArgs: CancelableEventArgs = { cancel: false };
+        this.onOpening.emit(openEventArgs);
+        if (openEventArgs.cancel) {
+            this._collapsed = true;
+            this.cdr.detectChanges();
+            return;
+        }
+
         if (this._overlayId) {
             this.overlayService.show(this._overlayId, overlaySettings);
         } else {
@@ -182,9 +198,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.onOpened.emit();
         });
-        this._overlayClosingSub = this.overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.onClosing.emit();
-        });
+        this._overlayClosingSub = this.overlayService
+            .onClosing
+            .pipe(...this._overlaySubFilter)
+            .subscribe((e: OverlayCancelableEventArgs) => {
+                const eventArgs: CancelableEventArgs = { cancel: false };
+                this.onClosing.emit(eventArgs);
+                e.cancel = eventArgs.cancel;
+            });
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
