@@ -622,7 +622,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - verify the column being moved can be reordered among new columns
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 30);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 350, 30);
             await wait();
             fixture.detectChanges();
@@ -711,7 +711,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 64, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 25);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 25);
             await wait();
             fixture.detectChanges();
@@ -832,7 +832,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
             await wait();
             fixture.detectChanges();
@@ -861,7 +861,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
             await wait();
             fixture.detectChanges();
@@ -884,11 +884,11 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 31);
-            await wait();
+            await wait(50);
             fixture.detectChanges();
 
             // step 3 - verify pinned columns are reordered correctly
@@ -911,7 +911,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 31);
             await wait();
             fixture.detectChanges();
@@ -938,7 +938,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 31);
             await wait();
             fixture.detectChanges();
@@ -966,7 +966,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 180, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 180, 31);
             await wait();
             fixture.detectChanges();
@@ -991,7 +991,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 80, 31);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 80, 31);
             await wait();
             fixture.detectChanges();
