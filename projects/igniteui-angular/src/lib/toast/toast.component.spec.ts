@@ -5,6 +5,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {IgxToastComponent, IgxToastModule, IgxToastPosition} from './toast.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxToast', () => {
     configureTestSuite();
@@ -101,7 +102,7 @@ describe('IgxToast', () => {
         expect(toast.isVisible).toBeTruthy();
     }));
 
-    it('visibility is properly toggled by its toggle() method.', () => {
+    it('visibility is properly toggled by its toggle() method.', (async() => {
         spyOn(toast.onShowing, 'emit');
         spyOn(toast.onShown, 'emit');
         spyOn(toast.onHiding, 'emit');
@@ -109,6 +110,7 @@ describe('IgxToast', () => {
 
         expect(toast.isVisible).toBe(true);
         toast.toggle();
+        await wait();
         fixture.detectChanges();
 
         expect(toast.isVisible).toBe(false);
@@ -118,6 +120,7 @@ describe('IgxToast', () => {
         expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
 
         toast.toggle();
+        await wait();
         fixture.detectChanges();
 
         expect(toast.isVisible).toBe(true);
@@ -127,9 +130,10 @@ describe('IgxToast', () => {
         expect(toast.onHidden.emit).toHaveBeenCalledTimes(1);
 
         toast.toggle();
+        await wait();
         fixture.detectChanges();
         expect(toast.isVisible).toBe(false);
-    });
+    }));
 });
 @Component({
     template: `<igx-toast #toast>
