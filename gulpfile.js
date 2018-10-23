@@ -223,7 +223,7 @@ gulp.task('typedoc-build:export',
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH}`)
 );
 
-gulp.task('typedoc-build:import',
+gulp.task('typedoc-build:import', ['typedoc-build'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.EXPORT_JSON_PATH}`)
 );
 
