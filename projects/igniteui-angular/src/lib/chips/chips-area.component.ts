@@ -201,10 +201,8 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             if (event.key === 'ArrowLeft' || event.key === 'Left') {
                 orderChanged = this.positionChipAtIndex(dragChipIndex, dragChipIndex - 1, false);
                 if (orderChanged) {
-                    // The `modifiedChipsArray` is out of date in the setTimeout sometimes.
-                    const chipArray = this.modifiedChipsArray;
                     setTimeout(() => {
-                        chipArray[dragChipIndex - 1].chipArea.nativeElement.focus();
+                        this.chipsList.toArray()[dragChipIndex - 1].chipArea.nativeElement.focus();
                     });
                 }
             } else if (event.key === 'ArrowRight' || event.key === 'Right') {

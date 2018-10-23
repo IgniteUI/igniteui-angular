@@ -494,7 +494,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             const totalMovedY = pageY - this._startY;
             if (!this._dragStarted &&
                 (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
-                this.dragStart.emit(dragStartArgs);
+                this.zone.run(() => { this.dragStart.emit(dragStartArgs); });
 
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
@@ -546,9 +546,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 this.onTransitionEnd(null);
             }
 
-            this.dragEnd.emit();
+            this.zone.run(() => { this.dragEnd.emit(); });
         } else {
-            this.dragClicked.emit();
+            this.zone.run(() => { this.dragClicked.emit(); });
         }
     }
 
@@ -704,7 +704,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
             this.element.nativeElement.style.transitionDuration = '0.0s';
             this._dragStarted = false;
-            this.returnMoveEnd.emit();
+            this.zone.run(() => { this.returnMoveEnd.emit(); });
             this.cdr.detectChanges();
         }
     }

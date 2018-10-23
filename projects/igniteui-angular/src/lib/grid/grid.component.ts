@@ -1556,6 +1556,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _showToolbar = false;
     private _exportExcel = false;
     private _exportCsv = false;
+    private _chipsDragged = false;
     private _toolbarTitle: string = null;
     private _exportText: string = null;
     private _exportExcelText: string = null;
@@ -4373,7 +4374,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.groupingExpansionState = [];
         this.chipsGoupingExpressions = newGrouping;
         event.isValid = true;
+
+        if (!this._chipsDragged) {
+            this.groupingExpressions = this.chipsGoupingExpressions;
+        }
         this.markForCheck();
+    }
+
+    /**
+     * @hidden
+     */
+    public chipsMovingStarted() {
+        this._chipsDragged = true;
     }
 
     /**
@@ -4381,6 +4393,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public chipsMovingEnded() {
         this.groupingExpressions = this.chipsGoupingExpressions;
+        this._chipsDragged = false;
         this.markForCheck();
     }
 
