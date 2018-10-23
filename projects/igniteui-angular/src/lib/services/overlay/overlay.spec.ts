@@ -6,7 +6,7 @@ import {
     ViewChild,
     ComponentRef
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async as asyncWrapper, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -29,6 +29,8 @@ import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
 import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -106,19 +108,22 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
 }
 
 describe('igxOverlay', () => {
-    beforeEach(async () => {
-        TestBed.configureTestingModule({
-            imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
-            declarations: DIRECTIVE_COMPONENTS
-        }).compileComponents();
+    beforeEach(async(() => {
         UIInteractions.clearOverlay();
-    });
+    }));
 
     afterAll(() => {
         UIInteractions.clearOverlay();
     });
 
     describe('Unit Tests: ', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
+                declarations: DIRECTIVE_COMPONENTS
+            }).compileComponents();
+        }));
 
         it('OverlayElement should return a div attached to Document\'s body.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -512,117 +517,6 @@ describe('igxOverlay', () => {
             });
         });
 
-        it('Should properly initialize Scroll Strategy - Block.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
-                }
-            }).createComponent(EmptyPageComponent);
-            const scrollStrat = new BlockScrollStrategy();
-            fixture.detectChanges();
-            const overlaySettings: OverlaySettings = {
-                positionStrategy: new GlobalPositionStrategy(),
-                scrollStrategy: scrollStrat,
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            const wheelSpy = spyOn<any>(scrollStrat, 'onWheel').and.callThrough();
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-
-            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
-            document.dispatchEvent(new Event('scroll'));
-
-            expect(scrollSpy).toHaveBeenCalledTimes(1);
-
-            document.dispatchEvent(new Event('wheel'));
-            expect(wheelSpy).toHaveBeenCalledTimes(1);
-            overlay.hide('0');
-            tick();
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
-        }));
-
-        it('Should properly initialize Scroll Strategy - Absolute.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
-                }
-            }).createComponent(EmptyPageComponent);
-            const scrollStrat = new AbsoluteScrollStrategy();
-            fixture.detectChanges();
-            const overlaySettings: OverlaySettings = {
-                positionStrategy: new GlobalPositionStrategy(),
-                scrollStrategy: scrollStrat,
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-
-            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
-            document.dispatchEvent(new Event('scroll'));
-            expect(scrollSpy).toHaveBeenCalledTimes(1);
-            overlay.hide('0');
-            tick();
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
-        }));
-
-        it('Should properly initialize Scroll Strategy - Close.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute,
-                bottom: 200%;
-            }`]
-                }
-            }).createComponent(EmptyPageComponent);
-            const scrollStrat = new CloseScrollStrategy();
-            fixture.detectChanges();
-            const overlaySettings: OverlaySettings = {
-                positionStrategy: new GlobalPositionStrategy(),
-                scrollStrategy: scrollStrat,
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            const overlay = fixture.componentInstance.overlay;
-            spyOn(scrollStrat, 'initialize').and.callThrough();
-            spyOn(scrollStrat, 'attach').and.callThrough();
-            spyOn(scrollStrat, 'detach').and.callThrough();
-            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-
-            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
-            document.dispatchEvent(new Event('scroll'));
-
-            expect(scrollSpy).toHaveBeenCalledTimes(1);
-            overlay.hide('0');
-            tick();
-            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
-        }));
-
         it('fix for #1690 - click on second filter does not close first one.', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
@@ -739,7 +633,144 @@ describe('igxOverlay', () => {
         }));
     });
 
+    describe('Unit Tests p2 (overrides): ', () => {
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
+                declarations: DIRECTIVE_COMPONENTS
+            });
+        }));
+        afterAll(() => {
+            TestBed.resetTestingModule();
+        });
+        it('Should properly initialize Scroll Strategy - Block.', fakeAsync( async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollStrat = new BlockScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(scrollStrat, 'initialize').and.callThrough();
+            spyOn(scrollStrat, 'attach').and.callThrough();
+            spyOn(scrollStrat, 'detach').and.callThrough();
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            const wheelSpy = spyOn<any>(scrollStrat, 'onWheel').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+            document.dispatchEvent(new Event('scroll'));
+
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+
+            document.dispatchEvent(new Event('wheel'));
+            expect(wheelSpy).toHaveBeenCalledTimes(1);
+            overlay.hide('0');
+            tick();
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should properly initialize Scroll Strategy - Absolute.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollStrat = new AbsoluteScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(scrollStrat, 'initialize').and.callThrough();
+            spyOn(scrollStrat, 'attach').and.callThrough();
+            spyOn(scrollStrat, 'detach').and.callThrough();
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+            document.dispatchEvent(new Event('scroll'));
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            overlay.hide('0');
+            tick();
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should properly initialize Scroll Strategy - Close.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            const scrollStrat = new CloseScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            spyOn(scrollStrat, 'initialize').and.callThrough();
+            spyOn(scrollStrat, 'attach').and.callThrough();
+            spyOn(scrollStrat, 'detach').and.callThrough();
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            expect(scrollStrat.attach).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
+            document.dispatchEvent(new Event('scroll'));
+
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            overlay.hide('0');
+            tick();
+            expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+        }));
+    });
+
     describe('Integration tests: ', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
+                declarations: DIRECTIVE_COMPONENTS
+            }).compileComponents();
+        }));
 
         // 1. Positioning Strategies
         // 1.1 Global (show components in the window center - default).
@@ -1107,57 +1138,6 @@ describe('igxOverlay', () => {
             expect(componentRect_1.height).toEqual(componentRect_2.height);
         });
 
-        // If adding a component near the visible window borders(left,right,up,down)
-        // it should be partially hidden and based on scroll strategy:
-        it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button {
-                        position: absolute;
-                        top: 850px;
-                        left: -30px;
-                        width: 100px;
-                        height: 60px;
-                    }`]
-                }
-            }).createComponent(EmptyPageComponent);
-
-            const dummy = document.createElement('div');
-            dummy.setAttribute('style',
-                'width:60px; height:60px; color:green; position: absolute; top: 3000px; left: 3000px;');
-            document.body.appendChild(dummy);
-
-            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('button')[0];
-            const positionSettings2 = {
-                target: targetEl
-            };
-
-            const overlaySettings: OverlaySettings = {
-                positionStrategy: new ConnectedPositioningStrategy(positionSettings2),
-                scrollStrategy: new NoOpScrollStrategy(),
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            const overlay = fixture.componentInstance.overlay;
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-
-            tick();
-            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-            const element = contentWrapper.firstChild as HTMLElement;
-            const elementRect = element.getBoundingClientRect();
-
-            document.documentElement.scrollTop = 100;
-            document.documentElement.scrollLeft = 50;
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-
-            expect(elementRect).toEqual(element.getBoundingClientRect());
-            expect(document.documentElement.scrollTop).toEqual(100);
-            expect(document.documentElement.scrollLeft).toEqual(50);
-            document.body.removeChild(dummy);
-        }));
-
         it(`Should change the state of the component to closed when reaching threshold and closing scroll strategy is used.`,
             fakeAsync(() => {
                 const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1188,41 +1168,6 @@ describe('igxOverlay', () => {
                 tick();
                 expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
             }));
-
-        it('Should retain the component state when scrolling and block scroll strategy is used.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button { position: absolute, bottom: -2000px; }`]
-                }
-            }).createComponent(EmptyPageComponent);
-            const scrollStrat = new BlockScrollStrategy();
-            fixture.detectChanges();
-            const overlaySettings: OverlaySettings = {
-                positionStrategy: new ConnectedPositioningStrategy(),
-                scrollStrategy: scrollStrat,
-                modal: false,
-                closeOnOutsideClick: false
-            };
-            const overlay = fixture.componentInstance.overlay;
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(document.documentElement.scrollTop).toEqual(0);
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-            expect(document.documentElement.scrollTop).toEqual(0);
-
-            document.documentElement.scrollTop += 25;
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-            expect(document.documentElement.scrollTop).toEqual(0);
-
-            document.documentElement.scrollTop += 1000;
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-            expect(document.documentElement.scrollTop).toEqual(0);
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-            scrollStrat.detach();
-        }));
 
         it('Should scroll component with the scrolling container when absolute scroll strategy is used.', fakeAsync(() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
@@ -1500,138 +1445,6 @@ describe('igxOverlay', () => {
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
 
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT.', fakeAsync(() => {
-            const fix = TestBed.overrideComponent(DownRightButtonComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute;
-                top: 16px;
-                left: 16px;
-                width: 84px;
-                height: 84px;
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }`]
-                }
-            }).createComponent(DownRightButtonComponent);
-            UIInteractions.clearOverlay();
-            fix.detectChanges();
-            const currentElement = fix.componentInstance;
-            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
-            fix.detectChanges();
-            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
-            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
-            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
-            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
-            currentElement.ButtonPositioningSettings.target = buttonElement;
-            buttonElement.click();
-            fix.detectChanges();
-            tick();
-
-            fix.detectChanges();
-            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
-            const buttonLeft = buttonElement.offsetLeft;
-            const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
-            const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
-            expect(wrapperTop).toEqual(expectedTop);
-            expect(wrapperLeft).toEqual(expectedLeft);
-        }));
-
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT.', fakeAsync(() => {
-            const fix = TestBed.overrideComponent(DownRightButtonComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute;
-                top: 16px;
-                right: 16px;
-                width: 84px;
-                height: 84px;
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }`]
-                }
-            }).createComponent(DownRightButtonComponent);
-            UIInteractions.clearOverlay();
-            fix.detectChanges();
-            const currentElement = fix.componentInstance;
-            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
-            fix.detectChanges();
-            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Right;
-            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
-            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
-            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Right;
-            currentElement.ButtonPositioningSettings.target = buttonElement;
-            buttonElement.click();
-            fix.detectChanges();
-            tick();
-
-            fix.detectChanges();
-            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
-            const buttonLeft = buttonElement.offsetLeft;
-            const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.clientWidth; // To the left of the button
-            const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
-            expect(wrapperTop).toEqual(expectedTop);
-            expect(wrapperLeft).toEqual(expectedLeft);
-        }));
-
-        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT.', fakeAsync(() => {
-            const fix = TestBed.overrideComponent(DownRightButtonComponent, {
-                set: {
-                    styles: [`button {
-                position: absolute;
-                bottom: 16px;
-                left: 16px;
-                width: 84px;
-                height: 84px;
-                padding: 0px;
-                margin: 0px;
-                border: 0px;
-            }`]
-                }
-            }).createComponent(DownRightButtonComponent);
-            UIInteractions.clearOverlay();
-            fix.detectChanges();
-            const currentElement = fix.componentInstance;
-            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
-            fix.detectChanges();
-            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
-            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Bottom;
-            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Bottom;
-            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
-            currentElement.ButtonPositioningSettings.target = buttonElement;
-            buttonElement.click();
-            fix.detectChanges();
-            tick();
-
-            fix.detectChanges();
-            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
-            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
-            const buttonLeft = buttonElement.offsetLeft;
-            const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
-            const expectedTop = buttonTop - wrapperContent.lastElementChild.clientHeight; // On top of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
-            expect(wrapperTop).toEqual(expectedTop);
-            expect(wrapperLeft).toEqual(expectedLeft);
-        }));
-
         it('Should display each shown component based on the options specified if the component fits into the visible window.',
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
@@ -1875,214 +1688,6 @@ describe('igxOverlay', () => {
                 expect(componentRect_1.height).toEqual(componentRect_2.height); // Will have the same height
             }));
 
-        // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
-        // 2.1. Scroll Strategy - None
-        it('Should not scroll component, nor the window when none scroll strategy is passed. No scrolling happens.', fakeAsync(() => {
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [`button {
-                        position: absolute;
-                        top: 120%;
-                        left:120%;
-                    }`]
-                }
-            }).createComponent(EmptyPageComponent);
-
-            const overlaySettings: OverlaySettings = {
-                modal: false,
-            };
-            const overlay = fixture.componentInstance.overlay;
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-            const element = contentWrapper.firstChild as HTMLElement;
-            const elementRect = element.getBoundingClientRect();
-
-            document.documentElement.scrollTop = 100;
-            document.documentElement.scrollLeft = 50;
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-
-            expect(elementRect).toEqual(element.getBoundingClientRect());
-            expect(document.documentElement.scrollTop).toEqual(100);
-            expect(document.documentElement.scrollLeft).toEqual(50);
-            overlay.hideAll();
-        }));
-
-        it(`Should not close the shown component when none scroll strategy is passed.
-        (example: expanded DropDown stays expanded during a scrolling attempt.)`,
-            fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [`button {
-                            position: absolute;
-                            top: 120%;
-                            left:120%;
-                        }`]
-                    }
-                }).createComponent(EmptyPageComponent);
-
-                const overlaySettings: OverlaySettings = {
-                    modal: false,
-                };
-                const overlay = fixture.componentInstance.overlay;
-
-                overlay.show(SimpleDynamicComponent, overlaySettings);
-                tick();
-                const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const element = contentWrapper.firstChild as HTMLElement;
-                const elementRect = element.getBoundingClientRect();
-
-                document.documentElement.scrollTop = 40;
-                document.documentElement.scrollLeft = 30;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-
-                expect(elementRect).toEqual(element.getBoundingClientRect());
-                expect(document.documentElement.scrollTop).toEqual(40);
-                expect(document.documentElement.scrollLeft).toEqual(30);
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-            })
-        );
-
-        // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
-        // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
-        it('Should scroll until the set threshold is exceeded, and closing scroll strategy is used.',
-            fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [
-                            'button { position: absolute; top: 100%; left: 90% }'
-                        ]
-                    }
-                }).createComponent(EmptyPageComponent);
-
-                const scrollTolerance = 10;
-                const scrollStrategy = new CloseScrollStrategy();
-                const overlay = fixture.componentInstance.overlay;
-                const overlaySettings: OverlaySettings = {
-                    positionStrategy: new GlobalPositionStrategy(),
-                    scrollStrategy: scrollStrategy,
-                    modal: false
-                };
-
-                overlay.show(SimpleDynamicComponent, overlaySettings);
-                tick();
-
-                document.documentElement.scrollTop = scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-
-                document.documentElement.scrollTop = scrollTolerance * 2;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
-
-            }));
-
-        it(`Should not change the shown component shown state until it exceeds the scrolling tolerance set,
-        and closing scroll strategy is used.`,
-            fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [
-                            'button { position: absolute; top: 200%; left: 90% }'
-                        ]
-                    }
-                }).createComponent(EmptyPageComponent);
-                const scrollTolerance = 10;
-                const scrollStrategy = new CloseScrollStrategy();
-                const overlay = fixture.componentInstance.overlay;
-                const overlaySettings: OverlaySettings = {
-                    positionStrategy: new GlobalPositionStrategy(),
-                    scrollStrategy: scrollStrategy,
-                    closeOnOutsideClick: false,
-                    modal: false
-                };
-
-                overlay.show(SimpleDynamicComponent, overlaySettings);
-                tick();
-                expect(document.documentElement.scrollTop).toEqual(0);
-
-                document.documentElement.scrollTop += scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-                fixture.destroy();
-            }));
-
-        it(`Should close the shown component shown when it exceeds the scrolling threshold set, and closing scroll strategy is used.
-            (an expanded DropDown, Menu, DatePicker, etc. collapses).`, fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [
-                            'button { position: absolute; top: 100%; left: 90% }'
-                        ]
-                    }
-                }).createComponent(EmptyPageComponent);
-                const scrollTolerance = 10;
-                const scrollStrategy = new CloseScrollStrategy();
-                const overlay = fixture.componentInstance.overlay;
-                const overlaySettings: OverlaySettings = {
-                    positionStrategy: new GlobalPositionStrategy(),
-                    scrollStrategy: scrollStrategy,
-                    modal: false
-                };
-
-                overlay.show(SimpleDynamicComponent, overlaySettings);
-                tick();
-                expect(document.documentElement.scrollTop).toEqual(0);
-
-                document.documentElement.scrollTop += scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-
-                document.documentElement.scrollTop += scrollTolerance * 2;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
-            }));
-
-        // 2.3 Scroll Strategy - NoOp.
-        it('Should retain the component static and only the background scrolls, when scrolling and noOP scroll strategy is used.',
-            fakeAsync(() => {
-                const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                    set: {
-                        styles: [
-                            'button { position: absolute; top: 200%; left: 90%; }'
-                        ]
-                    }
-                }).createComponent(EmptyPageComponent);
-                const scrollTolerance = 10;
-                const scrollStrategy = new NoOpScrollStrategy();
-                const overlay = fixture.componentInstance.overlay;
-                const overlaySettings: OverlaySettings = {
-                    modal: false,
-                    scrollStrategy: scrollStrategy,
-                    positionStrategy: new GlobalPositionStrategy()
-                };
-
-                overlay.show(SimpleDynamicComponent, overlaySettings);
-                tick();
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-
-                const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                const element = contentWrapper.firstChild as HTMLElement;
-                const elementRect = element.getBoundingClientRect();
-
-                document.documentElement.scrollTop += scrollTolerance;
-                document.dispatchEvent(new Event('scroll'));
-                tick();
-                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-                expect(element.getBoundingClientRect()).toEqual(elementRect);
-            }));
-
         it(`Should persist the component's open state when scrolling, when scrolling and noOP scroll strategy is used
         (expanded DropDown remains expanded).`, fakeAsync(() => {
                 // TO DO replace Spies with css class and/or getBoundingClientRect.
@@ -2116,43 +1721,6 @@ describe('igxOverlay', () => {
                 expect(overlay.hide).toHaveBeenCalledTimes(0);
                 expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             }));
-
-        // 2.4. Scroll Strategy - Absolute.
-        it('Should scroll everything except component when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
-
-            // Should behave as NoOpScrollStrategy
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [
-                        'button { position: absolute; top:200%; left: 100%; }',
-                    ]
-                }
-            }).createComponent(EmptyPageComponent);
-            const scrollTolerance = 10;
-            const scrollStrategy = new NoOpScrollStrategy();
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                closeOnOutsideClick: false,
-                modal: false,
-                positionStrategy: new ConnectedPositioningStrategy(),
-                scrollStrategy: scrollStrategy
-            };
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
-
-            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-            const element = contentWrapper.firstChild as HTMLElement;
-            const elementRect = element.getBoundingClientRect() as DOMRect;
-
-            document.documentElement.scrollTop += scrollTolerance;
-            document.dispatchEvent(new Event('scroll'));
-            tick();
-            const newElementRect = element.getBoundingClientRect() as DOMRect;
-            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
-            expect(newElementRect.top).toEqual(elementRect.top);
-        }));
 
         it('Should persist the component open state when scrolling and absolute scroll strategy is used.', fakeAsync(() => {
             // TO DO replace Spies with css class and/or getBoundingClientRect.
@@ -2332,35 +1900,6 @@ describe('igxOverlay', () => {
             expect(appliedBackgroundStyles).not.toContain(expectedBackgroundColor);
         }));
 
-        it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(() => {
-            // TO DO replace Spies with css class and/or getBoundingClientRect.
-            const fixture = TestBed.overrideComponent(EmptyPageComponent, {
-                set: {
-                    styles: [
-                        'button { position: absolute; top: 90%; left: 100%; }'
-                    ]
-                }
-            }).createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                modal: false,
-                closeOnOutsideClick: true,
-                positionStrategy: new GlobalPositionStrategy()
-            };
-
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay, 'hide').and.callThrough();
-
-            overlay.show(SimpleDynamicComponent, overlaySettings);
-            tick();
-            expect(overlay.show).toHaveBeenCalledTimes(1);
-            expect(overlay.hide).toHaveBeenCalledTimes(0);
-
-            fixture.componentInstance.buttonElement.nativeElement.click();
-            tick();
-            expect(overlay.hide).toHaveBeenCalledTimes(1);
-        }));
-
         it('Should not close when esc key is pressed and is not modal (DropDown, Dialog, etc.).', fakeAsync(() => {
 
             // Utility handler meant for later detachment
@@ -2416,6 +1955,554 @@ describe('igxOverlay', () => {
                 expect(overlayChild.getBoundingClientRect().height).toEqual(280);
                 fixture.componentInstance.overlay.hideAll();
             }));
+    });
+
+    describe('Integration tests p2 (overrides): ', () => {
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
+                declarations: DIRECTIVE_COMPONENTS
+            });
+        }));
+        // If adding a component near the visible window borders(left,right,up,down)
+        // it should be partially hidden and based on scroll strategy:
+        it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync( async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                        position: absolute;
+                        top: 850px;
+                        left: -30px;
+                        width: 100px;
+                        height: 60px;
+                    }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const dummy = document.createElement('div');
+            dummy.setAttribute('style',
+                'width:60px; height:60px; color:green; position: absolute; top: 3000px; left: 3000px;');
+            document.body.appendChild(dummy);
+
+            const targetEl: HTMLElement = <HTMLElement>document.getElementsByClassName('button')[0];
+            const positionSettings2 = {
+                target: targetEl
+            };
+
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(positionSettings2),
+                scrollStrategy: new NoOpScrollStrategy(),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+
+            tick();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+
+            document.documentElement.scrollTop = 100;
+            document.documentElement.scrollLeft = 50;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.documentElement.scrollTop).toEqual(100);
+            expect(document.documentElement.scrollLeft).toEqual(50);
+            document.body.removeChild(dummy);
+        }));
+
+        it('Should retain the component state when scrolling and block scroll strategy is used.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button { position: absolute, bottom: -2000px; }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollStrat = new BlockScrollStrategy();
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(0);
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(0);
+
+            document.documentElement.scrollTop += 25;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(0);
+
+            document.documentElement.scrollTop += 1000;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(0);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+            scrollStrat.detach();
+        }));
+
+        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + LEFT.',
+        fakeAsync(async () => {
+            TestBed.overrideComponent(DownRightButtonComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute;
+                top: 16px;
+                left: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fix = TestBed.createComponent(DownRightButtonComponent);
+            fix.detectChanges();
+
+            UIInteractions.clearOverlay();
+            fix.detectChanges();
+            const currentElement = fix.componentInstance;
+            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+            fix.detectChanges();
+            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
+            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
+            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
+            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
+            currentElement.ButtonPositioningSettings.target = buttonElement;
+            buttonElement.click();
+            fix.detectChanges();
+            tick();
+
+            fix.detectChanges();
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const buttonLeft = buttonElement.offsetLeft;
+            const buttonTop = buttonElement.offsetTop;
+            const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
+            const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
+            const wrapperLeft = wrapperContent.offsetLeft;
+            const wrapperTop = wrapperContent.offsetTop;
+            expect(wrapperTop).toEqual(expectedTop);
+            expect(wrapperLeft).toEqual(expectedLeft);
+        }));
+
+        it('Should show the component inside of the viewport if it would normally be outside of bounds, TOP + RIGHT.',
+        fakeAsync(async () => {
+            TestBed.overrideComponent(DownRightButtonComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fix = TestBed.createComponent(DownRightButtonComponent);
+            fix.detectChanges();
+            UIInteractions.clearOverlay();
+            fix.detectChanges();
+            const currentElement = fix.componentInstance;
+            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+            fix.detectChanges();
+            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Right;
+            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
+            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
+            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Right;
+            currentElement.ButtonPositioningSettings.target = buttonElement;
+            buttonElement.click();
+            fix.detectChanges();
+            tick();
+
+            fix.detectChanges();
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const buttonLeft = buttonElement.offsetLeft;
+            const buttonTop = buttonElement.offsetTop;
+            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.clientWidth; // To the left of the button
+            const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
+            const wrapperLeft = wrapperContent.offsetLeft;
+            const wrapperTop = wrapperContent.offsetTop;
+            expect(wrapperTop).toEqual(expectedTop);
+            expect(wrapperLeft).toEqual(expectedLeft);
+        }));
+
+        it('Should show the component inside of the viewport if it would normally be outside of bounds, BOTTOM + LEFT.',
+        fakeAsync(async () => {
+            TestBed.overrideComponent(DownRightButtonComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute;
+                bottom: 16px;
+                left: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fix = TestBed.createComponent(DownRightButtonComponent);
+            fix.detectChanges();
+            UIInteractions.clearOverlay();
+            fix.detectChanges();
+            const currentElement = fix.componentInstance;
+            const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+            fix.detectChanges();
+            currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
+            currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Bottom;
+            currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Bottom;
+            currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
+            currentElement.ButtonPositioningSettings.target = buttonElement;
+            buttonElement.click();
+            fix.detectChanges();
+            tick();
+
+            fix.detectChanges();
+            const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            const buttonLeft = buttonElement.offsetLeft;
+            const buttonTop = buttonElement.offsetTop;
+            const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
+            const expectedTop = buttonTop - wrapperContent.lastElementChild.clientHeight; // On top of the button
+            const wrapperLeft = wrapperContent.offsetLeft;
+            const wrapperTop = wrapperContent.offsetTop;
+            expect(wrapperTop).toEqual(expectedTop);
+            expect(wrapperLeft).toEqual(expectedLeft);
+        }));
+
+                // 2. Scroll Strategy (test with GlobalPositionStrategy(default))
+        // 2.1. Scroll Strategy - None
+        it('Should not scroll component, nor the window when none scroll strategy is passed. No scrolling happens.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                        position: absolute;
+                        top: 120%;
+                        left:120%;
+                    }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+            };
+            const overlay = fixture.componentInstance.overlay;
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+
+            document.documentElement.scrollTop = 100;
+            document.documentElement.scrollLeft = 50;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.documentElement.scrollTop).toEqual(100);
+            expect(document.documentElement.scrollLeft).toEqual(50);
+            overlay.hideAll();
+        }));
+
+        it(`Should not close the shown component when none scroll strategy is passed.
+        (example: expanded DropDown stays expanded during a scrolling attempt.)`,
+        fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                        position: absolute;
+                        top: 120%;
+                        left:120%;
+                    }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+            };
+            const overlay = fixture.componentInstance.overlay;
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect();
+
+            document.documentElement.scrollTop = 40;
+            document.documentElement.scrollLeft = 30;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+
+            expect(elementRect).toEqual(element.getBoundingClientRect());
+            expect(document.documentElement.scrollTop).toEqual(40);
+            expect(document.documentElement.scrollLeft).toEqual(30);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+        }));
+
+        // 2.2 Scroll Strategy - Closing. (Uses a tolerance and closes an expanded component upon scrolling if the tolerance is exceeded.)
+        // (example: DropDown or Dialog component collapse/closes after scrolling 10px.)
+        it('Should scroll until the set threshold is exceeded, and closing scroll strategy is used.',
+        fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [
+                        'button { position: absolute; top: 100%; left: 90% }'
+                    ]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollTolerance = 10;
+            const scrollStrategy = new CloseScrollStrategy();
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrategy,
+                modal: false
+            };
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+
+            document.documentElement.scrollTop = scrollTolerance;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+
+            document.documentElement.scrollTop = scrollTolerance * 2;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
+
+        }));
+
+        it(`Should not change the shown component shown state until it exceeds the scrolling tolerance set,
+        and closing scroll strategy is used.`,
+        fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [
+                        'button { position: absolute; top: 200%; left: 90% }'
+                    ]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollTolerance = 10;
+            const scrollStrategy = new CloseScrollStrategy();
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrategy,
+                closeOnOutsideClick: false,
+                modal: false
+            };
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(0);
+
+            document.documentElement.scrollTop += scrollTolerance;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+            fixture.destroy();
+        }));
+
+        it(`Should close the shown component shown when it exceeds the scrolling threshold set, and closing scroll strategy is used.
+            (an expanded DropDown, Menu, DatePicker, etc. collapses).`, fakeAsync(async () => {
+                TestBed.overrideComponent(EmptyPageComponent, {
+                    set: {
+                        styles: [
+                            'button { position: absolute; top: 100%; left: 90% }'
+                        ]
+                    }
+                });
+                await TestBed.compileComponents();
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
+
+                const scrollTolerance = 10;
+                const scrollStrategy = new CloseScrollStrategy();
+                const overlay = fixture.componentInstance.overlay;
+                const overlaySettings: OverlaySettings = {
+                    positionStrategy: new GlobalPositionStrategy(),
+                    scrollStrategy: scrollStrategy,
+                    modal: false
+                };
+
+                overlay.show(SimpleDynamicComponent, overlaySettings);
+                tick();
+                expect(document.documentElement.scrollTop).toEqual(0);
+
+                document.documentElement.scrollTop += scrollTolerance;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+
+                document.documentElement.scrollTop += scrollTolerance * 2;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
+            }));
+
+        // 2.3 Scroll Strategy - NoOp.
+        it('Should retain the component static and only the background scrolls, when scrolling and noOP scroll strategy is used.',
+            fakeAsync(async () => {
+                TestBed.overrideComponent(EmptyPageComponent, {
+                    set: {
+                        styles: [
+                            'button { position: absolute; top: 200%; left: 90%; }'
+                        ]
+                    }
+                });
+                await TestBed.compileComponents();
+                const fixture = TestBed.createComponent(EmptyPageComponent);
+                fixture.detectChanges();
+
+                const scrollTolerance = 10;
+                const scrollStrategy = new NoOpScrollStrategy();
+                const overlay = fixture.componentInstance.overlay;
+                const overlaySettings: OverlaySettings = {
+                    modal: false,
+                    scrollStrategy: scrollStrategy,
+                    positionStrategy: new GlobalPositionStrategy()
+                };
+
+                overlay.show(SimpleDynamicComponent, overlaySettings);
+                tick();
+                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+
+                const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                const element = contentWrapper.firstChild as HTMLElement;
+                const elementRect = element.getBoundingClientRect();
+
+                document.documentElement.scrollTop += scrollTolerance;
+                document.dispatchEvent(new Event('scroll'));
+                tick();
+                expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+                expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+                expect(element.getBoundingClientRect()).toEqual(elementRect);
+            }));
+
+        // 2.4. Scroll Strategy - Absolute.
+        it('Should scroll everything except component when scrolling and absolute scroll strategy is used.', fakeAsync(async () => {
+
+            // Should behave as NoOpScrollStrategy
+           TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [
+                        'button { position: absolute; top:200%; left: 100%; }',
+                    ]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollTolerance = 10;
+            const scrollStrategy = new NoOpScrollStrategy();
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                closeOnOutsideClick: false,
+                modal: false,
+                positionStrategy: new ConnectedPositioningStrategy(),
+                scrollStrategy: scrollStrategy
+            };
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(1);
+
+            const contentWrapper = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const element = contentWrapper.firstChild as HTMLElement;
+            const elementRect = element.getBoundingClientRect() as DOMRect;
+
+            document.documentElement.scrollTop += scrollTolerance;
+            document.dispatchEvent(new Event('scroll'));
+            tick();
+            const newElementRect = element.getBoundingClientRect() as DOMRect;
+            expect(document.documentElement.scrollTop).toEqual(scrollTolerance);
+            expect(newElementRect.top).toEqual(elementRect.top);
+        }));
+
+        it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(async () => {
+            // TO DO replace Spies with css class and/or getBoundingClientRect.
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [
+                        'button { position: absolute; top: 90%; left: 100%; }'
+                    ]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const overlay = fixture.componentInstance.overlay;
+            const overlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnOutsideClick: true,
+                positionStrategy: new GlobalPositionStrategy()
+            };
+
+            spyOn(overlay, 'show').and.callThrough();
+            spyOn(overlay, 'hide').and.callThrough();
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            expect(overlay.show).toHaveBeenCalledTimes(1);
+            expect(overlay.hide).toHaveBeenCalledTimes(0);
+
+            fixture.componentInstance.buttonElement.nativeElement.click();
+            tick();
+            expect(overlay.hide).toHaveBeenCalledTimes(1);
+        }));
     });
 });
 @Component({

@@ -13,7 +13,10 @@ import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../test-utils/grid-samples.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Deferred Column Resizing', () => {
+    configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     beforeEach(async(() => {

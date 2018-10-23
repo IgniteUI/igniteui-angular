@@ -3,7 +3,10 @@ import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFlexDirective, IgxLayoutDirective, IgxLayoutModule } from './layout.directive';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('IgxLayoutDirective', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TestFlexLayoutComponent],

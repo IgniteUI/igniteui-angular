@@ -6,7 +6,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('igxFocus', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
