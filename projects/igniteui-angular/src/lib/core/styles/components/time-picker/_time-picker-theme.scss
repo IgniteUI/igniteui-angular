@@ -75,6 +75,10 @@
         $selected-text-color: text-contrast($active-item-background);
     }
 
+    @if not($active-item-background) and $background-color {
+        $active-item-background: rgba(text-contrast($background-color), .12);
+    }
+
     //@if not($active-item-background) and $background-color {
     //    $active-item-background: lighten($background-color, 5%);
     //}

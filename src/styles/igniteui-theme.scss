@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/midnight/index';
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
 @import 'app-palettes';
 @import 'app-layout';
 
@@ -40,7 +40,7 @@ $exclude: (
 
 // Generating a theme
 @include igx-core();
-@include igx-theme($default-palette, $preset: $midnight-theme, $exclude: $exclude, $legacy-support: true);
+@include igx-theme($default-palette, $preset: $dark-green-theme, $exclude: $exclude, $legacy-support: true);
 
 
 /// Typography samples
@@ -64,7 +64,7 @@ $smoky-black: #0c120c;
 $boston-red: #d00000;
 
 $red-sox-button: igx-button-theme(
-    $preset: $midnight-theme,
+    $preset: $dark-green-theme,
     $flat-background: $boston-red,
     $raised-background: $boston-red,
     $fab-background: $boston-red,
@@ -72,7 +72,7 @@ $red-sox-button: igx-button-theme(
 );
 
 $smoky-black-button: igx-button-theme(
-    $preset: $midnight-theme,
+    $preset: $dark-green-theme,
     $flat-background: $smoky-black,
     $raised-background: $smoky-black,
     $fab-background: $smoky-black,
