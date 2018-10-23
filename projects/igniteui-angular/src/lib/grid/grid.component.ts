@@ -40,10 +40,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import {
-    IgxBaseExporter, IgxExporterOptionsBase, AbsoluteScrollStrategy,
-    ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, PositionSettings
-} from '../services/index';
+import { IgxBaseExporter, IgxExporterOptionsBase, AbsoluteScrollStrategy, HorizontalAlignment, VerticalAlignment } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -52,7 +49,7 @@ import { IgxColumnComponent } from './column.component';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
+import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -67,7 +64,6 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { getPointFromPositionsSettings } from '../services/overlay/utilities';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
 
@@ -156,33 +152,6 @@ export interface IFocusChangeEventArgs {
     groupRow: IgxGridGroupByRowComponent;
     event: Event;
     cancel: boolean;
-}
-
-interface ContainerPositionSettings extends PositionSettings {
-    container?: HTMLElement;
-}
-
-class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
-    isTop = false;
-    isTopInitialPosition = null;
-    public settings: ContainerPositionSettings;
-    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
-        super.position(contentElement, size, document, initialCall);
-        const container = this.settings.container; // grid.tbody
-        const target = <HTMLElement>this.settings.target; // current grid.row
-
-        // Position of the overlay depends on the available space in the grid.
-        // If the bottom space is not enough then the the row overlay will show at the top of the row.
-        // Once shown, either top or bottom, then this position stays until the overlay is closed (isTopInitialPosition property),
-        // which means that when scrolling then overlay may hide, while the row is still visible (UX requirement).
-        this.isTop = this.isTopInitialPosition !== null ?
-            this.isTopInitialPosition :
-            container.clientHeight <
-            target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
-        this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
-        const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
-        contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
-    }
 }
 
 /**
