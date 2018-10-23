@@ -10,10 +10,12 @@ import {
     ListLoadingComponent, ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
     TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 declare var Simulator: any;
 
 describe('List', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

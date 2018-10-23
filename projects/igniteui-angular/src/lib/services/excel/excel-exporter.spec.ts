@@ -6,7 +6,10 @@ import { FileContentData } from './test-data.service.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('Excel Exporter', () => {
+    configureTestSuite();
     let exporter: IgxExcelExporterService;
     let options: IgxExcelExporterOptions;
     let actualData: FileContentData;

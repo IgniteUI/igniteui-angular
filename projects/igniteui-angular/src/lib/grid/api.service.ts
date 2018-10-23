@@ -282,7 +282,11 @@ export class IgxGridAPIService {
                 newValue: value
             };
             grid.onEditDone.emit(args);
-            grid.data[index] = args.newValue;
+            if (grid.transactions.enabled) {
+                grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
+            } else {
+                grid.data[index] = args.newValue;
+            }
             if (isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;

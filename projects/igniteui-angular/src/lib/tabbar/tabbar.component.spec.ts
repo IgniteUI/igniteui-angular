@@ -7,7 +7,10 @@ import { IgxBottomNavComponent,
          IgxTabPanelComponent,
          IgxTabTemplateDirective } from './tabbar.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('TabBar', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent],

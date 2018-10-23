@@ -26,6 +26,7 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { IgxGridCellComponent } from './cell.component';
 import { take } from 'rxjs/operators';
 import { TransactionType } from '../services';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
@@ -39,6 +40,7 @@ describe('IgxGrid Component Tests', () => {
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
 
     describe('IgxGrid - input properties', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -301,6 +303,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -759,6 +762,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - keyboard navigation tests', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -811,6 +815,7 @@ describe('IgxGrid Component Tests', () => {
     });
 
     describe('IgxGrid - API methods', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -902,9 +907,35 @@ describe('IgxGrid Component Tests', () => {
             expect(trans.add).toHaveBeenCalledWith({id: 3, type: 'update', newValue: { ProductName: 'Updated Cell'}}, grid.data[2]);
             expect(grid.data.length).toBe(10);
         }));
+
+        it(`Should not update updated row in grid's data in grid with transactions`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const trans = grid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            const updateRowData = {
+                ProductID: 100,
+                ProductName: 'Added',
+                InStock: true,
+                UnitsInStock: 20000,
+                OrderDate: new Date(1)
+            };
+            const oldRowData = grid.data[2];
+
+            grid.updateRow(updateRowData, 3);
+            tick();
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            expect(trans.add).toHaveBeenCalledWith({id: 3, type: 'update', newValue: updateRowData}, oldRowData);
+            expect(grid.data[2]).toBe(oldRowData);
+        }));
     });
 
     describe('IgxGrid - Row Editing', () => {
+        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [

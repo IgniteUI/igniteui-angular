@@ -14,7 +14,10 @@ import { IgxChipComponent, IChipClickEventArgs } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils } from '../test-utils/helper-utils.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - GroupBy', () => {
+    configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -803,16 +806,9 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(groupRow.focused).toBe(true);
         expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+
         UIInteractions.triggerKeyDownEvtUponElem('tab', groupRow.nativeElement, true);
-
         await wait(100);
-        fix.detectChanges();
-
-        expect(cell.selected).toBe(false);
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('tab', firstRow.nativeElement, true);
-        await wait(300);
         fix.detectChanges();
 
         expect(cell.selected).toBeTruthy();
@@ -820,14 +816,6 @@ describe('IgxGrid - GroupBy', () => {
         expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
 
         cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
-        await wait(30);
-        fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeFalsy();
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--focused')).toBeTruthy();
-
-        firstRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
         await wait(30);
         fix.detectChanges();
 

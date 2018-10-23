@@ -13,7 +13,10 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 import { HelperUtils } from '../test-utils/helper-utils.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Column Hiding UI', () => {
+    configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;
@@ -1009,6 +1012,7 @@ describe('Column Hiding UI', () => {
     // });
 
     describe('toolbar button', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();

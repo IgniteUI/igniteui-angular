@@ -9,10 +9,12 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Cell component', () => {
+    configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';
     const navigateHorizontallyToIndex = (
@@ -195,8 +197,10 @@ describe('IgxGrid - Cell component', () => {
     });
 
     describe('Cell Editing', () => {
+        configureTestSuite();
 
         describe('Cell Editing - test edit templates, sorting and filtering', () => {
+            configureTestSuite();
             let fixture;
             let grid;
             beforeEach(() => {
@@ -445,6 +449,7 @@ describe('IgxGrid - Cell component', () => {
         });
 
         describe('EditMode - on scroll, pin, blur', () => {
+            configureTestSuite();
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx_grid__cell--edit';

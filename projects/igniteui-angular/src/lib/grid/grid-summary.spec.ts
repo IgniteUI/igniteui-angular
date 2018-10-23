@@ -8,7 +8,10 @@ import { IgxGridAPIService } from './api.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Summaries', () => {
+    configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';

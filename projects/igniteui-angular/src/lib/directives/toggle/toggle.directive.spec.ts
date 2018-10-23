@@ -6,7 +6,10 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverl
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('IgxToggle', () => {
+    configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
     beforeEach(async(() => {
@@ -213,6 +216,7 @@ describe('IgxToggle', () => {
     }));
 
     describe('overlay settings', () => {
+        configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDiretive and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();

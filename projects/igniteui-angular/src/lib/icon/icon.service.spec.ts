@@ -3,7 +3,10 @@ import { IgxIconService } from './icon.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DOCUMENT } from '@angular/common';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Icon Service', () => {
+    configureTestSuite();
     const MY_FONT = 'my-awesome-icons';
     const ALIAS = 'awesome';
 

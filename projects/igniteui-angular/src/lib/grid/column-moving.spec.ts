@@ -16,7 +16,10 @@ import {
  } from '../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Column Moving', () => {
+    configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__th--fw';
@@ -355,7 +358,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should preserve filtering after columns are reordered.', (async() => {
+        it('Should preserve filtering after columns are reordered.', async() => {
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();
 
@@ -391,16 +394,16 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 300, 71);
             await wait();
             fixture.detectChanges();
 
             expect(grid.columnList.toArray()[1].field).toEqual('ID');
             expect(grid.rowList.length).toEqual(1);
-        }));
+        });
 
         it('Should exit edit mode and commit the new value when column moving starts.', (async() => {
             fixture.componentInstance.isEditable = true;

@@ -9,10 +9,12 @@ import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
 import { IgxButtonDirective } from '../directives/button/button.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
 describe('IgxGrid - Filtering actions', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

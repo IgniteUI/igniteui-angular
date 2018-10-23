@@ -30,6 +30,8 @@ import { CloseScrollStrategy } from './scroll/close-scroll-strategy';
 import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib/animations/main';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
 const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
@@ -106,6 +108,7 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
 }
 
 describe('igxOverlay', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -114,10 +117,9 @@ describe('igxOverlay', () => {
         UIInteractions.clearOverlay();
     }));
 
-    afterAll(async(() => {
+    afterAll(() => {
         UIInteractions.clearOverlay();
-        TestBed.resetTestingModule();
-    }));
+    });
 
     describe('Unit Tests: ', () => {
 

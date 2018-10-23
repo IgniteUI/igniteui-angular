@@ -9,6 +9,7 @@ import { IgxStringFilteringOperand } from '../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -16,6 +17,7 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 
 describe('IgxGrid - multi-column headers', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

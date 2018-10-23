@@ -2,12 +2,10 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     DoCheck,
     ElementRef,
     forwardRef,
     HostBinding,
-    HostListener,
     Input,
     QueryList,
     ViewChild,
@@ -19,7 +17,6 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { first } from 'rxjs/operators';
 import { TransactionType, State } from '../services';
 import { IgxGridComponent } from './grid.component';
 
@@ -124,20 +121,6 @@ export class IgxGridRowComponent implements DoCheck {
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
     }
 
-
-    /**
-     * @hidden
-     */
-    get focused(): boolean {
-        return this.isFocused;
-    }
-
-    /**
-     * @hidden
-     */
-    set focused(val: boolean) {
-        this.isFocused = val;
-    }
 
     /**
      * @hidden
@@ -255,6 +238,11 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
+    public focused = false;
+
+    /**
+     * @hidden
+     */
     protected defaultCssClass = 'igx-grid__tr';
 
     /**
@@ -262,30 +250,11 @@ export class IgxGridRowComponent implements DoCheck {
      */
     protected _rowSelection = false;
 
-    /**
-     * @hidden
-     */
-    protected isFocused = false;
-
     constructor(public gridAPI: IgxGridAPIService,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event) {
-        if (this.rowSelectable && event.key.toLowerCase() === 'tab') {
-            event.preventDefault();
-            event.stopPropagation();
-            const shift = event.shiftKey;
-            if (shift) {
-                (<any>this.grid).navigation.navigateUp(this.nativeElement, this.index,
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
-            } else {
-                (<any>this.grid).navigation.onKeydownHome(this.index);
-    }
-    }
-    }
 
     /**
      * @hidden

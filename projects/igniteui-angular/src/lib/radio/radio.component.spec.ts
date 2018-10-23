@@ -10,7 +10,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxRadioComponent } from './radio.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxRadio', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

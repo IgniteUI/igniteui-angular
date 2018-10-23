@@ -4,9 +4,12 @@ import { By } from '@angular/platform-browser';
 import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
+
 describe('IgxGrid - CRUD operations', () => {
+    configureTestSuite();
 
     let fix;
     let grid;
