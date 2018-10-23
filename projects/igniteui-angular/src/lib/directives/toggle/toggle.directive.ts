@@ -16,8 +16,8 @@ import {
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
-import { filter, take } from 'rxjs/operators';
-import { Subscription, OperatorFunction } from 'rxjs';
+import { filter, takeUntil, take } from 'rxjs/operators';
+import { Subscription, OperatorFunction, Subject } from 'rxjs';
 
 @Directive({
     exportAs: 'toggle',
@@ -25,6 +25,7 @@ import { Subscription, OperatorFunction } from 'rxjs';
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayId: string;
+    private destroy$ = new Subject<boolean>();
     private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
         filter(x => x.id === this._overlayId),
         take(1),
@@ -179,14 +180,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter, takeUntil(this.destroy$)).subscribe(() => {
             this.onOpened.emit();
         });
-        this._overlayClosingSub = this.overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayClosingSub = this.overlayService.onClosing.pipe(...this._overlaySubFilter,  takeUntil(this.destroy$)).subscribe(() => {
             this.onClosing.emit();
         });
         this._overlayClosedSub = this.overlayService.onClosed
-            .pipe(...this._overlaySubFilter)
+            .pipe(...this._overlaySubFilter, takeUntil(this.destroy$))
             .subscribe(this.overlayClosed);
     }
 
@@ -232,6 +233,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.overlayService.hide(this._overlayId);
         }
         this.unsubscribe();
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     private overlayClosed = () => {
