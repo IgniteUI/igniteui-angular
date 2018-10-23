@@ -4912,7 +4912,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowObj.dataRowIndex]);
+        let oldValue = Object.assign({}, this.data[rowInEdit.rowIndex]);
         if (!rowObj) {
             const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
@@ -4920,7 +4920,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue: rowObj.rowData,
+            newValue: newValue,
             oldValue,
             row: rowObj
         });
