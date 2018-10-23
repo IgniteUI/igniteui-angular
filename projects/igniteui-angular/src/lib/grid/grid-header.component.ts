@@ -19,7 +19,7 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -56,7 +56,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
             'igx-grid__th--sorted': this.sorted,
             'igx-grid__drag-col-header': this.dragged,
             'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__th--filtering':this.filteringService.filteredColumn === this.column
+            'igx-grid__th--filtering': this.filteringService.filteredColumn === this.column
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -66,6 +66,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         });
         return defaultClasses.join(' ');
     }
+
 
     @HostBinding('style.min-width')
     @HostBinding('style.max-width')
@@ -149,7 +150,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         public elementRef: ElementRef,
         public zone: NgZone,
         private cms: IgxColumnMovingService,
-        private filteringService: IgxFilteringService
+        public filteringService: IgxFilteringService
     ) { }
 
     public ngOnInit() {
@@ -177,7 +178,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.grid.filteringService.isFilterRowVisible) {
-                if (this.column.filterable &&
+                if (this.column.filterable && !this.column.columnGroup &&
                     this.grid.filteringService.columsWithComplexFilter.find((field) => field === this.column.field) === undefined) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }

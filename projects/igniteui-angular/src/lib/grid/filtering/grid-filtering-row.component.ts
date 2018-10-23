@@ -66,14 +66,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             } else {
                 this.resetExpression();
             }
-        }
 
-        setTimeout(()=> {
             this.showHideArrowButtons();
-            this.cdr.detectChanges();
-        });
 
-        this.transform(0);
+            this.offset = 0;
+            this.transform(this.offset);
+        }
     }
 
     @Input()
@@ -273,8 +271,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     private showHideArrowButtons() {
-        this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
-        this.showArrows = this.chipsAreaWidth >= this.filterRowWidth - (this.inputGroupWidth + this.buttonsContainerWidth) ? true : false;
+        requestAnimationFrame(() => {
+            this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
+
+            this.showArrows = this.chipsAreaWidth >= this.filterRowWidth - (this.inputGroupWidth + this.buttonsContainerWidth) ? true : false;
+            this.cdr.detectChanges();
+        });
     }
 
     private generateExpressionsMap(expressionsTree: FilteringExpressionsTree, depth: number): void {
@@ -336,10 +338,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.expressionsList[length - 2].afterOperator = this.expressionsList[length - 1].beforeOperator;
         }
 
-        setTimeout(() => {
-            this.showHideArrowButtons();
-            this.cdr.detectChanges();
-        });
+        this.showHideArrowButtons();
     }
 
     private createTree(left: FilteringExpressionsTree | IFilteringExpression, right: ExpressionUI): void {
@@ -375,10 +374,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.resetExpression();
         }
 
-        setTimeout(() => {
-            this.showHideArrowButtons();
-            this.cdr.detectChanges();
-        });
+        this.showHideArrowButtons();
     }
 
     private resetExpression(): void {
@@ -397,10 +393,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.input.nativeElement.value = null;
         }
 
-        setTimeout(() => {
-            this.showHideArrowButtons();
-            this.cdr.detectChanges();
-        });
+        this.showHideArrowButtons();
     }
 
     public conditionChangedCallback(): void {
@@ -453,7 +446,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.resetExpression();
         this.cdr.detectChanges();
 
-        this.transform(0);
+        this.offset = 0;
+        this.transform(this.offset);
     }
 
     public clearInput(): void {
@@ -473,7 +467,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
 
-        this.transform(0);
+        this.offset = 0;
+        this.transform(this.offset);
     }
 
     public toggleConditionsDropDown(): void {
@@ -655,9 +650,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 this.transform(this.offset);
             }
 
-            if (chipsAreaRect.width <= containerRect.width) {
-                this.transform(0);
-            }
+            // if (chipsAreaRect.width <= containerRect.width) {
+            //     this.offset = 0;
+            //     this.transform(this.offset);
+            // }
         }
     }
 }

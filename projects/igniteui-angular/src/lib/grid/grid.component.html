@@ -59,7 +59,7 @@
                 <div class="igx-grid__thead-item igx-grid__th--pinned">
                     <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
-                    <igx-grid-filtering-cell *ngIf="allowFiltering" [gridID]="id"
+                    <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup" [gridID]="id"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
                 </div>
             </ng-template>
@@ -69,7 +69,7 @@
             <div class="igx-grid__thead-item">
                 <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
                     [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
-                <igx-grid-filtering-cell *ngIf="allowFiltering" [column]="col" [gridID]="id"
+                <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup" [column]="col" [gridID]="id"
                     [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
             </div>
         </ng-template>
