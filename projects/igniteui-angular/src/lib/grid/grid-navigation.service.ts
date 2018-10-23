@@ -189,7 +189,7 @@ export class IgxGridNavigationService {
             // since addedIndex !== -1, there will always be a target
             this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus();
         } else if (!this.isColumnLeftFullyVisible(editableIndex)) {  // if not fully visible, perform scroll
-            (document.activeElement as any).blur();
+            this.grid.nativeElement.focus();
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -229,7 +229,7 @@ export class IgxGridNavigationService {
             }
         } else {
             let scrollAmount = 0;
-            (document.activeElement as any).blur();
+            this.grid.nativeElement.focus();
             if (this.isColumnPartiallyVisible(editableIndex)) { // if next column is partially visible
                 scrollAmount = this.calcPartialScroll(rowIndex, editableIndex); // scroll by nextColumn.width
             } else if (this.isColumnPartiallyVisible(visibleColumnIndex)) { // if this column is partially visible, scroll both
