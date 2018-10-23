@@ -21,7 +21,7 @@
 </ng-template>
 
 <div [style.width.px]='calcWidth' class="igx-grouparea igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
+    <igx-chips-area class="igx-chips-area" (onReorder)="chipsOrderChanged($event)" (onMoveStart)="chipsMovingStarted()" (onMoveEnd)="chipsMovingEnded()">
         <igx-chip *ngFor="let expr of chipsGoupingExpressions; let last = last;" [id]="expr.fieldName" [draggable]="getColumnByName(expr.fieldName).groupable" [removable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
             (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
             <span class="igx-chip__label"
