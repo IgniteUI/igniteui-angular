@@ -556,7 +556,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 this._displayDensity = DisplayDensity.comfortable;
         }
 
-        if(currentDisplayDensity && currentDisplayDensity !== this._displayDensity) {
+        if (currentDisplayDensity && currentDisplayDensity !== this._displayDensity) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: currentDisplayDensity,
                 newDensity: this._displayDensity
@@ -731,7 +731,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
