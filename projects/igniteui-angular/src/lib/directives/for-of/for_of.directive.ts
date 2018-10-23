@@ -220,6 +220,24 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return this.totalItemCount !== null;
     }
 
+    /**
+     * @hidden
+     */
+    protected removeScrollEventListeners() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this._zone.runOutsideAngular(() =>
+                this.getHorizontalScroll().removeEventListener('scroll', this.func)
+            );
+        } else {
+            const vertical = this.getVerticalScroll();
+            if (vertical) {
+                this._zone.runOutsideAngular(() =>
+                    vertical.removeEventListener('scroll', this.verticalScrollHandler)
+                );
+            }
+        }
+    }
+
     public verticalScrollHandler(event) {
         this.onScroll(event);
     }
@@ -298,9 +316,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     public ngOnDestroy() {
-        if (this.hScroll) {
-            this.hScroll.removeEventListener('scroll', this.func);
-        }
+        this.removeScrollEventListeners();
     }
 
     /**
@@ -1072,18 +1088,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     ngOnInit() {
         super.ngOnInit();
-        if (this.igxForScrollOrientation === 'horizontal') {
-            this._zone.runOutsideAngular(() =>
-                this.getHorizontalScroll().removeEventListener('scroll', this.func)
-            );
-        } else {
-            const vertical = this.getVerticalScroll();
-            if (vertical) {
-                this._zone.runOutsideAngular(() =>
-                    vertical.removeEventListener('scroll', this.verticalScrollHandler)
-                );
-            }
-        }
+        this.removeScrollEventListeners();
     }
 
     ngOnChanges(changes: SimpleChanges) {
