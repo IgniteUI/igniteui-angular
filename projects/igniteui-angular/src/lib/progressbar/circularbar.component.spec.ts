@@ -10,7 +10,10 @@ import { By } from '@angular/platform-browser';
 import { IgxCircularProgressBarComponent, IgxProgressBarModule } from './progressbar.component';
 import { Common } from './common.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgCircularBar', () => {
+    configureTestSuite();
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -323,6 +326,7 @@ describe('IgCircularBar', () => {
 
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
+        configureTestSuite();
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();

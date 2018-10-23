@@ -8,7 +8,10 @@ import { IgxGridAPIService } from './api.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Summaries', () => {
+    configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
     const SUMMARY_VALUE_CLASS = '.igx-grid-summary__result';
@@ -28,6 +31,7 @@ describe('IgxGrid - Summaries', () => {
         })
             .compileComponents();
     }));
+
     it('should not have summary if no summary is active ', () => {
         const fixture = TestBed.createComponent(NoActiveSummariesComponent);
         fixture.detectChanges();
@@ -353,7 +357,7 @@ describe('IgxGrid - Summaries', () => {
         expect(emptySummaries[1].summaryResult).toBe(undefined);
         expect(emptySummaries[2].summaryResult).toBe(undefined);
     });
-    it('should calculate summaries only over filteredData', () => {
+    it('should calculate summaries only over filteredData', async(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
@@ -388,7 +392,7 @@ describe('IgxGrid - Summaries', () => {
             index++;
         });
 
-    });
+    }));
 
     it('When we have data which is undefined and enable summary per defined column, error should not be thrown', () => {
         const fix = TestBed.createComponent(NoActiveSummariesComponent);
@@ -606,7 +610,7 @@ describe('IgxGrid - Summaries', () => {
         expect(grid.hasSummarizedColumns).toBe(true);
     }));
 
-    it('should properly render custom summaries', () => {
+    it('should properly render custom summaries', async(() => {
         const fixture = TestBed.createComponent(CustomSummariesComponent);
         fixture.detectChanges();
 
@@ -639,7 +643,7 @@ describe('IgxGrid - Summaries', () => {
 
         const countValue = summariesUnitOfStock.query(By.css('[title=\'Count\']')).nativeElement.nextSibling.innerText;
         expect(countValue).toBe('0');
-    });
+    }));
 
 });
 

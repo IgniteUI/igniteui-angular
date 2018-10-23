@@ -6,7 +6,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxButtonDirective } from './button.directive';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('IgxButton', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

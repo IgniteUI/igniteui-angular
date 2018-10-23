@@ -4,10 +4,12 @@ import { By } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule, IRangeSliderValue, SliderType } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 declare var Simulator: any;
 
 describe('IgxSlider', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -22,6 +24,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -337,6 +340,7 @@ describe('IgxSlider', () => {
     });
 
     describe('RANGE slider Base tests', () => {
+        configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
