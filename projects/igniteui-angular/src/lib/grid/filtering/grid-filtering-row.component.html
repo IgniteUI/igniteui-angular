@@ -1,4 +1,4 @@
-<igx-drop-down #operands (onSelection)="onOperandChanged($event)" [allowItemsFocus]="true">
+<igx-drop-down #operands (onSelection)="onOperandChanged($event)">
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
@@ -13,8 +13,9 @@
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown()"
                     (keydown)="onPrefixKeyDown($event)"
+                    tabindex="0"
                     [igxDropDownItemNavigation]="operands">
-            <igx-icon tabindex="0" fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
+            <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <input
             #input
@@ -33,26 +34,26 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker tabindex="1" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
+    <igx-datePicker tabindex="0" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box">
                 <igx-prefix #inputGroupPrefix
-                            tabindex="1"
+                            tabindex="0"
                             (click)="toggleConditionsDropDown()"
-                            [igxDropDownItemNavigation]="operands"
-                            (keydown)="onPrefixKeyDown($event)">
+                            (keydown)="onPrefixKeyDown($event)"
+                            [igxDropDownItemNavigation]="operands">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input
                        igxInput
-                       tabindex="1"
+                       tabindex="0"
                 (click)="openDialog()"
                 [placeholder]="placeholder"
                 autocomplete="off"
                        [value]="displayData | date"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
-                <igx-suffix *ngIf="input.value.length > 0" (click)="clearInput()" tabindex="1">
+                <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
@@ -69,8 +70,9 @@
         <igx-chips-area #chipsArea style="display:flex; transition: transform .2s cubic-bezier(.35, 0, .25, 1)" (onSelection)="onChipsSelectionChanged($event)">
             <ng-container *ngFor="let item of expressionsList; index as i; let last = last;">
 
-                <igx-chip id='chip'
+                <igx-chip #chip id='chip'
                     (onSelection)="onChipSelected($event, item.expression)"
+                    (keydown)="onChipKeyDown($event, chip)"
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="true"
                     [selected]="item.isSelected"
@@ -84,13 +86,13 @@
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
-                    <button #operatorsButton igxButton (click)="toggleOperatorsDropDown($event, i)">
+                    <button #operatorsButton igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{getOperator(item.afterOperator)}}</span>
                     </button>
-                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item, operatorsButton)" [allowItemsFocus]="true">
-                            <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
-                            <igx-drop-down-item [igxDropDownItemNavigation]="operators" [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
+                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item, operatorsButton)">
+                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
+                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
                     </igx-drop-down>
                 </span>
 

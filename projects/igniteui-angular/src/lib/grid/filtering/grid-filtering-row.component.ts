@@ -535,16 +535,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onChipSelected(eventArgs: IChipSelectEventArgs, item: ExpressionUI): void {
+    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
         if (eventArgs.selected) {
-            this.expression = item.expression;
+            this.expression = expression;
             if (eventArgs.originalEvent) {
                 requestAnimationFrame(() => {
                     this.inputGroupPrefix.nativeElement.focus();
                     this.toggleConditionsDropDown();
                 });
             }
-        } else if (this.expression === item.expression) {
+        } else if (this.expression === expression) {
             this.resetExpression();
         }
     }
