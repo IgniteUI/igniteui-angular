@@ -804,6 +804,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             this.dc.changeDetectorRef.detectChanges();
             this.onChunkLoad.emit();
+            if (this.igxForScrollOrientation === 'vertical') {
+                requestAnimationFrame(() => {
+                    this._recalcUpdateSizes();
+                });
+            }
         }
     }
 
@@ -1216,6 +1221,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
                 cntx.index = this.igxForOf.indexOf(input);
+            }
+            if (this.igxForScrollOrientation === 'vertical') {
+                requestAnimationFrame(() => {
+                    this._recalcUpdateSizes();
+                });
             }
         }
     }

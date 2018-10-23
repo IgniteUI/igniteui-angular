@@ -4,6 +4,7 @@
         <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
     </igx-grid>
+    <div><input type='number' #input/><button (click)='scrollTo(grid1, input.value)'>Go To Index</button></div>
 
     <br/>
 <span> Auto Sized Rows </span>

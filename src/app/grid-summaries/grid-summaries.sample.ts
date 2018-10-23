@@ -467,4 +467,7 @@ export class GridSummaryComponent implements OnInit {
             this.grid1.getColumnByName('UnitsInStock').hidden = true;
         }
     }
+    public scrScrollTo(index) {
+        this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
+    }
 }

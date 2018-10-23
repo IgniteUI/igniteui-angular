@@ -38,7 +38,7 @@ export class GridPerformanceSampleComponent implements OnInit {
 
         for (let i = 0; i < 100000; i++) {
             var newObj = Object.create(obj);
-            newObj['ID'] = i + 1;
+            newObj['ID'] = i;
             this.localData.push(newObj);
         }
     }
@@ -67,5 +67,8 @@ export class GridPerformanceSampleComponent implements OnInit {
             this.localData.unshift(obj);
         }
         this.grid1.markForCheck();
+    }
+    public scrollTo(grid, index) {
+        grid.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
 }
