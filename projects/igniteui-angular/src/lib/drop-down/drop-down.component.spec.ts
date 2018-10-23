@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit, ElementRef, DebugElement } from '@angular
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule, CancelableEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
@@ -991,6 +991,51 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             expect(dropdown.selectedItem.value).toEqual({ name: 'Product 3', id: 3 });
         }));
+
+        it('fix for #2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            const toggle: IgxToggleDirective = (<any>dropdown).toggleDirective;
+            fixture.detectChanges();
+
+            spyOn(dropdown.onOpening, 'emit').and.callThrough();
+            spyOn(dropdown.onOpened, 'emit').and.callThrough();
+            spyOn(dropdown.onClosing, 'emit').and.callThrough();
+            spyOn(dropdown.onClosed, 'emit').and.callThrough();
+
+            dropdown.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+            button.click(mockObj);
+            fixture.detectChanges();
+
+            tick();
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            tick();
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            button.click({ stopPropagation: () => null });
+            fixture.detectChanges();
+
+            tick();
+            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);
+            tick();
+            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(0);
+
+            toggle.close();
+            fixture.detectChanges();
+            tick();
+
+            dropdown.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
+            button.click(mockObj);
+            fixture.detectChanges();
+
+            tick();
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(2);
+            tick();
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+        }));
     });
 });
 
@@ -998,8 +1043,8 @@ describe('IgxDropDown ', () => {
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" [allowItemsFocus]="true"
-    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>

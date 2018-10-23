@@ -21,7 +21,7 @@ import {
     AfterContentChecked
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxToggleModule, CancelableEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
@@ -72,7 +72,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter();
+    public onOpening = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -92,7 +92,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter();
+    public onClosing = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
@@ -413,9 +413,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    onToggleOpening() {
+    onToggleOpening(e: CancelableEventArgs) {
+        const eventArgs = { cancel: false};
+        this.onOpening.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
+        if (eventArgs.cancel) {
+            return;
+        }
         this.scrollToItem(this.selectedItem);
-        this.onOpening.emit();
     }
 
     /**
@@ -438,8 +443,10 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    onToggleClosing() {
-        this.onClosing.emit();
+    onToggleClosing(e: CancelableEventArgs) {
+        const eventArgs = { cancel: false};
+        this.onClosing.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
     }
 
     /**

@@ -23,7 +23,7 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule, CancelableEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
@@ -400,11 +400,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * Emitted before the dropdown is opened
      *
      * ```html
-     * <igx-combo onOpening='handleOpening()'></igx-combo>
+     * <igx-combo onOpening='handleOpening($event)'></igx-combo>
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter();
+    public onOpening = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -420,11 +420,11 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * Emitted before the dropdown is closed
      *
      * ```html
-     * <igx-combo (onClosing)='handleClosing()'></igx-combo>
+     * <igx-combo (onClosing)='handleClosing($event)'></igx-combo>
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter();
+    public onClosing = new EventEmitter<CancelableEventArgs>();
 
     /**
      * Emitted after the dropdown is closed
