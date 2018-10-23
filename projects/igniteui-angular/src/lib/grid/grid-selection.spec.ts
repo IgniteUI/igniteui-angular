@@ -1,27 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../calendar';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Calendar} from '../calendar';
+import {SortingDirection} from '../data-operations/sorting-expression.interface';
+import {IgxGridComponent} from './grid.component';
+import {IgxGridModule} from './index';
+import {IgxStringFilteringOperand} from '../../public_api';
+import {UIInteractions, wait} from '../test-utils/ui-interactions.spec';
+import {IgxNumberFilteringOperand} from '../data-operations/filtering-condition';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
-    { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
-    { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
-    { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', HireDate: '2005-11-18T11:23:17.714Z' },
-    { ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', HireDate: '2008-12-18T11:23:17.714Z' },
-    { ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z' },
-    { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z' },
-    { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z' },
-    { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
-    { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
-    { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
+    {ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z'},
+    {ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z'},
+    {ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', HireDate: '2005-11-18T11:23:17.714Z'},
+    {ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', HireDate: '2008-12-18T11:23:17.714Z'},
+    {ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z'},
+    {ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z'},
+    {ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z'},
+    {ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z'},
+    {ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z'},
+    {ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z'}
 ];
 
 describe('IgxGrid - Row Selection', () => {
@@ -45,16 +45,16 @@ describe('IgxGrid - Row Selection', () => {
         })
             .compileComponents();
         data = [
-            { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
-            { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
-            { ID: 3, Name: 'Tanya Bennett', JobTitle: 'Software Developer', HireDate: '2005-11-18T11:23:17.714Z' },
-            { ID: 4, Name: 'Jack Simon', JobTitle: 'Senior Software Developer', HireDate: '2008-12-18T11:23:17.714Z' },
-            { ID: 5, Name: 'Celia Martinez', JobTitle: 'CEO', HireDate: '2007-12-19T11:23:17.714Z' },
-            { ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z' },
-            { ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z' },
-            { ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z' },
-            { ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z' },
-            { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z' }
+            {ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z'},
+            {ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z'},
+            {ID: 3, Name: 'Tanya Bennett', JobTitle: 'Software Developer', HireDate: '2005-11-18T11:23:17.714Z'},
+            {ID: 4, Name: 'Jack Simon', JobTitle: 'Senior Software Developer', HireDate: '2008-12-18T11:23:17.714Z'},
+            {ID: 5, Name: 'Celia Martinez', JobTitle: 'CEO', HireDate: '2007-12-19T11:23:17.714Z'},
+            {ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z'},
+            {ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z'},
+            {ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z'},
+            {ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z'},
+            {ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z'}
         ];
     }));
 
@@ -89,7 +89,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
-        grid.updateRow({ ID: 2, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
+        grid.updateRow({ID: 2, Name: 'Gilberto Todd', JobTitle: 'Vice President'}, 2);
         expect(grid.cdr.markForCheck).toHaveBeenCalledTimes(1);
         fix.detectChanges();
         expect(grid.getRowByIndex(1).rowData['JobTitle']).toMatch('Vice President');
@@ -116,7 +116,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2)).toBeDefined();
-        grid.updateRow({ ID: 7, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
+        grid.updateRow({ID: 7, Name: 'Gilberto Todd', JobTitle: 'Vice President'}, 2);
         fix.detectChanges();
         expect(grid.getRowByKey(7)).toBeDefined();
         expect(grid.getRowByIndex(1)).toBeDefined();
@@ -509,7 +509,7 @@ describe('IgxGrid - Row Selection', () => {
 
     // API Methods
 
-    it("Simple row selection", () => {
+    it('Simple row selection', () => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
         fix.detectChanges();
 
@@ -521,7 +521,9 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(grid.getRowByIndex(1).isSelected).toBeTruthy();
-        spyOn(grid.onRowSelectionChange, 'emit').and.callFake((args) => { args.newSelection = args.oldSelection; });
+        spyOn(grid.onRowSelectionChange, 'emit').and.callFake((args) => {
+            args.newSelection = args.oldSelection;
+        });
 
         targetCheckbox.click();
         fix.detectChanges();
@@ -768,7 +770,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true });
+        grid.sort({fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true});
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
@@ -871,7 +873,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true });
+        grid.sort({fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
         expect(grid.selectedCells).toBeDefined();
         expect(grid.selectedCells.length).toBe(1);
@@ -1066,7 +1068,7 @@ describe('IgxGrid - Row Selection', () => {
         fix.detectChanges();
 
         expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
-        gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'tab', shiftKey: true}));
         await wait(30);
         fix.detectChanges();
 
@@ -1107,7 +1109,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
 
         cell = grid.getCellByColumn(1, 'ID');
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'tab', shiftKey: true}));
         await wait(100);
         fix.detectChanges();
         expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
@@ -1158,7 +1160,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstCell.focused).toBeTruthy();
 
         const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
-        const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 500 });
+        const event = new WheelEvent('wheel', {deltaX: 0, deltaY: 500});
         displayContainer.dispatchEvent(event);
         await wait(300);
 
@@ -1182,7 +1184,7 @@ describe('IgxGrid - Row Selection', () => {
 export class GridWithPrimaryKeyComponent {
     public data = data;
 
-    @ViewChild('gridSelection1', { read: IgxGridComponent })
+    @ViewChild('gridSelection1', {read: IgxGridComponent})
     public gridSelection1: IgxGridComponent;
 }
 
@@ -1198,7 +1200,7 @@ export class GridWithPrimaryKeyComponent {
 export class GridWithPagingAndSelectionComponent implements OnInit {
     public data = [];
 
-    @ViewChild('gridSelection2', { read: IgxGridComponent })
+    @ViewChild('gridSelection2', {read: IgxGridComponent})
     public gridSelection2: IgxGridComponent;
 
     ngOnInit() {
@@ -1234,14 +1236,14 @@ export class GridWithPagingAndSelectionComponent implements OnInit {
 @Component({
     template: `
         <igx-grid #gridSelection3 [data]="data" [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'"
-        [autoGenerate]="true" [rowSelectable]="true">
+                  [autoGenerate]="true" [rowSelectable]="true">
         </igx-grid>
     `
 })
 export class GridWithSelectionComponent implements OnInit {
     public data = [];
 
-    @ViewChild('gridSelection3', { read: IgxGridComponent })
+    @ViewChild('gridSelection3', {read: IgxGridComponent})
     public gridSelection3: IgxGridComponent;
 
     ngOnInit() {
@@ -1261,22 +1263,23 @@ export class GridWithSelectionComponent implements OnInit {
 }
 
 @Component({
-    template: `<igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
-            [filterable]="true" dataType="date">
-        </igx-column>
-    </igx-grid>`
+    template: `
+        <igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
+            <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+            <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
+            <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
+            <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
+                        [filterable]="true" dataType="date">
+            </igx-column>
+        </igx-grid>`
 })
 export class GridWithSelectionFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-    @ViewChild('gridSelection4', { read: IgxGridComponent })
+    @ViewChild('gridSelection4', {read: IgxGridComponent})
     public gridSelection4: IgxGridComponent;
 
     public data = [
@@ -1357,7 +1360,7 @@ export class GridWithSelectionFilteringComponent {
 export class GridWithScrollsComponent implements OnInit {
     public data = [];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, {read: IgxGridComponent})
     public gridSelection5: IgxGridComponent;
 
     ngOnInit() {
@@ -1398,18 +1401,18 @@ export class GridWithScrollsComponent implements OnInit {
 export class GridSummaryComponent {
 
     public data = [
-        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
-        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
-        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
-        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
-        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
-        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
-        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
-        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
-        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
-        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
+        {ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21')},
+        {ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15')},
+        {ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20')},
+        {ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11')},
+        {ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27')},
+        {ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17')},
+        {ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03')},
+        {ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09')},
+        {ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25')},
+        {ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01')}
     ];
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', {read: IgxGridComponent})
     public gridSummaries: IgxGridComponent;
 
 }
@@ -1433,18 +1436,18 @@ export class GridSummaryComponent {
 export class GridCancelableComponent {
 
     public data = [
-        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21') },
-        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15') },
-        { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20') },
-        { ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11') },
-        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27') },
-        { ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17') },
-        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03') },
-        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09') },
-        { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25') },
-        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
+        {ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21')},
+        {ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15')},
+        {ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20')},
+        {ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11')},
+        {ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27')},
+        {ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17')},
+        {ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03')},
+        {ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09')},
+        {ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25')},
+        {ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01')}
     ];
-    @ViewChild('gridCancelable', { read: IgxGridComponent })
+    @ViewChild('gridCancelable', {read: IgxGridComponent})
     public gridCancelable: IgxGridComponent;
 
     public cancelClick(evt) {
