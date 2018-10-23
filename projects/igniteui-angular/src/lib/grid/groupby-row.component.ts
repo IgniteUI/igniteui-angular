@@ -174,29 +174,42 @@ export class IgxGridGroupByRowComponent {
         event.stopPropagation();
         const shift = event.shiftKey;
         const key = event.key.toLowerCase();
-        if (key === 'arrowleft' && this.expanded) {
-            this.grid.toggleGroup(this.groupRow);
+        if (!this.isKeySupportedInGroupRow(key)) {
             return;
         }
-        if (key === 'arrowright' && !this.expanded) {
-            this.grid.toggleGroup(this.groupRow);
+        if ((key === 'arrowleft' ||  key === 'left')) {
+            if (this.expanded) {
+                this.grid.toggleGroup(this.groupRow);
+            }
+            return;
+        } else if ((key === 'arrowright' || key === 'right')) {
+            if (!this.expanded) {
+                this.grid.toggleGroup(this.groupRow);
+            }
+            return;
+        }
+        const args = {cell: null, groupRow: this, event: event, cancel: false };
+        this.grid.onFocusChange.emit(args);
+        if (args.cancel) {
             return;
         }
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
         this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        if (key === 'arrowdown') {
+        if (key === 'arrowdown' || key === 'down') {
             this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+            return;
         }
-        if (key === 'arrowup') {
+        if (key === 'arrowup' || key === 'up') {
             this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+            return;
         }
         if (key === 'tab') {
             if (shift) {
                 this.grid.navigation.navigateUp(this.nativeElement, this.index,
                     this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
             } else {
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0, true);
+                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
             }
         }
     }
@@ -223,5 +236,9 @@ export class IgxGridGroupByRowComponent {
         if (cell) {
             return cell.columnID;
         }
+    }
+    private isKeySupportedInGroupRow(key) {
+        return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
+        'tab'].indexOf(key) !== -1;
     }
 }
