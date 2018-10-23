@@ -2,12 +2,10 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     DoCheck,
     ElementRef,
     forwardRef,
     HostBinding,
-    HostListener,
     Input,
     QueryList,
     ViewChild,
@@ -19,7 +17,6 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { first } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -114,20 +111,6 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
-    get focused(): boolean {
-        return this.isFocused;
-    }
-
-    /**
-     * @hidden
-     */
-    set focused(val: boolean) {
-        this.isFocused = val;
-    }
-
-    /**
-     * @hidden
-     */
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
@@ -206,6 +189,11 @@ export class IgxGridRowComponent implements DoCheck {
     /**
      * @hidden
      */
+    public focused = false;
+
+    /**
+     * @hidden
+     */
     protected defaultCssClass = 'igx-grid__tr';
 
     /**
@@ -213,30 +201,11 @@ export class IgxGridRowComponent implements DoCheck {
      */
     protected _rowSelection = false;
 
-    /**
-     * @hidden
-     */
-    protected isFocused = false;
-
     constructor(public gridAPI: IgxGridAPIService,
                 private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
 
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event) {
-        if (this.rowSelectable && event.key.toLowerCase() === 'tab') {
-            event.preventDefault();
-            event.stopPropagation();
-            const shift = event.shiftKey;
-            if (shift) {
-                this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
-            } else {
-                this.grid.navigation.onKeydownHome(this.index);
-            }
-        }
-    }
 
     /**
      * @hidden
@@ -315,7 +284,7 @@ export class IgxGridRowComponent implements DoCheck {
         this.isSelected = this.rowSelectable ?
             this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
             this.selection.is_item_selected(this.gridID, this.rowID);
-        this.cdr.markForCheck();
+            this.cdr.markForCheck();
         if (this.checkboxElement) {
             this.checkboxElement.checked = this.isSelected;
         }
