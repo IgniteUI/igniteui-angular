@@ -16,7 +16,10 @@ import {
  } from '../test-utils/grid-samples.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - Column Moving', () => {
+    configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__th--fw';
@@ -71,10 +74,13 @@ describe('IgxGrid - Column Moving', () => {
             // moving a column that is not movable
             const header = headers[2].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 75);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 455, 81);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 75);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 75);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -90,10 +96,13 @@ describe('IgxGrid - Column Moving', () => {
             // and verify columns are not reordered
             const header = headers[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 256, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 380, 350);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 380, 350);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -108,9 +117,11 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - start moving a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 136, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 270, 71);
+            await wait();
 
             // step 2 - hit ESCAPE over the headers area and verify column moving is canceled
             document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Escape' }));
@@ -118,6 +129,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointerup', header, 270, 71);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -139,10 +151,13 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - move a column
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
+            await wait();
             fixture.detectChanges();
 
             columnsList = grid.columnList.toArray();
@@ -197,10 +212,13 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - move a column
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
+            await wait();
             fixture.detectChanges();
 
             columnsList = grid.columnList.toArray();
@@ -246,10 +264,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 106, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 71);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 300, 71);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - verify the filtering dialog is closed
@@ -263,6 +284,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - start moving a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
 
             // step 2 - verify onColumnMovingStart is fired correctly
             expect(fixture.componentInstance.countStart).toEqual(1);
@@ -270,12 +292,14 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait();
 
             // step 3 - verify onColumnMoving is fired correctly
             expect(fixture.componentInstance.count).toBeGreaterThan(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[0]);
 
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait();
             fixture.detectChanges();
 
             // step 4 - verify onColumnMovingEnd is fired correctly
@@ -290,6 +314,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - try moving a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
 
             if (fixture.componentInstance.source.field === 'ID') {
                 fixture.componentInstance.cancel = true;
@@ -298,7 +323,9 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait();
             fixture.detectChanges();
 
             // step 2 - verify the event was canceled
@@ -314,10 +341,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - start moving a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 530, 75);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 530, 75);
+            await wait();
             fixture.detectChanges();
 
             // step 2 - verify the event was canceled
@@ -327,7 +357,7 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should preserve filtering after columns are reordered.', (async() => {
+        it('Should preserve filtering after columns are reordered.', async() => {
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();
 
@@ -361,15 +391,18 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move a column and verify column remains filtered
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 130, 65);
-            UIInteractions.simulatePointerEvent('pointermove', header, 130, 71);
             await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 130, 71);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 300, 71);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 300, 71);
+            await wait();
             fixture.detectChanges();
 
             expect(grid.columnList.toArray()[1].field).toEqual('ID');
             expect(grid.rowList.length).toEqual(1);
-        }));
+        });
 
         it('Should exit edit mode and commit the new value when column moving starts.', (async() => {
             fixture.componentInstance.isEditable = true;
@@ -395,10 +428,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 3 - move a column
             const header = headers[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
+            await wait();
             fixture.detectChanges();
 
             // step 4 - verify cell has exited edit mode correctly
@@ -417,10 +453,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move a column
             const header = headers[2].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 400, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 400, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 80, 71);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 80, 71);
+            await wait();
             fixture.detectChanges();
 
             expect(grid.visibleColumns[0].field).toEqual('Region');
@@ -501,10 +540,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move that column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 480, 75);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 480, 75);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -540,10 +582,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - move a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 230, 30);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 230, 30);
+            await wait();
             fixture.detectChanges();
 
             // step 2 - verify column are reordered correctly
@@ -568,6 +613,7 @@ describe('IgxGrid - Column Moving', () => {
             // when holding the drag ghost over the right edge of the grid
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
@@ -576,7 +622,9 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - verify the column being moved can be reordered among new columns
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 30);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 350, 30);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -595,6 +643,7 @@ describe('IgxGrid - Column Moving', () => {
             // when holding the drag ghost over the left edge of the grid
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
@@ -603,7 +652,9 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 3 - verify the column being moved can be reordered among new columns
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 30);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 30);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -636,6 +687,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 200, 30);
             await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 200, 30);
+            await wait();
             fixture.detectChanges();
 
             const columnsList = grid.columnList.toArray();
@@ -655,10 +707,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move that column and verify selection is preserved
             let header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 70, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 64, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 25);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 25);
+            await wait();
             fixture.detectChanges();
 
             let columnsList = grid.columnList.toArray();
@@ -671,10 +726,13 @@ describe('IgxGrid - Column Moving', () => {
             headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             header = headers[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 25);
+            await wait();
             fixture.detectChanges();
 
             columnsList = grid.columnList.toArray();
@@ -697,6 +755,7 @@ describe('IgxGrid - Column Moving', () => {
             // and verify selection is preserved
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
@@ -704,7 +763,9 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 30);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 350, 30);
+            await wait();
             fixture.detectChanges();
 
             expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
@@ -734,6 +795,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 4 - reorder that column among columns that are currently out of view
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
@@ -743,7 +805,9 @@ describe('IgxGrid - Column Moving', () => {
             grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
 
             UIInteractions.simulatePointerEvent('pointermove', header, 40, 30);
+            await wait();
             UIInteractions.simulatePointerEvent('pointerup', header, 40, 30);
+            await wait();
             fixture.detectChanges();
 
             // step 5 - verify selection is preserved
@@ -764,10 +828,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - move a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 2 - navigate to page 2 and verify correct column order
@@ -790,10 +857,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move that column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 420, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 420, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - verify column remains sorted
@@ -812,10 +882,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - move a pinned column
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 50, 25);
-            UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
             await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 50, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 280, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 280, 31);
+            await wait(50);
             fixture.detectChanges();
 
             // step 3 - verify pinned columns are reordered correctly
@@ -834,10 +907,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - drag/drop an unpinned column among pinned columns
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[3].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 130, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 130, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - verify column is pinned at the correct place
@@ -858,10 +934,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - drag/drop a pinned column among unpinned columns
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 150, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - verify column is unpinned at the correct place
@@ -883,10 +962,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - try drag/drop an unpinned column among pinned columns
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 180, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 180, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - verify column cannot be pinned
@@ -905,10 +987,13 @@ describe('IgxGrid - Column Moving', () => {
             // step 2 - pin a column interactively via drag/drop
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 25);
+            await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 450, 31);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 80, 31);
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 80, 31);
+            await wait();
             fixture.detectChanges();
 
             // step 3 - unpin that column programmatically and verify correct order

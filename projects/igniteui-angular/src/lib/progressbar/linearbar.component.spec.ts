@@ -9,7 +9,10 @@ import { By } from '@angular/platform-browser';
 import { IgxLinearProgressBarComponent } from './progressbar.component';
 import { Common } from './common.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgLinearBar', () => {
+    configureTestSuite();
     const tickTime = 2000;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -324,6 +327,7 @@ describe('IgLinearBar', () => {
 
     // UI Tests
     describe('UI tests linear bar', () => {
+        configureTestSuite();
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();

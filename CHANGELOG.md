@@ -6,7 +6,29 @@ All notable changes for each version of this project will be documented in this 
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
+- Transaction Provider - `TransactionService` is an injectable middleware that a component can use to accumulate changes without affecting the underlying data. The provider exposes API to access, manipulate changes (undo and redo) and discard or commit all to the data.
+For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/services/transaction/README.md).
 - `igxGrid`:
+    - Row editing - allows modification of several cells in the row, before submitting, at once, all those changes to the grid's data source. Leverages the pending changes functionality of the new transaction provider.
+
+        ```html
+        <igx-grid [data]="data" [rowEditable]="true">
+            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ReleaseDate"></igx-column>
+        </igx-grid>
+        ```
+
+    - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
+
+        ```typescript
+        @Component({
+            providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+            selector: "app-grid-with-transactions",
+            template: "<ng-content></ng-content>"
+        })
+        export class GridWithTransactionsComponent { }
+        ```
+
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.
@@ -89,6 +111,8 @@ All notable changes for each version of this project will be documented in this 
         - Extends `IgxToggleActionDirective`.
         - Exported with the name **tooltipTarget**.
     - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `igxToggle`:
+    - Introduced reposition method which allows a user to force toggle to reposition according its position strategy.
 - `IgxDrag` and `IgxDrop` directives available.
     - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
     - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element.
