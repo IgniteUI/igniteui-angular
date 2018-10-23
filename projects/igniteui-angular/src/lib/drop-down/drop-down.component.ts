@@ -587,11 +587,18 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown', ['$event'])
     handleKeyDown(event: KeyboardEvent) {
         if (event) {
-            if (!this.target.collapsed) {
+            const key = event.code ? event.code.toLowerCase() : event.key.toLowerCase();
+            if (!this.target.collapsed) { // If dropdown is opened
+                const navKeys = ['esc', 'escape', 'enter', 'tab', 'space', 'spacebar',
+            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+                if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
+                    return;
+                }
                 event.preventDefault();
                 event.stopPropagation();
+            } else { // If dropdown is closed, do nothing
+                return;
             }
-            const key = event.code ? event.code.toLowerCase() : event.key.toLowerCase();
             switch (key) {
                 case 'esc':
                 case 'escape':
