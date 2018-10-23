@@ -2100,6 +2100,9 @@ describe('igxCombo', () => {
             expect(selItems[2][combo.valueKey]).toEqual(dataItems[2][combo.valueKey]);
 
             setTimeout(() => {
+                combo.toggle();
+                fixture.detectChanges();
+
                 combo.dropdown.verticalScrollContainer.scrollTo(20);
                 fixture.detectChanges();
                 setTimeout(() => {
