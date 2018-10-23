@@ -11,7 +11,7 @@
     QueryList,
     DoCheck,
     AfterViewInit,
-    OnDestroy
+    OnDestroy,
     ElementRef
 } from '@angular/core';
 import {
