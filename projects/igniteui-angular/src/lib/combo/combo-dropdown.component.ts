@@ -374,13 +374,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     onToggleClosing(e: CancelableEventArgs) {
         this.combo.searchValue = '';
-        const eventArgs = { cancel: false };
-        this.onClosing.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
-        if (eventArgs.cancel) {
-            return;
-        }
-
         super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
