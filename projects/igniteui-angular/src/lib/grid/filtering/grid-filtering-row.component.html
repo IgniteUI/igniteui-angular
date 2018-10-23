@@ -76,6 +76,7 @@
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="true"
                     [selected]="item.isSelected"
+                    tabindex="0"
                     [removable]="true">
                     <igx-icon
                         igxPrefix
@@ -86,16 +87,15 @@
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
-                    <button #operatorsButton igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators">
+                    <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators">
                         <igx-icon>expand_more</igx-icon>
                         <span>{{getOperator(item.afterOperator)}}</span>
                     </button>
-                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item, operatorsButton)">
+                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)">
                             <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
                             <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
                     </igx-drop-down>
                 </span>
-
             </ng-container>
         </igx-chips-area>
     </div>

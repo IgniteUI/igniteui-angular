@@ -573,13 +573,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI, operatorsButton: any): void {
+    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI): void {
         expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
         this.filter();
-        if (eventArgs.oldSelection) {
-            operatorsButton.focus();
-        }
     }
 
     public scrollChips(event) {
