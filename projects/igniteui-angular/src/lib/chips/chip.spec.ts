@@ -14,6 +14,7 @@ import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/displayDensity';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 @Component({
     template: `
@@ -78,7 +79,9 @@ class TestChipsLabelAndSuffixComponent {
     public chips: QueryList<IgxChipComponent>;
 }
 
+
 describe('IgxChip', () => {
+    configureTestSuite();
     const CHIP = 'igx-chip';
     const CHIP_ITEM = 'igx-chip__item';
     const CHIP_PREFIX = 'igx-chip__prefix';

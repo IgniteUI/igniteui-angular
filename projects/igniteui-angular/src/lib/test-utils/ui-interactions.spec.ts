@@ -87,10 +87,7 @@ export class UIInteractions {
         const pointerEvent = new PointerEvent(eventName, options);
         Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
         Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
-        return new Promise((resolve, reject) => {
-            element.dispatchEvent(pointerEvent);
-            resolve();
-        });
+        element.dispatchEvent(pointerEvent);
     }
 
     public static clearOverlay() {

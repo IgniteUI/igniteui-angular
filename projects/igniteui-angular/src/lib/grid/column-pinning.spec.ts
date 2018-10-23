@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent, IgxColumnPinningModule } from './column-pinning.component';
@@ -11,7 +11,10 @@ import { HelperUtils } from '../test-utils/helper-utils.spec';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../test-utils/grid-functions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('Column Pinning UI', () => {
+    configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnPinningComponent;
@@ -20,7 +23,7 @@ describe('Column Pinning UI', () => {
     const verifyCheckbox = HelperUtils.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
@@ -34,7 +37,7 @@ describe('Column Pinning UI', () => {
             ]
         })
         .compileComponents();
-    });
+    }));
 
     describe('', () => {
         beforeEach(() => {
@@ -49,12 +52,12 @@ describe('Column Pinning UI', () => {
             HelperUtils.clearOverlay();
         });
 
-        it ('title is initially empty.', () => {
+        it ('title is initially empty.', async(() => {
             const title = columnChooserElement.query(By.css('h4'));
             expect(title).toBe(null);
-        });
+        }));
 
-        it ('title can be successfully changed.', () => {
+        it ('title can be successfully changed.', async(() => {
             columnChooser.title = 'Pin/Unpin Columns';
             fix.detectChanges();
 
@@ -73,14 +76,14 @@ describe('Column Pinning UI', () => {
 
             expect(columnChooserElement.query(By.css('h4'))).toBe(null);
             expect(columnChooser.title).toBe('');
-        });
+        }));
 
-        it('shows all checkboxes unchecked.', () => {
+        it('shows all checkboxes unchecked.', async(() => {
             const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             expect(checkboxes.filter((chk) => !chk.checked).length).toBe(5);
-        });
+        }));
 
-        it('- toggling column checkbox checked state successfully changes the column\'s pinned state.', () => {
+        it('- toggling column checkbox checked state successfully changes the column\'s pinned state.', async(() => {
             const checkbox = HelperUtils.getCheckboxInput('ReleaseDate', columnChooserElement, fix);
             verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
 
@@ -96,9 +99,9 @@ describe('Column Pinning UI', () => {
 
             expect(checkbox.checked).toBe(false);
             verifyColumnIsPinned(column, false, 0);
-        });
+        }));
 
-        it('reflects properly grid column pinned value changes.', () => {
+        it('reflects properly grid column pinned value changes.', async(() => {
             const name = 'ReleaseDate';
             verifyCheckbox(name, false, false, columnChooserElement, fix);
             const column = grid.getColumnByName(name);
@@ -130,9 +133,9 @@ describe('Column Pinning UI', () => {
 
             verifyCheckbox(name, false, false, columnChooserElement, fix);
             verifyColumnIsPinned(column, false, 0);
-        });
+        }));
 
-        it('onColumnPinning event is fired on toggling checkboxes.', () => {
+        it('onColumnPinning event is fired on toggling checkboxes.', async(() => {
             let currentArgs: IPinColumnEventArgs;
             let counter = 0;
             grid.onColumnPinning.subscribe((args: IPinColumnEventArgs) => {
@@ -169,9 +172,9 @@ describe('Column Pinning UI', () => {
             expect(counter).toBe(3);
             expect(currentArgs.column.field).toBe('ProductName');
             expect(currentArgs.insertAtIndex).toBe(0);
-        });
+        }));
 
-        it('doesn\'t pin columns if unpinned area width will become less than the defined minimum.', () => {
+        it('doesn\'t pin columns if unpinned area width will become less than the defined minimum.', async(() => {
             const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
@@ -181,9 +184,9 @@ describe('Column Pinning UI', () => {
             verifyColumnIsPinned(grid.columns[1], true, 2);
             verifyColumnIsPinned(grid.columns[2], false, 2);
 
-        });
+        }));
 
-        it('doesn\'t pin columns if unpinned area width does not allow it even after hiding a pinned column.', () => {
+        it('doesn\'t pin columns if unpinned area width does not allow it even after hiding a pinned column.', async(() => {
             let checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
@@ -205,7 +208,7 @@ describe('Column Pinning UI', () => {
 
             verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
             verifyColumnIsPinned(grid.columns[1], true, 1);
-        });
+        }));
 
     });
 

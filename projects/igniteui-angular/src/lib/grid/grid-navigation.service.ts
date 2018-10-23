@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { first } from 'rxjs/operators';
+import { IgxColumnComponent } from './column.component';
 
+enum MoveDirection {
+    LEFT = 'left',
+    RIGHT = 'right'
+}
 @Injectable()
 export class IgxGridNavigationService {
     public grid: IgxGridComponent;
@@ -62,10 +67,46 @@ export class IgxGridNavigationService {
             this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
     }
 
+    public get gridOrderedColumns(): IgxColumnComponent[] {
+        return [...this.grid.pinnedColumns, ...this.grid.unpinnedColumns].filter(c => !c.columnGroup);
+    }
+
+    public isRowInEditMode(rowIndex): boolean {
+        return this.grid.rowEditable && (this.grid.rowInEditMode && this.grid.rowInEditMode.index === rowIndex);
+    }
+
+    public isColumnEditable(visibleColumnIndex: number): boolean {
+        const column = this.gridOrderedColumns.find(c => c.visibleIndex === visibleColumnIndex);
+        return column ? column.editable : false;
+    }
+
+    public findNextEditable(direction: string, visibleColumnIndex: number) {
+        const gridColumns = this.gridOrderedColumns;
+        if (direction === MoveDirection.LEFT) {
+            return gridColumns.splice(0, visibleColumnIndex + 1).reverse().findIndex(e => e.editable);
+        } else if (direction === MoveDirection.RIGHT) {
+            return gridColumns.splice(visibleColumnIndex, gridColumns.length - 1).findIndex(e => e.editable);
+        }
+    }
+
     public isColumnLeftPartiallyVisible(visibleColumnIndex) {
         const index = this.getColumnUnpinnedIndex(visibleColumnIndex + 1);
         return (!this.isColumnLeftFullyVisible(visibleColumnIndex)) && this.displayContainerScrollLeft <
             this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
+    }
+
+    public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex) {
+        return this.grid.nativeElement.querySelector(
+            `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+    }
+
+    public getScrollToNextEditableColumn(startIndex, endIndex) {
+        let amount = 0;
+        this.gridOrderedColumns.filter(e => e.visibleIndex > startIndex && e.visibleIndex <= endIndex)
+        .map(e => {
+            amount += parseInt(e.width, 10);
+        });
+        return amount;
     }
 
     public onKeydownArrowRight(element, rowIndex, visibleColumnIndex) {
@@ -83,7 +124,7 @@ export class IgxGridNavigationService {
                         .subscribe(() => {
                             element.nextElementSibling.firstElementChild.focus();
                         });
-                    this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
                 }
             } else {
                 element.nextElementSibling.focus();
@@ -104,8 +145,7 @@ export class IgxGridNavigationService {
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const currentCell = this.grid.nativeElement.querySelector(
-                        `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+                    const currentCell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex);
                     currentCell.nextElementSibling.focus();
                 });
             this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount;
@@ -124,8 +164,7 @@ export class IgxGridNavigationService {
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    const currentCell = this.grid.nativeElement.querySelector(
-                        `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+                    const currentCell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex);
                     currentCell.previousElementSibling.focus();
                 });
             this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
@@ -136,6 +175,79 @@ export class IgxGridNavigationService {
 
     }
 
+    public movePreviousEditable(element, rowIndex, visibleColumnIndex) {
+        const addedIndex = this.isColumnEditable(visibleColumnIndex - 1) ?
+            0 :
+            this.findNextEditable(MoveDirection.LEFT, visibleColumnIndex - 1);
+        if (addedIndex === -1) {
+            this.grid.rowEditTabs.last.element.nativeElement.focus();
+            return;
+        }
+        const editableIndex = visibleColumnIndex - 1 - addedIndex;
+        if (this.getColumnUnpinnedIndex(editableIndex) === -1 && this.grid.pinnedColumns.length) {
+            // if target is NOT pinned and there are pinned columns
+            // since addedIndex !== -1, there will always be a target
+            this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus();
+        } else if (!this.isColumnLeftFullyVisible(editableIndex)) {  // if not fully visible, perform scroll
+            this.grid.nativeElement.focus();
+            this.grid.parentVirtDir.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // focus after scroll
+                });
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
+                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(this.getColumnUnpinnedIndex(editableIndex));
+        } else {
+            this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // if fully visible, just focus
+        }
+    }
+
+    public moveNextEditable(element, rowIndex, visibleColumnIndex) {
+        let addedIndex = 0;
+        addedIndex = this.isColumnEditable(visibleColumnIndex + 1) ?
+                0 :
+        this.findNextEditable(MoveDirection.RIGHT, visibleColumnIndex + 1);
+        if (addedIndex === -1 && this.grid.rowEditTabs) { // no previous edit column -> go to RE buttons
+            this.grid.rowEditTabs.first.element.nativeElement.focus();
+            return;
+        }
+        const editableIndex = visibleColumnIndex + 1 + addedIndex;
+        if (this.isColumnFullyVisible(editableIndex)) { // If column is fully visible
+            if (element.classList.contains('igx-grid__th--pinned-last')) { // If this is pinned
+                if (this.isColumnLeftFullyVisible(editableIndex)) { // If next column is fully visible LEFT
+                    this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // focus
+                } else { // if NOT fully visible, perform scroll
+                    this.grid.parentVirtDir.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // Focus cell when loaded v
+                    });
+                    this.grid.dataRowList.first.virtDirRow.scrollTo(this.getColumnUnpinnedIndex(editableIndex)); // scroll to cell ^
+                }
+            } else { // cell is next cell
+                this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus();
+            }
+        } else {
+            let scrollAmount = 0;
+            this.grid.nativeElement.focus();
+            if (this.isColumnPartiallyVisible(editableIndex)) { // if next column is partially visible
+                scrollAmount = this.calcPartialScroll(rowIndex, editableIndex); // scroll by nextColumn.width
+            } else if (this.isColumnPartiallyVisible(visibleColumnIndex)) { // if this column is partially visible, scroll both
+                // scroll by currentCell.width + width of cells between editable + editableCell.width
+                scrollAmount = this.calcPartialScroll(rowIndex, visibleColumnIndex) +
+                this.getScrollToNextEditableColumn(visibleColumnIndex, editableIndex);
+            } else { // If next column is not visible at all
+                // scroll by width of cells between this & editable + editableCell.width
+                scrollAmount = this.getScrollToNextEditableColumn(visibleColumnIndex, editableIndex);
+            }
+            this.grid.parentVirtDir.onChunkLoad // perform scroll
+                .pipe(first())
+                .subscribe(() => {
+                    this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // after scroll, focus target
+                });
+            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount; // scroll by amount
+        }
+    }
     public onKeydownHome(rowIndex) {
         const rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex).nativeElement;
         const firstCell = rowElement.querySelector('igx-grid-cell');
@@ -183,7 +295,7 @@ export class IgxGridNavigationService {
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
-                    if (cells.length > 0) { cells[0].focus(); }
+                if (cells.length > 0) { cells[0].focus(); }
                 });
         }
     }
@@ -242,8 +354,8 @@ export class IgxGridNavigationService {
             }
             this.grid.nativeElement.focus({preventScroll: true});
             this.performHorizontalScrollToCell(currentRowEl.previousElementSibling, visibleColumnIndex);
+            }
         }
-    }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
         if (!rowElement.nextElementSibling) {
@@ -284,8 +396,8 @@ export class IgxGridNavigationService {
                 return;
             }
             this.performHorizontalScrollToCell(rowElement.nextElementSibling, visibleColumnIndex);
+            }
         }
-    }
 
     public goToFirstCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
@@ -317,22 +429,30 @@ export class IgxGridNavigationService {
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.grid.nativeElement.querySelectorAll('igx-grid-row');
-                    if (rows.length > 0) {
-                        const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
-                        this.onKeydownEnd(rowIndex);
-                    }
+                if (rows.length > 0) {
+                    const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
+                    this.onKeydownEnd(rowIndex);
+                }
                 });
         }
     }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+            if (this.isRowInEditMode(rowIndex)) {
+                this.grid.rowEditTabs.first.element.nativeElement.focus();
+                return;
+            }
             if (this.grid.rowList.find(row => row.index === rowIndex + 1)) {
                 this.navigateDown(currentRowEl, rowIndex, 0);
             }
         } else {
             const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             if (cell) {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.moveNextEditable(cell, rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this.onKeydownArrowRight(cell, rowIndex, visibleColumnIndex);
             }
         }
@@ -340,11 +460,19 @@ export class IgxGridNavigationService {
 
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
         if (visibleColumnIndex === 0) {
-            this.navigateUp(currentRowEl, rowIndex,
-                this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                if (this.isRowInEditMode(rowIndex)) {
+                    this.grid.rowEditTabs.last.element.nativeElement.focus();
+                    return;
+                }
+                this.navigateUp(currentRowEl, rowIndex,
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
         } else {
             const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             if (cell) {
+                if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
+                    this.movePreviousEditable(cell, rowIndex, visibleColumnIndex);
+                    return;
+                }
                 this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex);
             }
         }
@@ -354,20 +482,20 @@ export class IgxGridNavigationService {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         const cells = rowElement.querySelectorAll(`igx-grid-cell`);
         const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
-        const lastVisibleIndex = parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
+        const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
         const middle = (firstVisibleIndex + lastVisibleIndex) / 2;
         this.grid.parentVirtDir.onChunkLoad
-            .pipe(first())
-            .subscribe(() => {
-                rowElement.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
-            });
+        .pipe(first())
+        .subscribe(() => {
+            rowElement.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+        });
         if (middle >= visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
             this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex);
+            this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex);
         } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
             this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex + 1) -
-                    this.displayContainerWidth);
+            (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex + 1) -
+            this.displayContainerWidth);
         }
     }
 

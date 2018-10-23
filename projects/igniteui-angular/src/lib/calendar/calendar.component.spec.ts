@@ -9,7 +9,10 @@ import {
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxCalendar', () => {
+    configureTestSuite();
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent],
@@ -171,6 +174,7 @@ describe('IgxCalendar', () => {
     });
 
     describe('Rendered Component', () => {
+        configureTestSuite();
         let fixture;
         let calendar;
         let dom;
