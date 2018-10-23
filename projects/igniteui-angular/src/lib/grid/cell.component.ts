@@ -307,7 +307,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     @HostBinding('attr.tabindex')
-    public tabindex = -1;
+    public tabindex = 0;
 
     /**
      * Sets/get the `role` property of the cell.
@@ -342,18 +342,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     get cellHeight() {
         const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
         return this.grid.rowHeight - rowOffsetH;
-    }
-
-    /**
-     * Gets whether the cell is in edit mode.
-     * If `true`, the `"igx_grid__cell--edit"` class is added to the cell.
-     * ```typescript
-     * let cellInEditMode = this.cell.cellInEditMode;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get cellInEditMode() {
-        return this.inEditMode;
     }
 
     /**
@@ -434,39 +422,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * When `true`, the `"igx-grid__td--editing"` class is applied to the cell.
-     * ```typescript
-     * let cellInEditMode = this.cell.editModeCSS();
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get editModeCSS() {
-        return this.inEditMode;
-    }
-
-    /**
-     * Gets whether the cell is focused.
-     * ```typescript
-     * let isFocused = this.cell.focused;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    get focused(): boolean {
-        return this.isFocused;
-    }
-
-    /**
-     * Enables/disables the focused state of the cell.
-     * ```typescript
-     * this.cell.focused = true;
-     * ```
-     * @memberof IgxGridCellComponent
-     */
-    set focused(val: boolean) {
-        this.isFocused = val;
-    }
-
-    /**
      * Gets whether the cell is stored in a pinned column.
      * ```typescript
      * let isPinned = this.cell.isPinned;
@@ -537,7 +492,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @hidden
      */
     public editValue;
-    protected isFocused = false;
+    public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
     private prevCellSelectionID: string;
@@ -721,13 +676,16 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     @HostListener('blur', ['$event'])
     public onBlur(event) {
-        this.isFocused = false;
+        this.focused = false;
         this.row.focused = false;
     }
 
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
+        if (!this.isKeySupportedInCell(key)) {
+            return;
+        }
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;
 
@@ -749,6 +707,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
+        const args = {cell: this, groupRow: null, event: event, cancel: false };
+        this.grid.onFocusChange.emit(args);
+        if (args.cancel) {
+            return;
+        }
         switch (key) {
             case 'tab':
                 if (shift) {
@@ -808,8 +771,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
                 this.onKeydownExitEditMode(event);
                 break;
             case ' ':
-            case 'Spacebar':
-            case 'Space':
+            case 'spacebar':
+            case 'space':
                 if (this.row.rowSelectable) {
                     this.row.checkboxElement.toggle();
                 }
@@ -859,6 +822,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.highlight && this.column.searchable) {
             this.highlight.clearHighlight();
         }
+    }
+    private isKeySupportedInCell(key) {
+        return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
+
     }
 
 }
