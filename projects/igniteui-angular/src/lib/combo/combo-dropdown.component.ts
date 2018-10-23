@@ -9,7 +9,7 @@ import { IgxComboComponent } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { CancelableEventArgs } from '../directives/toggle/toggle.directive';
+import { CancelableEventArgs } from '../core/utils';
 
 @Component({
     selector: 'igx-combo-drop-down',

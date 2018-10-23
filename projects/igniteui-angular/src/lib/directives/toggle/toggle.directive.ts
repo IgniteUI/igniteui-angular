@@ -19,13 +19,7 @@ import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, Absolu
 import { filter, take } from 'rxjs/operators';
 import { Subscription, OperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
-
-export interface CancelableEventArgs {
-    /**
-     * Provides the ability to cancel the event.
-     */
-    cancel: boolean;
-}
+import { CancelableEventArgs } from '../../core/utils';
 
 @Directive({
     exportAs: 'toggle',

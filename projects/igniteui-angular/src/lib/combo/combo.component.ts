@@ -17,13 +17,13 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray } from '../core/utils';
+import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxToggleModule, CancelableEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';

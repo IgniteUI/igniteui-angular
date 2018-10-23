@@ -21,11 +21,12 @@ import {
     AfterContentChecked
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxToggleDirective, IgxToggleModule, CancelableEventArgs } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent, IgxDropDownItemBase } from './drop-down-item.component';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
 import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
+import { CancelableEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
 

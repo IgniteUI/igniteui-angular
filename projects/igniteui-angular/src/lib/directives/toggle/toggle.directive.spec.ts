@@ -2,14 +2,10 @@ import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output,
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import {
-    IgxToggleActionDirective,
-    IgxToggleDirective,
-    IgxToggleModule,
-    IgxOverlayOutletDirective,
-    CancelableEventArgs } from './toggle.directive';
+import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
+import { CancelableEventArgs } from '../../core/utils';
 
 describe('IgxToggle', () => {
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
@@ -233,31 +229,24 @@ describe('IgxToggle', () => {
 
         toggle.open();
         fixture.detectChanges();
-
         tick();
+
         expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
-
-        tick();
         expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
 
         toggle.close();
         fixture.detectChanges();
-
         tick();
+
         expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
-
-        tick();
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
 
         toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
-
         toggle.open();
         fixture.detectChanges();
-
         tick();
+
         expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
-
-        tick();
         expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
     }));
 

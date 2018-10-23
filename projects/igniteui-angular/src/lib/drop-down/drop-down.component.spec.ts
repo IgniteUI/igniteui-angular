@@ -2,10 +2,11 @@ import { Component, ViewChild, OnInit, ElementRef, DebugElement } from '@angular
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule, CancelableEventArgs, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { CancelableEventArgs } from '../core/utils';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
