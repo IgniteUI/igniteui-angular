@@ -39,10 +39,6 @@ describe('Column Pinning UI', () => {
         .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     describe('', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(ColumnPinningTestComponent);

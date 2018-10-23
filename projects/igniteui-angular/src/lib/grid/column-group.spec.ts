@@ -44,10 +44,6 @@ describe('IgxGrid - multi-column headers', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should initialize a grid with column groups', () => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);
         fixture.detectChanges();

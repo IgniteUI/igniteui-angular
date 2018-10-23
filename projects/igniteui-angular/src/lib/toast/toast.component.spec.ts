@@ -29,10 +29,6 @@ describe('IgxToast', () => {
         element = fixture.debugElement.query(By.css('.igx-toast--bottom'));
     });
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should properly initialize properties', () => {
         const domToast = fixture.debugElement.query(By.css('igx-toast')).nativeElement;
         expect(toast.id).toContain('igx-toast-');

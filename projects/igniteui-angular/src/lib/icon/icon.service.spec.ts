@@ -22,10 +22,6 @@ describe('Icon Service', () => {
         }).compileComponents();
     });
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should set the default icon set', () => {
         const iconService = TestBed.get(IgxIconService);
 

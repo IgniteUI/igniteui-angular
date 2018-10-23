@@ -33,10 +33,6 @@ describe('List', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should initialize igx-list with item and header', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
         const list = fixture.componentInstance.list;

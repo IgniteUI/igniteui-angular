@@ -46,7 +46,6 @@ const CSS_CLASS_FOOTER = 'footer-class';
 describe('igxCombo', () => {
     configureTestSuite();
     beforeEach(async(() => {
-        TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,

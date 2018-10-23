@@ -44,7 +44,6 @@ describe('IgxGrid - Column Moving', () => {
 
     afterEach(() => {
         UIInteractions.clearOverlay();
-        TestBed.resetTestingModule();
     });
 
     describe('', () => {

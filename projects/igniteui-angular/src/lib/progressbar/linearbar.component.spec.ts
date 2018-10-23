@@ -25,10 +25,6 @@ describe('IgLinearBar', () => {
         .compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('should initialize linearProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitLinearProgressBarComponent);
         fixture.detectChanges();

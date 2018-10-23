@@ -36,10 +36,6 @@ describe('IgxGrid - Grid Sorting', () => {
         grid = fixture.componentInstance.grid;
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     it('Should sort grid ascending by column name', () => {
         const currentColumn = 'Name';
         const lastNameColumn = 'LastName';

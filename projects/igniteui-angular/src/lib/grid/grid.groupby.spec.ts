@@ -40,10 +40,6 @@ describe('IgxGrid - GroupBy', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     const expandCollapceGroupRow =
     (fix: ComponentFixture<DefaultGridComponent>,
         groupRow: IgxGridGroupByRowComponent,

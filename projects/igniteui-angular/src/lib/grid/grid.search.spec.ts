@@ -28,10 +28,6 @@ describe('IgxGrid - search API', () => {
         }).compileComponents();
     }));
 
-    afterEach(async(() => {
-        TestBed.resetTestingModule();
-    }));
-
     /* BasicGrid */
     describe('', () => {
         beforeEach(() => {
