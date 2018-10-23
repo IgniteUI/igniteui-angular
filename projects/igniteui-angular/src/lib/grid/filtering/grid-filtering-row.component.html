@@ -67,7 +67,7 @@
 </button>
 <div #container class="igx-grid__filtering-row-main">
     <div style="display:flex;">
-        <igx-chips-area #chipsArea style="display:flex; transition: transform .2s cubic-bezier(.35, 0, .25, 1)" (onSelection)="onChipsSelectionChanged($event)">
+        <igx-chips-area #chipsArea style="display:flex; transition: transform .2s" (onSelection)="onChipsSelectionChanged($event)">
             <ng-container *ngFor="let item of expressionsList; index as i; let last = last;">
 
                 <igx-chip #chip id='chip'

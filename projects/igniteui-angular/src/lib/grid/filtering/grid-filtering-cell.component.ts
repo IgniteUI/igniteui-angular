@@ -57,6 +57,7 @@ export class IgxGridFilteringCellComponent implements OnInit {
     private datePipe = new DatePipe(window.navigator.language);
 
     public expressionsList: Array<ExpressionUI>;
+    public isMoreIconVisible = false;
 
     @HostBinding('style.min-width')
     @HostBinding('style.max-width')
