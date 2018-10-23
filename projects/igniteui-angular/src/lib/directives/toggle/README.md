@@ -48,6 +48,7 @@ handlers when the toggle is opened and respectively closed.
 | `open` | overlaySettings?: `OverlaySettings` | `void` | Opens the toggle. |
 | `close` | --- | `void` | Closes the toggle. |
 | `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
+| `reposition` | --- | `void` | Repositions the toggle. |
 
 
 # IgxToggleAction Directive

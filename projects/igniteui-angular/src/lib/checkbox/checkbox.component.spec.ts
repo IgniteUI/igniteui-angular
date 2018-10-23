@@ -8,7 +8,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxCheckbox', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
