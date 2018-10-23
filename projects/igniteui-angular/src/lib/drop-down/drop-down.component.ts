@@ -590,15 +590,8 @@ export class IgxDropDownItemNavigationDirective {
             if (!this.target.collapsed) {
                 event.preventDefault();
                 event.stopPropagation();
-            } else {
-                return;
             }
-            const key = event.key.toLowerCase();
-            const navKeys = ['escape', 'esc', 'tab', 'enter', 'space', 'spacebar',
-            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
-            if (navKeys.indexOf(key) === -1) {
-                return;
-            }
+            const key = event.code ? event.code.toLowerCase() : event.key.toLowerCase();
             switch (key) {
                 case 'esc':
                 case 'escape':
@@ -626,6 +619,8 @@ export class IgxDropDownItemNavigationDirective {
                 case 'end':
                     this.onEndKeyDown(event);
                     break;
+                default:
+                    return;
             }
         }
     }
