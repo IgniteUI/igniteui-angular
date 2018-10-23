@@ -584,49 +584,71 @@ export class IgxDropDownItemNavigationDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.Escape', ['$event'])
-    @HostListener('keydown.Tab', ['$event'])
-    onEscapeKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
+    @HostListener('keydown', ['$event'])
+    handleKeyDown(event: KeyboardEvent) {
+        if (event) {
+            if (!this.target.collapsed) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                return;
+            }
+            const key = event.key.toLowerCase();
+            const navKeys = ['escape', 'esc', 'tab', 'enter', 'space', 'spacebar',
+            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
+            if (navKeys.indexOf(key) === -1) {
+                return;
+            }
+            switch (key) {
+                case 'esc':
+                case 'escape':
+                    this.onEscapeKeyDown(event);
+                    break;
+                case 'enter':
+                case 'tab':
+                    this.onEnterKeyDown(event);
+                    break;
+                case 'space':
+                case 'spacebar':
+                    this.onSpaceKeyDown(event);
+                    break;
+                case 'arrowup':
+                case 'up':
+                    this.onArrowUpKeyDown(event);
+                    break;
+                case 'arrowdown':
+                case 'down':
+                    this.onArrowDownKeyDown(event);
+                    break;
+                case 'home':
+                    this.onHomeKeyDown(event);
+                    break;
+                case 'end':
+                    this.onEndKeyDown(event);
+                    break;
+            }
         }
-        this.target.close();
-        event.preventDefault();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.Space', ['$event'])
+    onEscapeKeyDown(event) {
+        this.target.close();
+    }
+
+    /**
+     * @hidden
+     */
     onSpaceKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
         this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
-        event.preventDefault();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.Spacebar', ['$event'])
-    onSpaceKeyDownIE(event) {
-        if (this.target.collapsed) {
-            return;
-        }
-        this.target.selectItem(this.target.focusedItem, event);
-        event.preventDefault();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.Enter', ['$event'])
     onEnterKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         if (!(this.target instanceof IgxDropDownComponent)) {
             if (this.target.focusedItem.value === 'ADD ITEM') {
                 const targetC = this.target as IgxComboDropDownComponent;
@@ -634,61 +656,37 @@ export class IgxDropDownItemNavigationDirective {
             } else {
                 this.target.close();
             }
-            event.preventDefault();
             return;
         }
         this.target.selectItem(this.target.focusedItem, event);
-        event.preventDefault();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.ArrowDown', ['$event'])
     onArrowDownKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         this.target.navigateNext();
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.ArrowUp', ['$event'])
     onArrowUpKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         this.target.navigatePrev();
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.End', ['$event'])
     onEndKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         this.target.navigateLast();
-        event.preventDefault();
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.Home', ['$event'])
     onHomeKeyDown(event) {
-        if (this.target.collapsed) {
-            return;
-        }
         this.target.navigateFirst();
-        event.preventDefault();
     }
 }
 
