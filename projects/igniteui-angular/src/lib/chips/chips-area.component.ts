@@ -10,7 +10,8 @@
     Output,
     QueryList,
     DoCheck,
-    AfterViewInit
+    AfterViewInit,
+    OnDestroy
 } from '@angular/core';
 import {
     IgxChipComponent,
@@ -22,6 +23,8 @@ import {
 import {
     IgxDropEnterEventArgs
 } from '../directives/dragdrop/dragdrop.directive';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs/internal/Subject';
 
 export interface IBaseChipsAreaEventArgs {
     originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
@@ -40,7 +43,7 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     selector: 'igx-chips-area',
     templateUrl: 'chips-area.component.html',
 })
-export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
+export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
 
     /**
      * @hidden
@@ -140,6 +143,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
     private selectedChips: IgxChipComponent[] = [];
+    protected destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef,
         private _iterableDiffers: IterableDiffers) {
@@ -171,20 +175,20 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
             const changes = this._differ.diff(this.chipsList.toArray());
             if (changes) {
                 changes.forEachAddedItem((addedChip) => {
-                    addedChip.item.onMoveStart.subscribe((args) => {
+                    addedChip.item.onMoveStart.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                         this.onChipMoveStart(args);
                     });
-                    addedChip.item.onMoveEnd.subscribe((args) => {
+                    addedChip.item.onMoveEnd.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                         this.onChipMoveEnd(args);
                     });
-                    addedChip.item.onDragEnter.subscribe((args) => {
+                    addedChip.item.onDragEnter.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                         this.onChipDragEnter(args);
                     });
-                    addedChip.item.onKeyDown.subscribe((args) => {
+                    addedChip.item.onKeyDown.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                         this.onChipKeyDown(args);
                     });
                     if (addedChip.item.selectable) {
-                        addedChip.item.onSelection.subscribe((args) => {
+                        addedChip.item.onSelection.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                             this.onChipSelectionChange(args);
                         });
                     }
@@ -192,6 +196,14 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit {
                 this.modifiedChipsArray = this.chipsList.toArray();
             }
         }
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**
