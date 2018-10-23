@@ -133,8 +133,8 @@ export interface IColumnMovingEndEventArgs {
 }
 
 export interface IDensityChangedEventArgs {
-    oldDensity: DisplayDensity | string,
-    newDensity: DisplayDensity | string
+    oldDensity: DisplayDensity | string;
+    newDensity: DisplayDensity | string;
 }
 
 /**
@@ -650,7 +650,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set height(value: any) {
+    public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
@@ -680,7 +680,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set width(value: any) {
+    public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
