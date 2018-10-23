@@ -1,6 +1,6 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 
-import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
+import { IgxGridComponent,  SortingDirection, ISortingExpression, IFocusChangeEventArgs } from 'igniteui-angular';
 import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { detectChanges } from '@angular/core/src/render3';
 
@@ -103,10 +103,12 @@ export class GridGroupBySampleComponent implements OnInit {
     getRowsList() {
         console.log(this.grid1.rowList);
     }
+
     onGroupingDoneHandler(event){
         console.log("onGroupingDone: ");
         console.log(event);
     }
+  
     groupMultiple() {
         const expr = [
             {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
@@ -115,14 +117,29 @@ export class GridGroupBySampleComponent implements OnInit {
         ];
         this.grid1.groupBy(expr);
     }
+  
     ungroupMultiple() {
         this.grid1.clearGrouping(["Address", "Country"]);
     }
+  
     groupUngroupMultiple() {
         const expr = [
             {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
             {fieldName: "Address", dir: 2, ignoreCase: true},
         ];
         this.grid1.groupingExpressions = expr;
+    }
+
+    changeFocus(event: IFocusChangeEventArgs) {
+        console.log(event);
+        const groupRow = event.groupRow;
+        const target = (event.event.target as any).tagName.toLowerCase() === 'igx-grid-groupby-row';
+        if (groupRow && target) {
+            event.cancel = true;
+            const focusTarget =  groupRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
+            console.log(groupRow.nativeElement, focusTarget);
+            if (focusTarget) { focusTarget.focus(); }
+            console.log(document.activeElement);
+        }
     }
 }
