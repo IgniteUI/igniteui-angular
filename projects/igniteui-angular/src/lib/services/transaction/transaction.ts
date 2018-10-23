@@ -1,263 +1,102 @@
-import { Transaction, State, TransactionType } from './utilities';
-import { IgxBaseTransactionService } from './base-transaction';
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
-@Injectable()
-export class IgxTransactionService extends IgxBaseTransactionService {
-    private _transactions: Transaction[] = [];
-    private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
-    private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
-    private _states: Map<any, State> = new Map();
-    public onStateUpdate = new EventEmitter<void>();
+export enum TransactionType {
+    ADD = 'add',
+    DELETE = 'delete',
+    UPDATE = 'update'
+}
 
-    public add(transaction: Transaction, recordRef?: any): void {
-        const states = this._isPending ? this._pendingStates : this._states;
-        this.verifyAddedTransaction(states, transaction, recordRef);
-        this.updateState(states, transaction, recordRef);
+export interface Transaction {
+    id: any;
+    type: TransactionType;
+    newValue: any;
+}
 
-        const transactions = this._isPending ? this._pendingTransactions : this._transactions;
-        transactions.push(transaction);
+export interface State {
+    value: any;
+    recordRef: any;
+    type: TransactionType;
+}
 
-        if (!this._isPending) {
-            this._undoStack.push({ transaction, recordRef });
-            this._redoStack = [];
-            this.onStateUpdate.emit();
-        }
-    }
-
-    public getTransactionLog(id?: any): Transaction[] | Transaction {
-        if (id) {
-            return [...this._transactions].reverse().find(t => t.id === id);
-        }
-        return [...this._transactions];
-    }
-
-    public aggregatedState(mergeChanges: boolean): Transaction[] {
-        const result: Transaction[] = [];
-        this._states.forEach((state: State, key: any) => {
-            const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type });
-        });
-        return result;
-    }
-
-    public getState(id: any): State {
-        return this._states.get(id);
-    }
-
-    public get enabled(): boolean {
-        return true;
-    }
-
-    public getAggregatedValue(id: any, mergeChanges: boolean): any {
-        const state = this._states.get(id);
-        const pendingState = super.getState(id);
-
-        //  if there is no state and there is no pending state return null
-        if (!state && !pendingState) {
-            return null;
-        }
-
-        const pendingChange = super.getAggregatedValue(id, false);
-        const change = state && state.value;
-        let aggregatedValue = this.mergeValues(change, pendingChange);
-        if (mergeChanges) {
-            const originalValue = state ? state.recordRef : pendingState.recordRef;
-            aggregatedValue = this.mergeValues(originalValue, aggregatedValue);
-        }
-        return aggregatedValue;
-    }
-
-    public endPending(commit: boolean): void {
-        this._isPending = false;
-        if (commit) {
-            this._pendingStates.forEach((s: State, k: any) => {
-                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
-            });
-        }
-        super.endPending(commit);
-    }
-
-    public commit(data: any[]): void {
-        this._states.forEach((s: State) => {
-            const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
-            switch (s.type) {
-                case TransactionType.ADD:
-                    data.push(s.value);
-                    break;
-                case TransactionType.DELETE:
-                    if (0 <= index && index < data.length) {
-                        data.splice(index, 1);
-                    }
-                    break;
-                case TransactionType.UPDATE:
-                    if (0 <= index && index < data.length) {
-                        data[index] = this.updateValue(s);
-                    }
-                    break;
-            }
-        });
-        this.clear();
-    }
-
-    public clear(): void {
-        this._transactions = [];
-        this._states.clear();
-        this._redoStack = [];
-        this._undoStack = [];
-        this.onStateUpdate.emit();
-    }
-
-    public undo(): void {
-        if (this._undoStack.length <= 0) {
-            return;
-        }
-        this._transactions.pop();
-        const action: { transaction: Transaction, recordRef: any } = this._undoStack.pop();
-        this._redoStack.push(action);
-        this._states.clear();
-        this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
-        this.onStateUpdate.emit();
-    }
-
-    public redo(): void {
-        if (this._redoStack.length > 0) {
-            const undoItem = this._redoStack.pop();
-            this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
-            this._transactions.push(undoItem.transaction);
-            this._undoStack.push(undoItem);
-            this.onStateUpdate.emit();
-        }
-    }
+export interface TransactionService {
+    /**
+     * Returns whether transaction is enabled for this service
+     */
+    readonly enabled: boolean;
 
     /**
-     * Verifies if the passed transaction is correct. If not throws an exception.
-     * @param transaction Transaction to be verified
+     * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo.
      */
-    protected verifyAddedTransaction(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
-        const state = states.get(transaction.id);
-        switch (transaction.type) {
-            case TransactionType.ADD:
-                if (state) {
-                    //  cannot add same item twice
-                    throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already added.`);
-                }
-                break;
-            case TransactionType.DELETE:
-            case TransactionType.UPDATE:
-                if (state && state.type === TransactionType.DELETE) {
-                    //  cannot delete or update deleted items
-                    throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already deleted.`);
-                }
-                if (!state && !recordRef) {
-                    //  cannot initially add transaction or delete item with no recordRef
-                    throw new Error(`Cannot add this transaction. This is first transaction of type ${transaction.type} ` +
-                        `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
-                }
-                break;
-        }
-    }
+    onStateUpdate?: EventEmitter<void>;
 
     /**
-     * Updates the provided states collection according to passed transaction and recordRef
-     * @param states States collection to apply the update to
-     * @param transaction Transaction to apply to the current state
-     * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
+     * Adds provided  transaction with recordRef if any
+     * @param transaction Transaction to be added
+     * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
-    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
-        let state = states.get(transaction.id);
-        //  if TransactionType is ADD simply add transaction to states;
-        //  if TransactionType is DELETE:
-        //    - if there is state with this id of type ADD remove it from the states;
-        //    - if there is state with this id of type UPDATE change its type to DELETE;
-        //    - if there is no state with this id add transaction to states;
-        //  if TransactionType is UPDATE:
-        //    - if there is state with this id of type ADD merge new value and state recordRef into state new value
-        //    - if there is state with this id of type UPDATE merge new value into state new value
-        //    - if there is state with this id and state type is DELETE change its type to UPDATE
-        //    - if there is no state with this id add transaction to states;
-        if (state) {
-            switch (transaction.type) {
-                case TransactionType.DELETE:
-                    if (state.type === TransactionType.ADD) {
-                        states.delete(transaction.id);
-                    } else if (state && state.type === TransactionType.UPDATE) {
-                        state.value = transaction.newValue;
-                        state.type = TransactionType.DELETE;
-                    }
-                    break;
-                case TransactionType.UPDATE:
-                    //  TODO: move object.assign part in a method, probably change updateValue one!
-                    if (typeof state.value === 'object') {
-                        if (state.type === TransactionType.ADD) {
-                            state.value = Object.assign({}, state.value, transaction.newValue);
-                        }
-                        if (state.type === TransactionType.UPDATE) {
-                            Object.assign(state.value, transaction.newValue);
-                        }
-                    } else {
-                        state.value = transaction.newValue;
-                    }
-            }
-        } else {
-            state = { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
-            states.set(transaction.id, state);
-        }
-
-        //  should not clean pending state. This will happen automatically on endPending call
-        if (!this._isPending) {
-            this.cleanState(transaction.id, states);
-        }
-    }
+    add(transaction: Transaction, recordRef?: any): void;
 
     /**
-     * Compares the state with recordRef and clears all duplicated values. If any state ends as
-     * empty object removes it from states.
-     * @param state State to clean
+     * Returns an array of all transactions. If id is provided returns last transaction for provided id
+     * @returns All the transaction on last transaction for provided id
      */
-    protected cleanState(id: any, states: Map<any, State>): void {
-        const state = states.get(id);
-        //  do nothing if
-        //  there is no state, or
-        //  there is no state value (e.g. DELETED transaction), or
-        //  there is no recordRef (e.g. ADDED transaction)
-        if (state && state.value && state.recordRef) {
-            //  if state's value is object compare each key with the ones in recordRef
-            //  if values in any key are the same delete it from state's value
-            //  if state's value is not object, simply compare with recordRef and remove
-            //  the state if they are equal
-            if (typeof state.recordRef === 'object') {
-                for (const key of Object.keys(state.value)) {
-                    if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
-                        delete state.value[key];
-                    }
-                }
-
-                //  if state's value is empty remove the state from the states, only if state is not DELETE type
-                if (state.type !== TransactionType.DELETE && Object.keys(state.value).length === 0) {
-                    states.delete(id);
-                }
-            } else {
-                if (state.recordRef === state.value) {
-                    states.delete(id);
-                }
-            }
-        }
-    }
+    getTransactionLog(id?: any): Transaction[] | Transaction;
 
     /**
-     * Merges second values in first value and the result in empty object. If values are primitive type
-     * returns second value if exists, or first value.
-     * @param first Value to merge into
-     * @param second Value to merge
+     * Remove the last transaction if any
      */
-    protected mergeValues<T>(first: T, second: T): T {
-        let result: T;
-        if ((first && typeof first === 'object') || (second && typeof second === 'object')) {
-            result = Object.assign({}, first, second);
-        } else {
-            result = second ? second : first;
-        }
-        return result;
-    }
+    undo(): void;
+
+    /**
+     * Applies the last undone transaction if any
+     */
+    redo(): void;
+
+    /**
+     * Returns aggregated state of all transactions including pending ones
+     * @param mergeChanges If set to true will merge each state's value over relate recordRef
+     * and will record resulting value in the related transaction
+     * @returns Collection of aggregated transactions for each changed record
+     */
+    aggregatedState(mergeChanges: boolean): Transaction[];
+
+    /**
+     * Returns the state of the record with provided id
+     * @param id The id of the record
+     * @returns State of the record if any
+     */
+    getState(id: any): State;
+
+    /**
+     * Returns value of the required id including all uncommitted changes
+     * @param id The id of the record to return value for
+     * @param mergeChanges If set to true will merge state's value over relate recordRef
+     * and will return merged value
+     * @returns Value with changes or **null**
+     */
+    getAggregatedValue(id: any, mergeChanges: boolean): any;
+
+    /**
+     * Applies all transactions over the provided data
+     * @param data Data source to update
+     */
+    commit(data: any[]): void;
+
+    /**
+     * Clears all transactions
+     */
+    clear(): void;
+
+    /**
+     * Starts pending transactions. All transactions passed after call to startPending
+     * will not be added to transaction log
+     */
+    startPending(): void;
+
+    /**
+     * Clears all pending transactions and aggregated pending state. If commit is set to true
+     * commits pending states as single transaction
+     * @param commit Should commit the pending states
+     */
+    endPending(commit: boolean): void;
 }

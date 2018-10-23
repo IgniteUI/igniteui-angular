@@ -58,7 +58,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { Transaction, TransactionType, TransactionService, State } from '../services/transaction/utilities';
+import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective

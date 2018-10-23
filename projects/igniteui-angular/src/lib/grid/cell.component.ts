@@ -17,7 +17,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey } from '../core/utils';
-import { State } from '../services/transaction/utilities';
+import { State } from '../services/index';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

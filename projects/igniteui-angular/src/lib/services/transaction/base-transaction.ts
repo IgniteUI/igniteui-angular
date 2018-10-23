@@ -1,4 +1,4 @@
-import { TransactionService, Transaction, State } from './utilities';
+import { TransactionService, Transaction, State } from './transaction';
 import { EventEmitter, Injectable } from '@angular/core';
 
 @Injectable()

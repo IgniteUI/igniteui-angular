@@ -1,5 +1,5 @@
-import { IgxTransactionService } from './transaction';
-import { Transaction, TransactionType } from './utilities';
+import { IgxTransactionService } from './igx-transaction';
+import { Transaction, TransactionType } from './transaction';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxTransaction', () => {

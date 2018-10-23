@@ -12,7 +12,7 @@ import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { Transaction, TransactionType } from '../services/transaction/utilities';
+import { Transaction, TransactionType } from '../services/index';
 /**
  *@hidden
  */
