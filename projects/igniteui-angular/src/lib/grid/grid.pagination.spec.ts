@@ -170,12 +170,13 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
     });
 
-    it('change paging pages per page API', () => {
+    it('change paging pages per page API', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         grid.paging = true;
         grid.perPage = 2;
         grid.height = '300px';
+        tick();
         fix.detectChanges();
         grid.page = 1;
         fix.detectChanges();
@@ -207,7 +208,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
         verifyGridPager(fix, 6, '1', '1 of 1', [true, true, true, true]);
         expect(vScrollBar.children[0].style.height).toEqual('500px');
-    });
+    }));
 
     it('change paging with button', () => {
         const fix = TestBed.createComponent(PagingAndEditingComponent);

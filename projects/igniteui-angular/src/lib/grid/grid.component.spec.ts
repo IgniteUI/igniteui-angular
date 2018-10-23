@@ -114,7 +114,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        it('should initialize grid with remove virtualization', (done) => {
+        it('should initialize grid with remove virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
             let rows = fix.componentInstance.instance.rowList.toArray();
@@ -130,17 +130,15 @@ describe('IgxGrid Component Tests', () => {
                 fix.componentRef.hostView.detectChanges();
             }).not.toThrow();
 
-            setTimeout(() => {
-                fix.detectChanges();
-                fix.componentInstance.cdr.detectChanges();
-                rows = fix.componentInstance.instance.rowList.toArray();
-                const data = fix.componentInstance.data.source.getValue();
-                for (let i = fix.componentInstance.instance.virtualizationState.startIndex; i < rows.length; i++) {
-                    expect(rows[i].rowData['Col1'])
-                        .toBe(data[i]['Col1']);
-                }
-                done();
-            }, 500);
+            fix.detectChanges();
+            fix.componentInstance.cdr.detectChanges();
+            await wait();
+            rows = fix.componentInstance.instance.rowList.toArray();
+            const data = fix.componentInstance.data.source.getValue();
+            for (let i = fix.componentInstance.instance.virtualizationState.startIndex; i < rows.length; i++) {
+                expect(rows[i].rowData['Col1'])
+                    .toBe(data[i]['Col1']);
+            }
         });
 
         it('height/width should be calculated depending on number of records', fakeAsync(() => {
@@ -607,11 +605,12 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.rowList.length).toBeGreaterThan(0);
             }));
 
-        it('should render all records if height is explicitly set to null.', () => {
+        it('should render all records if height is explicitly set to null.', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.initColumnsRows(20, 5);
             grid.height = null;
+            tick();
             fix.detectChanges();
 
             const recsCount = grid.data.length;
@@ -619,7 +618,7 @@ describe('IgxGrid Component Tests', () => {
             // tbody should have height equal to all items * item height
             expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51 - 1);
             expect(grid.rowList.length).toBeGreaterThan(0);
-        });
+        }));
 
         it('should match width and height of parent container when width/height are set in %', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -646,36 +645,39 @@ describe('IgxGrid Component Tests', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        it('should render 10 records if height is 100% and parent container\'s height is unset', () => {
+        it('should render 10 records if height is 100% and parent container\'s height is unset', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '700px';
+            tick();
             fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
-        });
+        }));
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
-            there are fewer than 10 records in the data view`, () => {
+            there are fewer than 10 records in the data view`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.componentInstance.grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+                tick();
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
                 expect(defaultHeight).not.toBeNull();
                 expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
                 expect(fix.componentInstance.grid.rowList.length).toEqual(5);
-            });
+            }));
 
         it(`should render 10 records if height is 100% and parent container\'s height is unset and
-            display density is changed`, () => {
+            display density is changed`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.componentInstance.grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 11);
                 fix.componentInstance.density = DisplayDensity.compact;
+                tick();
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
@@ -684,30 +686,31 @@ describe('IgxGrid Component Tests', () => {
                 expect(defaultHeightNum).toBeLessThan(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
                 expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-            });
+            }));
 
-        it('should render correct columns if after scrolling right container size changes so that all columns become visible.', (done) => {
+        it('should render correct columns if after scrolling right container size changes so that all columns become visible.',
+        async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.detectChanges();
             const grid = fix.componentInstance.grid;
             grid.width = '500px';
             fix.componentInstance.initColumnsRows(5, 5);
-
             fix.detectChanges();
+            // tick();
+            await wait();
             expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
             const scrollbar = grid.parentVirtDir.getHorizontalScroll();
             scrollbar.scrollLeft = 10000;
             grid.width = '1500px';
 
-            setTimeout(() => {
-                fix.detectChanges();
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
-                const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                expect(headers.length).toEqual(5);
-                for (let i = 0; i < headers.length; i++) {
-                    expect(headers[i].context.column.field).toEqual(grid.columns[i].field);
-                }
-                done();
-            }, 100);
+            fix.detectChanges();
+            await wait(100);
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            expect(headers.length).toEqual(5);
+            for (let i = 0; i < headers.length; i++) {
+                expect(headers[i].context.column.field).toEqual(grid.columns[i].field);
+            }
         });
 
         it('Should render date and number values based on default formatting', () => {
@@ -770,8 +773,9 @@ describe('IgxGrid Component Tests', () => {
             TestBed.resetTestingModule();
         }));
 
-        it('should allow pageup/pagedown navigation when the grid is focused', (done) => {
+        it('should allow pageup/pagedown navigation when the grid is focused', async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.detectChanges();
             const grid = fix.componentInstance.grid;
             const pageDownKeyEvent = new KeyboardEvent('keydown', {
                 code: 'PageDown',
@@ -785,25 +789,24 @@ describe('IgxGrid Component Tests', () => {
             grid.width = '800px';
             grid.height = '500px';
             fix.componentInstance.initColumnsRows(25, 25);
+            await wait();
             fix.detectChanges();
             grid.nativeElement.dispatchEvent(new Event('focus'));
 
             // testing the pagedown key
             grid.nativeElement.dispatchEvent(pageDownKeyEvent);
             grid.cdr.detectChanges();
-            setTimeout(() => {
-                currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
-                expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
 
-                // testing the pageup key
-                grid.nativeElement.dispatchEvent(pageUpKeyEvent);
-                grid.cdr.detectChanges();
-                setTimeout(() => {
-                    currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
-                    expect(currScrollTop).toEqual(0);
-                    done();
-                }, 100);
-            }, 0);
+            await wait();
+            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
+
+            // testing the pageup key
+            grid.nativeElement.dispatchEvent(pageUpKeyEvent);
+            grid.cdr.detectChanges();
+            await wait();
+            currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+            expect(currScrollTop).toEqual(0);
         });
     });
 

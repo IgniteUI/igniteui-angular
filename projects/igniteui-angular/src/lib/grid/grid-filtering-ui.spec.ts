@@ -1350,6 +1350,7 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         grid.width = '400px';
         grid.getColumnByName('ID').width = '50px';
+        await wait();
 
         // filter the ProductName by two conditions
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
