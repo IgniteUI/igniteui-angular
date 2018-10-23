@@ -47,6 +47,13 @@ export interface OverlayEventArgs {
     componentRef?: ComponentRef<{}>;
 }
 
+export interface OverlayCancelableEventArgs extends OverlayEventArgs {
+    /**
+     * Provides the ability to cancel the event.
+     */
+    cancel: boolean;
+}
+
 export interface OverlayAnimationEventArgs {
     /** Id of the overlay as returned by the `show()` method */
     id: string;
