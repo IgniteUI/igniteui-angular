@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
+import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -213,6 +214,42 @@ describe('IgxToggle', () => {
 
         expect(toggle.onClosed.emit).toHaveBeenCalled();
         expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
+    }));
+
+    it('fix for #2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+
+        spyOn(toggle.onOpening, 'emit').and.callThrough();
+        spyOn(toggle.onOpened, 'emit').and.callThrough();
+        spyOn(toggle.onClosing, 'emit').and.callThrough();
+        spyOn(toggle.onClosed, 'emit').and.callThrough();
+
+        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+        toggle.open();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+
+        toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
+        toggle.open();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
     }));
 
     describe('overlay settings', () => {
