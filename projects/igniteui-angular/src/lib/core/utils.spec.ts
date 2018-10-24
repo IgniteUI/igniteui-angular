@@ -45,7 +45,7 @@ describe('Utils', () => {
         }
     };
 
-    fdescribe('Utils - cloneObject unit tests', () => {
+    describe('Utils - cloneObject unit tests', () => {
         it('Should return primitive values', () => {
             let input: any = 10;
             let expected: any = 10;
