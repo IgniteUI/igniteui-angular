@@ -95,6 +95,7 @@
     // Call the individual component styles with the type scale
     @include igx-bottom-nav-typography($type-scale);
     @include igx-button-typography($type-scale);
+    @include igx-banner-typography($type-scale);
     @include igx-calendar-typography($type-scale);
     @include igx-card-typography($type-scale);
     @include igx-checkbox-typography($type-scale);
