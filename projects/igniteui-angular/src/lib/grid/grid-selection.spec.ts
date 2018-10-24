@@ -9,6 +9,7 @@ import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [
@@ -25,9 +26,9 @@ let data = [
 ];
 
 describe('IgxGrid - Row Selection', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
-        TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
                 GridWithPrimaryKeyComponent,
@@ -151,31 +152,30 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
     }));
 
-    xit('Should properly move focus when loading new row chunk', (async () => {
+    it('Should properly move focus when loading new row chunk', (async() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.gridSelection3;
-        const targetCellPrimaryKey = grid.rowList.last.rowID;
-        const targetCell = grid.getCellByColumn(targetCellPrimaryKey, 'Column1');
+        const lastRowIndex = grid.rowList.length - 2;
+        let targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
         const initialValue = targetCell.value;
         const targetCellElement: HTMLElement = targetCell.nativeElement;
         spyOn(targetCell, 'onFocus').and.callThrough();
         expect(targetCell.focused).toEqual(false);
         targetCellElement.focus();
-        await wait();
         spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
         fix.detectChanges();
+        targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
         expect(targetCell.focused).toEqual(true);
         UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
-        await wait(30);
+        await wait(200);
         fix.detectChanges();
-
-        const newLastRow = grid.rowList.last.rowID;
-        expect(grid.getCellByColumn(newLastRow, 'Column1').value === initialValue).toBeFalsy();
-        expect(grid.getCellByColumn(newLastRow, 'Column1').focused).toEqual(true);
-        expect(grid.getCellByColumn(newLastRow, 'Column1').selected).toEqual(true);
-        expect(grid.getCellByColumn(newLastRow, 'Column1').nativeElement.class).toContain('igx-grid__td--selected');
-        expect(grid.getCellByColumn(targetCellPrimaryKey, 'Column1').focused).toEqual(false);
+        const newLastRowIndex = lastRowIndex + 1;
+        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').value === initialValue).toBeFalsy();
+        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').focused).toEqual(true);
+        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').selected).toEqual(true);
+        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').nativeElement.classList).toContain('igx-grid__td--selected');
+        expect(grid.getCellByColumn(lastRowIndex, 'Column1').focused).toEqual(false);
         expect(grid.selectedCells.length).toEqual(1);
     }));
 
@@ -530,7 +530,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
     });
 
-    it('Should be able to select/deselect rows programatically', () => {
+    it('Should be able to select/deselect rows programatically', fakeAsync(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
 
@@ -551,11 +551,13 @@ describe('IgxGrid - Row Selection', () => {
         expect(thirdRow.isSelected).toBeFalsy();
 
         grid.deselectRows(['0_0', '0_1', '0_2']);
+        tick();
         fix.detectChanges();
 
         expect(rowsCollection).toEqual([]);
 
         grid.selectRows(['0_0', '0_1', '0_2'], false);
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeTruthy();
@@ -566,6 +568,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowsCollection.length).toEqual(3);
 
         grid.deselectRows(['0_0', '0_1', '0_2']);
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
@@ -577,9 +580,9 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowsCollection.length).toEqual(0);
         expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(3);
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
-    });
+    }));
 
-    it('Should be able to select/deselect ALL rows programatically', () => {
+    it('Should be able to select/deselect ALL rows programatically', fakeAsync(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
 
@@ -595,6 +598,7 @@ describe('IgxGrid - Row Selection', () => {
         spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
         grid.selectAllRows();
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeTruthy();
@@ -604,6 +608,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowsCollection.length).toEqual(500);
 
         grid.deselectAllRows();
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
@@ -613,7 +618,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowsCollection.length).toEqual(0);
         expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-    });
+    }));
 
     it('Filtering and row selection', () => {
         const fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
@@ -741,7 +746,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
     });
 
-    it('Should have persistent selection through data operations - sorting', () => {
+    it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
         const fix = TestBed.createComponent(GridWithSelectionComponent);
         fix.detectChanges();
 
@@ -762,6 +767,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(rowsCollection).toEqual([]);
 
         grid.selectRows(['0_0', '0_1'], false);
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeTruthy();
@@ -775,11 +781,12 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeFalsy();
 
         grid.clearSort('Column1');
+        tick();
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeTruthy();
         expect(secondRow.isSelected).toBeTruthy();
-    });
+    }));
 
     it('Clicking any other cell is not selecting the row', () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
@@ -910,7 +917,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(thirdRow.isSelected).toBeFalsy();
     });
 
-    it('Should be able to correctly select all rows programatically', () => {
+    it('Should be able to correctly select all rows programatically', fakeAsync(() => {
         const fixture = TestBed.createComponent(GridWithSelectionComponent);
         fixture.detectChanges();
 
@@ -931,7 +938,7 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
-    });
+    }));
 
     it('Should be able to programatically select all rows with a correct reference, #1297', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
@@ -1072,6 +1079,99 @@ describe('IgxGrid - Row Selection', () => {
 
         // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
         expect(virtualizationSpy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('keyboard navigation - Should properly handle TAB / SHIFT + TAB on row selectors', (async () => {
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+
+        const firstRow = grid.getRowByIndex(0);
+        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
+        const secondRow = grid.getRowByIndex(1);
+        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox');
+        let cell = grid.getCellByColumn(1, 'ID');
+
+        cell.onFocus(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(secondRow.isSelected).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(secondRow.isSelected).toBeFalsy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+
+        cell = grid.getCellByColumn(1, 'ID');
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', shiftKey: true }));
+        await wait(100);
+        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        cell = grid.getCellByColumn(0, 'Column 15');
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(firstRow.isSelected).toBeTruthy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+        await wait(30);
+        fix.detectChanges();
+
+        expect(cell.selected).toBeTruthy();
+        expect(firstRow.isSelected).toBeFalsy();
+        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
+
+        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+
+        cell = grid.getCellByColumn(1, 'ID');
+        expect(cell.selected).toBeTruthy();
+        expect(cell.focused).toBeTruthy();
+        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
+    }));
+
+    it('keyboard navigation - Should properly blur the focused cell when scroll with mouse wheeel', (async () => {
+        pending('This scenario need to be tested manually');
+        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.gridSelection5;
+        const firstCell = grid.rowList.first.cells.toArray()[0];
+
+        firstCell.onFocus(new Event('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(firstCell.selected).toBeTruthy();
+        expect(firstCell.focused).toBeTruthy();
+
+        const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
+        const event = new WheelEvent('wheel', { deltaX: 0, deltaY: 500 });
+        displayContainer.dispatchEvent(event);
+        await wait(300);
+
+        expect(firstCell.isSelected).toBeFalsy();
+        expect(firstCell.selected).toBeFalsy();
+        expect(firstCell.focused).toBeFalsy();
     }));
 
 });

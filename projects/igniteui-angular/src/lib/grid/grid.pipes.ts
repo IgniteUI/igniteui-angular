@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../data-operations/sorting-strategy';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -170,5 +169,27 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
 
     public transform(value: string): string {
         return value.split(/(?=[A-Z])/).join(' ');
+    }
+}
+
+@Pipe({
+    name: 'gridTransaction',
+    pure: true
+})
+export class IgxGridTransactionPipe implements PipeTransform {
+
+    constructor(private gridAPI: IgxGridAPIService) { }
+
+    transform(collection: any[], id: string, pipeTrigger: number) {
+        const grid: IgxGridComponent = this.gridAPI.get(id);
+
+        if (collection && grid.transactions.enabled) {
+            const result = DataUtil.mergeTransactions(
+                cloneArray(collection, true),
+                grid.transactions.aggregatedState(true),
+                grid.primaryKey);
+            return result;
+        }
+        return collection;
     }
 }

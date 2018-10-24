@@ -1,8 +1,8 @@
-import { Directive, Input, ElementRef, NgZone, OnInit, NgModule } from '@angular/core';
+import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Directive({ selector: '[igxScrollInertia]' })
-export class IgxScrollInertiaDirective implements OnInit {
+export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
     constructor(private element: ElementRef, private _zone: NgZone) {
 
@@ -444,6 +444,28 @@ export class IgxScrollInertiaDirective implements OnInit {
     // Start inertia and continue it recursively
     this._touchInertiaAnimID = requestAnimationFrame(inertiaStep);
    }
+
+    ngOnDestroy() {
+        this._zone.runOutsideAngular(() => {
+            const targetElem = this.element.nativeElement.parentElement || this.element.nativeElement.parentNode;
+            targetElem.removeEventListener('wheel',
+                (evt) => { this.onWheel(evt); });
+            targetElem.removeEventListener('touchstart',
+                (evt) => { this.onTouchStart(evt); });
+            targetElem.removeEventListener('touchmove',
+                (evt) => { this.onTouchMove(evt); });
+            targetElem.removeEventListener('touchend',
+                (evt) => { this.onTouchEnd(evt); });
+            targetElem.removeEventListener('pointerdown',
+                (evt) => { this.onPointerDown(evt); });
+            targetElem.removeEventListener('pointerup',
+                (evt) => { this.onPointerUp(evt); });
+            targetElem.removeEventListener('MSGestureStart',
+                (evt) => { this.onMSGestureStart(evt); });
+            targetElem.removeEventListener('MSGestureChange',
+                (evt) => { this.onMSGestureChange(evt); });
+        });
+    }
 
 }
 @NgModule({
