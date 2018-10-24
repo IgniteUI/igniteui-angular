@@ -278,6 +278,7 @@
 
     @include e(row-editing-outlet) {
         @extend %igx-grid__row-editing-outlet !optional;
+    }
 
     @include e(filtering-cell) {
         @extend %igx-grid__filtering-cell !optional;
