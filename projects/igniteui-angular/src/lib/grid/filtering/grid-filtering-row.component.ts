@@ -9,7 +9,8 @@ import {
     ViewChildren,
     QueryList,
     ElementRef,
-    HostBinding
+    HostBinding,
+    HostListener
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
@@ -266,8 +267,21 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     */
     public datePickerClose() {
         this.input.nativeElement.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event) {
+        if (event.keyCode === KEYCODES.TAB) {
+            event.stopPropagation();
+        }
     }
 
     private showHideArrowButtons() {

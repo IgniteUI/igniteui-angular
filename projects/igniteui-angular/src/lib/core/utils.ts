@@ -29,7 +29,8 @@ export const enum KEYCODES {
     UP_ARROW = 38,
     RIGHT_ARROW = 39,
     DOWN_ARROW = 40,
-    F2 = 113
+    F2 = 113,
+    TAB = 9
 }
 
 /**
