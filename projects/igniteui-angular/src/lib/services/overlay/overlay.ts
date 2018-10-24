@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
-import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs } from './utilities';
+import { OverlaySettings, OverlayEventArgs, OverlayInfo, OverlayAnimationEventArgs, OverlayCancelableEventArgs } from './utilities';
 
 import {
     ApplicationRef,
@@ -37,7 +37,7 @@ export class IgxOverlayService {
     /**
      * Emitted before the component is opened.
      */
-    public onOpening = new EventEmitter<OverlayEventArgs>();
+    public onOpening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
      * Emitted after the component is opened and all animations are finished.
@@ -47,7 +47,7 @@ export class IgxOverlayService {
     /**
      * Emitted before the component is closed.
      */
-    public onClosing = new EventEmitter<OverlayEventArgs>();
+    public onClosing = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
      * Emitted after the component is closed and all animations are finished.
@@ -105,7 +105,15 @@ export class IgxOverlayService {
         settings = Object.assign({}, this._defaultSettings, settings);
         info.settings = settings;
 
-        this.onOpening.emit({ id, componentRef: info.componentRef });
+        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
+        this.onOpening.emit(eventArgs);
+        if (eventArgs.cancel) {
+            if (info.componentRef) {
+                this._appRef.detachView(info.componentRef.hostView);
+                info.componentRef.destroy();
+            }
+            return id;
+        }
 
         //  if there is no close animation player, or there is one but it is not started yet we are in clear
         //  opening. Otherwise, if there is close animation player playing animation now we should not setup
@@ -150,7 +158,12 @@ export class IgxOverlayService {
             return;
         }
 
-        this.onClosing.emit({ id, componentRef: info.componentRef });
+        const eventArgs = { id, componentRef: info.componentRef, cancel: false };
+        this.onClosing.emit(eventArgs);
+        if (eventArgs.cancel) {
+            return;
+        }
+
         info.settings.scrollStrategy.detach();
         this.removeOutsideClickListener(info);
         this.removeResizeHandler(info.id);
