@@ -12,3 +12,6 @@ export {
     OverlayEventArgs, OverlaySettings, PositionSettings
 } from './overlay/utilities';
 export * from './overlay/scroll';
+export * from './transaction/igx-transaction';
+export * from './transaction/base-transaction';
+export * from './transaction/transaction';

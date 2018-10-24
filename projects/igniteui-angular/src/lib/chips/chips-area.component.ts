@@ -48,8 +48,19 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     /**
      * @hidden
      */
+    @Input()
+    public class = '';
+
+    /**
+     * @hidden
+     */
     @HostBinding('attr.class')
-    public cssClass = 'igx-chip-area';
+    get hostClass() {
+        const classes = ['igx-chip-area'];
+        classes.push(this.class);
+
+        return classes.join(' ');
+    }
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.

@@ -9,7 +9,10 @@ import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSe
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { wait } from '../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxGrid - search API', () => {
+    configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid, fixNativeElement;
 
@@ -651,12 +654,6 @@ describe('IgxGrid - search API', () => {
             cell.inEditMode = false;
             await wait(30);
             fix.detectChanges();
-        });
-
-        afterAll(() => {
-            if (grid && grid.getCellByColumn(4, 'JobTitle')) {
-                grid.getCellByColumn(4, 'JobTitle').update('Senior Software Developer');
-            }
         });
     });
 

@@ -3,7 +3,6 @@ import {
     IgxColumnComponent,
     IgxGridComponent,
     IgxNumberSummaryOperand,
-    IgxSummaryOperand,
     IgxSummaryResult
 } from 'igniteui-angular';
 
@@ -360,10 +359,9 @@ export class GridSummaryComponent implements OnInit {
     }
     ];
     public hasSummaryUnit = true;
-    public hashidden = false;
+    public hasHidden = false;
 
     constructor() {
-        const date = new Date();
         for (let i = 0; i < 10; i++) {
             this.data = this.data.concat(this.data);
         }
@@ -373,25 +371,22 @@ export class GridSummaryComponent implements OnInit {
         }
     }
 
-    ngOnInit() {
-    }
+    ngOnInit() { }
 
     updateData() {
         const d = [].concat(this.data).concat(this.data.slice(0, 15));
         this.data = d;
-        // this.grid1.markForCheck();
         this.grid1.clearSummaryCache();
     }
 
-    viewRecord(aRecord) {
-    }
-    initColunm(po: IgxColumnComponent) {
+    viewRecord(aRecord) { }
 
-    }
+    initColumn(po: IgxColumnComponent) { }
+
     public enableSummary() {
         for (const name of ['ReorderLevel', 'ProductID']) {
             if (this.grid1.getColumnByName(name).hasSummary) {
-               // this.grid1.disableSummaries(name);
+                // this.grid1.disableSummaries(name);
                 this.grid1.getColumnByName(name).hasSummary = false;
                 // this.grid1.disableSummaries(name);
             } else {
@@ -426,9 +421,11 @@ export class GridSummaryComponent implements OnInit {
     public deleteRow() {
         this.grid1.deleteRow(1);
     }
+
     public updateCell() {
         this.grid1.updateCell(70, 1, 'ReorderLevel');
     }
+
     public updateRow() {
         this.grid1.updateRow({
             __metadata: {
@@ -448,6 +445,7 @@ export class GridSummaryComponent implements OnInit {
             OrderDate: new Date('1905-03-17')
         }, 1);
     }
+
     pin() {
         for (const name of ['UnitsInStock', 'Discontinued']) {
             if (this.grid1.getColumnByName(name).pinned) {
