@@ -4,12 +4,14 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 
 describe('Dialog', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

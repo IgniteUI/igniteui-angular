@@ -105,7 +105,7 @@ public ngOnInit(): void {
 
 ```
 
-- enable some features for certaing columns
+- enable some features for certain columns
 
 ```typescript
 public initColumns(event: IgxGridColumnInitEvent) {
@@ -174,12 +174,14 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
-|`oddRowCSS`|string|Additional styling classses applied to all odd rows in the grid.|
+|`oddRowCSS`|string|Additional styling classes applied to all odd rows in the grid.|
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
 |`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
 |`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
+|`rowEditable` | Boolean | enables/disables row editing mode |
+|`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 
 ### Outputs
 
@@ -189,6 +191,8 @@ A list of the events emitted by the **igx-grid**:
 |--- |--- |
 |_Event emitters_|_Notify for a change_|
 |`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
+|`onRowEditDone`|Emitted when a row value is submitted. Returns `{ state: State }`|
+|`onRowEditCancel`|Emitted when a row value is submitted. Returns `{ state: State }`|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|

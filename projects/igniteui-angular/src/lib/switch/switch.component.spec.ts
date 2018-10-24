@@ -8,7 +8,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxSwitch', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

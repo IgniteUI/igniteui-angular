@@ -94,6 +94,18 @@
         @extend %grid-row--selected !optional;
     }
 
+    @include e(tr, $m: edited) {
+        @extend %igx-grid__tr--edited !optional;
+    }
+
+    @include e(tr, $m: deleted) {
+        @extend %igx-grid__tr--deleted !optional;
+    }
+
+    @include e(tr, $m: edit) {
+        @extend %igx-grid__tr--edit !optional;
+    }
+
     @include e(tr, $m: group) {
         @extend %grid-row--group !optional;
     }
@@ -147,8 +159,12 @@
         @extend %grid-cell--selected !optional;
     }
 
+    @include e(td, $m: edited) {
+        @extend %igx-grid__td--edited !optional;
+    }
+
     @include e(td, $m: editing) {
-        @extend %grid-cell--editing !optional;
+        @extend %igx-grid__td--editing !optional;
     }
 
     @include e(td, $m: number) {
@@ -182,6 +198,10 @@
 
     @include e(group-row) {
         @extend %igx-grid__group-row !optional;
+    }
+
+    @include e(group-row, $m: active) {
+        @extend %igx-grid__group-row--active !optional;
     }
 
     @include e(group-content) {
@@ -255,6 +275,9 @@
     @include e(outlet) {
         @extend %igx-grid__outlet !optional;
     }
+
+    @include e(row-editing-outlet) {
+        @extend %igx-grid__row-editing-outlet !optional;
 
     @include e(filtering-cell) {
         @extend %igx-grid__filtering-cell !optional;
