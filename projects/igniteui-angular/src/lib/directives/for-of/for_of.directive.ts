@@ -649,7 +649,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             const reducer = (acc, val) => acc + val;
             if (this.igxForScrollOrientation === 'vertical') {
-                const scrToBottom = this._isScrolledToBottom;
+                const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
                 const hSum = this.heightCache.reduce(reducer);
                 if (hSum > this._maxHeight) {
                     this._virtHeightRatio =  hSum / this._maxHeight;
