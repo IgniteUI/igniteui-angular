@@ -9,7 +9,7 @@
 </igx-drop-down>
 
 <ng-template #defaultFilterUI>
-    <igx-input-group #inputGroup type="box">
+    <igx-input-group #inputGroup type="box" [displayDensity]="'compact'">
         <igx-prefix #inputGroupPrefix
                     (click)="toggleConditionsDropDown()"
                     (keydown)="onPrefixKeyDown($event)"
@@ -36,7 +36,7 @@
 <ng-template #defaultDateUI>
     <igx-datePicker tabindex="0" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
-            <igx-input-group type="box">
+            <igx-input-group type="box" [displayDensity]="'compact'">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown()"
@@ -76,6 +76,7 @@
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="true"
                     [selected]="item.isSelected"
+                    [displayDensity]="'compact'"
                     tabindex="0"
                     [removable]="true">
                     <igx-icon
