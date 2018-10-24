@@ -656,7 +656,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 this.vh.instance.height = Math.min(this.vh.instance.height + totalDiff, this._maxHeight);
                 this._virtHeight = hSum;
-                this.vh.instance.cdr.detectChanges();
+                if (!this.vh.instance.destroyed) {
+                    this.vh.instance.cdr.detectChanges();
+                }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
                     const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
@@ -816,9 +818,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.changeDetectorRef.detectChanges();
             this.onChunkLoad.emit();
             if (this.igxForScrollOrientation === 'vertical') {
-                requestAnimationFrame(() => {
+                // requestAnimationFrame(() => {
                     this._recalcUpdateSizes();
-                });
+                // });
             }
         }
     }
