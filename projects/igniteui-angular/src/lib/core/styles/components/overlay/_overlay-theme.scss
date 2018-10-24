@@ -42,6 +42,7 @@
         background-color: transparent;
         transition: background-color .25s $ease-in-out-quad;
         pointer-events: none;
+        z-index: 10;
     }
 
     %overlay-wrapper--modal {
