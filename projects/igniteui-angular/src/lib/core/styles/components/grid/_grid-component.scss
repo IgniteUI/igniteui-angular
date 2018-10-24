@@ -34,8 +34,16 @@
         @extend %grid-thead-group !optional;
     }
 
+    @include e(thead-subgroup) {
+        @extend %grid-thead-subgroup !optional;
+    }
+
     @include e(thead-title, $m: pinned-last) {
         @extend %grid-thead-title--pinned !optional;
+    }
+
+    @include e(thead-item) {
+        @extend %grid-thead-item !optional;
     }
 
     @include e(tbody) {
