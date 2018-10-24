@@ -5,6 +5,7 @@ import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
+import { CancelableEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -45,6 +46,9 @@ export interface OverlayEventArgs {
     id: string;
     /** Available when `Type<T>` is provided to the `show()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<{}>;
+}
+
+export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
 }
 
 export interface OverlayAnimationEventArgs {
