@@ -135,6 +135,13 @@ export class DropDownSampleComponent implements OnInit {
         event.newSelection = old;
     }
 
+    onSelectionMenu(eventArgs) {
+        eventArgs.cancel = true;
+
+        console.log(`new selection ${eventArgs.newSelection.element.nativeElement.textContent}`);
+        console.log(`old selection ${eventArgs.oldSelection ? eventArgs.oldSelection.element.nativeElement.textContent : ''}`);
+    }
+
     onOpening(event) {
     }
 }
