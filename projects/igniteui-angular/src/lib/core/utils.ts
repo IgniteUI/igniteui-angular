@@ -14,10 +14,42 @@ export function cloneArray(array, deep?: boolean) {
 }
 /**
  *@hidden
+ * Creates deep clone of provided value.
+ * Supports primitive values, dates and objects
+ * @param value value to clone
  */
-export function cloneObject(object: any) {
-    return JSON.parse(JSON.stringify(object));
+export function cloneObject(value: any) {
+    if (this.isDate(value)) {
+        return new Date(value.getTime());
+    }
+    if (Array.isArray(value)) {
+        return [... value];
+    }
+    if (this.isObject(value)) {
+        const result = {};
+        Object.keys(value).forEach( k => {
+            result[k] = this.cloneObject(value[k]);
+        });
+        return result;
+    }
+    return value;
 }
+
+/**
+ *@hidden
+ */
+export function isDate(date: any) {
+    return date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date);
+}
+
+/**
+ *@hidden
+ */
+export function isObject(value: any) {
+    const valueType = typeof value;
+    return value !== null && value !== undefined && valueType === 'object';
+}
+
 /**
  *@hidden
  */
