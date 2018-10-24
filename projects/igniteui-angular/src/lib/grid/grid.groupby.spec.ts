@@ -2564,8 +2564,49 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.getColumnByName('ProductName').hidden).toBe(true);
     }));
 
+    it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
 
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false });
 
+        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false }]);
+        expect(grid.groupingExpressions).toEqual([]);
+
+        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+
+        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }]);
+        expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }]);
+    });
+
+    it('should update grouping expression when sorting a column first then grouping by another and changing sorting for it', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.enableSorting = true;
+        fix.detectChanges();
+
+        grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+
+        expect(grid.sortingExpressions).toEqual([
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        expect(grid.groupingExpressions).toEqual([]);
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+
+        expect(grid.sortingExpressions).toEqual([
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+        expect(grid.groupingExpressions).toEqual([{ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false }]);
+    });
 
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
@@ -2573,10 +2614,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         return fix.whenStable();
     }
-
-
 });
-
 
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);

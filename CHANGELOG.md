@@ -136,6 +136,7 @@ When you focus a specific cell and press one of the following key combinations, 
     - **Breaking change** cell selection is preserved when the focus is moved to group row.
     - Introduced `onFocusChange` event. The event is cancelable and output argument from type `IFocusChangeEventArgs`;
     - For more detailed information see the [official keyboard navigation specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
+    
 ## 6.1.5
 - **General**
     - `IgxChip`

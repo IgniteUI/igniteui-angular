@@ -513,20 +513,39 @@ export class IgxGridAPIService {
         }
     }
 
-    protected prepare_sorting_expression(states, expression: ISortingExpression) {
+    protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
         if (expression.dir === SortingDirection.None) {
-            states.forEach(state => {
+            stateCollections.forEach(state => {
                 state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
             });
             return;
         }
 
-        states.forEach(state => {
-            const e = state.find((expr) => expr.fieldName === expression.fieldName);
-            if (!e) {
-                state.push(expression);
+        /**
+         * We need to make sure the states in each collection with same fields point to the same object reference.
+         * If the different state collections provided have different sizes we need to get the largest one.
+         * That way we can get the state reference from the largest one that has the same fieldName as the expression to prepare.
+         */
+        let maxCollection = stateCollections[0];
+        for (let i = 1; i < stateCollections.length; i++) {
+            if (maxCollection.length < stateCollections[i].length) {
+                maxCollection = stateCollections[i];
+            }
+        }
+        const maxExpr = maxCollection.find((expr) => expr.fieldName === expression.fieldName);
+
+        stateCollections.forEach(collection => {
+            const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
+            if (!myExpr && !maxExpr) {
+                // Expression with this fieldName is missing from the current and the max collection.
+                collection.push(expression);
+            } else if (!myExpr && maxExpr) {
+                // Expression with this fieldName is missing from the current and but the max collection has.
+                collection.push(maxExpr);
+                Object.assign(maxExpr, expression);
             } else {
-                Object.assign(e, expression);
+                // The current collection has the expression so just update it.
+                Object.assign(myExpr, expression);
             }
         });
     }
