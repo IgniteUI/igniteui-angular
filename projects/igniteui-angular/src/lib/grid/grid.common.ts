@@ -62,7 +62,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
             takeUntil(this._destroy),
             switchMap((offset) => this.resize.pipe(
                 map((event) => event.clientX - offset),
-                takeUntil(this.resizeEnd)
+                takeUntil(this.resizeEnd),
+                takeUntil(this._destroy)
             ))
         ).subscribe((pos) => {
             const left = this._left + pos;
@@ -84,8 +85,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onMousedown(res));
 
             fromEvent(this.document.defaultView, 'mousemove').pipe(
-                takeUntil(this._destroy),
-                throttle(() => interval(0, animationFrameScheduler))
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroy)
             ).subscribe((res) => this.onMousemove(res));
 
             fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))

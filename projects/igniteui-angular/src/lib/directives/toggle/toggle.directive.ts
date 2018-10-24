@@ -16,8 +16,8 @@ import {
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
-import { filter, take } from 'rxjs/operators';
-import { Subscription, OperatorFunction } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subscription, OperatorFunction, Subject } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs } from '../../core/utils';
 
@@ -27,6 +27,7 @@ import { CancelableEventArgs } from '../../core/utils';
 })
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayId: string;
+    private destroy$ = new Subject<boolean>();
     private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
         filter(x => x.id === this._overlayId)
     ];
@@ -188,12 +189,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter, takeUntil(this.destroy$)).subscribe(() => {
             this.onOpened.emit();
         });
         this._overlayClosingSub = this.overlayService
             .onClosing
-            .pipe(...this._overlaySubFilter)
+            .pipe(...this._overlaySubFilter, takeUntil(this.destroy$))
             .subscribe((e: OverlayCancelableEventArgs) => {
                 const eventArgs: CancelableEventArgs = { cancel: false };
                 this.onClosing.emit(eventArgs);
@@ -207,7 +208,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
                 }
             });
         this._overlayClosedSub = this.overlayService.onClosed
-            .pipe(...this._overlaySubFilter)
+            .pipe(...this._overlaySubFilter, takeUntil(this.destroy$))
             .subscribe(this.overlayClosed);
     }
 
@@ -263,6 +264,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.overlayService.hide(this._overlayId);
         }
         this.unsubscribe();
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     private overlayClosed = () => {
