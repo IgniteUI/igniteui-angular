@@ -12,40 +12,70 @@ export function cloneArray(array, deep?: boolean) {
     }
     return arr;
 }
+
+export function mergeObjects(obj1: {}, obj2: {}) {
+    if (obj1 === null || obj2 === undefined) {
+        return this.cloneObject(obj2);
+    }
+
+    if (obj2 === null || obj2 === undefined) {
+        return this.cloneObject(obj1);
+    }
+
+    for (const key of Object.keys(obj2)) {
+        obj1[key] = this.cloneObject(obj2[key]);
+    }
+
+    return obj1;
+}
 /**
- *@hidden
  * Creates deep clone of provided value.
- * Supports primitive values, dates and objects
+ * Supports primitive values, dates and objects.
+ * If passed value is array returns shallow copy of the array.
  * @param value value to clone
+ * @returns Deep copy of provided value
+ *@hidden
  */
-export function cloneObject(value: any) {
+export function cloneObject(value: any): any {
     if (this.isDate(value)) {
         return new Date(value.getTime());
     }
     if (Array.isArray(value)) {
         return [... value];
     }
+
+    if (value instanceof Map || value instanceof Set) {
+        return value;
+    }
+
     if (this.isObject(value)) {
         const result = {};
-        Object.keys(value).forEach( k => {
-            result[k] = this.cloneObject(value[k]);
-        });
+
+        for (const key of Object.keys(value)) {
+            result[key] = this.cloneObject(value[key]);
+        }
         return result;
     }
     return value;
 }
 
 /**
+ * Checks if provided variable is Date
+ * @param value Value to check
+ * @returns true if provided variable is Date
  *@hidden
  */
-export function isDate(date: any) {
-    return date && Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date);
+export function isDate(value: any) {
+    return value && Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value);
 }
 
 /**
+ * Checks if provided variable is Object
+ * @param value Value to check
+ * @returns true if provided variable is Object
  *@hidden
  */
-export function isObject(value: any) {
+export function isObject(value: any): boolean {
     const valueType = typeof value;
     return value !== null && value !== undefined && valueType === 'object';
 }
