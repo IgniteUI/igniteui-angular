@@ -8,8 +8,8 @@
 </ng-template>
 
 <ng-template #defaultFilter>
-    <igx-chips-area class="igx-filtering-chips">
-        <ng-container *ngFor="let item of expressionsList; let last = last;">
+    <igx-chips-area #chipsArea class="igx-filtering-chips">
+        <ng-container *ngFor="let item of visibleExpressionsList; let last = last;">
             <igx-chip
                 [removable]="true"
                 [displayDensity]="'compact'"
@@ -26,9 +26,9 @@
             </igx-chip>
             <span *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
-        <div *ngIf="isMoreIconVisible" class="igx-grid__filtering-cell-indicator">
-            <igx-icon>filter_list</igx-icon>
-            <igx-badge value="2"></igx-badge>
+        <div #moreIcon class="igx-grid__filtering-cell-indicator">
+            <igx-icon (click)="onChipClicked()">filter_list</igx-icon>
+            <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>
     </igx-chips-area>
 </ng-template>

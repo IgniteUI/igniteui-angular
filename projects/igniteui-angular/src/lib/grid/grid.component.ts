@@ -67,6 +67,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -1363,6 +1364,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
     public headerList: QueryList<IgxGridHeaderComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridFilteringCellComponent, { read: IgxGridFilteringCellComponent })
+    public filterCellList: QueryList<IgxGridFilteringCellComponent>;
 
     /**
      * @hidden
