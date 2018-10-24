@@ -4,6 +4,7 @@ import { FormsModule, FormBuilder, ReactiveFormsModule, Validators  } from '@ang
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const TEXTAREA_CSS_CLASS = 'igx-input-group__textarea';
@@ -18,6 +19,7 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

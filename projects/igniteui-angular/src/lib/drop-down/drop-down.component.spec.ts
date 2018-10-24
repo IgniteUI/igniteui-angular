@@ -2,10 +2,13 @@ import { Component, ViewChild, OnInit, ElementRef, DebugElement } from '@angular
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { CancelableEventArgs } from '../core/utils';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { take } from 'rxjs/operators';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -15,6 +18,7 @@ const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 
 describe('IgxDropDown ', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -42,6 +46,7 @@ describe('IgxDropDown ', () => {
     }));
 
     describe('igxDropDown integration tests', () => {
+        configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
@@ -713,6 +718,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('igxDropDown Unit tests', () => {
+        configureTestSuite();
         it('Should fire events', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
@@ -991,6 +997,50 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             expect(dropdown.selectedItem.value).toEqual({ name: 'Product 3', id: 3 });
         }));
+
+        it('#2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestComponent);
+            const dropdown = fixture.componentInstance.dropdown;
+            const toggle: IgxToggleDirective = (<any>dropdown).toggleDirective;
+            fixture.detectChanges();
+
+            const onOpeningSpy = spyOn(dropdown.onOpening, 'emit').and.callThrough();
+            const onOpenedSpy = spyOn(dropdown.onOpened, 'emit').and.callThrough();
+            spyOn(dropdown.onClosing, 'emit').and.callThrough();
+            spyOn(dropdown.onClosed, 'emit').and.callThrough();
+
+            dropdown.onClosing.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const mockObj = jasmine.createSpyObj('mockEvt', ['stopPropagation', 'preventDefault']);
+            button.click(mockObj);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            button.click({ stopPropagation: () => null });
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdown.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onClosed.emit).toHaveBeenCalledTimes(0);
+
+            toggle.close();
+            fixture.detectChanges();
+            tick();
+            onOpeningSpy.calls.reset();
+            onOpenedSpy.calls.reset();
+
+            dropdown.onOpening.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
+            button.click(mockObj);
+            fixture.detectChanges();
+            tick();
+
+            expect(dropdown.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(0);
+        }));
     });
 });
 
@@ -998,8 +1048,8 @@ describe('IgxDropDown ', () => {
     template: `
     <button (click)="toggleDropDown()">Toggle</button>
     <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)" [allowItemsFocus]="true"
-    (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
+    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         <igx-drop-down-item *ngFor="let item of items">
             {{ item.field }}
         </igx-drop-down-item>

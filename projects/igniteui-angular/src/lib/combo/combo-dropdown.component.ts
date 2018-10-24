@@ -10,6 +10,7 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { Subject } from 'rxjs';
+import { CancelableEventArgs } from '../core/utils';
 
 @Component({
     selector: 'igx-combo-drop-down',
@@ -151,8 +152,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
         const scrollTarget = this.combo.totalItemCount ?
-        this.combo.totalItemCount - 1 :
-        Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
+            this.combo.totalItemCount - 1 :
+            Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
         if (vContainer.igxForOf.length <= vContainer.state.startIndex + vContainer.state.chunkSize) {
             this.focusItem(this.items.length - 1);
             return;
@@ -343,9 +344,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     /**
      * @hidden
      */
-    onToggleOpening() {
+    onToggleOpening(e: CancelableEventArgs) {
+        const eventArgs = { cancel: false };
+        this.onOpening.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
+        if (eventArgs.cancel) {
+            return;
+        }
         this.combo.handleInputChange();
-        this.onOpening.emit();
     }
 
     /**
@@ -368,9 +374,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     /**
      * @hidden
      */
-    onToggleClosing() {
+    onToggleClosing(e: CancelableEventArgs) {
         this.combo.searchValue = '';
-        super.onToggleClosing();
+        super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
 
