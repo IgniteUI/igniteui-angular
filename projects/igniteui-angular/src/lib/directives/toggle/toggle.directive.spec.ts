@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
+    AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy } from '../../services';
 import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -307,6 +307,34 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
+        });
+
+        it('should pass input overlaySettings from igxToggleAction and set position target if not provided', () => {
+            const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
+            fixture.detectChanges();
+            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
+
+            const settings = /*<OverlaySettings>*/{
+                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+                closeOnOutsideClick: true,
+                modal: false,
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+            };
+            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy();
+            fixture.detectChanges();
+
+            fixture.componentInstance.toggleAction.onClick();
+            expect(toggleSpy).toHaveBeenCalledWith(settings);
+            let positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
+            expect(positionStrategy.settings.target).toBe(button);
+
+            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy({ target: document.body });
+            fixture.detectChanges();
+
+            fixture.componentInstance.toggleAction.onClick();
+            positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
+            expect(positionStrategy.settings.target).toBe(document.body);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
