@@ -1105,12 +1105,12 @@ describe('igxOverlay', () => {
                 expect(strategy.settings).toEqual(expectedDefaults);
             });
 
-        it(`Should use  target: new Point(0, 0) StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop,
+        it(`Should use  target: null StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop,
             closeAnimation: scaleOutVerTop as default options when using a ConnectedPositioningStrategy without passing options.`, () => {
                 const strategy = new ConnectedPositioningStrategy();
 
                 const expectedDefaults = {
-                    target: new Point(0, 0),
+                    target: null,
                     horizontalDirection: HorizontalAlignment.Right,
                     verticalDirection: VerticalAlignment.Bottom,
                     horizontalStartPoint: HorizontalAlignment.Left,
