@@ -198,6 +198,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
                 const eventArgs: CancelableEventArgs = { cancel: false };
                 this.onClosing.emit(eventArgs);
                 e.cancel = eventArgs.cancel;
+
+                //  in case event is not canceled this will close the toggle and we need to unsubscribe.
+                //  Otherwise if for some reason, e.g. close on outside click, close() gets called before
+                //  onClosed was fired we will end with calling onClosing more than once
+                if (!e.cancel) {
+                    this.clearSubscription(this._overlayClosingSub);
+                }
             });
         this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
@@ -267,16 +274,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     private unsubscribe() {
-        if (this._overlayOpenedSub && !this._overlayOpenedSub.closed) {
-            this._overlayOpenedSub.unsubscribe();
-        }
+        this.clearSubscription(this._overlayOpenedSub);
+        this.clearSubscription(this._overlayClosingSub);
+        this.clearSubscription(this._overlayClosedSub);
+    }
 
-        if (this._overlayClosingSub && !this._overlayClosingSub.closed) {
-            this._overlayClosingSub.unsubscribe();
-        }
-
-        if (this._overlayClosedSub && !this._overlayClosedSub.closed) {
-            this._overlayClosedSub.unsubscribe();
+    private clearSubscription(subscription: Subscription) {
+        if (subscription && !subscription.closed) {
+            subscription.unsubscribe();
         }
     }
 }
