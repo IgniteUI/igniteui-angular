@@ -10,7 +10,10 @@ import { By } from '@angular/platform-browser';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
 import { IgxMaskModule } from './mask.directive';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('igxMask', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

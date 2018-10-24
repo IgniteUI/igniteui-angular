@@ -25,22 +25,22 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
+    AfterViewChecked,
     ViewContainerRef,
-    AfterViewChecked
+    InjectionToken
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isNavigationKey } from '../core/utils';
-import { DisplayDensity } from '../core/displayDensity';
-import { DataType } from '../data-operations/data-util';
+import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
+import { IgxBaseExporter, IgxExporterOptionsBase, AbsoluteScrollStrategy, HorizontalAlignment, VerticalAlignment } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -49,19 +49,28 @@ import { IgxColumnComponent } from './column.component';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, DropPosition } from './grid.common';
+import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
+import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
-import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
+import { Transaction, TransactionType, TransactionService, State } from '../services/index';
+import {
+    IgxRowEditTemplateDirective,
+    IgxRowEditTabStopDirective
+} from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DisplayDensity } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
+
+export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -73,6 +82,12 @@ export interface IGridEditEventArgs {
     cell: IgxGridCellComponent;
     currentValue: any;
     newValue: any;
+}
+
+export interface IGridRowEditEventArgs {
+    row: IgxGridRowComponent;
+    newValue: any;
+    oldValue: any;
 }
 
 export interface IPinColumnEventArgs {
@@ -172,7 +187,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public data = [];
+    public data: any[];
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -332,7 +347,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.gridAPI.get(this.id)) {
             this.gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
-            and without overriding seperate sorting expressions */
+            and without overriding separate sorting expressions */
             this._applyGrouping();
             this.cdr.markForCheck();
         } else {
@@ -509,7 +524,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
         this._perPage = val;
         this.page = 0;
-
+        this.endRowEdit(true);
         this.restoreHighlight();
     }
 
@@ -624,6 +639,30 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
+ * Sets whether the `IgxGridRowComponent` is editable.
+ * By default it is set to false.
+ * ```typescript
+ * let rowEditable = this.grid.rowEditable;
+ * ```
+ * @memberof IgxGridComponent
+ */
+    @Input()
+    get rowEditable(): boolean {
+        return this._rowEditable;
+    }
+    /**
+    * Sets whether rows can be edited.
+    * ```html
+    * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
+    * ```
+    * @memberof IgxGridComponent
+    */
+    set rowEditable(val: boolean) {
+        this._rowEditable = val;
+        this.refreshGridState();
+    }
+
+    /**
      * Returns the height of the `IgxGridComponent`.
      * ```typescript
      * let gridHeight = this.grid.height;
@@ -724,7 +763,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public  get rowHeight()  {
+    public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
     }
 
@@ -983,6 +1022,63 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     @Output()
     public onEditDone = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(true)` is called.
+     * Emiited when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
+     * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
+     *
+     * Emitts the current row and it's state.
+     *
+     * Bind to the event in markup as follows:
+     * ```html
+     * <igx-grid #grid3 (onRowEditDone)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+     * ```typescript
+     *      editDone(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
+     *          const editedRow = emitted.row;
+     *          const newValue = emitted.newValue;
+     *          const oldValue = emitted.oldValue;
+     *      }
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onRowEditDone = new EventEmitter<IGridRowEditEventArgs>();
+
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(false)` is called.
+     * Emiited when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
+     * in the row editing overlay.
+     *
+     * Emitts the current row and it's state.
+     *
+     * Bind to the event in markup as follows:
+     * ```html
+     * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+     * ```typescript
+     *      editCancel(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
+     *          const editedRow = emitted.row;
+     *          const cancelValue = emitted.newValue;
+     *          const oldValue = emitted.oldValue;
+     *      }
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onRowEditCancel = new EventEmitter<IGridRowEditEventArgs>();
 
     /**
      * Emitted when a grid column is initialized. Returns the column object.
@@ -1245,7 +1341,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 
 
     @ViewChildren('row')
-    private _rowList:  QueryList<any>;
+    private _rowList: QueryList<any>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1421,8 +1517,79 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    @ViewChild(IgxOverlayOutletDirective, { read: IgxOverlayOutletDirective })
+    @ViewChild('igxFilteringOverlayOutlet', { read: IgxOverlayOutletDirective })
     public outletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
+    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
+    public defaultRowEditTemplate: TemplateRef<any>;
+    /**
+     * @hidden
+     */
+    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
+    public rowEditCustom: TemplateRef<any>;
+
+    public get rowEditContainer(): TemplateRef<any> {
+        return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
+    }
+
+    /**
+     * @hidden
+     */
+    public get rowInEditMode(): IgxGridRowComponent {
+        const editRowId = this.gridAPI.get_row_inEditMode(this.id);
+        return editRowId !== null ? this.rowList.find(e => e.rowID === editRowId.rowID) : null;
+    }
+
+    /**
+     * @hidden
+     */
+    public get firstEditableColumnIndex(): number {
+        const index = [...this.pinnedColumns, ...this.unpinnedColumns].filter(e => !e.columnGroup).findIndex(e => e.editable);
+        return index !== -1 ? index : null;
+    }
+
+    /**
+     * @hidden
+     */
+    public get lastEditableColumnIndex(): number {
+        const orderedColumns = [...this.pinnedColumns, ...this.unpinnedColumns].filter(e => !e.columnGroup);
+        const index = orderedColumns.reverse().findIndex(e => e.editable);
+        return index !== -1 ? orderedColumns.length - 1 - index : null;
+    }
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxRowEditTabStopDirective)
+    public rowEditTabsDEFAULT: QueryList<IgxRowEditTabStopDirective>;
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxRowEditTabStopDirective)
+    public rowEditTabsCUSTOM: QueryList<IgxRowEditTabStopDirective>;
+
+    /**
+     * @hidden
+     */
+    public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
+        return this.rowEditCustom ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
+    }
+
+    /**
+     * @hidden
+     */
+    @ViewChild(IgxToggleDirective)
+    public rowEditingOverlay: IgxToggleDirective;
 
     /**
      * @hidden
@@ -1457,6 +1624,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             default:
                 return 'igx-drop-area';
         }
+    }
+
+    get bannerClass(): string {
+        let bannerClass = '';
+        switch (this._displayDensity) {
+            case DisplayDensity.cosy:
+                bannerClass = 'igx-banner--cosy';
+                break;
+            case DisplayDensity.compact:
+                bannerClass = 'igx-banner--compact';
+                break;
+            default:
+                bannerClass = 'igx-banner';
+        }
+        bannerClass += this.rowEditPositioningStrategy.isTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
+        return bannerClass;
     }
 
     /**
@@ -1550,7 +1733,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
-            this._maxLevelHeaderDepth =  this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
         return this._maxLevelHeaderDepth;
     }
@@ -1615,6 +1798,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this._pinnedColumnsText = value;
     }
 
+    /**
+     * Get transactions service for the grid.
+     */
+    get transactions() {
+        return this._transactions;
+    }
+
+    /**
+     * @hidden
+    */
+    public columnsWithNoSetWidths = null;
+
     /* Toolbar related definitions */
     private _showToolbar = false;
     private _exportExcel = false;
@@ -1623,6 +1818,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _exportText: string = null;
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
+    private _rowEditable = false;
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -1850,6 +2046,11 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     }
 
     /**
+     * @hidden
+     */
+    public rowEditMessage;
+
+    /**
      * Emitted when an export process is initiated by the user.
      * ```typescript
      * toolbarExporting(event: IGridToolbarExportEventArgs){
@@ -2021,11 +2222,29 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private _defaultTargetRecordNumber = 10;
     private _hideGroupedColumns = false;
 
+    private rowEditPositioningStrategy = new ContainerPositioningStrategy({
+        horizontalDirection: HorizontalAlignment.Left,
+        verticalDirection: VerticalAlignment.Bottom,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalStartPoint: VerticalAlignment.Bottom,
+        openAnimation: null,
+        closeAnimation: null
+    });
+
+    private rowEditSettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        outlet: this.rowEditingOutletDirective,
+        positionStrategy: this.rowEditPositioningStrategy
+    };
+
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+            this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
         });
     }
 
@@ -2044,6 +2263,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
         if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
+            if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
+                if (this.rowEditTabs.find(e => e.element.nativeElement === event.target)) {
+                    return;
+                    // Do not prevent tab on rowEditOverlay custom tabStops
+                }
+            }
             event.preventDefault();
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
@@ -2058,6 +2283,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     constructor(
         private gridAPI: IgxGridAPIService,
         public selection: IgxSelectionAPIService,
+        @Inject(IgxGridTransaction) private _transactions: TransactionService,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -2083,12 +2309,25 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
 
-        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
-        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
-        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe((source) => {
-            this.gridAPI.submit_value(this.id);
+        this.onRowEditDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.rowEditable) {
+                this.endRowEdit(true);
+            } else {
+                this.gridAPI.submit_value(this.id);
+            }
+        });
+        this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.clearSummaryCache();
+            this._pipeTrigger++;
+            this.markForCheck();
         });
     }
 
@@ -2210,17 +2449,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.groupingDiffer) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
             if (changes && this.columnList) {
-            changes.forEachAddedItem((rec) => {
-                const col = this.getColumnByName(rec.item.fieldName);
-                col.hidden = true;
-            });
-            changes.forEachRemovedItem((rec) => {
-                const col = this.getColumnByName(rec.item.fieldName);
-                col.hidden = false;
-            });
+                changes.forEachAddedItem((rec) => {
+                    const col = this.getColumnByName(rec.item.fieldName);
+                    col.hidden = true;
+                });
+                changes.forEachRemovedItem((rec) => {
+                    const col = this.getColumnByName(rec.item.fieldName);
+                    col.hidden = false;
+                });
             }
         }
-      }
+    }
 
     /**
      * @hidden
@@ -2809,7 +3048,16 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     public addRow(data: any): void {
-        this.data.push(data);
+        // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
+        // If there is a row in edit - > commit and close
+        if (this.transactions.enabled) {
+            const transactionId = this.primaryKey ? data[this.primaryKey] : data;
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: data };
+            this.transactions.add(transaction);
+        } else {
+            this.data.push(data);
+        }
+
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.cdr.markForCheck();
@@ -2829,27 +3077,62 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const index = this.gridAPI.get(this.id).data.map((record) => record[this.gridAPI.get(this.id).primaryKey]).indexOf(rowSelector);
-            if (index !== -1) {
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
-                this.onRowDeleted.emit({ data: this.data[index] });
-                this.data.splice(index, 1);
-                if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowSelector)) {
-                    this.deselectRows([rowSelector]);
-                } else {
-                    this.checkHeaderCheckboxStatus();
-                }
-                this._pipeTrigger++;
-                this.cdr.markForCheck();
+            this.deleteRowById(rowSelector);
+        }
+    }
 
-                this.refreshSearch();
-                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-                    this.page--;
-                }
+    /**
+     * @hidden
+     * @param
+     */
+    public deleteRowById(rowId: any) {
+        let index: number;
+        if (this.primaryKey) {
+            index = this.data.map((record) => record[this.primaryKey]).indexOf(rowId);
+        } else {
+            index = this.data.indexOf(rowId);
+        }
+        const state: State = this.transactions.getState(rowId);
+        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
+
+        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
+        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
+        //  Otherwise just exit - there is nothing to delete
+        if (index !== -1 || hasRowInNonDeletedState) {
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+            if (editableCell && editableCell.cellID.rowID === rowId) {
+                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
             }
+        } else {
+            return;
+        }
+
+        this.onRowDeleted.emit({ data: this.data[index] });
+
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        if (index !== -1) {
+            if (this.transactions.enabled) {
+                const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
+                this.transactions.add(transaction, this.data[index]);
+            } else {
+                this.data.splice(index, 1);
+            }
+        } else {
+            this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
+        }
+
+        if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowId)) {
+            this.deselectRows([rowId]);
+        } else {
+            this.checkHeaderCheckboxStatus();
+        }
+        this._pipeTrigger++;
+        this.cdr.markForCheck();
+
+        this.refreshSearch();
+        if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+            this.page--;
         }
     }
 
@@ -2933,6 +3216,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
+        this.endRowEdit(true);
         this.gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -2942,7 +3226,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.cdr.detectChanges();
         this.calculateGridSizes();
         this.onGroupingDone.emit(this.sortingExpressions);
-
         this.restoreHighlight();
     }
 
@@ -3091,7 +3374,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
-            this._disableMultipleSummaries(rest[0], false);
+            this._disableMultipleSummaries(rest[0]);
         } else {
             this._summaries(rest[0], false);
         }
@@ -3150,6 +3433,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         } else {
             this.gridAPI.remove_summary(this.id);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public refreshGridState(editCell?) {
+        this.endRowEdit(true);
+        this.clearSummaryCache(editCell);
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -3404,7 +3695,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     protected get rowBasedHeight() {
         if (this.data && this.data.length) {
-            return this.data.length * this.rowHeight;
+            return this.dataLength * this.rowHeight;
         }
         return 0;
     }
@@ -3441,7 +3732,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || this.data.length;
+        const allItems = this.totalItemCount || this.dataLength;
         return this.rowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
@@ -3710,7 +4001,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _disableMultipleSummaries(expressions: string[], hasSummary: boolean) {
+    protected _disableMultipleSummaries(expressions: string[]) {
         expressions.forEach((column) => { this._summaries(column, false); });
     }
 
@@ -3763,6 +4054,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         collection.forEach((column: IgxColumnComponent) => {
             column.gridID = this.id;
             column.defaultWidth = this.columnWidth;
+            this.setColumnEditState(column);
 
             if (cb) {
                 cb(column);
@@ -3770,6 +4062,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
 
         this.reinitPinStates();
+    }
+
+    private setColumnEditState(column: IgxColumnComponent) {
+        // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
+        if (this.rowEditable && column.editable === null &&
+            column.field && column.field !== this.primaryKey) {
+            column.editable = this.rowEditable;
+        }
     }
 
     /**
@@ -3791,7 +4091,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             event.checked ?
                 this.filteredData ?
                     this.selection.add_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.data, this.primaryKey) :
+                    this.selection.get_all_ids(this.dataWithAddedInTransactionRows, this.primaryKey) :
                 this.filteredData ?
                     this.selection.delete_items(this.id, this.selection.get_all_ids(this._filteredData, this.primaryKey)) :
                     this.selection.get_empty();
@@ -3813,14 +4113,14 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.data && this.data.length === 0) {
+        if (this.data && this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
         }
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     public getContext(rowData): any {
         return {
             $implicit: rowData,
@@ -3845,11 +4145,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.data);
+            this.allRowsSelected = this.selection.are_all_selected(this.id, this.dataLength);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked = this.selection.are_all_selected(this.id, this.data);
+                    this.headerCheckbox.checked =
+                        this.selection.are_all_selected(this.id, this.dataLength);
                 }
             }
             this.cdr.markForCheck();
@@ -3889,7 +4190,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data) {
-            data = this.data;
+            this.checkHeaderCheckboxStatus();
+            return;
         }
         switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
             case 'allSelected': {
@@ -3974,7 +4276,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
     public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.data, this.primaryKey));
+        this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithAddedInTransactionRows, this.primaryKey));
     }
 
     /**
@@ -4119,6 +4421,13 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     get filteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
+        if (!this.filteredData && this.transactions.enabled) {
+            data = DataUtil.mergeTransactions(
+                cloneArray(data, true),
+                this.transactions.aggregatedState(true),
+                this.primaryKey
+            );
+        }
 
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
@@ -4126,7 +4435,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
             data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
         }
-
         return data;
     }
 
@@ -4528,4 +4836,160 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.verticalScrollContainer.scrollPrevPage();
         this.nativeElement.focus();
     } */
+
+    private changeRowEditingOverlayStateOnScroll(row: IgxGridRowComponent) {
+        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+            return;
+        }
+        if (!row) {
+            this.hideRowEditingOverlay();
+        } else {
+            this.repositionRowEditingOverlay(row);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public startRowEdit(row: IgxGridRowComponent) {
+        this.transactions.startPending();
+        this.configureRowEditingOverlay(row);
+        this.rowEditingOverlay.open(this.rowEditSettings);
+        this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
+        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+    }
+
+    /**
+     * @hidden
+     */
+    public closeRowEditingOverlay(commit?: boolean) {
+        this.gridAPI.set_row_inEditMode(this.id, null);
+        this.transactions.endPending(commit);
+        this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
+        this.rowEditPositioningStrategy.isTopInitialPosition = null;
+        this.rowEditingOverlay.close();
+    }
+
+    private showRowEditingOverlay() {
+        this.rowEditingOverlay.element.style.display = 'block';
+    }
+
+    private hideRowEditingOverlay() {
+        this.rowEditingOverlay.element.style.display = 'none';
+    }
+
+    private repositionRowEditingOverlay(row: IgxGridRowComponent) {
+        this.configureRowEditingOverlay(row);
+        if (!this.rowEditingOverlay.collapsed) {
+            this.rowEditingOverlay.reposition();
+        }
+    }
+
+    private configureRowEditingOverlay(row: IgxGridRowComponent) {
+        this.rowEditSettings.outlet = this.rowEditingOutletDirective;
+        this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
+        this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
+        this.showRowEditingOverlay();
+    }
+
+    /**
+     * @hidden
+     */
+    public get rowChangesCount() {
+        if (!this.rowInEditMode) {
+            return 0;
+        }
+        const rowChanges = this.transactions.getAggregatedValue(this.rowInEditMode.rowID, false);
+        return rowChanges ? Object.keys(rowChanges).length : 0;
+    }
+
+    /**
+     * @hidden
+     */
+    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxGridRowComponent) {
+        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        if (!rowInEdit || this.rowEditingOverlay.collapsed) {
+            return;
+        }
+        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
+        let oldValue = Object.assign({}, this.data[rowInEdit.rowIndex]);
+        if (!rowObj) {
+            const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
+            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
+        }
+        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
+        const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
+        emitter.emit({
+            newValue: newValue,
+            oldValue,
+            row: rowObj
+        });
+        this.transactions.endPending(commit);
+        if (commit && newValue && !this.transactions.enabled) {
+            this.data[rowInEdit.rowIndex] = newValue;
+        }
+        if (closeOverlay) {
+            this.closeRowEditingOverlay(commit);
+        }
+        if (!commit) {
+            this._pipeTrigger++;
+        }
+        // this.cdr.detectChanges();
+    }
+
+    /**
+     * Finishes the row transactions on the current row.
+     * If `commit === true`, passes them from the pending state to the data (or transaction service)
+     *
+     * Binding to the event
+     * ```html
+     * <button igxButton (click)="grid.endRowEdit(true)">Commit Row</button>
+     * ```
+     * @param commit
+     */
+    public endRowEdit(commit = true) {
+        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed) {
+            return;
+        }
+        const row = this.gridAPI.get_row_inEditMode(this.id);
+        const rowObject = row ? this.getRowByKey(row.rowID) : null;
+        const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
+        if (cellInEdit) {
+            this.gridAPI.submit_value(this.id, commit);
+        }
+        this.endRowTransaction(commit, true, row, rowObject);
+        const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cellInEdit.cellID.columnID) : null;
+        if (currentCell) {
+            currentCell.nativeElement.focus();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    private rowEditingWheelHandler(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.verticalScrollContainer.scrollNext();
+        } else {
+            this.verticalScrollContainer.scrollPrev();
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public get dataWithAddedInTransactionRows() {
+        const result = <any>cloneArray(this.data);
+        if (this.transactions.enabled) {
+            result.push(...this.transactions.aggregatedState(true)
+                .filter(t => t.type === TransactionType.ADD)
+                .map(t => t.newValue));
+        }
+
+        return result;
+    }
+
+    private get dataLength() {
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.data.length;
+    }
 }
