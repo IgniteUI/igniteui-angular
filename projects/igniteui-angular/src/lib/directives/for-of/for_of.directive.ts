@@ -634,7 +634,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.hScroll.children[0].style.width = totalWidth + 'px';
             }
             if (this.igxForScrollOrientation === 'vertical') {
-                const scrToBottom = this._isScrolledToBottom;
+                const scrToBottom = this._isScrolledToBottom && !this.dc.instance.notVirtual;
                 const reducer = (acc, val) => acc + val;
                 const hSum = this.heightCache.reduce(reducer);
                 if (hSum > this._maxHeight) {
