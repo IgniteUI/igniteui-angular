@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy
+    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
