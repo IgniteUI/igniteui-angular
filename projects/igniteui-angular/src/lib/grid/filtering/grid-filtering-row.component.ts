@@ -118,12 +118,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
 
-    @ViewChild('inputGroup', { read: IgxInputGroupComponent })
-    protected inputGroup: IgxInputGroupComponent;
-
-    @ViewChild('buttonsContainer')
-    protected buttonsContainer: ElementRef;
-
     @ViewChild('container')
     protected container: ElementRef;
 
@@ -147,11 +141,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(this.locale);
 
-    private filterRowWidth: number;
-    private inputGroupWidth: number;
-    private buttonsContainerWidth: number;
     private chipsAreaWidth: number;
-    private offset:number = 0;
+    private offset: number = 0;
 
     protected conditionChanged = new Subject();
     protected unaryConditionChanged = new Subject();
@@ -173,10 +164,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.column.dataType === DataType.Date) {
             this.cdr.detectChanges();
         }
-
-        this.filterRowWidth = parseInt(this.element.nativeElement.offsetWidth, 10);
-        this.inputGroupWidth = parseInt(this.inputGroup.element.nativeElement.offsetWidth, 10);
-        this.buttonsContainerWidth = parseInt(this.buttonsContainer.nativeElement.offsetWidth, 10);
 
         if (this.inputGroupPrefix) {
             requestAnimationFrame(() => {
@@ -286,10 +273,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
+            const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
             this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
 
-            this.showArrows = this.chipsAreaWidth >= this.filterRowWidth - (this.inputGroupWidth + this.buttonsContainerWidth) ? true : false;
+            this.showArrows = this.chipsAreaWidth >= containerWidth;
             this.cdr.detectChanges();
+
+            this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
+            if (this.chipsAreaWidth <= containerWidth) {
+                this.offset = 0;
+                this.transform(this.offset);
+            }
         });
     }
 
@@ -570,9 +564,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
-        this.scrollChipsOnRemove();
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove, item.expression);
+
+        this.scrollChipsOnRemove();
     }
 
     public onChipsSelectionChanged(eventArgs: IChipsAreaSelectEventArgs): void {
@@ -621,8 +616,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
             if (lastVisibleElement && chipsAreaRect.left < containerRect.left) {
                 this.offset += containerRect.left - lastVisibleElementRect.left + 5;
-            } else {
-                this.offset = event === 'left' ? 5 : -5;
             }
         }
 
@@ -663,11 +656,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 this.offset += containerRect.left - lastVisibleElementRect.left + 5;
                 this.transform(this.offset);
             }
-
-            // if (chipsAreaRect.width <= containerRect.width) {
-            //     this.offset = 0;
-            //     this.transform(this.offset);
-            // }
         }
     }
 }

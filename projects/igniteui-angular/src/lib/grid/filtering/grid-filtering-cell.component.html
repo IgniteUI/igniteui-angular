@@ -1,6 +1,6 @@
 <ng-template #emptyFilter>
-        <igx-chips-area class="igx-filtering-chips">
-            <igx-chip (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'compact'">
+        <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
+            <igx-chip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'compact'">
                 <igx-icon [attr.draggable]="false" igxPrefix>add</igx-icon>
                 <span [attr.draggable]="false">Filter</span>
             </igx-chip>

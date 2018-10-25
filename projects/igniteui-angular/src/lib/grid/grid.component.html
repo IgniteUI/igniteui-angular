@@ -58,9 +58,9 @@
             <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
                 <div class="igx-grid__thead-item igx-grid__th--pinned">
                     <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [style.max-width.px]='col.width'></igx-grid-header>
                     <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
                 </div>
             </ng-template>
         </ng-container>
@@ -68,9 +68,9 @@
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
             <div class="igx-grid__thead-item">
                 <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
+                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-header>
                 <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
+                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
             </div>
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
@@ -153,7 +153,7 @@
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
-    <div [className]="bannerClass"> 
+    <div [className]="bannerClass">
         <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit.bind(this) }"></ng-container>
     </div>
 </div>
