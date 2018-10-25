@@ -1,4 +1,4 @@
-<igx-drop-down #operands (onSelection)="onOperandChanged($event)">
+<igx-drop-down #inputGroupConditions (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
@@ -14,7 +14,7 @@
                     (click)="toggleConditionsDropDown()"
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
-                    [igxDropDownItemNavigation]="operands">
+                    [igxDropDownItemNavigation]="inputGroupConditions">
             <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
         </igx-prefix>
         <input
@@ -41,7 +41,7 @@
                             tabindex="0"
                             (click)="toggleConditionsDropDown()"
                             (keydown)="onPrefixKeyDown($event)"
-                            [igxDropDownItemNavigation]="operands">
+                            [igxDropDownItemNavigation]="inputGroupConditions">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input
