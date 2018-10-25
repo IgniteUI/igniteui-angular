@@ -16,13 +16,14 @@ import {
 import { Subscription } from 'rxjs';
 import { DataType } from '../data-operations/data-util';
 import { IgxToggleDirective, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxButtonGroupComponent } from '../buttonGroup/buttonGroup.component';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { OverlaySettings, HorizontalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
+import { IgxGridBaseComponent } from './grid-base.component';
 
 /**
  *@hidden
@@ -83,7 +84,7 @@ export class IgxGridFilterComponent implements OnInit, OnDestroy, DoCheck {
     @ViewChild('logicOperators', { read: IgxButtonGroupComponent })
     protected logicOperators: IgxButtonGroupComponent;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef, private elementRef: ElementRef) {
 
         this.filteringLogicOptions = [
             {

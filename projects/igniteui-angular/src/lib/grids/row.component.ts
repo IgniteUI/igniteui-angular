@@ -14,11 +14,11 @@ import {
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
-import { IgxGridComponent } from './grid.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +26,7 @@ import { IgxGridComponent } from './grid.component';
     selector: 'igx-grid-row',
     templateUrl: './row.component.html'
 })
-export class IgxGridRowComponent implements DoCheck {
+export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck {
 
     private _rowData: any;
     /**
@@ -208,7 +208,7 @@ export class IgxGridRowComponent implements DoCheck {
      *  </igx-grid>
      * ```
      */
-    get grid(): IgxGridComponent {
+    get grid(): T {
         return this.gridAPI.get(this.gridID);
     }
 
@@ -250,7 +250,7 @@ export class IgxGridRowComponent implements DoCheck {
      */
     protected _rowSelection = false;
 
-    constructor(public gridAPI: IgxGridAPIService,
+    constructor(public gridAPI: GridBaseAPIService<T>,
         private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }

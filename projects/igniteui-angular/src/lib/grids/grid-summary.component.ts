@@ -4,8 +4,9 @@ import {
 } from '@angular/core';
 import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 /**
  *@hidden
  */
@@ -78,7 +79,7 @@ export class IgxGridSummaryComponent implements DoCheck {
     public itemClass = 'igx-grid-summary__item';
     private displayDensity: DisplayDensity | string;
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
 
     ngDoCheck() {
         this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;

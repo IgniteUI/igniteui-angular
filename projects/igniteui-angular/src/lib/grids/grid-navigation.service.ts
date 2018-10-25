@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxGridComponent } from './grid.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 
@@ -9,7 +9,7 @@ enum MoveDirection {
 }
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridComponent;
+    public grid: IgxGridBaseComponent;
 
     get displayContainerWidth() {
         return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10);

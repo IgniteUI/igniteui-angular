@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
 import { IgxGridRowComponent } from './row.component';
@@ -23,7 +23,6 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
-import { IgxGridComponent } from './grid.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
 import {
@@ -31,6 +30,7 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { IgxGridBaseComponent } from './grid-base.component';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -497,7 +497,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    get grid(): IgxGridComponent {
+    get grid(): IgxGridBaseComponent {
         return this.gridAPI.get(this.gridID);
     }
     /**
@@ -762,7 +762,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    public static updateHighlights(oldIndex: number, newIndex: number, grid: IgxGridComponent) {
+    public static updateHighlights(oldIndex: number, newIndex: number, grid: IgxGridBaseComponent) {
         const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(grid.id);
 
         if (activeInfo && activeInfo.columnIndex === oldIndex) {
@@ -777,7 +777,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    constructor(public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
     /**
      *@hidden
      */

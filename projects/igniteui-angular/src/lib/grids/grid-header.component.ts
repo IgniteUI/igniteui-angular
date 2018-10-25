@@ -19,10 +19,11 @@ import {
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
+import { IgxGridBaseComponent } from './grid-base.component';
 
 /**
  * @hidden
@@ -143,7 +144,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
     private _pinnedMaxWidth;
 
     constructor(
-        public gridAPI: IgxGridAPIService,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,

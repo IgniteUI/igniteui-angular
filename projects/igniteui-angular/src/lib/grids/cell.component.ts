@@ -14,10 +14,11 @@
 import { IgxSelectionAPIService } from '../core/selection';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey } from '../core/utils';
 import { State } from '../services/index';
+import { IgxGridBaseComponent } from './grid-base.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -514,7 +515,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: IgxGridAPIService,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
-import { IgxGridComponent } from './grid.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
@@ -18,7 +18,7 @@ export class IgxRowEditTabStopDirective {
         return this.grid.rowEditTabs;
     }
     constructor(
-        @Inject(forwardRef(() => IgxGridComponent)) public grid: IgxGridComponent,
+        @Inject(forwardRef(() => IgxGridBaseComponent)) public grid: IgxGridBaseComponent,
         public element: ElementRef,
         @Inject(forwardRef(() => IgxGridNavigationService)) public navigationService: IgxGridNavigationService) {}
     @HostListener('keydown.Tab', [`$event`])
