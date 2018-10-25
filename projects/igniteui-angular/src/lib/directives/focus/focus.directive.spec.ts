@@ -1,12 +1,18 @@
 import { Component, DebugElement, ViewChild } from '@angular/core';
 import {
     async,
-    TestBed
+    TestBed,
+    fakeAsync,
+    tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective } from './focus.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { EditorProvider } from '../../core/edit-provider';
+import { IgxCheckboxModule, IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/date-picker.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {
     configureTestSuite();
@@ -15,8 +21,10 @@ describe('igxFocus', () => {
             declarations: [
                 IgxFocusDirective,
                 SetFocusComponent,
-                TriggerFocusOnClickComponent
-            ]
+                TriggerFocusOnClickComponent,
+                CheckboxPickerComponent
+            ],
+            imports: [ IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
         }).compileComponents();
     }));
 
@@ -75,6 +83,33 @@ describe('igxFocus', () => {
             return Promise.reject(reason);
         });
     });
+
+    it('Should return EditorProvider element to focus', fakeAsync(() => {
+        const elem = { nativeElement: document.createElement('button') };
+        const providerElem = document.createElement('input');
+        const provider: EditorProvider = {
+            getEditElement: () => providerElem
+         };
+        let directive = new IgxFocusDirective(elem, null);
+        expect(directive.nativeElement).toBe(elem.nativeElement);
+        directive = new IgxFocusDirective(elem, []);
+        expect(directive.nativeElement).toBe(elem.nativeElement);
+        directive = new IgxFocusDirective(elem, [null]);
+        expect(directive.nativeElement).toBe(elem.nativeElement);
+        directive = new IgxFocusDirective(elem, [provider]);
+        expect(directive.nativeElement).toBe(providerElem);
+    }));
+
+    it('Should correctly focus igx-checkbox and igx-date-picker', fakeAsync(() => {
+        const fix = TestBed.createComponent(CheckboxPickerComponent);
+        fix.detectChanges();
+        tick(16);
+        expect(document.activeElement).toBe(fix.componentInstance.checkbox.getEditElement());
+
+        fix.componentInstance.pickerFocusRef.trigger();
+        tick(16);
+        expect(document.activeElement).toBe(fix.componentInstance.picker.getEditElement());
+    }));
 });
 
 @Component({
@@ -103,4 +138,17 @@ class TriggerFocusOnClickComponent {
         this.focusRef.trigger();
     }
 
+}
+
+@Component({
+    template:
+    `
+    <igx-checkbox [igxFocus]="true"></igx-checkbox>
+    <igx-date-picker #picker [igxFocus]></igx-date-picker>
+    `
+})
+class CheckboxPickerComponent {
+    @ViewChild(IgxCheckboxComponent) public checkbox: IgxCheckboxComponent;
+    @ViewChild(IgxDatePickerComponent) public picker: IgxDatePickerComponent;
+    @ViewChild('picker', { read: IgxFocusDirective}) public pickerFocusRef: IgxFocusDirective;
 }
