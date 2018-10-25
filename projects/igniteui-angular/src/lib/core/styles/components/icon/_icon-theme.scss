@@ -30,7 +30,7 @@
         name: 'igx-icon',
         color: currentColor,
         size: rem(24px),
-        disabled-color: igx-color($palette, 'grays', 500)
+        disabled-color: currentColor
     );
 
     @if $preset {
@@ -71,6 +71,7 @@
 
     %igx-icon--inactive {
         color: --var($theme, 'disabled-color') !important;
+        opacity: .54;
     }
 }
 
