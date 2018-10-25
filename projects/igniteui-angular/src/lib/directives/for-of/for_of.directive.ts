@@ -281,7 +281,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._maxHeight = this._calcMaxBrowserHeight();
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
-                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler.bind(this));
+                this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
+                this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
                 this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
         }
@@ -602,14 +603,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         requestAnimationFrame(() => {
             // check if height/width has changes in views.
-            this._recalcUpdateSizes();
+            this.recalcUpdateSizes();
         });
         this.dc.changeDetectorRef.detectChanges();
 
         this.onChunkLoad.emit(this.state);
     }
 
-    protected _recalcUpdateSizes() {
+    /**
+     * @hidden
+     * Function that recaculates and updates cache sizes.
+     */
+    public recalcUpdateSizes() {
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
         'width' : 'height';
         const diffs = [];
@@ -663,6 +668,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     const containerSize = parseInt(this.igxForContainerSize, 10);
                     const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
                     this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+                    return;
                 }
                 if (this._adjustToIndex) {
                     // in case scrolled to specific index where after scroll heights are changed
@@ -818,9 +824,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.dc.changeDetectorRef.detectChanges();
             this.onChunkLoad.emit();
             if (this.igxForScrollOrientation === 'vertical') {
-                // requestAnimationFrame(() => {
-                    this._recalcUpdateSizes();
-                // });
+                this.recalcUpdateSizes();
             }
         }
     }
@@ -1182,7 +1186,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         requestAnimationFrame(() => {
-            this._recalcUpdateSizes();
+            this.recalcUpdateSizes();
         });
     }
 
@@ -1237,7 +1241,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
             if (this.igxForScrollOrientation === 'vertical') {
                 requestAnimationFrame(() => {
-                    this._recalcUpdateSizes();
+                    this.recalcUpdateSizes();
                 });
             }
         }

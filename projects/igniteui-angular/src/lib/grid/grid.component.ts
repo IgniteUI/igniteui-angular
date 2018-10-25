@@ -2398,6 +2398,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             requestAnimationFrame(() => {
                 this.summariesHeight = 0;
                 this.reflow();
+                this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
         this._ngAfterViewInitPaassed = true;
