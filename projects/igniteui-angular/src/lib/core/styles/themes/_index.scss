@@ -86,7 +86,7 @@
 
 @mixin igx-theme(
     $palette,
-    $preset: (),
+    $preset: null,
     $exclude: (),
     $legacy-support: true
 ) {
