@@ -283,7 +283,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     set inEditMode(value: boolean) {
-        if (this.grid.rowEditable && this.row.deleted) {
+        if (this.row.deleted) {
             return;
         }
         if (this.column.editable && value) {
