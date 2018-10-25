@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Conten
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -19,6 +19,11 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
+import { IgxGridCellComponent } from '../cell.component';
+
+export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
+    groupRow: IgxGridGroupByRowComponent;
+}
 
 /**
  * **Ignite UI for Angular Grid** -
@@ -249,6 +254,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
      */
     @Output()
     public onGroupingDone = new EventEmitter<ISortingExpression[]>();
+
+    @Output()
+    public onFocusChange = new EventEmitter<IGridFocusChangeEventArgs>();
 
     /**
      * @hidden

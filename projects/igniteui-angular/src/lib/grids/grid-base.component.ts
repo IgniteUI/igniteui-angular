@@ -52,7 +52,6 @@ import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -149,7 +148,6 @@ export interface IColumnMovingEndEventArgs {
 
 export interface IFocusChangeEventArgs {
     cell: IgxGridCellComponent;
-    groupRow: IgxGridGroupByRowComponent;
     event: Event;
     cancel: boolean;
 }
