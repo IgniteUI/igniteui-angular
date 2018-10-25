@@ -231,9 +231,13 @@
 
     %switch-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: --var($theme, 'thumb-on-color');
+        background-color: --var($theme, 'track-off-color');
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
+    }
+
+    %switch-ripple--focused-checked {
+        background-color: --var($theme, 'thumb-on-color');
     }
 
     %switch-label {
