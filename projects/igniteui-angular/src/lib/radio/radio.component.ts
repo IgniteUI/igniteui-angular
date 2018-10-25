@@ -271,7 +271,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
         event.stopPropagation();
         this.select();
 
-        if (isIE) {
+        if (isIE()) {
             this.nativeRadio.nativeElement.blur();
         }
     }
