@@ -351,19 +351,19 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         }
         const oldExpressions: Array<ISortingExpression> = this.groupingExpressions;
         const newExpressions: Array<ISortingExpression> = value;
+        this._groupingExpressions = cloneArray(value);
+        this.chipsGoupingExpressions = cloneArray(value);
+        if (this.gridAPI.get(this.id)) {
+            this.gridAPI.arrange_sorting_expressions(this.id);
+            /* grouping should work in conjunction with sorting
+            and without overriding separate sorting expressions */
+            this._applyGrouping();
+            this.cdr.markForCheck();
+        } else {
+            // setter called before grid is registered in grid API service
+            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
+        }
         if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions)) {
-            this._groupingExpressions = cloneArray(value);
-            this.chipsGoupingExpressions = cloneArray(value);
-            if (this.gridAPI.get(this.id)) {
-                this.gridAPI.arrange_sorting_expressions(this.id);
-                /* grouping should work in conjunction with sorting
-                and without overriding separate sorting expressions */
-                this._applyGrouping();
-                this.cdr.markForCheck();
-            } else {
-                // setter called before grid is registered in grid API service
-                this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
-            }
             if (this.columnList) {
                 const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
                 const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
