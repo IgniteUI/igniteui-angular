@@ -42,7 +42,7 @@ import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase, AbsoluteScrollStrategy, HorizontalAlignment, VerticalAlignment } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
-import { IgxGridAPIService } from './api.service';
+import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
@@ -2045,7 +2045,7 @@ export class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit
     }
 
     constructor(
-        private gridAPI: IgxGridAPIService,
+        private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) private _transactions: TransactionService,
         private elementRef: ElementRef,

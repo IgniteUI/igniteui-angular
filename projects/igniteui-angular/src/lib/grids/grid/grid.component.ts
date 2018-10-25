@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef, DoCheck } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
+    IterableDiffers, ViewContainerRef } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -14,6 +16,9 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { DataUtil } from '../../data-operations/data-util';
+import { IgxSelectionAPIService } from '../../core/selection';
+import { TransactionService } from '../../services/transaction/transaction';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +51,24 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
     protected groupingDiffer;
     private _hideGroupedColumns = false;
 
+    private _gridAPI: IgxGridAPIService;
+
+    constructor(
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        selection: IgxSelectionAPIService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxGridNavigationService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+            this._gridAPI = <IgxGridAPIService>gridAPI;
+    }
+
     /**
      * Returns the group by state of the `IgxGridComponent`.
      * ```typescript
@@ -75,8 +98,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
         }
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
-        if (this.gridAPI.get(this.id)) {
-            this.gridAPI.arrange_sorting_expressions(this.id);
+        if (this._gridAPI.get(this.id)) {
+            this._gridAPI.arrange_sorting_expressions(this.id);
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
             this._applyGrouping();
@@ -316,7 +339,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
         this.endRowEdit(true);
-        this.gridAPI.submit_value(this.id);
+        this._gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
         } else {
@@ -338,7 +361,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
      *
      */
     public clearGrouping(name?: string): void {
-        this.gridAPI.clear_groupby(this.id, name);
+        this._gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
 
         this.restoreHighlight();
@@ -424,35 +447,35 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
      * @hidden
      */
     protected _groupBy(expression: ISortingExpression) {
-        this.gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
     }
 
     /**
      * @hidden
      */
     protected _groupByMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.groupBy_multiple(this.id, expressions);
+        this._gridAPI.groupBy_multiple(this.id, expressions);
     }
 
     /**
      * @hidden
      */
     protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
-        return this.gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
+        return this._gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
     }
 
     /**
      * @hidden
      */
     protected _toggleGroup(groupRow: IGroupByRecord) {
-        this.gridAPI.groupBy_toggle_group(this.id, groupRow);
+        this._gridAPI.groupBy_toggle_group(this.id, groupRow);
     }
 
     /**
      * @hidden
      */
     protected _applyGrouping() {
-        this.gridAPI.sort_multiple(this.id, this._groupingExpressions);
+        this._gridAPI.sort_multiple(this.id, this._groupingExpressions);
     }
 
     /**
