@@ -65,6 +65,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
     public expressionsList: Array<ExpressionUI>;
     public visibleExpressionsList: Array<ExpressionUI>;
     public moreFiltersCount = 0;
+    public baseClass = 'igx-grid__filtering-cell-indicator';
 
     @HostBinding('style.min-width')
     @HostBinding('style.max-width')
@@ -112,7 +113,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
         this.getExpressionsList();
         this.cdr.markForCheck;
     }
-    
+
     private getExpressionsList() {
         this.expressionsList = this.filteringService.expressionsMap.get(this.column.field);
         this.visibleExpressionsList = cloneArray(this.expressionsList);
@@ -242,7 +243,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth;
-            
+
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
@@ -291,11 +292,10 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
     }
 
     public filteringIndicatorClass() {
-        const baseClass = 'igx-grid__filtering-cell-indicator';
 
         return {
-            [baseClass]: !this.isMoreIconHidden,
-            [`${baseClass}--hidden`]: this.isMoreIconHidden
+            [this.baseClass]: !this.isMoreIconHidden,
+            [`${this.baseClass}--hidden`]: this.isMoreIconHidden
         }
     }
 }
