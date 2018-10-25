@@ -124,6 +124,20 @@
         }
     }
 
+    @include mx(focused, checked) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+            @extend %cbx-ripple--focused-checked !optional;
+        }
+    }
+
+    @include mx(focused, indeterminate) {
+        @include e(ripple) {
+            @extend %cbx-ripple--focused !optional;
+            @extend %cbx-ripple--focused-checked !optional;
+        }
+    }
+
     @include mx(indeterminate, disabled) {
         @include e(composite) {
             @extend %cbx-composite--x--disabled !optional;
