@@ -292,7 +292,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.restoreHighlight();
     }
 
-    private collapsedHighlightedItem: any = null;
+    /**
+     * @hidden
+     */
+    protected collapsedHighlightedItem: any = null;
 
     /**
      * Returns whether the paging feature is enabled/disabled.
@@ -2030,7 +2033,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         private resolver: ComponentFactoryResolver,
-        private differs: IterableDiffers,
+        protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService) {
         this.resizeHandler = () => {
@@ -2079,15 +2082,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (this.autoGenerate) {
             this.autogenerateColumns();
         }
-        if (this.groupTemplate) {
-            this._groupRowTemplate = this.groupTemplate.template;
-        }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
 
-        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
-            this._setGroupColsVisibility(this.hideGroupedColumns);
-        }
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
@@ -3335,7 +3332,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         }
 
         let pagingHeight = 0;
-        let groupAreaHeight = 0;
         if (this.paging && this.paginator) {
             pagingHeight = this.paginator.nativeElement.firstElementChild ?
                 this.paginator.nativeElement.offsetHeight : 0;
@@ -3346,9 +3342,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 this.calcMaxSummaryHeight() : 0;
         }
 
-        if (this.groupArea) {
-            groupAreaHeight = this.groupArea.nativeElement.offsetHeight;
-        }
+        const groupAreaHeight = this.getGroupAreaHeight();
 
         if (this._height && this._height.indexOf('%') !== -1) {
             /*height in %*/
@@ -3358,6 +3352,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             this.calcHeight = this._calculateGridBodyHeight(
                 parseInt(this._height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected getGroupAreaHeight(): number {
+        return 0;
     }
 
     /**
@@ -3475,9 +3476,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             sum += this.calcRowCheckboxWidth;
         }
 
-        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
-            sum += this.headerGroupContainer.nativeElement.clientWidth;
-        }
         return sum;
     }
 
@@ -4017,13 +4015,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this._unpinnedColumns = unpinnedColumns;
     }
 
-    private scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {
+    /**
+     * @hidden
+     */
+    protected scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {
         if (this.paging) {
             this.page = page;
-        }
-
-        if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-            this.toggleGroup(groupByRecord);
         }
 
         this.scrollDirective(this.verticalScrollContainer, row);
@@ -4136,12 +4133,18 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         });
     }
 
-    private getLevelIncrement(currentIncrement, currentHierarchy, prevHierarchy) {
-        if (currentHierarchy !== prevHierarchy && !!prevHierarchy && !!currentHierarchy) {
-            return this.getLevelIncrement(++currentIncrement, currentHierarchy.groupParent, prevHierarchy.groupParent);
-        } else {
-            return currentIncrement;
-        }
+    /**
+     * @hidden
+     */
+    public isExpandedGroup(group: IGroupByRecord): boolean {
+        return undefined;
+    }
+
+     /**
+     * @hidden
+     */
+    protected getGroupByRecords(): IGroupByRecord[] {
+        return null;
     }
 
     // For paging we need just the increment between the start of the page and the current row
@@ -4160,7 +4163,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return pagingIncrement;
     }
 
-    private restoreHighlight(): void {
+    /**
+     * @hidden
+     */
+    protected restoreHighlight(): void {
         if (this.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
@@ -4204,6 +4210,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 this.find(this.lastSearchInfo.searchText, 0, this.lastSearchInfo.caseSensitive, this.lastSearchInfo.exactMatch, false);
             }
         }
+    }
+
+    // This method's idea is to get by how much each data row is offset by the group by rows before it.
+    /**
+    * @hidden
+    */
+    protected getGroupIncrementData(): number[] {
+        return null;
     }
 
     private checkIfGridIsAdded(node): boolean {

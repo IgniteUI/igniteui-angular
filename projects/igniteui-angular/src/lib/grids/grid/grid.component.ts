@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -43,7 +43,7 @@ import { DOCUMENT } from '@angular/common';
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
+export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, AfterContentInit {
 
     /**
      * @hidden
@@ -288,7 +288,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
      * @hidden
      */
     get groupAreaHostClass(): string {
-        switch (this._displayDensity) {
+        switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 'igx-drop-area--cosy';
             case DisplayDensity.compact:
@@ -505,7 +505,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
     }
 
     // This method's idea is to get by how much each data row is offset by the group by rows before it.
-    private getGroupIncrementData(): number[] {
+    /**
+    * @hidden
+    */
+    protected getGroupIncrementData(): number[] {
         if (this.groupingExpressions && this.groupingExpressions.length) {
             const groupsRecords = this.getGroupByRecords();
             const groupByIncrements = [];
@@ -538,7 +541,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
         }
     }
 
-    private getGroupByRecords(): IGroupByRecord[] {
+    private getLevelIncrement(currentIncrement, currentHierarchy, prevHierarchy) {
+        if (currentHierarchy !== prevHierarchy && !!prevHierarchy && !!currentHierarchy) {
+            return this.getLevelIncrement(++currentIncrement, currentHierarchy.groupParent, prevHierarchy.groupParent);
+        } else {
+            return currentIncrement;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected getGroupByRecords(): IGroupByRecord[] {
         if (this.groupingExpressions && this.groupingExpressions.length) {
             const state = {
                 expressions: this.groupingExpressions,
@@ -615,6 +629,55 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck {
             this.sort(columnExpr);
             this.markForCheck();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected getGroupAreaHeight(): number {
+        return this.groupArea ? this.groupArea.nativeElement.offsetHeight : 0;
+    }
+
+    /**
+     * Gets calculated width of the pinned area.
+     * ```typescript
+     * const pinnedWidth = this.grid.getPinnedWidth();
+     * ```
+     * @param takeHidden If we should take into account the hidden columns in the pinned area.
+     * @memberof IgxGridComponent
+     */
+    public getPinnedWidth(takeHidden = false) {
+        let sum = super.getPinnedWidth(takeHidden);
+
+        if (this.groupingExpressions.length > 0 && this.headerGroupContainer) {
+            sum += this.headerGroupContainer.nativeElement.clientWidth;
+        }
+        return sum;
+    }
+
+    /**
+     * @hidden
+     */
+    protected scrollTo(row: number, column: number, page: number, groupByRecord?: IGroupByRecord): void {
+        if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
+            this.toggleGroup(groupByRecord);
+        }
+
+        super.scrollTo(row, column, page, groupByRecord);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+        if (this.groupTemplate) {
+            this._groupRowTemplate = this.groupTemplate.template;
+        }
+
+        if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
+            this._setGroupColsVisibility(this.hideGroupedColumns);
+        }
+        super.ngAfterContentInit();
     }
 
     public ngDoCheck(): void {
