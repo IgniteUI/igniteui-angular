@@ -1215,7 +1215,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get
      * grouped/ungrouped at once by using the Group By API.
      * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
-     * the `groupby()` or `clearGrouping()` API methods and passing an array as an argument.
+     * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
      * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
      * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
      * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
