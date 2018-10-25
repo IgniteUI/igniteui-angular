@@ -305,8 +305,15 @@
     }
 
     @include e(filtering-row-main) {
-
         @extend %igx-grid__filtering-row-main !optional;
+    }
+
+    @include e(filtering-row-scroll-start) {
+        @extend %igx-grid__filtering-scroll-start !optional;
+    }
+
+    @include e(filtering-row-scroll-end) {
+        @extend %igx-grid__filtering-scroll-end !optional;
     }
 
     @for $i from 1 through 10 {

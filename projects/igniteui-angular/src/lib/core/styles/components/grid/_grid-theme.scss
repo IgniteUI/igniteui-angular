@@ -1426,8 +1426,10 @@
         border-top: $grid-header-border;
         height: map-get($grid-header-height, 'comfortable');
         padding: map-get($grid-header-padding, 'comfortable');
+        overflow: hidden;
 
         igx-chips-area {
+            transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
             overflow: hidden;
         }
@@ -1461,13 +1463,28 @@
         position: absolute;
         display: flex;
         width: 100%;
-        padding: map-get($grid-cell-padding, 'comfortable');
+        height: 50px;
+        padding: map-get($grid-cell-padding, 'cosy');
         align-items: center;
         justify-content: space-between;
         background: #fff;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, .08),
-        0 1px 0 #fff;
+        bottom: 0;
         z-index: 3;
+
+        &::after {
+            position: absolute;
+            content: '';
+            height: 10px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-shadow: 0 1px 0 #fff,
+                0 4px 10px rgba(0, 0, 0, .12);
+        }
+
+        igx-prefix:focus {
+            color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
     }
 
     %igx-grid__filtering-row-main {
@@ -1477,16 +1494,60 @@
         max-width: calc(100% - 176px);
 
         igx-chips-area {
+            transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
-            // overflow-x: auto;
-        }
-
-        igx-input-group {
-            flex: 0 0 250px;
+            margin: 0 rem(8px);
         }
 
         igx-chip {
             margin: 0 rem(4px);
+        }
+
+        [igxButton] {
+            igx-icon {
+                position: absolute;
+                left: rem(12px);
+            }
+
+            span {
+                margin-left: rem(16px);
+            }
+        }
+    }
+
+    %igx-grid__filtering-scroll-start {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        overflow: visible;
+        margin: 0 8px;
+        z-index: 1;
+
+        &::after {
+            position: absolute;
+            content: '';
+            left: calc(100% + 8px);
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to right, white, transparent);
+        }
+    }
+
+    %igx-grid__filtering-scroll-end {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        overflow: visible;
+        margin: 0 8px;
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            content: '';
+            right: calc(100% + 8px);
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to left, white, transparent);
         }
     }
 }

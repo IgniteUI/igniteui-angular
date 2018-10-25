@@ -62,21 +62,22 @@
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
-<button *ngIf="showArrows" style="min-width: 20px; max-width: 20px" (click)="scrollChips('left')" igxButton>
-    <igx-icon fontSet="material">navigate_before</igx-icon>
-</button>
-<div #container class="igx-grid__filtering-row-main">
-    <div style="display:flex;">
-        <igx-chips-area #chipsArea style="display:flex; transition: transform .2s">
-            <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
 
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (click)="scrollChips('left')">
+    <igx-icon>navigate_before</igx-icon>
+</button>
+
+<div #container class="igx-grid__filtering-row-main">
+    <div>
+         <igx-chips-area #chipsArea>
+            <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
                 <igx-chip #chip id='chip'
                     (onSelection)="onChipSelected($event, item.expression)"
                     (keydown)="onChipKeyDown($event, chip)"
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="true"
                     [selected]="item.isSelected"
-                    [displayDensity]="'compact'"
+                    [displayDensity]="'cosy'"
                     [removable]="true">
                     <igx-icon
                         igxPrefix
@@ -100,9 +101,11 @@
         </igx-chips-area>
     </div>
 </div>
-<button *ngIf="showArrows" style="min-width: 20px; max-width: 20px" (click)="scrollChips('right')" igxButton>
-    <igx-icon fontSet="material">navigate_next</igx-icon>
+
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChips('right')">
+    <igx-icon>navigate_next</igx-icon>
 </button>
+
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
     <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
     <button igxButton igxRipple (click)="close()">Close</button>

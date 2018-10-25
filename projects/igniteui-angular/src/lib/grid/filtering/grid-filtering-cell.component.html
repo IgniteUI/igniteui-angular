@@ -1,6 +1,6 @@
 <ng-template #emptyFilter>
         <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
-            <igx-chip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'compact'">
+            <igx-chip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'cosy'">
                 <igx-icon [attr.draggable]="false" igxPrefix>add</igx-icon>
                 <span [attr.draggable]="false">Filter</span>
             </igx-chip>
@@ -12,7 +12,7 @@
         <ng-container *ngFor="let item of visibleExpressionsList; let last = last;">
             <igx-chip
                 [removable]="true"
-                [displayDensity]="'compact'"
+                [displayDensity]="'cosy'"
                 (click)="onChipClicked(item.expression)"
                 (keydown)="onKeyDown($event, item.expression)"
                 (onRemove)="onChipRemoved($event, item)">
@@ -34,7 +34,7 @@
 </ng-template>
 
 <ng-template #complexFilter>
-    <igx-chip [removable]="true" [displayDensity]="'compact'" (onRemove)="clearFiltering()">
+    <igx-chip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
         <igx-icon igxPrefix>filter_list</igx-icon>
         <span>Complex Filter</span>
     </igx-chip>
