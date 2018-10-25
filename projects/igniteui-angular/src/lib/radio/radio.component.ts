@@ -7,6 +7,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { isIE } from '../core/utils';
 
 export interface IChangeRadioEventArgs {
     value: any;
@@ -269,6 +270,10 @@ export class IgxRadioComponent implements ControlValueAccessor {
     public _onRadioClick(event) {
         event.stopPropagation();
         this.select();
+
+        if (isIE) {
+            this.nativeRadio.nativeElement.blur();
+        }
     }
     /**
      *@hidden
