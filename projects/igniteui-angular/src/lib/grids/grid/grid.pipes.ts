@@ -1,12 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../data-operations/sorting-strategy';
-import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxGridAPIService } from './api.service';
+import { cloneArray } from '../../core/utils';
+import { DataUtil } from '../../data-operations/data-util';
+import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
+import { IGroupByResult } from '../../data-operations/sorting-strategy';
+import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridAPIService } from './grid-api.service';
 
 /**
  *@hidden
@@ -17,7 +19,7 @@ import { IgxGridComponent } from './grid.component';
 })
 export class IgxGridSortingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
 
     public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
         id: string, pipeTrigger: number): any[] {
@@ -41,8 +43,11 @@ export class IgxGridSortingPipe implements PipeTransform {
     pure: true
 })
 export class IgxGridPreGroupingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
     public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
@@ -74,8 +79,11 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
     pure: true
 })
 export class IgxGridPostGroupingPipe implements PipeTransform {
+    private gridAPI: IgxGridAPIService;
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+        this.gridAPI = <IgxGridAPIService>gridAPI;
+    }
 
     public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
@@ -108,7 +116,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 })
 export class IgxGridPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
@@ -139,7 +147,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number) {
@@ -178,10 +186,10 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
 })
 export class IgxGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
-        const grid: IgxGridComponent = this.gridAPI.get(id);
+        const grid: IgxGridBaseComponent = this.gridAPI.get(id);
 
         if (collection && grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
