@@ -3,13 +3,13 @@ import { TestBed, fakeAsync, async, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
-import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../services/index';
+import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../services/index';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { DisplayDensity } from '../core/displayDensity';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxGridModule } from '../index';
+import { DisplayDensity } from '../../core/displayDensity';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Grid Toolbar', () => {
     configureTestSuite();

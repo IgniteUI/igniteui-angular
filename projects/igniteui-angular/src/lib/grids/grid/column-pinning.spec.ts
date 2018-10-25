@@ -3,15 +3,15 @@ import { DebugElement } from '@angular/core';
 import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnPinningComponent, IgxColumnPinningModule } from './column-pinning.component';
-import { IgxGridComponent, IPinColumnEventArgs } from './grid.component';
-import { IgxGridModule } from './index';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { HelperUtils } from '../test-utils/helper-utils.spec';
-import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../test-utils/grid-base-components.spec';
-import { GridFunctions } from '../test-utils/grid-functions.spec';
-
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../column-pinning.component';
+import { IgxGridComponent } from './grid.component';
+import { IPinColumnEventArgs } from '../grid-base.component';
+import { IgxGridModule } from '../index';
+import { IgxButtonModule } from '../../directives/button/button.directive';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../../test-utils/grid-base-components.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Column Pinning UI', () => {
     configureTestSuite();

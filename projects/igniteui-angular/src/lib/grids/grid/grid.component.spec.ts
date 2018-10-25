@@ -4,29 +4,27 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridAPIService } from './api.service';
-import { IgxGridComponent, IgxGridTransaction } from './grid.component';
-import { IgxColumnComponent } from './column.component';
-import { IForOfState } from '../directives/for-of/for_of.directive';
-import { IgxGridModule } from './index';
-import { IgxNumberFilteringOperand, IgxTransactionService } from '../../public_api';
-import { DisplayDensity } from '../core/displayDensity';
-import { DataType } from '../data-operations/data-util';
-import { GridTemplateStrings } from '../test-utils/template-strings.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxGridAPIService } from './grid-api.service';
+import { IgxGridComponent } from './grid.component';
+import { IgxGridTransaction } from '../grid-base.component';
+import { IgxColumnComponent } from '../column.component';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IgxGridModule } from '../index';
+import { IgxNumberFilteringOperand, IgxTransactionService } from '../../../public_api';
+import { DisplayDensity } from '../../core/displayDensity';
+import { DataType } from '../../data-operations/data-util';
+import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import {
-    IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective
-} from './grid.rowEdit.directive';
-import { IgxGridRowComponent } from './row.component';
-import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridCellComponent } from './cell.component';
-import { take } from 'rxjs/operators';
-import { TransactionType } from '../services';
-import { configureTestSuite } from '../test-utils/configure-suite';
+} from '../grid.rowEdit.directive';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxGridCellComponent } from '../cell.component';
+import { TransactionType } from '../../services';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 

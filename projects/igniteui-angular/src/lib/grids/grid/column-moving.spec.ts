@@ -3,20 +3,20 @@ import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule } from './index';
-import { IgxColumnGroupComponent } from './column.component';
-import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxGridModule } from '../index';
+import { IgxColumnGroupComponent } from '../column.component';
+import { IgxInputDirective } from '../../directives/input/input.directive';
+import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import {
     MovableColumnsComponent,
     MovableTemplatedColumnsComponent,
     MovableColumnsLargeComponent,
     MultiColumnHeadersComponent
- } from '../test-utils/grid-samples.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+ } from '../../test-utils/grid-samples.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Column Moving', () => {
     configureTestSuite();

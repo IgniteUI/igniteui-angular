@@ -2,13 +2,12 @@ import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../test-utils/grid-samples.spec';
-import { wait } from '../test-utils/ui-interactions.spec';
-
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxGridModule } from '../index';
+import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../../test-utils/grid-samples.spec';
+import { wait } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();

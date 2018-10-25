@@ -2,19 +2,20 @@
 import { async, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from './column.component';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnMovingDragDirective, IgxGroupAreaDropDirective } from './grid.common';
+import { IgxGroupAreaDropDirective } from './grid.directives';
+import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule, IgxGridCellComponent } from './index';
-import { IgxGridRowComponent } from './row.component';
-import { IgxChipComponent, IChipClickEventArgs } from '../chips/chip.component';
-import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
-import { HelperUtils } from '../test-utils/helper-utils.spec';
+import { IgxGridModule, IgxGridCellComponent } from '../index';
+import { IgxGridRowComponent } from './grid-row.component';
+import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();

@@ -2,14 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../calendar';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { Calendar } from '../../calendar';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxGridModule } from '../index';
+import { IgxStringFilteringOperand } from '../../../public_api';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const selectedCellClass = '.igx-grid__td--selected';
 let data = [

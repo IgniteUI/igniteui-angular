@@ -1,13 +1,13 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule } from './index';
-import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../test-utils/grid-samples.spec';
-import { PagingComponent } from '../test-utils/grid-base-components.spec';
-import { IgxNumberFilteringOperand } from '../../public_api';
+import { IgxGridModule } from '../index';
+import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { PagingComponent } from '../../test-utils/grid-base-components.spec';
+import { IgxNumberFilteringOperand } from '../../../public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Grid Paging', () => {
     configureTestSuite();

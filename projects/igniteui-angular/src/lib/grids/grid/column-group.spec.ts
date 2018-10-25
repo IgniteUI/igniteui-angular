@@ -1,15 +1,15 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from './grid.module';
+import { IgxGridModule } from '../grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand } from '../../public_api';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxStringFilteringOperand } from '../../../public_api';
 import { By } from '@angular/platform-browser';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { wait } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';

@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxGridComponent } from './grid.component';
+import { IGridEditEventArgs } from '../grid-base.component';
+import { IgxGridModule } from '../index';
+import { wait } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const CELL_CSS_CLASS = '.igx-grid__td';
 

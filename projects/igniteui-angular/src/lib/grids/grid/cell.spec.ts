@@ -3,13 +3,15 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { HelperUtils} from '../test-utils/helper-utils.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule,  } from '../index';
+import { IgxGridComponent } from './grid.component';
+import { IGridCellEventArgs } from '../grid-base.component';
+import { IgxStringFilteringOperand } from '../../../public_api';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { HelperUtils} from '../../test-utils/helper-utils.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 

@@ -3,17 +3,17 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxAvatarModule } from '../avatar/avatar.component';
-import { Calendar } from '../calendar';
+import { IgxAvatarModule } from '../../avatar/avatar.component';
+import { Calendar } from '../../calendar';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../test-utils/template-strings.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { IColumnResized } from '../test-utils/grid-interfaces.spec';
-import { MultiColumnHeadersComponent } from '../test-utils/grid-samples.spec';
+import { IgxGridModule } from '../index';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { GridTemplateStrings, ColumnDefinitions, EventSubscriptions } from '../../test-utils/template-strings.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
+import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Deferred Column Resizing', () => {
     configureTestSuite();

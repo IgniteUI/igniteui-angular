@@ -2,14 +2,14 @@ import { Component, ViewChild } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../calendar/calendar';
-import { IgxInputDirective } from '../directives/input/input.directive';
+import { Calendar } from '../../calendar/calendar';
+import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../public_api';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxGridModule } from '../index';
+import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../../public_api';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 

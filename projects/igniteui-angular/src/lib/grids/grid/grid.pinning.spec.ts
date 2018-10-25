@@ -2,18 +2,19 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Calendar } from '../calendar/index';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
+import { Calendar } from '../../calendar/index';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxColumnComponent } from '../column.component';
+import { IgxGridHeaderComponent } from '../grid-header.component';
+import { IgxGridComponent } from './grid.component';
+import { IGridCellEventArgs } from '../grid-base.component';
+import { IgxGridModule } from '../index';
+import { IgxStringFilteringOperand } from '../../../public_api';
 import { first } from 'rxjs/operators';
-import { IgxGridRowComponent } from './row.component';
-import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxGridRowComponent } from './grid-row.component';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Column Pinning ', () => {
     configureTestSuite();
