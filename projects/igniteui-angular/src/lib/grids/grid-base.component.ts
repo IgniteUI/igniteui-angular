@@ -3542,7 +3542,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         const columns = [];
 
         fields.forEach((field) => {
-            const ref = this.viewRef.createComponent(factory);
+            const ref = this.viewRef.createComponent(factory, null, this.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(this.data[0][field]);
             ref.changeDetectorRef.detectChanges();
