@@ -13,19 +13,21 @@ import {
     Inject,
     Injectable,
     Injector,
-    Type
+    Type,
+    OnDestroy
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
-import { fromEvent } from 'rxjs';
-import { take, filter } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
 @Injectable({ providedIn: 'root' })
-export class IgxOverlayService {
+export class IgxOverlayService implements OnDestroy {
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
     private _overlayElement: HTMLElement;
     private _document: Document;
+    private destroy$ = new Subject<boolean>();
 
     private _defaultSettings: OverlaySettings = {
         positionStrategy: new GlobalPositionStrategy(),
@@ -312,7 +314,7 @@ export class IgxOverlayService {
         const wrapperElement = info.elementRef.nativeElement.parentElement.parentElement;
         fromEvent(wrapperElement, 'keydown').pipe(
             filter((ev: KeyboardEvent) => ev.key === 'Escape' || ev.key === 'Esc'),
-            take(1)
+            takeUntil(this.destroy$)
         ).subscribe(() => this.hide(info.id));
         wrapperElement.classList.remove('igx-overlay__wrapper');
         this.applyAnimationParams(wrapperElement, info.settings.positionStrategy.settings.openAnimation);
@@ -468,7 +470,7 @@ export class IgxOverlayService {
         if (info.settings.closeOnOutsideClick) {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
-                    .pipe(take(1))
+                    .pipe(takeUntil(this.destroy$))
                     .subscribe(() => this.hide(info.id));
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
@@ -520,5 +522,13 @@ export class IgxOverlayService {
         for (let i = this._overlayInfos.length; i--;) {
             this.reposition(this._overlayInfos[i].id);
         }
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 }
