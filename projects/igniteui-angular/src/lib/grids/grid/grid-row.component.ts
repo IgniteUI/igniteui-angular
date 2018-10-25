@@ -1,10 +1,12 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: 'igx-grid-row',
-    templateUrl: '../grid-common/row.component.html',
+    templateUrl: './row.component.html',
     providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent)}]
 })
 export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {

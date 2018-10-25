@@ -20,13 +20,7 @@ import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent } from './grid-base.component';
 
-@Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
-    selector: 'igx-grid-row',
-    templateUrl: './row.component.html'
-})
-export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck {
+export abstract class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck {
 
     private _rowData: any;
     /**
