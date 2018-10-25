@@ -1,5 +1,5 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
-import { IgxGridModule } from '../grid.module';
+import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';

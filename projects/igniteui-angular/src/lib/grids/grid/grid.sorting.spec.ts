@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';

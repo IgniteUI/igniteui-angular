@@ -3,7 +3,7 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
-import { IgxDateSummaryOperand, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from '../index';
+import { IgxDateSummaryOperand, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridAPIService } from './grid-api.service';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';

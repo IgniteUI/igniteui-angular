@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar, ICalendarDate } from '../../calendar/calendar';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand, FilteringExpressionsTree } from '../../../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';

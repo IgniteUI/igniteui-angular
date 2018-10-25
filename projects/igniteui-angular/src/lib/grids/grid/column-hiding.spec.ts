@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../column-hiding-item.directive';
 import { IgxColumnHidingComponent, IgxColumnHidingModule } from '../column-hiding.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnDisplayOrder } from '../column-chooser-base';

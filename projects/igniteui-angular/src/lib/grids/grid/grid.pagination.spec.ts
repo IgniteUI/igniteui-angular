@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { ReorderedColumnsComponent,  PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { IgxNumberFilteringOperand } from '../../../public_api';

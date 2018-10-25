@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../column-pinning.component';
 import { IgxGridComponent } from './grid.component';
 import { IPinColumnEventArgs } from '../grid-base.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../../test-utils/grid-base-components.spec';

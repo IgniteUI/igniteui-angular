@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../../public_api';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';

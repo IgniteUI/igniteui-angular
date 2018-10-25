@@ -3,7 +3,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule,  } from '../index';
+import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule,  } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-base.component';
 import { IgxStringFilteringOperand } from '../../../public_api';
@@ -1436,7 +1436,7 @@ export class CellEditingScrollTestComponent {
                                               [cellClasses]="c.cellClasses">
         </igx-column>
     </igx-grid>`,
-    styleUrls: ['../test-utils/grid-cell-style-testing.scss'],
+    styleUrls: ['../../test-utils/grid-cell-style-testing.scss'],
 })
 export class ConditionalCellStyleTestComponent implements OnInit {
     public data: Array<any>;

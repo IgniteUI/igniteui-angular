@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../../public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
