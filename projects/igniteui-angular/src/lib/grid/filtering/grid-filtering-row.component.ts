@@ -540,6 +540,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
         if (eventArgs.selected) {
+            this.chipsArea.chipsList.forEach((chip)=>{
+                if(chip !== eventArgs.owner) {
+                    chip.selected = false;
+                }
+            })
             this.expression = expression;
             if (eventArgs.originalEvent) {
                 requestAnimationFrame(() => {
@@ -568,13 +573,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.removeExpression(indexToRemove, item.expression);
 
         this.scrollChipsOnRemove();
-    }
-
-    public onChipsSelectionChanged(eventArgs: IChipsAreaSelectEventArgs): void {
-        if (eventArgs.newSelection.length > 1) {
-            eventArgs.newSelection[0].selected = false;
-        }
-        this.cdr.detectChanges();
     }
 
     public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI): void {
