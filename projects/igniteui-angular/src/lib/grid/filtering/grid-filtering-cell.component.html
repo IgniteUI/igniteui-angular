@@ -26,7 +26,7 @@
             </igx-chip>
             <span *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
-        <div #moreIcon class="igx-grid__filtering-cell-indicator">
+        <div #moreIcon style="visibility:hidden" class="igx-grid__filtering-cell-indicator">
             <igx-icon (click)="onChipClicked()">filter_list</igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>

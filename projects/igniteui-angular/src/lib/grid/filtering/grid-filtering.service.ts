@@ -6,6 +6,7 @@ import { IgxGridComponent, IColumnResizeEventArgs } from '../grid.component';
 import icons from './svgIcons';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { cloneArray } from '../../core/utils';
+import { ExpressionUI } from './grid-filtering-cell.component';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -20,9 +21,11 @@ export class IgxFilteringService implements OnDestroy {
     public filteredColumn = null;
     public selectedExpression: IFilteringExpression = null;
     public columsWithComplexFilter = [];
+    public expressionsMap: Map<string, ExpressionUI[]>;
     protected columnResized;
 
     constructor(private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {
+        this.expressionsMap = new Map<string, ExpressionUI[]>();
     }
 
     ngOnDestroy(): void {
@@ -36,7 +39,7 @@ export class IgxFilteringService implements OnDestroy {
     public subscribeEvents(){
         if (!this.columnResized) {
             this.columnResized = this.grid.onColumnResized.subscribe((eventArgs: IColumnResizeEventArgs) => {
-                const filterCell = this.grid.filterCellList.find(cell=>cell.column === eventArgs.column);
+                const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
                 filterCell.visibleExpressionsList = cloneArray(filterCell.expressionsList);
                 filterCell.updateFilterCellArea();
             });

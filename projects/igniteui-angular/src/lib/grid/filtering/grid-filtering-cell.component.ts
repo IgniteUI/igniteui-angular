@@ -7,7 +7,8 @@ import {
     ViewChild,
     HostBinding,
     AfterViewInit,
-    ElementRef
+    ElementRef,
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -33,7 +34,7 @@ export class ExpressionUI {
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html'
 })
-export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit {
+export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoCheck {
 
     @Input()
     public column: IgxColumnComponent;
@@ -86,14 +87,16 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit {
 
     constructor(private filteringService: IgxFilteringService, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
         this.expressionsMap = new Map<number, ExpressionUI[]>();
-        this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.subscribeEvents();
     }
 
     ngOnInit(): void {
+        this.filteringService.expressionsMap.set(this.column.field, new Array<ExpressionUI>());
+
         if (this.column.filteringExpressionsTree) {
             this.generateExpressionsMap(this.column.filteringExpressionsTree, 0);
             if (this.treesOnLevelCount.find(item => item > 0) === undefined) {
+                this.expressionsList = this.filteringService.expressionsMap.get(this.column.field);
                 this.generateExpressionsList();
                 this.visibleExpressionsList = cloneArray(this.expressionsList);
             }
@@ -101,6 +104,17 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.updateFilterCellArea();
+    }
+
+    ngDoCheck(): void {
+        this.getExpressionsList();
+        this.cdr.markForCheck;
+    }
+    
+    private getExpressionsList() {
+        this.expressionsList = this.filteringService.expressionsMap.get(this.column.field);
+        this.visibleExpressionsList = cloneArray(this.expressionsList);
         this.updateFilterCellArea();
     }
 
@@ -218,14 +232,15 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit {
 
     public updateFilterCellArea() {
         this.cdr.detectChanges();
-        if(this.moreIcon) {
+        if (this.moreIcon) {
             this.moreIcon.nativeElement.setAttribute("style", "visibility:hidden");
         }
-        if(this.chipsArea && this.visibleExpressionsList.length > 1) {
+        if (this.chipsArea && this.visibleExpressionsList.length > 1) {
             const areaWidth = this.chipsArea.element.nativeElement.offsetWidth;
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
+            const moreIconWidth = this.moreIcon.nativeElement.offsetWidth;
             
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
@@ -234,7 +249,9 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit {
                         visibleChipsCount++;
                     }
                 } else {
-                    if (index % 2 !== 0 && viewWidth + this.moreIcon.nativeElement.offsetWidth > areaWidth) {
+                    if (index % 2 !== 0 && viewWidth + moreIconWidth > areaWidth) {
+                        visibleChipsCount--;
+                    } else if (visibleChipsCount > 0 && viewWidth - chipsAreaElements[index - 1].offsetWidth + moreIconWidth > areaWidth) {
                         visibleChipsCount--;
                     }
                     this.moreFiltersCount = this.expressionsList.length - visibleChipsCount;

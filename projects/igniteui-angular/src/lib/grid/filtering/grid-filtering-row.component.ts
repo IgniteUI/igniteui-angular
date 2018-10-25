@@ -538,11 +538,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
         if (eventArgs.selected) {
-            this.chipsArea.chipsList.forEach((chip)=>{
-                if(chip !== eventArgs.owner) {
-                    chip.selected = false;
-                }
-            })
+            if (this.chipsArea.chipsList) {
+                this.chipsArea.chipsList.forEach((chip) => {
+                    if(chip !== eventArgs.owner) {
+                        chip.selected = false;
+                    }
+                });
+            }
             this.expression = expression;
             if (eventArgs.originalEvent) {
                 if (this.dropDownConditions.collapsed) {
