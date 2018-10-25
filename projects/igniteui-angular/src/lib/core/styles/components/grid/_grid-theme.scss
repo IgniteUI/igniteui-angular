@@ -1442,11 +1442,16 @@
         justify-content: center;
         padding-right: 16px;
         cursor: pointer;
+        visibility: visible;
 
         igx-badge {
             position: absolute;
             right: 0;
         }
+    }
+
+    %igx-grid__filtering-cell-indicator--hidden {
+        visibility: hidden;
     }
 
     %igx-grid__filtering-cell--cosy {

@@ -60,6 +60,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(window.navigator.language);
+    private isMoreIconHidden = true;
 
     public expressionsList: Array<ExpressionUI>;
     public visibleExpressionsList: Array<ExpressionUI>;
@@ -85,7 +86,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
         }
     }
 
-    constructor(private filteringService: IgxFilteringService, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef) {
+    constructor(private filteringService: IgxFilteringService, public gridAPI: IgxGridAPIService, public cdr: ChangeDetectorRef, public elementRef: ElementRef,) {
         this.expressionsMap = new Map<number, ExpressionUI[]>();
         this.filteringService.subscribeEvents();
     }
@@ -233,9 +234,9 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
     public updateFilterCellArea() {
         this.cdr.detectChanges();
         if (this.moreIcon) {
-            this.moreIcon.nativeElement.setAttribute("style", "visibility:hidden");
+            this.isMoreIconHidden = true;
         }
-        if (this.chipsArea && this.visibleExpressionsList.length > 1) {
+        if (this.chipsArea && this.expressionsList.length > 1) {
             const areaWidth = this.chipsArea.element.nativeElement.offsetWidth;
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
@@ -255,7 +256,7 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
                         visibleChipsCount--;
                     }
                     this.moreFiltersCount = this.expressionsList.length - visibleChipsCount;
-                    this.moreIcon.nativeElement.setAttribute("style", "visibility:visible");
+                    this.isMoreIconHidden = false;
                     this.visibleExpressionsList.splice(visibleChipsCount);
                     this.cdr.detectChanges();
                     break;
@@ -286,6 +287,15 @@ export class IgxGridFilteringCellComponent implements OnInit, AfterViewInit, DoC
         if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             this.onChipClicked(expression);
+        }
+    }
+
+    public filteringIndicatorClass() {
+        const baseClass = 'igx-grid__filtering-cell-indicator';
+
+        return {
+            [baseClass]: !this.isMoreIconHidden,
+            [`${baseClass}--hidden`]: this.isMoreIconHidden
         }
     }
 }
