@@ -9,8 +9,12 @@ export interface IPositionStrategy {
 
     /**
      * Position the element based on the PositionStrategy implementing this interface.
+     * @param contentElement The HTML element to be positioned
+     * @param size Size of the element
+     * @param document reference to the Document object
+     * @param initialCall should be true if this is the initial call to the method
      * ```typescript
-     * settings.positionStrategy.position(content, size, Document, true);
+     * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
      position(contentElement: HTMLElement, size?: {}, document?: Document, initialCall?: boolean): void;

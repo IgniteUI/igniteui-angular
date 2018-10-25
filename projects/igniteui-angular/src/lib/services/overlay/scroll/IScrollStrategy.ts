@@ -7,7 +7,7 @@ export class IScrollStrategy {
     constructor(scrollContainer?: HTMLElement) { }
 
     /**
-     * Initialize the strategy. Should be called once
+     * Initializes the strategy. Should be called once
      * @param document reference to Document object.
      * @param overlayService IgxOverlay service to use in this strategy
      * @param id Unique id for this strategy.
