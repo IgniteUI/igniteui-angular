@@ -560,7 +560,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
 	 * @memberof IgxGridComponent
      */
 public set displayDensity(val: DisplayDensity | string) {
-    const currentDisplayDensity = this._displayDensity;
     switch (val) {
         case 'compact':
             this._displayDensity = DisplayDensity.compact;
