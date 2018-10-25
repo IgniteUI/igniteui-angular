@@ -74,7 +74,7 @@ export function cloneValue(value: any): any {
  *@hidden
  */
 export function isObject(value: any): boolean {
-    return value !== null && value !== undefined && value.toString() === '[object Object]';
+    return value && value.toString() === '[object Object]';
 }
 
 /**
