@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { JSZipFiles } from './jszip-helper';
+import { JSZipFiles } from './jszip-helper.spec';
 import { IFileContent } from './jszip-verification-wrapper.spec';
 
 @Injectable()

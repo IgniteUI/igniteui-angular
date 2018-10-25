@@ -4,7 +4,8 @@ import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
   private _defaultSettings: PositionSettings = {
-    target: new Point(0, 0),
+    // default Point(0, 0) in getPointFromPositionsSettings
+    target: null,
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
     horizontalStartPoint: HorizontalAlignment.Left,
