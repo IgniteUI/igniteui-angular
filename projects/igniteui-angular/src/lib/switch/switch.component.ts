@@ -292,7 +292,7 @@ export class IgxSwitchComponent implements ControlValueAccessor {
         event.stopPropagation();
         this.toggle();
 
-        if (isIE) {
+        if (isIE()) {
             this.nativeCheckbox.nativeElement.blur();
         }
     }
