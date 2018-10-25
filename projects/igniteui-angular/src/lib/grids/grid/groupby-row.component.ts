@@ -8,9 +8,10 @@ import {
     Input,
     ViewChild,
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxGridAPIService } from './api.service';
+import { IgxSelectionAPIService } from '../../core/selection';
+import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseComponent } from '../grid-base.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,7 +21,7 @@ import { IgxGridAPIService } from './api.service';
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: IgxGridAPIService,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
                 private selection: IgxSelectionAPIService,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) { }
