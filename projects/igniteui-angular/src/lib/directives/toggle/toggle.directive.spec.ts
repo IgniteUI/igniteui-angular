@@ -4,7 +4,8 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import { IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy, AutoPositionStrategy } from '../../services';
+    AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy } from '../../services';
+import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -215,6 +216,42 @@ describe('IgxToggle', () => {
         expect(toggleElm.classList.contains(HIDDEN_TOGGLER_CLASS)).toBe(true);
     }));
 
+    it('fix for #2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+
+        spyOn(toggle.onOpening, 'emit').and.callThrough();
+        spyOn(toggle.onOpened, 'emit').and.callThrough();
+        spyOn(toggle.onClosing, 'emit').and.callThrough();
+        spyOn(toggle.onClosed, 'emit').and.callThrough();
+
+        toggle.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+
+        toggle.open();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onClosing.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(0);
+
+        toggle.onOpening.subscribe((e: CancelableEventArgs) => e.cancel = true);
+        toggle.open();
+        fixture.detectChanges();
+        tick();
+
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
+        expect(toggle.onOpened.emit).toHaveBeenCalledTimes(1);
+    }));
+
     describe('overlay settings', () => {
         configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDiretive and respect outsideClickClose', fakeAsync(() => {
@@ -270,6 +307,34 @@ describe('IgxToggle', () => {
             fixture.detectChanges();
             fixture.componentInstance.toggleAction.onClick();
             expect(IgxToggleDirective.prototype.toggle).toHaveBeenCalledWith(settings);
+        });
+
+        it('should pass input overlaySettings from igxToggleAction and set position target if not provided', () => {
+            const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
+            fixture.detectChanges();
+            const toggleSpy = spyOn(IgxToggleDirective.prototype, 'toggle');
+            const button = fixture.debugElement.query(By.directive(IgxToggleActionDirective)).nativeElement;
+
+            const settings = /*<OverlaySettings>*/{
+                positionStrategy: jasmine.any(ConnectedPositioningStrategy),
+                closeOnOutsideClick: true,
+                modal: false,
+                scrollStrategy: jasmine.any(AbsoluteScrollStrategy)
+            };
+            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy();
+            fixture.detectChanges();
+
+            fixture.componentInstance.toggleAction.onClick();
+            expect(toggleSpy).toHaveBeenCalledWith(settings);
+            let positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
+            expect(positionStrategy.settings.target).toBe(button);
+
+            fixture.componentInstance.settings.positionStrategy  = new ConnectedPositioningStrategy({ target: document.body });
+            fixture.detectChanges();
+
+            fixture.componentInstance.toggleAction.onClick();
+            positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
+            expect(positionStrategy.settings.target).toBe(document.body);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {

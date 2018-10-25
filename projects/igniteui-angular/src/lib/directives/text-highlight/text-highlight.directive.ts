@@ -11,6 +11,8 @@ import {
     Renderer2,
     SimpleChanges
 } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 interface ISearchInfo {
     searchedText: string;
@@ -167,6 +169,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
 
     private _container: any;
 
+    private destroy$ = new Subject<boolean>();
+
     /**
      * Activates the highlight at a given index.
      * (if such index exists)
@@ -192,7 +196,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     constructor(element: ElementRef, public renderer: Renderer2) {
         this.parentElement = this.renderer.parentNode(element.nativeElement);
 
-        IgxTextHighlightDirective.onActiveElementChanged.subscribe((groupName) => {
+        IgxTextHighlightDirective.onActiveElementChanged.pipe(takeUntil(this.destroy$)).subscribe((groupName) => {
             if (this.groupName === groupName) {
                 if (this._activeElementIndex !== -1) {
                     this.deactivate();
@@ -209,6 +213,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         if (this._observer !== null) {
             this._observer.disconnect();
         }
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**

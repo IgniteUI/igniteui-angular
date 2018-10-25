@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { isIE } from '../core/utils';
 
 export enum LabelPosition {
     BEFORE = 'before',
@@ -309,6 +310,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         // we need to prevent the checkbox click event from bubbling up
         // as it gets triggered on label click
         event.stopPropagation();
+
+        if (isIE) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
+
         this.toggle();
     }
     /**
