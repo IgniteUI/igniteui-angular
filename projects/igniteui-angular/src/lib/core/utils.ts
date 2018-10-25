@@ -181,3 +181,10 @@ export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
 }
+
+export interface CancelableEventArgs {
+    /**
+     * Provides the ability to cancel the event.
+     */
+    cancel: boolean;
+}
