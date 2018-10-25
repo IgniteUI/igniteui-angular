@@ -20,6 +20,7 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
+import { IgxGridSortingPipe } from './grid.pipes';
 
 export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     groupRow: IgxGridGroupByRowComponent;
@@ -672,6 +673,21 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
         }
 
         super.scrollTo(row, column, page, groupByRecord);
+    }
+
+    /**
+     * @hidden
+     */
+    protected resolveFilteredSortedData(): any[] {
+        let data: any[] = super.resolveFilteredSortedData();
+
+        if (this.sortingExpressions &&
+            this.sortingExpressions.length > 0) {
+
+            const sortingPipe = new IgxGridSortingPipe(this._gridAPI);
+            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+        }
+        return data;
     }
 
     /**

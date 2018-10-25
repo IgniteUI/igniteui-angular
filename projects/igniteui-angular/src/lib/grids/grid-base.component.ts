@@ -51,7 +51,6 @@ import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
 import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -3935,6 +3934,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     get filteredSortedData(): any[] {
+        return this.resolveFilteredSortedData();
+    }
+
+    /**
+     * @hidden
+     */
+    protected resolveFilteredSortedData(): any[] {
         let data: any[] = this.filteredData ? this.filteredData : this.data;
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
@@ -3944,12 +3950,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             );
         }
 
-        if (this.sortingExpressions &&
-            this.sortingExpressions.length > 0) {
-
-            const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
-        }
         return data;
     }
 
