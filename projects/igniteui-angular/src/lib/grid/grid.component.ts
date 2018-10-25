@@ -4912,7 +4912,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowInEdit.rowIndex]);
+        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
+        let oldValue = Object.assign({}, this.data[rowIndex]);
         if (!rowObj) {
             const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
@@ -4926,15 +4927,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         });
         this.transactions.endPending(commit);
         if (commit && newValue && !this.transactions.enabled) {
-            this.data[rowInEdit.rowIndex] = newValue;
+            this.data[rowIndex] = newValue;
         }
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);
         }
-        if (!commit) {
-            this._pipeTrigger++;
-        }
-        // this.cdr.detectChanges();
+        this._pipeTrigger++;
     }
 
     /**

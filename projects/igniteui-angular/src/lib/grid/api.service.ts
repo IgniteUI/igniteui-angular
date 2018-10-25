@@ -136,6 +136,11 @@ export class IgxGridAPIService {
         }
     }
 
+    public get_row_index_in_data(id: string, rowID: any): number {
+        const grid = this.get(id) as IgxGridComponent;
+        return grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+    }
+
     public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
@@ -216,7 +221,7 @@ export class IgxGridAPIService {
         const column = grid.columnList.toArray()[columnID];
         const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
             editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
-        let rowIndex = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+        let rowIndex = this.get_row_index_in_data(id, rowID);
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
@@ -272,8 +277,7 @@ export class IgxGridAPIService {
     public update_row(value: any, id: string, rowID: any): void {
         const grid = this.get(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
-        const index = grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) :
-            grid.data.indexOf(rowID);
+        const index = this.get_row_index_in_data(id, rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = {
                 row: this.get_row_by_key(id, rowID),
