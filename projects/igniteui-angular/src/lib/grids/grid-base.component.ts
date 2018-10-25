@@ -126,7 +126,7 @@ export interface ISearchInfo {
 }
 
 export interface IGridToolbarExportEventArgs {
-    grid: IgxGridComponent;
+    grid: IgxGridBaseComponent;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
@@ -177,7 +177,7 @@ export interface IFocusChangeEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
+export class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.

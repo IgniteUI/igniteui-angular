@@ -8,7 +8,7 @@ import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs, IgxGridComponent } from './grid.component';
+import { IGridEditEventArgs, IgxGridBaseComponent } from './grid-base.component';
 import { IgxGridRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -17,7 +17,7 @@ import { Transaction, TransactionType } from '../services/index';
  *@hidden
  */
 @Injectable()
-export class GridBaseAPIService <T extends IgxGridComponent> {
+export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
