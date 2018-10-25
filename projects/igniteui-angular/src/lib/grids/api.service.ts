@@ -9,7 +9,7 @@ import { ISortingExpression, SortingDirection } from '../data-operations/sorting
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { IGridEditEventArgs, IgxGridBaseComponent } from './grid-base.component';
-import { IgxGridRowComponent } from './row.component';
+import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
@@ -136,7 +136,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxGridRowComponent {
+    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -145,7 +145,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxGridRowComponent {
+    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IgxGridBaseComponent> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 

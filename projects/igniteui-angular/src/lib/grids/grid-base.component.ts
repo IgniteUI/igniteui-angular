@@ -53,7 +53,7 @@ import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrat
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridSortingPipe, IgxGridTransactionPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridRowComponent } from './row.component';
+import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
@@ -78,14 +78,14 @@ export interface IGridCellEventArgs {
 }
 
 export interface IGridEditEventArgs {
-    row: IgxGridRowComponent;
+    row: IgxRowComponent<IgxGridBaseComponent>;
     cell: IgxGridCellComponent;
     currentValue: any;
     newValue: any;
 }
 
 export interface IGridRowEditEventArgs {
-    row: IgxGridRowComponent;
+    row: IgxRowComponent<IgxGridBaseComponent>;
     newValue: any;
     oldValue: any;
 }
@@ -113,7 +113,7 @@ export interface IColumnResizeEventArgs {
 export interface IRowSelectionEventArgs {
     oldSelection: any[];
     newSelection: any[];
-    row?: IgxGridRowComponent;
+    row?: IgxRowComponent<IgxGridBaseComponent>;
     event?: Event;
 }
 
@@ -1170,7 +1170,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return res;
     }
 
-    @ViewChildren(IgxGridRowComponent, { read: IgxGridRowComponent })
+    @ViewChildren(IgxRowComponent, { read: IgxRowComponent })
     private _dataRowList: QueryList<any>;
 
     /**
@@ -1323,7 +1323,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public get rowInEditMode(): IgxGridRowComponent {
+    public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent> {
         const editRowId = this.gridAPI.get_row_inEditMode(this.id);
         return editRowId !== null ? this.rowList.find(e => e.rowID === editRowId.rowID) : null;
     }
@@ -2370,7 +2370,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param index
      * @memberof IgxGridComponent
      */
-    public getRowByIndex(index: number): IgxGridRowComponent {
+    public getRowByIndex(index: number): IgxRowComponent<IgxGridBaseComponent> {
         return this.gridAPI.get_row_by_index(this.id, index);
     }
 
@@ -2383,7 +2383,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param keyValue
      * @memberof IgxGridComponent
      */
-    public getRowByKey(keyValue: any): IgxGridRowComponent {
+    public getRowByKey(keyValue: any): IgxRowComponent<IgxGridBaseComponent> {
         return this.gridAPI.get_row_by_key(this.id, keyValue);
     }
 
@@ -3251,8 +3251,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     get selectedCells(): IgxGridCellComponent[] | any[] {
-        if (this.rowList) {
-            return this.rowList.filter((row) => row instanceof IgxGridRowComponent).map((row) => row.cells.filter((cell) => cell.selected))
+        if (this.dataRowList) {
+            return this.dataRowList.map((row) => row.cells.filter((cell) => cell.selected))
                 .reduce((a, b) => a.concat(b), []);
         }
         return [];
@@ -3809,7 +3809,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxGridRowComponent, event?: Event, headerStatus?: boolean) {
+    public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxRowComponent<IgxGridBaseComponent>,
+        event?: Event, headerStatus?: boolean) {
         const oldSelectionAsSet = this.selection.get(this.id);
         const oldSelection = oldSelectionAsSet ? Array.from(oldSelectionAsSet) : [];
         const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
@@ -4256,7 +4257,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.nativeElement.focus();
     } */
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxGridRowComponent) {
+    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
             return;
         }
@@ -4270,7 +4271,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public startRowEdit(row: IgxGridRowComponent) {
+    public startRowEdit(row: IgxRowComponent<IgxGridBaseComponent>) {
         this.transactions.startPending();
         this.configureRowEditingOverlay(row);
         this.rowEditingOverlay.open(this.rowEditSettings);
@@ -4297,14 +4298,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.rowEditingOverlay.element.style.display = 'none';
     }
 
-    private repositionRowEditingOverlay(row: IgxGridRowComponent) {
+    private repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
         this.configureRowEditingOverlay(row);
         if (!this.rowEditingOverlay.collapsed) {
             this.rowEditingOverlay.reposition();
         }
     }
 
-    private configureRowEditingOverlay(row: IgxGridRowComponent) {
+    private configureRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
@@ -4325,7 +4326,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxGridRowComponent) {
+    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
         const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;

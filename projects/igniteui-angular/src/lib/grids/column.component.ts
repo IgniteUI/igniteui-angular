@@ -16,7 +16,7 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
-import { IgxGridRowComponent } from './row.component';
+import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -596,7 +596,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.filter((row) => row instanceof IgxGridRowComponent)
+        return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
             .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
             .reduce((a, b) => a.concat(b), []);
     }
