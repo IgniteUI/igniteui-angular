@@ -1482,6 +1482,13 @@
                 0 4px 10px rgba(0, 0, 0, .12);
         }
 
+<<<<<<< HEAD
+=======
+        igx-input-group {
+            flex: 0 0 200px;
+        }
+
+>>>>>>> refactor(filtering-row): update the styles of the filtering row
         igx-prefix:focus {
             color: igx-color(map-get($theme, 'palette'), 'secondary');
         }
