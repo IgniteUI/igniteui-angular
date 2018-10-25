@@ -2698,7 +2698,9 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(cell.value).toBe('Changed product');
             }));
+        });
 
+        fdescribe('Row Editing - Grouping',  () => {
             it('Hide/show row editing dialog with group collapsing/expanding', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
                 const grid = fix.componentInstance.instance;

@@ -184,8 +184,8 @@ export class IgxGridRowComponent implements DoCheck {
 
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-            return (editableRow && editableRow.rowID === this.rowID) || false;
+            const editRowState = this.gridAPI.get_edit_row_state(this.gridID);
+            return (editRowState && editRowState.rowID === this.rowID) || false;
         } else {
             return false;
         }

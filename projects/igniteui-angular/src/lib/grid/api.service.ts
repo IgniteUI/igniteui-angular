@@ -89,7 +89,7 @@ export class IgxGridAPIService {
     public set_cell_inEditMode(gridId: string, cell) {
         const grid = this.get(gridId);
         if (grid.rowEditable) {
-            const currentEditRow = this.get_row_inEditMode(gridId);
+            const currentEditRow = this.get_edit_row_state(gridId);
             if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
                 grid.endRowEdit(true);
                 grid.startRowEdit(cell.row);
@@ -98,7 +98,7 @@ export class IgxGridAPIService {
                 grid.startRowEdit(cell.row);
             }
             const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
-            this.set_row_inEditMode(gridId, rowState);
+            this.set_edit_row_state(gridId, rowState);
         }
 
         if (!this.get_cell_inEditMode(gridId)) {
@@ -149,13 +149,13 @@ export class IgxGridAPIService {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_row_inEditMode(gridId) {
+    public get_edit_row_state(gridId) {
         const editRow = this.editRowState.get(gridId);
         return editRow ? editRow : null;
 
     }
 
-    public set_row_inEditMode(gridId, row: { rowID: any, rowIndex: number }) {
+    public set_edit_row_state(gridId, row: { rowID: any, rowIndex: number }) {
         if (!row) {
             this.editRowState.delete(gridId);
         } else {
@@ -385,24 +385,52 @@ export class IgxGridAPIService {
             DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
     }
 
+    public groupBy_is_row_in_group(id: string, groupRow: IGroupByRecord, rowID): boolean {
+        const grid = this.get(id);
+        let rowInGroup = false;
+        groupRow.records.forEach(row => {
+            if (grid.primaryKey ? row[grid.primaryKey] === rowID : row === rowID) {
+                rowInGroup = true;
+            }
+        });
+        return rowInGroup;
+    }
+
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
         const grid = this.get(id);
         const expansionState = grid.groupingExpansionState;
-        let expanded: boolean;
+        let isEditRowVisible: boolean;
+        let isEditRowInGroup = false;
+        if (grid.rowEditable) {
+            const rowState = this.get_edit_row_state(id);
 
+            // Toggle only row editing overlays that are inside current expanded/collapsed group.
+            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(id, groupRow, this.get_edit_row_state(id).rowID) : false;
+        }
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
         if (state) {
-            state.expanded = expanded = !state.expanded;
+            state.expanded = !state.expanded;
+            if (isEditRowInGroup) {
+                isEditRowVisible = state.expanded;
+            }
         } else {
-            expanded = !grid.groupsExpanded;
             expansionState.push({
-                expanded,
+                expanded: !grid.groupsExpanded,
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
+            if (isEditRowInGroup) {
+                isEditRowVisible = false;
+            }
         }
         this.get(id).groupingExpansionState = expansionState;
         if (grid.rowEditable) {
-            grid.toggleRowEditingOverlay(expanded);
+            grid.toggleRowEditingOverlay(isEditRowVisible);
+
+            // If row overlay is opened in a group and another group is expanded/collapsed,
+            // then the row in edit will move down/up and therefore the row edit overlay should move down/up.
+            if (grid.rowInEditMode && !grid.rowEditingOverlay.collapsed) {
+                grid.repositionRowEditingOverlay(grid.rowInEditMode);
+            }
         }
     }
 

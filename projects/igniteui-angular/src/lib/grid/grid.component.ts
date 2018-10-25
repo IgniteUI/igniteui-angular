@@ -1545,8 +1545,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public get rowInEditMode(): IgxGridRowComponent {
-        const editRowId = this.gridAPI.get_row_inEditMode(this.id);
-        return editRowId !== null ? this.rowList.find(e => e.rowID === editRowId.rowID) : null;
+        const editRowState = this.gridAPI.get_edit_row_state(this.id);
+        return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.rowID) : null;
     }
 
     /**
@@ -4842,7 +4842,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             return;
         }
         if (!row) {
-            this.hideRowEditingOverlay();
+            this.toggleRowEditingOverlay(false);
         } else {
             this.repositionRowEditingOverlay(row);
         }
@@ -4863,7 +4863,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public closeRowEditingOverlay(commit?: boolean) {
-        this.gridAPI.set_row_inEditMode(this.id, null);
+        this.gridAPI.set_edit_row_state(this.id, null);
         this.transactions.endPending(commit);
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
@@ -4874,22 +4874,18 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     public toggleRowEditingOverlay(show) {
+        const rowStyle = this.rowEditingOverlay.element.style;
         if (show) {
-            this.showRowEditingOverlay();
+            rowStyle.display = 'block';
         } else {
-            this.hideRowEditingOverlay();
+            rowStyle.display = 'none';
         }
     }
 
-    private showRowEditingOverlay() {
-        this.rowEditingOverlay.element.style.display = 'block';
-    }
-
-    private hideRowEditingOverlay() {
-        this.rowEditingOverlay.element.style.display = 'none';
-    }
-
-    private repositionRowEditingOverlay(row: IgxGridRowComponent) {
+    /**
+     * @hidden
+     */
+    public repositionRowEditingOverlay(row: IgxGridRowComponent) {
         this.configureRowEditingOverlay(row);
         if (!this.rowEditingOverlay.collapsed) {
             this.rowEditingOverlay.reposition();
@@ -4900,7 +4896,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
-        this.showRowEditingOverlay();
+        this.toggleRowEditingOverlay(true);
     }
 
     /**
@@ -4918,7 +4914,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxGridRowComponent) {
-        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        const rowInEdit = row ? row : this.gridAPI.get_edit_row_state(this.id);
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
@@ -4962,7 +4958,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed) {
             return;
         }
-        const row = this.gridAPI.get_row_inEditMode(this.id);
+        const row = this.gridAPI.get_edit_row_state(this.id);
         const rowObject = row ? this.getRowByKey(row.rowID) : null;
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         if (cellInEdit) {
