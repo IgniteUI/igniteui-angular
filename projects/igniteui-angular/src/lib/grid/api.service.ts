@@ -388,19 +388,22 @@ export class IgxGridAPIService {
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
         const grid = this.get(id);
         const expansionState = grid.groupingExpansionState;
+        let expanded: boolean;
 
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
         if (state) {
-            state.expanded = !state.expanded;
-            grid.toggleRowEditingOverlay(state.expanded);
+            state.expanded = expanded = !state.expanded;
         } else {
+            expanded = !grid.groupsExpanded;
             expansionState.push({
-                expanded: !grid.groupsExpanded,
+                expanded,
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
-            grid.toggleRowEditingOverlay(!grid.groupsExpanded);
         }
         this.get(id).groupingExpansionState = expansionState;
+        if (grid.rowEditable) {
+            grid.toggleRowEditingOverlay(expanded);
+        }
     }
 
     public filter(id: string, fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
