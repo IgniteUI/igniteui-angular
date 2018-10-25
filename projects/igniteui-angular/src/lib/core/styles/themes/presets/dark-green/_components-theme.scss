@@ -169,13 +169,11 @@ $grid-dark-green-theme: igx-grid-theme(
     $header-background: igx-color($dark-green-palette, 'grays', 800),
     $header-text-color: $dark-green-white-70,
     $header-border-color: $dark-green-white-40,
-    $row-indentation-background: #000,
     $row-selected-background: #333,
     $row-selected-text-color: text-contrast(#333),
     $row-hover-background: #222,
     $row-hover-text-color: text-contrast(#222),
     $row-border-color: #333,
-    $row-content-focus-background: rgba(106, 227, 104, .2),
     $cell-selected-background: igx-color($dark-green-palette, 'primary'),
     $cell-selected-text-color: igx-color($dark-green-palette, 'grays', 900),
 
