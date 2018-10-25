@@ -267,7 +267,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(paginator).toBeNull();
     });
 
-    fit('should change not leave prev page data after scorlling', (async () => {
+    it('should change not leave prev page data after scorlling', (async () => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.componentInstance.perPage = 5;
         fix.componentInstance.grid.height = "300px";
