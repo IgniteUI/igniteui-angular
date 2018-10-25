@@ -6,7 +6,7 @@ import { IgxRowComponent } from '../row.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-row',
-    templateUrl: './row.component.html',
+    templateUrl: './grid-row.component.html',
     providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent)}]
 })
 export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
