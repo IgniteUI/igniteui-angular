@@ -42,6 +42,10 @@ export class GridAutoGenerateComponent extends BasicGridComponent {
 export class GridWithSizeComponent extends GridAutoGenerateComponent {
     public width = '100%';
     public height = '100%';
+
+    public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
 }
 
 @Component({

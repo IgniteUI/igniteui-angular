@@ -8,6 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Grid Paging', () => {
     configureTestSuite();
@@ -265,6 +266,24 @@ describe('IgxGrid - Grid Paging', () => {
         paginator = grid.nativeElement.querySelector('.igx-paginator');
         expect(paginator).toBeNull();
     });
+
+    fit('should change not leave prev page data after scorlling', (async () => {
+        const fix = TestBed.createComponent(PagingComponent);
+        fix.componentInstance.perPage = 5;
+        fix.componentInstance.grid.height = "300px";
+        fix.componentInstance.data = fix.componentInstance.data.slice(0, 7);
+        fix.detectChanges();
+
+        fix.componentInstance.scrollTop(25);
+        await wait(100);
+        fix.componentInstance.grid.paginate(1);
+        fix.detectChanges();
+        await wait(100);
+        fix.componentInstance.grid.paginate(0);
+        fix.detectChanges();
+        await wait(100);
+        expect(fix.componentInstance.grid.rowList.first._rowData).toEqual(fix.componentInstance.grid.data[0]);
+    }));
 
     it('should work correct with filtering', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
