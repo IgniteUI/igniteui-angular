@@ -72,7 +72,8 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxGridFilterExpressionComponent,
         IgxGridTransactionPipe,
         IgxDatePipeComponent,
-        IgxDecimalPipeComponent
+        IgxDecimalPipeComponent,
+        IgxRowComponent
 
     ],
     entryComponents: [
@@ -95,7 +96,29 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
-        IgxColumnMovingDropDirective
+        IgxColumnMovingDropDirective,
+        IgxRowComponent,
+        IgxGridFilterConditionPipe,
+        IgxGridTransactionPipe,
+        IgxButtonModule,
+        IgxDatePickerModule,
+        IgxIconModule,
+        IgxRippleModule,
+        IgxInputGroupModule,
+        IgxToggleModule,
+        IgxForOfModule,
+        IgxTemplateOutletModule,
+        IgxFocusModule,
+        IgxTextHighlightModule,
+        IgxTextSelectionModule,
+        IgxCheckboxModule,
+        IgxBadgeModule,
+        IgxChipsModule,
+        IgxDragDropModule,
+        IgxColumnHidingModule,
+        IgxDropDownModule,
+        IgxButtonGroupModule,
+        IgxColumnPinningModule
     ],
     imports: [
         CommonModule,

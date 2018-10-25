@@ -24,6 +24,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     protected editCellState: Map<string, any> = new Map<string, any>();
     protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
+    protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
     public register(grid: T) {
         this.state.set(grid.id, grid);
@@ -42,6 +43,31 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.editRowState.delete(id);
+    }
+
+    public reset(oldId: string, newId: string) {
+        const destroy = this.destroyMap.get(oldId);
+        const summary = this.summaryCacheMap.get(oldId);
+        const editCellState = this.editCellState.get(oldId);
+        const grid = this.get(oldId);
+
+        this.unset(oldId);
+
+        if (grid) {
+            this.state.set(newId, grid);
+        }
+
+        if (destroy) {
+            this.destroyMap.set(newId, destroy);
+        }
+
+        if (summary) {
+            this.summaryCacheMap.set(newId, summary);
+        }
+
+        if (editCellState) {
+            this.editCellState.set(newId, editCellState);
+        }
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {

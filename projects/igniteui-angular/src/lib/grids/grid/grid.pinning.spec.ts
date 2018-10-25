@@ -8,7 +8,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-base.component';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand } from '../../../public_api';
 import { first } from 'rxjs/operators';
 import { IgxGridRowComponent } from './grid-row.component';

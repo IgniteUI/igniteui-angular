@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -21,6 +21,8 @@ import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
+
+let NEXT_ID = 0;
 
 export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     groupRow: IgxGridGroupByRowComponent;
@@ -50,7 +52,7 @@ export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     templateUrl: './grid.component.html'
 })
 export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, AfterContentInit {
-
+    private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden
      */
@@ -72,6 +74,26 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
      */
     protected groupingDiffer;
     private _hideGroupedColumns = false;
+
+    /**
+     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public get id(): string {
+        return this._id;
+    }
+    public set id(value: string) {
+        if (this._id !== value) {
+            const oldId = this._id;
+            this._id = value;
+            this._gridAPI.reset(oldId, this._id);
+        }
+    }
 
     private _gridAPI: IgxGridAPIService;
 

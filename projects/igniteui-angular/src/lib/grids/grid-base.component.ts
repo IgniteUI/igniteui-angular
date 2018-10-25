@@ -65,7 +65,6 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
 
-let NEXT_ID = 0;
 const MINIMUM_COLUMN_WIDTH = 136;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
@@ -174,16 +173,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     @Input()
     public autoGenerate = false;
 
-    /**
-     * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
-     * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-grid-${NEXT_ID++}`;
+    public abstract id: string;
 
     /**
      * An @Input property that sets a custom template when the `IgxGridComponent` is empty.

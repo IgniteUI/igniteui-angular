@@ -9,7 +9,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridTransaction } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from '../index';
+import { IgxGridModule } from './index';
 import { IgxNumberFilteringOperand, IgxTransactionService } from '../../../public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
@@ -28,7 +28,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid Component Tests', () => {
+fdescribe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CLASS = '.igx-grid__td';

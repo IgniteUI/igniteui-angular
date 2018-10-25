@@ -9,7 +9,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule, IgxGridCellComponent } from '../index';
+import { IgxGridModule, IgxGridCellComponent } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
