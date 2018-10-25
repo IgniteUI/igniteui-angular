@@ -625,6 +625,41 @@ describe('IgxGrid - GroupBy', () => {
         expect(gRow.expanded).toBe(true);
     }));
 
+    it(`focus should stays over the group row when expand/collapse
+        with ArrowRight/ArrowLeft keys and grid is scrolled to bottom`, (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '600px';
+        fix.componentInstance.height = '500px';
+        await wait(30);
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fix.detectChanges();
+
+        const groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
+        let lastGroupRow = groupRows[groupRows.length - 1];
+        const lastGroupRowIndex = parseInt(lastGroupRow.dataset.rowindex, 10);
+        lastGroupRow.dispatchEvent(new FocusEvent('focus'));
+        await wait(30);
+        fix.detectChanges();
+
+        expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
+        lastGroupRow.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowLeft', key: 'ArrowLeft'}));
+
+        await wait(100);
+        fix.detectChanges();
+        lastGroupRow =  grid.nativeElement.querySelector(`igx-grid-groupby-row[data-rowindex="${lastGroupRowIndex}"]`);
+        expect(lastGroupRow).toBeDefined();
+        expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
+        expect(lastGroupRow.getAttribute('aria-expanded')).toBe('false');
+
+    }));
+
     xit('should allow keyboard navigation through group rows.', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

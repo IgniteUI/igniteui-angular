@@ -358,10 +358,26 @@ export class IgxGridNavigationService {
         }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
-        if (!rowElement.nextElementSibling) {
+        if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
             return;
         }
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex + 1);
+        if (!rowElement.nextElementSibling) {
+            this.grid.verticalScrollContainer.addScrollTop(rowHeight);
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    if (rowElement.tagName.toLowerCase() === 'igx-grid-row') {
+                        rowElement = this.grid.nativeElement.querySelector(
+                            `igx-grid-row[data-rowindex="${currentRowIndex}"]`);
+                    } else {
+                        rowElement = rowElement = this.grid.nativeElement.querySelector(
+                            `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
+                    }
+                    this.focusNextElement(rowElement, visibleColumnIndex);
+                });
+                return;
+        }
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : null;
         const targetEndTopOffset = rowElement.nextElementSibling.offsetTop + rowHeight +
             parseInt(this.verticalDisplayContainerElement.style.top, 10);
