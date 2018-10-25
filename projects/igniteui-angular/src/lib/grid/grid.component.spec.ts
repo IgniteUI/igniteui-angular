@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
-    OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+    OnInit, ViewChild, ViewChildren, QueryList, TemplateRef } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -13,7 +13,7 @@ import { IgxNumberFilteringOperand, IgxTransactionService } from '../../public_a
 import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridTemplateStrings } from '../test-utils/template-strings.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { SampleTestData, DataParent } from '../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import {
@@ -928,7 +928,8 @@ describe('IgxGrid Component Tests', () => {
                     IgxGridRowEditingWithoutEditableColumnsComponent,
                     IgxGridWithEditingAndFeaturesComponent,
                     IgxGridCustomOverlayComponent,
-                    IgxGridRowEditingTransactionComponent
+                    IgxGridRowEditingTransactionComponent,
+                    IgxGridRowEditingWithFeaturesComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -2697,6 +2698,34 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(cell.value).toBe('Changed product');
             }));
+
+            it('Hide/show row editing dialog with group collapsing/expanding', fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
+                const grid = fix.componentInstance.instance;
+                grid.primaryKey = 'ID';
+                fix.detectChanges();
+                grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+                tick();
+                fix.detectChanges();
+                const cell = grid.getCellByColumn(1, 'ProductName');
+                cell.inEditMode = true;
+                tick();
+                fix.detectChanges();
+                const groupRows = grid.groupsRowList.toArray();
+
+                 // toggle group row - collapse
+                expect(groupRows[0].expanded).toEqual(true);
+                grid.toggleGroup(groupRows[0].groupRow);
+                tick();
+                fix.detectChanges();
+                expect(groupRows[0].expanded).toEqual(false);
+                expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                grid.toggleGroup(groupRows[0].groupRow);
+                tick();
+                fix.detectChanges();
+                expect(groupRows[0].expanded).toEqual(true);
+                expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+            }));
         });
     });
 });
@@ -3177,4 +3206,48 @@ export class IgxGridRowEditingTransactionComponent {
     @ViewChild('grid', { read: IgxGridComponent }) public grid: IgxGridComponent;
 
     public paging = false;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="enableRowEditing">
+        </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
+    `
+})
+export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
+    public width = '800px';
+    public height = null;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef })
+    public dropAreaTemplate: TemplateRef<any>;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = true;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
 }

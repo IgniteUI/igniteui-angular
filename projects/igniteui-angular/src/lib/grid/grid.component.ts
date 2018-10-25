@@ -4870,6 +4870,17 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.rowEditingOverlay.close();
     }
 
+    /**
+     * @hidden
+     */
+    public toggleRowEditingOverlay(show) {
+        if (show) {
+            this.showRowEditingOverlay();
+        } else {
+            this.hideRowEditingOverlay();
+        }
+    }
+
     private showRowEditingOverlay() {
         this.rowEditingOverlay.element.style.display = 'block';
     }

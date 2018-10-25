@@ -392,11 +392,13 @@ export class IgxGridAPIService {
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
         if (state) {
             state.expanded = !state.expanded;
+            grid.toggleRowEditingOverlay(state.expanded);
         } else {
             expansionState.push({
                 expanded: !grid.groupsExpanded,
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
+            grid.toggleRowEditingOverlay(!grid.groupsExpanded);
         }
         this.get(id).groupingExpansionState = expansionState;
     }
