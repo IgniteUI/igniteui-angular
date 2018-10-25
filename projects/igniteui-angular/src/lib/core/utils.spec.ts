@@ -1,4 +1,4 @@
-import { cloneObject, mergeObjects, isObject, isDate } from './utils';
+import { cloneValue, mergeObjects, isObject, isDate } from './utils';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 describe('Utils', () => {
@@ -45,39 +45,39 @@ describe('Utils', () => {
         }
     };
 
-    describe('Utils - cloneObject() unit tests', () => {
+    describe('Utils - cloneValue() unit tests', () => {
         it('Should return primitive values', () => {
             let input: any = 10;
             let expected: any = 10;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = 0;
             expected = 0;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = Infinity;
             expected = Infinity;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = '';
             expected = '';
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = true;
             expected = true;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = false;
             expected = false;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = null;
             expected = null;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
 
             input = undefined;
             expected = undefined;
-            expect(cloneObject(input)).toBe(expected);
+            expect(cloneValue(input)).toBe(expected);
         });
 
         it('Should not clone Map or Set', () => {
@@ -85,20 +85,20 @@ describe('Utils', () => {
             mapInput.set('a', 0);
             mapInput.set('b', 1);
             mapInput.set('c', 2);
-            const mapClone = cloneObject(mapInput);
+            const mapClone = cloneValue(mapInput);
             expect(mapInput).toBe(mapClone);
 
             const setInput: Set<Number> = new Set();
             setInput.add(0);
             setInput.add(1);
             setInput.add(2);
-            const setClone = cloneObject(setInput);
+            const setClone = cloneValue(setInput);
             expect(setInput).toBe(setClone);
         });
 
         it('Should clone correctly dates', () => {
             const input: Date = new Date(0);
-            const clone: Date = cloneObject(input);
+            const clone: Date = cloneValue(input);
             expect(clone).not.toBe(input);
             expect(clone.getTime()).toBe(input.getTime());
 
@@ -109,7 +109,7 @@ describe('Utils', () => {
 
         it('Should create shallow copy of array', () => {
             const input: { Number: any, String: any, Boolean: any, Date: any }[] = SampleTestData.differentTypesData();
-            const clone: { Number: any, String: any, Boolean: any, Date: any }[] = cloneObject(input);
+            const clone: { Number: any, String: any, Boolean: any, Date: any }[] = cloneValue(input);
             expect(clone).not.toBe(input);
             expect(clone.length).toBe(input.length);
             expect(clone).toEqual(input);
@@ -122,7 +122,7 @@ describe('Utils', () => {
 
         it('Should correctly deep clone objects', () => {
             const input = complexObject;
-            const clone = cloneObject(input);
+            const clone = cloneValue(input);
             expect(input).toEqual(clone);
             expect(input.Object10).toEqual(clone.Object10);
             expect(input.Object11).toEqual(clone.Object11);
@@ -156,7 +156,7 @@ describe('Utils', () => {
             const objectWithSpecialValues = {};
             objectWithSpecialValues['Null'] = null;
             objectWithSpecialValues['Undefined'] = undefined;
-            const clone = cloneObject(objectWithSpecialValues);
+            const clone = cloneValue(objectWithSpecialValues);
 
             expect(clone.Null).toBeNull();
             expect(clone.undefined).toBeUndefined();
@@ -225,16 +225,15 @@ describe('Utils', () => {
             expect(result).toBe(obj1);
         });
 
-        it('Should correctly merge into null object', () => {
+        it('Should throw when try to merge into null object', () => {
             const obj1 = null;
             const obj2 = {
                 Test: 'Test',
                 Date: new Date(0)
             };
 
-            const result = mergeObjects(obj1, obj2);
-            expect(result).toEqual(obj2);
-            expect(result).not.toBe(obj2);
+            const errorFunction = function () { mergeObjects(obj1, obj2); };
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
         });
 
         it('Should correctly merge from null object', () => {
@@ -249,16 +248,15 @@ describe('Utils', () => {
             expect(result).toBe(obj1);
         });
 
-        it('Should correctly merge into undefined object', () => {
+        it('Should throw when try to merge into undefined object', () => {
             const obj1 = undefined;
             const obj2 = {
                 Test: 'Test',
                 Date: new Date(0)
             };
 
-            const result = mergeObjects(obj1, obj2);
-            expect(result).toEqual(obj2);
-            expect(result).not.toBe(obj2);
+            const errorFunction = function () { mergeObjects(obj1, obj2); };
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
         });
 
         it('Should correctly merge from undefined object', () => {
@@ -277,32 +275,31 @@ describe('Utils', () => {
             let obj1: any = 'Some string';
             const obj2 = {};
             const errorFunction = function () { mergeObjects(obj1, obj2); };
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
 
             obj1 = 100;
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
 
             obj1 = true;
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
 
             obj1 = new Date(0);
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+            expect(errorFunction).toThrowError(`Cannot merge into ${obj1}. First param must be an object.`);
         });
 
-        it('Should throw error when try to merge from non object type', () => {
+        it('Should return first object when try to merge from non object type', () => {
             const obj1 = {};
             let obj2: any = 'Some string';
-            const errorFunction = function () { mergeObjects(obj1, obj2); };
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+            expect(mergeObjects(obj1, obj2)).toBe(obj1);
 
             obj2 = 100;
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+            expect(mergeObjects(obj1, obj2)).toBe(obj1);
 
             obj2 = true;
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+            expect(mergeObjects(obj1, obj2)).toBe(obj1);
 
             obj2 = new Date(0);
-            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+            expect(mergeObjects(obj1, obj2)).toBe(obj1);
         });
     });
 
@@ -352,7 +349,7 @@ describe('Utils', () => {
             expect(isDate(variable)).toBeTruthy();
 
             variable = new Date('wrong date parameter');
-            expect(isDate(variable)).toBeFalsy();
+            expect(isDate(variable)).toBeTruthy();
 
             variable = 10;
             expect(isDate(variable)).toBeFalsy();

@@ -1,6 +1,6 @@
 import { TransactionService, Transaction, State } from './transaction';
 import { EventEmitter, Injectable } from '@angular/core';
-import { isObject, mergeObjects, cloneObject } from '../../core/utils';
+import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxBaseTransactionService implements TransactionService {
@@ -83,7 +83,7 @@ export class IgxBaseTransactionService implements TransactionService {
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: cloneObject(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
             states.set(transaction.id, state);
         }
     }

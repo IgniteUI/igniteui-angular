@@ -8,7 +8,7 @@ export function cloneArray(array, deep?: boolean) {
     }
     let i = array.length;
     while (i--) {
-        arr[i] = deep ? cloneObject(array[i]) : array[i];
+        arr[i] = deep ? cloneValue(array[i]) : array[i];
     }
     return arr;
 }
@@ -20,25 +20,17 @@ export function cloneArray(array, deep?: boolean) {
  * @returns Obj1 with merged cloned keys from Obj2
  * @hidden
  */
-export function mergeObjects(obj1: {}, obj2: {}) {
-    if (obj1 === null || obj1 === undefined) {
-        return cloneObject(obj2);
-    }
-
-    if (obj2 === null || obj2 === undefined) {
-        return obj1;
-    }
-
+export function mergeObjects(obj1: {}, obj2: {}): any {
     if (!isObject(obj1)) {
-        throw new Error(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+        throw new Error(`Cannot merge into ${obj1}. First param must be an object.`);
     }
 
     if (!isObject(obj2)) {
-        throw new Error(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+        return obj1;
     }
 
     for (const key of Object.keys(obj2)) {
-        obj1[key] = cloneObject(obj2[key]);
+        obj1[key] = cloneValue(obj2[key]);
     }
 
     return obj1;
@@ -52,7 +44,7 @@ export function mergeObjects(obj1: {}, obj2: {}) {
  * @returns Deep copy of provided value
  *@hidden
  */
-export function cloneObject(value: any): any {
+export function cloneValue(value: any): any {
     if (isDate(value)) {
         return new Date(value.getTime());
     }
@@ -68,7 +60,7 @@ export function cloneObject(value: any): any {
         const result = {};
 
         for (const key of Object.keys(value)) {
-            result[key] = cloneObject(value[key]);
+            result[key] = cloneValue(value[key]);
         }
         return result;
     }
