@@ -1,7 +1,9 @@
-import { Directive, NgModule, Input, QueryList, Output, EventEmitter, AfterContentInit, ContentChildren } from '@angular/core';
+import { Directive, NgModule, Input, QueryList, Output, EventEmitter, AfterContentInit, ContentChildren, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 const noop = () => { };
 let nextId = 0;
@@ -25,7 +27,7 @@ let nextId = 0;
     selector: 'igx-radio-group, [igxRadioGroup]',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioGroupDirective, multi: true }]
 })
-export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor {
+export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor, OnDestroy {
     /**
      * Returns reference to the child radio buttons.
      * ```typescript
@@ -186,6 +188,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      *@hidden
      */
     private _required = false;
+    /**
+     *@hidden
+     */
+    private destroy$ = new Subject<boolean>();
 
     ngAfterContentInit() {
         // The initial value can possibly be set by NgModel and it is possible that
@@ -225,6 +231,14 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     /**
      *@hidden
      */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
+
+    /**
+     *@hidden
+     */
     private _initRadioButtons() {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
@@ -238,7 +252,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
                     this._selected = button;
                 }
 
-                button.change.subscribe((ev) => this._selectedRadioButtonChanged(ev));
+                button.change.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._selectedRadioButtonChanged(ev));
             });
         }
     }

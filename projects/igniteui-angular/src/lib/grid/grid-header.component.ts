@@ -13,7 +13,8 @@ import {
     OnInit,
     ViewChild,
     QueryList,
-    ViewChildren
+    ViewChildren,
+    OnDestroy
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -32,7 +33,7 @@ import { isFirefox } from '../core/utils';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
+export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, OnDestroy {
 
     @Input()
     public column: IgxColumnComponent;
@@ -165,6 +166,16 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
                 this.resizeArea.nativeElement.addEventListener('mouseover', this.onResizeAreaMouseOver.bind(this));
                 this.resizeArea.nativeElement.addEventListener('mousedown', this.onResizeAreaMouseDown.bind(this));
                 this.resizeArea.nativeElement.addEventListener('dblclick', this.onResizeAreaDblClick.bind(this));
+            });
+        }
+    }
+
+    ngOnDestroy() {
+        if (!this.column.columnGroup) {
+            this.zone.runOutsideAngular(() => {
+                this.resizeArea.nativeElement.removeEventListener('mouseover', this.onResizeAreaMouseOver);
+                this.resizeArea.nativeElement.removeEventListener('mousedown', this.onResizeAreaMouseDown);
+                this.resizeArea.nativeElement.removeEventListener('dblclick', this.onResizeAreaDblClick);
             });
         }
     }
