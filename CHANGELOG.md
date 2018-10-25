@@ -3,6 +3,20 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
+    
+    Setting display density on a component level:
+    ```typescript
+    @Component({
+    ...
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }]
+    })
+    ```
+- `igx-input-group`
+    - The `igx-input-group` control's display density can be explicitly set by using the `displayDensity` input.
+    ```html
+    <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
+    ```
 - `igx-drop-down`:
     - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
 - `igxIcon`:
