@@ -5,7 +5,8 @@ import {
     EventEmitter,
     Input,
     NgModule,
-    Output
+    Output,
+    OnDestroy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
@@ -13,13 +14,15 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { ColumnChooserBase } from './column-chooser-base';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
     preserveWhitespaces: false,
     selector: 'igx-column-hiding',
     templateUrl: './column-hiding.component.html'
 })
-export class IgxColumnHidingComponent extends ColumnChooserBase {
+export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDestroy {
     /**
      * Returns a boolean indicating whether the `HIDE ALL` button is disabled.
      * ```html
@@ -118,6 +121,8 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
     private get hidableColumns() {
         return this.columnItems.filter((col) => !col.disabled);
     }
+
+    private destroy$ = new Subject<boolean>();
     /**
      *@hidden
      */
@@ -126,7 +131,7 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
         item.container = container;
         item.column = column;
         if (!item.column.columnGroup) {
-            item.valueChanged.subscribe((args) => {
+            item.valueChanged.pipe(takeUntil(this.destroy$)).subscribe((args) => {
                 this.onVisibilityChanged({ column: item.column, newValue: args.newValue });
             });
         }
@@ -161,6 +166,14 @@ export class IgxColumnHidingComponent extends ColumnChooserBase {
      */
     public onVisibilityChanged(args: IColumnVisibilityChangedEventArgs) {
         this.onColumnVisibilityChanged.emit(args);
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 }
 /**
