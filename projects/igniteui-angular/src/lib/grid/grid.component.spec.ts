@@ -2584,7 +2584,7 @@ describe('IgxGrid Component Tests', () => {
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
-                expect(state[2].newValue['ProductName']).toBeUndefined();
+                expect(state[2].newValue).toBeNull();
 
                 trans.undo();
                 tick();
@@ -2604,7 +2604,7 @@ describe('IgxGrid Component Tests', () => {
                 state = trans.aggregatedState(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
-                expect(state[2].newValue['ProductName']).toBeUndefined();
+                expect(state[2].newValue).toBeNull();
                 expect(row.classList).toContain('igx-grid__tr--deleted');
 
                 trans.commit(grid.data);
