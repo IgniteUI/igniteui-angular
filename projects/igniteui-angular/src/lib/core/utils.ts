@@ -22,7 +22,7 @@ export function cloneArray(array, deep?: boolean) {
  */
 export function mergeObjects(obj1: {}, obj2: {}) {
     if (obj1 === null || obj1 === undefined) {
-        return this.cloneObject(obj2);
+        return cloneObject(obj2);
     }
 
     if (obj2 === null || obj2 === undefined) {
@@ -38,7 +38,7 @@ export function mergeObjects(obj1: {}, obj2: {}) {
     }
 
     for (const key of Object.keys(obj2)) {
-        obj1[key] = this.cloneObject(obj2[key]);
+        obj1[key] = cloneObject(obj2[key]);
     }
 
     return obj1;
@@ -53,7 +53,7 @@ export function mergeObjects(obj1: {}, obj2: {}) {
  *@hidden
  */
 export function cloneObject(value: any): any {
-    if (this.isDate(value)) {
+    if (isDate(value)) {
         return new Date(value.getTime());
     }
     if (Array.isArray(value)) {
@@ -64,11 +64,11 @@ export function cloneObject(value: any): any {
         return value;
     }
 
-    if (this.isObject(value)) {
+    if (isObject(value)) {
         const result = {};
 
         for (const key of Object.keys(value)) {
-            result[key] = this.cloneObject(value[key]);
+            result[key] = cloneObject(value[key]);
         }
         return result;
     }
