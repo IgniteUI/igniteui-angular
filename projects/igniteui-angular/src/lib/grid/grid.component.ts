@@ -147,11 +147,6 @@ export interface IColumnMovingEndEventArgs {
     cancel: boolean;
 }
 
-export interface IDensityChangedEventArgs {
-    oldDensity: DisplayDensity | string;
-    newDensity: DisplayDensity | string;
-}
-
 export interface IFocusChangeEventArgs {
     cell: IgxGridCellComponent;
     groupRow: IgxGridGroupByRowComponent;
@@ -564,29 +559,22 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set displayDensity(val: DisplayDensity | string) {
-        const currentDisplayDensity = this._displayDensity;
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-
-        if (currentDisplayDensity && currentDisplayDensity !== this._displayDensity) {
-            const densityChangedArgs: IDensityChangedEventArgs = {
-                oldDensity: currentDisplayDensity,
-                newDensity: this._displayDensity
-            };
-
-            this.onDensityChanged.emit(densityChangedArgs);
-        }
+public set displayDensity(val: DisplayDensity | string) {
+    const currentDisplayDensity = this._displayDensity;
+    switch (val) {
+        case 'compact':
+            this._displayDensity = DisplayDensity.compact;
+            break;
+        case 'cosy':
+            this._displayDensity = DisplayDensity.cosy;
+            break;
+        case 'comfortable':
+        default:
+            this._displayDensity = DisplayDensity.comfortable;
     }
+
+    this.onDensityChanged.emit();
+}
 
     /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
@@ -1333,7 +1321,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     @Output()
-    protected onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
+    protected onDensityChanged = new EventEmitter<any>();
 
     /**
      * @hidden
