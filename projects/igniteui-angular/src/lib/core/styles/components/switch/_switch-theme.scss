@@ -65,8 +65,8 @@
     $light-theme: (
         name: $name,
 
-        thumb-on-color: igx-color($palette, 'secondary', 200),
-        track-on-color: rgba(igx-color($palette, 'secondary', 200), .5),
+        thumb-on-color: igx-color($palette, 'secondary', 500),
+        track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
 
         thumb-off-color: #bdbdbd,
         track-off-color: rgba(255, 255, 255, .3),
