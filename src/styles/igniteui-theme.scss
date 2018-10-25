@@ -40,8 +40,32 @@ $exclude: (
 
 // Generating a theme
 @include igx-core();
-@include igx-theme($default-palette, $preset: $dark-green-theme, $exclude: $exclude, $legacy-support: true);
+@include igx-theme(
+    $default-palette,
+    $preset: $dark-green-theme
+);
 
+@mixin scrollbar-love {
+    $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
+    $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
+
+    @if luminance($igx-background-color) < .5 {
+        $scrollbar-track: darken($igx-background-color, 8%);
+        $scrollbar-thumb: lighten($igx-background-color, 20%);
+    }
+
+    ::-webkit-scrollbar {
+        width: 16px;
+        height: 16px;
+        background-color: $scrollbar-track;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-thumb;
+    }
+}
+
+@include scrollbar-love();
 
 /// Typography samples
 // $button-type-style: igx-type-style(
@@ -58,31 +82,31 @@ $exclude: (
 // @include igx-typography($type-scale: $my-type-scale);
 
 // Button Themes
-$blue-green: #2ec4b6;
-$bright-yellow: #ff9f1c;
-$smoky-black: #0c120c;
-$boston-red: #d00000;
+// $blue-green: #2ec4b6;
+// $bright-yellow: #ff9f1c;
+// $smoky-black: #0c120c;
+// $boston-red: #d00000;
 
-$red-sox-button: igx-button-theme(
-    $preset: $dark-green-theme,
-    $flat-background: $boston-red,
-    $raised-background: $boston-red,
-    $fab-background: $boston-red,
-    $icon-background: $boston-red
-);
+// $red-sox-button: igx-button-theme(
+//     $preset: $dark-green-theme,
+//     $flat-background: $boston-red,
+//     $raised-background: $boston-red,
+//     $fab-background: $boston-red,
+//     $icon-background: $boston-red
+// );
 
-$smoky-black-button: igx-button-theme(
-    $preset: $dark-green-theme,
-    $flat-background: $smoky-black,
-    $raised-background: $smoky-black,
-    $fab-background: $smoky-black,
-    $icon-background: $smoky-black
-);
+// $smoky-black-button: igx-button-theme(
+//     $preset: $dark-green-theme,
+//     $flat-background: $smoky-black,
+//     $raised-background: $smoky-black,
+//     $fab-background: $smoky-black,
+//     $icon-background: $smoky-black
+// );
 
-.red-sox-button {
-    @include igx-button($red-sox-button);
-}
+// .red-sox-button {
+//     @include igx-button($red-sox-button);
+// }
 
-.smoky-black-button {
-    @include igx-button($smoky-black-button);
-}
+// .smoky-black-button {
+//     @include igx-button($smoky-black-button);
+// }
