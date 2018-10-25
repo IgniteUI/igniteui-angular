@@ -8,6 +8,7 @@ import { IFilteringExpression } from '../../data-operations/filtering-expression
 import { cloneArray } from '../../core/utils';
 import { ExpressionUI } from './grid-filtering-cell.component';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -42,7 +43,7 @@ export class IgxFilteringService implements OnDestroy {
     public subscribeEvents(){
         if (!this.isColumnResizedSubscribed) {
             this.isColumnResizedSubscribed = true;
-            this.grid.onColumnResized.subscribe((eventArgs: IColumnResizeEventArgs) => {
+            this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
                 const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
                 filterCell.visibleExpressionsList = cloneArray(filterCell.expressionsList);
                 filterCell.updateFilterCellArea();
