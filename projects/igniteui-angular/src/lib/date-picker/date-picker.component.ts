@@ -662,7 +662,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, OnInit, OnD
             this.calendar.viewDate = this.value;
         }
         this.calendar.weekStart = this.weekStart;
-        this.calendar.onSelection.subscribe((ev) => this.handleSelection(ev));
+        this.calendar.onSelection.pipe(takeUntil(this.destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
     }
 
     // Focus the dialog element, after its appearence into DOM.
