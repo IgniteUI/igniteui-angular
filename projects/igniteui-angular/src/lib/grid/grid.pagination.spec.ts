@@ -270,7 +270,7 @@ describe('IgxGrid - Grid Paging', () => {
     it('should change not leave prev page data after scorlling', (async () => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.componentInstance.perPage = 5;
-        fix.componentInstance.grid.height = "300px";
+        fix.componentInstance.grid.height = '300px';
         fix.componentInstance.data = fix.componentInstance.data.slice(0, 7);
         fix.detectChanges();
 
