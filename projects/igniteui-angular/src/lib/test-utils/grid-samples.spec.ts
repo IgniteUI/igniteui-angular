@@ -1,14 +1,13 @@
 import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
-import { IgxGridCellComponent } from '../grid/cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grid/grid-summary';
-import { IGridEditEventArgs } from '../grid/grid.component';
-import { IGridCellEventArgs } from '../grids/grid-base.component';
+import { IgxGridCellComponent } from '../grids/cell.component';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grids/grid-summary';
+import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/grid-base.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection, IEditDone, IGridRowEvents, IGridRowSelectionChange } from './grid-interfaces.spec';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
-import { IgxColumnComponent } from '../grid/column.component';
+import { IgxColumnComponent } from '../grids/column.component';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
