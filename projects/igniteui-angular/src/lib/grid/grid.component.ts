@@ -363,33 +363,31 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             // setter called before grid is registered in grid API service
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
-        if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions)) {
-            if (this.columnList) {
-                const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-                const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-                const groupedColsArr = newExpressions.filter(function(obj) {
-                    return !oldExpressions.some(function(obj2) {
-                        return obj.fieldName === obj2.fieldName;
-                    });
+        if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
+            const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const groupedColsArr = newExpressions.filter((obj) => {
+                return !oldExpressions.some((obj2) => {
+                    return obj.fieldName === obj2.fieldName;
                 });
-                groupedColsArr.forEach(function(elem) {
-                    groupedCols.push(this.getColumnByName(elem.fieldName));
-                }, this);
-                const ungroupedColsArr = oldExpressions.filter(function(obj) {
-                    return !newExpressions.some(function(obj2) {
-                        return obj.fieldName === obj2.fieldName;
-                    });
+            });
+            groupedColsArr.forEach((elem) => {
+                groupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const ungroupedColsArr = oldExpressions.filter((obj) => {
+                return !newExpressions.some((obj2) => {
+                    return obj.fieldName === obj2.fieldName;
                 });
-                ungroupedColsArr.forEach(function(elem) {
-                    ungroupedCols.push(this.getColumnByName(elem.fieldName));
-                }, this);
-                const groupingDoneArgs: IGroupingDoneEventArgs = {
-                    expressions: newExpressions,
-                    groupedColumns: groupedCols,
-                    ungroupedColumns: ungroupedCols
-                };
-                this.onGroupingDone.emit(groupingDoneArgs);
-            }
+            });
+            ungroupedColsArr.forEach((elem) => {
+                ungroupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newExpressions,
+                groupedColumns: groupedCols,
+                ungroupedColumns: ungroupedCols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
         }
     }
 
