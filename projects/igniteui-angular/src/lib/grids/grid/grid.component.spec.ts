@@ -28,7 +28,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CLASS = '.igx-grid__td';
