@@ -564,6 +564,7 @@
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
         padding: 0 0 rem(8px, map-get($base-scale-size, 'comfortable'));
         border-top: rem(8px, map-get($base-scale-size, 'comfortable')) solid rgba(0, 0, 0, 0);
+        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -631,6 +632,7 @@
     %form-group-textarea {
         min-height: rem(82px, map-get($base-scale-size, 'comfortable')); /* 3 lines * 22px + 8px bottom padding + 8px top padding */
         margin-right: -#{rem(16px, map-get($base-scale-size, 'comfortable'))}; /* this fixes resizing in chrome !?!? */
+        line-height: normal !important; /* resets typography styles */
         height: auto;
         resize: vertical;
         overflow: hidden;
