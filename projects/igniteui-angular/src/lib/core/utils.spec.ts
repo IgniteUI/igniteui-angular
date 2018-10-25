@@ -1,4 +1,4 @@
-import { cloneObject } from './utils';
+import { cloneObject, mergeObjects, isObject, isDate } from './utils';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 
 describe('Utils', () => {
@@ -45,7 +45,7 @@ describe('Utils', () => {
         }
     };
 
-    describe('Utils - cloneObject unit tests', () => {
+    describe('Utils - cloneObject() unit tests', () => {
         it('Should return primitive values', () => {
             let input: any = 10;
             let expected: any = 10;
@@ -124,6 +124,268 @@ describe('Utils', () => {
             const input = complexObject;
             const clone = cloneObject(input);
             expect(input).toEqual(clone);
+            expect(input.Object10).toEqual(clone.Object10);
+            expect(input.Object11).toEqual(clone.Object11);
+
+            expect(input.Date).toEqual(clone.Date);
+            expect(input.Date).not.toBe(clone.Date);
+            expect(input.Date.getTime()).toBe(clone.Date.getTime());
+
+            expect(input.Object10.Date).toEqual(clone.Object10.Date);
+            expect(input.Object10.Date).not.toBe(clone.Object10.Date);
+            expect(input.Object10.Date.getTime()).toBe(clone.Object10.Date.getTime());
+
+            expect(input.Object11.Object111.Date).toEqual(clone.Object11.Object111.Date);
+            expect(input.Object11.Object111.Date).not.toBe(clone.Object11.Object111.Date);
+            expect(input.Object11.Object111.Date.getTime()).toBe(clone.Object11.Object111.Date.getTime());
+
+            expect(input.Number).toBe(clone.Number);
+            expect(input.Object10.Number).toBe(clone.Object10.Number);
+            expect(input.Object11.Object111.Number).toBe(clone.Object11.Object111.Number);
+
+            expect(input.String).toBe(clone.String);
+            expect(input.Object10.String).toBe(clone.Object10.String);
+            expect(input.Object11.Object111.String).toBe(clone.Object11.Object111.String);
+
+            expect(input.Boolean).toBe(clone.Boolean);
+            expect(input.Object10.Boolean).toBe(clone.Object10.Boolean);
+            expect(input.Object11.Object111.Boolean).toBe(clone.Object11.Object111.Boolean);
+        });
+
+        it('Should correctly deep clone object with special values', () => {
+            const objectWithSpecialValues = {};
+            objectWithSpecialValues['Null'] = null;
+            objectWithSpecialValues['Undefined'] = undefined;
+            const clone = cloneObject(objectWithSpecialValues);
+
+            expect(clone.Null).toBeNull();
+            expect(clone.undefined).toBeUndefined();
+        });
+    });
+
+    describe('Utils - mergeObjects() unit tests', () => {
+        it('Should correctly merge objects', () => {
+            const obj1 = {
+                Numeric: 1,
+                String: 'Some test string',
+                Boolean: true,
+                Date: new Date(0),
+                Object: {
+                    Numeric: 10,
+                    String: 'Some inner test string',
+                    Boolean: false,
+                    Date: new Date(1000 * 60 * 60 * 24 * 10),
+                }
+            };
+
+            const obj2 = {
+                Numeric: 100,
+                String: 'Some changed test string',
+                Boolean: false,
+                Date: new Date(1000 * 60 * 60 * 24 * 100),
+                Object: {
+                    Numeric: Infinity,
+                }
+            };
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result.Numeric).toBe(obj2.Numeric);
+            expect(result.String).toBe(obj2.String);
+            expect(result.Boolean).toBe(obj2.Boolean);
+            expect(result.Date).toEqual(obj2.Date);
+            expect(result.Date).not.toBe(obj2.Date);
+            expect(result.Date.getTime()).toBe(obj2.Date.getTime());
+
+            expect(result.Object).toEqual(obj2.Object);
+            expect(result.Object).not.toBe(obj2.Object);
+            expect(result.Object.Numeric).toEqual(obj2.Object.Numeric);
+        });
+
+        it('Should correctly merge into empty object', () => {
+            const obj1 = {};
+            const obj2 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj2);
+            expect(result).not.toBe(obj2);
+        });
+
+        it('Should correctly merge from empty object', () => {
+            const obj1 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+            const obj2 = {};
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj1);
+            expect(result).toBe(obj1);
+        });
+
+        it('Should correctly merge into null object', () => {
+            const obj1 = null;
+            const obj2 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj2);
+            expect(result).not.toBe(obj2);
+        });
+
+        it('Should correctly merge from null object', () => {
+            const obj1 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+            const obj2 = null;
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj1);
+            expect(result).toBe(obj1);
+        });
+
+        it('Should correctly merge into undefined object', () => {
+            const obj1 = undefined;
+            const obj2 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj2);
+            expect(result).not.toBe(obj2);
+        });
+
+        it('Should correctly merge from undefined object', () => {
+            const obj1 = {
+                Test: 'Test',
+                Date: new Date(0)
+            };
+            const obj2 = undefined;
+
+            const result = mergeObjects(obj1, obj2);
+            expect(result).toEqual(obj1);
+            expect(result).toBe(obj1);
+        });
+
+        it('Should throw error when try to merge into non object type', () => {
+            let obj1: any = 'Some string';
+            const obj2 = {};
+            const errorFunction = function () { mergeObjects(obj1, obj2); };
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+
+            obj1 = 100;
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+
+            obj1 = true;
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+
+            obj1 = new Date(0);
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+        });
+
+        it('Should throw error when try to merge from non object type', () => {
+            const obj1 = {};
+            let obj2: any = 'Some string';
+            const errorFunction = function () { mergeObjects(obj1, obj2); };
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+
+            obj2 = 100;
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+
+            obj2 = true;
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+
+            obj2 = new Date(0);
+            expect(errorFunction).toThrowError(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
+        });
+    });
+
+    describe('Utils - isObject() unit tests', () => {
+        it('Should correctly determine if variable is Object', () => {
+            let variable: any = {};
+            expect(isObject(variable)).toBeTruthy();
+
+            variable = 10;
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = 'Some string';
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = '';
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = true;
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = false;
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = new Date(0);
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = null;
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = undefined;
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = [];
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = new Map();
+            expect(isObject(variable)).toBeFalsy();
+
+            variable = new Set();
+            expect(isObject(variable)).toBeFalsy();
+        });
+    });
+
+    describe('Utils - isDate() unit tests', () => {
+        it('Should correctly determine if variable is Date', () => {
+            let variable: any = new Date(0);
+            expect(isDate(variable)).toBeTruthy();
+
+            variable = new Date('wrong date parameter');
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = 10;
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = 'Some string';
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = '';
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = true;
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = false;
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = {};
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = null;
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = undefined;
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = [];
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = new Map();
+            expect(isDate(variable)).toBeFalsy();
+
+            variable = new Set();
+            expect(isDate(variable)).toBeFalsy();
         });
     });
 });

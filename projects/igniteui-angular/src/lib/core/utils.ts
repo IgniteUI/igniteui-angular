@@ -13,13 +13,28 @@ export function cloneArray(array, deep?: boolean) {
     return arr;
 }
 
+/**
+ * Deep clones all first level keys of Obj2 and merges them to Obj1
+ * @param obj1 Object to merge into
+ * @param obj2 Object to merge from
+ * @returns Obj1 with merged cloned keys from Obj2
+ * @hidden
+ */
 export function mergeObjects(obj1: {}, obj2: {}) {
-    if (obj1 === null || obj2 === undefined) {
+    if (obj1 === null || obj1 === undefined) {
         return this.cloneObject(obj2);
     }
 
     if (obj2 === null || obj2 === undefined) {
-        return this.cloneObject(obj1);
+        return obj1;
+    }
+
+    if (!isObject(obj1)) {
+        throw new Error(`Should provide objects to mergeObjects method. ${obj1} is not an object!`);
+    }
+
+    if (!isObject(obj2)) {
+        throw new Error(`Should provide objects to mergeObjects method. ${obj2} is not an object!`);
     }
 
     for (const key of Object.keys(obj2)) {
@@ -28,6 +43,7 @@ export function mergeObjects(obj1: {}, obj2: {}) {
 
     return obj1;
 }
+
 /**
  * Creates deep clone of provided value.
  * Supports primitive values, dates and objects.
@@ -41,7 +57,7 @@ export function cloneObject(value: any): any {
         return new Date(value.getTime());
     }
     if (Array.isArray(value)) {
-        return [... value];
+        return [...value];
     }
 
     if (value instanceof Map || value instanceof Set) {
@@ -60,6 +76,16 @@ export function cloneObject(value: any): any {
 }
 
 /**
+ * Checks if provided variable is Object
+ * @param value Value to check
+ * @returns true if provided variable is Object
+ *@hidden
+ */
+export function isObject(value: any): boolean {
+    return value !== null && value !== undefined && value.toString() === '[object Object]';
+}
+
+/**
  * Checks if provided variable is Date
  * @param value Value to check
  * @returns true if provided variable is Date
@@ -67,17 +93,6 @@ export function cloneObject(value: any): any {
  */
 export function isDate(value: any) {
     return value && Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value);
-}
-
-/**
- * Checks if provided variable is Object
- * @param value Value to check
- * @returns true if provided variable is Object
- *@hidden
- */
-export function isObject(value: any): boolean {
-    const valueType = typeof value;
-    return value !== null && value !== undefined && valueType === 'object';
 }
 
 /**
@@ -143,13 +158,13 @@ export function valToPxlsUsingCanvas(canvas2dCtx: any, node: any): number {
 /**
  *@hidden
  */
-export function isIE (): boolean {
-  return navigator.appVersion.indexOf('Trident/') > 0;
+export function isIE(): boolean {
+    return navigator.appVersion.indexOf('Trident/') > 0;
 }
 /**
  *@hidden
  */
-export function isEdge (): boolean {
+export function isEdge(): boolean {
     const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     return edgeBrowser;
 }
@@ -157,12 +172,12 @@ export function isEdge (): boolean {
 /**
  *@hidden
  */
-export function isFirefox (): boolean {
+export function isFirefox(): boolean {
     const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     return firefoxBrowser;
 }
 
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
+        'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
 }
