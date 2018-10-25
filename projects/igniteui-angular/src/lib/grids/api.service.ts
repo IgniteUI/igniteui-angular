@@ -17,23 +17,23 @@ import { Transaction, TransactionType } from '../services/index';
  *@hidden
  */
 @Injectable()
-export class IgxGridAPIService {
+export class GridBaseAPIService <T extends IgxGridComponent> {
 
     public change: Subject<any> = new Subject<any>();
-    protected state: Map<string, IgxGridComponent> = new Map<string, IgxGridComponent>();
+    protected state: Map<string, T> = new Map<string, T>();
     protected editCellState: Map<string, any> = new Map<string, any>();
     protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
 
-    public register(grid: IgxGridComponent) {
+    public register(grid: T) {
         this.state.set(grid.id, grid);
     }
 
-    public unsubscribe(grid: IgxGridComponent) {
+    public unsubscribe(grid: T) {
         this.state.delete(grid.id);
     }
 
-    public get(id: string): IgxGridComponent {
+    public get(id: string): T {
         return this.state.get(id);
     }
 
