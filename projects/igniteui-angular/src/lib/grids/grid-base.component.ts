@@ -154,30 +154,7 @@ export interface IFocusChangeEventArgs {
     cancel: boolean;
 }
 
-/**
- * **Ignite UI for Angular Grid** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
- *
- * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
- * has been bound, it can be manipulated through filtering, sorting & editing operations.
- *
- * Example:
- * ```html
- * <igx-grid [data]="employeeData" autoGenerate="false">
- *   <igx-column field="first" header="First Name"></igx-column>
- *   <igx-column field="last" header="Last Name"></igx-column>
- *   <igx-column field="role" header="Role"></igx-column>
- * </igx-grid>
- * ```
- */
-@Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
-    providers: [IgxGridNavigationService],
-    selector: 'igx-grid',
-    templateUrl: './grid.component.html'
-})
-export class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, DoCheck {
+export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
