@@ -148,17 +148,6 @@ export class IgxCellHeaderTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxGroupByRow]'
-})
-export class IgxGroupByRowTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-
-}
-/**
- * @hidden
- */
-@Directive({
     selector: '[igxFooter]'
 })
 export class IgxCellFooterTemplateDirective {
@@ -179,7 +168,9 @@ export class IgxCellEditorTemplateDirective {
 /**
  * @hidden
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class IgxColumnMovingService {
     private _icon: any;
     private _column: IgxColumnComponent;

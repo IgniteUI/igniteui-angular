@@ -49,7 +49,7 @@ import { IgxColumnComponent } from './column.component';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, DropPosition, ContainerPositioningStrategy } from './grid.common';
+import { DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';

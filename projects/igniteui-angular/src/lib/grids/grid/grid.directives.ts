@@ -1,9 +1,21 @@
-import { Directive, ElementRef, Renderer2, NgZone, HostBinding } from '@angular/core';
+import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxGroupByRow]'
+})
+export class IgxGroupByRowTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+
+}
 
 /**
  * @hidden

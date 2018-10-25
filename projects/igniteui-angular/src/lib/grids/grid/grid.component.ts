@@ -9,7 +9,7 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 import { cloneArray } from '../../core/utils';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxGroupByRowTemplateDirective } from '../grid.common';
+import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';

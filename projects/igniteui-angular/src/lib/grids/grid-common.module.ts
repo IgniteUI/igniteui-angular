@@ -16,7 +16,6 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
@@ -32,24 +31,16 @@ import {
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
-    IgxGroupAreaDropDirective,
     IgxColumnMovingService,
-    IgxGroupByRowTemplateDirective,
     IgxDecimalPipeComponent,
     IgxDatePipeComponent
 } from './grid.common';
-import { IgxGridComponent, IgxGridTransaction } from './grid.component';
+import { IgxGridTransaction } from './grid-base.component';
 import {
     IgxGridFilterConditionPipe,
-    IgxGridFilteringPipe,
-    IgxGridPagingPipe,
-    IgxGridPostGroupingPipe,
-    IgxGridPreGroupingPipe,
-    IgxGridSortingPipe,
     IgxGridTransactionPipe
-} from './grid.pipes';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridRowComponent } from './row.component';
+} from './grid-common.pipes';
+import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
@@ -64,15 +55,11 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxGridCellComponent,
         IgxColumnComponent,
         IgxColumnGroupComponent,
-        IgxGridComponent,
-        IgxGridRowComponent,
-        IgxGridGroupByRowComponent,
         IgxGridHeaderComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
-        IgxGroupByRowTemplateDirective,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
@@ -80,13 +67,7 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
-        IgxGroupAreaDropDirective,
         IgxGridFilterComponent,
-        IgxGridPreGroupingPipe,
-        IgxGridPostGroupingPipe,
-        IgxGridSortingPipe,
-        IgxGridPagingPipe,
-        IgxGridFilteringPipe,
         IgxGridFilterConditionPipe,
         IgxGridFilterExpressionComponent,
         IgxGridTransactionPipe,
@@ -99,10 +80,7 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxColumnGroupComponent,
     ],
     exports: [
-        IgxGridComponent,
         IgxGridCellComponent,
-        IgxGridGroupByRowComponent,
-        IgxGridRowComponent,
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
@@ -111,15 +89,13 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
-        IgxGroupByRowTemplateDirective,
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
-        IgxColumnMovingDropDirective,
-        IgxGroupAreaDropDirective
+        IgxColumnMovingDropDirective
     ],
     imports: [
         CommonModule,
@@ -145,21 +121,9 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxColumnPinningModule
     ],
     providers: [
-        IgxGridAPIService,
         IgxSelectionAPIService,
         IgxColumnMovingService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
-export class IgxGridModule {
-    public static forRoot() {
-        return {
-            ngModule: IgxGridModule,
-            providers: [
-                IgxGridAPIService,
-                IgxSelectionAPIService,
-                IgxColumnMovingService
-            ]
-        };
-    }
-}
+export class IgxGridCommonModule { }
