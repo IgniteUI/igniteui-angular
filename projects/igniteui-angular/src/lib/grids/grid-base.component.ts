@@ -1996,12 +1996,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
         if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
-            if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
-                if (this.rowEditTabs.find(e => e.element.nativeElement === event.target)) {
-                    return;
-                    // Do not prevent tab on rowEditOverlay custom tabStops
-                }
-            }
             event.preventDefault();
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
