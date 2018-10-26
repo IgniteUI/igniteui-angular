@@ -1,6 +1,6 @@
 
 import { Calendar } from '../calendar/calendar';
-import { cloneObject } from '../core/utils';
+import { cloneValue } from '../core/utils';
 import { ValueData } from '../services/excel/test-data.service.spec';
 
 export class SampleTestData {
@@ -756,7 +756,7 @@ export class SampleTestData {
 
         for (let i = 0; i < iterations; i++) {
             baseData.forEach((item) => {
-                const currentItem = cloneObject(item);
+                const currentItem = cloneValue(item);
                 const id = SampleTestData.getIDColumnName(currentItem);
                 if (id) {
                     currentItem[id] = item[id] + i * baseData.length;
@@ -766,7 +766,7 @@ export class SampleTestData {
         }
         const currentLength = data.length;
         for (let i = 0; i < remainder; i++) {
-            const currentItem = cloneObject(baseData[i]);
+            const currentItem = cloneValue(baseData[i]);
             const id = SampleTestData.getIDColumnName(currentItem);
             if (id) {
                 currentItem[id] = currentLength + baseData[i][id];
