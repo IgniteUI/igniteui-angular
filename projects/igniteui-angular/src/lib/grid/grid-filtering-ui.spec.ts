@@ -11,6 +11,7 @@ import { IgxButtonDirective } from '../directives/button/button.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
+const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
 
 describe('IgxGrid - Filtering actions', () => {
@@ -37,26 +38,33 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.query(By.css(FILTER_UI_CONTAINER));
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        let input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css("igx-chip")).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        let input = filterUIRow.query(By.directive(IgxInputDirective));
+        
+        const reset = filterUIRow.queryAll(By.css('button'))[0];
+        const close = filterUIRow.queryAll(By.css('button'))[1];
 
         expect(grid.rowList.length).toEqual(8);
 
+        // open dropdown
         filterIcon.nativeElement.click();
         fix.detectChanges();
         tick(100);
 
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddItems = ddList.nativeElement.children;
+
         // iterate over not unary conditions when input is empty
         // starts with
-        verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIRow, grid);
 
-        options[1].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[2].click();
+        // select.nativeElement.dispatchEvent(new Event('change'));
         fix.detectChanges();
         tick();
 
@@ -65,9 +73,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // ends with
-        options[2].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[3].click();
         fix.detectChanges();
         tick();
 
@@ -76,9 +87,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // does not contain
-        options[3].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[1].click();
         fix.detectChanges();
         tick();
 
@@ -87,9 +101,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // equals
-        options[4].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[0].click();
         fix.detectChanges();
         tick();
 
@@ -98,9 +115,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // does not equal
-        options[5].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[5].click();
         fix.detectChanges();
         tick();
 
@@ -109,59 +129,80 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // empty
-        options[6].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[6].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(4);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        removeFilterChipByIndex(0, filterUIRow);
+
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // not empty
-        options[7].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[7].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(4);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        removeFilterChipByIndex(0, filterUIRow);
+
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // iterate over unary conditions
         // null
-        options[8].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[8].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(3);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        removeFilterChipByIndex(0, filterUIRow);
+
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // not null
-        options[9].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[9].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(5);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // changing from unary to not unary condition when input is empty - filtering should keep its state
         // contains
-        options[0].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[0].click();
         fix.detectChanges();
         tick();
 
-        input = filterUIContainer.query(By.directive(IgxInputDirective));
+        input = filterUIRow.query(By.directive(IgxInputDirective));
         expect(grid.rowList.length).toEqual(5);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         // input is empty but there is filtering applied, so reset button should be active !
@@ -175,15 +216,26 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.query(By.css(FILTER_UI_CONTAINER));
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css("igx-chip")).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+        const reset = filterUIRow.queryAll(By.css('button'))[0];
+        const close = filterUIRow.queryAll(By.css('button'))[1];
 
         expect(grid.rowList.length).toEqual(8);
+
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddItems = ddList.nativeElement.children;
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
@@ -201,8 +253,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // starts with
-        options[2].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[2].click();
         fix.detectChanges();
         tick();
 
@@ -210,7 +261,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick();
 
-        verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIRow, grid);
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(2);
         expect(grid.getCellByColumn(0, 'ProductName').value).toMatch('NetAdvantage');
@@ -218,9 +269,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // ends with
-        options[3].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[3].click();
         fix.detectChanges();
         tick();
 
@@ -233,9 +287,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // does not contain
-        options[1].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[1].click();
         fix.detectChanges();
         tick();
 
@@ -254,9 +311,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // equals
-        options[4].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[4].click();
         fix.detectChanges();
         tick();
 
@@ -269,9 +329,12 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // equals
-        options[4].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[4].click();
         fix.detectChanges();
         tick();
 
@@ -286,9 +349,12 @@ describe('IgxGrid - Filtering actions', () => {
         const emptyTemplate = fix.debugElement.query(By.css('span.igx-grid__tbody-message'));
         expect(emptyTemplate.nativeElement.offsetHeight).toBeGreaterThan(0);
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // does not equal
-        options[5].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[5].click();
         fix.detectChanges();
         tick();
 
@@ -308,13 +374,16 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[1];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        let input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[2].query(By.css("igx-chip")).nativeElement.click();
+        fix.detectChanges();
+
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        let input = filterUIRow.query(By.directive(IgxInputDirective));
+
+        const reset = filterUIRow.queryAll(By.css('button'))[0];
+        const close = filterUIRow.queryAll(By.css('button'))[1];
 
         expect(grid.rowList.length).toEqual(8);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -324,7 +393,10 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick(100);
 
-        verifyFilterUIPosition(filterUIContainer, grid);
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddItems = ddList.nativeElement.children;
+
+        verifyFilterUIPosition(filterUIRow, grid);
 
         // iterate over not unary conditions and fill the input
         // equals
@@ -336,19 +408,17 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(0);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        let clear = filterUIContainer.query(By.css('igx-suffix'));
+        let clear = filterUIRow.query(By.css('igx-suffix'));
         expect(clear.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // clear input value
-        input.nativeElement.value = '';
-        input.nativeElement.dispatchEvent(new Event('input'));
+        removeFilterChipByIndex(0, filterUIRow);
         fix.detectChanges();
         tick();
 
         // iterate over not unary conditions when input is empty
         // does not equal
-        options[1].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[1].click();
         fix.detectChanges();
         tick();
 
@@ -358,8 +428,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // greater than
-        options[2].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[2].click();
         fix.detectChanges();
         tick();
 
@@ -370,57 +439,52 @@ describe('IgxGrid - Filtering actions', () => {
 
         // iterate over unary conditions
         // null
-        options[6].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[6].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(1);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // not null
-        options[7].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[7].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(7);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // empty
-        options[8].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[8].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(1);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // not empty
-        options[9].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[9].click();
         fix.detectChanges();
         tick();
 
         expect(grid.rowList.length).toEqual(7);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(input.nativeElement.offsetHeight).toEqual(0);
+        expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // changing from unary to not unary condition when input is empty - filtering should keep its state
         // equals - filter should keep its state and not be reset
-        options[0].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[0].click();
         fix.detectChanges();
         tick();
 
-        input = filterUIContainer.query(By.directive(IgxInputDirective));
+        input = filterUIRow.query(By.directive(IgxInputDirective));
         expect(grid.rowList.length).toEqual(7);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         // input is empty but there is filtering applied, so reset button should be active !
@@ -433,7 +497,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick();
 
-        clear = filterUIContainer.query(By.css('igx-suffix'));
+        clear = filterUIRow.query(By.css('igx-suffix'));
         expect(grid.rowList.length).toEqual(1);
         expect(grid.getCellByColumn(0, 'Downloads').value).toEqual(100);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
@@ -442,8 +506,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // does not equal
-        options[1].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[1].click();
         fix.detectChanges();
         tick();
 
@@ -453,8 +516,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // greater than
-        options[2].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[2].click();
         fix.detectChanges();
         tick();
 
@@ -476,11 +538,14 @@ describe('IgxGrid - Filtering actions', () => {
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        expect(select.nativeElement.value).toMatch('equals');
+        expect(filterIcon.componentInstance.iconName).toMatch('equals');
 
+        // open dropdown
+        filterIcon.nativeElement.click();
+        fix.detectChanges();
+        tick(100);
         // less than
-        options[3].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[3].click();
         fix.detectChanges();
         tick();
 
@@ -492,8 +557,9 @@ describe('IgxGrid - Filtering actions', () => {
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
+        expect(filterIcon.componentInstance.iconName).toMatch('less_than');
 
-        clear = filterUIContainer.query(By.css('igx-suffix'));
+        removeFilterChipByIndex(0, filterUIRow);
         clear.nativeElement.click();
         fix.detectChanges();
         tick();
@@ -502,11 +568,11 @@ describe('IgxGrid - Filtering actions', () => {
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        expect(select.nativeElement.value).toMatch('lessThan');
+        // revert to the default after 
+        expect(filterIcon.componentInstance.iconName).toMatch('equals');
 
         // greater than or equal to
-        options[4].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[4].click();
         fix.detectChanges();
         tick();
 
@@ -520,8 +586,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
 
         // less than or equal to
-        options[5].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[5].click();
         fix.detectChanges();
         tick();
 
@@ -537,24 +602,28 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[2];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const select = filterUIContainer.query(By.css('select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[3].query(By.css("igx-chip")).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+
+        const reset = filterUIRow.queryAll(By.css('button'))[0];
+        const close = filterUIRow.queryAll(By.css('button'))[1];
 
         expect(grid.rowList.length).toEqual(8);
 
         filterIcon.nativeElement.click();
         fix.detectChanges();
         tick(100);
+    
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddItems = ddList.nativeElement.children;
 
-        verifyFilterUIPosition(filterUIContainer, grid);
+        verifyFilterUIPosition(filterUIRow, grid);
 
         // false condition
-        options[2].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[2].click();
         fix.detectChanges();
         tick();
 
@@ -565,8 +634,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // true condition
-        options[1].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[1].click();
         fix.detectChanges();
         tick();
 
@@ -578,8 +646,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // (all) condition
-        options[0].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[0].click();
         fix.detectChanges();
         tick();
 
@@ -588,8 +655,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
 
         // empty condition
-        options[3].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[3].click();
         fix.detectChanges();
         tick();
 
@@ -601,8 +667,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // not empty condition
-        options[4].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[4].click();
         fix.detectChanges();
         tick();
 
@@ -616,8 +681,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // null condition
-        options[5].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[5].click();
         fix.detectChanges();
         tick();
 
@@ -628,8 +692,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // not null condition
-        options[6].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        ddItems[6].click();
         fix.detectChanges();
         tick();
 
@@ -650,17 +713,19 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const select = filterUIContainer.query(By.css('select'));
-
-        filterUIContainer.triggerEventHandler('mousedown', null);
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
         fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        verifyFilterUIPosition(filterUIContainer, grid);
-        select.nativeElement.value = 'today';
-        select.nativeElement.dispatchEvent(new Event('change'));
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        fix.detectChanges();
+        verifyFilterUIPosition(filterUIRow, grid);
+
+        selectFilteringCondition('Today', ddList);
         fix.detectChanges();
 
         // only one record is populated with 'today' date, this is why rows must be 1
@@ -672,31 +737,35 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const select = filterUIContainer.query(By.css('select'));
-
-        filterUIContainer.triggerEventHandler('mousedown', null);
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
         fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
         filterIcon.nativeElement.click();
         fix.detectChanges();
-        verifyFilterUIPosition(filterUIContainer, grid);
 
-        select.nativeElement.value = 'yesterday';
-        select.nativeElement.dispatchEvent(new Event('change'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        fix.detectChanges();
+        verifyFilterUIPosition(filterUIRow, grid);
+
+        selectFilteringCondition('Yesterday', ddList);
         fix.detectChanges();
 
         // only one record is populated with (today - 1 day)  date, this is why rows must be 1
         expect(grid.rowList.length).toEqual(1);
     });
 
-    it('UI - should correctly filter date column by \'this month\' filtering conditions', () => {
+    fit('UI - should correctly filter date column by \'this month\' filtering conditions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterIcon = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
-        const select = filterIcon.query(By.css('select'));
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
         const cal = fix.componentInstance.timeGenerator;
         const today = fix.componentInstance.today;
 
@@ -707,9 +776,9 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         filterIcon.nativeElement.click();
         fix.detectChanges();
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         verifyFilterUIPosition(filterIcon, grid);
-        select.nativeElement.value = 'thisMonth';
-        select.nativeElement.dispatchEvent(new Event('change'));
+        selectFilteringCondition('This Month', ddList);
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(expectedResults[5]);
@@ -1450,13 +1519,13 @@ export class CustomFilter extends IgxFilteringOperand {
 
     private constructor () {
         super();
-        this.operations = [{
-            name: 'custom',
-            isUnary: false,
-            logic: (target: string): boolean => {
-                return target === 'custom';
-            }
-        }];
+        // this.operations = [{
+        //     name: 'custom',
+        //     isUnary: false,
+        //     logic: (target: string): boolean => {
+        //         return target === 'custom';
+        //     }
+        // }];
     }
 
     public static instance(): CustomFilter {
@@ -1466,15 +1535,15 @@ export class CustomFilter extends IgxFilteringOperand {
 
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px">
-        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-        <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-        <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'" [filterable]="false"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
         <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
-            [filterable]="true" dataType="date">
+            dataType="date">
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="true"
+        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
@@ -1717,4 +1786,21 @@ function isLastYear(date: Date, year: number): boolean {
 
 function isNextYear(date: Date, year: number): boolean {
     return date.getFullYear() > year;
+}
+
+function removeFilterChipByIndex(index: number, filterUIRow) {
+    const filterChip = filterUIRow.queryAll(By.css('igx-chip'))[index];
+    const removeButton = filterChip.query(By.css('div.igx-chip__remove'));
+    removeButton.nativeElement.click();
+}
+
+function selectFilteringCondition(cond: string, ddList) {
+    let ddItems = ddList.nativeElement.children;
+    let i; 
+    for ( i = 0; i < ddItems.length; i++) {
+        if (ddItems[i].textContent === cond) {
+            ddItems[i].click();
+            return;
+        }
+    }
 }
