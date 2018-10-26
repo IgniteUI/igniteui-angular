@@ -1455,7 +1455,8 @@ export class CustomFilter extends IgxFilteringOperand {
             isUnary: false,
             logic: (target: string): boolean => {
                 return target === 'custom';
-            }
+            },
+            iconName: 'custom'
         }];
     }
 
