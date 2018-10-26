@@ -3,110 +3,37 @@
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
+
+@import 'mixins';
 @import 'app-palettes';
 @import 'app-layout';
 
-$exclude: (
-    // igx-avatar,
-    // igx-badge,
-    // igx-button,
-    // igx-button-group,
-    // igx-calendar,
-    // igx-card,
-    // igx-carousel,
-    // igx-checkbox,
-    // igx-date-picker,
-    // igx-dialog,
-    // igx-grid,
-    // igx-filtering,
-    // igx-icon,
-    // igx-form-group,
-    // igx-input-group,
-    // igx-list,
-    // igx-navbar,
-    // igx-overlay,
-    // igx-nav-drawer,
-    // igx-paginator,
-    // progress-linear,
-    // progress-circular,
-    // igx-radio,
-    // igx-ripple,
-    // igx-slider,
-    // igx-snackbar,
-    // igx-switch,
-    // igx-bottom-nav,
-    // igx-toast
-);
-
-// Generating a theme
 @include igx-core();
-@include igx-theme(
-    $default-palette,
-    $preset: $dark-green-theme
-);
 
-@mixin scrollbar-love {
-    $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
-    $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
+.default-theme {
+    $igx-background-color: #fff;
+    $igx-foreground-color: text-contrast($igx-background-color);
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+    @include scrollbar-love();
 
-    @if luminance($igx-background-color) < .5 {
-        $scrollbar-track: darken($igx-background-color, 8%);
-        $scrollbar-thumb: lighten($igx-background-color, 20%);
-    }
-
-    ::-webkit-scrollbar {
-        width: 16px;
-        height: 16px;
-        background-color: $scrollbar-track;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: $scrollbar-thumb;
-    }
+    @include igx-theme($app-palette);
 }
 
-@include scrollbar-love();
+.dark-green-theme {
+    $igx-background-color: #222;
+    $igx-foreground-color: text-contrast($igx-background-color);
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+    @include scrollbar-love($igx-background-color);
 
-/// Typography samples
-// $button-type-style: igx-type-style(
-//     $font-weight: 700,
-//     $text-transform: lowercase,
-//     $font-family: 'Roboto'
-// );
+    @include igx-theme($app-dark-green-palette, $preset: $dark-green-theme);
 
-// $h5-style: igx-type-style($font-size: rem(18px));
-// $overline-style: igx-type-style($font-family: 'Dosis', $font-size: 14px);
-// $my-type-scale: igx-type-scale($overline: $caption-style, $button: $button-type-style);
-// $my-type-scale-1: igx-type-scale($h5: $h5-style, $overline: $overline-style);
+    .igniteui-logo__text {
+        fill: #fff;
+    }
 
-// @include igx-typography($type-scale: $my-type-scale);
-
-// Button Themes
-// $blue-green: #2ec4b6;
-// $bright-yellow: #ff9f1c;
-// $smoky-black: #0c120c;
-// $boston-red: #d00000;
-
-// $red-sox-button: igx-button-theme(
-//     $preset: $dark-green-theme,
-//     $flat-background: $boston-red,
-//     $raised-background: $boston-red,
-//     $fab-background: $boston-red,
-//     $icon-background: $boston-red
-// );
-
-// $smoky-black-button: igx-button-theme(
-//     $preset: $dark-green-theme,
-//     $flat-background: $smoky-black,
-//     $raised-background: $smoky-black,
-//     $fab-background: $smoky-black,
-//     $icon-background: $smoky-black
-// );
-
-// .red-sox-button {
-//     @include igx-button($red-sox-button);
-// }
-
-// .smoky-black-button {
-//     @include igx-button($smoky-black-button);
-// }
+    .igniteui-logo__rocket {
+        fill: rgba(white, .38);
+    }
+}

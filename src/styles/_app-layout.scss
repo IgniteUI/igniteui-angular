@@ -1,9 +1,30 @@
+@include b(igniteui-logo) {
+    @include e(u) {
+        fill: #f60;
+    }
+
+    @include e(text) {
+        fill: #000;
+        transform: translate(190px, -6px);
+    }
+
+    @include e(flame) {
+        fill: white;
+        transform: translate(55px, 97px);
+    }
+
+    @include e(rocket) {
+        fill: #222;
+        transform: translate(55px);
+    }
+}
+
 #igniteui-demo-app {
     @include fade-in-fwd();
 
     .logo {
-        width: 172px;
-        height: 56.666px;
+        min-width: 172px;
+        min-height: 56.666px;
     }
 
     .main {
