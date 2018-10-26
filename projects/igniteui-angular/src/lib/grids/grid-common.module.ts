@@ -49,6 +49,7 @@ import { IgxColumnPinningModule } from './column-pinning.component';
 import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 @NgModule({
     declarations: [
@@ -100,6 +101,8 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxRowComponent,
         IgxGridFilterConditionPipe,
         IgxGridTransactionPipe,
+        IgxDatePipeComponent,
+        IgxDecimalPipeComponent,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxIconModule,
@@ -146,6 +149,7 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
     providers: [
         IgxSelectionAPIService,
         IgxColumnMovingService,
+        IgxGridNavigationService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
