@@ -1,14 +1,14 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule, IgxGridCellComponent } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
-import { IgxTreeGridSimpleComponent, IgxTreeGridCellSelectionComponent } from '../test-utils/tree-grid-components.spec';
+import { IgxTreeGridSimpleComponent, IgxTreeGridCellSelectionComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions,
          TREE_ROW_SELECTION_CSS_CLASS,
-         TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../test-utils/tree-grid-functions.spec';
-import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../data-operations/filtering-condition';
+         TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxTreeGrid - Selection', () => {
     let fix;

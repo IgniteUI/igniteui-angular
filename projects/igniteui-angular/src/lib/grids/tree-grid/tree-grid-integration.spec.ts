@@ -4,9 +4,9 @@ import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent
-} from '../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../test-utils/tree-grid-functions.spec';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+} from '../../test-utils/tree-grid-components.spec';
+import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 
 describe('IgxTreeGrid - Integration', () => {
