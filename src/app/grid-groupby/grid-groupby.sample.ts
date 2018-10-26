@@ -104,6 +104,32 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log(this.grid1.rowList);
     }
 
+    onGroupingDoneHandler(event){
+        console.log("onGroupingDone: ");
+        console.log(event);
+    }
+  
+    groupMultiple() {
+        const expr = [
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "Country", dir: 2, ignoreCase: true}
+        ];
+        this.grid1.groupBy(expr);
+    }
+  
+    ungroupMultiple() {
+        this.grid1.clearGrouping(["Address", "Country"]);
+    }
+  
+    groupUngroupMultiple() {
+        const expr = [
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
+        ];
+        this.grid1.groupingExpressions = expr;
+    }
+
     changeFocus(event: IGridFocusChangeEventArgs) {
         console.log(event);
         const groupRow = event.groupRow;
