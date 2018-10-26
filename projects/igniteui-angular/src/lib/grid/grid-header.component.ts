@@ -120,7 +120,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
     public hostRole = 'columnheader';
 
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public tabindex = -1;
 
     @HostBinding('attr.id')
     get headerID() {

@@ -1,6 +1,6 @@
 <ng-template #emptyFilter>
         <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
-            <igx-chip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'cosy'">
+            <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onKeyDown($event)" [displayDensity]="'cosy'">
                 <igx-icon [attr.draggable]="false" igxPrefix>add</igx-icon>
                 <span [attr.draggable]="false">Filter</span>
             </igx-chip>
@@ -27,14 +27,14 @@
             <span class="igx-filtering-chips__connector" *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
         <div #moreIcon [ngClass]="filteringIndicatorClass()">
-            <igx-icon (click)="onChipClicked()">filter_list</igx-icon>
+            <igx-icon (click)="onChipClicked()" tabindex="0">filter_list</igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>
     </igx-chips-area>
 </ng-template>
 
 <ng-template #complexFilter>
-    <igx-chip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
+    <igx-chip #complexChip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
         <igx-icon igxPrefix>filter_list</igx-icon>
         <span>Complex Filter</span>
     </igx-chip>
