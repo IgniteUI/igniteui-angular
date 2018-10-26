@@ -1,6 +1,5 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowComponent } from '../tree-grid';
-import { IGridBaseComponent } from '../grid-common/common/grid-interfaces';
+import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent } from '../grids/tree-grid';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 
 // CSS class should end with a number that specified the row's level
@@ -205,14 +204,14 @@ export class TreeGridFunctions {
     /**
      * Returns true if a tree-grid row is 'grayed out' because of filtering
      */
-    public static checkRowIsGrayedOut(row: IgxRowComponent<IGridBaseComponent>): boolean {
+    public static checkRowIsGrayedOut(row: IgxRowComponent<IgxGridBaseComponent>): boolean {
         return row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 
     /**
      * Returns true if a tree-grid row is NOT 'grayed out' because of filtering
      */
-    public static checkRowIsNotGrayedOut(row: IgxRowComponent<IGridBaseComponent>): boolean {
+    public static checkRowIsNotGrayedOut(row: IgxRowComponent<IgxGridBaseComponent>): boolean {
         return !row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 
