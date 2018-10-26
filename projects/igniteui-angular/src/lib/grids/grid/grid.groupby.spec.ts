@@ -16,7 +16,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { DataParent } from '../test-utils/sample-test-data.spec';
+import { DataParent } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();
