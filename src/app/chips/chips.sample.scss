@@ -45,7 +45,8 @@ igx-chip {
 }
 
 .chip-area-connector {
-    color: igx-color($default-palette, 'grays', 400);
+    color: currentColor;
+    opacity: .54;
 }
 
 .chip-area-avatar {

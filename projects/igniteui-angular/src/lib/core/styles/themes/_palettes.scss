@@ -68,3 +68,7 @@ $elevations: igx-elevations(
     rgba(0, 0, 0, .12),
     rgba(0, 0, 0, .08)
 ) !default;
+
+$dark-green-palette: igx-palette($primary: #09f, $secondary: #72da67) !default;
+
+
