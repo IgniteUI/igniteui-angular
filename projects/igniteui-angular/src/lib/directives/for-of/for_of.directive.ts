@@ -1156,15 +1156,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         });
     }
 
-    onHScroll(event) {
+    onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
         if (!this.hScroll || !parseInt(this.hScroll.children[0].style.width, 10)) {
             return;
         }
-        const curScrollLeft = event.target.scrollLeft;
 
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllCols(curScrollLeft);
+        const scrollOffset = this.fixedUpdateAllCols(scrollAmount);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
 
