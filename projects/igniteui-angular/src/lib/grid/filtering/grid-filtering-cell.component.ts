@@ -7,16 +7,18 @@ import {
     HostBinding,
     AfterViewInit,
     ElementRef,
-    DoCheck
+    HostListener,
+    OnInit
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IBaseChipEventArgs, IgxChipsAreaComponent } from '../../chips';
+import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { IgxGridFilterConditionPipe } from '../grid.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYCODES, cloneArray } from '../../core/utils';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 /**
  * @hidden
@@ -26,7 +28,7 @@ import { KEYCODES, cloneArray } from '../../core/utils';
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html'
 })
-export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
+export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     @Input()
     public column: IgxColumnComponent;
@@ -46,6 +48,12 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
     @ViewChild('moreIcon', { read: ElementRef })
     protected moreIcon: ElementRef;
 
+    @ViewChild('ghostChip', { read: IgxChipComponent })
+    protected ghostChip: IgxChipComponent;
+
+    @ViewChild('complexChip', { read: IgxChipComponent })
+    protected complexChip: IgxChipComponent;
+
     private rootExpressionsTree: FilteringExpressionsTree;
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
@@ -53,6 +61,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
     private isMoreIconHidden = true;
     private expressionsList: ExpressionUI[];
     private baseClass = 'igx-grid__filtering-cell-indicator';
+    private currentTemplate = null;
 
     public visibleExpressionsList: ExpressionUI[];
     public moreFiltersCount = 0;
@@ -77,19 +86,23 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, private filteringService: IgxFilteringService) {
+    constructor(public cdr: ChangeDetectorRef, private filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
         this.filteringService.subscribeToEvents();
+    }
+
+    ngOnInit(): void {
+        this.filteringService.columnToChipToFocus.set(this.column.field, false);
+
     }
 
     ngAfterViewInit(): void {
         this.updateFilterCellArea();
     }
 
-    ngDoCheck(): void {
-        this.updateFilterCellArea();
-        this.cdr.markForCheck;      // todo: should this be removed as it's called inside the method above
+    public getChipToFocus() {
+        return this.filteringService.columnToChipToFocus.get(this.column.field);
     }
-
+    
     public updateFilterCellArea() {
         this.expressionsList = this.filteringService.getExpressions(this.column.field);
         this.updateVisibleFilters();
@@ -97,18 +110,22 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
 
     get template(): TemplateRef<any> {
         if (!this.column.filterable) {
+            this.currentTemplate = null;
             return null;
         }
 
         const expressionTree = this.column.filteringExpressionsTree;
         if (!expressionTree || expressionTree.filteringOperands.length === 0) {
+            this.currentTemplate = this.emptyFilter;
             return this.emptyFilter;
         }
 
         if (this.filteringService.isFilterComplex(this.column.field)) {
+            this.currentTemplate = this.complexFilter;
             return this.complexFilter;
         }
 
+        this.currentTemplate = this.defaultFilter;
         return this.defaultFilter;
     }
 
@@ -163,7 +180,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth;
-
+            
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
@@ -204,10 +221,59 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, DoCheck {
         }
     }
 
+    @HostListener('keydown', ['$event'])
+    public onTabKeyDown(eventArgs) {
+        if (eventArgs.keyCode === KEYCODES.TAB) {
+            if (eventArgs.shiftKey) {
+                if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
+                    eventArgs.preventDefault();
+                    this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex - 1);
+                }
+            } else {
+                if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
+                    switch (this.currentTemplate) {
+                        case 'defaultFilter':
+                            if(!this.isMoreIconHidden) {
+                                if (this.moreIcon.nativeElement.children[0] === document.activeElement) {
+                                    this.navService.goToFirstCell();
+                                }
+                            } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) === document.activeElement) {
+                                this.navService.goToFirstCell();
+                            }
+                            break;
+                        case 'emptyFilter':
+                        case 'complexFilter':
+                            this.navService.goToFirstCell();
+                            break;
+                    }
+                    
+                } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
+                    eventArgs.preventDefault();
+                    this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex + 1);
+                }
+            }
+            eventArgs.stopPropagation();
+        }
+    }
+
     public filteringIndicatorClass() {
         return {
             [this.baseClass]: !this.isMoreIconHidden,
             [`${this.baseClass}--hidden`]: this.isMoreIconHidden
+        }
+    }
+
+    public focusChip() {
+        if (this.currentTemplate === this.defaultFilter) {
+            if(!this.isMoreIconHidden) {
+                this.moreIcon.nativeElement.children[0].focus();
+            } else {
+                this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+            }
+        } else if (this.currentTemplate === this.emptyFilter) {
+            this.ghostChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+        } else if (this.currentTemplate === this.complexFilter) {
+            this.complexChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
         }
     }
 }
