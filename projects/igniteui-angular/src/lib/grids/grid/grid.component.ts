@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -21,6 +21,7 @@ import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
+import { takeUntil } from 'rxjs/operators';
 
 let NEXT_ID = 0;
 
@@ -53,7 +54,7 @@ export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden
@@ -726,6 +727,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         super.ngAfterContentInit();
+    }
+
+    public ngOnInit() {
+        super.ngOnInit();
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
     }
 
     public ngDoCheck(): void {
