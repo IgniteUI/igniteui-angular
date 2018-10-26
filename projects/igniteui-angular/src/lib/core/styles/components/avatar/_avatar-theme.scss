@@ -23,6 +23,7 @@
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
     $palette: $default-palette,
+    $preset: null,
     $icon-background: null,
     $icon-color: null,
     $initials-background: null,
@@ -37,6 +38,10 @@
         initials-color: igx-color($palette, 'grays', 800),
         image-background: transparent
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
