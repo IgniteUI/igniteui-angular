@@ -1980,10 +1980,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     private horizontalScrollHandler(event) {
-        this.headerContainer.onHScroll(event);
-        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
+        const scrollLeft = event.target.scrollLeft;
+
+        this.headerContainer.onHScroll(scrollLeft);
+        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         if (this.summaryContainer) {
-            this.summaryContainer.onHScroll(event);
+            this.summaryContainer.onHScroll(scrollLeft);
         }
         this.zone.run(() => {
             this.cdr.detectChanges();
