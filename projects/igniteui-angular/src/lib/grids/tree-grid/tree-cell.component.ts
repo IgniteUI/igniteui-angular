@@ -32,10 +32,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
     @ViewChild('indentationDiv', { read: ElementRef })
     public indentationDiv: ElementRef;
 
-    // TREE-GRID
-    // protected resolveStyleClasses(): string {
-    //     return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
-    // }
+    /**
+     * @hidden
+     */
+    protected resolveStyleClasses(): string {
+        return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
+    }
 
     public get indentation() {
         return this.row.indentation;

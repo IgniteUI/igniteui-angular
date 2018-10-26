@@ -50,10 +50,12 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         return this._treeRow.expanded;
     }
 
-    // TREE-GRID
-    // protected resolveClasses(): string {
-    //     const classes = super.resolveClasses();
-    //     const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
-    //     return `${classes} ${filteredClass}`;
-    // }
+    /**
+     * @hidden
+     */
+    protected resolveClasses(): string {
+        const classes = super.resolveClasses();
+        const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
+        return `${classes} ${filteredClass}`;
+    }
 }

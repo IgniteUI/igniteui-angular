@@ -370,33 +370,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
-
-        if (this.column.cellClasses) {
-            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
-                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
-                if (value) {
-                    defaultClasses.push(name);
-                }
-            }, this);
-        }
-
-        const classList = {
-            'igx_grid__cell--edit': this.inEditMode,
-            'igx-grid__td--number': this.column.dataType === DataType.Number,
-            'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected,
-            'igx-grid__td--edited': this.dirty
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
+        return this.resolveStyleClasses();
     }
 
     /**
@@ -876,4 +850,36 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     }
 
+    /**
+     * @hidden
+     */
+    protected resolveStyleClasses(): string {
+        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
+
+        if (this.column.cellClasses) {
+            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
+                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
+                if (value) {
+                    defaultClasses.push(name);
+                }
+            }, this);
+        }
+
+        const classList = {
+            'igx_grid__cell--edit': this.inEditMode,
+            'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
+            'igx-grid__td--editing': this.inEditMode,
+            'igx-grid__th--pinned': this.column.pinned,
+            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--selected': this.selected,
+            'igx-grid__td--edited': this.dirty
+        };
+
+        Object.entries(classList).forEach(([klass, value]) => {
+            if (value) {
+                defaultClasses.push(klass);
+            }
+        });
+        return defaultClasses.join(' ');
+    }
 }

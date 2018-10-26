@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
+import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -486,5 +486,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }
 
     protected remove_grouping_expression(id, fieldName) {
+    }
+
+    public should_apply_number_style(column: IgxColumnComponent): boolean {
+        return column.dataType === DataType.Number;
     }
 }
