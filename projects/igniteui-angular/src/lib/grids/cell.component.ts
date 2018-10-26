@@ -284,6 +284,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     set inEditMode(value: boolean) {
+        if (this.row.deleted) {
+            return;
+        }
         if (this.column.editable && value) {
             this.editValue = this.value;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
@@ -341,9 +344,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
  * @hidden
  */
     @HostBinding('style.min-height.px')
-    get cellHeight() {
-        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
-        return this.grid.rowHeight - rowOffsetH;
+    get minHeight() {
+        return this.grid ? this.grid.rowHeight : 32;
     }
 
     /**

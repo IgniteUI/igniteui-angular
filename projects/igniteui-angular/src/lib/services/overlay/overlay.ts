@@ -21,6 +21,10 @@ import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
 
+/**
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
+ * The overlay service allows users to show components on overlay div above all other elements in the page.
+ */
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
     private _componentId = 0;
@@ -38,25 +42,52 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Emitted before the component is opened.
+     * ```typescript
+     * onOpening(event: OverlayCancelableEventArgs){
+     *     const onOpening = event;
+     * }
+     * ```
      */
     public onOpening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
      * Emitted after the component is opened and all animations are finished.
+     * ```typescript
+     * onOpened(event: OverlayEventArgs){
+     *     const onOpened = event;
+     * }
+     * ```
      */
     public onOpened = new EventEmitter<OverlayEventArgs>();
 
     /**
      * Emitted before the component is closed.
+     * ```typescript
+     * onClosing(event: OverlayCancelableEventArgs){
+     *     const onClosing = event;
+     * }
+     * ```
      */
     public onClosing = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
      * Emitted after the component is closed and all animations are finished.
+     * ```typescript
+     * onClosed(event: OverlayEventArgs){
+     *     const onClosed = event;
+     * }
+     * ```
      */
     public onClosed = new EventEmitter<OverlayEventArgs>();
 
-    /** Emitted before animation is started */
+    /**
+     * Emitted before animation is started
+     * ```typescript
+     * onAnimation(event: OverlayAnimationEventArgs){
+     *     const onAnimation = event;
+     * }
+     * ```
+     */
     public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
 
     constructor(
@@ -79,6 +110,9 @@ export class IgxOverlayService implements OnDestroy {
      * @param component ElementRef or Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     * ```typescript
+     * this.overlay.show(element, settings);
+     * ```
      */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
@@ -151,6 +185,9 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Hides the component with the ID provided as a parameter.
+     * ```typescript
+     * this.overlay.hide(id);
+     * ```
      */
     hide(id: string) {
         const info: OverlayInfo = this.getOverlayById(id);
@@ -187,6 +224,9 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Hides all the components and the overlay.
+     * ```typescript
+     * this.overlay.hideAll();
+     * ```
      */
     hideAll() {
         // since overlays are removed on animation done, que all hides
@@ -197,6 +237,9 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Repositions the component with ID provided as a parameter.
+     * ```typescript
+     * this.overlay.reposition(id);
+     * ```
      */
     reposition(id: string) {
         const overlay = this.getOverlayById(id);

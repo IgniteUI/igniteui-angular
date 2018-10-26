@@ -1980,10 +1980,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     private horizontalScrollHandler(event) {
-        this.headerContainer.onHScroll(event);
-        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(event));
+        const scrollLeft = event.target.scrollLeft;
+
+        this.headerContainer.onHScroll(scrollLeft);
+        this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         if (this.summaryContainer) {
-            this.summaryContainer.onHScroll(event);
+            this.summaryContainer.onHScroll(scrollLeft);
         }
         this.zone.run(() => {
             this.cdr.detectChanges();
@@ -3440,6 +3442,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
+        if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
+            this.repositionRowEditingOverlay(this.rowInEditMode);
+        }
         this.cdr.detectChanges();
     }
 
@@ -3633,8 +3638,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     /**
-     * @hidden
-     */
+    * @hidden
+    */
     public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
@@ -4127,14 +4132,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public isExpandedGroup(group: IGroupByRecord): boolean {
         return undefined;
-    }
+                    }
 
      /**
      * @hidden
      */
     protected getGroupByRecords(): IGroupByRecord[] {
-        return null;
-    }
+            return null;
+        }
 
     // For paging we need just the increment between the start of the page and the current row
     private getPagingIncrement(groupByIncrement: number, groupIndexData: number[], page: number) {
@@ -4315,34 +4320,34 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
-        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id); // If row was passed, use it
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
-        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowInEdit.rowIndex]);
-        if (!rowObj) {
-            const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
-            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
+        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true); // Visible value
+        const lastCommitedValue = // Last commited value (w/o pending)
+        this.transactions.getState(rowInEdit.rowID) ? Object.assign({}, this.transactions.getState(rowInEdit.rowID).value) : {};
+        // we want pure object, not object reference, as it changes when endPending is called
+        this.transactions.endPending(commit); // End pending
+        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
+        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
+        let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
+        if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
+            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
         }
-        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue: newValue,
+            newValue,
             oldValue,
             row: rowObj
         });
-        this.transactions.endPending(commit);
         if (commit && newValue && !this.transactions.enabled) {
-            this.data[rowInEdit.rowIndex] = newValue;
+            this.data[rowIndex] = newValue; // If no transactions, write to data directly
         }
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);
         }
-        if (!commit) {
-            this._pipeTrigger++;
-        }
-        // this.cdr.detectChanges();
+        this._pipeTrigger++;
     }
 
     /**
