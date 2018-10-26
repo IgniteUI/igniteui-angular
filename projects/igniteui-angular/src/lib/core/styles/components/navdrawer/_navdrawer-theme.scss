@@ -32,6 +32,7 @@
 ///   @include igx-navdrawer($navdrawer-theme);
 @function igx-navdrawer-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $background: null,
     $border-color: null,
@@ -62,6 +63,10 @@
         item-active-icon-color: igx-color($palette, primary, 500),
         item-hover-icon-color: igx-color($palette, grays, 800)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);

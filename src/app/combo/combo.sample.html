@@ -35,7 +35,6 @@
                         </div>
                     </ng-template>
                     <ng-template #headerTemplate let-display let-key="valueKey">
-                        <div>This is a header</div>
                     </ng-template>
                     <ng-template igxComboFooterTemplate let-display let-key="valueKey">
                         <div>This is a footer</div>
@@ -50,12 +49,9 @@
             </div>
             <div class="btn-wrapper mb24">
                 <div class="btn-container">
-                    <button class="igx-button--flat" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"</button>
-                </div>
-            </div>
-            <div class="btn-wrapper mb24">
-                <div class="btn-container">
-                    <button class="igx-button--flat" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
+                    <button igxButton="raised" igxRipple (click)="toggleItem('Connecticut')">Toggle "Connecticut"
+                    </button>
+                    <button igxButton="raised" igxRipple (click)="changeItemTemplate()">Change Item Template</button>
                 </div>
             </div>
             <ng-template #customItemTemplate let-display let-key="valueKey">

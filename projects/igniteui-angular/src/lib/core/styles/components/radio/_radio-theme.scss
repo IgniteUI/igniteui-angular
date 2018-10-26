@@ -25,6 +25,8 @@
 ///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
@@ -54,6 +56,10 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,
@@ -225,9 +231,13 @@
 
     %radio-ripple--focused {
         @include animation('scale-in-out' 1s $ease-out-quad infinite);
-        background-color: --var($theme, 'fill-color');
+        background-color: --var($theme, 'empty-color');
         transition: background-color .2s $ease-out-quad;
         opacity: .12;
+    }
+
+    %radio-ripple--focused-checked {
+        background-color: --var($theme, 'fill-color');
     }
 
     %radio-ripple--hover {
