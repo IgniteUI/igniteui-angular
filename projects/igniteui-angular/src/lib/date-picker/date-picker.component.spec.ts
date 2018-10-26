@@ -331,6 +331,18 @@ describe('IgxDatePicker', () => {
         expect(datePicker.value.getSeconds()).toBe(date.getSeconds());
         expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
     });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.datePicker;
+            const editElement = fixture.debugElement.query(By.css('.igx-date-picker__input-date')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
+    });
 });
 
 @Component({

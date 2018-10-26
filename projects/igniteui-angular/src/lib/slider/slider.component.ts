@@ -5,6 +5,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { EditorProvider } from '../core/edit-provider';
 
 export enum SliderType {
     /**
@@ -57,7 +58,7 @@ let NEXT_ID = 0;
     selector: 'igx-slider',
     templateUrl: 'slider.component.html'
 })
-export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterViewInit {
+export class IgxSliderComponent implements ControlValueAccessor, EditorProvider, OnInit, AfterViewInit {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -540,6 +541,11 @@ export class IgxSliderComponent implements ControlValueAccessor, OnInit, AfterVi
      */
     public registerOnTouched(fn: any): void {
         this._onTouchedCallback = fn;
+    }
+
+    /** @hidden */
+    getEditElement() {
+        return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
     /**

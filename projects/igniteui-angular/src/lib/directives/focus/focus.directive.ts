@@ -1,4 +1,6 @@
-import { Directive, ElementRef, Input, NgModule } from '@angular/core';
+import { Directive, ElementRef, Input, NgModule, Optional, Inject, Self } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { EditorProvider } from '../../core/edit-provider';
 
 @Directive({
     exportAs: 'igxFocus',
@@ -43,10 +45,13 @@ export class IgxFocusDirective {
      * @memberof IgxFocusDirective
      */
     get nativeElement() {
+        if (this.comp && this.comp[0] && this.comp[0].getEditElement) {
+            return (this.comp[0] as EditorProvider).getEditElement();
+        }
         return this.element.nativeElement;
     }
 
-    constructor(private element: ElementRef) { }
+    constructor(private element: ElementRef, @Inject(NG_VALUE_ACCESSOR) @Self() @Optional() private comp?: any[]) { }
     /**
      * Triggers the igxFocus state.
      * ```typescript
