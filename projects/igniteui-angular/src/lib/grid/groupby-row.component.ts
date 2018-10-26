@@ -174,22 +174,26 @@ export class IgxGridGroupByRowComponent {
         event.preventDefault();
         event.stopPropagation();
         const shift = event.shiftKey;
+        const alt = event.altKey;
         const key = event.key.toLowerCase();
         if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
-        if (key === 'arrowleft' ||  key === 'left') {
-            if (this.expanded) {
-                this.grid.toggleGroup(this.groupRow);
-                const groupRowIndex = this.index;
-                this.grid.verticalScrollContainer.onChunkLoad
-                    .pipe(take(1))
-                    .subscribe(() => {
-                        this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
-                    });
+        if (this.isToggleKey(key)) {
+            if (!alt) { return; }
+            if (key === 'arrowleft' ||  key === 'left') {
+                if (this.expanded) {
+                    this.grid.toggleGroup(this.groupRow);
+                    const groupRowIndex = this.index;
+                    this.grid.verticalScrollContainer.onChunkLoad
+                        .pipe(take(1))
+                        .subscribe(() => {
+                            this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
+                        });
+                }
+                return;
+            } else if (key === 'arrowright' || key === 'right') {
+                if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
+                return;
             }
-            return;
-        } else if (key === 'arrowright' || key === 'right') {
-            if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
-            return;
         }
         const args = {cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
@@ -244,5 +248,8 @@ export class IgxGridGroupByRowComponent {
     private isKeySupportedInGroupRow(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'tab'].indexOf(key) !== -1;
+    }
+    private isToggleKey(key) {
+        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
     }
 }

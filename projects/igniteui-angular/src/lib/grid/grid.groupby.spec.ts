@@ -50,7 +50,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(cell.selected).toBe(true);
         }
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', groupRow.nativeElement, true);
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', code: 'arrowleft', altKey: true }));
         await wait(300);
         fix.detectChanges();
 
@@ -61,7 +61,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(cell.selected).toBe(true);
         }
 
-        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', groupRow.nativeElement, true);
+        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', code: 'arrowright', altKey: true }));
         await wait(100);
         fix.detectChanges();
 
@@ -606,16 +606,10 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const gRow = grid.groupsRowList.toArray()[0];
         expect(gRow.expanded).toBe(true);
-        const evtArrowLeft = new KeyboardEvent('keydown', {
-            code: 'ArrowLeft',
-            key: 'ArrowLeft'
-        });
-        const evtArrowRight = new KeyboardEvent('keydown', {
-            code: 'ArrowRight',
-            key: 'ArrowRight'
-        });
-        gRow.element.nativeElement.dispatchEvent(evtArrowLeft);
+        const evtArrowLeft = new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true });
 
+        const evtArrowRight = new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true });
+        gRow.element.nativeElement.dispatchEvent(evtArrowLeft);
         fix.detectChanges();
 
         expect(gRow.expanded).toBe(false);
@@ -649,7 +643,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
-        lastGroupRow.dispatchEvent(new KeyboardEvent('keydown', { code: 'ArrowLeft', key: 'ArrowLeft'}));
+        lastGroupRow.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
 
         await wait(100);
         fix.detectChanges();
@@ -657,7 +651,6 @@ describe('IgxGrid - GroupBy', () => {
         expect(lastGroupRow).toBeDefined();
         expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
         expect(lastGroupRow.getAttribute('aria-expanded')).toBe('false');
-
     }));
 
     xit('should allow keyboard navigation through group rows.', (async () => {
