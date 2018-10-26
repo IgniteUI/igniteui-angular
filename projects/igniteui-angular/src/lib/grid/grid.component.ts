@@ -4911,21 +4911,23 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
+        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true); // Visible value
+        const lastCommitedValue = // Last commited value (w/o pending)
+        this.transactions.getState(rowInEdit.rowID) ? Object.assign({}, this.transactions.getState(rowInEdit.rowID).value) : {};
+        // we want pure object, not object reference, as it changes when endPending is called
+        this.transactions.endPending(commit); // End pending
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
         let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
         if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-            const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
-            oldValue = lastCommitedValue ? lastCommitedValue.value : oldValue;
+            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
         }
-        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true); // Visible value
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
             newValue,
             oldValue,
             row: rowObj
         });
-        this.transactions.endPending(commit); // End pending
         if (commit && newValue && !this.transactions.enabled) {
             this.data[rowIndex] = newValue; // If no transactions, write to data directly
         }
