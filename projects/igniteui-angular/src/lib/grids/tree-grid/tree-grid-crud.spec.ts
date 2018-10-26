@@ -106,7 +106,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 // Try adding child row to a non-existing parent row
                 spyOn(treeGrid.onRowAdded, 'emit');
-                let newRow = {
+                const newRow = {
                     ID: 383,
                     Name: 'TEST NAME 1',
                     HireDate: new Date(2018, 3, 22),
@@ -259,7 +259,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 // Try adding child row to a non-existing parent row
                 spyOn(treeGrid.onRowAdded, 'emit');
-                let newRow = {
+                const newRow = {
                     ID: 777,
                     ParentID: 12345,  // there is no row with ID=12345
                     Name: 'New Employee 1',
