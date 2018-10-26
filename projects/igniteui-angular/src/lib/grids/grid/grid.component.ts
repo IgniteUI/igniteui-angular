@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -47,7 +47,9 @@ export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxGridAPIService }],
+    providers: [IgxGridNavigationService,
+        { provide: GridBaseAPIService, useClass: IgxGridAPIService },
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) }],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
