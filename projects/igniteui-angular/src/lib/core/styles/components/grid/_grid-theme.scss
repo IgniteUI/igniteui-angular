@@ -1462,7 +1462,6 @@
         igx-chips-area {
             transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
-            overflow: hidden;
 
             .igx-filtering-chips__connector {
                 font-size: rem(12px);
