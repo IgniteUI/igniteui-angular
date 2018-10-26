@@ -34,6 +34,7 @@
 ///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
@@ -65,8 +66,16 @@
         menu-button-disabled-text-color: initial
     );
 
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @if not($menu-text-color) and $menu-background {
         $menu-text-color: text-contrast($menu-background);
+    }
+
+    @if not($toggle-icon-color) and $toggle-active-background {
+        $toggle-icon-color: text-contrast($toggle-active-background);
     }
 
     @if not($menu-button-text-color) and $menu-background {
@@ -133,6 +142,7 @@
         color: --var($theme, 'toggle-icon-color');
 
         igx-icon {
+            color: --var($theme, 'toggle-icon-color');
             font-size: $grid-head-icon-size !important;
             line-height: $grid-head-icon-lh;
             padding: $grid-head-icon-padding;
@@ -142,10 +152,18 @@
 
     %igx-filtering-icon--active {
         color: --var($theme, 'toggle-icon-active-color');
+
+        igx-icon {
+            color: --var($theme, 'toggle-icon-active-color');
+        }
     }
 
     %igx-filtering-icon--filtered {
         color: --var($theme, 'toggle-icon-filtered-color');
+
+        igx-icon {
+            color: --var($theme, 'toggle-icon-filtered-color');
+        }
     }
 
     %igx-filtering-toggle {
