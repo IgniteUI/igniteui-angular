@@ -3,7 +3,7 @@ import {
     Output
 } from '@angular/core';
 
-import { cloneObject } from '../../core/utils';
+import { cloneValue } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
@@ -211,7 +211,7 @@ export abstract class IgxBaseExporter {
                 expressions: grid.sortingExpressions
             };
 
-            this._sort = cloneObject(grid.sortingExpressions[0]);
+            this._sort = cloneValue(grid.sortingExpressions[0]);
 
             data =  DataUtil.sort(data, sortingState);
         }

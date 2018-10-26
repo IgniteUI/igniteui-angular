@@ -84,7 +84,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!data) {
             if (grid.transactions.enabled) {
                 data = DataUtil.mergeTransactions(
-                    cloneArray(grid.data, true),
+                    cloneArray(grid.data),
                     grid.transactions.aggregatedState(true),
                     grid.primaryKey
                 );
