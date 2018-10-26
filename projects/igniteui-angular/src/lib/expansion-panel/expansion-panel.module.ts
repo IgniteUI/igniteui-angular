@@ -27,7 +27,7 @@ import { IgxExpansionPanelDescriptionDirective, IgxExpansionPanelTitleDirective,
     IgxExpansionPanelBodyComponent,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelIconDirective
+      IgxExpansionPanelIconDirective
   ],
   imports: [
     CommonModule,
