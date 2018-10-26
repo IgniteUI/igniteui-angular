@@ -22,3 +22,7 @@ $components: () !default;
 
 /// The global themes registry map.
 $themes: () !default;
+
+/// The global background color.
+$igx-background-color: #fff !default;
+$igx-foreground-color: rgba(0, 0, 0, .87) !default;

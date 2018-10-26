@@ -4,10 +4,8 @@
         <article class="sample-column">
             <h4 class="sample-title">Alert</h4>
             <p class="sample-description">Detailed description to be added.</p>
-            <div class="preview">
-                <img style="margin-left: -52px;" src="assets/images/dialog/alert.png" alt="Alert preview image">
-            </div>
-            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igxRipple="white" (click)="alert.open()">Trigger Alert</button>
+            <br>
+            <button igxButton="raised" igxRipple (click)="alert.open()">Trigger Alert</button>
             <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()">
             </igx-dialog>
         </article>
@@ -15,25 +13,23 @@
         <article class="sample-column">
             <h4 class="sample-title">Generic Dialog</h4>
             <p class="sample-description">Detailed description to be added</p>
-            <div class="preview">
-                <img style="margin-left: -52px;" src="assets/images/dialog/dialog.png" alt="Dialog preview image">
-            </div>
-            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igxRipple="white" (click)="dialog.open()">Trigger Dialog</button>
+            <br>
+            <button igxButton="raised" igxRipple (click)="dialog.open()">Trigger Dialog</button>
             <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
-                rightButtonRipple="#4CAF50" (onRightButtonSelect)="onDialogOKSelected($event)" message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
+                        (onRightButtonSelect)="onDialogOKSelected($event)"
+                        message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
             </igx-dialog>
         </article>
 
         <article class="sample-column">
             <h4 class="sample-title">Custom Dialog</h4>
             <p class="sample-description">Detailed description to be added</p>
-            <div class="preview">
-                <img style="margin-left: -52px;" src="assets/images/dialog/dialog.png" alt="Custom dialog preview image">
-            </div>
-            <button igxButton="raised" igxButtonColor="white" igxButtonBackground="#EC6F74" igRipple="white" (click)="form.open()">Trigger Custom</button>
+            <br>
+            <button igxButton="raised" igxRipple (click)="form.open()">Trigger Custom</button>
 
-            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onClose)="closeDialog($event)" (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In"
-                rightButtonBackgroundColor="#0375be" rightButtonColor="white"  backgroundClick="true" [closeOnOutsideSelect]="true">
+            <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
+                        (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
+                        [closeOnOutsideSelect]="true">
                 <div class="login-form">
                     <igx-input-group>
                         <igx-prefix>

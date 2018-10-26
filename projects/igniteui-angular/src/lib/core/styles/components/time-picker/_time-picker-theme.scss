@@ -32,6 +32,8 @@
 ///   @include igx-time-picker($my-button-theme);
 @function igx-time-picker-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $text-color: null,
     $hover-text-color: null,
     $selected-text-color: null,
@@ -53,6 +55,10 @@
         background-color: white
     );
 
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
     }
@@ -68,6 +74,14 @@
     @if not($selected-text-color) and $active-item-background {
         $selected-text-color: text-contrast($active-item-background);
     }
+
+    @if not($active-item-background) and $background-color {
+        $active-item-background: rgba(text-contrast($background-color), .12);
+    }
+
+    //@if not($active-item-background) and $background-color {
+    //    $active-item-background: lighten($background-color, 5%);
+    //}
 
     @return extend($default-theme, (
         palette: $palette,
