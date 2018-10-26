@@ -138,6 +138,9 @@ export class IgxGridAPIService {
 
     public get_row_index_in_data(id: string, rowID: any): number {
         const grid = this.get(id) as IgxGridComponent;
+        if (!grid) {
+            return -1;
+        }
         return grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
     }
 

@@ -4907,27 +4907,27 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxGridRowComponent) {
-        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id);
+        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id); // If row was passed, use it
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
-        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID);
+        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowIndex]);
-        if (!rowObj) {
+        let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
+        if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
             const lastCommitedValue = this.transactions.getState(rowInEdit.rowID);
-            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue.value) : oldValue;
+            oldValue = lastCommitedValue ? lastCommitedValue.value : oldValue;
         }
-        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true);
+        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true); // Visible value
         const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
         emitter.emit({
-            newValue: newValue,
+            newValue,
             oldValue,
             row: rowObj
         });
-        this.transactions.endPending(commit);
+        this.transactions.endPending(commit); // End pending
         if (commit && newValue && !this.transactions.enabled) {
-            this.data[rowIndex] = newValue;
+            this.data[rowIndex] = newValue; // If no transactions, write to data directly
         }
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);
