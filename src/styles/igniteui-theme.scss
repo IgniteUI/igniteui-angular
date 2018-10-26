@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
 
 @import 'mixins';
 @import 'app-palettes';
@@ -17,17 +16,19 @@
     color: $igx-foreground-color;
     @include scrollbar-love();
 
-    @include igx-theme($app-palette);
+    @include igx-theme($default-palette);
 }
 
 .dark-green-theme {
-    $igx-background-color: #222;
+    @import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
+
+    $igx-background-color: #484848;
     $igx-foreground-color: text-contrast($igx-background-color);
     background: $igx-background-color;
     color: $igx-foreground-color;
     @include scrollbar-love($igx-background-color);
 
-    @include igx-theme($app-dark-green-palette, $preset: $dark-green-theme);
+    @include igx-theme($default-palette, $preset: $dark-green-theme);
 
     .igniteui-logo__text {
         fill: #fff;
