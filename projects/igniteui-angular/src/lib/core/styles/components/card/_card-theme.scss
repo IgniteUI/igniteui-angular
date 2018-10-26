@@ -83,7 +83,7 @@
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
-    $card-border-radius: 2px;
+    $card-border-radius: 4px;
     $card-shadow: igx-elevation($elevations, 2);
     $card-shadow-hover: igx-elevation($elevations, 8);
 

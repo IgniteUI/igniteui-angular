@@ -8,11 +8,13 @@ import {
     NgModule,
     Output,
     Provider,
-    ViewChild
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE } from '../core/utils';
+import { EditorProvider } from '../core/edit-provider';
 
 export enum LabelPosition {
     BEFORE = 'before',
@@ -46,7 +48,7 @@ let nextId = 0;
     preserveWhitespaces: false,
     templateUrl: 'checkbox.component.html'
 })
-export class IgxCheckboxComponent implements ControlValueAccessor {
+export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
     /**
      *@hidden
      */
@@ -58,7 +60,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('checkbox') public nativeCheckbox;
+    @ViewChild('checkbox') public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
@@ -367,6 +369,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
      *@hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden */
+    getEditElement() {
+        return this.nativeCheckbox.nativeElement;
+    }
 }
 
 export const IGX_CHECKBOX_REQUIRED_VALIDATOR: Provider = {

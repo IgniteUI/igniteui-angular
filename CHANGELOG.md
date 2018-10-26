@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
 - Transaction Provider - `TransactionService` is an injectable middleware that a component can use to accumulate changes without affecting the underlying data. The provider exposes API to access, manipulate changes (undo and redo) and discard or commit all to the data.
 For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/services/transaction/README.md).
 - `igxGrid`:
+    - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
+
     - Row editing - allows modification of several cells in the row, before submitting, at once, all those changes to the grid's data source. Leverages the pending changes functionality of the new transaction provider.
 
         ```html
@@ -44,7 +46,6 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
         })
         export class GridWithTransactionsComponent { }
         ```
-
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.
