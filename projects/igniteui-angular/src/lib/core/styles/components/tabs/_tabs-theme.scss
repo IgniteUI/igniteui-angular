@@ -38,6 +38,7 @@
 
 @function igx-tabs-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $item-text-color: null,
     $item-background: null,
@@ -82,8 +83,16 @@
         button-ripple-color: igx-color($palette, 'grays', 100)
     );
 
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @if not($item-text-color) and $item-background {
         $item-text-color: text-contrast($item-background);
+    }
+
+    @if not($item-hover-color) and $item-background {
+        $item-hover-color: text-contrast($item-background);
     }
 
     @if not($item-hover-color) and $item-hover-background {
@@ -263,6 +272,10 @@
 
         %igx-tabs__header-menu-item-icon {
             color: --var($theme, 'item-active-icon-color');
+
+            igx-icon {
+                color: --var($theme, 'item-active-icon-color');
+            }
         }
     }
 

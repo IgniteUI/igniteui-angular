@@ -26,6 +26,8 @@
 ///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $track-color: null,
     $fill-color-default: null,
     $fill-color-danger: null,
@@ -46,6 +48,10 @@
         stripes-color: rgba(#fff, .7),
         text-color: igx-color($palette, 'grays', 700)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,

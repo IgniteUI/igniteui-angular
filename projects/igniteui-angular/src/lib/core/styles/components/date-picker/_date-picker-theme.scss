@@ -9,8 +9,16 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 ///
 /// @requires extend
-@function igx-date-picker-theme($palette: $default-palette) {
+@function igx-date-picker-theme(
+    $palette: $default-palette,
+    $preset: null
+) {
     $default-theme: (name: 'igx-date-picker');
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @return extend($default-theme, ($palette: $palette));
 }
 
