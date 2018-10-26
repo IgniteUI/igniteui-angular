@@ -593,9 +593,9 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
     isTopInitialPosition = null;
     public settings: ContainerPositionSettings;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
-        super.position(contentElement, size, document, initialCall);
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row
+        super.position(contentElement, { width: target.clientWidth, height: target.clientHeight }, document, initialCall);
 
         // Position of the overlay depends on the available space in the grid.
         // If the bottom space is not enough then the the row overlay will show at the top of the row.
@@ -608,5 +608,6 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
         contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
+        contentElement.style.width = target.clientWidth + 'px';
     }
 }
