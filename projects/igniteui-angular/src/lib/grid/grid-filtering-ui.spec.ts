@@ -756,7 +756,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(1);
     });
 
-    fit('UI - should correctly filter date column by \'this month\' filtering conditions', () => {
+    it('UI - should correctly filter date column by \'this month\' filtering conditions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
