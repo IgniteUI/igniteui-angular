@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
-import { IgxGridModule } from '../../grid';
-import { IgxGridComponent } from '../../grid/grid.component';
+import { IgxGridModule } from '../../grids/grid';
+import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
