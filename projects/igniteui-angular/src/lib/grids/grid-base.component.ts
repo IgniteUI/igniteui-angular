@@ -3933,7 +3933,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         let data: any[] = this.filteredData ? this.filteredData : this.data;
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
-                cloneArray(data, true),
+                cloneArray(data),
                 this.transactions.aggregatedState(true),
                 this.primaryKey
             );
