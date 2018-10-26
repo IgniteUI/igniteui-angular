@@ -53,6 +53,11 @@
 /// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
 ///
+/// @param {Color} $filtering-header-background [#fff] - The background color of the filtered column header.
+/// @param {Color} $filtering-header-text-color [rgba(0, 0, 0, .74)] - The text color color of the filtered column header.
+/// @param {Color} $filtering-row-background [#fff] - The background color of the filtering row.
+/// @param {Color} $filtering-row-text-color [rgba(0, 0, 0, .74)] - The text-color color of the filtering row.
+///
 /// @requires igx-color
 /// @requires igx-contrast-color
 /// @requires text-contrast
@@ -122,7 +127,12 @@
     $drop-area-text-color: null,
     $drop-area-icon-color: null,
     $drop-area-background: null,
-    $drop-area-on-drop-background: null
+    $drop-area-on-drop-background: null,
+
+    $filtering-header-background: null,
+    $filtering-header-text-color: null,
+    $filtering-row-background: null,
+    $filtering-row-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -189,6 +199,11 @@
 
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
+
+        filtering-header-background: #fff,
+        filtering-header-text-color: igx-color($palette, 'grays', 800),
+        filtering-row-background: #fff,
+        filtering-row-text-color: igx-color($palette, 'grays', 800)
     );
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -255,7 +270,6 @@
         $group-row-background: $header-background
     }
 
-    ///////
     @if not($expand-icon-color) and $group-row-background {
         $expand-icon-color: text-contrast($group-row-background)
     }
@@ -271,8 +285,6 @@
     @if not($group-count-background) and $group-row-selected-background {
         $group-count-background: text-contrast($group-row-selected-background);
     }
-    ////////
-
 
     @if not($expand-all-icon-color) and $header-background {
         $expand-all-icon-color: rgba(text-contrast($header-background), .87);
@@ -308,6 +320,26 @@
 
     @if not($drop-area-text-color) and $drop-area-background {
         $drop-area-text-color: text-contrast($drop-area-background)
+    }
+
+    @if not($filtering-header-background) and $header-background {
+        @if luminance($header-background) < .5 {
+            $filtering-header-background: lighten($header-background, 25%);
+        }
+    }
+
+    @if not($filtering-header-text-color) and $filtering-header-background {
+        $filtering-header-text-color: text-contrast(hexrgba($filtering-header-background));
+    }
+
+    @if not($filtering-row-background) and $header-background {
+        @if luminance($header-background) < .5 {
+            $filtering-row-background: lighten($header-background, 25%);
+        }
+    }
+
+    @if not($filtering-row-text-color) and $filtering-row-background {
+        $filtering-row-text-color: text-contrast(hexrgba($filtering-row-background));
     }
 
     @return extend($default-theme, (
@@ -374,6 +406,11 @@
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
+
+        filtering-header-background: $filtering-header-background,
+        filtering-header-text-color: $filtering-header-text-color,
+        filtering-row-background: $filtering-row-background,
+        filtering-row-text-color: $filtering-row-text-color
     ));
 }
 
@@ -563,7 +600,6 @@
     %grid-thead-item,
     %grid-thead-subgroup {
         position: relative;
-        z-index: 0;
     }
 
     %grid-tfoot {
@@ -791,18 +827,9 @@
     }
 
     %grid-cell-header--filtering {
-        background: #fff;
+        background: --var($theme, 'filtering-header-background');
+        color: --var($theme, 'filtering-header-text-color');
         z-index: 3;
-
-        &::after {
-            position: absolute;
-            content: '';
-            background: inherit;
-            left: 1px;
-            width: calc(100% - 2px);
-            bottom: -2px;
-            height: 4px;
-        }
     }
 
     %grid-cell-header--cosy {
@@ -1495,7 +1522,8 @@
         padding: map-get($grid-cell-padding, 'cosy');
         align-items: center;
         justify-content: space-between;
-        background: #fff;
+        background: --var($theme, 'filtering-row-background');
+        color: --var($theme, 'filtering-row-text-color');
         bottom: 0;
         z-index: 3;
 
@@ -1506,7 +1534,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            box-shadow: 0 1px 0 #fff,
+            box-shadow: 0 1px 0 --var($theme, 'filtering-row-background'),
                 0 4px 10px rgba(0, 0, 0, .12);
         }
 
