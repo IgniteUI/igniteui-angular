@@ -133,7 +133,7 @@
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
 
-    $group-radius: 2px;
+    $group-radius: 4px;
     $group-shadow: igx-elevation($elevations, 2);
 
     $group-item-min-width: 24px;

@@ -113,7 +113,6 @@
         align-items: center;
         flex-flow: column nowrap;
         transform-style: preserve-3d;
-        outline: none;
     }
 
     %igx-carousel-slide-wrapper {
@@ -121,6 +120,7 @@
         width: 100%;
         height: inherit;
         overflow: hidden;
+        outline-style: none;
 
         .active {
             display: block;
