@@ -165,39 +165,3 @@ export class IgxGridFilteringPipe implements PipeTransform {
         return result;
     }
 }
-
-/**
- *@hidden
- */
-@Pipe({
-    name: 'filterCondition',
-    pure: true
-})
-export class IgxGridFilterConditionPipe implements PipeTransform {
-
-    public transform(value: string): string {
-        return value.split(/(?=[A-Z])/).join(' ');
-    }
-}
-
-@Pipe({
-    name: 'gridTransaction',
-    pure: true
-})
-export class IgxGridTransactionPipe implements PipeTransform {
-
-    constructor(private gridAPI: IgxGridAPIService) { }
-
-    transform(collection: any[], id: string, pipeTrigger: number) {
-        const grid: IgxGridComponent = this.gridAPI.get(id);
-
-        if (collection && grid.transactions.enabled) {
-            const result = DataUtil.mergeTransactions(
-                cloneArray(collection),
-                grid.transactions.aggregatedState(true),
-                grid.primaryKey);
-            return result;
-        }
-        return collection;
-    }
-}
