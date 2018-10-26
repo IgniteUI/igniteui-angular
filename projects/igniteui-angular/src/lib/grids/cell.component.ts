@@ -344,9 +344,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
  * @hidden
  */
     @HostBinding('style.min-height.px')
-    get cellHeight() {
-        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
-        return this.grid.rowHeight - rowOffsetH;
+    get minHeight() {
+        return this.grid ? this.grid.rowHeight : 32;
     }
 
     /**
@@ -527,7 +526,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.selected) {
             return;
         }
-        const rowInEdit = this.grid.rowEditable ? this.gridAPI.get_row_inEditMode(this.gridID) : null; // Get current editted row
+        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current editted row
         const inEditRow = this.belongsToEditRow; // Check if cell is in current editable mode, if any
         this._clearCellSelection();
         this._saveCellSelection();
@@ -536,11 +535,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
             }
-            if (rowInEdit) { // If there is a row being edited
+            if (editRowState) { // If there is a row being edited
                 if (inEditRow && !this.column.editable) { // and this cell is in the row and is NOT editable, submit the values and close
-                    this.exitRowEdit(true, true, rowInEdit);
+                    this.exitRowEdit(true, true, editRowState);
                 } else if (!inEditRow) { // or this is not in the editted row
-                    this.exitRowEdit(true, !this.column.editable, rowInEdit); // submit data and close the overlay depending on editable
+                    this.exitRowEdit(true, !this.column.editable, editRowState); // submit data and close the overlay depending on editable
                 }
             }
             this.selected = true;
@@ -829,7 +828,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
-                const rowInEdit = this.gridAPI.get_row_inEditMode(this.gridID);
+                const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
                 this.gridAPI.submit_value(this.gridID);
                 this.exitRowEdit(true, true, rowInEdit);
                 this.nativeElement.focus();
@@ -841,7 +840,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
-            const rowInEdit = this.gridAPI.get_row_inEditMode(this.gridID);
+            const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
             this.inEditMode = false;
             this.exitRowEdit(false, true, rowInEdit);
             this.nativeElement.focus();

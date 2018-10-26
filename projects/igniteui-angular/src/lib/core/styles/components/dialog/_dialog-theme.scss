@@ -79,7 +79,7 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
-        border-radius: 2px;
+        border-radius: 4px;
         background: --var($theme, 'background');
         box-shadow: igx-elevation($elevations, 24);
         overflow: hidden;

@@ -91,15 +91,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     /**
      * @hidden
      */
-    @HostBinding('style.min-height.px')
-    get rowHeight() {
-        const rowOffsetH = this.element.nativeElement.offsetHeight - this.element.nativeElement.clientHeight;
-        return this.grid.rowHeight - rowOffsetH;
-    }
-
-    /**
-     * @hidden
-     */
     @HostBinding('attr.role')
     public role = 'row';
 
@@ -184,8 +175,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
 
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editableRow = this.gridAPI.get_row_inEditMode(this.gridID);
-            return (editableRow && editableRow.rowID === this.rowID) || false;
+            const editRowState = this.gridAPI.get_edit_row_state(this.gridID);
+            return (editRowState && editRowState.rowID === this.rowID) || false;
         } else {
             return false;
         }

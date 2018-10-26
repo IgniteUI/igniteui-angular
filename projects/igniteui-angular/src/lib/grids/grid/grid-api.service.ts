@@ -29,30 +29,26 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions(id);
     }
 
-    public clear_groupby(id: string, name?: string) {
+    public clear_groupby(id: string, name?: string | Array<string>) {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         if (name) {
-            // clear specific expression
-            const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === name);
-            const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === name);
-            const grpExpandState = this.get(id).groupingExpansionState;
-            if (grExprIndex > -1) {
-                groupingState.splice(grExprIndex, 1);
-            }
-            if (sortExprIndex > -1) {
-                sortingState.splice(sortExprIndex, 1);
-            }
-            this.get(id).groupingExpressions = groupingState;
-            this.get(id).sortingExpressions = sortingState;
-
-            /* remove expansion states related to the cleared group
-            and all with deeper hierarchy than the cleared group */
-            this.get(id).groupingExpansionState = grpExpandState
-                .filter((val) => {
-                    return val.hierarchy && val.hierarchy.length <= grExprIndex;
-                });
+            const names = typeof name === 'string' ? [ name ] : name;
+            const groupedCols = groupingState.filter((state) => !names.includes(state.fieldName));
+            const newSortingExpr = sortingState.filter((state) => !names.includes(state.fieldName));
+            this.get(id).groupingExpressions = groupedCols;
+            this.get(id).sortingExpressions = newSortingExpr;
+            names.forEach((colName) => {
+                const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
+                const grpExpandState = this.get(id).groupingExpansionState;
+                /* remove expansion states related to the cleared group
+                and all with deeper hierarchy than the cleared group */
+                this.get(id).groupingExpansionState = grpExpandState
+                    .filter((val) => {
+                        return val.hierarchy && val.hierarchy.length <= grExprIndex;
+                    });
+            });
         } else {
             // clear all
             this.get(id).groupingExpressions = [];
@@ -74,20 +70,55 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             DataUtil.isHierarchyMatch(state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
     }
 
+    public groupBy_is_row_in_group(id: string, groupRow: IGroupByRecord, rowID): boolean {
+        const grid = this.get(id);
+        let rowInGroup = false;
+        groupRow.records.forEach(row => {
+            if (grid.primaryKey ? row[grid.primaryKey] === rowID : row === rowID) {
+                rowInGroup = true;
+            }
+        });
+        return rowInGroup;
+    }
+
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
         const grid = this.get(id);
         const expansionState = grid.groupingExpansionState;
+        let toggleRowEditingOverlay: boolean;
+        let isEditRowInGroup = false;
+        if (grid.rowEditable) {
+            const rowState = this.get_edit_row_state(id);
 
+            // Toggle only row editing overlays that are inside current expanded/collapsed group.
+            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(id, groupRow, this.get_edit_row_state(id).rowID) : false;
+        }
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(id, groupRow);
         if (state) {
             state.expanded = !state.expanded;
+            if (isEditRowInGroup) {
+                toggleRowEditingOverlay = state.expanded;
+            }
         } else {
             expansionState.push({
                 expanded: !grid.groupsExpanded,
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
+            if (isEditRowInGroup) {
+                toggleRowEditingOverlay = false;
+            }
         }
         this.get(id).groupingExpansionState = expansionState;
+        if (grid.rowEditable) {
+            if (toggleRowEditingOverlay !== undefined) {
+                grid.toggleRowEditingOverlay(toggleRowEditingOverlay);
+            }
+
+            // If row overlay is opened in a group and another group is expanded/collapsed,
+            // then the row in edit will move down/up and therefore the row edit overlay should move down/up.
+            if (grid.rowInEditMode && !grid.rowEditingOverlay.collapsed) {
+                grid.repositionRowEditingOverlay(grid.rowInEditMode);
+            }
+        }
     }
 
     protected remove_grouping_expression(id, fieldName) {

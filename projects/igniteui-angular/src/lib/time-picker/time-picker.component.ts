@@ -32,6 +32,7 @@ import {
     IgxTimePickerTemplateDirective
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
+import { EditorProvider } from '../core/edit-provider';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -67,7 +68,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
     styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnDestroy, DoCheck, AfterViewInit {
+export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy, DoCheck, AfterViewInit {
 
     private _value: Date;
 
@@ -522,6 +523,11 @@ export class IgxTimePickerComponent implements ControlValueAccessor, OnInit, OnD
      * @hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /** @hidden */
+    getEditElement() {
+        return this._input.nativeElement;
+    }
 
     private _onTouchedCallback: () => void = () => { };
 
