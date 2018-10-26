@@ -1519,13 +1519,14 @@ export class CustomFilter extends IgxFilteringOperand {
 
     private constructor () {
         super();
-        // this.operations = [{
-        //     name: 'custom',
-        //     isUnary: false,
-        //     logic: (target: string): boolean => {
-        //         return target === 'custom';
-        //     }
-        // }];
+        this.operations = [{
+            name: 'custom',
+            isUnary: false,
+            logic: (target: string): boolean => {
+                return target === 'custom';
+            },
+            iconName: 'custom'
+        }];
     }
 
     public static instance(): CustomFilter {
