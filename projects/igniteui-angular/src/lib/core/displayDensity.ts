@@ -1,4 +1,5 @@
-import { InjectionToken, Input } from '@angular/core';
+import { InjectionToken, Input, Output, EventEmitter, DoCheck } from '@angular/core';
+
 
 /**
  * Defines the posible values of the components' display density.
@@ -16,6 +17,11 @@ export interface IDisplayDensity {
     displayDensity: DisplayDensity;
 }
 
+export interface IDensityChangedEventArgs {
+    oldDensity: DisplayDensity | string;
+    newDensity: DisplayDensity | string;
+}
+
 /**
  * Defines the DisplayDensity DI token.
  */
@@ -24,7 +30,7 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensity>('DisplayD
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */
-export class DisplayDensityBase {
+export class DisplayDensityBase implements DoCheck {
     protected _displayDensity: DisplayDensity | string;
 
     /**
@@ -44,6 +50,7 @@ export class DisplayDensityBase {
      * Sets the theme of the component.
      */
     public set displayDensity(val: DisplayDensity | string) {
+        const currentDisplayDensity = this._displayDensity;
         switch (val) {
             case 'compact':
                 this._displayDensity = DisplayDensity.compact;
@@ -55,12 +62,23 @@ export class DisplayDensityBase {
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+        if (currentDisplayDensity !== this._displayDensity) {
+            const densityChangedArgs: IDensityChangedEventArgs = {
+                oldDensity: currentDisplayDensity,
+                newDensity: this._displayDensity
+            };
+        this.onDensityChanged.emit(densityChangedArgs);
+        }
     }
+
+    @Output()
+    public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
+    protected oldDisplayDensityOptions: IDisplayDensity = { displayDensity: DisplayDensity.comfortable };
 
     /**
      *@hidden
      */
-    protected isCosy(): boolean {
+    public isCosy(): boolean {
         return this._displayDensity === DisplayDensity.cosy ||
             (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy);
     }
@@ -68,7 +86,7 @@ export class DisplayDensityBase {
     /**
      *@hidden
      */
-    protected isComfortable(): boolean {
+    public isComfortable(): boolean {
         return this._displayDensity === DisplayDensity.comfortable ||
             (!this._displayDensity && (!this.displayDensityOptions ||
              this.displayDensityOptions.displayDensity === DisplayDensity.comfortable));
@@ -77,10 +95,19 @@ export class DisplayDensityBase {
     /**
      *@hidden
      */
-    protected isCompact(): boolean {
+    public isCompact(): boolean {
         return this._displayDensity === DisplayDensity.compact ||
             (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact);
     }
+    constructor(protected displayDensityOptions: IDisplayDensity) {
+        Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
+    }
 
-    constructor(protected displayDensityOptions: IDisplayDensity) {}
+    public ngDoCheck() {
+        if (this.oldDisplayDensityOptions && this.displayDensityOptions &&
+            this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
+            this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
+            this.onDensityChanged.emit();
+        }
+    }
 }
