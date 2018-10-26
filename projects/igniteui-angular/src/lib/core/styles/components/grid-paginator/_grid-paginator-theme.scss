@@ -65,6 +65,7 @@
         padding: rem(5px) 0;
         font-size: 12px;
         border-top: 1px dotted --var($theme, 'border-color');
+        z-index: 1;
 
         &:empty {
             padding: 0;
