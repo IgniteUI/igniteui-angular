@@ -1547,6 +1547,23 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBeFalsy();
             }));
 
+            it(`Should not allow editing a deleted row`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+
+                grid.deleteRow(grid.getRowByIndex(2).rowID);
+                fix.detectChanges();
+
+                const cell = grid.getCellByColumn(2, 'ProductName');
+                cell.inEditMode = true;
+                tick();
+                fix.detectChanges();
+                expect(cell.inEditMode).toBeFalsy();
+            }));
+
             it(`Should exit row editing AND COMMIT on filter`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 fix.detectChanges();
