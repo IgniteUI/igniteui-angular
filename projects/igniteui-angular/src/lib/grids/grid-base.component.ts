@@ -3440,6 +3440,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
+        if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
+            this.repositionRowEditingOverlay(this.rowInEditMode);
+        }
         this.cdr.detectChanges();
     }
 
