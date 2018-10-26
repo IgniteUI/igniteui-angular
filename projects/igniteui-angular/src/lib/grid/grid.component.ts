@@ -559,21 +559,21 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
 	 * @memberof IgxGridComponent
      */
-public set displayDensity(val: DisplayDensity | string) {
-    switch (val) {
-        case 'compact':
-            this._displayDensity = DisplayDensity.compact;
-            break;
-        case 'cosy':
-            this._displayDensity = DisplayDensity.cosy;
-            break;
-        case 'comfortable':
-        default:
-            this._displayDensity = DisplayDensity.comfortable;
-    }
+    public set displayDensity(val: DisplayDensity | string) {
+        switch (val) {
+            case 'compact':
+                this._displayDensity = DisplayDensity.compact;
+                break;
+            case 'cosy':
+                this._displayDensity = DisplayDensity.cosy;
+                break;
+            case 'comfortable':
+            default:
+                this._displayDensity = DisplayDensity.comfortable;
+        }
 
-    this.onDensityChanged.emit();
-}
+        this.onDensityChanged.emit();
+    }
 
     /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
