@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { isIE } from '../core/utils';
 
 export enum SwitchLabelPosition {
     BEFORE = 'before',
@@ -290,6 +291,10 @@ export class IgxSwitchComponent implements ControlValueAccessor {
     public _onSwitchClick(event) {
         event.stopPropagation();
         this.toggle();
+
+        if (isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
     }
     /**
      *@hidden

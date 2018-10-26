@@ -47,6 +47,7 @@
 ///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -78,6 +79,9 @@
     $success-secondary-color: null,
     $warning-secondary-color: null,
     $error-secondary-color: null,
+
+    $placeholder-color: null,
+    $disabled-placeholder-color: null,
 
     $variant: 'dark'
 ) {
@@ -116,7 +120,9 @@
 
         success-secondary-color: igx-color($palette, 'success'),
         warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error')
+        error-secondary-color: igx-color($palette, 'error'),
+        placeholder-color: igx-color($palette, 'grays', 500),
+        disabled-placeholder-color: igx-color($palette, 'grays', 400)
     );
 
     $light-theme: (
@@ -152,13 +158,21 @@
 
         success-secondary-color: igx-color($palette, 'success'),
         warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error')
+        error-secondary-color: igx-color($palette, 'error'),
+        placeholder-color: #999,
+        disabled-placeholder-color: #777
+
+
     );
 
     $default-theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,
@@ -194,10 +208,22 @@
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
+        placeholder-color: $placeholder-color,
+        disabled-placeholder-color: $disabled-placeholder-color,
 
         variant: $variant
     ));
+
+    @if not($placeholder-color) and $box-background {
+        $placeholder-color: text-contrast($box-background);
+    }
+
+    @if not($placeholder-color) and $search-background {
+        $placeholder-color: text-contrast($search-background);
+    }
 }
+
+
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
@@ -564,6 +590,7 @@
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
         padding: 0 0 rem(8px, map-get($base-scale-size, 'comfortable'));
         border-top: rem(8px, map-get($base-scale-size, 'comfortable')) solid rgba(0, 0, 0, 0);
+        line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -577,7 +604,7 @@
         }
 
         &::placeholder {
-            color: igx-color($palette, 'grays', 500);
+            color: --var($theme, 'placeholder-color');
             opacity: 1;
         }
     }
@@ -624,13 +651,14 @@
         color: --var($theme, 'disabled-text-color');
 
         &::placeholder {
-            color: igx-color($palette, 'grays', 400);
+            color: --var($theme, 'disabled-placeholder-color');
         }
     }
 
     %form-group-textarea {
         min-height: rem(82px, map-get($base-scale-size, 'comfortable')); /* 3 lines * 22px + 8px bottom padding + 8px top padding */
         margin-right: -#{rem(16px, map-get($base-scale-size, 'comfortable'))}; /* this fixes resizing in chrome !?!? */
+        line-height: normal !important; /* resets typography styles */
         height: auto;
         resize: vertical;
         overflow: hidden;
@@ -863,7 +891,6 @@
         order: 1;
     }
 }
-
 
 /// Adds typography styles for the igx-input-group component.
 /// Uses the 'body-1', 'caption'
