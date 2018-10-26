@@ -2870,18 +2870,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     /**
-     * Returns if the grid's group by drop area is visible.
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public get dropAreaVisible(): boolean {
-        return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGoupingExpressions.length;
-    }
-
-    /**
      * Filters a single `IgxColumnComponent`.
      * ```typescript
      * public filter(term) {
