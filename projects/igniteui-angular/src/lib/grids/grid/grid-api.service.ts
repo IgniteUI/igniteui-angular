@@ -29,30 +29,26 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         this.arrange_sorting_expressions(id);
     }
 
-    public clear_groupby(id: string, name?: string) {
+    public clear_groupby(id: string, name?: string | Array<string>) {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         if (name) {
-            // clear specific expression
-            const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === name);
-            const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === name);
-            const grpExpandState = this.get(id).groupingExpansionState;
-            if (grExprIndex > -1) {
-                groupingState.splice(grExprIndex, 1);
-            }
-            if (sortExprIndex > -1) {
-                sortingState.splice(sortExprIndex, 1);
-            }
-            this.get(id).groupingExpressions = groupingState;
-            this.get(id).sortingExpressions = sortingState;
-
-            /* remove expansion states related to the cleared group
-            and all with deeper hierarchy than the cleared group */
-            this.get(id).groupingExpansionState = grpExpandState
-                .filter((val) => {
-                    return val.hierarchy && val.hierarchy.length <= grExprIndex;
-                });
+            const names = typeof name === 'string' ? [ name ] : name;
+            const groupedCols = groupingState.filter((state) => !names.includes(state.fieldName));
+            const newSortingExpr = sortingState.filter((state) => !names.includes(state.fieldName));
+            this.get(id).groupingExpressions = groupedCols;
+            this.get(id).sortingExpressions = newSortingExpr;
+            names.forEach((colName) => {
+                const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
+                const grpExpandState = this.get(id).groupingExpansionState;
+                /* remove expansion states related to the cleared group
+                and all with deeper hierarchy than the cleared group */
+                this.get(id).groupingExpansionState = grpExpandState
+                    .filter((val) => {
+                        return val.hierarchy && val.hierarchy.length <= grExprIndex;
+                    });
+            });
         } else {
             // clear all
             this.get(id).groupingExpressions = [];
