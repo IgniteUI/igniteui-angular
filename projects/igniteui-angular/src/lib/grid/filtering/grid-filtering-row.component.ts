@@ -590,7 +590,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const chipsAreaRect = this.chipsArea.element.nativeElement.getBoundingClientRect();
 
         if (event === 'right') {
-            elementsFromPoint = document.elementsFromPoint(containerRect.right - 1, containerRect.top + containerRect.height / 2);
+            elementsFromPoint = this.getElementsAtPoint(containerRect.right - 1, containerRect.top + containerRect.height / 2);
             for (let i = 0; i < elementsFromPoint.length; i++) {
                 if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
                     lastVisibleElement = elementsFromPoint[i];
@@ -599,13 +599,29 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 }
             }
 
-            if (lastVisibleElement && chipsAreaRect.right > containerRect.right) {
+            if (lastVisibleElement) {
                 this.offset += -(lastVisibleElementRect.width - (containerRect.right - lastVisibleElementRect.left) + 5);
+            } else if (chipsAreaRect.right > containerRect.right){
+                elementsFromPoint = this.getElementsAtPoint(containerRect.right - 5, containerRect.top + containerRect.height / 2);
+                for (let i = 0; i < elementsFromPoint.length; i++) {
+                    if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
+                        const childen = this.chipsArea.element.nativeElement.children;
+                        for (let index = 0; index < childen.length; index++) {
+                            if (childen[index].isSameNode(elementsFromPoint[i]) && index !== childen.length - 1) {
+                                lastVisibleElement = childen[index + 1];
+                                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                this.offset += -(lastVisibleElementRect.width + 5);
             }
         }
 
         if (event === 'left') {
-            elementsFromPoint = document.elementsFromPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
+            elementsFromPoint = this.getElementsAtPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
             for (let i = 0; i < elementsFromPoint.length; i++) {
                 if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
                     lastVisibleElement = elementsFromPoint[i];
@@ -614,8 +630,24 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 }
             }
 
-            if (lastVisibleElement && chipsAreaRect.left < containerRect.left) {
+            if (lastVisibleElement) {
                 this.offset += containerRect.left - lastVisibleElementRect.left + 5;
+            } else if (chipsAreaRect.left < containerRect.left) {
+                elementsFromPoint = this.getElementsAtPoint(containerRect.left + 5, containerRect.top + containerRect.height / 2);
+                for (let i = 0; i < elementsFromPoint.length; i++) {
+                    if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
+                        const childen = this.chipsArea.element.nativeElement.children;
+                        for (let index = 0; index < childen.length; index++) {
+                            if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
+                                lastVisibleElement = childen[index - 1];
+                                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                this.offset += lastVisibleElementRect.width + 5;
             }
         }
 
@@ -630,32 +662,57 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     private scrollChipsOnRemove() {
         const containerRect = this.container.nativeElement.getBoundingClientRect();
-        const chipsAreaRect = this.chipsArea.element.nativeElement.getBoundingClientRect();
 
         let lastVisibleElement, lastVisibleElementRect, elementsFromPoint;
-        if (chipsAreaRect.left < containerRect.left) {
-            elementsFromPoint = document.elementsFromPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
+        elementsFromPoint = this.getElementsAtPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
+        for (let i = 0; i < elementsFromPoint.length; i++) {
+            if (elementsFromPoint[i].id === 'chip') {
+                lastVisibleElement = elementsFromPoint[i];
+                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                break;
+            }
+
+            if (elementsFromPoint[i].id === 'operand') {
+                const childen = this.chipsArea.element.nativeElement.children;
+                for (let index = 0; index < childen.length; index++) {
+                    if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
+                        lastVisibleElement = childen[index - 1];
+                        lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (!lastVisibleElement) {
+            elementsFromPoint = this.getElementsAtPoint(containerRect.left + 5, containerRect.top + containerRect.height / 2);
             for (let i = 0; i < elementsFromPoint.length; i++) {
-                if (elementsFromPoint[i].id === 'chip') {
-                    lastVisibleElement = elementsFromPoint[i];
-                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                    break;
-                }
-
-                if (elementsFromPoint[i].id === 'operand') {
-                    lastVisibleElement = this.chipsArea.chipsList.toArray().filter((chip) =>
-                        elementsFromPoint[i].getBoundingClientRect().left - chip.elementRef.nativeElement.getBoundingClientRect().right < 5 &&
-                        elementsFromPoint[i].getBoundingClientRect().left - chip.elementRef.nativeElement.getBoundingClientRect().right > 0 )[0];
-
-                    lastVisibleElementRect = lastVisibleElement.elementRef.nativeElement.getBoundingClientRect();
+                if (elementsFromPoint[i].id === 'operand' || elementsFromPoint[i].id === 'chip') {
+                    const childen = this.chipsArea.element.nativeElement.children;
+                    for (let index = 0; index < childen.length; index++) {
+                        if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
+                            lastVisibleElement = childen[index - 1];
+                            lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
+                            break;
+                        }
+                    }
                     break;
                 }
             }
+        }
 
-            if (lastVisibleElement) {
-                this.offset += containerRect.left - lastVisibleElementRect.left + 5;
-                this.transform(this.offset);
-            }
+        this.offset += containerRect.left - lastVisibleElementRect.left + 5;
+        this.transform(this.offset);
+    }
+
+    private getElementsAtPoint(pageX: number, pageY: number) {
+        const viewPortX = pageX - window.pageXOffset;
+        const viewPortY = pageY - window.pageYOffset;
+        if (document['msElementsFromPoint']) {
+            return document['msElementsFromPoint'](viewPortX, viewPortY); // Edge and IE
+        } else {
+            return document.elementsFromPoint(viewPortX, viewPortY);
         }
     }
 }
