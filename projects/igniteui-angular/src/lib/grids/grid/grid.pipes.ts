@@ -165,4 +165,3 @@ export class IgxGridFilteringPipe implements PipeTransform {
         return result;
     }
 }
-
