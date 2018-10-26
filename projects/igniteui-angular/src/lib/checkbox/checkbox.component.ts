@@ -311,7 +311,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor {
         // as it gets triggered on label click
         event.stopPropagation();
 
-        if (isIE) {
+        if (isIE()) {
             this.nativeCheckbox.nativeElement.blur();
         }
 
