@@ -24,6 +24,8 @@
 ///   @include igx-navbar($my-navbar-theme);
 @function igx-navbar-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background: null,
     $text-color: null,
     $idle-icon-color: null,
@@ -38,6 +40,10 @@
         hover-icon-color: #fff,
         nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);

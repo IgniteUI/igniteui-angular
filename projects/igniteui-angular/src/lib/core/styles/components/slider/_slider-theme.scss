@@ -24,6 +24,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-slider-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $track-color: null,
     $thumb-color: null,
@@ -66,6 +67,10 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
