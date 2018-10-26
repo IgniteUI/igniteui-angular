@@ -399,7 +399,7 @@ export class IgxGridAPIService {
     public groupBy_toggle_group(id: string, groupRow: IGroupByRecord) {
         const grid = this.get(id);
         const expansionState = grid.groupingExpansionState;
-        let isEditRowVisible: boolean;
+        let toggleRowEditingOverlay: boolean;
         let isEditRowInGroup = false;
         if (grid.rowEditable) {
             const rowState = this.get_edit_row_state(id);
@@ -411,7 +411,7 @@ export class IgxGridAPIService {
         if (state) {
             state.expanded = !state.expanded;
             if (isEditRowInGroup) {
-                isEditRowVisible = state.expanded;
+                toggleRowEditingOverlay = state.expanded;
             }
         } else {
             expansionState.push({
@@ -419,12 +419,14 @@ export class IgxGridAPIService {
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
             if (isEditRowInGroup) {
-                isEditRowVisible = false;
+                toggleRowEditingOverlay = false;
             }
         }
         this.get(id).groupingExpansionState = expansionState;
         if (grid.rowEditable) {
-            grid.toggleRowEditingOverlay(isEditRowVisible);
+            if (toggleRowEditingOverlay !== undefined) {
+                grid.toggleRowEditingOverlay(toggleRowEditingOverlay);
+            }
 
             // If row overlay is opened in a group and another group is expanded/collapsed,
             // then the row in edit will move down/up and therefore the row edit overlay should move down/up.
