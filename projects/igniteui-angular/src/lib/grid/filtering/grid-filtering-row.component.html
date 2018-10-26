@@ -1,10 +1,11 @@
+<!-- Have to apply styles inline because of the overlay outlet ... -->
 <igx-drop-down #inputGroupConditions (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item
         *ngFor="let condition of conditions"
         [value]="condition"
         [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-        <span>{{ condition | filterCondition | titlecase }}</span>
+        <span style="margin-left: 16px">{{ condition | filterCondition | titlecase }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 

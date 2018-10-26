@@ -20,11 +20,11 @@
                     fontSet="filtering-icons"
                     [name]="item.expression.condition.iconName">
                 </igx-icon>
-                <span class="igx-filtering-chips__connector" #label>
+                <span #label>
                     {{getChipLabel(item.expression)}}
                 </span>
             </igx-chip>
-            <span *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
+            <span class="igx-filtering-chips__connector" *ngIf="!last">{{getOperator(item.afterOperator)}}</span>
         </ng-container>
         <div #moreIcon [ngClass]="filteringIndicatorClass()">
             <igx-icon (click)="onChipClicked()">filter_list</igx-icon>
