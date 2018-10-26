@@ -167,7 +167,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        return grid.primaryKey ? grid.data.map((record) => record[grid.primaryKey]).indexOf(rowID) : grid.data.indexOf(rowID);
+        return grid.primaryKey ? grid.data.findIndex(record => record[grid.primaryKey] === rowID) : grid.data.indexOf(rowID);
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
