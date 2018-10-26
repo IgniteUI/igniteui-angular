@@ -515,7 +515,8 @@ describe('IgxGrid - Summaries', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid1;
-        let summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
+        const gridApi = (grid as any)._gridAPI;
+        let summaries = gridApi.get_summaries(grid.id);
 
         let getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
         expect(getCountResSummary).toEqual(fix.componentInstance.data.length);
@@ -528,7 +529,7 @@ describe('IgxGrid - Summaries', () => {
         await wait(100);
         fix.detectChanges();
 
-        summaries = fix.componentInstance.gridApi.get_summaries(grid.id);
+        summaries = gridApi.get_summaries(grid.id);
         getCountResSummary = summaries.get('UnitsInStock').find((k) => k.key === 'count').summaryResult;
         expect(getCountResSummary).toEqual(fix.componentInstance.data.length);
     }));
@@ -681,8 +682,6 @@ export class  SummaryColumnsWithIdenticalWidthsComponent {
         { ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: '2025-12-25' },
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: '2018-03-01' }
     ];
-
-    constructor(public gridApi: IgxGridAPIService) { }
 }
 
 
