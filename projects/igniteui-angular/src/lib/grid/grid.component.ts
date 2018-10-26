@@ -175,7 +175,7 @@ export interface IFocusChangeEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, IgxFilteringService],
+    providers: [IgxGridNavigationService],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
@@ -2332,7 +2332,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService) {
-
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());

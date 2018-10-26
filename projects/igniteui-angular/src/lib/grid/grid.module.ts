@@ -61,6 +61,7 @@ import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
 import { IgxAvatarModule } from '../avatar/avatar.component';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
 
 @NgModule({
     declarations: [
@@ -150,6 +151,7 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
     ],
     providers: [
         IgxGridAPIService,
+        IgxFilteringService,
         IgxSelectionAPIService,
         IgxColumnMovingService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
