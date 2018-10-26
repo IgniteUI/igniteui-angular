@@ -2171,7 +2171,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _sortingExpressions = [];
+    protected _sortingExpressions: Array<ISortingExpression> = [];
     /**
      * @hidden
      */
