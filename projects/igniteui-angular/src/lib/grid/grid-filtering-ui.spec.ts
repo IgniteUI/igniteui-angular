@@ -45,7 +45,7 @@ describe('IgxGrid - Filtering actions', () => {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         let input = filterUIRow.query(By.directive(IgxInputDirective));
-        
+
         const reset = filterUIRow.queryAll(By.css('button'))[0];
         const close = filterUIRow.queryAll(By.css('button'))[1];
 
@@ -568,7 +568,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
         expect(input.nativeElement.offsetHeight).toBeGreaterThan(0);
-        // revert to the default after 
+        // revert to the default after
         expect(filterIcon.componentInstance.iconName).toMatch('equals');
 
         // greater than or equal to
@@ -616,7 +616,7 @@ describe('IgxGrid - Filtering actions', () => {
         filterIcon.nativeElement.click();
         fix.detectChanges();
         tick(100);
-    
+
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         const ddItems = ddList.nativeElement.children;
 
@@ -1514,6 +1514,27 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 });
 
+describe('IgxGrid - Filtering Row UI actions', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridFilteringComponent
+            ],
+            imports: [
+                BrowserAnimationsModule,
+                IgxGridModule.forRoot()]
+        })
+            .compileComponents();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    // TODO - add new tests based on the test plan in the spec.
+});
+
 export class CustomFilter extends IgxFilteringOperand {
     private static _instance: CustomFilter;
 
@@ -1797,7 +1818,7 @@ function removeFilterChipByIndex(index: number, filterUIRow) {
 
 function selectFilteringCondition(cond: string, ddList) {
     let ddItems = ddList.nativeElement.children;
-    let i; 
+    let i;
     for ( i = 0; i < ddItems.length; i++) {
         if (ddItems[i].textContent === cond) {
             ddItems[i].click();
