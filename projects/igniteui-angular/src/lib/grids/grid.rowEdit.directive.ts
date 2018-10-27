@@ -24,6 +24,7 @@ export class IgxRowEditTabStopDirective {
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
+        event.stopPropagation();
         if (this.allTabs.length > 1) {
             if ((this.allTabs.last ===  this && !event.shiftKey) ||
                 (this.allTabs.first ===  this && event.shiftKey)
