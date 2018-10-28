@@ -3,10 +3,13 @@
 @import '../../../projects/igniteui-angular/src/lib/core/styles/components/button/button-component';
 @import '../../styles/app-palettes';
 
-$button-background: igx-contrast-color($default-palette, 'primary');
+$background: #111;
+$text-color: text-contrast($background);
+
+$button-background: text-contrast($background);
 
 $hamburger-theme: igx-button-theme(
-    $icon-background: rgba($button-background, .86),
+    $icon-background: $button-background,
     $icon-hover-background: $button-background,
     $icon-focus-background: $button-background
 );
@@ -21,19 +24,19 @@ $hamburger-theme: igx-button-theme(
 
 .sample-header {
     padding: 48px 24px;
-    background: rgba(igx-color($default-palette, 'primary'), .94);
+    background: $background;
 
     .title {
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        color: rgba(igx-contrast-color($default-palette, 'primary'), .86);
+        color: $text-color;
         font-weight: 400;
         margin: 0;
     }
 
     .description {
-        color: igx-contrast-color($default-palette, 'primary');
+        color: $text-color;
         margin-top: 48px;
         margin-bottom: 0;
     }
