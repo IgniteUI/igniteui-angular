@@ -69,50 +69,49 @@ gulp.task('copy-git-hooks', () => {
     if (process.env.AZURE_PIPELINES || process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
         return;
     }
-    
-    return gulp.src('./.hooks/scripts/utils/issue-validator.js').pipe(gulp.dest('./git', {mode: "0777"}));
-    // const gitHooksDir = './.git/hooks/';
-    // const defaultCopyHookDir = gitHooksDir + 'scripts/';
-    // const dirs = [
-    //     gitHooksDir,
-    //     defaultCopyHookDir,
-    //     defaultCopyHookDir + 'templates',
-    //     defaultCopyHookDir + 'templateValidators',
-    //     defaultCopyHookDir + 'utils'
-    // ];
 
-    // dirs.forEach((dir) => {
-    //     if (!fs.existsSync(dir)) {
-    //         fs.mkdir(dir, (err) => {
-    //             if (err) {
-    //                 throw err;
-    //             }
-    //         });
-    //     }
-    // });
+    const gitHooksDir = './.git/hooks/';
+    const defaultCopyHookDir = gitHooksDir + 'scripts/';
+    const dirs = [
+        gitHooksDir,
+        defaultCopyHookDir,
+        defaultCopyHookDir + 'templates',
+        defaultCopyHookDir + 'templateValidators',
+        defaultCopyHookDir + 'utils'
+    ];
 
-    // const defaultHookDir = './.hooks/scripts/';
+    dirs.forEach((dir) => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdir(dir, (err) => {
+                if (err) {
+                    throw err;
+                }
+            });
+        }
+    });
 
-    // fs.copyFileSync(defaultHookDir + 'templates/default.js',
-    //     defaultCopyHookDir + 'templates/default.js');
+    const defaultHookDir = './.hooks/scripts/';
 
-    // fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
-    //     defaultCopyHookDir + 'templateValidators/default-style-validator.js');
+    fs.copyFileSync(defaultHookDir + 'templates/default.js',
+        defaultCopyHookDir + 'templates/default.js');
 
-    // fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
-    //     defaultCopyHookDir + 'utils/issue-validator.js');
+    fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
+        defaultCopyHookDir + 'templateValidators/default-style-validator.js');
 
-    // fs.copyFileSync(defaultHookDir + 'utils/line-limits.js',
-    //     defaultCopyHookDir + 'utils/line-limits.js');
+    fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
+        defaultCopyHookDir + 'utils/issue-validator.js');
 
-    // fs.copyFileSync(defaultHookDir + 'common.js',
-    //     defaultCopyHookDir + 'common.js');
+    fs.copyFileSync(defaultHookDir + 'utils/line-limits.js',
+        defaultCopyHookDir + 'utils/line-limits.js');
 
-    // fs.copyFileSync(defaultHookDir + 'validate.js',
-    //     defaultCopyHookDir + 'validate.js');
+    fs.copyFileSync(defaultHookDir + 'common.js',
+        defaultCopyHookDir + 'common.js');
 
-    // fs.copyFileSync('./.hooks/prepare-commit-msg',
-    //     './.git/hooks/prepare-commit-msg');
+    fs.copyFileSync(defaultHookDir + 'validate.js',
+        defaultCopyHookDir + 'validate.js');
+
+    fs.copyFileSync('./.hooks/prepare-commit-msg',
+        './.git/hooks/prepare-commit-msg');
 });
 
 gulp.task('copy-migrations', () => {
