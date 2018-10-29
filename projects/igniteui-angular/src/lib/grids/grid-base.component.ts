@@ -59,7 +59,9 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
     IgxRowEditTemplateDirective,
-    IgxRowEditTabStopDirective
+    IgxRowEditTabStopDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -1250,22 +1252,29 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+    private rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
-    public defaultRowEditTemplate: TemplateRef<any>;
+    private defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
+    /** @hidden */
     public get rowEditContainer(): TemplateRef<any> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
+    /** @hidden */
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
+    public rowEditText: TemplateRef<any>;
+    /** @hidden */
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
+    public rowEditActions: TemplateRef<any>;
 
     /**
      * @hidden
@@ -1306,9 +1315,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * @hidden
+     * TODO: Nav service logic doesn't handle 0 results from this querylist
      */
     public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
-        return this.rowEditCustom ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
+        return this.rowEditTabsCUSTOM.length ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
     }
 
     /**

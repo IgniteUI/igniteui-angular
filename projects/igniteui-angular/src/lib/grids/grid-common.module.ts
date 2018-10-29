@@ -48,7 +48,12 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
-import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
+import {
+    IgxRowEditTemplateDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditTabStopDirective
+} from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
 @NgModule({
@@ -64,6 +69,8 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
@@ -94,6 +101,8 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
