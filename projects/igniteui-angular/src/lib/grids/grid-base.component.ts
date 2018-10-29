@@ -1625,13 +1625,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     /**
-     * @hidden
-     */
-    protected getExportExcel(): boolean {
-        return this._exportExcel;
-    }
-
-    /**
      * Enable or disable the option for exporting to MS Excel.
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
@@ -1658,13 +1651,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     @Input()
     public get exportCsv(): boolean {
         return this.getExportCsv();
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportCsv(): boolean {
-        return this._exportCsv;
     }
 
     /**
@@ -4357,5 +4343,19 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     private get dataLength() {
         return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data(this.id).length;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportCsv(): boolean {
+        return this._exportCsv;
     }
 }
