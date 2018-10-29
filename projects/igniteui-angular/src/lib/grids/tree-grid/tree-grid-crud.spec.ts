@@ -31,6 +31,8 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Create', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
+
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -184,6 +186,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -282,6 +285,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update API', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -435,6 +439,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -659,6 +664,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update UI', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -802,6 +808,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -948,6 +955,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Delete', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -1048,6 +1056,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();

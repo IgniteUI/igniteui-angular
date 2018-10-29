@@ -28,6 +28,7 @@ describe('IgxTreeGrid - Selection', () => {
     }));
 
     describe('API Row Selection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -194,6 +195,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('UI Row Selection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -372,7 +374,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('Cell Selection', () => {
-
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();

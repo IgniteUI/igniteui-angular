@@ -57,6 +57,7 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Child Collection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -167,6 +168,7 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Primary/Foreign key', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

@@ -202,6 +202,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
 });
 
 describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
+    configureTestSuite();
     let fix;
     let treeGrid;
 
