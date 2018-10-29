@@ -33,12 +33,12 @@ export class IgxFilteringService implements OnDestroy {
     public selectedExpression: IFilteringExpression = null;
     private columnsWithComplexFilter = new Set<string>();
     private isColumnResizedSubscribed = false;
+    private isChunkLoadedSubscribed = false;
     private destroy$ = new Subject<boolean>();
 
     public columnToChipToFocus = new Map<string, boolean>();
+    public columnToMoreIconHidden = new Map<string, boolean>();
     public index = -1;
-    protected columnResized;
-    protected chunkLoaded;
 
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
 
@@ -64,8 +64,9 @@ export class IgxFilteringService implements OnDestroy {
             });
         }
 
-        if (!this.chunkLoaded) {
-            this.chunkLoaded = this.grid.parentVirtDir.onChunkLoad.subscribe((eventArgs: IForOfState) => {
+        if (!this.isChunkLoadedSubscribed) {
+            this.isChunkLoadedSubscribed = true;
+            this.grid.parentVirtDir.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
                 if (eventArgs.startIndex !== this.index) {
                     this.index = eventArgs.startIndex;
                     this.grid.filterCellList.forEach((filterCell) => {
