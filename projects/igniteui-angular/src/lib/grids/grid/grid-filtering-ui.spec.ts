@@ -1317,24 +1317,29 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
     });
 
-    it('Clicking And/Or button shows second select and input for adding second condition', fakeAsync(() => {
+    it('Should apply And/Or button when adding more than expression', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[0];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const andButton = fix.debugElement.queryAll(By.directive(IgxButtonDirective))[0];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
 
         UIInteractions.clickElement(filterIcon);
         tick(50);
         fix.detectChanges();
 
-        UIInteractions.clickElement(andButton);
+        // apply two filters for And/Or button
+        filterBy('Starts With', 'I', fix);
+        filterBy('Ends With', 'f', fix);
+
+        const andButton = fix.debugElement.queryAll(By.css('#operand'));
+
         tick(50);
         fix.detectChanges();
 
-        const secondExpr = fix.debugElement.queryAll(By.css('igx-grid-filter-expression'))[1];
-        expect(secondExpr.attributes['name']).toEqual('secondExpr');
+        expect(andButton.length).toEqual(1);
 
         discardPeriodicTasks();
     }));
