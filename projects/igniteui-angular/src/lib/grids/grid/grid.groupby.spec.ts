@@ -763,6 +763,44 @@ describe('IgxGrid - GroupBy', () => {
         expect(lastGroupRow.getAttribute('aria-expanded')).toBe('false');
     }));
 
+    it(`should be able to navigate down to the next row when expand the last group row
+    and grid is scrolled to bottom`, (async () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '600px';
+        fix.componentInstance.height = '500px';
+        await wait(30);
+        fix.detectChanges();
+
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fix.detectChanges();
+
+        grid.groupsRowList.last.toggle();
+        await wait(30);
+        fix.detectChanges();
+        expect(grid.groupsRowList.last.expanded).toBeFalsy();
+
+        grid.groupsRowList.last.toggle();
+        await wait(30);
+        fix.detectChanges();
+        expect(grid.groupsRowList.last.expanded).toBeTruthy();
+
+        const groupRowIndex = grid.groupsRowList.last.index;
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', grid.groupsRowList.last.nativeElement, true);
+        await wait(100);
+        fix.detectChanges();
+
+        const selectedCell = grid.nativeElement.querySelector('.igx-grid__td--selected');
+        expect(selectedCell).toBeDefined();
+        expect(parseInt(selectedCell.dataset.rowindex, 10)).toBe(groupRowIndex + 1);
+        expect(parseInt(selectedCell.dataset.visibleindex, 10)).toBe(0);
+
+    }));
+
     xit('should allow keyboard navigation through group rows.', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

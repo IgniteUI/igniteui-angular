@@ -12,7 +12,7 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
-import { take } from 'rxjs/operators';
+import { take, takeWhile } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -182,19 +182,20 @@ export class IgxGridGroupByRowComponent {
             if (!alt) { return; }
             if (key === 'arrowleft' ||  key === 'left') {
                 if (this.expanded) {
-                    this.grid.toggleGroup(this.groupRow);
                     const groupRowIndex = this.index;
-                    this.grid.verticalScrollContainer.onChunkLoad
-                        .pipe(take(1))
-                        .subscribe(() => {
-                            this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
-                        });
+                    if (this.grid.rowList.last.index === this.grid.verticalScrollContainer.igxForOf.length - 1) {
+                        this.grid.verticalScrollContainer.onChunkLoad
+                            .pipe(take(1))
+                            .subscribe((s) => {
+                                this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
+                            });
+                    }
+                    this.grid.toggleGroup(this.groupRow);
                 }
-                return;
             } else if (key === 'arrowright' || key === 'right') {
                 if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
-                return;
             }
+            return;
         }
         const args = {cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
