@@ -30,6 +30,8 @@
 ///   @include igx-carousel($my-carousel-theme);
 @function igx-carousel-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $button-background: null,
     $button-hover-background: null,
     $button-arrow-color: null,
@@ -53,6 +55,10 @@
         indicator-border-color: #fff,
         indicator-active-border-color: #fff
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($button-arrow-color) and $button-background {
         $button-arrow-color: text-contrast($button-background);
@@ -107,7 +113,6 @@
         align-items: center;
         flex-flow: column nowrap;
         transform-style: preserve-3d;
-        outline: none;
     }
 
     %igx-carousel-slide-wrapper {
@@ -115,6 +120,7 @@
         width: 100%;
         height: inherit;
         overflow: hidden;
+        outline-style: none;
 
         .active {
             display: block;

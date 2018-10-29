@@ -17,6 +17,12 @@
     <button igxButton="raised" (click)="groupBy('City')">Group/Ungroup 'City'</button>
     <button igxButton="raised" (click)="groupBy('PostalCode')">Group/Ungroup 'PostalCode'</button>
     <button igxButton="raised" (click)="getRowsList()">Get rowslist'</button>
+
+    <br />
+    <button igxButton="raised" (click)="groupMultiple()">Group "Contact Title", "Address", "Country"</button>
+    <button igxButton="raised" (click)="ungroupMultiple()">Ungroup "Address", "Country"</button>
+    <button igxButton="raised" (click)="groupUngroupMultiple()">Ungroup "CompanyName", group "ContactTitle", "Address"</button>
+    <br />
     <button igxButton="raised" (click)="toggleDensity()">Toggle density</button>
     <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
 </div>

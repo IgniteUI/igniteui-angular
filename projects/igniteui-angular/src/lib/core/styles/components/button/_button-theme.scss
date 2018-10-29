@@ -56,6 +56,8 @@
 ///   @include igx-button($my-button-theme);
 @function igx-button-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $button-roundness: null,
 
     $flat-text-color: null,
@@ -101,7 +103,6 @@
 
         flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
         flat-focus-text-color: igx-color($palette, 'secondary', 500),
-
         raised-background: igx-color($palette, 'secondary', 500),
         raised-text-color: igx-contrast-color($palette, 'secondary', 500),
         raised-hover-background: igx-color($palette, 'secondary', 300),
@@ -126,6 +127,10 @@
         disabled-color: igx-color($palette, 'grays', 400),
         disabled-background: igx-color($palette, 'grays', 100)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
