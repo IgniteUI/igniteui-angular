@@ -366,6 +366,9 @@ export class GridSummaryComponent implements OnInit {
             this.data = this.data.concat(this.data);
         }
         this.data = this.data.slice(0, 19);
+        for (let i = 0; i < this.data.length; i++) {
+            this.data[i]['Index'] = i;
+        }
     }
 
     ngOnInit() { }
@@ -464,5 +467,8 @@ export class GridSummaryComponent implements OnInit {
         } else {
             this.grid1.getColumnByName('UnitsInStock').hidden = true;
         }
+    }
+    public scrScrollTo(index) {
+        this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }
 }
