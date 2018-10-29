@@ -2120,6 +2120,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             requestAnimationFrame(() => {
                 this.summariesHeight = 0;
                 this.reflow();
+                this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
         this._ngAfterViewInitPaassed = true;
@@ -4031,27 +4032,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!directive) {
             return;
         }
-
-        const state = directive.state;
-        const start = state.startIndex;
-        const isColumn = directive.igxForScrollOrientation === 'horizontal';
-
-        const size = directive.getItemCountInView();
-
-        if (start >= goal) {
-            // scroll so that goal is at beggining of visible chunk
-            directive.scrollTo(goal);
-        } else if (start + size <= goal) {
-            // scroll so that goal is at end of visible chunk
-            if (isColumn) {
-                directive.getHorizontalScroll().scrollLeft =
-                    directive.getColumnScrollLeft(goal) -
-                    parseInt(directive.igxForContainerSize, 10) +
-                    parseInt(this.columns[goal].width, 10);
-            } else {
-                directive.scrollTo(goal - size + 1);
-            }
-        }
+        directive.scrollTo(goal);
     }
 
     private rebuildMatchCache() {
