@@ -4393,7 +4393,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public get dataWithAddedInTransactionRows() {
-        const result = <any>cloneArray(this.data);
+        const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
             result.push(...this.transactions.aggregatedState(true)
                 .filter(t => t.type === TransactionType.ADD)
@@ -4404,6 +4404,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     private get dataLength() {
-        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.data.length;
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data(this.id).length;
     }
 }

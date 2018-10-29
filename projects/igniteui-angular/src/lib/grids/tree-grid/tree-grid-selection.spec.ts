@@ -384,22 +384,22 @@ describe('IgxTreeGrid - Selection', () => {
         it('should return the correct type of cell when clicking on a cells', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const normalCells = TreeGridFunctions.getNormalCells(rows[0]);
-            normalCells[0].triggerEventHandler('click', new Event('click'));
+            normalCells[0].triggerEventHandler('focus', new Event('focus'));
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
 
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
 
             // perform 2 clicks and check selection again
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -411,21 +411,21 @@ describe('IgxTreeGrid - Selection', () => {
 
             // level 1
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(147);
 
             // level 2
             treeGridCell = TreeGridFunctions.getTreeCell(rows[1]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(475);
 
             // level 3
             treeGridCell = TreeGridFunctions.getTreeCell(rows[2]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(957);
@@ -434,7 +434,7 @@ describe('IgxTreeGrid - Selection', () => {
         it('should persist selection after paging', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -461,7 +461,7 @@ describe('IgxTreeGrid - Selection', () => {
         it('should persist selection after filtering', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
 
             treeGrid.filter('ID', '14', IgxStringFilteringOperand.instance().condition('startsWith'), true);
             fix.detectChanges();
@@ -484,7 +484,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
             // scroll down 150 pixels
@@ -505,7 +505,7 @@ describe('IgxTreeGrid - Selection', () => {
         it('should persist selection after sorting', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -523,7 +523,7 @@ describe('IgxTreeGrid - Selection', () => {
         it('should persist selection after row delete', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('click', new Event('click'));
+            treeGridCell.triggerEventHandler('focus', new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);

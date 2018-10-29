@@ -498,4 +498,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number;
     }
+
+    public get_all_data(id: string): any[] {
+        const grid = this.get(id);
+        return grid.data;
+    }
 }
