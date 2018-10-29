@@ -8,11 +8,13 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxTreeGrid - CRUD', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

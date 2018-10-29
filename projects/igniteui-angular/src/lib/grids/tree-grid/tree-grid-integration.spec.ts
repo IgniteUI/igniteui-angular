@@ -8,8 +8,10 @@ import {
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Integration', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

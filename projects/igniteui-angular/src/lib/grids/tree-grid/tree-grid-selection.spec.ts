@@ -9,8 +9,10 @@ import { TreeGridFunctions,
          TREE_ROW_SELECTION_CSS_CLASS,
          TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Selection', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

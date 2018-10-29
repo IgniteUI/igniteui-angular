@@ -8,8 +8,10 @@ import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../test-utils/tree-
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Indentation', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
