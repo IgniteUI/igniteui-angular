@@ -22,6 +22,7 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
+import { isDate } from 'util';
 
 let NEXT_ID = 0;
 
@@ -830,6 +831,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *```
      */
     public selectDate(value: Date | Date[]) {
+        if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
+            throw new Error('Date or array should be set for the selectDate method.');
+        }
+
         switch (this.selection) {
             case 'single':
                 this.selectSingle(value as Date);
@@ -852,6 +857,10 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public deselectDate(value?: Date | Date[]) {
         if (value === null || value === undefined) {
             this.selectedDates = this.selection === 'single' ? null : [];
+            return;
+        }
+
+        if (this.selectedDates === null || this.selectedDates === []) {
             return;
         }
 
@@ -1164,8 +1173,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         if (Array.isArray(value)) {
             this.rangeStarted = false;
             value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-            start = this.getDateOnly(value.shift());
-            end = this.getDateOnly(value.pop());
+            start = this.getDateOnly(value[0]);
+            end = this.getDateOnly(value[value.length - 1]);
             this.selectedDates = [start, ...this.generateDateRange(start, end)];
         } else {
             if (!this.rangeStarted) {
@@ -1201,7 +1210,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private deselectSingle(value: Date) {
-        if (this.selectedDates !== null && value !== null &&
+        if (this.selectedDates !== null &&
             this.getDateOnlyInMs(value as Date) === this.getDateOnlyInMs(this.selectedDates)) {
             this.selectedDates = null;
             this._onChangeCallback(this.selectedDates);
@@ -1213,10 +1222,6 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private deselectMultiple(value: Date[]) {
-        if (value === null) {
-            return;
-        }
-
         value = value.filter(v => v !== null);
         const selectedDatesCount = this.selectedDates.length;
         const datesInMsToDeselect: Set<number> = new Set<number>(
@@ -1238,21 +1243,23 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private deselectRange(value: Date[]) {
-        if (value === null) {
-            return;
-        }
-
-        value = value.filter(v => v !== null);
-        if (value.length < 2) {
+        value = value.filter(v => v !== null && isDate(v));
+        if (value.length < 1) {
             return;
         }
 
         value.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
-        const start = this.getDateOnly(value.shift());
-        const end = this.getDateOnly(value.pop());
+        const valueStart = this.getDateOnlyInMs(value[0]);
+        const valueEnd = this.getDateOnlyInMs(value[value.length - 1]);
 
-        const deselectRange = [start, ...this.generateDateRange(start, end)];
-        this.deselectMultiple(deselectRange);
+        this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
+        const selectedDatesStart = this.getDateOnlyInMs(this.selectedDates[0]);
+        const selectedDatesEnd = this.getDateOnlyInMs(this.selectedDates[this.selectedDates.length - 1]);
+
+        if (!(valueEnd < selectedDatesStart) && !(valueStart > selectedDatesEnd)) {
+            this.selectedDates = [];
+            this._onChangeCallback(this.selectedDates);
+        }
     }
 
     /**
