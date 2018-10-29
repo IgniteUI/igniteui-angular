@@ -7,12 +7,12 @@ import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { IgxFilteringOperand, IgxStringFilteringOperand,
-     FilteringExpressionsTree, FilteringLogic, IgxChipComponent } from '../../public_api';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
+     FilteringExpressionsTree, FilteringLogic, IgxChipComponent } from '../../../public_api';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
@@ -1135,7 +1135,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(3);
     }));
 
-    fit('UI - should correctly filter date column by \'before\' filtering conditions', fakeAsync(() => {
+    it('UI - should correctly filter date column by \'before\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1577,17 +1577,21 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
     // TODO - add new tests based on the test plan in the spec.
 
-    it('should render Filter chip for filterable columns and render empty cell for a column when filterable is set to false', () => {
+    it('should render Filter chip for filterable columns and render empty cell for a column when filterable is set to false',
+    fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        tick(100);
+        fix.componentInstance.grid.width = '1000px';
         fix.detectChanges();
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const filteringChips = fix.debugElement.queryAll(By.css('.igx-filtering-chips'));
-        expect(filteringCells.length).toBe(4);
-        expect(filteringChips.length).toBe(3);
+        expect(filteringCells.length).toBe(6);
+        expect(filteringChips.length).toBe(5);
 
         const idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
         expect(idCellChips.length).toBe(0);
-    });
+    }));
 
     it('should render correct input and dropdown in filter row for different column types', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
