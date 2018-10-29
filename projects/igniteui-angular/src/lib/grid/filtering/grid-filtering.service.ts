@@ -7,6 +7,7 @@ import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IForOfState } from '../../directives/for-of/for_of.directive';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -34,6 +35,11 @@ export class IgxFilteringService implements OnDestroy {
     private isColumnResizedSubscribed = false;
     private destroy$ = new Subject<boolean>();
 
+    public columnToChipToFocus = new Map<string, boolean>();
+    public index = -1;
+    protected columnResized;
+    protected chunkLoaded;
+
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
 
     constructor(private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {}
@@ -51,8 +57,25 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.isColumnResizedSubscribed) {
             this.isColumnResizedSubscribed = true;
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
-                const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
-                filterCell.updateFilterCellArea();
+                if (!this.isFilterRowVisible) {
+                    const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
+                    filterCell.updateFilterCellArea();
+                }
+            });
+        }
+
+        if (!this.chunkLoaded) {
+            this.chunkLoaded = this.grid.parentVirtDir.onChunkLoad.subscribe((eventArgs: IForOfState) => {
+                if (eventArgs.startIndex !== this.index) {
+                    this.index = eventArgs.startIndex;
+                    this.grid.filterCellList.forEach((filterCell) => {
+                        filterCell.updateFilterCellArea();
+                        if (filterCell.getChipToFocus()) {
+                            this.columnToChipToFocus.set(filterCell.column.field, false);
+                            filterCell.focusChip();
+                        }
+                    });
+                }
             });
         }
     }
@@ -85,7 +108,7 @@ export class IgxFilteringService implements OnDestroy {
             this.columnToExpressionsMap.set(columnId, expressionsUIs);
 
             return expressionsUIs;
-        }
+}
 
         return this.columnToExpressionsMap.get(columnId);
     }
