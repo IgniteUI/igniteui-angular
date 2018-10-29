@@ -1782,6 +1782,54 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(grid.rowList.length).toEqual(8);
 
     }));
+    it('should update UI when chip is removed from filter row.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const grid = fix.componentInstance.grid;
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Starts With', 'I', fix);
+        expect(grid.rowList.length).toEqual(2);
+
+        // remove from row
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        removeFilterChipByIndex(0, filterUIRow);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+    }));
+
+    it('should not render chip in header if condition that requires value is applied and then value is cleared in filter row.',
+    fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const grid = fix.componentInstance.grid;
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Starts With', 'I', fix);
+        // remote text from input
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+        input.nativeElement.value = null;
+        const exprList = filterUIRow.componentInstance.expressionsList;
+        exprList[0].expression.searchVal = null;
+        fix.detectChanges();
+        closeFilterRow(fix);
+
+        // check no condition is applied
+        expect(grid.rowList.length).toEqual(8);
+
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+        expect(stringCellText.nativeElement.textContent).toBe('Filter');
+
+    }));
 
 });
 
