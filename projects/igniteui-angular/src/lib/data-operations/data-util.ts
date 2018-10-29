@@ -21,6 +21,7 @@ import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { Transaction, TransactionType } from '../services';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { mergeObjects } from '../core/utils';
 
 export enum DataType {
     String = 'string',
@@ -223,12 +224,17 @@ export class DataUtil {
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
-        data.forEach((value, index) => {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, recursive?: boolean): T[] {
+        data.forEach((value: any, index: number) => {
+            value = recursive ? value.data : value;
             const rowId = primaryKey ? value[primaryKey] : value;
             const transaction = transactions.find(t => t.id === rowId);
+            const currentRecord: any = data[index];
+            if (currentRecord.children && recursive) {
+                this.mergeTransactions(currentRecord.children, transactions, primaryKey, recursive);
+            }
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = transaction.newValue;
+                mergeObjects(recursive ? currentRecord.data : currentRecord, transaction.newValue);
             }
         });
 

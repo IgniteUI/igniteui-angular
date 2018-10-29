@@ -10,9 +10,10 @@ import { IgxExpansionPanelDescriptionDirective } from '../../expansion-panel/exp
 import { IgxColumnComponent } from '../column.component';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
-    public get_all_data(id: string): any[] {
+    public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        return grid.flatData;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
+        return data ? data : [];
     }
 
     public expand_row(id: string, rowID: any) {
@@ -109,12 +110,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         //         childData.indexOf(rowID);
         //     childData.splice(index, 1);
         // }
-    }
-
-    public get_data(id: string, transactions?: boolean): any[] {
-        const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
-        return data ? data : [];
     }
 
     protected update_row_in_array(id: string, value: any, rowID: any, index: number) {

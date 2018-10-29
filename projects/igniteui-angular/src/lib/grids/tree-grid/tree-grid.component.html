@@ -44,6 +44,7 @@
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxGridFor let-rowData [igxGridForOf]="data | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
+    | treeGridTransaction:id:pipeTrigger
     | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger 
     | treeGridSorting:sortingExpressions:id:pipeTrigger
     | treeGridFlattening:id:expandedLevels:expandedStates:pipeTrigger

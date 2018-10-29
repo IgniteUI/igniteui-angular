@@ -239,3 +239,27 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         return result;
     }
 }
+@Pipe({
+    name: 'treeGridTransaction',
+    pure: true
+})
+export class IgxTreeGridTransactionPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
+
+    transform(collection: ITreeGridRecord[], id: string, pipeTrigger: number): ITreeGridRecord[] {
+        const grid: IgxGridBaseComponent = this.gridAPI.get(id);
+
+        if (collection && grid.transactions.enabled) {
+            const result = DataUtil.mergeTransactions<ITreeGridRecord>(
+                cloneArray(collection),
+                grid.transactions.aggregatedState(true),
+                grid.primaryKey,
+                true);
+            return result;
+        }
+        return collection;
+    }
+
+
+}

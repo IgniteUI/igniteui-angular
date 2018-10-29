@@ -77,12 +77,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public get_data(id: string, transactions?: boolean): any[] {
-        const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
-        return data ? data : [];
-    }
-
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
         return this.get(id).columnList.find((col) => col.field === name);
     }
@@ -180,7 +174,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        const data = this.get_data(id);
+        const data = this.get_all_data(id);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -268,8 +262,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = this.get_data(id)[rowIndex][column.field];
-            rowData = this.get_data(id)[rowIndex];
+            oldValue = this.get_all_data(id)[rowIndex][column.field];
+            rowData = this.get_all_data(id)[rowIndex];
         }
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
@@ -279,8 +273,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
             if (rowIndex !== -1) {
-                oldValue = this.get_data(id, true)[rowIndex][column.field];
-                rowData = this.get_data(id, true)[rowIndex];
+                oldValue = this.get_all_data(id, true)[rowIndex][column.field];
+                rowData = this.get_all_data(id, true)[rowIndex];
             }
         }
 
@@ -305,7 +299,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                const rowValue = this.get_data(id)[rowIndex];
+                const rowValue = this.get_all_data(id)[rowIndex];
                 mergeObjects(rowValue, {[column.field]: args.newValue });
             }
             if (grid.primaryKey === column.field && isRowSelected) {
@@ -333,7 +327,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled) {
                 grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
             } else {
-                const rowValue = this.get_data(id)[index];
+                const rowValue = this.get_all_data(id)[index];
                 mergeObjects(rowValue, args.newValue);
             }
             if (isRowSelected) {
@@ -515,8 +509,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return column.dataType === DataType.Number;
     }
 
-    public get_all_data(id: string): any[] {
+    public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        return grid.data;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
+        return data ? data : [];
     }
 }
