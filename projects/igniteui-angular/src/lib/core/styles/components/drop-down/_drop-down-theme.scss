@@ -32,6 +32,7 @@
 /// @requires igx-contrast-color
 @function igx-drop-down-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $background-color: null,
     $header-text-color: null,
@@ -67,19 +68,22 @@
         hover-item-background: igx-color($palette, 'grays', 100),
         focused-item-background: igx-color($palette, 'grays', 100),
         focused-item-text-color: igx-color($palette, 'grays', 800),
-
-        selected-item-background: igx-color($palette, 'secondary', 200),
+        selected-item-background: igx-color($palette, 'secondary', 500),
         selected-item-text-color: igx-contrast-color($palette, 'secondary', 500),
 
         selected-hover-item-background: igx-color($palette, 'secondary', 300),
-        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 600),
+        selected-hover-item-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         selected-focus-item-background: igx-color($palette, 'secondary', 300),
-        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 600),
+        selected-focus-item-text-color: igx-contrast-color($palette, 'secondary', 300),
 
         disabled-item-background: transparent,
         disabled-item-text-color: igx-color($palette, 'grays', 500)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);

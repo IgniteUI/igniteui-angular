@@ -21,6 +21,8 @@
 ///   @include igx-avatar($my-list-theme);
 @function igx-list-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background: null,
     $header-background: null,
     $header-text-color: null,
@@ -39,6 +41,10 @@
         item-background-active: hexrgba(igx-color($palette, 'grays', 100)),
         item-text-color-active: igx-color($palette, 'grays', 800)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($header-background) and $background {
         $header-background: $background;

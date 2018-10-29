@@ -1,0 +1,19 @@
+@mixin scrollbar-love($scrollbar-color: null) {
+    $scrollbar-track: hexrgba(igx-color($default-palette, 'grays', 200));
+    $scrollbar-thumb: hexrgba(igx-color($default-palette, 'grays', 400));
+
+    @if $scrollbar-color and luminance($scrollbar-color) < .5 {
+        $scrollbar-track: darken($scrollbar-color, 8%);
+        $scrollbar-thumb: lighten($scrollbar-color, 20%);
+    }
+
+    ::-webkit-scrollbar {
+        width: 16px;
+        height: 16px;
+        background-color: $scrollbar-track;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: $scrollbar-thumb;
+    }
+}

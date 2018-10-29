@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridModule } from '../../grid';
-import { IgxGridComponent } from '../../grid/grid.component';
+import { IgxGridModule } from '../../grids/grid';
+import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { FileContentData } from '../excel/test-data.service.spec';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
