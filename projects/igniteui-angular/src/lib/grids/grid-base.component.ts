@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isNavigationKey } from '../core/utils';
+import { cloneArray, isNavigationKey, mergeObjects } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -4317,6 +4317,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.data[rowIndex], value);
+    }
     /**
      * @hidden
      */
@@ -4343,7 +4346,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             row: rowObj
         });
         if (commit && newValue && !this.transactions.enabled) {
-            this.data[rowIndex] = newValue; // If no transactions, write to data directly
+            this.writeToData(rowIndex, newValue); // If no transactions, write to data directly
         }
         if (closeOverlay) {
             this.closeRowEditingOverlay(commit);

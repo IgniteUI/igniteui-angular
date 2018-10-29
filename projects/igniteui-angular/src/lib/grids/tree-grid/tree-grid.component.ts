@@ -20,7 +20,7 @@ import {
     forwardRef
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, mergeObjects } from '../../core/utils';
 import { DisplayDensity } from '../../core/displayDensity';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -212,5 +212,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             $implicit: rowData,
             templateID: 'dataRow'
         };
+    }
+
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.flatData[rowIndex], value);
     }
 }

@@ -1,6 +1,6 @@
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, mergeObjects } from '../../core/utils';
 import { DataUtil, DataType } from '../../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -109,6 +109,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         //         childData.indexOf(rowID);
         //     childData.splice(index, 1);
         // }
+    }
+
+    public get_data(id: string, transactions?: boolean): any[] {
+        const grid = this.get(id);
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
+        return data ? data : [];
     }
 
     protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
