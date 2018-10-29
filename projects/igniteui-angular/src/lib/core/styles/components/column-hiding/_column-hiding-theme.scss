@@ -21,6 +21,8 @@
 ////
 @function igx-column-hiding-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $title-color: null,
     $background-color: null
 ) {
@@ -34,6 +36,10 @@
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);
+    }
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
     }
 
     @return extend($default-theme, (

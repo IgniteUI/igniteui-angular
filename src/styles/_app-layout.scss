@@ -1,9 +1,30 @@
+@include b(igniteui-logo) {
+    @include e(u) {
+        fill: #f60;
+    }
+
+    @include e(text) {
+        fill: #000;
+        transform: translate(190px, -6px);
+    }
+
+    @include e(flame) {
+        fill: white;
+        transform: translate(55px, 97px);
+    }
+
+    @include e(rocket) {
+        fill: #222;
+        transform: translate(55px);
+    }
+}
+
 #igniteui-demo-app {
     @include fade-in-fwd();
 
     .logo {
-        width: 172px;
-        height: 56.666px;
+        min-width: 172px;
+        min-height: 56.666px;
     }
 
     .main {
@@ -31,7 +52,6 @@
         display: flex;
         align-items: center;
         padding: 24px 16px;
-        background: #eee;
         height: 142px;
     }
 
@@ -41,7 +61,6 @@
             position: relative;
             height: 100%;
             margin: 0 auto;
-            background: #fff;
         }
 
         &-column {
@@ -55,7 +74,6 @@
 
         &-title {
             @include igx-type-style($default-type-scale, 'h6');
-            color: #0375be;
             margin-bottom: 24px;
 
             .light {
@@ -66,7 +84,6 @@
         &-description {
             font-size: 14px;
             font-weight: 400;
-            color: #717171;
         }
 
         &-content {

@@ -2,37 +2,39 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
+
+@import 'mixins';
 @import 'app-palettes';
 @import 'app-layout';
 
-// Generating a theme
 @include igx-core();
-@include igx-theme($default-palette);
 
-// Button Themes
-$blue-green: #2ec4b6;
-$bright-yellow: #ff9f1c;
-$smoky-black: #0c120c;
-$boston-red: #d00000;
+.default-theme {
+    $igx-background-color: #fff;
+    $igx-foreground-color: text-contrast($igx-background-color);
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+    @include scrollbar-love();
 
-$red-sox-button: igx-button-theme(
-    $flat-background: $boston-red,
-    $raised-background: $boston-red,
-    $fab-background: $boston-red,
-    $icon-background: $boston-red
-);
-
-$smoky-black-button: igx-button-theme(
-    $flat-background: $smoky-black,
-    $raised-background: $smoky-black,
-    $fab-background: $smoky-black,
-    $icon-background: $smoky-black
-);
-
-.red-sox-button {
-    @include igx-button($red-sox-button);
+    @include igx-theme($default-palette);
 }
 
-.smoky-black-button {
-    @include igx-button($smoky-black-button);
+.dark-green-theme {
+    @import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
+
+    $igx-background-color: #484848;
+    $igx-foreground-color: text-contrast($igx-background-color);
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+    @include scrollbar-love($igx-background-color);
+
+    @include igx-theme($default-palette, $preset: $dark-green-theme);
+
+    .igniteui-logo__text {
+        fill: #fff;
+    }
+
+    .igniteui-logo__rocket {
+        fill: rgba(white, .38);
+    }
 }

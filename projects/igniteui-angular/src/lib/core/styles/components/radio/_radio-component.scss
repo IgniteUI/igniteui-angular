@@ -83,6 +83,13 @@
         }
     }
 
+    @include mx(focused, checked) {
+        @include e(ripple) {
+            @extend %radio-ripple--focused !optional;
+            @extend %radio-ripple--focused-checked !optional;
+        }
+    }
+
     @include mx(checked, disabled) {
         @include e(composite) {
             @extend %radio-composite--x--disabled !optional;

@@ -102,4 +102,11 @@
             @extend %switch-label--disabled !optional;
         }
     }
+
+    @include mx(focused, checked) {
+        @include e(ripple) {
+            @extend %switch-ripple--focused !optional;
+            @extend %switch-ripple--focused-checked !optional;
+        }
+    }
 }
