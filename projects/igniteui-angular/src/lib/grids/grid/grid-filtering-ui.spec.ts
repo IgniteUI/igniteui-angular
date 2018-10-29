@@ -1583,7 +1583,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
         tick(100);
         const grid = fix.componentInstance.grid;
-        grid.width = '1000px';
+        grid.width = '1500px';
         fix.detectChanges();
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const filteringChips = fix.debugElement.queryAll(By.css('.igx-filtering-chips'));
