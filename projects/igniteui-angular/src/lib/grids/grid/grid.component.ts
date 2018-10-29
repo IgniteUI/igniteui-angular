@@ -23,7 +23,6 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
-import { SortingStateDefaults } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 

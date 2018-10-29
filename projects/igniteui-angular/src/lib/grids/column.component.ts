@@ -31,7 +31,7 @@ import {
     IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
+import { SortingStrategy } from '../data-operations/sorting-strategy';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -757,7 +757,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy = SortingStateDefaults.strategy;
+    protected _sortStrategy = new SortingStrategy();
     /**
      *@hidden
      */

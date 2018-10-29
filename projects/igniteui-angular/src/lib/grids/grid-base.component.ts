@@ -64,7 +64,6 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
-import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
