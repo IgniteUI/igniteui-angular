@@ -5,7 +5,8 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     Calendar, IgxCalendarComponent, IgxCalendarModule, isLeap, IgxCalendarDateDirective,
-    monthRange, weekDay, WEEKDAYS } from './index';
+    monthRange, weekDay, WEEKDAYS
+} from './index';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 
@@ -184,12 +185,12 @@ describe('IgxCalendar', () => {
                     declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents()
-                .then(() => {
-                    fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-                    fixture.detectChanges();
-                    calendar = fixture.componentInstance.calendar;
-                    dom = fixture.debugElement;
-                 });
+                    .then(() => {
+                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                        fixture.detectChanges();
+                        calendar = fixture.componentInstance.calendar;
+                        dom = fixture.debugElement;
+                    });
             })
         );
 
@@ -244,7 +245,7 @@ describe('IgxCalendar', () => {
                 weekday: 'short',
                 year: 'numeric'
             };
-            const defaultViews = { day: false, month: true, year: false};
+            const defaultViews = { day: false, month: true, year: false };
             const bodyMonth = dom.query(By.css('.date .date__el'));
             const headerYear = dom.query(By.css('.igx-calendar__header-year'));
             const bodyYear = dom.queryAll(By.css('.date .date__el'))[1];
@@ -264,7 +265,7 @@ describe('IgxCalendar', () => {
 
             // change formatOptions and formatViews
             const formatOptions: any = { month: 'long', year: '2-digit' };
-            const formatViews: any = { month: true, year: true};
+            const formatViews: any = { month: true, year: true };
             calendar.formatOptions = formatOptions;
             calendar.formatViews = formatViews;
             fixture.detectChanges();
@@ -734,6 +735,42 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(true);
             }
+
+            // Select with only one day
+            calendar.selectDate([lastDay]);
+            fixture.detectChanges();
+
+            expect((calendar.value as Date[]).length).toEqual(1);
+            expect(calendar.value[0].toDateString()).toMatch(lastDay.toDateString());
+            expect(
+                weekDays[6].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+
+            // Select with array of 3 days
+            calendar.selectDate([midDay, lastDay, firstDay]);
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                7
+            );
+            expect((calendar.value as Date[]).length).toEqual(7);
+            expect(calendar.value[0].toDateString()).toMatch(
+                firstDay.toDateString()
+            );
+            expect(
+                calendar.value[
+                    (calendar.value as Date[]).length - 1
+                ].toDateString()
+            ).toMatch(lastDay.toDateString());
+            weekDays.forEach((el) => {
+                expect(
+                    el.nativeElement.classList.contains(
+                        'igx-calendar__date--selected'
+                    )
+                ).toBe(true);
+            });
         });
 
         it('Calendar keyboard navigation - PageUp/PageDown', () => {
@@ -850,6 +887,167 @@ describe('IgxCalendar', () => {
             await wait(500);
 
             expect(document.activeElement.textContent.trim()).toMatch('2');
+        });
+
+        it('Should navigate to first enabled date when using "home" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+                { type: DateRangeType.Weekends });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should navigate to last enabled date when using "end" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
+            dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates },
+                { type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 27)] });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 26).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should navigate to first enabled date when using "arrow up" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+                { type: DateRangeType.Weekends });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 9).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should navigate to first enabled date when using "arrow down" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
+                { type: DateRangeType.Weekends });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 22).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should navigate to first enabled date when using "arrow left" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+            dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 1).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should navigate to first enabled date when using "arrow right" key.', async () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
+            dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            fixture.detectChanges();
+
+            const date = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 30).getTime())[0];
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('Should not select disabled dates when having "range" selection', () => {
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const rangeDates = [new Date(2017, 5, 10), new Date(2017, 5, 15)];
+            dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
+            calendar.disabledDates = dateRangeDescriptors;
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const fromDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
+            fromDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const toDate = calendar.dates.filter(
+                d => getDate(d).getTime() === new Date(2017, 5, 20).getTime())[0];
+            toDate.nativeElement.click();
+            fixture.detectChanges();
+
+            const selectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return (dateTime >= new Date(2017, 5, 5).getTime() &&
+                    dateTime <= new Date(2017, 5, 9).getTime()) ||
+                    (dateTime >= new Date(2017, 5, 16).getTime() &&
+                        dateTime <= new Date(2017, 5, 20).getTime());
+            });
+
+            selectedDates.forEach(d => {
+                expect(d.selected).toBe(true);
+                expect(d.isSelectedCSS).toBe(true);
+            });
+
+            const notSelectedDates = calendar.dates.toArray().filter(d => {
+                const dateTime = getDate(d).getTime();
+                return dateTime >= new Date(2017, 5, 10).getTime() &&
+                    dateTime <= new Date(2017, 5, 15).getTime();
+            });
+
+            notSelectedDates.forEach(d => {
+                expect(d.selected).toBe(false);
+                expect(d.isSelectedCSS).toBe(false);
+            });
         });
     });
 
@@ -1020,352 +1218,334 @@ describe('IgxCalendar', () => {
         );
     });
 
-    it('Should navigate to first enabled date when using "home" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
-            {type: DateRangeType.Weekends});
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
 
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
 
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
+    describe('Select and deselect', () => {
+        configureTestSuite();
+        let fixture;
+        let calendar;
+        let ci;
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    declarations: [IgxCalendarSampleComponent],
+                    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
+                }).compileComponents()
+                    .then(() => {
+                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                        fixture.detectChanges();
+                        ci = fixture.componentInstance;
+                        calendar = ci.calendar;
+                    });
+            })
+        );
 
-    it('Should navigate to last enabled date when using "end" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
-        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates },
-            {type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 27)]});
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-        fixture.detectChanges();
-
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 26).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('Should navigate to first enabled date when using "arrow up" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
-            { type: DateRangeType.Weekends });
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+        it('Deselect using API. Should deselect in "single" selection mode.', () => {
+            const date = calendar.viewDate;
+            calendar.selectDate(date);
             fixture.detectChanges();
 
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 9).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
+            let selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
 
-    it('Should navigate to first enabled date when using "arrow down" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates},
-            { type: DateRangeType.Weekends });
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 22).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('Should navigate to first enabled date when using "arrow left" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
-        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            calendar.deselectDate(date);
             fixture.detectChanges();
 
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 1).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
+            selectedDate = calendar.value;
+            expect(selectedDate).toBe(null);
 
-    it('Should navigate to first enabled date when using "arrow right" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const debugEl = fixture.debugElement;
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
-        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = debugEl.query(By.css('.igx-calendar')).nativeElement;
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            // Deselect with date diffrent than selected date
+            calendar.selectDate(date);
             fixture.detectChanges();
 
-        const date = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 30).getTime())[0];
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
+            selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
 
-    it('Should not select disabled dates when having "range" selection', () => {
-        const fixture = TestBed.createComponent(IgxCalendaRangeComponent);
-        const calendar = fixture.componentInstance.calendar;
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const rangeDates = [new Date(2017, 5, 10), new Date(2017, 5, 15)];
-        dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
-        calendar.disabledDates = dateRangeDescriptors;
-        calendar.selection = 'range';
-        fixture.detectChanges();
+            const dateToDeselect = new Date(date);
+            dateToDeselect.setDate(dateToDeselect.getDate() + 5);
 
-        const fromDate = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 5).getTime())[0];
-        fromDate.nativeElement.click();
-        fixture.detectChanges();
+            calendar.deselectDate(dateToDeselect);
+            fixture.detectChanges();
 
-        const toDate = calendar.dates.filter(
-            d => getDate(d).getTime() === new Date(2017, 5, 20).getTime())[0];
-        toDate.nativeElement.click();
-        fixture.detectChanges();
-
-        const selectedDates = calendar.dates.toArray().filter(d => {
-            const dateTime = getDate(d).getTime();
-            return (dateTime >= new Date(2017, 5, 5).getTime() &&
-                    dateTime <= new Date(2017, 5, 9).getTime()) ||
-                    (dateTime >= new Date(2017, 5, 16).getTime() &&
-                    dateTime <= new Date(2017, 5, 20).getTime());
+            selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
         });
 
-        selectedDates.forEach(d => {
-            expect(d.selected).toBe(true);
-            expect(d.isSelectedCSS).toBe(true);
+        it('Deselect using API. Should deselect in "multi" selection mode.', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            const year = calendar.viewDate.getFullYear();
+            const month = calendar.viewDate.getMonth();
+            const dates = [];
+            const datesCount = 10;
+            for (let i = 0; i < datesCount; i++) {
+                dates.push(new Date(year, month, i + 1));
+            }
+
+            fixture.detectChanges();
+            calendar.selectDate(dates);
+
+            fixture.detectChanges();
+            const evenDates = dates.filter(d => d.getDate() % 2 === 0);
+            calendar.deselectDate(evenDates);
+
+            fixture.detectChanges();
+            const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(5);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
+
+            // Deselect with array not included in the selected dates
+            calendar.deselectDate(evenDates);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(5);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
+
+            // Deselect one date included in the selected dates
+            calendar.deselectDate([oddDates[0]]);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(4);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
+
+            // Deselect with array with all dates included in the selected dates
+            calendar.deselectDate(oddDates);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
         });
 
-        const notSelectedDates = calendar.dates.toArray().filter(d => {
-            const dateTime = getDate(d).getTime();
-            return dateTime >= new Date(2017, 5, 10).getTime() &&
-                    dateTime <= new Date(2017, 5, 15).getTime();
+        it('Deselect using API. Should deselect in "range" selection mode whe period is not included in the selected dates', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
+            const startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            const endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(startDate.getDate() - 3);
+
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
+
+            // Deselect with range which is not included in the selected dates
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
         });
 
-        notSelectedDates.forEach(d => {
-            expect(d.selected).toBe(false);
-            expect(d.isSelectedCSS).toBe(false);
+        it('Deselect using API. Should deselect in "range" selection mode when period is not included.', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
+
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
+
+            // Deselect with range is includes the selection
+            let startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            let endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() + 5);
+
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with range which includes the beginning of the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 2);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with range which includes the end of the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 2);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() + 5);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with range which is inside the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 1);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 1);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
         });
-    });
 
-    it('Deselect using API. Should deselect in "single" selection mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const calendar = fixture.componentInstance.calendar;
-        fixture.detectChanges();
+        it('Deselect using API. Should deselect in "range" with array of dates.', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
 
-        const date = calendar.viewDate;
-        calendar.selectDate(date);
-        fixture.detectChanges();
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
+            const endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 1);
+            const midDateDeselect = new Date(endDate);
 
-        let selectedDate = calendar.value;
-        expect(selectedDate).toEqual(date);
+            // Deselect with range with only one date
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
 
-        calendar.deselectDate(date);
-        fixture.detectChanges();
+            let selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
 
-        selectedDate = calendar.value;
-        expect(selectedDate).toBe(null);
-    });
+            let startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 5);
+            calendar.deselectDate([startDateDeselect]);
+            fixture.detectChanges();
 
-    it('Deselect using API. Should deselect in "multi" selection mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'multi';
-        fixture.detectChanges();
-        await wait(50);
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
 
-        const year = calendar.viewDate.getFullYear();
-        const month = calendar.viewDate.getMonth();
-        const dates = [];
-        const datesCount = 10;
-        for (let i = 0; i < datesCount; i++) {
-            dates.push(new Date(year, month, i + 1));
-        }
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 2);
+            calendar.deselectDate([startDateDeselect]);
+            fixture.detectChanges();
 
-        fixture.detectChanges();
-        calendar.selectDate(dates);
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
 
-        fixture.detectChanges();
-        const evenDates = dates.filter(d => d.getDate() % 2 === 0);
-        calendar.deselectDate(evenDates);
+            // Deselect with array of dates
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
 
-        fixture.detectChanges();
-        const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
-        const selectedDates: Date[] = calendar.value as Date[];
-        for (const selectedDate of selectedDates) {
-            const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
-            expect(fdate).toBeTruthy();
-        }
-    });
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
 
-    it('Deselect using API. Should deselect in "range" selection mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'range';
-        fixture.detectChanges();
-        await wait(50);
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 10);
 
-        const startDate = calendar.viewDate;
-        const endDate = new Date(calendar.viewDate);
-        endDate.setDate(endDate.getDate() + 14);
+            midDateDeselect.setDate(endDate.getDate() + 3);
+            calendar.deselectDate([midDateDeselect, endDateDeselect, startDateDeselect]);
+            fixture.detectChanges();
 
-        const startDateDeselect = new Date(startDate);
-        const endDateDeselect = new Date(endDate);
-        endDateDeselect.setDate(endDate.getDate() - 7);
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+        });
 
-        calendar.selectDate(startDate);
-        fixture.detectChanges();
+        it('Deselect using API. Should deselect all in "single" mode.', () => {
+            const date = calendar.viewDate;
+            calendar.selectDate(date);
+            fixture.detectChanges();
 
-        calendar.selectDate(endDate);
-        fixture.detectChanges();
+            let selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
 
-        calendar.deselectDate([startDateDeselect, endDateDeselect]);
-        fixture.detectChanges();
+            calendar.deselectDate();
+            fixture.detectChanges();
 
-        const selectedDates: Date[] = calendar.value as Date[];
-        const selectedDatesMs = selectedDates.map(d => new Date(
-            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-        expect(selectedDates.length).toBe(7);
-        const expectedSelectedDates = [];
+            selectedDate = calendar.value;
+            expect(selectedDate).toBe(null);
+        });
 
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(endDate);
-            date.setDate(date.getDate() - i);
-            expectedSelectedDates.push(date);
-        }
+        it('Deselect using API. Should deselect all in "multi" mode.', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
 
-        const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
-            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-        for (const expectedSelectedDate of expectedSelectedDatesInMs) {
-            expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
-        }
-    });
+            const year = calendar.viewDate.getFullYear();
+            const month = calendar.viewDate.getMonth();
+            const dates = [];
+            const datesCount = 10;
+            for (let i = 0; i < datesCount; i++) {
+                dates.push(new Date(year, month, i + 1));
+            }
 
-    it('Deselect using API. Should deselect all in "single" mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const calendar = fixture.componentInstance.calendar;
-        fixture.detectChanges();
+            calendar.selectDate(dates);
+            fixture.detectChanges();
 
-        const date = calendar.viewDate;
-        calendar.selectDate(date);
-        fixture.detectChanges();
+            calendar.deselectDate();
+            fixture.detectChanges();
 
-        let selectedDate = calendar.value;
-        expect(selectedDate).toEqual(date);
+            expect(calendar.value).toEqual([]);
+        });
 
-        calendar.deselectDate();
-        fixture.detectChanges();
+        it('Deselect using API. Should deselect all in "range" mode.', () => {
+            calendar.selection = 'range';
+            fixture.detectChanges();
 
-        selectedDate = calendar.value;
-        expect(selectedDate).toBe(null);
-    });
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 7);
 
-    it('Deselect using API. Should deselect all in "multi" mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'multi';
-        fixture.detectChanges();
-        await wait(50);
+            calendar.selectDate(startDate);
+            fixture.detectChanges();
 
-        const year = calendar.viewDate.getFullYear();
-        const month = calendar.viewDate.getMonth();
-        const dates = [];
-        const datesCount = 10;
-        for (let i = 0; i < datesCount; i++) {
-            dates.push(new Date(year, month, i + 1));
-        }
+            calendar.selectDate(endDate);
+            fixture.detectChanges();
 
-        calendar.selectDate(dates);
-        fixture.detectChanges();
+            calendar.deselectDate();
+            fixture.detectChanges();
 
-        calendar.deselectDate();
-        fixture.detectChanges();
-
-        expect(calendar.value).toEqual([]);
-    });
-
-    it('Deselect using API. Should deselect all in "range" mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'range';
-        fixture.detectChanges();
-        await wait(50);
-
-        const startDate = calendar.viewDate;
-        const endDate = new Date(calendar.viewDate);
-        endDate.setDate(endDate.getDate() + 7);
-
-        calendar.selectDate(startDate);
-        fixture.detectChanges();
-
-        calendar.selectDate(endDate);
-        fixture.detectChanges();
-
-        calendar.deselectDate();
-        fixture.detectChanges();
-
-        expect(calendar.value).toEqual([]);
+            expect(calendar.value).toEqual([]);
+        });
     });
 });
 
@@ -1423,7 +1603,8 @@ class DateRangesPropertiesTester {
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const afterDate = new Date(2017, 5, 13);
         const afterDateRangeDescriptor: DateRangeDescriptor = {
-            type: DateRangeType.After, dateRange:  [afterDate] };
+            type: DateRangeType.After, dateRange: [afterDate]
+        };
         dateRangeDescriptors.push(afterDateRangeDescriptor);
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
@@ -1441,7 +1622,8 @@ class DateRangesPropertiesTester {
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const beforeDate = new Date(2017, 5, 13);
         const beforeDateRangeDescriptor: DateRangeDescriptor = {
-            type: DateRangeType.Before, dateRange: [beforeDate] };
+            type: DateRangeType.Before, dateRange: [beforeDate]
+        };
         dateRangeDescriptors.push(beforeDateRangeDescriptor);
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
@@ -1496,7 +1678,7 @@ class DateRangesPropertiesTester {
         const calendar = fixture.componentInstance.calendar;
         const dateRangeDescriptors: DateRangeDescriptor[] = [];
         const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 10),
-            new Date(2017, 5, 20), new Date(2017, 5, 21), new Date(2017, 5, 22)];
+        new Date(2017, 5, 20), new Date(2017, 5, 21), new Date(2017, 5, 22)];
         dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
         assignFunc(calendar, dateRangeDescriptors);
         fixture.detectChanges();
@@ -1522,7 +1704,7 @@ class DateRangesPropertiesTester {
         const inRangeDates = dates.filter(d => d.date.date.getDay() !== 0 &&
             d.date.date.getDay() !== 6);
         const outOfRangeDates = dates.filter(d => d.date.date.getDay() === 0 ||
-           d.date.date.getDay() === 6);
+            d.date.date.getDay() === 6);
         testRangesFunc(inRangeDates, outOfRangeDates);
     }
 
@@ -1553,7 +1735,7 @@ class DateRangesPropertiesTester {
         const secondBetweenMin = new Date(2017, 5, 7);
         const secondBetweenMax = new Date(2017, 5, 15);
         dateRangeDescriptors.push(
-            {type: DateRangeType.Between, dateRange: [firstBetweenMin, firstBetweenMax] });
+            { type: DateRangeType.Between, dateRange: [firstBetweenMin, firstBetweenMax] });
         dateRangeDescriptors.push(
             { type: DateRangeType.Between, dateRange: [secondBetweenMin, secondBetweenMax] });
         assignFunc(calendar, dateRangeDescriptors);
