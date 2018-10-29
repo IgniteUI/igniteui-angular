@@ -302,6 +302,7 @@ describe('IgxTreeGrid - Selection', () => {
         }));
 
         it('should update header checkbox when reselecting all filtered-in rows', fakeAsync(() => {
+            pending('General Grid Issue #2793');
             treeGrid.filter('Age', 30, IgxNumberFilteringOperand.instance().condition('lessThan'));
             tick(100);
 
