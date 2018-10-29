@@ -209,7 +209,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.expression.condition) {
             return this.expression.condition.isUnary;
         } else {
-            return false;
+            return true;
         }
     }
 
@@ -500,9 +500,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI): void {
-        expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-        this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
-        this.filter();
+        if (eventArgs.oldSelection !== null) {
+            expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+            this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
+            this.filter();
+        }
     }
 
     private scrollChipsWhenAddingExpression() {
