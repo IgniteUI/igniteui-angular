@@ -28,6 +28,7 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYCODES } from '../../core/utils';
+import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 
 /**
  * @hidden
@@ -114,12 +115,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private _conditionsOverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
     private _operatorsOverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
@@ -505,9 +508,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filter();
     }
 
-
     private scrollChipsWhenAddingExpression() {
         const chipAraeChildren = this.chipsArea.element.nativeElement.children;
+        if (!chipAraeChildren || chipAraeChildren.length === 0) {
+            return;
+        }
+
         const containerRectRight = Math.ceil(this.container.nativeElement.getBoundingClientRect().right);
 
         const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);

@@ -191,7 +191,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
             event.stopPropagation();
             if (this.grid.filteringService.isFilterRowVisible) {
                 if (this.column.filterable && !this.column.columnGroup &&
-                    this.grid.filteringService.columsWithComplexFilter.find((field) => field === this.column.field) === undefined) {
+                    !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
             }
