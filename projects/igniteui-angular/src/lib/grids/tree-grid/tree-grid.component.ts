@@ -203,6 +203,20 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI.add_child_row(this.id, parentRowID, data);
     }
 
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
+         if (this.primaryKey && this.foreignKey) {
+            super.deleteRowFromData(rowID, index);
+        } else {
+            const record = this.treeGridRecordsMap.get(rowID);
+            const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
+            index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData.splice(index, 1);
+        }
+    }
 
     /**
     * @hidden

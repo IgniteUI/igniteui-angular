@@ -174,7 +174,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        return grid.primaryKey ? grid.data.findIndex(record => record[grid.primaryKey] === rowID) : grid.data.indexOf(rowID);
+        const data = this.get_all_data(id);
+        return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
@@ -252,6 +253,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     //  and one without transaction
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -261,8 +263,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = grid.data[rowIndex][column.field];
-            rowData = grid.data[rowIndex];
+            oldValue = data[rowIndex][column.field];
+            rowData = data[rowIndex];
         }
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
@@ -298,7 +300,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                grid.data[rowIndex][column.field] = args.newValue;
+                data[rowIndex][column.field] = args.newValue;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -312,20 +314,21 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public update_row(value: any, id: string, rowID: any): void {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = this.get_row_index_in_data(id, rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = {
                 row: this.get_row_by_key(id, rowID),
                 cell: null,
-                currentValue: this.get(id).data[index],
+                currentValue: data[index],
                 newValue: value
             };
             grid.onEditDone.emit(args);
             if (grid.transactions.enabled) {
                 grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
             } else {
-                grid.data[index] = args.newValue;
+                this.update_row_in_array(id, args.newValue, rowID, index);
             }
             if (isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -334,6 +337,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
             (grid as any)._pipeTrigger++;
         }
+    }
+
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data[index] = value;
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {

@@ -2745,10 +2745,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public deleteRowById(rowId: any) {
         let index: number;
+        const data = this.gridAPI.get_all_data(this.id);
         if (this.primaryKey) {
-            index = this.data.map((record) => record[this.primaryKey]).indexOf(rowId);
+            index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
         } else {
-            index = this.data.indexOf(rowId);
+            index = data.indexOf(rowId);
         }
         const state: State = this.transactions.getState(rowId);
         const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
@@ -2765,16 +2766,16 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             return;
         }
 
-        this.onRowDeleted.emit({ data: this.data[index] });
+        this.onRowDeleted.emit({ data: data[index] });
 
         //  if there is a row (index !== 0) delete it
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
             if (this.transactions.enabled) {
                 const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, this.data[index]);
+                this.transactions.add(transaction, data[index]);
             } else {
-                this.data.splice(index, 1);
+                this.deleteRowFromData(rowId, index);
             }
         } else {
             this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
@@ -2789,9 +2790,16 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.cdr.markForCheck();
 
         this.refreshSearch();
-        if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+        if (data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
             this.page--;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
+        this.data.splice(index, 1);
     }
 
     /**
