@@ -418,6 +418,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public close(): void {
+        this.expressionsList.forEach((item) => {
+            if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
+                this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
+            }
+        });
+
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
