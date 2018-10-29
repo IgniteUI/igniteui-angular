@@ -56,10 +56,16 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
         this.treeGridAPI.trigger_row_expansion_toggle(this.gridID, this.row, event);
     }
 
+    /**
+     * @hidden
+     */
     public onIndicatorFocus(event: Event) {
         event.stopPropagation();
     }
 
+    /**
+     * @hidden
+     */
     public calculateSizeToFit(range: any): number {
         const indicatorWidth = this.indicator.nativeElement.getBoundingClientRect().width;
         const indicatorStyle = this.document.defaultView.getComputedStyle(this.indicator.nativeElement);

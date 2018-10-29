@@ -16,7 +16,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey } from '../core/utils';
+import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent } from './grid-base.component';
 
@@ -880,5 +880,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             }
         });
         return defaultClasses.join(' ');
+    }
+
+    /**
+     * @hidden
+     */
+    public calculateSizeToFit(range: any): number {
+        return Math.max(...Array.from(this.nativeElement.children)
+                   .map((child) => valToPxlsUsingRange(range, child)));
     }
 }
