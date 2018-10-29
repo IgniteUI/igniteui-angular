@@ -1942,7 +1942,7 @@ function selectFilteringCondition(cond: string, ddList) {
 function checkUIForType(type: string, elem: DebugElement) {
     let expectedConditions;
     let expectedInputType;
-    const isReadOnly = type === 'bool' ?  true : undefined;
+    const isReadOnly = type === 'bool' ?  true : false;
     switch (type) {
         case 'string':
             expectedConditions = IgxStringFilteringOperand.instance().operations;
@@ -1958,7 +1958,7 @@ function checkUIForType(type: string, elem: DebugElement) {
             break;
         case 'bool':
             expectedConditions = IgxBooleanFilteringOperand.instance().operations;
-            expectedInputType = 'bool';
+            expectedInputType = 'text';
         break;
     }
 
@@ -1974,7 +1974,7 @@ function checkUIForType(type: string, elem: DebugElement) {
     if (expectedInputType !== 'datePicker') {
         const input = filterUIRow.query(By.css('.igx-input-group__input'));
         expect(input.nativeElement.type).toBe(expectedInputType);
-        expect(input.nativeElement.readonly).toBe(isReadOnly);
+        expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
     } else {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
