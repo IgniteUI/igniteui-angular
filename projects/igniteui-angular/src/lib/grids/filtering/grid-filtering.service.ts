@@ -83,10 +83,14 @@ export class IgxFilteringService implements OnDestroy {
 
     public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
         this.grid.filter(field, null, expressionsTree);
+        this.grid.onFilteringDone.emit(expressionsTree);
     }
 
     public clearFilter(field: string): void {
         this.grid.clearFilter(field);
+        
+        const expr = this.grid.filteringExpressionsTree.find(field);
+        this.grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
 
         const expressions = this.getExpressions(field);
         expressions.length = 0;

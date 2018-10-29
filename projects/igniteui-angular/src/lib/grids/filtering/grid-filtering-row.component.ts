@@ -93,7 +93,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     protected dropDownConditions: IgxDropDownComponent;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
-    public chipsArea: IgxChipsAreaComponent;
+    protected chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
@@ -130,7 +130,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(this.locale);
-    private chipSelTogglesDropdown = false;
     private chipsAreaWidth: number;
     private offset: number = 0;
     private conditionChanged = new Subject();
@@ -155,23 +154,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
         }
 
-        this.conditionsDropDownClosed = this.dropDownConditions.onClosed.subscribe(() => {
-            if (this.chipSelTogglesDropdown) {
-                requestAnimationFrame(() => {
-                    this.toggleConditionsDropDown();
-                });
-
-                this.chipSelTogglesDropdown = false;
-            }
-        });
-
-        if (this.inputGroupPrefix) {
             this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
-            requestAnimationFrame(() => {
-                this.toggleConditionsDropDown();
-            });
+        this.input.nativeElement.focus();
         }
-    }
 
     ngOnDestroy() {
         this.conditionChanged.unsubscribe();
@@ -224,7 +209,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.SPACE) &&
             this.dropDownConditions.collapsed) {
-            this.toggleConditionsDropDown();
+            this.dropDownConditions.toggle(this._conditionsOverlaySettings);
             event.stopImmediatePropagation();
         }
     }
@@ -246,7 +231,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             }
 
             this.resetExpression();
-            this.toggleConditionsDropDown();
             this.scrollChipsWhenAddingExpression();
         }
     }
@@ -288,7 +272,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         return value;
     }
 
-    private addExpression(isSelected: boolean): void {
+    private addExpression(isSelected: boolean) {
         const exprUI = new ExpressionUI();
         exprUI.expression = this.expression;
         exprUI.beforeOperator = this.expressionsList.length > 0 ? FilteringLogic.And : null;
@@ -321,7 +305,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.showHideArrowButtons();
     }
 
-    private resetExpression(): void {
+    private resetExpression() {
         this.expression = {
             fieldName: this.column.field,
             condition: null,
@@ -340,7 +324,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.showHideArrowButtons();
     }
 
-    public conditionChangedCallback(): void {
+    public conditionChangedCallback() {
         if (!!this.expression.searchVal || this.expression.searchVal === 0) {
             this.filter();
         } else if (this.value) {
@@ -348,7 +332,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public unaryConditionChangedCallback(): void {
+    public unaryConditionChangedCallback() {
         if (this.value) {
             this.value = null;
         }
@@ -392,7 +376,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public clearFiltering(): void {
+    public clearFiltering() {
         this.filteringService.clearFilter(this.column.field);
         this.resetExpression();
         this.cdr.detectChanges();
@@ -401,7 +385,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.transform(this.offset);
     }
 
-    public clearInput(): void {
+    public clearInput() {
         this.value = null;
     }
 
@@ -412,12 +396,18 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public close(): void {
-        this.expressionsList.forEach((item) => {
-            if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
-                this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
-            }
-        });
+    public close() {
+        if (this.expressionsList.length === 1 &&
+            this.expressionsList[0].expression.searchVal === null &&
+            this.expressionsList[0].expression.condition.isUnary === false) {
+            this.filteringService.clearFilter(this.column.field);
+        } else {
+            this.expressionsList.forEach((item) => {
+                if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
+                    this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
+                }
+            });
+        }
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
@@ -428,23 +418,22 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.transform(this.offset);
     }
 
-    public toggleConditionsDropDown(): void {
-        this.inputGroupPrefix.nativeElement.focus();
+    public toggleConditionsDropDown() {
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
 
-    public toggleOperatorsDropDown(eventArgs, index): void {
+    public toggleOperatorsDropDown(eventArgs, index) {
         this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target;
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
     }
 
-    public filter(): void {
+    public filter() {
         this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
 
         this.filteringService.filter(this.column.field, this.rootExpressionsTree);
     }
 
-    public onConditionsChanged(eventArgs): void {
+    public onConditionsChanged(eventArgs) {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expression.condition = this.getCondition(value);
         if (this.expression.condition.isUnary) {
@@ -458,7 +447,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression): void {
+    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression) {
         if (eventArgs.selected) {
             if (this.chipsArea.chipsList) {
                 this.chipsArea.chipsList.forEach((chip) => {
@@ -468,14 +457,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 });
             }
             this.expression = expression;
-            if (eventArgs.originalEvent) {
-                if (this.dropDownConditions.collapsed) {
-                    requestAnimationFrame(() => {
-                        this.toggleConditionsDropDown();
-                    });
-                } else {
-                    this.chipSelTogglesDropdown = true;
-                }
+            if (this.input) {
+                this.input.nativeElement.focus();
             }
         } else if (this.expression === expression) {
             this.resetExpression();
@@ -486,21 +469,18 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             chip.selected = !chip.selected;
-            if (chip.selected) {
-                this.toggleConditionsDropDown();
             }
         }
-    }
 
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
+    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove, item.expression);
 
         this.scrollChipsOnRemove();
     }
 
-    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI): void {
-        if (eventArgs.oldSelection !== null) {
+    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI) {
+        if (eventArgs.oldSelection) {
             expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
             this.filter();

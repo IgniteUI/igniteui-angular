@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
@@ -1597,15 +1597,23 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         tick(100);
-        fix.componentInstance.grid.width = '1000px';
+        const grid = fix.componentInstance.grid;
+        grid.width = '1500px';
         fix.detectChanges();
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const filteringChips = fix.debugElement.queryAll(By.css('.igx-filtering-chips'));
         expect(filteringCells.length).toBe(6);
         expect(filteringChips.length).toBe(5);
 
-        const idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
+        let idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
         expect(idCellChips.length).toBe(0);
+
+        grid.getColumnByName('ID').filterable = true;
+        fix.detectChanges();
+        tick(100);
+
+        idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
+        expect(idCellChips.length).toBe(1);
     }));
 
     it('should render correct input and dropdown in filter row for different column types', fakeAsync(() => {
@@ -1662,6 +1670,112 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
         tick(200);
         checkUIForType('bool', fix.debugElement);
+    }));
+
+    it('should apply  multiple conditions to grid immediately while the filter row is still open',  () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
+        const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
+        const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
+        const grid = fix.componentInstance.grid;
+        // open for string
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        filterBy('Starts With', 'I', fix);
+        expect(grid.rowList.length).toEqual(2);
+        filterBy('Ends With', 'r', fix);
+        expect(grid.rowList.length).toEqual(1);
+
+        // Reset and Close
+        resetFilterRow(fix);
+        closeFilterRow(fix);
+
+        // open for number
+        numberCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        filterBy('Less Than', '100', fix);
+        expect(grid.rowList.length).toEqual(3);
+        filterBy('Greater Than', '10', fix);
+        expect(grid.rowList.length).toEqual(1);
+
+        // Reset and Close
+        resetFilterRow(fix);
+        closeFilterRow(fix);
+        // open for bool
+        boolCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        filterBy('False', '', fix);
+        expect(grid.rowList.length).toEqual(2);
+        filterBy('Empty', '', fix);
+        expect(grid.rowList.length).toEqual(0);
+
+        // Reset and Close
+        resetFilterRow(fix);
+        closeFilterRow(fix);
+
+        // open for date
+        dateCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Today', '', fix);
+        expect(grid.rowList.length).toEqual(1);
+        filterBy('Null', '', fix);
+        expect(grid.rowList.length).toEqual(0);
+    });
+
+    it('should render navigation arrows in the filtering row when chips don\'t fit.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // open for string
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        for (let i = 0; i < 10; i++) {
+            filterBy('Starts With', 'I', fix);
+            tick(200);
+        }
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const startArrow = filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-start'));
+        const endArrow = filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-end'));
+
+        expect(startArrow).not.toBe(null);
+        expect(endArrow).not.toBe(null);
+    }));
+
+    it('should update UI when chip is removed from header cell.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const grid = fix.componentInstance.grid;
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Starts With', 'I', fix);
+        expect(grid.rowList.length).toEqual(2);
+
+        closeFilterRow(fix);
+
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // remove chip
+        const removeButton = stringCellChip.query(By.css('div.igx-chip__remove'));
+        removeButton.nativeElement.click();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+
     }));
 
 });
@@ -1980,7 +2094,7 @@ function checkUIForType(type: string, elem: DebugElement) {
             expectedInputType = 'text';
         break;
     }
-
+    openFilterDD(elem);
     const ddList = elem.query(By.css('div.igx-drop-down__list.igx-toggle'));
     const ddItems = ddList.nativeElement.children;
     // check drop-down conditions
@@ -1998,4 +2112,42 @@ function checkUIForType(type: string, elem: DebugElement) {
         const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
         expect(datePicker).not.toBe(null);
     }
+}
+
+function filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    // open dropdown
+    openFilterDD(fix.debugElement);
+
+    const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+    selectFilteringCondition(condition, ddList);
+    const input = filterUIRow.query(By.directive(IgxInputDirective));
+    sendInput(input, value, fix);
+    // Enter key to submit
+    const kbEvt = document.createEvent('Event');
+    kbEvt['keyCode'] = 13;
+    kbEvt.initEvent('keydown', false, true);
+    input.nativeElement.dispatchEvent(kbEvt);
+}
+
+function resetFilterRow(fix: ComponentFixture<any> ) {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+    const reset = editingBtns.queryAll(By.css('button'))[0];
+    reset.nativeElement.click();
+    fix.detectChanges();
+}
+
+function closeFilterRow(fix: ComponentFixture<any>) {
+    const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+    const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+    const close = editingBtns.queryAll(By.css('button'))[1];
+    close.nativeElement.click();
+    fix.detectChanges();
+}
+
+function openFilterDD(elem: DebugElement) {
+    const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
+    const filterIcon = filterUIRow.query(By.css('igx-icon'));
+    filterIcon.nativeElement.click();
 }
