@@ -1714,6 +1714,29 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(grid.rowList.length).toEqual(0);
     });
 
+    it('should render navigation arrows in the filtering row when chips don\'t fit.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // open for string
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        for (let i = 0; i < 10; i++) {
+            filterBy('Starts With', 'I', fix);
+            tick(200);
+        }
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const startArrow = filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-start'));
+        const endArrow = filterUIRow.query(By.css('.igx-grid__filtering-row-scroll-end'));
+
+        expect(startArrow).not.toBe(null);
+        expect(endArrow).not.toBe(null);
+    }));
+
 });
 
 export class CustomFilter extends IgxFilteringOperand {
