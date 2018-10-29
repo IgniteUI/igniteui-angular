@@ -60,7 +60,9 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
     IgxRowEditTemplateDirective,
-    IgxRowEditTabStopDirective
+    IgxRowEditTabStopDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -1249,22 +1251,29 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+    private rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
-    public defaultRowEditTemplate: TemplateRef<any>;
+    private defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
+    /** @hidden */
     public get rowEditContainer(): TemplateRef<any> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
+    /** @hidden */
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
+    public rowEditText: TemplateRef<any>;
+    /** @hidden */
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
+    public rowEditActions: TemplateRef<any>;
 
     /**
      * @hidden
@@ -1305,9 +1314,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * TODO: Nav service logic doesn't handle 0 results from this querylist
      */
     public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
-        return this.rowEditCustom ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
+        return this.rowEditTabsCUSTOM.length ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
     }
 
     /**
@@ -2075,6 +2085,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             requestAnimationFrame(() => {
                 this.summariesHeight = 0;
                 this.reflow();
+                this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
         this._ngAfterViewInitPaassed = true;
@@ -3984,27 +3995,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!directive) {
             return;
         }
-
-        const state = directive.state;
-        const start = state.startIndex;
-        const isColumn = directive.igxForScrollOrientation === 'horizontal';
-
-        const size = directive.getItemCountInView();
-
-        if (start >= goal) {
-            // scroll so that goal is at beggining of visible chunk
-            directive.scrollTo(goal);
-        } else if (start + size <= goal) {
-            // scroll so that goal is at end of visible chunk
-            if (isColumn) {
-                directive.getHorizontalScroll().scrollLeft =
-                    directive.getColumnScrollLeft(goal) -
-                    parseInt(directive.igxForContainerSize, 10) +
-                    parseInt(this.columns[goal].width, 10);
-            } else {
-                directive.scrollTo(goal - size + 1);
-            }
-        }
+        directive.scrollTo(goal);
     }
 
     private rebuildMatchCache() {

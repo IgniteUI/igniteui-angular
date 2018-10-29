@@ -120,6 +120,14 @@
                             </div>
                         </div>
                     </ng-template>
+                    <ng-template igxRowEditText let-rowChangesCount>
+                        Changes: {{rowChangesCount}}
+                    </ng-template>
+                    <!-- https://github.com/angular/angular/issues/16643 -->
+                    <ng-template igxRowEditActions let-endRowEdit>
+                        <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
+                        <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Apply</button>
+                    </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>
             <button (click)="addRow('gridRowEditTransaction')">Add Row</button>
