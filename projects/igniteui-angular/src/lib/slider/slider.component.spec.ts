@@ -627,6 +627,29 @@ describe('IgxSlider', () => {
         expect((slider.value as IRangeSliderValue).lower).toBe(5);
         expect((slider.value as IRangeSliderValue).upper).toBe(7);
     });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element (single)', () => {
+            const fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.slider;
+            const editElement = fixture.debugElement.query(By.css('.igx-slider__thumb-to')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
+
+        it('Should return correct edit element (range)', () => {
+            const fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            const instance = fixture.componentInstance.slider;
+            instance.type = SliderType.RANGE;
+            fixture.detectChanges();
+
+            const editElement = fixture.debugElement.query(By.css('.igx-slider__thumb-from')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
+    });
 });
 @Component({
     selector: 'igx-slider-test-component',

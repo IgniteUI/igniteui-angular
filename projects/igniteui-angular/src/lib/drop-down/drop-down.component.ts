@@ -16,9 +16,7 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject,
-    AfterContentInit,
-    AfterContentChecked
+    Inject
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -30,9 +28,15 @@ import { CancelableEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
 
+/**
+ * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.
+ *
+ * @export
+ */
 export interface ISelectionEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
+    cancel: boolean;
 }
 
 /** @hidden */
@@ -501,16 +505,19 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    protected changeSelectedItem(newSelection?: IgxDropDownItemBase) {
+    protected changeSelectedItem(newSelection?: IgxDropDownItemBase): boolean {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
         }
 
-        const args: ISelectionEventArgs = { oldSelection, newSelection };
-        this.selection.set(this.id, new Set([newSelection]));
-
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
+        if (!args.cancel) {
+            this.selection.set(this.id, new Set([newSelection]));
+        }
+
+        return !args.cancel;
     }
 
     /**
@@ -728,16 +735,20 @@ export class IgxDropDownComponent extends IgxDropDownBase {
         super(elementRef, cdr, selection);
     }
 
-    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent) {
+    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent): boolean {
         const oldSelection = this.selectedItem;
-        super.changeSelectedItem(newSelection);
+        const selectionChanged = super.changeSelectedItem(newSelection);
 
-        if (oldSelection) {
-            oldSelection.isSelected = false;
+        if (selectionChanged) {
+            if (oldSelection) {
+                oldSelection.isSelected = false;
+            }
+            if (newSelection) {
+                newSelection.isSelected = true;
+            }
         }
-        if (newSelection) {
-            newSelection.isSelected = true;
-        }
+
+        return selectionChanged;
     }
 }
 @NgModule({

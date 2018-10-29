@@ -178,6 +178,18 @@ describe('IgxSwitch', () => {
         expect(testInstance.subscribed).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
     });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(SwitchSimpleComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.switch;
+            const editElement = fixture.debugElement.query(By.css('.igx-switch__input')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
+    });
 });
 
 @Component({ template: `<igx-switch>Init</igx-switch>` })

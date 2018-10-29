@@ -1,6 +1,0 @@
-@import '../index';
-@import './midnight/index';
-
-// Generate a palette
-@include igx-core();
-@include igx-theme($default-palette, $preset: $midnight-theme);

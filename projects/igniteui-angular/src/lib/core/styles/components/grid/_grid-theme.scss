@@ -65,6 +65,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -205,6 +206,10 @@
         filtering-row-background: #fff,
         filtering-row-text-color: igx-color($palette, 'grays', 800)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -878,6 +883,7 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
+            color: igx-color($palette, 'secondary');
         }
     }
 
@@ -1462,7 +1468,6 @@
         igx-chips-area {
             transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
-            overflow: hidden;
 
             .igx-filtering-chips__connector {
                 font-size: rem(12px);

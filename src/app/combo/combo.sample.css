@@ -10,7 +10,7 @@
     padding: 0 24px;
 }
 
-.header-class>* {
+.header-class > * {
     flex: 1 1 auto;
     width: 50%;
     text-align: left;
@@ -26,6 +26,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+
+.btn-container button {
+    margin-right: 8px;
 }
 
 .input-row {
@@ -72,7 +76,7 @@
     width: 100%;
 }
 
-.state-card--simple>* {
+.state-card--simple > * {
     flex: 1 1 auto;
 }
 
@@ -99,6 +103,6 @@
     margin-bottom: 24px;
 }
 
-.input-container+.input-container {
+.input-container + .input-container {
     margin-left: 24px;
 }

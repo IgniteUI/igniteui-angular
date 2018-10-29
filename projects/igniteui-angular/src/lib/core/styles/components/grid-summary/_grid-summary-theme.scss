@@ -29,6 +29,8 @@
 ///   @include igx-grid-summary($my-summary-theme);
 @function igx-grid-summary-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background-color: null,
     $label-color: null,
     $result-color: null,
@@ -51,6 +53,10 @@
         pinned-border-color: igx-color($palette, 'grays', 400),
         inactive-color: igx-color($palette, 'grays', 400)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
