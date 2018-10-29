@@ -956,7 +956,7 @@ describe('IgxGrid - Cell component', () => {
         await wait(50);
 
         fix.detectChanges();
-        expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
+        expect(parseInt(displayContainer.style.top, 10)).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
