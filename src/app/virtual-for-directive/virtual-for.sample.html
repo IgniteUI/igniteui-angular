@@ -6,16 +6,16 @@
               <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='"500px"'
-                [igxForItemSize]='"300px"'
+                [igxForItemSize]='"100px"'
                 let-rowIndex="index">
-                <div style='height:300px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height:100px;'>{{rowIndex}} : {{item.text}}</div>
                 </ng-template>
             </div>
             <button (click)="scrNextRow()">Scroll Next Row</button>
             <button (click)="scrPrevRow()">Scroll Prev Row</button>
             <button (click)="scrNextPage()">Scroll Next Page</button>
             <button (click)="scrPrevPage()">Scroll Prev Page</button>
-            <input (input)="scrScrollTo($event.target.value)" placeholder="scroll to index"/>
+            <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
             <button (click)="verticalVisibleItemCount()">Get visible item count</button>
     </article>
     <article class="sample-column">
