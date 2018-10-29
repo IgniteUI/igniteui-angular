@@ -855,12 +855,13 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *````
      */
     public deselectDate(value?: Date | Date[]) {
-        if (value === null || value === undefined) {
-            this.selectedDates = this.selection === 'single' ? null : [];
+        if (this.selectedDates === null || this.selectedDates === []) {
             return;
         }
 
-        if (this.selectedDates === null || this.selectedDates === []) {
+        if (value === null || value === undefined) {
+            this.selectedDates = this.selection === 'single' ? null : [];
+            this._onChangeCallback(this.selectedDates);
             return;
         }
 
