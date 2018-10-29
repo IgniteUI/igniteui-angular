@@ -16,7 +16,6 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     remoteData: any;
     options = {};
     prevRequest: any;
-
     @ViewChild('virtDirVertical', { read: IgxForOfDirective })
     virtDirVertical: IgxForOfDirective<any>;
 
@@ -137,7 +136,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             width: 100,
             height: 100
         }];
-        for (let i = 10; i < 1e6; i++) {
+        for (let i = 10; i < 1e5; i++) {
             const obj = Object.assign({}, data[i % 10]);
             obj['key'] = i;
             data.push(obj);
@@ -171,7 +170,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
         this.virtDirVertical.scrollPrevPage();
     }
     scrScrollTo(index) {
-        this.virtDirVertical.scrollTo(index);
+        this.virtDirVertical.scrollTo(parseInt(index, 10));
     }
     scrNextCol() {
         this.virtDirHorizontal.scrollNext();
