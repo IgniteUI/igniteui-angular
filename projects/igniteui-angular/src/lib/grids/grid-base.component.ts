@@ -669,40 +669,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public emptyFilteredGridMessage = 'No records found.';
 
     /**
-     * An @Input property that sets the message displayed inside the GroupBy drop area where columns can be dragged on.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid dropAreaMessage="Drop here to group!">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
-
-    /**
-     * An @Input property that sets the template that will be rendered as a GroupBy drop area.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid [dropAreaTemplate]="dropAreaRef">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     *
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
-     * ```ts
-     * @ViewChild('myDropArea', { read: TemplateRef })
-     * public dropAreaRef: TemplateRef<any>;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaTemplate: TemplateRef<any>;
-
-    /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
@@ -1198,12 +1164,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultDropArea', { read: TemplateRef })
-    public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -3636,17 +3596,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         if (this.data && this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
-    }
-
-    /**
-    * @hidden
-    */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
         }
     }
 
