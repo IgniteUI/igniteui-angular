@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit, Inject } from '@angular/core';
 
-import { IgxGridComponent,  SortingDirection, ISortingExpression, IFocusChangeEventArgs, IgxInputGroupComponent } from 'igniteui-angular';
+import { IgxGridComponent,  SortingDirection, ISortingExpression, IgxInputGroupComponent } from 'igniteui-angular';
+import { IGridFocusChangeEventArgs } from 'projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { DisplayDensityToken, DisplayDensity, IDisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { detectChanges } from '@angular/core/src/render3';
 

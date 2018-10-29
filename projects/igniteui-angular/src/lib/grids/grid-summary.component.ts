@@ -69,7 +69,7 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-summary')
     get defaultCSS() {
-        return this.displayDensity === DisplayDensity.comfortable;
+        return this.gridAPI.get(this.gridID).isComfortable();
     }
 
     get dataType(): DataType {

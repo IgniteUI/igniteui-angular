@@ -27,7 +27,8 @@ import {
     ViewChildren,
     AfterViewChecked,
     ViewContainerRef,
-    InjectionToken
+    InjectionToken,
+    Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
@@ -63,7 +64,7 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -150,7 +151,7 @@ export interface IFocusChangeEventArgs {
     cancel: boolean;
 }
 
-export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -381,42 +382,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public paginationTemplate: TemplateRef<any>;
-
-    /**
-     * Return the display density currently applied to the grid.
-     * The default value is `comfortable`.
-     * Available options are `comfortable`, `cosy`, `compact`.
-     * ```typescript
-     * let gridTheme = this.grid.displayDensity;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    /**
-     * Sets the display density currently applied to the grid.
-     * ```html
-     * <igx-grid #grid [data]="localData" [displayDensity]="'compact'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-        this.onDensityChanged.emit();
-    }
 
     /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
@@ -1120,12 +1085,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    @Output()
-    protected onDensityChanged = new EventEmitter<any>();
-
-    /**
-     * @hidden
-     */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -1368,26 +1327,22 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
+        if (this.isCosy()) {
                 return 'igx-grid--cosy';
-            case DisplayDensity.compact:
+        } else if (this.isCompact()) {
                 return 'igx-grid--compact';
-            default:
+        } else {
                 return 'igx-grid';
         }
     }
 
     get bannerClass(): string {
         let bannerClass = '';
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
+        if (this.isCosy()) {
                 bannerClass = 'igx-banner--cosy';
-                break;
-            case DisplayDensity.compact:
+        } else if (this.isCompact()) {
                 bannerClass = 'igx-banner--compact';
-                break;
-            default:
+        } else {
                 bannerClass = 'igx-banner';
         }
         bannerClass += this.rowEditPositioningStrategy.isTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
@@ -1944,7 +1899,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
     private _horizontalForOfs;
 
@@ -2018,7 +1972,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         private resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
-        private navigation: IgxGridNavigationService) {
+        private navigation: IgxGridNavigationService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensity) {
+            super(_displayDensityOptions);
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -2238,13 +2194,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     get defaultRowHeight(): number {
-        switch (this._displayDensity) {
-            case DisplayDensity.compact:
+        if (this.isCosy()) {
+            return 40;
+        } else if (this.isCompact()) {
                 return 32;
-            case DisplayDensity.cosy:
-                return 40;
-            case DisplayDensity.comfortable:
-            default:
+        } else {
                 return 50;
         }
     }
