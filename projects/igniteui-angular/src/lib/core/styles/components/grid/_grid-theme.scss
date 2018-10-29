@@ -865,7 +865,7 @@
         align-items: center;
         justify-content: flex-end;
         user-select: none;
-        min-width: 39px; /* sort-icon width + filtering toggle icon width */
+        min-width: 15px; /* sort-icon width */
         height: map-get($grid-header-height, 'comfortable');
         align-self: flex-end;
 

@@ -268,6 +268,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
             this.resetExpression();
             this.toggleConditionsDropDown();
+            this.scrollChipsWhenAddingExpression();
         }
     }
 
@@ -291,16 +292,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
             const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
-            this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
+            this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
             this.showArrows = this.chipsAreaWidth >= containerWidth;
             this.cdr.detectChanges();
-
-            this.chipsAreaWidth = parseInt(this.chipsArea.element.nativeElement.getBoundingClientRect().width, 10);
-            if (this.chipsAreaWidth <= containerWidth) {
-                this.offset = 0;
-                this.transform(this.offset);
-            }
         });
     }
 
@@ -583,75 +578,49 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filter();
     }
 
-    public scrollChips(event) {
-        let lastVisibleElement, lastVisibleElementRect, elementsFromPoint;
 
+    private scrollChipsWhenAddingExpression() {
+        const chipAraeChildren = this.chipsArea.element.nativeElement.children;
+        const containerRectRight = Math.ceil(this.container.nativeElement.getBoundingClientRect().right);
+
+        const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);
+        if (lastChipRectRight >= containerRectRight) {
+            this.offset -= lastChipRectRight - containerRectRight;
+            this.transform(this.offset);
+        }
+    }
+
+    public scrollChipsOnArrowPress(event) {
+        let count = 0;
+        const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         const containerRect = this.container.nativeElement.getBoundingClientRect();
-        const chipsAreaRect = this.chipsArea.element.nativeElement.getBoundingClientRect();
 
         if (event === 'right') {
-            elementsFromPoint = this.getElementsAtPoint(containerRect.right - 1, containerRect.top + containerRect.height / 2);
-            for (let i = 0; i < elementsFromPoint.length; i++) {
-                if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
-                    lastVisibleElement = elementsFromPoint[i];
-                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                    break;
+            for (let index = 0; index < chipAraeChildren.length; index++) {
+                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.right)) {
+                    count++;
                 }
             }
 
-            if (lastVisibleElement) {
-                this.offset += -(lastVisibleElementRect.width - (containerRect.right - lastVisibleElementRect.left) + 5);
-            } else if (chipsAreaRect.right > containerRect.right){
-                elementsFromPoint = this.getElementsAtPoint(containerRect.right - 5, containerRect.top + containerRect.height / 2);
-                for (let i = 0; i < elementsFromPoint.length; i++) {
-                    if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
-                        const childen = this.chipsArea.element.nativeElement.children;
-                        for (let index = 0; index < childen.length; index++) {
-                            if (childen[index].isSameNode(elementsFromPoint[i]) && index !== childen.length - 1) {
-                                lastVisibleElement = childen[index + 1];
-                                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                this.offset += -(lastVisibleElementRect.width + 5);
+            if (count < chipAraeChildren.length) {
+                this.offset -= Math.ceil(chipAraeChildren[count].getBoundingClientRect().right) - Math.ceil(containerRect.right) + 1;
+                this.transform(this.offset);
             }
         }
 
         if (event === 'left') {
-            elementsFromPoint = this.getElementsAtPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
-            for (let i = 0; i < elementsFromPoint.length; i++) {
-                if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
-                    lastVisibleElement = elementsFromPoint[i];
-                    lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                    break;
+            for (let index = 0; index < chipAraeChildren.length; index++) {
+                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
+                    count++;
                 }
             }
 
-            if (lastVisibleElement) {
-                this.offset += containerRect.left - lastVisibleElementRect.left + 5;
-            } else if (chipsAreaRect.left < containerRect.left) {
-                elementsFromPoint = this.getElementsAtPoint(containerRect.left + 5, containerRect.top + containerRect.height / 2);
-                for (let i = 0; i < elementsFromPoint.length; i++) {
-                    if (elementsFromPoint[i].id === 'chip' || elementsFromPoint[i].id === 'operand') {
-                        const childen = this.chipsArea.element.nativeElement.children;
-                        for (let index = 0; index < childen.length; index++) {
-                            if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
-                                lastVisibleElement = childen[index - 1];
-                                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                this.offset += lastVisibleElementRect.width + 5;
+            if (count > 0) {
+                this.offset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[count - 1].getBoundingClientRect().left) + 1;
+                this.transform(this.offset);
             }
         }
 
-        this.transform(this.offset);
     }
 
     private transform(offset: number) {
@@ -661,58 +630,23 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     private scrollChipsOnRemove() {
+        let count = 0;
+        const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
-        let lastVisibleElement, lastVisibleElementRect, elementsFromPoint;
-        elementsFromPoint = this.getElementsAtPoint(containerRect.left + 1, containerRect.top + containerRect.height / 2);
-        for (let i = 0; i < elementsFromPoint.length; i++) {
-            if (elementsFromPoint[i].id === 'chip') {
-                lastVisibleElement = elementsFromPoint[i];
-                lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                break;
-            }
-
-            if (elementsFromPoint[i].id === 'operand') {
-                const childen = this.chipsArea.element.nativeElement.children;
-                for (let index = 0; index < childen.length; index++) {
-                    if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
-                        lastVisibleElement = childen[index - 1];
-                        lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                        break;
-                    }
-                }
-                break;
+        for (let index = 0; index < chipAraeChildren.length; index++) {
+            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
+                count++;
             }
         }
 
-        if (!lastVisibleElement) {
-            elementsFromPoint = this.getElementsAtPoint(containerRect.left + 5, containerRect.top + containerRect.height / 2);
-            for (let i = 0; i < elementsFromPoint.length; i++) {
-                if (elementsFromPoint[i].id === 'operand' || elementsFromPoint[i].id === 'chip') {
-                    const childen = this.chipsArea.element.nativeElement.children;
-                    for (let index = 0; index < childen.length; index++) {
-                        if (childen[index].isSameNode(elementsFromPoint[i]) && index !== 0) {
-                            lastVisibleElement = childen[index - 1];
-                            lastVisibleElementRect = lastVisibleElement.getBoundingClientRect();
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
-        this.offset += containerRect.left - lastVisibleElementRect.left + 5;
-        this.transform(this.offset);
-    }
-
-    private getElementsAtPoint(pageX: number, pageY: number) {
-        const viewPortX = pageX - window.pageXOffset;
-        const viewPortY = pageY - window.pageYOffset;
-        if (document['msElementsFromPoint']) {
-            return document['msElementsFromPoint'](viewPortX, viewPortY); // Edge and IE
+        if (count <= 2) {
+            this.offset = 0;
         } else {
-            return document.elementsFromPoint(viewPortX, viewPortY);
+            let dif = chipAraeChildren[count].id === 'chip' ? count - 2 : count - 1;
+            this.offset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[dif].getBoundingClientRect().left) + 1;
         }
+
+        this.transform(this.offset);
     }
 }
