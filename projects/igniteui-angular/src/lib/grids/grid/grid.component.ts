@@ -23,6 +23,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
+import { SortingStateDefaults } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 
@@ -549,7 +550,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     protected _groupBy(expression: ISortingExpression) {
-        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
     }
 
     /**

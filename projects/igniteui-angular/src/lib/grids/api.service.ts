@@ -13,6 +13,8 @@ import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
+import { ISortingStrategy } from '../data-operations/sorting-strategy';
+import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -329,13 +331,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
-        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -456,6 +458,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }
 
     protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
+        DataUtil.mergeDefaultProperties(expression, SortingStateDefaults);
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
                 state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
