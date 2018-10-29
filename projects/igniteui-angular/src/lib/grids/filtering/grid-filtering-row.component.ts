@@ -457,7 +457,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 });
             }
             this.expression = expression;
-            this.input.nativeElement.focus();
+            if (this.input) {
+                this.input.nativeElement.focus();
+            }
         } else if (this.expression === expression) {
             this.resetExpression();
         }
