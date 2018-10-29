@@ -42,7 +42,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[1].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
 
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -220,7 +220,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[1].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
 
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -378,7 +378,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[2].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[2].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
 
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -606,7 +606,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[3].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[3].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -717,7 +717,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -741,7 +741,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -765,7 +765,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -793,7 +793,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -822,7 +822,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -851,7 +851,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -874,7 +874,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -897,7 +897,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -920,7 +920,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -943,7 +943,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -971,7 +971,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -999,7 +999,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -1027,7 +1027,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -1065,7 +1065,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -1103,7 +1103,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -1141,7 +1141,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        filteringCells[4].query(By.css("igx-chip")).nativeElement.click();
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
@@ -1176,8 +1176,12 @@ describe('IgxGrid - Filtering actions', () => {
     it('Should correctly select month from month view datepicker/calendar component', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
-        const input = filterIcon.query(By.directive(IgxInputDirective));
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
 
         filterIcon.triggerEventHandler('mousedown', null);
         fix.detectChanges();
@@ -1209,8 +1213,12 @@ describe('IgxGrid - Filtering actions', () => {
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
-        const filterIcon = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[3];
-        const input = filterIcon.query(By.directive(IgxInputDirective));
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
 
         filterIcon.triggerEventHandler('mousedown', null);
         fix.detectChanges();
@@ -1248,13 +1256,15 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        const filterUIContainer = fix.debugElement.queryAll(By.css(FILTER_UI_CONTAINER))[4];
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
-        const options = select.nativeElement.options;
-        const reset = filterUIContainer.queryAll(By.css('button'))[0];
-        const close = filterUIContainer.queryAll(By.css('button'))[1];
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        filteringCells[5].query(By.css('igx-chip')).nativeElement.click();
+        fix.detectChanges();
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+        const reset = filterUIRow.queryAll(By.css('button'))[0];
+        const close = filterUIRow.queryAll(By.css('button'))[1];
 
         expect(grid.rowList.length).toEqual(8);
 
@@ -1266,9 +1276,9 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
         tick();
 
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         // false condition
-        options[0].selected = true;
-        select.nativeElement.dispatchEvent(new Event('change'));
+        selectFilteringCondition('False', ddList);
         fix.detectChanges();
         tick();
 
@@ -1282,7 +1292,6 @@ describe('IgxGrid - Filtering actions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
-        const filterUiContainer = fix.debugElement.query(By.css(FILTER_UI_CONTAINER));
         const grid = fix.componentInstance.grid;
         const filterVal = 'search';
         const columnName = 'ProductName';
@@ -1290,10 +1299,16 @@ describe('IgxGrid - Filtering actions', () => {
         grid.filter(columnName, filterVal, IgxStringFilteringOperand.instance().condition('contains'));
         fix.detectChanges();
 
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
+        expect(idCellChips.length).toBe(1);
         spyOn(grid.onFilteringDone, 'emit');
 
-        const reset = filterUiContainer.queryAll(By.css('button'))[0];
-        const input = filterUiContainer.query(By.directive(IgxInputDirective));
+        idCellChips[0].nativeElement.click();
+        fix.detectChanges();
+        const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const reset = filterUiRow.queryAll(By.css('button'))[0];
+        const input = filterUiRow.query(By.directive(IgxInputDirective));
         sendInput(input, filterVal, fix);
 
         reset.nativeElement.dispatchEvent(new MouseEvent('click'));
@@ -2095,7 +2110,7 @@ function removeFilterChipByIndex(index: number, filterUIRow) {
 }
 
 function selectFilteringCondition(cond: string, ddList) {
-    let ddItems = ddList.nativeElement.children;
+    const ddItems = ddList.nativeElement.children;
     let i;
     for ( i = 0; i < ddItems.length; i++) {
         if (ddItems[i].textContent === cond) {
