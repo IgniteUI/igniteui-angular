@@ -84,7 +84,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!data) {
             if (grid.transactions.enabled) {
                 data = DataUtil.mergeTransactions(
-                    cloneArray(grid.data, true),
+                    cloneArray(grid.data),
                     grid.transactions.aggregatedState(true),
                     grid.primaryKey
                 );
@@ -115,7 +115,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     public set_cell_inEditMode(gridId: string, cell) {
         const grid = this.get(gridId);
         if (grid.rowEditable) {
-            const currentEditRow = this.get_row_inEditMode(gridId);
+            const currentEditRow = this.get_edit_row_state(gridId);
             if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
                 grid.endRowEdit(true);
                 grid.startRowEdit(cell.row);
@@ -124,7 +124,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 grid.startRowEdit(cell.row);
             }
             const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
-            this.set_row_inEditMode(gridId, rowState);
+            this.set_edit_row_state(gridId, rowState);
         }
 
         if (!this.get_cell_inEditMode(gridId)) {
@@ -183,13 +183,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_row_inEditMode(gridId) {
+    public get_edit_row_state(gridId) {
         const editRow = this.editRowState.get(gridId);
         return editRow ? editRow : null;
 
     }
 
-    public set_row_inEditMode(gridId, row: { rowID: any, rowIndex: number }) {
+    public set_edit_row_state(gridId, row: { rowID: any, rowIndex: number }) {
         if (!row) {
             this.editRowState.delete(gridId);
         } else {

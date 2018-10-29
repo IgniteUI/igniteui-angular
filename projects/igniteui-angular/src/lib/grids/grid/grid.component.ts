@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -21,11 +21,18 @@ import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
+import { IgxColumnComponent } from '../column.component';
+import { takeUntil } from 'rxjs/operators';
 
 let NEXT_ID = 0;
 
 export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     groupRow: IgxGridGroupByRowComponent;
+}
+export interface IGroupingDoneEventArgs {
+    expressions: Array<ISortingExpression> | ISortingExpression;
+    groupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
+    ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
 /**
@@ -53,7 +60,7 @@ export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden
@@ -128,7 +135,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
     }
 
     /**
-     * Sets the group by state of the `IgxGridComponent`.
+     * Sets the group by state of the `IgxGridComponent` and emits the `onGroupingDone`
+     * event with the appropriate arguments.
      * ```typescript
      * this.grid.groupingExpressions = [{
      *     fieldName: "ID",
@@ -142,6 +150,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
+        const oldExpressions: Array<ISortingExpression> = this.groupingExpressions;
+        const newExpressions: Array<ISortingExpression> = value;
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.get(this.id)) {
@@ -154,6 +164,32 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
             // setter called before grid is registered in grid API service
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
+        if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
+            const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const groupedColsArr = newExpressions.filter((obj) => {
+                return !oldExpressions.some((obj2) => {
+                    return obj.fieldName === obj2.fieldName;
+                });
+            });
+            groupedColsArr.forEach((elem) => {
+                groupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const ungroupedColsArr = oldExpressions.filter((obj) => {
+                return !newExpressions.some((obj2) => {
+                    return obj.fieldName === obj2.fieldName;
+                });
+            });
+            ungroupedColsArr.forEach((elem) => {
+                ungroupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newExpressions,
+                groupedColumns: groupedCols,
+                ungroupedColumns: ungroupedCols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
+    }
     }
 
     /**
@@ -265,11 +301,22 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
     }
 
     /**
-     * Emitted when a new `IgxColumnComponent` is grouped or ungrouped.
-     * Returns the `ISortingExpression` related to the grouping operation.
+     * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get
+     * grouped/ungrouped at once by using the Group By API.
+     * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
+     * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
+     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
+     * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
+     * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
+     * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
+     * columns.
      * ```typescript
-     * groupingDone(event: any){
-     *     const grouping = event;
+     * groupingDone(event: IGroupingDoneEventArgs){
+     *     const expressions = event.expressions;
+     *     //the newly grouped columns
+     *     const groupedColumns = event.groupedColumns;
+     *     //the newly ungrouped columns
+     *     const ungroupedColumns = event.ungroupedColumns;
      * }
      * ```
      * ```html
@@ -278,7 +325,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onGroupingDone = new EventEmitter<ISortingExpression[]>();
+    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
 
     @Output()
     public onFocusChange = new EventEmitter<IGridFocusChangeEventArgs>();
@@ -379,9 +426,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
     }
 
     /**
-     * Groups by a new `IgxColumnComponent` based on the provided expression or modifies an existing one.
+     * Groups by a new `IgxColumnComponent` based on the provided expression, or modifies an existing one.
+     * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
+     * The onGroupingDone event would get raised only **once** if this method gets called multiple times with the same arguments.
      * ```typescript
      * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+     * this.grid.groupBy([
+            { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
+            { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
      * ```
 	 * @memberof IgxGridComponent
      */
@@ -396,23 +450,22 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.onGroupingDone.emit(this.sortingExpressions);
         this.restoreHighlight();
     }
 
     /**
      * Clears all grouping in the grid, if no parameter is passed.
-     * If a parameter is provided clears grouping for a particular column
+     * If a parameter is provided, clears grouping for a particular column or an array of columns.
      * ```typescript
-     * this.grid.clearGrouping();
-     * this.grid.clearGrouping("ID");
+     * this.grid.clearGrouping(); //clears all grouping
+     * this.grid.clearGrouping("ID"); //ungroups a single column
+     * this.grid.clearGrouping(["ID", "Column1", "Column2"]); //ungroups multiple columns
      * ```
      *
      */
-    public clearGrouping(name?: string): void {
+    public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-
         this.restoreHighlight();
     }
 
@@ -726,6 +779,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements DoCheck, A
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         super.ngAfterContentInit();
+    }
+
+    public ngOnInit() {
+        super.ngOnInit();
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
     }
 
     public ngDoCheck(): void {

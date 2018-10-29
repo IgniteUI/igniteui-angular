@@ -140,11 +140,11 @@
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
-    <div [className]="bannerClass"> 
+    <div [className]="bannerClass">
         <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit.bind(this) }"></ng-container>
     </div>
 </div>
-<ng-template #defaultRowEditTemplate >
+<ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">You have {{ rowChangesCount }} uncommitted changes on this row</span>
     </div>
