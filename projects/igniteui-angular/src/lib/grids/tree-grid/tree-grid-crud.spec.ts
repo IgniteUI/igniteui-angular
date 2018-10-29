@@ -784,13 +784,12 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async(done) => {
+            it('should emit an event when editing a tree-grid cell through UI', async() => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 treeGrid.onEditDone.pipe(first()).subscribe((args) => {
                     expect(args.newValue).toBe(146);
-                    done();
                 });
 
                 cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
@@ -802,6 +801,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 UIInteractions.sendInput(editTemplate, '146');
                 await wait(DEBOUNCETIME);
+
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
             });
@@ -928,13 +928,12 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async(done) => {
+            it('should emit an event when editing a tree-grid cell through UI', async() => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 treeGrid.onEditDone.pipe(first()).subscribe((args) => {
                     expect(args.newValue).toBe(146);
-                    done();
                 });
 
                 cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
