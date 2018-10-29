@@ -8,7 +8,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxSwitch', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -174,6 +177,18 @@ describe('IgxSwitch', () => {
         expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
+    });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(SwitchSimpleComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.switch;
+            const editElement = fixture.debugElement.query(By.css('.igx-switch__input')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
     });
 });
 

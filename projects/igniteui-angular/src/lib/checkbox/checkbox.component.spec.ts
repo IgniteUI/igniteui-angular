@@ -8,7 +8,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxCheckbox', () => {
+    configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -200,6 +203,18 @@ describe('IgxCheckbox', () => {
         expect(testInstance.changeEventCalled).toBe(true);
         expect(testInstance.subscribed).toBe(false);
         expect(testInstance.clickCounter).toEqual(2);
+    });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(CheckboxSimpleComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.cb;
+            const editElement = fixture.debugElement.query(By.css('.igx-checkbox__input')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
     });
 });
 

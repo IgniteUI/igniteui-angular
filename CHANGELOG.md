@@ -3,10 +3,49 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.0
+- Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
+    
+    Setting display density on a component level:
+    ```typescript
+    @Component({
+    ...
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }]
+    })
+    ```
+- `igx-input-group`
+    - The `igx-input-group` control's display density can be explicitly set by using the `displayDensity` input.
+    ```html
+    <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
+    ```
+- `igx-drop-down`:
+    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
+- Transaction Provider - `TransactionService` is an injectable middleware that a component can use to accumulate changes without affecting the underlying data. The provider exposes API to access, manipulate changes (undo and redo) and discard or commit all to the data.
+For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/services/transaction/README.md).
 - `igxGrid`:
+    - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
+
+    - Row editing - allows modification of several cells in the row, before submitting, at once, all those changes to the grid's data source. Leverages the pending changes functionality of the new transaction provider.
+
+        ```html
+        <igx-grid [data]="data" [rowEditable]="true">
+            <igx-column field="ProductName"></igx-column>
+            <igx-column field="ReleaseDate"></igx-column>
+        </igx-grid>
+        ```
+
+    - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
+
+        ```typescript
+        @Component({
+            providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+            selector: "app-grid-with-transactions",
+            template: "<ng-content></ng-content>"
+        })
+        export class GridWithTransactionsComponent { }
+        ```
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.
@@ -37,7 +76,18 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChip`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - **Breaking change** `onSelection`'s EventEmitter interface property `nextStatus` is renamed to `selected`.
+    - **Breaking change** Move the location of where the chip `suffix` is positioned. Now it is between the content and the `remove button` making the button last element if visible by default.
+    - **Breaking change** Remove the chip `connector` rendered when using the `igxConnector` directive that is also removed.
+    - **Breaking change** The chip theme has been rewritten. Most theme input properties have been renamed for consistency
+    and better legibility. New properties have been added. Please, refer to the updated igx-chip-theme documentation to see all updates.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
+    - Added `data` input for storing any data related to the chip itself.
+    - Added `select icon` with show/hide animation to indicate when a chip is being selected with ability to customize it while retaining the chip Material Design styling.
+    - Added `selectIcon` input to set custom template for the `select icon`.
+    - Update chip styling to match Material Design guidelines.
+    - Rework of the chip content styling so now by default text inside is styled to match the chip Material Design styling.
+    - Rework of the `remove button` rendered and now has the ability to customize its icon while retaining the chip Material Design.
+    - Added `removeIcon` input so a custom template cane be set for the remove button icon.
 - `IgxChipArea`
     - Introduced event argument types to all `EventEmitter` `@Output`s.
     - Exposed original event that is responsible for triggering any of the events. If triggered by the API it is by default `null`.
@@ -78,10 +128,66 @@ All notable changes for each version of this project will be documented in this 
         - Extends `IgxToggleActionDirective`.
         - Exported with the name **tooltipTarget**.
     - Both new directives are used in combination to set a tooltip to an element. For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/tooltip/README.md).
+- `igxToggle`:
+    - Introduced reposition method which allows a user to force toggle to reposition according its position strategy.
 - `IgxDrag` and `IgxDrop` directives available.
     - `IgxDrag` allows any kind of element to be moved/dragged around the page without changing its position in the DOM. Supports Desktop/Mixed/Touch environments.
-    - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element. 
+    - `IgxDrop` allows any element to act as a drop area where any `igxDrag` element can be dragged into and dropped. Includes default logic that moves the dropped element from its original position to a child of the `igxDrop` element.
     - Combined they provide a way to move elements around the page by dragging them. For more detail see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/dragdrop/README.md).
+- `IgxGrid` keyboard navigation
+When you focus a specific cell and press one of the following key combinations, the described behaviour is now performed:
+    - `Ctrl + Arrow Key Up` - navigates to the first cell in the current column;
+    - `Ctrl + Arrow Down` - navigates to the last cell in the current column;
+    - `Home` - provide the same behavior as Ctrl + Arrow Left - navigates to the first cell from the current row;
+    - `End` - provide the same behavior as Ctrl + Arrow Right - navigates to the last cell from the current row;
+    - `Ctrl + Home` - navigates to the first cell in the grid;
+    - `Ctrl + End` - navigates to the last cell in the grid;
+    - `Tab` - sequentially move the focus over the next cell on the row and if the last cell is reached move to next row. If next row is group row the whole row is focused, if it is data row, move focus over the first cell;
+    - `Shift + Tab` - sequentially move focus to the previous cell on the row, if the first cell is reached move the focus to the previous row. If previous row is group row focus the whole row or if it is data row, focus the last cell of the row;
+    - `Space` over Cell - if the row is selectable, on keydown space triggers row selection
+    - `Arrow Left` over GroupRow - collapse the group row content if the row is not already collapsed;
+    - `Arrow Right` over GroupRow - expand the group row content if the row is not already expanded;
+    - on mouse `wheel` the focused element is blurred;
+    - **Breaking change**  `space` handler for the group row has been removed; so `Space` does not toggle the group row;
+    - **Breaking change** cell selection is preserved when the focus is moved to group row.
+    - Introduced `onFocusChange` event. The event is cancelable and output argument from type `IFocusChangeEventArgs`;
+    - For more detailed information see the [official keyboard navigation specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
+    
+## 6.1.8
+
+### Bug fixes
+
+- Fix sorting and groupby expression not syncing when there are already sorted columns. #2786
+- GroupBy Chip sorting direction indicator is not changed if sorting direction is changed #2765
+- Failing tests caused by inconsistent behavior when sorting a column with equal values #2767
+- IgxGridComponent.groupingExpressions is of type any #2758
+
+## 6.1.7
+
+### Bug Fixes
+- IgxSelectionAPIService allows to add items with id which is undefined #2581
+- FilteredSortedData collection holds the original data after first filtering operation is done #2611
+- Calendar improvement of "selected" getter #2687
+- Improve igxCalendar performance #2675
+- Add Azure Pipelines CI and PR builds #2605
+- The igxDatePicker changes the time portion of a provided date #2561
+- IgxChip remove icon has wrong color #2573
+- Chip has intrinsic margin #2662
+- IgxChip remove icon has wrong color #2573
+- ChipsArea's OnSelection output is not emitted on initialization #2640
+
+## 6.1.6
+
+## Bug Fixes
+- IgxChip raises onSelection before onRemove #2612
+- Summaries are shown on horizontal scrolling when Row Selectors are enabled #2522
+- Bug - IgxCombo - Combo does not bind properly with [(ngModel)] and simple data (e.g. string[]) #2620
+- Missing backtick in comment #2537
+- IgxSelectionAPIService allows to add items with id which is undefined #2581
+- Circular bar text is clipped #2370
+- Update all angular async Calendar tests to await async #2582
+- InvalidPipeArgument: 'inable to convert "" into a date for pipe 'DatePipe' #2520
+- All cells in the row enter in edit mode if igx-columns are recreated. #2516
 
 ## 6.1.5
 - **General**
@@ -97,12 +203,46 @@ All notable changes for each version of this project will be documented in this 
         - Adding inertia scrolling for touch devices.
     - `igxCombo`
         - Adding inertia scrolling for touch devices. 
+    - `IgxCalendar` - `deselectDate` method added that deselects date(s) (based on the selection type)
+    - `IgxDatePicker` - `deselectDate` method added that deselects the calendar date.
+
+### Bug Fixes
+- igx-tabs : When you move the tab key, the contents of other tabs are displayed. #2550
+- Prevent default scroll behavior when using keyboard navigation. #2496
+- Error is thrown on ng serve --prod #2540
+- onSelection event is not fired when a cell in last visible row is row is selected and press arrow Down #2509
+- Add deselect method to igxCalendar #2424
+- Time starts from 03 minutes instead of 00 #2541
+- Replace EventEmitter<any> with the respective interface for the event #2481
+- Cannot scroll last item in view #2504
+- Japanese character is redundantly inserted into textbox on filter dialog on Safari #2316
+- Improve row selection performance #1258
+- igxRipple - Mousedown event doesn't bubble up when igxRipple is attached to elements. #2473
+- Add default formatting for numbers in igx-grid #1197
+- An error is returned when update a filtered cell #2465
+- Grid Keyboard navigation performance issue #1923
+- Vertical scrolling performance is slower when grouping is applied. #2421
+
+## 6.1.4
+
+### Bug Fixes
+
+- Bottom of letters fall of in the label of igx-tabs-group #1978
+- The search highlight and info are not updated correctly after editing a cell value of the grid #2388
+- Cannot set chip as selected through API if selectable is false #2383
+- Pressing 'Home/End' keys is not moving the focus to the first/last item #2332
+- Cannot set igxChip as selected #2378
+- Scrolling using touch is not working on Edge and Internet Explorer 11 #1639
+- IgxCombo - Selection - Cannot override combo selection through the onSelectionChange event #2440
+- igx-grid - `updateCell` method doesn't update cells that are not rendered. #2350
+
 ## 6.1.3
 - **General**
     - Added ES7 polyfill for Object for IE. This should be added to the polyfills in order for the igxGrid to render under IE.
         ```
         import 'core-js/es7/object';
         ```
+
 - `igxTabs`
     - `selectedIndex` property has an `@Input` setter and can be set both in markup and in code behind.
 - `igxDropDownItem`
@@ -122,6 +262,44 @@ All notable changes for each version of this project will be documented in this 
 - `igxLinearBar` and `igxCircularBar`
     - exposed `step` input which determines the update step of the progress indicator. By default it is one percent of the maximum value.
     - `IgxCircularBar` `text` input property exposed to set the text to be displayed inside the circular bar.
+
+### Bug fixes
+
+- igx-grid - cannot auto-size columns by double-clicking in IE11 #2025
+- Animation for removing item from list is very quick, must be more smoothly. #2306
+- circular and linear bars - prevent progress exceeding, smooth update when operate with big nums, allow floating point nums, expose step input #2163
+- Blank space on the right of igxGrid when there is a hidden column and grid width is 100% #2249
+- Igx Combo throws errors when data is set to null or undefined #2300
+- Top cell is not positioned aligned to the header, after keyboard navigation #1185
+- In carousel when call method remove for selected slide it is still previewed #2182
+- In grid paging paginate and page should check if the page is greater than the totalPages #2288
+- Typos and inaccuracies in IgxSnackbar's readme. #2250
+- The grid enables all the columns to be declared as pinned in the template #1612
+- Combo - Keyboard Navigation - Add Item button fires on Keydown.Space #2266
+- Reduce the use of MutationObservers in the IgxTextHighlightDirective #2251
+- Improve row selection performance #1258
+- Filter UI dialog redraws #2038
+- Can't navigate from first row cell to selection checkbox with key combination #1937
+- Incorrect position pinning of Navigation Drawer #2013
+- Keyboard navigation not working correctly whith column moving and cell selection #2086
+- Grid Layout is broken when you hide column #2121
+- IgxDateFilteringOperand's operation "doesNotEqual" doesn't work if the "equals" operation is localized(modified). #2202
+- aside in igx-nav-drawer surpasses height of igx-nav-drawer #1981
+- The button for collapse/expand all in groupby is not working correctly #2200
+- IgxDropDown Item cannot be set as selected. #2061
+- IgxBooleanFilteringOperand doesn't work if the operation 'all' is localized(modified). #2067
+- columnMove doesn't work if no data is loaded. #2158
+- Combo's clear button should be just an icon #2099
+- Default combo width should be 100% #2097
+- The combo list disappears after disabling Filtering at runtime #2108
+- igx-slider - slider comes to not work well after changing maxValue. #920
+- Search match highlight not always scrolled into view #1886
+- When groupby row is focused and spacebar is pressed the browser scrolls down, everywhere except Chrome, although it should only collapse the group #1947
+- Grid data bind fails initially until window resize #1614
+- Localization (i18n) for grid grouping area string #2046
+- When delete all records in the last page pager should be changed #2014
+- Filter icon in the header changes its position #2036
+
 ## 6.1.2
 - `igxCombo` improvements
     - Remote Data Binding fixes - selection preserving and keyboard navigation.
@@ -130,9 +308,46 @@ All notable changes for each version of this project will be documented in this 
 
 **General**
 - Added `jsZip` as a Dependency.
+
+### Bug Fixes
+
+- Grid Layout is broken when you change displayDensity runtime #2005
+- Add empty grid template #2035
+- Page Up/Page Down buttons don't scroll the grid #606
+- Icon component is not properly exported #2072
+- Adding density to chip doesn't make the density style to apply when it is dragged #1846
+- Update jszip as dependency #2043
+- No message is displayed when there is empty grid data without filtering enabled. #2001
+- The only possible range of setting minValue to igxSlider is between [0..99] #2033
+- Bootstrap & IgniteUI issues #1548
+- Remove tabs from collection -> TabCollectionChange Output #1972
+- 6.1.1 error on npm install #2023
+- Remote binding combo doesn't store the selected fields when scrolled or collapsed #1944
+- Exception is thrown when hovering a chip with a column header #1813
+- IgxCombo - Remote Virtualization Keyboard Navigation #1987
+
 ## 6.1.1
 - `igxTimePicker` changes
     - `onClose` event added.
+
+## Bug Fixes
+
+- Exit edit mode when move column through grid API #1932
+- IgxListItemComponent and the two template directives are missing from public_api.ts. #1939
+- Add Item button disappears after adding same item twice successively. #1938
+- onTabItemDeselected is called for every not selected tab item #1952
+- Exit edit mode when pin/unpin column through grid API #1933
+- Selected combo item doesn't have the proper focused styles #1948
+- Time-picker does not open on button-press. #1949
+- Custom cell not rendering with grid searching functionality #1931
+- Regular highlight makes the highlighted text unreadable when the row is selected. #1852
+- DatePicker focus is wrong on select date value #1965
+- add sass docs, grid document updates and input-group theme-related fixes #1993
+- DatePicker focus handler and AoT build #1994 
+- Change displayDensity runtime #1974 
+- Change IgxGrid display density runtime #1998 
+- Error is thrown when using igx-grid theme without $content-background #1996 
+- Update npm deploy token #2002
 
 ## 6.1.0
 - `igxOverlay` service added. **igxOverlayService** allows you to show any component above all elements in page. For more detailed information see the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)

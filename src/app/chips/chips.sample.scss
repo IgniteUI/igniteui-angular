@@ -1,0 +1,79 @@
+@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-component';
+@import '../../../projects/igniteui-angular/src/lib/core/styles/components/chip/chip-theme';
+
+$chip-border-theme: igx-chip-theme(
+    $background: white,
+    $border-color: igx-color($default-palette, 'grays', 400),
+    $text-color: igx-color($default-palette, 'grays', 800)
+);
+
+$dark-chip-theme: igx-chip-theme(
+    $roundness: 4px,
+    $background: #180505,
+    $text-color: white
+);
+
+:host ::ng-deep {
+    .chip-border-theme {
+        @include igx-chip($chip-border-theme);
+    }
+
+    .chip-dark-theme {
+        @include igx-chip($dark-chip-theme);
+        @include igx-chip-typography(
+            $default-type-scale,
+            $categories: (text: 'caption')
+        );
+    }
+}
+
+igx-chip {
+    margin: rem(4px);
+}
+
+.chip-avatar {
+    width: rem(24px);
+    height: rem(24px);
+    min-width: rem(24px);
+}
+
+.chip-storyboard {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.chip-area-connector {
+    color: currentColor;
+    opacity: .54;
+}
+
+.chip-area-avatar {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+}
+
+.wrapperAreaCc,
+.wrapperAreaTo {
+    display: flex;
+    align-items: center;
+    max-width: 640px;
+    border-bottom: 1px solid igx-color($default-palette, 'grays', 400);
+    min-height: 48px;
+    flex-wrap: wrap;
+}
+
+.dropAreaCc,
+.dropAreaTo {
+    padding: 0 1rem;
+    margin: .25rem;
+    border-radius: 1rem;
+    visibility: hidden;
+
+    &.dragOver {
+        color: igx-color($default-palette, 'grays', 700);
+        background-color: igx-color($default-palette, 'grays', 200);
+    }
+}

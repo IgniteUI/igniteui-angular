@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxGridModule } from '../../grid';
-import { IgxGridComponent } from '../../grid/grid.component';
+import { IgxGridModule } from '../../grids/grid';
+import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { FileContentData } from '../excel/test-data.service.spec';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
@@ -14,7 +14,10 @@ import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../te
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('CSV Grid Exporter', () => {
+    configureTestSuite();
     let exporter: IgxCsvExporterService;
     let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
@@ -31,19 +34,19 @@ describe('CSV Grid Exporter', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(async(() => {
         exporter = new IgxCsvExporterService();
         actualData = new FileContentData();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
-    });
+    }));
 
-    afterEach(() => {
+    afterEach(async(() => {
         exporter.onColumnExport.unsubscribe();
         exporter.onRowExport.unsubscribe();
-    });
+    }));
 
     it('should export grid as displayed.', () => {
         const currentGrid: IgxGridComponent = null;

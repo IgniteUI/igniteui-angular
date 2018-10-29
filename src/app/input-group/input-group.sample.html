@@ -1,5 +1,7 @@
 <app-page-header title="Input Group"></app-page-header>
 <div class="samples">
+    <input-group-child-sample></input-group-child-sample>
+
     <h3 class="sample-title">Line Style Input</h3>
     <form class="form">
         <!-- Basic text field -->
@@ -15,14 +17,14 @@
         </igx-input-group>
 
         <!-- Text field w/ text prefix -->
-        <igx-input-group>
+        <igx-input-group displayDensity="compact">
             <igx-prefix>+359</igx-prefix>
             <label igxLabel>Phone</label>
             <input igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />
         </igx-input-group>
 
         <!-- Text field w/ icon prefix -->
-        <igx-input-group>
+        <igx-input-group [supressInputAutofocus]="true">
             <igx-prefix>
                 <igx-icon>email</igx-icon>
             </igx-prefix>

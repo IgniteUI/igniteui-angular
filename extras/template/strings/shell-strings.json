@@ -1,0 +1,26 @@
+{
+    "jp": {
+        "Returns": "返却",
+        "Parameters": "パラメーター",
+        "Type parameters": "型パラメーター",
+        "Globals": "グローバル",
+        "Hierarchy": "階層",
+        "Implements": "実装",
+        "Implemented by": "次で実装:",
+        "Callable": "呼び出し可能",
+        "Implementation of": "次の実装:",
+        "Inherited from": "継承元",
+        "Overrides": "オーバーライド",
+        "Defined in": "次で定義:",
+        "Properties": "プロパティ",
+        "Methods": "メソッド",
+        "Accessors": "アクセサー",
+        "Constructor": "コンストラクタ",
+        "Constructors": "コンストラクタ",
+        "Enumeration members": "列挙型メンバー",
+        "Class": "クラス",
+        "Interface": "インターフェイス",
+        "Enumeration": "列挙",
+        "Static": "スタティック"
+    }
+}   

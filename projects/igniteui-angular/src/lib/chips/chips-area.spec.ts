@@ -8,18 +8,20 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxChipsModule } from './chips.module';
+import { IgxPrefixModule } from '../directives/prefix/prefix.directive';
+import { IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
 import { UIInteractions} from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 @Component({
     template: `
-        <igx-chips-area #chipsArea>
+        <igx-chips-area #chipsArea class="customClass">
             <igx-chip #chipElem *ngFor="let chip of chipList"
             [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -44,7 +46,7 @@ class TestChipComponent {
             <igx-chip #chipElem [id]="1" [draggable]="true" [removable]="true" [selectable]="true" [selected]="true">
                 <span #label [class]="'igx-chip__text'">first chip</span>
             </igx-chip>
-            <igx-chip #chipElem [id]="2" [draggable]="false" [removable]="false" [selectable]="false" [selected]="true">
+            <igx-chip #chipElem [id]="2" [draggable]="false" [selectable]="false" [selected]="true">
                 <span #label [class]="'igx-chip__text'">second chip</span>
             </igx-chip>
             <igx-chip #chipElem [id]="3" [draggable]="true" [removable]="true" [selectable]="true" [selected]="false">
@@ -65,7 +67,6 @@ class TestChipSelectComponent extends TestChipComponent {
                 [removable]="true" [selectable]="true" (onRemove)="chipRemoved($event)">
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
-                <igx-icon class="igx-chip__dir-icon" igxConnector fontSet="material">forward</igx-icon>
             </igx-chip>
         </igx-chips-area>
     `
@@ -94,7 +95,6 @@ class TestChipReorderComponent {
             newChipList.push(chipItem);
         }
         this.chipList = newChipList;
-        event.isValid = true;
     }
 
     chipMovingEnded() {
@@ -119,9 +119,10 @@ class TestChipReorderComponent {
     }
 }
 
+
 describe('IgxChipsArea', () => {
-    const CHIP_ITEM_AREA = 'igx-chip__item';
-    const CHIP_CONNECTOR = 'igx-chip__connector';
+    configureTestSuite();
+    const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -130,7 +131,7 @@ describe('IgxChipsArea', () => {
                 TestChipReorderComponent,
                 TestChipSelectComponent
             ],
-            imports: [FormsModule, IgxIconModule, IgxChipsModule]
+            imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
         }).compileComponents();
     }));
 
@@ -141,7 +142,7 @@ describe('IgxChipsArea', () => {
         const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
         const chipAreaComponent = fix.componentInstance;
 
-        expect(chipArea[0].nativeElement.className).toEqual('igx-chips-area');
+        expect(chipArea[0].nativeElement.className).toEqual('igx-chip-area customClass');
         expect(chipArea[0].nativeElement.children.length).toEqual(2);
 
         chipAreaComponent.chipList.push({ id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true });
@@ -255,106 +256,6 @@ describe('IgxChipsArea', () => {
                 expect(afterDragTop - startingTop).toEqual(yDragDifference);
                 expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
             }, 100);
-        });
-    }));
-
-    it('all suffix conectors should be invisible when chip is dragged', async(() => {
-        const xDragDifference = 200;
-        const yDragDifference = 100;
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const secondChip = chipComponents[1].componentInstance;
-        const secondChipElem = secondChip.chipArea.nativeElement;
-
-        const startingTop = secondChipElem.getBoundingClientRect().top;
-        const startingLeft = secondChipElem.getBoundingClientRect().left;
-        const startingBottom = secondChipElem.getBoundingClientRect().bottom;
-        const startingRight = secondChipElem.getBoundingClientRect().right;
-
-        const startingX = (startingLeft + startingRight) / 2;
-        const startingY = (startingTop + startingBottom) / 2;
-
-        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
-
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            UIInteractions.simulatePointerEvent(
-                'pointermove',
-                secondChip.dragDir['_dragGhost'],
-                startingX + xDragDifference,
-                startingY + yDragDifference
-            );
-            fix.detectChanges();
-
-            setTimeout(() => {
-                const firstChip = chipComponents[0];
-                expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
-            });
-        });
-
-    }));
-
-    it('all suffix conectors should be visible after chip is dropped', async(() => {
-        const xDragDifference = 200;
-        const yDragDifference = 100;
-        const fix = TestBed.createComponent(TestChipComponent);
-        fix.detectChanges();
-
-        const chipArea = fix.debugElement.queryAll(By.directive(IgxChipsAreaComponent));
-        const chipComponents = chipArea[0].queryAll(By.directive(IgxChipComponent));
-        const secondChip = chipComponents[1].componentInstance;
-        secondChip.dragDir.animateOnRelease = false;
-        const secondChipElem = secondChip.chipArea.nativeElement;
-
-        const startingTop = secondChipElem.getBoundingClientRect().top;
-        const startingLeft = secondChipElem.getBoundingClientRect().left;
-        const startingBottom = secondChipElem.getBoundingClientRect().bottom;
-        const startingRight = secondChipElem.getBoundingClientRect().right;
-
-        const startingX = (startingLeft + startingRight) / 2;
-        const startingY = (startingTop + startingBottom) / 2;
-
-        const firstChip = chipComponents[0];
-
-        UIInteractions.simulatePointerEvent('pointerdown', secondChipElem, startingX, startingY);
-        fix.detectChanges();
-
-        fix.whenStable().then(() => {
-            fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChipElem, startingX + 10, startingY + 10);
-
-            return fix.whenStable();
-        }).then(() => {
-            fix.detectChanges();
-            UIInteractions.simulatePointerEvent(
-                'pointermove',
-                secondChip.dragDir['_dragGhost'],
-                startingX + xDragDifference,
-                startingY + yDragDifference
-            );
-            fix.detectChanges();
-
-            return fix.whenRenderingDone();
-        }).then(() => {
-            expect(firstChip.nativeElement.children[1].style.visibility).toEqual('hidden');
-            UIInteractions.simulatePointerEvent(
-                'pointerup',
-                secondChip.dragDir['_dragGhost'],
-                startingX + xDragDifference,
-                startingY + yDragDifference
-            );
-            return fix.whenRenderingDone();
-        }).then(() => {
-            expect(firstChip.nativeElement.children[1].style.visibility).toEqual('visible');
         });
     }));
 
@@ -793,12 +694,12 @@ describe('IgxChipsArea', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const firstChipComp = chipComponents[0];
+        const firstChipComp = chipComponents[0].componentInstance;
 
-        firstChipComp.componentInstance.chipArea.nativeElement.focus();
+        firstChipComp.chipArea.nativeElement.focus();
 
-        expect(document.activeElement).toBe(firstChipComp.componentInstance.chipArea.nativeElement);
-        firstChipComp.componentInstance.chipArea.nativeElement.dispatchEvent(deleteKey);
+        expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
+        firstChipComp.chipArea.nativeElement.dispatchEvent(deleteKey);
         fix.detectChanges();
 
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -813,7 +714,7 @@ describe('IgxChipsArea', () => {
 
         expect(chipComponents.length).toEqual(4);
 
-        const deleteButtonElement = fix.debugElement.queryAll(By.css('igx-icon.igx-chip__remove-icon'))[0];
+        const deleteButtonElement = fix.debugElement.queryAll(By.css('.' + CHIP_REMOVE_BUTTON))[0];
         deleteButtonElement.nativeElement.click();
 
         fix.detectChanges();
@@ -837,7 +738,7 @@ describe('IgxChipsArea', () => {
         const secondChipElem = secondChip.chipArea.nativeElement;
 
         secondChip.dragDir.animateOnRelease = false;
-        secondChipElem.dispatchEvent(spaceKeyEvent);
+        secondChip.chipArea.nativeElement.dispatchEvent(spaceKeyEvent);
 
         const startingTop = secondChipElem.getBoundingClientRect().top;
         const startingLeft = secondChipElem.getBoundingClientRect().left;

@@ -1,7 +1,7 @@
 # igx-overlay
 
 The overlay service allows users to show components on overlay div above all other elements in the page.
-A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay.html)
+A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
 
 ## Usage
 
@@ -120,8 +120,8 @@ this.overlay.show(component, overlaySettings);
 ###### IgxOverlayService
 | Name        | Description                         | Cancelable | Parameters |
 |-------------|-------------------------------------|------------|------------|
-|onOpening    | Emitted before overlay shows        | false      |            |
+|onOpening    | Emitted before overlay shows        | true       |            |
 |onOpened     | Emitted after overlay shows         | false      |            |
-|onClosing    | Emitted before overlay hides        | false      |            |
+|onClosing    | Emitted before overlay hides        | true       |            |
 |onClosed     | Emitted after overlay hides         | false      |            |
 |onAnimation  | Emitted before animation is started | false      |            |

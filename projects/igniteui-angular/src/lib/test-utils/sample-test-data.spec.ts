@@ -1,6 +1,6 @@
 
 import { Calendar } from '../calendar/calendar';
-import { cloneObject } from '../core/utils';
+import { cloneValue } from '../core/utils';
 import { ValueData } from '../services/excel/test-data.service.spec';
 
 export class SampleTestData {
@@ -756,7 +756,7 @@ export class SampleTestData {
 
         for (let i = 0; i < iterations; i++) {
             baseData.forEach((item) => {
-                const currentItem = cloneObject(item);
+                const currentItem = cloneValue(item);
                 const id = SampleTestData.getIDColumnName(currentItem);
                 if (id) {
                     currentItem[id] = item[id] + i * baseData.length;
@@ -766,7 +766,7 @@ export class SampleTestData {
         }
         const currentLength = data.length;
         for (let i = 0; i < remainder; i++) {
-            const currentItem = cloneObject(baseData[i]);
+            const currentItem = cloneValue(baseData[i]);
             const id = SampleTestData.getIDColumnName(currentItem);
             if (id) {
                 currentItem[id] = currentLength + baseData[i][id];
@@ -801,6 +801,25 @@ export class SampleTestData {
         }];
     }
 
+    /**
+     * Generates simple array of primitve values
+     * @param rows Number of items to add to the array
+     * @param type The type of the items
+     */
+    public static generateListOfPrimitiveValues(rows: number, type: Number|String|Boolean): any[] {
+        const data: any[] = [];
+        for (let row = 0; row < rows; row++) {
+            if (type === 'Number') {
+                data.push(row);
+            } else if (type === 'String') {
+                data.push(`Row ${row}`);
+            } else if (type === 'Boolean') {
+                data.push(row % 7 === 0);
+            }
+        }
+        return data;
+    }
+
     /* Gets the name of the identifier column if exists. */
     private static getIDColumnName(dataItem: any) {
         if (!dataItem) {
@@ -820,3 +839,67 @@ export class SampleTestData {
 }
 
     // tslint:enable:quotemark
+
+export class DataParent {
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public nextDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1, 0, 0, 0);
+    public prevDay = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() - 1, 0, 0, 0);
+    public data = [
+        {
+            Downloads: 254,
+            ID: 1,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: this.today,
+            Released: false
+        },
+        {
+            Downloads: 1000,
+            ID: 2,
+            ProductName: 'NetAdvantage',
+            ReleaseDate: this.nextDay,
+            Released: true
+        },
+        {
+            Downloads: 20,
+            ID: 3,
+            ProductName: 'Ignite UI for Angular',
+            ReleaseDate: null,
+            Released: false
+        },
+        {
+            Downloads: null,
+            ID: 4,
+            ProductName: 'Ignite UI for JavaScript',
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 100,
+            ID: 5,
+            ProductName: '',
+            ReleaseDate: null,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 6,
+            ProductName: 'Ignite UI for Angular',
+            ReleaseDate: this.nextDay,
+            Released: null
+        },
+        {
+            Downloads: 0,
+            ID: 7,
+            ProductName: null,
+            ReleaseDate: this.prevDay,
+            Released: true
+        },
+        {
+            Downloads: 1000,
+            ID: 8,
+            ProductName: 'NetAdvantage',
+            ReleaseDate: this.today,
+            Released: false
+        }
+    ];
+}

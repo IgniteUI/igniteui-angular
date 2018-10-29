@@ -24,7 +24,10 @@ import { IgxScrollInertiaModule, IgxScrollInertiaDirective } from './scroll_iner
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
+import { configureTestSuite } from '../../test-utils/configure-suite';
+
 describe('Scroll Inertia Directive ', () => {
+    configureTestSuite();
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
     beforeEach(async(() => {

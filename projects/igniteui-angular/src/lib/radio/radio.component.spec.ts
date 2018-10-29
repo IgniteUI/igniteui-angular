@@ -10,7 +10,10 @@ import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxRadioComponent } from './radio.component';
 
+import { configureTestSuite } from '../test-utils/configure-suite';
+
 describe('IgxRadio', () => {
+    configureTestSuite();
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -174,6 +177,18 @@ describe('IgxRadio', () => {
 
         expect(radioInstance.required).toBe(true);
         expect(nativeRadio.required).toBe(true);
+    });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(InitRadioComponent);
+            fixture.detectChanges();
+
+            const radioInstance = fixture.componentInstance.radio;
+            const editElement = fixture.debugElement.query(By.css('.igx-radio__input')).nativeElement;
+
+            expect(radioInstance.getEditElement()).toBe(editElement);
+        });
     });
 });
 

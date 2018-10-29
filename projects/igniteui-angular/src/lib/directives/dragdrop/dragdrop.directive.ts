@@ -389,8 +389,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(this.element.nativeElement, 'pointermove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
@@ -401,8 +401,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'touchmove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(document.defaultView, 'touchend').pipe(takeUntil(this._destroy))
@@ -413,8 +413,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'mousemove').pipe(
-                    takeUntil(this._destroy),
-                    throttle(() => interval(0, animationFrameScheduler))
+                    throttle(() => interval(0, animationFrameScheduler)),
+                    takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
                 fromEvent(document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
@@ -503,7 +503,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             const totalMovedY = pageY - this._startY;
             if (!this._dragStarted &&
                 (Math.abs(totalMovedX) > this.dragTolerance || Math.abs(totalMovedY) > this.dragTolerance)) {
-                this.dragStart.emit(dragStartArgs);
+                this.zone.run(() => {
+                    this.dragStart.emit(dragStartArgs);
+                });
 
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
@@ -559,9 +561,13 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 this.onTransitionEnd(null);
             }
 
-            this.dragEnd.emit(eventArgs);
+            this.zone.run(() => {
+                this.dragEnd.emit(eventArgs);
+            });
         } else {
-            this.dragClicked.emit(eventArgs);
+            this.zone.run(() => {
+                this.dragClicked.emit(eventArgs);
+            });
         }
     }
 
@@ -731,9 +737,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
             this.element.nativeElement.style.transitionDuration = '0.0s';
             this._dragStarted = false;
-            this.returnMoveEnd.emit({
-                originalEvent: event,
-                owner: this
+            this.zone.run(() => {
+                this.returnMoveEnd.emit({
+                    originalEvent: event,
+                    owner: this
+                });
             });
         }
     }
@@ -748,9 +756,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         // using window.pageXOffset for IE9 compatibility
         const viewPortX = pageX - window.pageXOffset;
         const viewPortY = pageY - window.pageYOffset;
-        if (document.msElementsFromPoint) {
+        if (document['msElementsFromPoint']) {
             // Edge and IE special snowflakes
-            return document.msElementsFromPoint(viewPortX, viewPortY);
+            return document['msElementsFromPoint'](viewPortX, viewPortY);
         } else {
             // Other browsers like Chrome, Firefox, Opera
             return document.elementsFromPoint(viewPortX, viewPortY);
@@ -881,7 +889,9 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             pageX: event.detail.pageX,
             pageY: event.detail.pageY
         };
-        this.onEnter.emit(eventArgs);
+        this._zone.run(() => {
+            this.onEnter.emit(eventArgs);
+        });
     }
 
     /**
@@ -898,7 +908,9 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             pageX: event.detail.pageX,
             pageY: event.detail.pageY
         };
-        this.onLeave.emit();
+        this._zone.run(() => {
+            this.onLeave.emit();
+        });
     }
 
     /**
@@ -911,7 +923,9 @@ export class IgxDropDirective implements OnInit, OnDestroy {
             drag: event.detail.owner,
             cancel: false
         };
-        this.onDrop.emit(args);
+        this._zone.run(() => {
+            this.onDrop.emit(args);
+        });
 
         if (!args.cancel) {
             // To do for generic scenario
