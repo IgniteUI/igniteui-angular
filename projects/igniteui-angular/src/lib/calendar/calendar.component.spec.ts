@@ -9,7 +9,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 describe('IgxCalendar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxCalendarRenderingComponent],
+            declarations: [IgxCalendarSampleComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
     });
@@ -174,15 +174,15 @@ describe('IgxCalendar', () => {
         beforeEach(
             async(() => {
                 TestBed.configureTestingModule({
-                    declarations: [IgxCalendarRenderingComponent],
+                    declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents()
-                .then(() => {
-                    fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-                    fixture.detectChanges();
-                    calendar = fixture.componentInstance.calendar;
-                    dom = fixture.debugElement;
-                 });
+                    .then(() => {
+                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                        fixture.detectChanges();
+                        calendar = fixture.componentInstance.calendar;
+                        dom = fixture.debugElement;
+                    });
             })
         );
 
@@ -237,7 +237,7 @@ describe('IgxCalendar', () => {
                 weekday: 'short',
                 year: 'numeric'
             };
-            const defaultViews = { day: false, month: true, year: false};
+            const defaultViews = { day: false, month: true, year: false };
             const bodyMonth = dom.query(By.css('.date .date__el'));
             const headerYear = dom.query(By.css('.igx-calendar__header-year'));
             const bodyYear = dom.queryAll(By.css('.date .date__el'))[1];
@@ -257,7 +257,7 @@ describe('IgxCalendar', () => {
 
             // change formatOptions and formatViews
             const formatOptions: any = { month: 'long', year: '2-digit' };
-            const formatViews: any = { month: true, year: true};
+            const formatViews: any = { month: true, year: true };
             calendar.formatOptions = formatOptions;
             calendar.formatViews = formatViews;
             fixture.detectChanges();
@@ -727,6 +727,42 @@ describe('IgxCalendar', () => {
                     )
                 ).toBe(true);
             }
+
+            // Select with only one day
+            calendar.selectDate([lastDay]);
+            fixture.detectChanges();
+
+            expect((calendar.value as Date[]).length).toEqual(1);
+            expect(calendar.value[0].toDateString()).toMatch(lastDay.toDateString());
+            expect(
+                weekDays[6].nativeElement.classList.contains(
+                    'igx-calendar__date--selected'
+                )
+            ).toBe(true);
+
+            // Select with array of 3 days
+            calendar.selectDate([midDay, lastDay, firstDay]);
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.model as Date[]).length).toEqual(
+                7
+            );
+            expect((calendar.value as Date[]).length).toEqual(7);
+            expect(calendar.value[0].toDateString()).toMatch(
+                firstDay.toDateString()
+            );
+            expect(
+                calendar.value[
+                    (calendar.value as Date[]).length - 1
+                ].toDateString()
+            ).toMatch(lastDay.toDateString());
+            weekDays.forEach((el) => {
+                expect(
+                    el.nativeElement.classList.contains(
+                        'igx-calendar__date--selected'
+                    )
+                ).toBe(true);
+            });
         });
 
         it('Calendar keyboard navigation - PageUp/PageDown', () => {
@@ -846,171 +882,331 @@ describe('IgxCalendar', () => {
         });
     });
 
-    it('Deselect using API. Should deselect in "single" selection mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const calendar = fixture.componentInstance.calendar;
-        fixture.detectChanges();
+    describe('Select and deselect dates', () => {
+        let fixture;
+        let calendar;
+        let ci;
+        beforeEach(
+            async(() => {
+                TestBed.configureTestingModule({
+                    declarations: [IgxCalendarSampleComponent],
+                    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
+                }).compileComponents()
+                    .then(() => {
+                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+                        fixture.detectChanges();
+                        ci = fixture.componentInstance;
+                        calendar = ci.calendar;
+                    });
+            })
+        );
 
-        const date = calendar.viewDate;
-        calendar.selectDate(date);
-        fixture.detectChanges();
+        it('Deselect using API. Should deselect in "single" selection mode.', () => {
+            const date = calendar.viewDate;
+            calendar.selectDate(date);
+            fixture.detectChanges();
 
-        let selectedDate = calendar.value;
-        expect(selectedDate).toEqual(date);
+            let selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
 
-        calendar.deselectDate(date);
-        fixture.detectChanges();
+            calendar.deselectDate(date);
+            fixture.detectChanges();
 
-        selectedDate = calendar.value;
-        expect(selectedDate).toBe(null);
-    });
+            selectedDate = calendar.value;
+            expect(selectedDate).toBe(null);
 
-    it('Deselect using API. Should deselect in "multi" selection mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'multi';
-        fixture.detectChanges();
-        await wait(50);
+            // Deselect with date diffrent than selected date
+            calendar.selectDate(date);
+            fixture.detectChanges();
 
-        const year = calendar.viewDate.getFullYear();
-        const month = calendar.viewDate.getMonth();
-        const dates = [];
-        const datesCount = 10;
-        for (let i = 0; i < datesCount; i++) {
-            dates.push(new Date(year, month, i + 1));
-        }
+            selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
 
-        fixture.detectChanges();
-        calendar.selectDate(dates);
+            const dateToDeselect = new Date(date);
+            dateToDeselect.setDate(dateToDeselect.getDate() + 5);
 
-        fixture.detectChanges();
-        const evenDates = dates.filter(d => d.getDate() % 2 === 0);
-        calendar.deselectDate(evenDates);
+            calendar.deselectDate(dateToDeselect);
+            fixture.detectChanges();
 
-        fixture.detectChanges();
-        const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
-        const selectedDates: Date[] = calendar.value as Date[];
-        for (const selectedDate of selectedDates) {
-            const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
-            expect(fdate).toBeTruthy();
-        }
-    });
+            selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
+        });
 
-    it('Deselect using API. Should deselect in "range" selection mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'range';
-        fixture.detectChanges();
-        await wait(50);
+        it('Deselect using API. Should deselect in "multi" selection mode.', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
 
-        const startDate = calendar.viewDate;
-        const endDate = new Date(calendar.viewDate);
-        endDate.setDate(endDate.getDate() + 14);
+            const year = calendar.viewDate.getFullYear();
+            const month = calendar.viewDate.getMonth();
+            const dates = [];
+            const datesCount = 10;
+            for (let i = 0; i < datesCount; i++) {
+                dates.push(new Date(year, month, i + 1));
+            }
 
-        const startDateDeselect = new Date(startDate);
-        const endDateDeselect = new Date(endDate);
-        endDateDeselect.setDate(endDate.getDate() - 7);
+            fixture.detectChanges();
+            calendar.selectDate(dates);
 
-        calendar.selectDate(startDate);
-        fixture.detectChanges();
+            fixture.detectChanges();
+            const evenDates = dates.filter(d => d.getDate() % 2 === 0);
+            calendar.deselectDate(evenDates);
 
-        calendar.selectDate(endDate);
-        fixture.detectChanges();
+            fixture.detectChanges();
+            const oddDates = dates.filter(d => d.getDate() % 2 !== 0);
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(5);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
 
-        calendar.deselectDate([startDateDeselect, endDateDeselect]);
-        fixture.detectChanges();
+            // Deselect with array not included in the selected dates
+            calendar.deselectDate(evenDates);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(5);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
 
-        const selectedDates: Date[] = calendar.value as Date[];
-        const selectedDatesMs = selectedDates.map(d => new Date(
-            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-        expect(selectedDates.length).toBe(7);
-        const expectedSelectedDates = [];
+            // Deselect one date included in the selected dates
+            calendar.deselectDate([oddDates[0]]);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(4);
+            for (const selectedDate of selectedDates) {
+                const fdate = oddDates.some((date: Date) => date.getTime() === selectedDate.getTime());
+                expect(fdate).toBeTruthy();
+            }
 
-        for (let i = 0; i < 7; i++) {
-            const date = new Date(endDate);
-            date.setDate(date.getDate() - i);
-            expectedSelectedDates.push(date);
-        }
+            // Deselect with array with all dates included in the selected dates
+            calendar.deselectDate(oddDates);
+            fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+        });
 
-        const expectedSelectedDatesInMs = expectedSelectedDates.map(d => new Date(
-            d.getFullYear(), d.getMonth(), d.getDate()).getTime());
-        for (const expectedSelectedDate of expectedSelectedDatesInMs) {
-            expect(selectedDatesMs.indexOf(expectedSelectedDate)).toBeGreaterThan(-1);
-        }
-    });
+        it('Deselect using API. Should deselect in "range" selection mode whe period is not included in the selected dates', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
 
-    it('Deselect using API. Should deselect all in "single" mode.', () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const calendar = fixture.componentInstance.calendar;
-        fixture.detectChanges();
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
+            const startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            const endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(startDate.getDate() - 3);
 
-        const date = calendar.viewDate;
-        calendar.selectDate(date);
-        fixture.detectChanges();
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
 
-        let selectedDate = calendar.value;
-        expect(selectedDate).toEqual(date);
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
 
-        calendar.deselectDate();
-        fixture.detectChanges();
+            // Deselect with range which is not included in the selected dates
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
 
-        selectedDate = calendar.value;
-        expect(selectedDate).toBe(null);
-    });
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
+        });
 
-    it('Deselect using API. Should deselect all in "multi" mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'multi';
-        fixture.detectChanges();
-        await wait(50);
+        it('Deselect using API. Should deselect in "range" selection mode when period is not included.', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
 
-        const year = calendar.viewDate.getFullYear();
-        const month = calendar.viewDate.getMonth();
-        const dates = [];
-        const datesCount = 10;
-        for (let i = 0; i < datesCount; i++) {
-            dates.push(new Date(year, month, i + 1));
-        }
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
 
-        calendar.selectDate(dates);
-        fixture.detectChanges();
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
 
-        calendar.deselectDate();
-        fixture.detectChanges();
+            let selectedDates: Date[] = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+            expect(selectedDates[0]).toEqual(startDate);
+            expect(selectedDates[5]).toEqual(endDate);
 
-        expect(calendar.value).toEqual([]);
-    });
+            // Deselect with range is includes the selection
+            let startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            let endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() + 5);
 
-    it('Deselect using API. Should deselect all in "range" mode.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarRenderingComponent);
-        const ci = fixture.componentInstance;
-        const calendar = ci.calendar;
-        ci.model = [];
-        calendar.selection = 'range';
-        fixture.detectChanges();
-        await wait(50);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
 
-        const startDate = calendar.viewDate;
-        const endDate = new Date(calendar.viewDate);
-        endDate.setDate(endDate.getDate() + 7);
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
 
-        calendar.selectDate(startDate);
-        fixture.detectChanges();
+            // Deselect with range which includes the beginning of the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
 
-        calendar.selectDate(endDate);
-        fixture.detectChanges();
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
 
-        calendar.deselectDate();
-        fixture.detectChanges();
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 7);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 2);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
 
-        expect(calendar.value).toEqual([]);
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with range which includes the end of the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 2);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() + 5);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with range which is inside the selection
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 1);
+            endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 1);
+            calendar.deselectDate([startDateDeselect, endDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+        });
+
+        it('Deselect using API. Should deselect in "range" with array of dates.', () => {
+            ci.model = [];
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 5);
+            const endDateDeselect = new Date(endDate);
+            endDateDeselect.setDate(endDate.getDate() - 1);
+            const midDateDeselect = new Date(endDate);
+
+            // Deselect with range with only one date
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            let selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            let startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 5);
+            calendar.deselectDate([startDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() + 2);
+            calendar.deselectDate([startDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+
+            // Deselect with array of dates
+            calendar.selectDate([startDate, endDate]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(6);
+
+            startDateDeselect = new Date(startDate);
+            startDateDeselect.setDate(startDate.getDate() - 10);
+
+            midDateDeselect.setDate(endDate.getDate() + 3);
+            calendar.deselectDate([midDateDeselect, endDateDeselect, startDateDeselect]);
+            fixture.detectChanges();
+
+            selectedDates = calendar.value as Date[];
+            expect(selectedDates.length).toBe(0);
+        });
+
+        it('Deselect using API. Should deselect all in "single" mode.', () => {
+            const date = calendar.viewDate;
+            calendar.selectDate(date);
+            fixture.detectChanges();
+
+            let selectedDate = calendar.value;
+            expect(selectedDate).toEqual(date);
+
+            calendar.deselectDate();
+            fixture.detectChanges();
+
+            selectedDate = calendar.value;
+            expect(selectedDate).toBe(null);
+        });
+
+        it('Deselect using API. Should deselect all in "multi" mode.', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            const year = calendar.viewDate.getFullYear();
+            const month = calendar.viewDate.getMonth();
+            const dates = [];
+            const datesCount = 10;
+            for (let i = 0; i < datesCount; i++) {
+                dates.push(new Date(year, month, i + 1));
+            }
+
+            calendar.selectDate(dates);
+            fixture.detectChanges();
+
+            calendar.deselectDate();
+            fixture.detectChanges();
+
+            expect(calendar.value).toEqual([]);
+        });
+
+        it('Deselect using API. Should deselect all in "range" mode.', () => {
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const startDate = calendar.viewDate;
+            const endDate = new Date(calendar.viewDate);
+            endDate.setDate(endDate.getDate() + 7);
+
+            calendar.selectDate(startDate);
+            fixture.detectChanges();
+
+            calendar.selectDate(endDate);
+            fixture.detectChanges();
+
+            calendar.deselectDate();
+            fixture.detectChanges();
+
+            expect(calendar.value).toEqual([]);
+        });
     });
 });
 
@@ -1019,7 +1215,7 @@ describe('IgxCalendar', () => {
         <igx-calendar [viewDate]="viewDate" [(ngModel)]="model"></igx-calendar>
     `
 })
-export class IgxCalendarRenderingComponent {
+export class IgxCalendarSampleComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
