@@ -184,14 +184,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     get template(): TemplateRef<any> {
-        switch (this.column.dataType) {
-            case DataType.String:
-            case DataType.Number:
-            case DataType.Boolean:
-                return this.defaultFilterUI;
-            case DataType.Date:
-                return this.defaultDateUI;
+        if (this.column.dataType === DataType.Date) {
+            return this.defaultDateUI;
         }
+
+        return this.defaultFilterUI;
     }
 
     get type() {
