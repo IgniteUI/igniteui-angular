@@ -500,7 +500,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI): void {
-        if (eventArgs.oldSelection !== null) {
+        if (eventArgs.oldSelection) {
             expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
             this.filter();
