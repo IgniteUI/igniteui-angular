@@ -166,6 +166,17 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
+    /**
+     * Returns if the `IgxGridComponent` has summarized columns.
+     * ```typescript
+     * const summarizedGrid = this.grid.hasSummarizedColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasSummarizedColumns(): boolean {
+        return false;
+    }
+
     private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -216,6 +227,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 childData.indexOf(rowID);
             childData.splice(index, 1);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected calcMaxSummaryHeight() {
+        return 0;
     }
 
     /**
