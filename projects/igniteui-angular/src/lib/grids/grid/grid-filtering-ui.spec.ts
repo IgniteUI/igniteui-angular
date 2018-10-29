@@ -1737,6 +1737,32 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(endArrow).not.toBe(null);
     }));
 
+    it('should update UI when chip is removed from header cell.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const grid = fix.componentInstance.grid;
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Starts With', 'I', fix);
+        expect(grid.rowList.length).toEqual(2);
+
+        closeFilterRow(fix);
+
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+
+        // remove chip
+        const removeButton = stringCellChip.query(By.css('div.igx-chip__remove'));
+        removeButton.nativeElement.click();
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(8);
+
+    }));
+
 });
 
 export class CustomFilter extends IgxFilteringOperand {
