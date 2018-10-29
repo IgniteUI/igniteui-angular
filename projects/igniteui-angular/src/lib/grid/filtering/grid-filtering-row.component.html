@@ -16,7 +16,7 @@
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
+            <igx-icon fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         </igx-prefix>
         <input
             #input
