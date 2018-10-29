@@ -22,8 +22,7 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const fs = require('fs');
-const convert = require('./localization');
-const render = require('./localization/render');
+const sassPlug = require('sassdoc-plugin-localization');
 
 themeleon.use({
 
@@ -31,13 +30,9 @@ themeleon.use({
  * Log current source directory, destination directory, and context
  * variables.
  */
-    convert: (context) => {
-        convert(context._data);
-    },
+    convert: (data, dir) => sassPlug.convert(data, dir),
 
-    render: (context) => {
-        render(context._data);
-    }
+    render: (data, dir) => sassPlug.render(data, dir)
 });
 
 // const {convert} = require('./localization/index');
@@ -52,7 +47,7 @@ themeleon.use({
  * The theme function describes the steps to render the theme.
  */
 const theme = themeleon(__dirname, function (t) {
-    return t.convert(t.ctx); 
+    // t.convert(t.ctx._data, './extras/sassdoc/en'); 
   /**
    * Copy the assets folder from the theme's directory in the
    * destination directory.
@@ -111,9 +106,8 @@ const theme = themeleon(__dirname, function (t) {
    * as `index.html` in the destination directory.
    */
   t.handlebars('views/index.hbs', 'index.html', options);
-  t.render(t.ctx);
+  t.render(t.ctx._data, './extras/sassdoc/en');
 });
-
 /**
  * Actual theme function. It takes the destination directory `dest`
  * (that will be handled by Themeleon), and the context variables `ctx`.
