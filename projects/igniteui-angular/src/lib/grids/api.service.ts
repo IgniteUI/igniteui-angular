@@ -28,6 +28,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public register(grid: T) {
         this.state.set(grid.id, grid);
+        this.destroyMap.set(grid.id, new Subject<boolean>());
     }
 
     public unsubscribe(grid: T) {
@@ -43,12 +44,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.editRowState.delete(id);
+        this.destroyMap.delete(id);
     }
 
     public reset(oldId: string, newId: string) {
         const destroy = this.destroyMap.get(oldId);
         const summary = this.summaryCacheMap.get(oldId);
         const editCellState = this.editCellState.get(oldId);
+        const editRowState = this.editRowState.get(oldId);
         const grid = this.get(oldId);
 
         this.unset(oldId);
@@ -67,6 +70,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         if (editCellState) {
             this.editCellState.set(newId, editCellState);
+        }
+
+        if (editRowState) {
+            this.editRowState.set(newId, editRowState);
         }
     }
 
