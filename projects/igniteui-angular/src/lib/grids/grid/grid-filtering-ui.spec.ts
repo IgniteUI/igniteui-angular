@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,10 +6,13 @@ import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxFilteringOperand, IgxStringFilteringOperand, FilteringExpressionsTree, FilteringLogic } from '../../../public_api';
-import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxFilteringOperand, IgxStringFilteringOperand,
+     FilteringExpressionsTree, FilteringLogic, IgxChipComponent } from '../../public_api';
+import { IgxButtonDirective } from '../directives/button/button.directive';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
+import { IgxDatePickerComponent } from '../date-picker/date-picker.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
@@ -1573,6 +1576,75 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     });
 
     // TODO - add new tests based on the test plan in the spec.
+
+    it('should render Filter chip for filterable columns and render empty cell for a column when filterable is set to false', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const filteringChips = fix.debugElement.queryAll(By.css('.igx-filtering-chips'));
+        expect(filteringCells.length).toBe(4);
+        expect(filteringChips.length).toBe(3);
+
+        const idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
+        expect(idCellChips.length).toBe(0);
+    });
+
+    it('should render correct input and dropdown in filter row for different column types', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        const numberCellChip = filteringCells[2].query(By.css('igx-chip'));
+        const boolCellChip = filteringCells[3].query(By.css('igx-chip'));
+        const dateCellChip = filteringCells[4].query(By.css('igx-chip'));
+        // open for string
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+
+        checkUIForType('string', fix.debugElement);
+
+        // close
+        let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        let close = filterUIRow.queryAll(By.css('button'))[1];
+        close.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+
+        // open for number
+        numberCellChip.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+        checkUIForType('number', fix.debugElement);
+
+        // close
+        filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        close = filterUIRow.queryAll(By.css('button'))[1];
+        close.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+
+        // open for date
+        dateCellChip.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+        checkUIForType('date', fix.debugElement);
+
+        // close
+        filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        close = filterUIRow.queryAll(By.css('button'))[1];
+        close.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+
+        // open for bool
+        boolCellChip.nativeElement.click();
+        fix.detectChanges();
+        tick(200);
+        checkUIForType('bool', fix.debugElement);
+    }));
+
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -1864,5 +1936,47 @@ function selectFilteringCondition(cond: string, ddList) {
             ddItems[i].click();
             return;
         }
+    }
+}
+
+function checkUIForType(type: string, elem: DebugElement) {
+    let expectedConditions;
+    let expectedInputType;
+    const isReadOnly = type === 'bool' ?  true : false;
+    switch (type) {
+        case 'string':
+            expectedConditions = IgxStringFilteringOperand.instance().operations;
+            expectedInputType = 'text';
+            break;
+        case 'number':
+            expectedConditions = IgxNumberFilteringOperand.instance().operations;
+            expectedInputType = 'number';
+            break;
+        case 'date':
+            expectedConditions = IgxDateFilteringOperand.instance().operations;
+            expectedInputType = 'datePicker';
+            break;
+        case 'bool':
+            expectedConditions = IgxBooleanFilteringOperand.instance().operations;
+            expectedInputType = 'text';
+        break;
+    }
+
+    const ddList = elem.query(By.css('div.igx-drop-down__list.igx-toggle'));
+    const ddItems = ddList.nativeElement.children;
+    // check drop-down conditions
+    for (let i = 0; i < expectedConditions.length; i++) {
+        const txt = expectedConditions[i].name.split(/(?=[A-Z])/).join(' ').toLowerCase();
+        expect(txt).toEqual(ddItems[i].textContent.toLowerCase());
+    }
+    // check input is correct type
+    const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
+    if (expectedInputType !== 'datePicker') {
+        const input = filterUIRow.query(By.css('.igx-input-group__input'));
+        expect(input.nativeElement.type).toBe(expectedInputType);
+        expect(input.nativeElement.attributes.hasOwnProperty('readonly')).toBe(isReadOnly);
+    } else {
+        const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent));
+        expect(datePicker).not.toBe(null);
     }
 }

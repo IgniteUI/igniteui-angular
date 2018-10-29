@@ -57,8 +57,10 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.isColumnResizedSubscribed) {
             this.isColumnResizedSubscribed = true;
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
-                const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
-                filterCell.updateFilterCellArea();
+                if (!this.isFilterRowVisible) {
+                    const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
+                    filterCell.updateFilterCellArea();
+                }
             });
         }
 

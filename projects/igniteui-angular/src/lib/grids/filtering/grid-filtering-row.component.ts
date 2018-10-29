@@ -50,18 +50,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
             this.expressionsList = this.filteringService.getExpressions(this._column.field);
 
-            if (this.column.dataType === DataType.Boolean) {
-                this.expression = {
-                    fieldName: this.column.field,
-                    condition: null,
-                    searchVal: null,
-                    ignoreCase: this.column.filteringIgnoreCase
-                };
-            } else {
-                this.resetExpression();
-            }
-
-            this.showHideArrowButtons();
+            this.resetExpression();
 
             this.offset = 0;
             this.transform(this.offset);
@@ -378,6 +367,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         return this.column.filters.instance().condition(value);
     }
 
+    public getIconName(): string {
+        if (this.column.dataType === DataType.Boolean && this.expression.searchVal === null) {
+            return this.getCondition(this.conditions[0]).iconName;
+        } else {
+            return this.expression.condition.iconName;
+        }
+    }
+
     public isConditionSelected(conditionName: string): boolean {
         if (this.expression.condition) {
             return this.expression.condition.name === conditionName;
@@ -421,6 +418,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public close(): void {
+        this.expressionsList.forEach((item) => {
+            if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
+                this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
+            }
+        });
+
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;

@@ -196,10 +196,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                     this.moreFiltersCount = this.expressionsList.length - visibleChipsCount;
                     this.isMoreIconHidden = false;
                     this.visibleExpressionsList.splice(visibleChipsCount);
-                    this.cdr.detectChanges();
                     break;
                 }
             }
+            this.cdr.detectChanges();
         }
     }
 
@@ -228,23 +228,21 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                     eventArgs.preventDefault();
                     this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex - 1);
+                } else if (this.column.visibleIndex === 0) {
+                    eventArgs.preventDefault();
                 }
             } else {
                 if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
-                    switch (this.currentTemplate) {
-                        case 'defaultFilter':
-                            if(!this.isMoreIconHidden) {
-                                if (this.moreIcon.nativeElement.children[0] === document.activeElement) {
-                                    this.navService.goToFirstCell();
-                                }
-                            } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) === document.activeElement) {
+                    if (this.currentTemplate === this.defaultFilter) {
+                        if(!this.isMoreIconHidden) {
+                            if (this.moreIcon.nativeElement === document.activeElement) {
                                 this.navService.goToFirstCell();
                             }
-                            break;
-                        case 'emptyFilter':
-                        case 'complexFilter':
+                        } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) === document.activeElement) {
                             this.navService.goToFirstCell();
-                            break;
+                        }
+                    } else {
+                        this.navService.goToFirstCell();
                     }
                     
                 } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
@@ -266,7 +264,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     public focusChip() {
         if (this.currentTemplate === this.defaultFilter) {
             if(!this.isMoreIconHidden) {
-                this.moreIcon.nativeElement.children[0].focus();
+                this.moreIcon.nativeElement.focus();
             } else {
                 this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
             }
