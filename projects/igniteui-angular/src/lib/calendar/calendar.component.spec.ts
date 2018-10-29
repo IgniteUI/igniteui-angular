@@ -1218,9 +1218,7 @@ describe('IgxCalendar', () => {
         );
     });
 
-
-
-    describe('Select and deselect', () => {
+    describe('Select and deselect dates', () => {
         configureTestSuite();
         let fixture;
         let calendar;
