@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent, IgxGridComponent } from '../../public_api';
 import { wait } from '../test-utils/ui-interactions.spec';
 import { take } from 'rxjs/operators';
-import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
+import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {

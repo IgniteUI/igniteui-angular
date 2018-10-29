@@ -4,9 +4,12 @@ import {
     HostBinding,
     Input,
     Output,
-    ViewChild
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { isIE } from '../core/utils';
+import { EditorProvider } from '../core/edit-provider';
 
 export interface IChangeRadioEventArgs {
     value: any;
@@ -39,7 +42,7 @@ const noop = () => { };
     templateUrl: 'radio.component.html'
 })
 
-export class IgxRadioComponent implements ControlValueAccessor {
+export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      * Returns reference to native radio element.
      * ```typescript
@@ -47,7 +50,7 @@ export class IgxRadioComponent implements ControlValueAccessor {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('radio') public nativeRadio;
+    @ViewChild('radio') public nativeRadio: ElementRef;
     /**
      * Returns reference to native label element.
      * ```typescript
@@ -269,6 +272,10 @@ export class IgxRadioComponent implements ControlValueAccessor {
     public _onRadioClick(event) {
         event.stopPropagation();
         this.select();
+
+        if (isIE()) {
+            this.nativeRadio.nativeElement.blur();
+        }
     }
     /**
      *@hidden
@@ -303,6 +310,10 @@ export class IgxRadioComponent implements ControlValueAccessor {
     public writeValue(value: any) {
         this._value = value;
         this.checked = (this._value === this.value);
+    }
+    /** @hidden */
+    getEditElement() {
+        return this.nativeRadio.nativeElement;
     }
     /**
      *@hidden

@@ -178,6 +178,18 @@ describe('IgxRadio', () => {
         expect(radioInstance.required).toBe(true);
         expect(nativeRadio.required).toBe(true);
     });
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(InitRadioComponent);
+            fixture.detectChanges();
+
+            const radioInstance = fixture.componentInstance.radio;
+            const editElement = fixture.debugElement.query(By.css('.igx-radio__input')).nativeElement;
+
+            expect(radioInstance.getEditElement()).toBe(editElement);
+        });
+    });
 });
 
 @Component({ template: `<igx-radio #radio>Radio</igx-radio>` })

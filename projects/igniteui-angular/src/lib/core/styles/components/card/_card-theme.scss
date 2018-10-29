@@ -26,6 +26,8 @@
 ///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background: null,
     $header-text-color: null,
     $subtitle-text-color: null,
@@ -40,6 +42,10 @@
         content-text-color: igx-color($palette, grays, 600),
         actions-text-color: igx-color($palette, grays, 600)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -77,7 +83,7 @@
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
-    $card-border-radius: 2px;
+    $card-border-radius: 4px;
     $card-shadow: igx-elevation($elevations, 2);
     $card-shadow-hover: igx-elevation($elevations, 8);
 
