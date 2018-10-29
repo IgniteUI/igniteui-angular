@@ -843,11 +843,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(true)` is called.
-     * Emiited when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
      * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
      * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -872,10 +872,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(false)` is called.
-     * Emiited when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
+     * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
