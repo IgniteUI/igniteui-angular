@@ -20,6 +20,7 @@
 ///   @include igx-banner($my-banner-theme);
 @function igx-banner-theme(
     $palette: $default-palette,
+    $preset: null,
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
@@ -35,8 +36,12 @@
         banner-illustration-color: igx-color($palette, 'grays', 900)
     );
 
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @if not($banner-message-color) and $banner-background {
-        $banner-label-color: text-contrast($banner-background);
+        $banner-message-color: text-contrast($banner-background);
     }
 
     @return extend($default-theme, (

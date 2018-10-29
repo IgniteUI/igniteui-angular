@@ -1311,8 +1311,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent> {
-        const editRowId = this.gridAPI.get_row_inEditMode(this.id);
-        return editRowId !== null ? this.rowList.find(e => e.rowID === editRowId.rowID) : null;
+        const editRowState = this.gridAPI.get_edit_row_state(this.id);
+        return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.rowID) : null;
     }
 
     /**
@@ -1996,12 +1996,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
         if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
-            if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
-                if (this.rowEditTabs.find(e => e.element.nativeElement === event.target)) {
-                    return;
-                    // Do not prevent tab on rowEditOverlay custom tabStops
-                }
-            }
             event.preventDefault();
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
@@ -3939,7 +3933,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         let data: any[] = this.filteredData ? this.filteredData : this.data;
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
-                cloneArray(data, true),
+                cloneArray(data),
                 this.transactions.aggregatedState(true),
                 this.primaryKey
             );
@@ -4255,7 +4249,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             return;
         }
         if (!row) {
-            this.hideRowEditingOverlay();
+            this.toggleRowEditingOverlay(false);
         } else {
             this.repositionRowEditingOverlay(row);
         }
@@ -4276,22 +4270,29 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public closeRowEditingOverlay(commit?: boolean) {
-        this.gridAPI.set_row_inEditMode(this.id, null);
+        this.gridAPI.set_edit_row_state(this.id, null);
         this.transactions.endPending(commit);
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
     }
 
-    private showRowEditingOverlay() {
-        this.rowEditingOverlay.element.style.display = 'block';
+    /**
+     * @hidden
+     */
+    public toggleRowEditingOverlay(show) {
+        const rowStyle = this.rowEditingOverlay.element.style;
+        if (show) {
+            rowStyle.display = 'block';
+        } else {
+            rowStyle.display = 'none';
+        }
     }
 
-    private hideRowEditingOverlay() {
-        this.rowEditingOverlay.element.style.display = 'none';
-    }
-
-    private repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
+    /**
+     * @hidden
+     */
+    public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
         this.configureRowEditingOverlay(row);
         if (!this.rowEditingOverlay.collapsed) {
             this.rowEditingOverlay.reposition();
@@ -4302,7 +4303,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
-        this.showRowEditingOverlay();
+        this.toggleRowEditingOverlay(true);
     }
 
     /**
@@ -4320,7 +4321,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
-        const rowInEdit = row ? row : this.gridAPI.get_row_inEditMode(this.id); // If row was passed, use it
+        const rowInEdit = row ? row : this.gridAPI.get_edit_row_state(this.id); // If row was passed, use it
         if (!rowInEdit || this.rowEditingOverlay.collapsed) {
             return;
         }
@@ -4364,7 +4365,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed) {
             return;
         }
-        const row = this.gridAPI.get_row_inEditMode(this.id);
+        const row = this.gridAPI.get_edit_row_state(this.id);
         const rowObject = row ? this.getRowByKey(row.rowID) : null;
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         if (cellInEdit) {

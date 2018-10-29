@@ -132,7 +132,7 @@
     }
 
     @if not(index($exclude, 'igx-banner')) {
-        @include igx-banner($theme: igx-banner-theme());
+        @include igx-banner($theme: get-theme($preset, 'igx-banner'));
     }
 
     @if not(index($exclude, 'igx-calendar')) {
