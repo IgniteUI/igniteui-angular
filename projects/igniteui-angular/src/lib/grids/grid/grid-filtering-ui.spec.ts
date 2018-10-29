@@ -2079,7 +2079,7 @@ function checkUIForType(type: string, elem: DebugElement) {
             expectedInputType = 'text';
         break;
     }
-
+    openFilterDD(elem);
     const ddList = elem.query(By.css('div.igx-drop-down__list.igx-toggle'));
     const ddItems = ddList.nativeElement.children;
     // check drop-down conditions
@@ -2102,8 +2102,7 @@ function checkUIForType(type: string, elem: DebugElement) {
 function filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
     const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
     // open dropdown
-    const filterIcon = filterUIRow.query(By.css('igx-icon'));
-    filterIcon.nativeElement.click();
+    openFilterDD(fix.debugElement);
 
     const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
     selectFilteringCondition(condition, ddList);
@@ -2130,4 +2129,10 @@ function closeFilterRow(fix: ComponentFixture<any>) {
     const close = editingBtns.queryAll(By.css('button'))[1];
     close.nativeElement.click();
     fix.detectChanges();
+}
+
+function openFilterDD(elem: DebugElement) {
+    const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
+    const filterIcon = filterUIRow.query(By.css('igx-icon'));
+    filterIcon.nativeElement.click();
 }
