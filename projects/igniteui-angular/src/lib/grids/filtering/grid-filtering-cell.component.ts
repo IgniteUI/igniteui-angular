@@ -14,7 +14,7 @@ import { IgxColumnComponent } from '../column.component';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
-import { IgxGridFilterConditionPipe } from '../grid.pipes';
+import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYCODES, cloneArray } from '../../core/utils';

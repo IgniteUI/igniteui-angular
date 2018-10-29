@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { IgxGridAPIService } from '../api.service';
+import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridComponent, IColumnResizeEventArgs } from '../grid.component';
+import { IgxGridBaseComponent, IColumnResizeEventArgs } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -42,14 +42,14 @@ export class IgxFilteringService implements OnDestroy {
 
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
 
-    constructor(private gridAPI: IgxGridAPIService, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    public get grid(): IgxGridComponent {
+    public get grid(): IgxGridBaseComponent {
         return this.gridAPI.get(this.gridId);
     }
 

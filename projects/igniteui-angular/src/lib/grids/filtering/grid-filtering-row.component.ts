@@ -24,7 +24,7 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
-import { IgxGridFilterConditionPipe } from '../grid.pipes';
+import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYCODES } from '../../core/utils';
