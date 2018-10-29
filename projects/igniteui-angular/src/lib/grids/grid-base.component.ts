@@ -1621,6 +1621,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public get exportExcel(): boolean {
+        return this.getExportExcel();
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportExcel(): boolean {
         return this._exportExcel;
     }
 
@@ -1650,6 +1657,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public get exportCsv(): boolean {
+        return this.getExportCsv();
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportCsv(): boolean {
         return this._exportCsv;
     }
 
