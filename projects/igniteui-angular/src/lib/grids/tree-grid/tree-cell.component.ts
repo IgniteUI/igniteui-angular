@@ -56,7 +56,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
         this.treeGridAPI.trigger_row_expansion_toggle(this.gridID, this.row, event);
     }
 
-    public onFocus(event: Event) {
+    public onIndicatorFocus(event: Event) {
         event.stopPropagation();
     }
 
