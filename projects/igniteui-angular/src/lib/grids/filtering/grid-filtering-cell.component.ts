@@ -159,6 +159,21 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     }
 
     public onChipClicked(expression?: IFilteringExpression) {
+        if (expression) {
+            this.expressionsList.forEach((item)=> {
+                if (item.expression === expression) {
+                    item.isSelected = true;
+                } else {
+                    item.isSelected = false;
+                }
+            });
+        } else if (this.expressionsList.length > 0) {
+            this.expressionsList.forEach((item)=> {
+                item.isSelected = false;
+            });
+            this.expressionsList[0].isSelected = true;
+        }
+
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
         this.filteringService.selectedExpression = expression;

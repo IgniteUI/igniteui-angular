@@ -814,6 +814,9 @@ export class IgxColumnComponent implements AfterContentInit {
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
                     break;
+                default:
+                    this.summaries = IgxSummaryOperand;
+                    break;
             }
         }
         if (!this.filters) {
