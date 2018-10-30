@@ -27,7 +27,7 @@ import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.compone
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
-import { KEYCODES } from '../../core/utils';
+import { KEYS } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 
 /**
@@ -106,6 +106,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     @ViewChild('operand')
     protected operand: ElementRef;
+
+    @ViewChild('closeButton')
+    protected closeButton: ElementRef;
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -207,15 +210,18 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if ((event.keyCode === KEYCODES.ENTER || event.keyCode === KEYCODES.SPACE) &&
+        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
             this.dropDownConditions.toggle(this._conditionsOverlaySettings);
             event.stopImmediatePropagation();
+        } else if (event.key === KEYS.TAB && event.shiftKey) {
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 
     public onInputKeyDown(event: KeyboardEvent) {
-        if (event.keyCode === KEYCODES.ENTER) {
+        if (event.key === KEYS.ENTER) {
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
             let indexToDeselect = -1;
@@ -232,6 +238,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
             this.resetExpression();
             this.scrollChipsWhenAddingExpression();
+        } else if (event.key === KEYS.DOWN_ARROW) {
+            this.input.nativeElement.blur();
+            this.inputGroupPrefix.nativeElement.focus();
+            this.toggleConditionsDropDown();
         }
     }
 
@@ -247,8 +257,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
-        if (event.keyCode === KEYCODES.TAB) {
+        if (event.key === KEYS.TAB) {
             event.stopPropagation();
+            if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
+                event.preventDefault();
+            }
         }
     }
 
@@ -390,7 +403,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.keyCode === KEYCODES.ENTER) {
+        if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
             this.clearInput();
         }
@@ -467,14 +480,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
-        if (eventArgs.keyCode === KEYCODES.ENTER) {
+        if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
             chip.selected = !chip.selected;
         }
     }
 
     public scrollChipsIntoView(event) {
-        if (event.keyCode === KEYCODES.TAB) {
+        if (event.keyCode === KEYS.TAB) {
             this.offset = 0;
             this.transform(this.offset);
         }

@@ -138,7 +138,8 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should not break filtering, sorting and resizing when column moving is enabled.', (async() => {
+        xit('Should not break filtering, sorting and resizing when column moving is enabled.', (async() => {
+            pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
             fixture.componentInstance.isResizable = true;
             fixture.componentInstance.isSortable = true;
@@ -241,7 +242,8 @@ describe('IgxGrid - Column Moving', () => {
             expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
         }));
 
-        it('Should close filter dialog, if opened, when column moving starts.', (async() => {
+        xit('Should close filter dialog, if opened, when column moving starts.', (async() => {
+            pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();
 
@@ -357,7 +359,8 @@ describe('IgxGrid - Column Moving', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should preserve filtering after columns are reordered.', async() => {
+        xit('Should preserve filtering after columns are reordered.', async() => {
+            pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();
 
