@@ -1,10 +1,10 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, ViewChild, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
 
 @Component({
     selector: 'igx-virtual-helper',
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="height"></div>'
 })
-export class VirtualHelperComponent implements OnInit {
+export class VirtualHelperComponent implements OnDestroy {
     @ViewChild('container', { read: ViewContainerRef }) public _vcr;
     @Input() public itemsLength: number;
     public height: number;
@@ -12,9 +12,12 @@ export class VirtualHelperComponent implements OnInit {
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
 
+    public destroyed;
+
     constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) { }
 
-    public ngOnInit() {
+    public ngOnDestroy() {
+        this.destroyed = true;
     }
 
 }

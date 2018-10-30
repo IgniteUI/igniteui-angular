@@ -9,6 +9,7 @@ import { IgxGridComponent, Transaction, IgxToggleDirective } from 'igniteui-angu
     templateUrl: 'grid-row-edit-sample.component.html'
 })
 export class GridRowEditSampleComponent {
+    public console = window.console;
     private addProductId: number;
     private pinFlag = false;
     private hideFlag = false;
