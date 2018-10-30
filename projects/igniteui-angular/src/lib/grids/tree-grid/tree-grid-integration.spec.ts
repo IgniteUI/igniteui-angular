@@ -12,6 +12,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
+const CSS_CLASS_BANNER = 'igx-banner';
+
 describe('IgxTreeGrid - Integration', () => {
     configureTestSuite();
     let fix;
@@ -294,47 +296,134 @@ describe('IgxTreeGrid - Integration', () => {
         }));
 
         it('shows the banner below the edited parent node', fakeAsync(() => {
-            // TODO
-            // Test in expanded/collapsed mode for the parent nodes
-
             // Collapsed state
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.collapseAll();
             fix.detectChanges();
+            verifyBannerPositioning(0);
 
-            const grid = fix.componentInstance.treeGrid;
-            const cell = grid.getCellByColumn(0, 'Name');
+            // Expanded state
+            grid.expandAll();
+            fix.detectChanges();
+            verifyBannerPositioning(3);
+
+            function verifyBannerPositioning(columnIndex: number) {
+                const cell = grid.getCellByColumn(columnIndex, 'Name');
+                cell.inEditMode = true;
+                tick();
+                fix.detectChanges();
+
+                const editRow = cell.row.nativeElement;
+                const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
+
+                const bannerTop = banner.getBoundingClientRect().top;
+                const editRowBottom = editRow.getBoundingClientRect().bottom;
+
+                // The banner appears below the row
+                expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
+                // No much space between the row and the banner
+                expect(bannerTop - editRowBottom).toBeLessThan(2);
+            }
+        }));
+
+        it('shows the banner below the edited child node', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.expandAll();
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(1, 'Name');
             cell.inEditMode = true;
-            const editRow = cell.row.nativeElement;
-            const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
             tick();
             fix.detectChanges();
+
+            const editRow = cell.row.nativeElement;
+            const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerTop = banner.getBoundingClientRect().top;
             const editRowBottom = editRow.getBoundingClientRect().bottom;
 
             // The banner appears below the row
             expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
-
             // No much space between the row and the banner
             expect(bannerTop - editRowBottom).toBeLessThan(2);
-
-            // Expanded state
-            // TODO
         }));
 
-        it('shows the banner below the edited child node', fakeAsync(() => {
-            // TODO
-            // Test in expanded/collapsed mode for the parent nodes
-        }));
+        xit('shows the banner above the edited parent node if it is the last one', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.height = '200px';
+            fix.detectChanges();
+            grid.collapseAll();
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(2, 'Name');
+            cell.inEditMode = true;
+            tick();
+            fix.detectChanges();
 
-        it('shows the banner above the edited parent node if it is the last one', fakeAsync(() => {
-            // TODO
+            const editRow = cell.row.nativeElement;
+            const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
+
+            const bannerBottom = banner.getBoundingClientRect().bottom;
+            const editRowTop = editRow.getBoundingClientRect().top;
+            console.log(banner.getBoundingClientRect());
+            console.log(editRow.getBoundingClientRect());
+            console.log(grid.height);
+
+            // The banner appears below the row
+            expect(bannerBottom).toBeLessThanOrEqual(editRowTop);
+            // No much space between the row and the banner
+            expect(editRowTop - bannerBottom).toBeLessThan(2);
         }));
 
         it('shows the banner above the edited child node if it is the last one', fakeAsync(() => {
-            // TODO
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.expandAll();
+            fix.detectChanges();
+            const cell = grid.getCellByColumn(9, 'Name');
+            cell.inEditMode = true;
+            tick();
+            fix.detectChanges();
+
+            const editRow = cell.row.nativeElement;
+            const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
+
+            const bannerBottom = banner.getBoundingClientRect().bottom;
+            const editRowTop = editRow.getBoundingClientRect().top;
+
+            // The banner appears below the row
+            expect(bannerBottom).toBeLessThanOrEqual(editRowTop);
+            // No much space between the row and the banner
+            expect(editRowTop - bannerBottom).toBeLessThan(2);
         }));
 
         it('banner hides when you expand/collapse the edited row', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.collapseAll();
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(0, 'Name');
+            cell.inEditMode = true;
+            tick();
+            fix.detectChanges();
+
+            let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
+
+            const row = cell.row as IgxTreeGridRowComponent;
+            grid.expandRow(row.rowID);
+            tick();
+            fix.detectChanges();
+
+            banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            expect(cell.inEditMode).toBeFalsy();
+            //expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+
+            cell = grid.getCellByColumn(0, 'Name');
+            cell.inEditMode = true;
+            tick();
+            fix.detectChanges();
+
+            banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
+
             // TODO
             // Verify the changes are preserved
             // 1.) Expand a parent row while editing it
