@@ -126,14 +126,5 @@ export class GridGroupBySampleComponent implements OnInit {
 
     changeFocus(event: IGridFocusChangeEventArgs) {
         console.log(event);
-        const groupRow = event.groupRow;
-        const target = (event.event.target as any).tagName.toLowerCase() === 'igx-grid-groupby-row';
-        if (groupRow && target) {
-            event.cancel = true;
-            const focusTarget =  groupRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
-            console.log(groupRow.nativeElement, focusTarget);
-            if (focusTarget) { focusTarget.focus(); }
-            console.log(document.activeElement);
-        }
     }
 }
