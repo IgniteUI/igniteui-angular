@@ -225,22 +225,48 @@ export class DataUtil {
      * @param primaryKey Primary key of the collection, if any
      */
     public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, recursive?: boolean): T[] {
-        data.forEach((value: any, index: number) => {
-            value = recursive ? value.data : value;
-            const rowId = primaryKey ? value[primaryKey] : value;
+        data.forEach((item: any, index: number) => {
+            const dataItem = recursive ? item.data : item;
+            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
             const transaction = transactions.find(t => t.id === rowId);
-            const currentRecord: any = data[index];
-            if (currentRecord.children && recursive) {
-                this.mergeTransactions(currentRecord.children, transactions, primaryKey, recursive);
+            if (item.children && recursive) {
+                this.mergeTransactions(item.children, transactions, primaryKey, recursive);
             }
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                mergeObjects(recursive ? currentRecord.data : currentRecord, transaction.newValue);
+                data[index] = mergeObjects(mergeObjects({}, dataItem), transaction.newValue);
             }
         });
 
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
+        return data;
+    }
+
+    public static mergeHierarchicalTransactions(
+        data: any[], transactions: Transaction[], childDataKey: any, primaryKey?: any): any[] {
+
+        data.forEach((dataItem: any, index: number) => {
+            const children = dataItem[childDataKey];
+            if (children) {
+                dataItem[childDataKey] = this.mergeHierarchicalTransactions(children, transactions, childDataKey, primaryKey);
+            }
+            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
+            const transaction = transactions.find(t => t.id === rowId);
+            if (transaction && transaction.type === TransactionType.UPDATE) {
+                data[index] = mergeObjects(mergeObjects({}, dataItem), transaction.newValue);
+            }
+
+            const addTransactions = transactions.filter(t => t.id.parentId === rowId);
+            for (const t of addTransactions) {
+                if (!children) {
+                    dataItem[childDataKey] = [];
+                }
+
+                dataItem[childDataKey].push(t.newValue);
+            }
+        });
+
         return data;
     }
 }

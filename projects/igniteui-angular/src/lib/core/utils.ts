@@ -13,6 +13,22 @@ export function cloneArray(array, deep?: boolean) {
     return arr;
 }
 
+export function cloneHierarchicalArray(array: any[], childDataKey: any, deep?: boolean): any[] {
+    const result: any[] = [];
+    if (array) {
+        return result;
+    }
+
+    for (const item of array) {
+        const children = item[childDataKey];
+        if (children && Array.isArray(children)) {
+            item[childDataKey] = cloneHierarchicalArray(children, childDataKey, deep);
+        }
+        result.push(deep ? cloneValue(item) : item);
+    }
+    return result;
+}
+
 /**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
  * @param obj1 Object to merge into

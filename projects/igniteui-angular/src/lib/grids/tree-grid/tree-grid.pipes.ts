@@ -25,22 +25,22 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.get(id);
-        let hirerchicalRecords: ITreeGridRecord[] = [];
+        let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
 
         if (primaryKey && foreignKey) {
-            hirerchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap);
+            hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap);
             grid.flatData = grid.data;
         } else if (childDataKey) {
             const flatData: any[] = [];
-            hirerchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
+            hierarchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
             grid.flatData = flatData;
         }
 
         grid.treeGridRecordsMap = treeGridRecordsMap;
-        grid.treeGridRecords = hirerchicalRecords;
-        return hirerchicalRecords;
+        grid.treeGridRecords = hierarchicalRecords;
+        return hierarchicalRecords;
     }
 
     private getRowID(primaryKey: any, rowData: any) {
@@ -143,12 +143,12 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         grid.processedTreeGridRecords = collection;
         grid.processedTreeGridRecordsMap = new Map<any, ITreeGridRecord>();
 
-        this.getFlatDataRecusrive(collection, data, expandedLevels, expandedStates, id, true);
+        this.getFlatDataRecursive(collection, data, expandedLevels, expandedStates, id, true);
 
         return data;
     }
 
-    private getFlatDataRecusrive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
+    private getFlatDataRecursive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
         expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
         parentExpanded: boolean) {
         if (!collection || !collection.length) {
@@ -170,7 +170,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
             grid.processedTreeGridRecordsMap.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
-            this.getFlatDataRecusrive(hierarchicalRecord.children, data, expandedLevels,
+            this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
                 expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded);
         }
     }
@@ -197,18 +197,18 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         expressions: ISortingExpression | ISortingExpression[],
         id: string,
         pipeTrigger: number): ITreeGridRecord[] {
-            const state = { expressions: [] };
-            const grid = this.gridAPI.get(id);
-            state.expressions = grid.sortingExpressions;
+        const state = { expressions: [] };
+        const grid = this.gridAPI.get(id);
+        state.expressions = grid.sortingExpressions;
 
-            let result: ITreeGridRecord[];
-            if (!state.expressions.length) {
-                result = hierarchicalData;
-            } else {
-                result = DataUtil.hierarchicalSort(hierarchicalData, state, undefined);
-            }
+        let result: ITreeGridRecord[];
+        if (!state.expressions.length) {
+            result = hierarchicalData;
+        } else {
+            result = DataUtil.hierarchicalSort(hierarchicalData, state, undefined);
+        }
 
-            return result;
+        return result;
     }
 }
 
@@ -245,21 +245,34 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 })
 export class IgxTreeGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
+    constructor(private gridAPI: IgxTreeGridAPIService) { }
 
-    transform(collection: ITreeGridRecord[], id: string, pipeTrigger: number): ITreeGridRecord[] {
-        const grid: IgxGridBaseComponent = this.gridAPI.get(id);
-
+    transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         if (collection && grid.transactions.enabled) {
-            const result = DataUtil.mergeTransactions<ITreeGridRecord>(
-                cloneArray(collection),
-                grid.transactions.aggregatedState(true),
-                grid.primaryKey,
-                true);
-            return result;
+            const primaryKey = grid.primaryKey;
+            if (!primaryKey) {
+                return collection;
+            }
+
+            const foreignKey = grid.foreignKey;
+            const childDataKey = grid.childDataKey;
+
+            if (foreignKey) {
+                return DataUtil.mergeTransactions(
+                    cloneArray(collection),
+                    grid.transactions.aggregatedState(true),
+                    grid.primaryKey,
+                    true);
+            } else if (childDataKey) {
+                return DataUtil.mergeHierarchicalTransactions(
+                    cloneArray(collection),
+                    grid.transactions.aggregatedState(true),
+                    childDataKey,
+                    grid.primaryKey);
+            }
         }
+
         return collection;
     }
-
-
 }
