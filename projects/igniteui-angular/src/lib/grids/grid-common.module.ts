@@ -48,8 +48,12 @@ import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
-import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
-import { IgxAvatarModule } from '../avatar/avatar.component';
+import {
+    IgxRowEditTemplateDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditTabStopDirective
+} from './grid.rowEdit.directive';
 
 @NgModule({
     declarations: [
@@ -64,6 +68,8 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
@@ -93,6 +99,8 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,

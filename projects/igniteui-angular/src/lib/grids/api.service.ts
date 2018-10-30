@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray } from '../core/utils';
+import { cloneArray, isEqual } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -285,8 +285,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue !== undefined && oldValue === args.newValue) { return; }
-
+            if (oldValue !== undefined && isEqual(oldValue, args.newValue)) { return; }
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);

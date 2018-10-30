@@ -244,6 +244,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
+        event.stopPropagation();
     }
 
     /**
