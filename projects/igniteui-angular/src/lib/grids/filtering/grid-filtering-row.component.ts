@@ -491,7 +491,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public scrollChipsIntoView(event) {
-        if (event.keyCode === KEYS.TAB) {
+        if (event.key === KEYS.TAB) {
             this.offset = 0;
             this.transform(this.offset);
         }
