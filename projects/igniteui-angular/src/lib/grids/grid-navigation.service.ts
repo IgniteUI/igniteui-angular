@@ -31,7 +31,6 @@ export class IgxGridNavigationService {
         const column = this.grid.unpinnedColumns.find((col) => !col.columnGroup && col.visibleIndex === visibleColumnIndex);
         return this.grid.pinnedColumns.length ? this.grid.unpinnedColumns.filter((c) => !c.columnGroup).indexOf(column) :
             visibleColumnIndex;
-
     }
 
     public isColumnFullyVisible(visibleColumnIndex: number) {
@@ -44,16 +43,6 @@ export class IgxGridNavigationService {
         return this.displayContainerWidth >=
             this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index + 1) -
             this.displayContainerScrollLeft;
-    }
-
-    public isColumnPartiallyVisible(visibleColumnIndex) {
-        const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        // getColumnScrollLeft(index) gives the left border of the cell and getColumnScrollLeft(index + 1) gives the right border
-        return (this.displayContainerWidth >
-            this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index) -
-            this.displayContainerScrollLeft) &&
-            (this.displayContainerWidth < this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index + 1) -
-                this.displayContainerScrollLeft);
     }
 
     public isColumnLeftFullyVisible(visibleColumnIndex) {
@@ -89,24 +78,9 @@ export class IgxGridNavigationService {
         }
     }
 
-    public isColumnLeftPartiallyVisible(visibleColumnIndex) {
-        const index = this.getColumnUnpinnedIndex(visibleColumnIndex + 1);
-        return (!this.isColumnLeftFullyVisible(visibleColumnIndex)) && this.displayContainerScrollLeft <
-            this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
-    }
-
     public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex) {
         return this.grid.nativeElement.querySelector(
             `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
-    }
-
-    public getScrollToNextEditableColumn(startIndex, endIndex) {
-        let amount = 0;
-        this.gridOrderedColumns.filter(e => e.visibleIndex > startIndex && e.visibleIndex <= endIndex)
-        .map(e => {
-            amount += parseInt(e.width, 10);
-        });
-        return amount;
     }
 
     public onKeydownArrowRight(element, rowIndex, visibleColumnIndex) {
@@ -124,31 +98,14 @@ export class IgxGridNavigationService {
                         .subscribe(() => {
                             element.nextElementSibling.firstElementChild.focus();
                         });
-                this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                        this.horizontalScroll(rowIndex).scrollTo(0);
                 }
             } else {
                 element.nextElementSibling.focus();
             }
         } else {
-            let scrollAmount = 0;
             this.grid.nativeElement.focus({preventScroll: true});
-            if (this.isColumnPartiallyVisible(visibleColumnIndex + 1)) { // if next column is not partially visible
-                scrollAmount = this.calcPartialScroll(rowIndex, visibleColumnIndex + 1);
-            } else if (this.isColumnPartiallyVisible(visibleColumnIndex)) { // if current column is partially visible
-                scrollAmount = this.calcPartialScroll(rowIndex, visibleColumnIndex) +
-                    parseInt(this.grid.columnList.filter(c => !c.columnGroup)
-                        .find((column) => column.visibleIndex === visibleColumnIndex + 1).width, 10);
-            } else { // If next column is not visible
-                scrollAmount = parseInt(this.grid.columnList.filter(c => !c.columnGroup)
-                    .find((column) => column.visibleIndex === visibleColumnIndex + 1).width, 10);
-            }
-            this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    const currentCell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex);
-                    currentCell.nextElementSibling.focus();
-                });
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount;
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1);
         }
     }
 
@@ -161,21 +118,14 @@ export class IgxGridNavigationService {
             element.parentNode.previousElementSibling.focus();
         } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             this.grid.nativeElement.focus({preventScroll: true});
-            this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    const currentCell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex);
-                    currentCell.previousElementSibling.focus();
-                });
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(index);
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1);
         } else {
             element.previousElementSibling.focus();
         }
 
     }
 
-    public movePreviousEditable(element, rowIndex, visibleColumnIndex) {
+    public movePreviousEditable(rowIndex, visibleColumnIndex) {
         const addedIndex = this.isColumnEditable(visibleColumnIndex - 1) ?
             0 :
             this.findNextEditable(MoveDirection.LEFT, visibleColumnIndex - 1);
@@ -189,14 +139,8 @@ export class IgxGridNavigationService {
             // since addedIndex !== -1, there will always be a target
             this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus();
         } else if (!this.isColumnLeftFullyVisible(editableIndex)) {  // if not fully visible, perform scroll
-            this.grid.nativeElement.focus();
-            this.grid.parentVirtDir.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // focus after scroll
-                });
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-                this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(this.getColumnUnpinnedIndex(editableIndex));
+            this.grid.nativeElement.focus({preventScroll: true});
+            this.performHorizontalScrollToCell(rowIndex, editableIndex);
         } else {
             this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // if fully visible, just focus
         }
@@ -217,35 +161,15 @@ export class IgxGridNavigationService {
                 if (this.isColumnLeftFullyVisible(editableIndex)) { // If next column is fully visible LEFT
                     this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // focus
                 } else { // if NOT fully visible, perform scroll
-                    this.grid.parentVirtDir.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // Focus cell when loaded v
-                    });
-                    this.grid.dataRowList.first.virtDirRow.scrollTo(this.getColumnUnpinnedIndex(editableIndex)); // scroll to cell ^
+                    this.grid.nativeElement.focus({preventScroll: true});
+                    this.performHorizontalScrollToCell(rowIndex, editableIndex);
                 }
             } else { // cell is next cell
                 this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus();
             }
         } else {
-            let scrollAmount = 0;
-            this.grid.nativeElement.focus();
-            if (this.isColumnPartiallyVisible(editableIndex)) { // if next column is partially visible
-                scrollAmount = this.calcPartialScroll(rowIndex, editableIndex); // scroll by nextColumn.width
-            } else if (this.isColumnPartiallyVisible(visibleColumnIndex)) { // if this column is partially visible, scroll both
-                // scroll by currentCell.width + width of cells between editable + editableCell.width
-                scrollAmount = this.calcPartialScroll(rowIndex, visibleColumnIndex) +
-                this.getScrollToNextEditableColumn(visibleColumnIndex, editableIndex);
-            } else { // If next column is not visible at all
-                // scroll by width of cells between this & editable + editableCell.width
-                scrollAmount = this.getScrollToNextEditableColumn(visibleColumnIndex, editableIndex);
-            }
-            this.grid.parentVirtDir.onChunkLoad // perform scroll
-                .pipe(first())
-                .subscribe(() => {
-                    this.getCellElementByVisibleIndex(rowIndex, editableIndex).focus(); // after scroll, focus target
-                });
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft += scrollAmount; // scroll by amount
+            this.grid.nativeElement.focus({preventScroll: true});
+            this.performHorizontalScrollToCell(rowIndex, editableIndex);
         }
     }
     public onKeydownHome(rowIndex) {
@@ -353,22 +277,23 @@ export class IgxGridNavigationService {
                 return;
             }
             this.grid.nativeElement.focus({preventScroll: true});
-            this.performHorizontalScrollToCell(currentRowEl.previousElementSibling, visibleColumnIndex);
+            this.performHorizontalScrollToCell(parseInt(
+                currentRowEl.previousElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex);
             }
         }
 
     public navigateDown(rowElement, currentRowIndex, visibleColumnIndex) {
-        if (!rowElement.nextElementSibling) {
+        if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
             return;
         }
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(currentRowIndex + 1);
-        const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : null;
-        const targetEndTopOffset = rowElement.nextElementSibling.offsetTop + rowHeight +
-            parseInt(this.verticalDisplayContainerElement.style.top, 10);
+        const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
+        const targetEndTopOffset = rowElement.nextElementSibling ?
+        rowElement.nextElementSibling.offsetTop + rowHeight + parseInt(this.verticalDisplayContainerElement.style.top, 10) :
+        containerHeight + rowHeight;
+        this.grid.nativeElement.focus({preventScroll: true});
         if (containerHeight && containerHeight < targetEndTopOffset) {
-            this.grid.nativeElement.focus({preventScroll: true});
-            const scrollAmount = targetEndTopOffset - containerHeight;
-            this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
+            this.grid.verticalScrollContainer.scrollTo(currentRowIndex + 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -382,7 +307,6 @@ export class IgxGridNavigationService {
                     this.focusNextElement(rowElement, visibleColumnIndex);
                 });
         } else {
-            this.grid.nativeElement.focus({preventScroll: true});
             this.focusNextElement(rowElement, visibleColumnIndex);
         }
     }
@@ -395,7 +319,8 @@ export class IgxGridNavigationService {
                 rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
                 return;
             }
-            this.performHorizontalScrollToCell(rowElement.nextElementSibling, visibleColumnIndex);
+            this.performHorizontalScrollToCell(parseInt(
+                rowElement.nextElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex);
             }
         }
 
@@ -470,7 +395,7 @@ export class IgxGridNavigationService {
             const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
-                    this.movePreviousEditable(cell, rowIndex, visibleColumnIndex);
+                    this.movePreviousEditable( rowIndex, visibleColumnIndex);
                     return;
                 }
                 this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex);
@@ -478,32 +403,13 @@ export class IgxGridNavigationService {
         }
     }
 
-    private performHorizontalScrollToCell(rowElement, visibleColumnIndex) {
+    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        const cells = rowElement.querySelectorAll(`igx-grid-cell`);
-        const firstVisibleIndex = parseInt(cells[0].getAttribute('data-visibleIndex'), 10);
-        const lastVisibleIndex =  parseInt(cells[cells.length - 1].getAttribute('data-visibleIndex'), 10);
-        const middle = (firstVisibleIndex + lastVisibleIndex) / 2;
         this.grid.parentVirtDir.onChunkLoad
-        .pipe(first())
-        .subscribe(() => {
-            rowElement.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
-        });
-        if (middle >= visibleColumnIndex && !this.isColumnLeftFullyVisible(visibleColumnIndex)) {
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-            this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex);
-        } else if (middle < visibleColumnIndex && !this.isColumnFullyVisible(visibleColumnIndex)) {
-            this.grid.parentVirtDir.getHorizontalScroll().scrollLeft =
-            (this.grid.dataRowList.first.virtDirRow.getColumnScrollLeft(unpinnedIndex + 1) -
-            this.displayContainerWidth);
-        }
-    }
-
-    private calcPartialScroll(rowIndex, visibleColumnIndex) {
-        const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        return this.horizontalScroll(rowIndex).getColumnScrollLeft(index) +
-            parseInt(this.grid.columnList.filter(c => !c.columnGroup)
-            .find((column) => column.visibleIndex === visibleColumnIndex).width, 10) -
-            this.displayContainerWidth - this.horizontalScroll(rowIndex).getHorizontalScroll().scrollLeft;
+            .pipe(first())
+            .subscribe(() => {
+                this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex).focus();
+            });
+        this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
     }
 }
