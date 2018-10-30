@@ -1947,7 +1947,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-            this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+            if (this.rowEditable) {
+                this.refreshRowEditingOverlay(this.rowInEditMode);
+            }
         });
     }
 
@@ -3417,8 +3419,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-        if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
-            this.repositionRowEditingOverlay(this.rowInEditMode);
+        if (this.rowEditable) {
+            this.refreshRowEditingOverlay(this.rowInEditMode);
         }
         this.cdr.detectChanges();
     }
@@ -4194,16 +4196,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.nativeElement.focus();
     } */
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
-            return;
-        }
-        if (!row) {
-            this.toggleRowEditingOverlay(false);
-        } else {
-            this.repositionRowEditingOverlay(row);
-        }
-    }
 
     /**
      * @hidden
@@ -4225,27 +4217,22 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
+        this.rowEditingOverlay.element.parentElement.style.display = '';
     }
 
     /**
      * @hidden
      */
-    public toggleRowEditingOverlay(show) {
-        const rowStyle = this.rowEditingOverlay.element.style;
-        if (show) {
-            rowStyle.display = 'block';
-        } else {
-            rowStyle.display = 'none';
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
-        this.configureRowEditingOverlay(row);
+    public refreshRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>, toggle = true) {
         if (!this.rowEditingOverlay.collapsed) {
-            this.rowEditingOverlay.reposition();
+            const rowStyle = this.rowEditingOverlay.element.parentElement.style;
+            if (row && toggle) {
+                rowStyle.display = '';
+                this.configureRowEditingOverlay(row);
+                this.rowEditingOverlay.reposition();
+            } else {
+                rowStyle.display = 'none';
+            }
         }
     }
 
@@ -4253,7 +4240,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
         this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
-        this.toggleRowEditingOverlay(true);
     }
 
     /**

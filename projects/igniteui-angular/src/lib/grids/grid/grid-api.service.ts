@@ -109,15 +109,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
         this.get(id).groupingExpansionState = expansionState;
         if (grid.rowEditable) {
-            if (toggleRowEditingOverlay !== undefined) {
-                grid.toggleRowEditingOverlay(toggleRowEditingOverlay);
-            }
-
-            // If row overlay is opened in a group and another group is expanded/collapsed,
-            // then the row in edit will move down/up and therefore the row edit overlay should move down/up.
-            if (grid.rowInEditMode && !grid.rowEditingOverlay.collapsed) {
-                grid.repositionRowEditingOverlay(grid.rowInEditMode);
-            }
+            grid.refreshRowEditingOverlay(grid.rowInEditMode, toggleRowEditingOverlay);
         }
     }
 

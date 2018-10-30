@@ -61,6 +61,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expandedStates;
         expandedStates.set(row.rowID, expanded);
         grid.expandedStates = expandedStates;
+        if (grid.rowEditable) {
+            const editRow = this.get_edit_row_state(id);
+            if (editRow) {
+                const toggle = this.is_descendant(id, row.treeRow, editRow.rowID) ? expanded : undefined;
+                grid.refreshRowEditingOverlay(grid.rowInEditMode, toggle);
+            }
+        }
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
@@ -72,6 +79,23 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return expanded;
         } else {
             return indentationLevel < grid.expandedLevels;
+        }
+    }
+
+    public is_descendant(id: string, parentRow: ITreeGridRecord, childRowID): boolean {
+        const childRows: ITreeGridRecord[] = parentRow.children;
+        if (!childRows) {
+            return false;
+        }
+        const grid = this.get(id);
+        for (let rowIndex = 0, found = false, data; rowIndex < childRows.length; rowIndex++) {
+            data = childRows[rowIndex].data;
+            found = grid.primaryKey ? data[grid.primaryKey] === childRowID : data === childRowID;
+            if (found) {
+                return true;
+            } else {
+                return this.is_descendant(id, childRows[rowIndex], childRowID);
+            }
         }
     }
 
