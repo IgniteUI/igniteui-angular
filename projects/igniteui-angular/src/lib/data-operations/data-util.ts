@@ -234,7 +234,7 @@ export class DataUtil {
                 this.mergeTransactions(currentRecord.children, transactions, primaryKey, recursive);
             }
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                mergeObjects(recursive ? currentRecord.data : currentRecord, transaction.newValue);
+                data[index] = recursive ? Object.assign({}, currentRecord, { data: transaction.newValue}) : transaction.newValue;
             }
         });
 
