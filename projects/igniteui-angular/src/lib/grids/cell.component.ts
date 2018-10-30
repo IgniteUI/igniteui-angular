@@ -546,6 +546,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
     }
 
+    /** TODO: Refactor away, move to grid.endRowEdit! */
     private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
         const grid = this.grid;
         if (grid.rowEditable) {
