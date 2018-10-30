@@ -1923,7 +1923,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: null,
         closeAnimation: null
     });
 
@@ -4264,6 +4263,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * TODO: Refactor
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
@@ -4275,7 +4275,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const lastCommitedValue = // Last commited value (w/o pending)
         this.transactions.getState(rowInEdit.rowID) ? Object.assign({}, this.transactions.getState(rowInEdit.rowID).value) : {};
         // we want pure object, not object reference, as it changes when endPending is called
-        this.transactions.endPending(commit); // End pending
+        if (closeOverlay) { // End pending
+            // TODO: Why is transactions.endPending in closeRowEditingOverlay?
+            this.closeRowEditingOverlay(commit);
+        }
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
         let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
@@ -4288,13 +4291,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             oldValue,
             row: rowObj
         });
+
         if (commit && newValue && !this.transactions.enabled) {
             this.data[rowIndex] = newValue; // If no transactions, write to data directly
+            this._pipeTrigger++;
         }
-        if (closeOverlay) {
-            this.closeRowEditingOverlay(commit);
-        }
-        this._pipeTrigger++;
     }
 
     /**
