@@ -460,11 +460,11 @@ describe('IgxTransaction', () => {
             // Stacks are clear by default
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeFalsy();
-            let addItem: Transaction = { id: 1, type: TransactionType.UPDATE, newValue: { Category: 'Something' } };
+            let addItem: Transaction = { id: 1, type: TransactionType.ADD, newValue: { Category: 'Something' } };
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();
-            addItem = { id: 2, type: TransactionType.UPDATE, newValue: { Category: 'Something 2' } };
+            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' } };
             transaction.add(addItem);
             expect(transaction.canRedo).toBeFalsy();
             expect(transaction.canUndo).toBeTruthy();

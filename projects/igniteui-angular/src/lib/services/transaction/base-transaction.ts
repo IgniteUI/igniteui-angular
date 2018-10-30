@@ -7,8 +7,12 @@ export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();
-    public canUndo = false;
-    public canRedo = false;
+    public get canRedo(): boolean {
+        return false;
+    }
+    public get canUndo(): boolean {
+        return false;
+    }
     public get enabled(): boolean {
         return this._isPending;
     }
