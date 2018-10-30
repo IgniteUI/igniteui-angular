@@ -306,17 +306,17 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 fix.detectChanges();
 
                 // verify that the parent node is still in the filtered list
-                expect(treeGrid.filteredData.filter(c => c.Name === targetCell.value).length).toBeGreaterThan(0);
+                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
 
                 treeGrid.clearFilter();
                 tick();
                 fix.detectChanges();
 
                 // verify the changes were preserved after the filtering is removed
-                expect(treeGrid.data.filter(c => c.Name === targetCell.value).length).toBeGreaterThan(0);
+                expect(treeGrid.data.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
             }));
 
-        fit(`should remove the parent node from the filtered list if
+        it(`should remove the parent node from the filtered list if
                 its only matching child is modified and does not match the filtering condition anymore`,
             fakeAsync(() => {
                 const newCellValue = 'John McJohn';
@@ -336,7 +336,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 treeGrid.clearFilter();
                 tick();
 
-                // find the parent which contains a child node that was modified (if any)
+                // verify that there is a parent which contains the updated child node
                 const filteredParentNodes = treeGrid.data.filter(function (n) {
                     return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
                 });
@@ -345,14 +345,33 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
             }));
 
-        it('a filtered child row keeps its parent in the list.', fakeAsync(() => {
-            // TODO
-            // 1.) Filter by any condition
-            // 2.) Edit a child row that has sibilings meeting the filtering condition
-            // 3.) Verify the updated node is removed from the filtered list
-            // 4.) Verify the parent and the sibilings are not removed from the filtered list
-            // 4.) Remove filtering
-            // 5.) Verify the update is preserved
-        }));
+        it('should not remove a parent node from the filtered list if it has at least one child node which matches the filtering condition',
+            fakeAsync(() => {
+                const newCellValue = 'Peter Peterson';
+                treeGrid.filter('Name', 'h', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick();
+
+                // modify the first child node which meets the filtering condition
+                const targetCell = treeGrid.getCellByColumn(1, 'Name');
+                targetCell.update(newCellValue);
+                tick();
+                fix.detectChanges();
+
+                // check if the edited child row is removed
+                expect(treeGrid.filteredData.filter(c => c.Name === newCellValue).length).toBe(0);
+
+                // check if the parent which contains the edited row is not removed
+                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.treeRow.parent.data.Name).length).toBeGreaterThan(0);
+
+                treeGrid.clearFilter();
+
+                // verify that there is a parent which contains the updated child node
+                const filteredParentNodes = treeGrid.data.filter(function (n) {
+                    return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
+                });
+
+                // if there are any parent nodes in this collection then the changes were preserved
+                expect(filteredParentNodes.length).toBeGreaterThan(0);
+            }));
     });
 });
