@@ -336,9 +336,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        const columnSortStrategy = this.get_column_by_name(this.get(id).id, fieldName) ?
-            this.get_column_by_name(this.get(id).id, fieldName).sortStrategy : undefined;
-        strategy = strategy ? strategy : columnSortStrategy;
+        strategy = this.getSortStrategyPerColumn(id, fieldName, strategy);
         this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
@@ -350,7 +348,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
-            each.strategy = each.strategy ? each.strategy : this.get_column_by_name(this.get(id).id, each.fieldName).sortStrategy;
+            each.strategy = this.getSortStrategyPerColumn(id, each.fieldName, each.strategy);
             this.prepare_sorting_expression([sortingState], each);
         }
 
@@ -499,4 +497,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     protected remove_grouping_expression(id, fieldName) {
         }
+
+    protected getSortStrategyPerColumn(id: string, fieldName: string, strategy) {
+        const columnSortStrategy = this.get_column_by_name(this.get(id).id, fieldName) ?
+            this.get_column_by_name(id, fieldName).sortStrategy : undefined;
+        strategy = strategy ? strategy : columnSortStrategy;
+        return strategy;
+    }
 }

@@ -12,7 +12,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
     public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        strategy = strategy ? strategy : this.get_column_by_name(this.get(id).id, fieldName).sortStrategy;
+        strategy = this.getSortStrategyPerColumn(id, fieldName, strategy);
         this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).groupingExpressions = groupingState;
         this.arrange_sorting_expressions(id);
@@ -23,7 +23,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
-            each.strategy = each.strategy ? each.strategy : this.get_column_by_name(this.get(id).id, each.fieldName).sortStrategy;
+            each.strategy = this.getSortStrategyPerColumn(id, each.fieldName, each.strategy);
             this.prepare_sorting_expression([sortingState, groupingState], each);
         }
 
