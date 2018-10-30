@@ -1970,7 +1970,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: null,
         closeAnimation: null
     });
 
