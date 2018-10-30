@@ -35,6 +35,7 @@ export class IgxFilteringService implements OnDestroy {
     private isColumnResizedSubscribed = false;
     private isChunkLoadedSubscribed = false;
     private destroy$ = new Subject<boolean>();
+    private isFiltering = false;
 
     public columnToChipToFocus = new Map<string, boolean>();
     public columnToMoreIconHidden = new Map<string, boolean>();
@@ -57,10 +58,7 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.isColumnResizedSubscribed) {
             this.isColumnResizedSubscribed = true;
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
-                if (!this.isFilterRowVisible) {
-                    const filterCell = this.grid.filterCellList.find(cell => cell.column === eventArgs.column);
-                    filterCell.updateFilterCellArea();
-                }
+                this.updateFilteringCell(eventArgs.column.field);
             });
         }
 
@@ -82,11 +80,17 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
+        this.isFiltering = true;
+
         this.grid.filter(field, null, expressionsTree);
         this.grid.onFilteringDone.emit(expressionsTree);
+
+        this.isFiltering = false;
     }
 
     public clearFilter(field: string): void {
+        this.isFiltering = true;
+
         this.grid.clearFilter(field);
         
         const expr = this.grid.filteringExpressionsTree.find(field);
@@ -94,6 +98,8 @@ export class IgxFilteringService implements OnDestroy {
 
         const expressions = this.getExpressions(field);
         expressions.length = 0;
+
+        this.isFiltering = false;
     }
 
     public registerSVGIcons(): void {
@@ -107,15 +113,35 @@ export class IgxFilteringService implements OnDestroy {
     public getExpressions(columnId: string): ExpressionUI[] {
         if (!this.columnToExpressionsMap.has(columnId)) {
             const column = this.grid.columns.find((col) => col.field === columnId);
-            const expressionsUIs = new Array<ExpressionUI>();
+            const expressionUIs = new Array<ExpressionUI>();
 
-            this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionsUIs);
-            this.columnToExpressionsMap.set(columnId, expressionsUIs);
+            this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
+            this.columnToExpressionsMap.set(columnId, expressionUIs);
 
-            return expressionsUIs;
-}
+            return expressionUIs;
+        }
 
         return this.columnToExpressionsMap.get(columnId);
+    }
+
+    public refreshExpressions() {
+        if (!this.isFiltering) {
+            this.columnsWithComplexFilter.clear();
+
+            this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
+                const column = this.grid.columns.find((col) => col.field === key);
+                value.length = 0;
+
+                this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, value);
+
+                const isComplex = this.isFilteringTreeComplex(column.filteringExpressionsTree);
+                if (isComplex) {
+                    this.columnsWithComplexFilter.add(key);
+                }
+
+                this.updateFilteringCell(key);
+            });
+        }
     }
 
     public removeExpression(columnId: string, indexToRemove: number) {
@@ -176,6 +202,13 @@ export class IgxFilteringService implements OnDestroy {
         return isComplex;
     }
 
+    private updateFilteringCell(columnId: string) {
+        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+        if (filterCell) {
+            filterCell.updateFilterCellArea();
+        }
+    }
+
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (!expressions) {
             return false;
@@ -233,7 +266,14 @@ export class IgxFilteringService implements OnDestroy {
         } else {
             const exprUI = new ExpressionUI();
             exprUI.expression = expressions as IFilteringExpression;
-            exprUI.beforeOperator = operator;
+            if (expressionsUIs.length !== 0) {
+                exprUI.beforeOperator = operator;
+            }
+
+            const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
+            if (prevExprUI) {
+                prevExprUI.afterOperator = operator;
+            }
 
             expressionsUIs.push(exprUI);
         }

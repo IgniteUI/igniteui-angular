@@ -101,7 +101,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     public getChipToFocus() {
         return this.filteringService.columnToChipToFocus.get(this.column.field);
     }
-    
+
     public updateFilterCellArea() {
         this.expressionsList = this.filteringService.getExpressions(this.column.field);
         this.updateVisibleFilters();

@@ -244,6 +244,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
             this._filteringExpressionsTree = value;
             this._pipeTrigger++;
+            this.filteringService.refreshExpressions();
             this.clearSummaryCache();
             this.cdr.markForCheck();
         }
