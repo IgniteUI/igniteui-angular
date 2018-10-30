@@ -263,8 +263,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = this.get_all_data(id)[rowIndex][column.field];
-            rowData = this.get_all_data(id)[rowIndex];
+            oldValue = data[rowIndex][column.field];
+            rowData = data[rowIndex];
         }
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
@@ -296,8 +296,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             //  if edit (new) value is same as old value do nothing here
             if (oldValue !== undefined && oldValue === args.newValue) { return; }
 
-            const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
             if (grid.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
                 grid.transactions.add(transaction, rowData);
             } else {
                 const rowValue = this.get_all_data(id)[rowIndex];
