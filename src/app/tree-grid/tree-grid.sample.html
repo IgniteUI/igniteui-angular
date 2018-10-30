@@ -9,7 +9,7 @@
             <div class="density-chooser" style="margin-bottom: 16px">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
             </div>
-            <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" expandedLevels="1" [rowSelectable]="true" [paging]="false" [displayDensity]="density"
+            <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" expansionDepth="1" [rowSelectable]="true" [paging]="false" [displayDensity]="density"
                            [width]="'900px'" [height]="'500px'"
                            [showToolbar]="true"
                            [columnHiding]="true"
