@@ -65,4 +65,8 @@ export class GridColumnResizingSampleComponent implements OnInit {
         const col = this.grid1.getColumnByName(name);
         col.pinned = !col.pinned;
     }
+
+    public scrScrollTo(index) {
+        this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
+    }
 }

@@ -664,7 +664,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(8);
         expect(close.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
-        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeTruthy();
+        expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
 
         // empty condition
         ddItems[3].click();
@@ -1297,7 +1297,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(reset.nativeElement.classList.contains('igx-button--disabled')).toBeFalsy();
     }));
 
-    it('Should emit onFilteringDone when we clicked reset', () => {
+    it('Should emit onFilteringDone when we clicked reset', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1309,7 +1309,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        const idCellChips = filteringCells[0].queryAll(By.css('.igx-filtering-chips'));
+        const idCellChips = filteringCells[1].queryAll(By.css('igx-chip'));
         expect(idCellChips.length).toBe(1);
         spyOn(grid.onFilteringDone, 'emit');
 
@@ -1322,9 +1322,10 @@ describe('IgxGrid - Filtering actions', () => {
 
         reset.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
+        tick(100);
 
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
-    });
+    }));
 
     it('Should apply And/Or button when adding more than expression', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -1398,7 +1399,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(andButton.length).toEqual(0);
     }));
 
-    it('Should emit onFilteringDone when clear the input of filteringUI', () => {
+    it('Should emit onFilteringDone when clear the input of filteringUI', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1421,11 +1422,13 @@ describe('IgxGrid - Filtering actions', () => {
         spyOn(grid.onFilteringDone, 'emit');
 
         clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
+        simulateKeyboardKeyCode(input, 'keydown', KEYCODES.ENTER);
         fix.detectChanges();
+        tick(100);
 
         const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(columnName);
         expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(columnFilteringExpressionsTree);
-    });
+    }));
 
     it('When filter column with value 0 and dataType number, filtering chip should be applied', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
