@@ -70,7 +70,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return indentationLevel < grid.expandedLevels;
+            return indentationLevel < grid.expansionDepth;
         }
     }
 
@@ -79,7 +79,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const parentRecord = grid.records.get(parentRowID);
 
         if (!parentRecord) {
-            return;
+            throw Error('Invalid parent row ID!');
         }
 
         if (grid.primaryKey && grid.foreignKey) {
