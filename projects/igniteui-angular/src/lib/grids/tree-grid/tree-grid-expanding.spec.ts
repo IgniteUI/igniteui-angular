@@ -1,9 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
-import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent,
+    IgxTreeGridRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -230,4 +231,203 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         expect(rows.length).toBe(3);
     });
 
+});
+
+describe('Row editing expanding/collapsing', () => {
+    configureTestSuite();
+    let fix;
+    let treeGrid;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridRowEditingComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxTreeGridModule]
+        })
+        .compileComponents();
+    }));
+
+    beforeEach(() => {
+        fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
+        fix.detectChanges();
+        treeGrid = fix.componentInstance.treeGrid;
+        fix.detectChanges();
+    });
+
+    it('Hide banner with collapsing a parent node, using UI', fakeAsync(() => {
+        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
+        // Then expand again parent row and see that overlay is visible. All this clicking row indicator.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(1, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        const firstRow = rows[0];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('none');
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    it('Hide banner with collapsing a parent node, using API', fakeAsync(() => {
+        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
+        // Then expand again parent row and see that overlay is visible. All this using API.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(1, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('none');
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    it('Do not hide parent banner while collapsing the parent node, using UI', fakeAsync(() => {
+        // Test summary: Edit parent row, then collapse parent row and see that row overlay is still visible.
+        // Then expand again parent row and see that again it is visible. All this clicking row indicator.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(0, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        const firstRow = rows[0];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    it('Do not hide parent banner while collapsing the parent node, using API', fakeAsync(() => {
+        // Test summary: Edit parent row, then collapse parent row and see that row overlay is still visible.
+        // Then expand again parent row and see that again it is visible. All this using API.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(1, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    it('Do not hide banner while collapsing node that is NOT a parent one, using UI', fakeAsync(() => {
+        // Test summary: Edit a row, then collapse row that is not parent of the edit row - then row overlay should be visible.
+        // Then expand again parent row and see that again it is visible. All this clicking row indicator.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(9, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        const firstRow = rows[0];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    it('Do not hide banner while collapsing node that is NOT a parent one, using API', fakeAsync(() => {
+        // Test summary: Edit a row, then collapse row that is not parent of the edit row - then row overlay should be visible.
+        // Then expand again parent row and see that again it is visible. All this using API.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(9, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const editRow = cell.row.nativeElement;
+        const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
+
+    xit('Hide banner while collapsing node that is NOT a parent one, but goes outside visible area, using UI', fakeAsync(() => {
+        // Test summary: First make grid 300px.
+        // Edit a row, then expand row that is not parent of the edit row, but the expanded row has so many records
+        // that they push the edit row outside the visible area - then row overlay should be hidden.
+        // Then collapse again previously expanded row and see that again it is visible. All this clicking row indicator.
+
+        treeGrid.height = '300px'; // THIS IS NOT WORKING - the grid height is changed, but not the grid body height.
+        tick();
+        fix.detectChanges();
+
+        const rows = TreeGridFunctions.getAllRows(fix);
+        const firstRow = rows[0];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        const cell = treeGrid.getCellByColumn(3, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+        const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('none');
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(overlayContent.style.display).toEqual('');
+    }));
 });
