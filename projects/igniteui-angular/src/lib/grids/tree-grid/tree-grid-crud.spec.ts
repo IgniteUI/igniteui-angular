@@ -33,11 +33,12 @@ describe('IgxTreeGrid - CRUD', () => {
         describe('Child Collection', () => {
             configureTestSuite();
 
-            beforeEach(() => {
+            beforeEach(async() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
+                await wait();
                 fix.detectChanges();
             });
 
@@ -187,11 +188,12 @@ describe('IgxTreeGrid - CRUD', () => {
 
         describe('Primary/Foreign key', () => {
             configureTestSuite();
-            beforeEach(() => {
+            beforeEach(async() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
+                await wait();
                 fix.detectChanges();
             });
 
@@ -568,7 +570,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 8, 8);
             });
 
-            it('should support updating a child row by changing the its original parentID', () => {
+            it('should support updating a child row by changing its original parentID', () => {
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
