@@ -336,7 +336,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        strategy = strategy ? strategy : this.get_column_by_name(this.get(id).id, fieldName).sortStrategy;
+        const columnSortStrategy = this.get_column_by_name(this.get(id).id, fieldName) ?
+            this.get_column_by_name(this.get(id).id, fieldName).sortStrategy : undefined;
+        strategy = strategy ? strategy : columnSortStrategy;
         this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
