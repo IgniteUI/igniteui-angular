@@ -2246,6 +2246,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(GridFunctions.getChipText(colChips[1])).toEqual('o');
         expect(colOperands.length).toEqual(1);
         expect(colOperands[0].nativeElement.innerText).toEqual('AND');
+
     }));
 });
 
