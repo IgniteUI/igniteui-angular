@@ -1,10 +1,12 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent
+    IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
+    IgxTreeGridRowEditingComponent
 } from '../../test-utils/tree-grid-components.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
@@ -22,9 +24,10 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridStringTreeColumnComponent,
                 IgxTreeGridDateTreeColumnComponent,
-                IgxTreeGridBooleanTreeColumnComponent
+                IgxTreeGridBooleanTreeColumnComponent,
+                IgxTreeGridRowEditingComponent
             ],
-            imports: [IgxTreeGridModule]
+            imports: [NoopAnimationsModule, IgxTreeGridModule]
         })
             .compileComponents();
     }));
@@ -276,5 +279,88 @@ describe('IgxTreeGrid - Integration', () => {
             expect((<HTMLElement>headerCell.nativeElement).getBoundingClientRect().width).toBe(152, 'incorrect headerCell width');
             expect(parseInt(column.width, 10)).toBe(152);
         });
+    });
+
+    describe('Row editing', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('banner has no indentation when editing a parent node.', fakeAsync(() => {
+            // TODO
+            // Verify the overlay has the same width as the row that is edited
+        }));
+
+        it('shows the banner below the edited parent node', fakeAsync(() => {
+            // TODO
+            // Test in expanded/collapsed mode for the parent nodes
+
+            // Collapsed state
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.treeGrid;
+            const cell = grid.getCellByColumn(0, 'Name');
+            cell.inEditMode = true;
+            const editRow = cell.row.nativeElement;
+            const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
+            tick();
+            fix.detectChanges();
+
+            const bannerTop = banner.getBoundingClientRect().top;
+            const editRowBottom = editRow.getBoundingClientRect().bottom;
+
+            // The banner appears below the row
+            expect(bannerTop).toBeGreaterThanOrEqual(editRowBottom);
+
+            // No much space between the row and the banner
+            expect(bannerTop - editRowBottom).toBeLessThan(2);
+
+            // Expanded state
+            // TODO
+        }));
+
+        it('shows the banner below the edited child node', fakeAsync(() => {
+            // TODO
+            // Test in expanded/collapsed mode for the parent nodes
+        }));
+
+        it('shows the banner above the edited parent node if it is the last one', fakeAsync(() => {
+            // TODO
+        }));
+
+        it('shows the banner above the edited child node if it is the last one', fakeAsync(() => {
+            // TODO
+        }));
+
+        it('banner hides when you expand/collapse the edited row', fakeAsync(() => {
+            // TODO
+            // Verify the changes are preserved
+            // 1.) Expand a parent row while editing it
+            // 2.) Collapse an expanded parent row while editing it
+            // 3.) Collapse an expanded parent row while editing a child (test with more than 2 levels)
+        }));
+
+        it('TAB navigation cannot leave the edited row and the banner.', fakeAsync(() => {
+            // TODO
+            // Verify the focus do not go to the next row
+            // Verify non-editable columns are skipped while navigating
+        }));
+
+        it('updates are preserved after GroupBy is removed', fakeAsync(() => {
+            // TODO
+            // Test for parent and child nodes
+        }));
+
+        it('updates are preserved after Filtering is removed', fakeAsync(() => {
+            // TODO
+            // Test for parent and child nodes
+        }));
+
+        it('updates are preserved after Sorting is removed', fakeAsync(() => {
+            // TODO
+            // Test for parent and child nodes
+        }));
     });
 });

@@ -5,12 +5,12 @@ export interface ITreeGridRecord {
     data: any;
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
-    indentationLevel?: number;
+    level?: number;
     isFilteredOutParent?: boolean;
     expanded?: boolean;
 }
 
-export interface ITreeGridRowExpansionEventArgs {
+export interface IRowToggleEventArgs {
     row: IgxTreeGridRowComponent;
     expanded: boolean;
     event: Event;

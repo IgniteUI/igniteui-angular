@@ -813,11 +813,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(true)` is called.
-     * Emiited when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
      * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
      * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -842,10 +842,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(false)` is called.
-     * Emiited when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
+     * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -1930,7 +1930,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: null,
         closeAnimation: null
     });
 
@@ -2680,7 +2679,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param data
      * @memberof IgxGridComponent
      */
-    public addRow(data: any): void {
+    public addRow(data: any, parentID?: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         if (this.transactions.enabled) {
@@ -4257,6 +4256,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         mergeObjects(this.data[rowIndex], value);
     }
     /**
+     * TODO: Refactor
      * @hidden
      */
     private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
@@ -4268,7 +4268,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         const lastCommitedValue = // Last commited value (w/o pending)
         this.transactions.getState(rowInEdit.rowID) ? Object.assign({}, this.transactions.getState(rowInEdit.rowID).value) : {};
         // we want pure object, not object reference, as it changes when endPending is called
-        this.transactions.endPending(commit); // End pending
+        if (closeOverlay) { // End pending
+            // TODO: Why is transactions.endPending in closeRowEditingOverlay?
+            this.closeRowEditingOverlay(commit);
+        }
         const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
         let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
@@ -4281,14 +4284,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             oldValue,
             row: rowObj
         });
+
         if (commit && newValue && !this.transactions.enabled) {
             this.writeToData(rowIndex, newValue); // If no transactions, write to data directly
+            this._pipeTrigger++;
         }
-        if (closeOverlay) {
-            this.closeRowEditingOverlay(commit);
         }
-        this._pipeTrigger++;
-    }
 
     /**
      * Finishes the row transactions on the current row.

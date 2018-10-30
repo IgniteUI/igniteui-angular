@@ -12,6 +12,7 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
+import { first } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -173,19 +174,28 @@ export class IgxGridGroupByRowComponent {
     public onKeydown(event) {
         event.preventDefault();
         event.stopPropagation();
-        const shift = event.shiftKey;
+        const alt = event.altKey;
         const key = event.key.toLowerCase();
-        if (!this.isKeySupportedInGroupRow(key)) {
-            return;
-        }
-        if ((key === 'arrowleft' ||  key === 'left')) {
-            if (this.expanded) {
-                this.grid.toggleGroup(this.groupRow);
-            }
-            return;
-        } else if ((key === 'arrowright' || key === 'right')) {
-            if (!this.expanded) {
-                this.grid.toggleGroup(this.groupRow);
+
+        if (!this.isKeySupportedInGroupRow(key) || event.ctrlKey) { return; }
+
+        if (this.isToggleKey(key)) {
+            if (!alt) { return; }
+            if (key === 'arrowleft' ||  key === 'left') {
+                if (this.expanded) {
+                    const groupRowIndex = this.index;
+                    if (this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
+                        this.grid.verticalScrollContainer.igxForOf.length - 1) {
+                        this.grid.verticalScrollContainer.onChunkLoad
+                            .pipe(first())
+                            .subscribe(() => {
+                                this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
+                            });
+                    }
+                    this.grid.toggleGroup(this.groupRow);
+                }
+            } else if (key === 'arrowright' || key === 'right') {
+                if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
             }
             return;
         }
@@ -197,21 +207,23 @@ export class IgxGridGroupByRowComponent {
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
         this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
-        if (key === 'arrowdown' || key === 'down') {
-            this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
-            return;
-        }
-        if (key === 'arrowup' || key === 'up') {
-            this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
-            return;
-        }
-        if (key === 'tab') {
-            if (shift) {
-                this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
-            } else {
-                this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
-            }
+        switch (key) {
+            case 'arrowdown':
+            case 'down':
+                this.grid.navigation.navigateDown(this.nativeElement, this.index, visibleColumnIndex);
+                break;
+            case 'arrowup':
+            case 'up':
+                this.grid.navigation.navigateUp(this.nativeElement, this.index, visibleColumnIndex);
+                break;
+            case 'tab':
+                if (event.shiftKey) {
+                    this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                } else {
+                    this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
+                }
+                break;
         }
     }
 
@@ -238,8 +250,13 @@ export class IgxGridGroupByRowComponent {
             return cell.columnID;
         }
     }
+
     private isKeySupportedInGroupRow(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'tab'].indexOf(key) !== -1;
+    }
+
+    private isToggleKey(key) {
+        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
     }
 }
