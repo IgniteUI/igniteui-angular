@@ -212,6 +212,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
+            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
             this.dropDownConditions.toggle(this._conditionsOverlaySettings);
             event.stopImmediatePropagation();
         } else if (event.key === KEYS.TAB && event.shiftKey) {
@@ -241,7 +242,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         } else if (event.key === KEYS.DOWN_ARROW) {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
-            this.toggleConditionsDropDown();
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
 
@@ -435,7 +436,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.transform(this.offset);
     }
 
-    public toggleConditionsDropDown() {
+    public toggleConditionsDropDown(target: any) {
+        this._conditionsOverlaySettings.positionStrategy.settings.target = target;
         this.dropDownConditions.toggle(this._conditionsOverlaySettings);
     }
 
