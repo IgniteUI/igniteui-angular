@@ -11,7 +11,7 @@ import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
 
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy, IGroupByResult } from './sorting-strategy';
+import { ISortingStrategy, SortingStrategy, IGroupByResult, TreeGridSortingStrategy } from './sorting-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -20,6 +20,7 @@ import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interfa
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { Transaction, TransactionType } from '../services';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
 export enum DataType {
     String = 'string',
@@ -52,6 +53,37 @@ export class DataUtil {
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
+
+    public static hierarchicalSort(hierarchicalData: ITreeGridRecord[], state: ISortingState, parent: ITreeGridRecord): ITreeGridRecord[] {
+        state.strategy = new TreeGridSortingStrategy();
+        let res: ITreeGridRecord[] = [];
+
+        hierarchicalData.forEach((hr: ITreeGridRecord) => {
+            const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
+            rec.parent = parent;
+            if (rec.children) {
+                rec.children = DataUtil.hierarchicalSort(rec.children, state, rec);
+            }
+            res.push(rec);
+        });
+
+        res = DataUtil.sort(res, state);
+
+        return res;
+    }
+
+    public static cloneTreeGridRecord(hierarchicalRecord: ITreeGridRecord) {
+        const rec: ITreeGridRecord = {
+            rowID: hierarchicalRecord.rowID,
+            data: hierarchicalRecord.data,
+            children: hierarchicalRecord.children,
+            isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
+            level: hierarchicalRecord.level,
+            expanded: hierarchicalRecord.expanded
+        };
+        return rec;
+    }
+
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);

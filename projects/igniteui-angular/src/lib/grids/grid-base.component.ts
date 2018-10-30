@@ -673,40 +673,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public emptyFilteredGridMessage = 'No records found.';
 
     /**
-     * An @Input property that sets the message displayed inside the GroupBy drop area where columns can be dragged on.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid dropAreaMessage="Drop here to group!">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
-
-    /**
-     * An @Input property that sets the template that will be rendered as a GroupBy drop area.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid [dropAreaTemplate]="dropAreaRef">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     *
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
-     * ```ts
-     * @ViewChild('myDropArea', { read: TemplateRef })
-     * public dropAreaRef: TemplateRef<any>;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaTemplate: TemplateRef<any>;
-
-    /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
@@ -1206,12 +1172,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    @ViewChild('defaultDropArea', { read: TemplateRef })
-    public defaultDropAreaTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
     public parentVirtDir: IgxGridForOfDirective<any>;
 
@@ -1673,7 +1633,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public get exportExcel(): boolean {
-        return this._exportExcel;
+        return this.getExportExcel();
     }
 
     /**
@@ -1702,7 +1662,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public get exportCsv(): boolean {
-        return this._exportCsv;
+        return this.getExportCsv();
     }
 
     /**
@@ -2757,10 +2717,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public deleteRowById(rowId: any) {
         let index: number;
+        const data = this.gridAPI.get_all_data(this.id);
         if (this.primaryKey) {
-            index = this.data.map((record) => record[this.primaryKey]).indexOf(rowId);
+            index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
         } else {
-            index = this.data.indexOf(rowId);
+            index = data.indexOf(rowId);
         }
         const state: State = this.transactions.getState(rowId);
         const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
@@ -2777,16 +2738,16 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             return;
         }
 
-        this.onRowDeleted.emit({ data: this.data[index] });
+        this.onRowDeleted.emit({ data: data[index] });
 
         //  if there is a row (index !== 0) delete it
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
             if (this.transactions.enabled) {
                 const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, this.data[index]);
+                this.transactions.add(transaction, data[index]);
             } else {
-                this.data.splice(index, 1);
+                this.deleteRowFromData(rowId, index);
             }
         } else {
             this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
@@ -2801,9 +2762,16 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.cdr.markForCheck();
 
         this.refreshSearch();
-        if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+        if (data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
             this.page--;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
+        this.data.splice(index, 1);
     }
 
     /**
@@ -3644,17 +3612,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     /**
-    * @hidden
-    */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
-    /**
      * @hidden
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
@@ -4387,7 +4344,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public get dataWithAddedInTransactionRows() {
-        const result = <any>cloneArray(this.data);
+        const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
             result.push(...this.transactions.aggregatedState(true)
                 .filter(t => t.type === TransactionType.ADD)
@@ -4398,6 +4355,20 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     private get dataLength() {
-        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.data.length;
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data(this.id).length;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportCsv(): boolean {
+        return this._exportCsv;
     }
 }

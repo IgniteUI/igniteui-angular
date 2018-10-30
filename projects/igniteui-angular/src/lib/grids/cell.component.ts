@@ -16,7 +16,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey } from '../core/utils';
+import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent } from './grid-base.component';
 
@@ -369,33 +369,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
-
-        if (this.column.cellClasses) {
-            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
-                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
-                if (value) {
-                    defaultClasses.push(name);
-                }
-            }, this);
-        }
-
-        const classList = {
-            'igx_grid__cell--edit': this.inEditMode,
-            'igx-grid__td--number': this.column.dataType === DataType.Number,
-            'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected,
-            'igx-grid__td--edited': this.dirty
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
+        return this.resolveStyleClasses();
     }
 
     /**
@@ -873,4 +847,44 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     }
 
+    /**
+     * @hidden
+     */
+    protected resolveStyleClasses(): string {
+        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
+
+        if (this.column.cellClasses) {
+            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
+                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
+                if (value) {
+                    defaultClasses.push(name);
+                }
+            }, this);
+        }
+
+        const classList = {
+            'igx_grid__cell--edit': this.inEditMode,
+            'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
+            'igx-grid__td--editing': this.inEditMode,
+            'igx-grid__th--pinned': this.column.pinned,
+            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--selected': this.selected,
+            'igx-grid__td--edited': this.dirty
+        };
+
+        Object.entries(classList).forEach(([klass, value]) => {
+            if (value) {
+                defaultClasses.push(klass);
+            }
+        });
+        return defaultClasses.join(' ');
+    }
+
+    /**
+     * @hidden
+     */
+    public calculateSizeToFit(range: any): number {
+        return Math.max(...Array.from(this.nativeElement.children)
+                   .map((child) => valToPxlsUsingRange(range, child)));
+    }
 }
