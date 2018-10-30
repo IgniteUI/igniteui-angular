@@ -403,7 +403,7 @@
 
     @if (function-exists('get-function')) {
         @return call(get-function(#{$theme}-theme));
-      } @else {
+    } @else {
         @return call((#{$theme}-theme));
     }
 }
