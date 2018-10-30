@@ -4,6 +4,7 @@ import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxGridCellComponent } from '../cell.component';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 @Component({
     selector: 'igx-tree-grid-row',
@@ -48,6 +49,14 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     @HostBinding('attr.aria-expanded')
     get expanded(): boolean {
         return this._treeRow.expanded;
+    }
+
+    set expanded(value: boolean) {
+        if (this._treeRow.children &&
+            this._treeRow.children.length > 0 &&
+            this._treeRow.expanded !== value) {
+            (this.gridAPI as IgxTreeGridAPIService).trigger_row_expansion_toggle(this.gridID, this, undefined);
+        }
     }
 
     /**

@@ -72,7 +72,8 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public onIndicatorFocus(event: Event) {
-        event.stopPropagation();
+        this.gridAPI.submit_value(this.gridID, false);
+        this._updateCellSelectionStatus(false, event);
     }
 
     /**
