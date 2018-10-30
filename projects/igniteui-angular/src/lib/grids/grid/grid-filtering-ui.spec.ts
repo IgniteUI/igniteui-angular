@@ -25,6 +25,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
+const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -1422,7 +1423,7 @@ describe('IgxGrid - Filtering actions', () => {
         spyOn(grid.onFilteringDone, 'emit');
 
         clearSuffix.nativeElement.dispatchEvent(new MouseEvent('click'));
-        simulateKeyboardKeyCode(input, 'keydown', KEYCODES.ENTER);
+        simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
         tick(100);
 
@@ -1960,7 +1961,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
         expect(input.componentInstance.value).toEqual('a');
 
-        simulateKeyboardKeyCode(input, 'keydown', KEYCODES.ENTER);
+        simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
 
         // Check focus is kept and chips is no longer selected.
@@ -2096,6 +2097,37 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const badge = fcIndicator.query(By.directive(IgxBadgeComponent));
         expect(badge.componentInstance.value).toBe(1);
     });
+
+    it('Should allow setting filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.columnWidth = '150px';
+        fix.detectChanges();
+
+        // Add initial filtering conditions
+        const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        columnsFilteringTree.filteringOperands = [
+            { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
+            { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains') }
+        ];
+        gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+        grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+        fix.detectChanges();
+
+        const colChips = getFilterChipsForColumn('ProductName', fix);
+        const colOperands = getFilterOperandsForColumn('ProductName', fix);
+        const colIndicator = getFilterIndicatorForColumn('ProductName', fix);
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(colChips.length).toEqual(1);
+        expect(GridFunctions.getChipText(colChips[0])).toEqual('a');
+        expect(colOperands.length).toEqual(0);
+
+        const indicatorBadge = colIndicator[0].query(By.directive(IgxBadgeComponent));
+        expect(indicatorBadge).toBeTruthy();
+        expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('1');
+    }));
 
     // Integration scenario
 
@@ -2309,10 +2341,13 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(text.trim()).toEqual('Angular');
     });
 
-    it('Should allow setting initial filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
+    // Filtering + Resizing
+    it('Should display view more indicator when column is resized so not all filters are visible.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
+        grid.columnWidth = '250px';
 
+        // Add initial filtering conditions
         const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
         const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         columnsFilteringTree.filteringOperands = [
@@ -2323,16 +2358,147 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         grid.filteringExpressionsTree = gridFilteringExpressionsTree;
         fix.detectChanges();
 
-        const colChips = getFilterChipsForColumn('ProductName', fix);
-        const colOperands = getFilterOperandsForColumn('ProductName', fix);
+        // Enable resizing
+        grid.columns.forEach(col => col.resizable = true);
+        fix.detectChanges();
 
-        expect(grid.rowList.length).toEqual(2);
+        let colChips = getFilterChipsForColumn('ProductName', fix);
+        let colOperands = getFilterOperandsForColumn('ProductName', fix);
+        let colIndicator = getFilterIndicatorForColumn('ProductName', fix);
+
         expect(colChips.length).toEqual(2);
+        expect(colOperands.length).toEqual(1);
+        expect(colIndicator.length).toEqual(0);
+
+        // Make 'ProductName' column smaller
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        const headerResArea = headers[1].nativeElement.children[2];
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
+        tick();
+        fix.detectChanges();
+
+        const resizer = headers[1].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
+        tick();
+
+        UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+        tick(100);
+        fix.detectChanges();
+
+        colChips = getFilterChipsForColumn('ProductName', fix);
+        colOperands = getFilterOperandsForColumn('ProductName', fix);
+        colIndicator = getFilterIndicatorForColumn('ProductName', fix);
+
+        expect(colChips.length).toEqual(1);
         expect(GridFunctions.getChipText(colChips[0])).toEqual('a');
-        expect(GridFunctions.getChipText(colChips[1])).toEqual('o');
+        expect(colOperands.length).toEqual(0);
+        expect(colIndicator.length).toEqual(1);
+
+        const indicatorBadge = colIndicator[0].query(By.directive(IgxBadgeComponent));
+        expect(indicatorBadge).toBeTruthy();
+        expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('1');
+    }));
+
+    // Filtering + Resizing
+    it('Should correctly resize the current column that filtering the row is rendered for.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.columnWidth = '250px';
+        fix.detectChanges();
+
+        // Enable resizing
+        grid.columns.forEach(col => col.resizable = true);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        const headerResArea = headers[1].nativeElement.children[2];
+        let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+
+        expect(filteringRow).toBeTruthy();
+        expect(headers[1].nativeElement.offsetWidth).toEqual(250);
+
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
+        tick();
+        fix.detectChanges();
+
+        const resizer = headers[1].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
+        tick();
+
+        UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
+        tick(100);
+        fix.detectChanges();
+
+        filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeTruthy();
+        expect(headers[1].nativeElement.offsetWidth).toEqual(150);
+    }));
+
+    // Filtering + Resizing
+    it('Should correctly render all filtering chips when column is resized so all filter are visible.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.columnWidth = '100px';
+        fix.detectChanges();
+
+        // Add initial filtering conditions
+        const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'Downloads');
+        columnsFilteringTree.filteringOperands = [
+            { fieldName: 'Downloads', searchVal: 25, condition: IgxNumberFilteringOperand.instance().condition('greaterThan') },
+            { fieldName: 'Downloads', searchVal: 200, condition: IgxNumberFilteringOperand.instance().condition('lessThan') }
+        ];
+        gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+        grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+        fix.detectChanges();
+
+        // Enable resizing
+        grid.columns.forEach(col => col.resizable = true);
+        fix.detectChanges();
+
+        let colChips = getFilterChipsForColumn('Downloads', fix);
+        let colOperands = getFilterOperandsForColumn('Downloads', fix);
+        let colIndicator = getFilterIndicatorForColumn('Downloads', fix);
+
+        expect(colChips.length).toEqual(0);
+        expect(colOperands.length).toEqual(0);
+        expect(colIndicator.length).toEqual(1);
+
+        const indicatorBadge = colIndicator[0].query(By.directive(IgxBadgeComponent));
+        expect(indicatorBadge).toBeTruthy();
+        expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('2');
+
+        // Make 'Downloads' column bigger
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        const headerResArea = headers[2].nativeElement.children[2];
+        UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
+        tick();
+        fix.detectChanges();
+
+        const resizer = headers[2].nativeElement.children[2].children[0];
+        expect(resizer).toBeDefined();
+        UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
+        tick();
+
+        UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
+        tick(100);
+        fix.detectChanges();
+
+        colChips = getFilterChipsForColumn('Downloads', fix);
+        colOperands = getFilterOperandsForColumn('Downloads', fix);
+        colIndicator = getFilterIndicatorForColumn('Downloads', fix);
+
+        expect(colChips.length).toEqual(2);
         expect(colOperands.length).toEqual(1);
         expect(colOperands[0].nativeElement.innerText).toEqual('AND');
-
+        expect(colIndicator.length).toEqual(0);
     }));
 });
 
@@ -2716,11 +2882,7 @@ function filterBy(condition: string, value: string, fix: ComponentFixture<any>) 
     const input = filterUIRow.query(By.directive(IgxInputDirective));
     sendInput(input, value, fix);
     // Enter key to submit
-    const kbEvt = document.createEvent('Event');
-    kbEvt['keyCode'] = 13;
-    kbEvt['key'] = 'Enter';
-    kbEvt.initEvent('keydown', false, true);
-    input.nativeElement.dispatchEvent(kbEvt);
+    simulateKeyboardEvent(input, 'keydown', 'Enter');
 }
 
 function resetFilterRow(fix: ComponentFixture<any> ) {
@@ -2749,24 +2911,23 @@ function simulateKeyboardEvent(element, eventName, inputKey) {
     element.nativeElement.dispatchEvent(new KeyboardEvent(eventName, { key: inputKey }));
 }
 
-// This specifically simulates keyboard events using keyCode property since it is readOnly.
-// When switching to `event.key` instead of the current `event.keyCode` switch to `simulateKeyboardEvent` instead.
-function simulateKeyboardKeyCode(element, eventName, keyCode) {
-    const keyboardEvent = new KeyboardEvent(eventName);
-    Object.defineProperty(keyboardEvent, 'keyCode', { value: keyCode, enumerable: true });
-    element.nativeElement.dispatchEvent(keyboardEvent);
-}
-
-function getFilterChipsForColumn(columnField, fix) {
-    const columnHeader = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
+function getColumnHeader(columnField: string, fix: ComponentFixture<any>) {
+    return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
         return header.componentInstance.column.field === columnField;
     });
+}
+
+function getFilterChipsForColumn(columnField: string, fix: ComponentFixture<any>) {
+    const columnHeader = getColumnHeader(columnField, fix);
     return columnHeader.parent.queryAll(By.directive(IgxChipComponent));
 }
 
-function getFilterOperandsForColumn(columnField, fix) {
-    const columnHeader = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
-        return header.componentInstance.column.field === columnField;
-    });
+function getFilterOperandsForColumn(columnField: string, fix: ComponentFixture<any>) {
+    const columnHeader = getColumnHeader(columnField, fix);
     return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_CONNECTOR));
+}
+
+function getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>) {
+    const columnHeader = getColumnHeader(columnField, fix);
+    return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_INDICATOR));
 }
