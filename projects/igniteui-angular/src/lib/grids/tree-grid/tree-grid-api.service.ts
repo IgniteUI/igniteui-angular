@@ -70,7 +70,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return indentationLevel < grid.expandedLevels;
+            return indentationLevel < grid.expansionDepth;
         }
     }
 
