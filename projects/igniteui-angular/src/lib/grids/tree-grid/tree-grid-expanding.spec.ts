@@ -50,11 +50,11 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         let rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(4);
 
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
 
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(4);
     });
@@ -92,7 +92,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         });
 
         for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
-            grid.toggleRowExpansion(grid.getRowByIndex(rowToToggle).rowID);
+            grid.toggleRow(grid.getRowByIndex(rowToToggle).rowID);
             for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
                 if (rowToCheck === rowToToggle) {
                     TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[rowToCheck]);
@@ -100,7 +100,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
                     TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                 }
             }
-            grid.toggleRowExpansion(grid.getRowByIndex(rowToToggle).rowID);
+            grid.toggleRow(grid.getRowByIndex(rowToToggle).rowID);
         }
 
         rows.forEach(row => {
@@ -119,7 +119,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
     });
 
     it('check second level records are having the correct indentation (API)', () => {
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
 
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // fix, rowIndex, expectedLevel
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 2, 1);
@@ -144,10 +144,10 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
 
     it('check third level records are having the correct indentation (API)', () => {
         // expand second level records
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
 
         // expand third level record
-        grid.toggleRowExpansion(grid.getRowByIndex(3).rowID);
+        grid.toggleRow(grid.getRowByIndex(3).rowID);
 
         // check third level records indentation
         TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 4, 2); // fix, rowIndex, expectedLevel
@@ -159,16 +159,16 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         expect(rows.length).toBe(4);
 
         // expand second level records
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
 
         // expand third level record
-        grid.toggleRowExpansion(grid.getRowByIndex(3).rowID);
+        grid.toggleRow(grid.getRowByIndex(3).rowID);
 
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(9);
 
         // collapse first row with all its children and grand children
-        grid.toggleRowExpansion(grid.getRowByIndex(0).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
 
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(4);
@@ -221,11 +221,11 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         let rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(3);
 
-        treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(5);
 
-        treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(3);
     });
