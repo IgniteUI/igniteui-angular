@@ -66,6 +66,7 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
+import { IgxGridRowComponent } from './grid';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -417,6 +418,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+
         this.onDensityChanged.emit();
     }
 
@@ -528,7 +530,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set height(value: any) {
+    public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
@@ -558,7 +560,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridComponent
      */
-    public set width(value: any) {
+    public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
@@ -1138,7 +1140,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public headerList: QueryList<IgxGridHeaderComponent>;
 
     @ViewChildren('row')
-    private _rowList: QueryList<any>;
+    private _rowList: QueryList<IgxGridRowComponent>;
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1933,7 +1935,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    protected _sortingExpressions = [];
+    protected _sortingExpressions: Array<ISortingExpression> = [];
     /**
      * @hidden
      */
@@ -3572,7 +3574,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
