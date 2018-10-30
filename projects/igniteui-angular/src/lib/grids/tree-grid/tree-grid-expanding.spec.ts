@@ -5,8 +5,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
 import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
+    configureTestSuite();
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -199,6 +202,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
 });
 
 describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
+    configureTestSuite();
     let fix;
     let treeGrid;
 

@@ -253,6 +253,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     //  and one without transaction
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -314,13 +315,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public update_row(value: any, id: string, rowID: any): void {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = this.get_row_index_in_data(id, rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = {
                 row: this.get_row_by_key(id, rowID),
                 cell: null,
-                currentValue: this.get(id).data[index],
+                currentValue: data[index],
                 newValue: value
             };
             grid.onEditDone.emit(args);
@@ -337,6 +339,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
             (grid as any)._pipeTrigger++;
         }
+    }
+
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data[index] = value;
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {

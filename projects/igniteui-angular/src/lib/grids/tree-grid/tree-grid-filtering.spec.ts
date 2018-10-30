@@ -6,8 +6,11 @@ import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../public_api';
 import { IgxTreeGridFilteringComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Filtering actions', () => {
+    configureTestSuite();
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [

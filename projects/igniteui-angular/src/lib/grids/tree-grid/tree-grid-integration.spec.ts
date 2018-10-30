@@ -8,8 +8,10 @@ import {
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Integration', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -55,6 +57,7 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Child Collection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -165,6 +168,7 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Primary/Foreign key', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

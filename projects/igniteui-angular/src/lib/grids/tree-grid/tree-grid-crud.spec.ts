@@ -8,11 +8,13 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxTreeGrid - CRUD', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -29,11 +31,14 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Create', () => {
         describe('Child Collection', () => {
-            beforeEach(() => {
+            configureTestSuite();
+
+            beforeEach(async() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
+                await wait();
                 fix.detectChanges();
             });
 
@@ -182,11 +187,13 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
-            beforeEach(() => {
+            configureTestSuite();
+            beforeEach(async() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
                 treeGrid.height = '800px';
+                await wait();
                 fix.detectChanges();
             });
 
@@ -280,6 +287,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update API', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -433,6 +441,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -561,7 +570,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 8, 8);
             });
 
-            it('should support updating a child row by changing the its original parentID', () => {
+            it('should support updating a child row by changing its original parentID', () => {
                 spyOn(treeGrid.onEditDone, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
@@ -657,6 +666,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Update UI', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -776,13 +786,12 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async(done) => {
+            it('should emit an event when editing a tree-grid cell through UI', async() => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 treeGrid.onEditDone.pipe(first()).subscribe((args) => {
                     expect(args.newValue).toBe(146);
-                    done();
                 });
 
                 cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
@@ -794,12 +803,14 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 UIInteractions.sendInput(editTemplate, '146');
                 await wait(DEBOUNCETIME);
+
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
             });
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
@@ -919,13 +930,12 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
             });
 
-            it('should emit an event when editing a tree-grid cell through UI', async(done) => {
+            it('should emit an event when editing a tree-grid cell through UI', async() => {
                 const cellComponent = treeGrid.getCellByColumn(0, 'ID');
                 const cellDomNumber = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 treeGrid.onEditDone.pipe(first()).subscribe((args) => {
                     expect(args.newValue).toBe(146);
-                    done();
                 });
 
                 cellDomNumber.triggerEventHandler('dblclick', new Event('dblclick'));
@@ -946,6 +956,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
     describe('Delete', () => {
         describe('Child Collection', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
                 fix.detectChanges();
@@ -1046,6 +1057,7 @@ describe('IgxTreeGrid - CRUD', () => {
         });
 
         describe('Primary/Foreign key', () => {
+            configureTestSuite();
             beforeEach(() => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();

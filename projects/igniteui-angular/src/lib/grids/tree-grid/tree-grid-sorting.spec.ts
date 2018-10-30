@@ -5,8 +5,10 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Sorting', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

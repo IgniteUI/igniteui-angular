@@ -76,54 +76,43 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public add_child_row(id: string, parentRowID: any, data: any) {
-        // TREE-GRID
-        // const grid = this.get(id);
-        // const parentRecord = grid.treeGridRecordsMap.get(parentRowID);
+        const grid = this.get(id);
+        const parentRecord = grid.treeGridRecordsMap.get(parentRowID);
 
-        // if (!parentRecord) {
-        //     return;
-        // }
+        if (!parentRecord) {
+            return;
+        }
 
-        // if (grid.primaryKey && grid.foreignKey) {
-        //     data[grid.foreignKey] = parentRowID;
-        //     this.add_row(id, data);
-        // } else {
-        //     const parentData = parentRecord.data;
-        //     const childKey = grid.childDataKey;
-        //     if (!parentData[childKey]) {
-        //         parentData[childKey] = [];
-        //     }
-        //     parentData[childKey].push(data);
-        //     this.trigger_row_added(id, data);
-        // }
-    }
+        if (grid.primaryKey && grid.foreignKey) {
+            data[grid.foreignKey] = parentRowID;
+            grid.addRow(data);
+        } else {
+            const parentData = parentRecord.data;
+            const childKey = grid.childDataKey;
+            if (!parentData[childKey]) {
+                parentData[childKey] = [];
+            }
+            parentData[childKey].push(data);
 
-    protected delete_row_from_array(id: string, rowID: any, index: number) {
-        // TREE-GRID
-        // const grid = this.get(id);
-        // if (grid.primaryKey && grid.foreignKey) {
-        //     super.delete_row_from_array(id, rowID, index);
-        // } else {
-        //     const record = grid.treeGridRecordsMap.get(rowID);
-        //     const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
-        //     index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
-        //         childData.indexOf(rowID);
-        //     childData.splice(index, 1);
-        // }
+            grid.onRowAdded.emit({ data });
+            (grid as any)._pipeTrigger++;
+            grid.cdr.markForCheck();
+
+            grid.refreshSearch();
+        }
     }
 
     protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
-        // TREE-GRID
-        // const grid = this.get(id);
-        // if (grid.primaryKey && grid.foreignKey) {
-        //     super.update_row_in_array(id, value, rowID, index);
-        // } else {
-        //     const record = grid.treeGridRecordsMap.get(rowID);
-        //     const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
-        //     index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
-        //         childData.indexOf(rowID);
-        //     childData[index] = value;
-        // }
+        const grid = this.get(id);
+        if (grid.primaryKey && grid.foreignKey) {
+            super.update_row_in_array(id, value, rowID, index);
+        } else {
+            const record = grid.treeGridRecordsMap.get(rowID);
+            const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
+            index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData[index] = value;
+        }
     }
 
     public should_apply_number_style(column: IgxColumnComponent): boolean {

@@ -64,7 +64,8 @@
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
+    <!-- Hiding until summaries are implemented for TreeGrid -->
+    <!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
         <ng-container *ngIf="summariesMargin">
             <div
             class="igx-grid__summaries-patch"
@@ -78,7 +79,7 @@
         <ng-template igxGridFor let-col [igxGridForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
             <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
         </ng-template>
-    </div>
+    </div> -->
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
@@ -100,11 +101,6 @@
 
 <ng-template #defaultEmptyGrid>
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
-</ng-template>
-
-<ng-template #defaultDropArea>
-    <igx-icon fontSet="material" class="igx-drop-area__icon">group_work</igx-icon>
-    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
