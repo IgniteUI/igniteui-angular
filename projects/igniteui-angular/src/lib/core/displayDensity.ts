@@ -67,7 +67,7 @@ export class DisplayDensityBase implements DoCheck {
                 oldDensity: currentDisplayDensity,
                 newDensity: this._displayDensity
             };
-        this.onDensityChanged.emit(densityChangedArgs);
+            this.onDensityChanged.emit(densityChangedArgs);
         }
     }
 
