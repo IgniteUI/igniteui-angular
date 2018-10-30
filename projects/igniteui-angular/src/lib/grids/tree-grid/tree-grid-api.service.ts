@@ -99,33 +99,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public add_child_row(id: string, parentRowID: any, data: any) {
-        const grid = this.get(id);
-        const parentRecord = grid.records.get(parentRowID);
-
-        if (!parentRecord) {
-            throw Error('Invalid parent row ID!');
-        }
-
-        if (grid.primaryKey && grid.foreignKey) {
-            data[grid.foreignKey] = parentRowID;
-            grid.addRow(data);
-        } else {
-            const parentData = parentRecord.data;
-            const childKey = grid.childDataKey;
-            if (!parentData[childKey]) {
-                parentData[childKey] = [];
-            }
-            parentData[childKey].push(data);
-
-            grid.onRowAdded.emit({ data });
-            (grid as any)._pipeTrigger++;
-            grid.cdr.markForCheck();
-
-            grid.refreshSearch();
-        }
-    }
-
     protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
         const grid = this.get(id);
         if (grid.primaryKey && grid.foreignKey) {

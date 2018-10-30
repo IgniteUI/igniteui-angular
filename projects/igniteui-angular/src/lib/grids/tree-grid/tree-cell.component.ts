@@ -43,7 +43,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public get indentation() {
-        return this.row.indentation;
+        return this.row.treeRow.level;
     }
 
     /**
@@ -72,7 +72,8 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public onIndicatorFocus(event: Event) {
-        event.stopPropagation();
+        this.gridAPI.submit_value(this.gridID, false);
+        this._updateCellSelectionStatus(false, event);
     }
 
     /**

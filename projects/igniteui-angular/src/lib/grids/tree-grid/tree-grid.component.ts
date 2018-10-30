@@ -212,7 +212,29 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     public addRow(data: any, parentRowID?: any) {
         if (parentRowID) {
-            this._gridAPI.add_child_row(this.id, parentRowID, data);
+            const parentRecord = this.records.get(parentRowID);
+
+            if (!parentRecord) {
+                throw Error('Invalid parent row ID!');
+            }
+
+            if (this.primaryKey && this.foreignKey) {
+                data[this.foreignKey] = parentRowID;
+                super.addRow(data);
+            } else {
+                const parentData = parentRecord.data;
+                const childKey = this.childDataKey;
+                if (!parentData[childKey]) {
+                    parentData[childKey] = [];
+                }
+                parentData[childKey].push(data);
+
+                this.onRowAdded.emit({ data });
+                this._pipeTrigger++;
+                this.cdr.markForCheck();
+
+                this.refreshSearch();
+            }
         } else {
             super.addRow(data);
         }

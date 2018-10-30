@@ -23,7 +23,7 @@ import {
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from '../cell.component';
-import { TransactionType } from '../../services';
+import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
@@ -2688,6 +2688,71 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(cell.value).toBe('Updated value');
+            }));
+
+            it(`Should not log a transaction when a cell's value does not change`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const initialState = grid.transactions.aggregatedState(false);
+                expect(cell.value).toBe('Chai');
+
+                // Set to same value
+                cell.update('Chai');
+                tick();
+                fixture.detectChanges();
+                expect(cell.value).toBe('Chai');
+                expect(grid.transactions.aggregatedState(false)).toEqual(initialState);
+
+                // Change value and check if it's logged
+                cell.update('Updated value');
+                tick();
+                fixture.detectChanges();
+                expect(cell.value).toBe('Updated value');
+                const expectedTransaction: Transaction = {
+                    id: 1,
+                    newValue: {ProductName: 'Updated value'},
+                    type: TransactionType.UPDATE
+                };
+                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
+            }));
+
+            it(`Should not log a transaction when a cell's value does not change - Date`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const cellStock = grid.getCellByColumn(0, 'UnitsInStock');
+                const cellDate = grid.getCellByColumn(0, 'OrderDate');
+                const initialCellValue = cellDate.value;
+                const initialState = grid.transactions.aggregatedState(false);
+
+                // Enter edit mode
+                cellDate.onKeydownEnterEditMode({ stopPropagation: () => {}, preventDefault: () => {}});
+                tick();
+                fixture.detectChanges();
+                // Perform Shift + Tab to UnitsInStock
+                cellDate.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'tab', shiftKey: true, code: 'tab'}));
+                tick();
+                fixture.detectChanges();
+                // Exit edit mode
+                grid.endRowEdit(true);
+                tick();
+                fixture.detectChanges();
+                expect(grid.transactions.aggregatedState(false)).toEqual(initialState);
+
+                const newValue = new Date('01/01/2000');
+                cellDate.update(newValue);
+                tick();
+                fixture.detectChanges();
+                const expectedTransaction: Transaction = {
+                    id: 1,
+                    newValue: {OrderDate: newValue},
+                    type: TransactionType.UPDATE
+                };
+                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
             }));
 
             it('Should allow to change of a cell in added row in grid with transactions', fakeAsync(() => {
