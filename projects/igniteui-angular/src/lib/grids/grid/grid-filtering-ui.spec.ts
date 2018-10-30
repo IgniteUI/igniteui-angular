@@ -2718,6 +2718,7 @@ function filterBy(condition: string, value: string, fix: ComponentFixture<any>) 
     // Enter key to submit
     const kbEvt = document.createEvent('Event');
     kbEvt['keyCode'] = 13;
+    kbEvt['key'] = 'Enter';
     kbEvt.initEvent('keydown', false, true);
     input.nativeElement.dispatchEvent(kbEvt);
 }
