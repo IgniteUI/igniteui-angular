@@ -2677,7 +2677,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param data
      * @memberof IgxGridComponent
      */
-    public addRow(data: any): void {
+    public addRow(data: any, parentID?: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         if (this.transactions.enabled) {

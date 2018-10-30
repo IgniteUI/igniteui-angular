@@ -79,7 +79,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const parentRecord = grid.records.get(parentRowID);
 
         if (!parentRecord) {
-            return;
+            throw Error('Invalid parent row ID!');
         }
 
         if (grid.primaryKey && grid.foreignKey) {

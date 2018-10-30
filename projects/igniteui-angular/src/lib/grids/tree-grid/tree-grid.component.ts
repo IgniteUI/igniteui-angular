@@ -210,8 +210,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.expansionStates = new Map<any, boolean>();
     }
 
-    public addChildRow(parentRowID: any, data: any) {
-        this._gridAPI.add_child_row(this.id, parentRowID, data);
+    public addRow(data: any, parentRowID?: any) {
+        if (parentRowID) {
+            this._gridAPI.add_child_row(this.id, parentRowID, data);
+        } else {
+            super.addRow(data);
+        }
     }
 
     /**
