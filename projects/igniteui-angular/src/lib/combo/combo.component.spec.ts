@@ -664,14 +664,14 @@ describe('igxCombo', () => {
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
-                        combo.dropdown.verticalScrollContainer.scrollTo(6);
+                        combo.dropdown.verticalScrollContainer.scrollTo(10);
                         setTimeout(function () {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                             expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                             expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
-                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[5]);
+                            expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[11]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {
                                 fixture.detectChanges();
@@ -2016,19 +2016,21 @@ describe('igxCombo', () => {
 
             const verifyComboData = function () {
                 fixture.detectChanges();
+                let ind = combo.dropdown.verticalScrollContainer.state.startIndex;
                 for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
-                    expect(combo.data[itemIndex].id).toEqual(productIndex);
-                    expect(combo.data[itemIndex].product).toEqual('Product ' + productIndex);
+                    expect(combo.data[itemIndex].id).toEqual(ind);
+                    expect(combo.data[itemIndex].product).toEqual('Product ' + ind);
                     const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
                     const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                    expect(dropdownItems[itemIndex].innerText.trim()).toEqual('Product ' + productIndex);
-                    productIndex++;
+                    expect(dropdownItems[itemIndex].innerText.trim()).toEqual('Product ' + ind);
+                    ind++;
                 }
             };
 
             combo.toggle();
             fixture.detectChanges();
             verifyComboData();
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex).toEqual(productIndex);
             await wait(10);
 
             productIndex = 42;
@@ -2036,6 +2038,9 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
+            // index is at bottom
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
+            .toEqual(productIndex);
             await wait(20);
 
             productIndex = 485;
@@ -2043,6 +2048,9 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
+            // index is at bottom
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
+            .toEqual(productIndex);
             await wait(20);
 
             productIndex = 873;
