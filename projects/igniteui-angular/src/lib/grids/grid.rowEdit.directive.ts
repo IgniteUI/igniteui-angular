@@ -6,9 +6,17 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 @Directive({
     selector: '[igxRowEdit]'
 })
-export class IgxRowEditTemplateDirective {
-    constructor(public element: ElementRef) {}
-}
+export class IgxRowEditTemplateDirective { }
+
+@Directive({
+    selector: '[igxRowEditText]'
+})
+export class IgxRowEditTextDirective { }
+
+@Directive({
+    selector: '[igxRowEditActions]'
+})
+export class IgxRowEditActionsDirective { }
 
 @Directive({
     selector: `[igxRowEditTabStop]`
