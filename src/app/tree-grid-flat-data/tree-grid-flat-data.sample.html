@@ -5,7 +5,10 @@
 
     <div class="sample-content">
         <div class="sample-column">
-            <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true" [paging]="false" 
+            <div class="density-chooser" style="margin-bottom: 16px">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+            </div>
+            <igx-tree-grid #grid1 [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelectable]="true" [paging]="false" [displayDensity]="density"
                            [width]="'900px'" [height]="'500px'"
                            [showToolbar]="true"
                            [columnHiding]="true"
@@ -33,7 +36,7 @@
                 </igx-column>
             </igx-tree-grid>
 
-            <div>
+            <div class="topMargin">
                 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
                 <igx-switch [(ngModel)]="grid1.rowEditable">Enable Row Editing</igx-switch>
                 <div class="sample-buttons">

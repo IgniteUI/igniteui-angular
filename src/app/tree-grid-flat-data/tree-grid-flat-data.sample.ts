@@ -15,7 +15,16 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
+    public density = 'compact';
+    public displayDensities;
+
     public ngOnInit(): void {
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
+
         this.columns = [
             { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number' },
             { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string' },
@@ -59,5 +68,9 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public addRow() {
         this.grid1.addRow({ 'employeeID': 24, 'PID': 5, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }
