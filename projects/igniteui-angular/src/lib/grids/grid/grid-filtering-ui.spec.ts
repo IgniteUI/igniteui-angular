@@ -19,6 +19,7 @@ import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.co
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { KEYCODES } from '../../core/utils';
+import { IgxBadgeComponent } from '../../badge/badge.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
@@ -2041,6 +2042,73 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(grid.rowList.length).toEqual(8);
         expect(initialChips.length).toEqual(5);
     }));
+
+    it('should update UI when filtering via the API.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.columnWidth = '400px';
+        fix.detectChanges();
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        const expression1 = {
+            fieldName: 'ProductName',
+            searchVal: 'Angular',
+            condition: IgxStringFilteringOperand.instance().condition('contains')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        filteringExpressionsTree.filteringOperands.push(expression1);
+        grid.filter('ProductName', null, filteringExpressionsTree);
+        grid.filter('Released', true, IgxBooleanFilteringOperand.instance().condition('false'));
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(0);
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChips = filteringCells[1].queryAll(By.css('igx-chip'));
+        const boolCellChips = filteringCells[3].queryAll(By.css('igx-chip'));
+        const strConnector = filteringCells[1].query(By.css('.igx-filtering-chips__connector'));
+
+        expect(strConnector.nativeElement.textContent.trim()).toBe('And');
+        expect(stringCellChips.length).toBe(2);
+        expect(boolCellChips.length).toBe(1);
+
+        const stringCellText1 = stringCellChips[0].query(By.css('.igx-chip__content'));
+        expect(stringCellText1.nativeElement.textContent.trim()).toBe('Ignite');
+
+        const stringCellText2 = stringCellChips[1].query(By.css('.igx-chip__content'));
+        expect(stringCellText2.nativeElement.textContent.trim()).toBe('Angular');
+
+        const boolCellText = boolCellChips[0].query(By.css('.igx-chip__content'));
+        expect(boolCellText.nativeElement.textContent.trim()).toBe('False');
+    });
+
+    it('should display view more icon in filter cell if chips don\'t fit in the cell.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Starts With', 'IgniteUI', fix);
+        filterBy('Contains', 'for', fix);
+        closeFilterRow(fix);
+        // check 1 chip and view more icon is displayed.
+        const chips = filteringCells[1].queryAll(By.css('igx-chip'));
+        expect(chips.length).toEqual(1);
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const fcIndicator = filteringCells[1].query(By.css('.igx-grid__filtering-cell-indicator'));
+        expect(fcIndicator).not.toBe(null);
+        const badge = fcIndicator.query(By.directive(IgxBadgeComponent));
+        expect(badge.componentInstance.value).toBe(1);
+    });
 });
 
 export class CustomFilter extends IgxFilteringOperand {
