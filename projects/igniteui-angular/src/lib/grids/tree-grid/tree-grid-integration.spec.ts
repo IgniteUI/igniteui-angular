@@ -277,7 +277,7 @@ describe('IgxTreeGrid - Integration', () => {
         });
     });
 
-    fdescribe('Row editing', () => {
+    describe('Row editing', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
@@ -289,7 +289,7 @@ describe('IgxTreeGrid - Integration', () => {
             // Verify the overlay has the same width as the row that is edited
         }));
 
-        fit('shows the banner below the edited parent node', fakeAsync(() => {
+        it('shows the banner below the edited parent node', fakeAsync(() => {
             // TODO
             // Test in expanded/collapsed mode for the parent nodes
 

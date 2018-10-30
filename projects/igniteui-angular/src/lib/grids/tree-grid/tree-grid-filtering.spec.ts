@@ -275,4 +275,48 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(7);
     });
 
+    describe('Filtering: Row editing', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridFilteringREComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('a filtered parent row removes the row from the list.', fakeAsync(() => {
+            // TODO
+            // 1.) Filter by any condition
+            // 2.) Edit a parent row that meets the filtering condition so that it is not meeting it anymore
+            // 3.) Verify the parent node and its children are removed from the filtered list
+            // 4.) Remove filtering
+            // 5.) Verify the update is preserved
+        }));
+
+        it('a parent row  that has filtered child does not remove it from the list.', fakeAsync(() => {
+            // TODO
+            // 1.) Filter by any condition
+            // 2.) Edit a parent row that has a child that meets the filtering condition
+            // 3.) Verify the parent node and its children are still present in the filtered list
+            // 4.) Remove filtering
+            // 5.) Verify the update is preserved
+        }));
+
+        it('a filtered child row removes the row from the list.', fakeAsync(() => {
+            // TODO
+            // 1.) Filter by any condition
+            // 2.) Edit a child row that is the only one meeting the filtering condition
+            // 3.) Verify the parent node and its children are removed from the filtered list
+            // 4.) Remove filtering
+            // 5.) Verify the update is preserved
+        }));
+
+        it('a filtered child row keeps its parent in the list.', fakeAsync(() => {
+            // TODO
+            // 1.) Filter by any condition
+            // 2.) Edit a child row that has sibilings meeting the filtering condition
+            // 3.) Verify the updated node is removed from the filtered list
+            // 4.) Verify the parent and the sibilings are not removed from the filtered list
+            // 4.) Remove filtering
+            // 5.) Verify the update is preserved
+        }));
+    });
 });
