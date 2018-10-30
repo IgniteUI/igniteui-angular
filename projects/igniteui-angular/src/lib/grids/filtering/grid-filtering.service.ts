@@ -83,7 +83,9 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         this.grid.filter(field, null, expressionsTree);
-        this.grid.onFilteringDone.emit(expressionsTree);
+
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(expressionsTree));
 
         this.isFiltering = false;
     }
@@ -94,7 +96,9 @@ export class IgxFilteringService implements OnDestroy {
         this.grid.clearFilter(field);
         
         const expr = this.grid.filteringExpressionsTree.find(field);
-        this.grid.onFilteringDone.emit(expr as FilteringExpressionsTree);
+
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(expr as FilteringExpressionsTree));
 
         const expressions = this.getExpressions(field);
         expressions.length = 0;
