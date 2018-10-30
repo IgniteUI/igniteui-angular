@@ -23,6 +23,7 @@ import { IgxBadgeComponent } from '../../badge/badge.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONTAINER = 'igx-grid-filter';
+const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 
 describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
@@ -2109,6 +2110,31 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const badge = fcIndicator.query(By.directive(IgxBadgeComponent));
         expect(badge.componentInstance.value).toBe(1);
     });
+
+    it('Should allow setting initial filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+
+        const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+        const columnsFilteringTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        columnsFilteringTree.filteringOperands = [
+            { fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains') },
+            { fieldName: 'ProductName', searchVal: 'o', condition: IgxStringFilteringOperand.instance().condition('contains') }
+        ];
+        gridFilteringExpressionsTree.filteringOperands.push(columnsFilteringTree);
+        grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+        fix.detectChanges();
+
+        const colChips = getFilterChipsForColumn('ProductName', fix);
+        const colOperands = getFilterOperandsForColumn('ProductName', fix);
+
+        expect(grid.rowList.length).toEqual(2);
+        expect(colChips.length).toEqual(2);
+        expect(GridFunctions.getChipText(colChips[0])).toEqual('a');
+        expect(GridFunctions.getChipText(colChips[1])).toEqual('o');
+        expect(colOperands.length).toEqual(1);
+        expect(colOperands[0].nativeElement.innerText).toEqual('AND');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -2509,4 +2535,18 @@ function simulateKeyboardKeyCode(element, eventName, keyCode) {
     const keyboardEvent = new KeyboardEvent(eventName);
     Object.defineProperty(keyboardEvent, 'keyCode', { value: keyCode, enumerable: true });
     element.nativeElement.dispatchEvent(keyboardEvent);
+}
+
+function getFilterChipsForColumn(columnField, fix) {
+    const columnHeader = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
+        return header.componentInstance.column.field === columnField;
+    });
+    return columnHeader.parent.queryAll(By.directive(IgxChipComponent));
+}
+
+function getFilterOperandsForColumn(columnField, fix) {
+    const columnHeader = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
+        return header.componentInstance.column.field === columnField;
+    });
+    return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_CONNECTOR));
 }
