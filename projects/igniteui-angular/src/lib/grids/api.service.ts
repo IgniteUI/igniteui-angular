@@ -336,7 +336,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-
+        strategy = strategy ? strategy : this.get_column_by_name(this.get(id).id, fieldName).sortStrategy;
         this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
@@ -348,6 +348,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
+            each.strategy = each.strategy ? each.strategy : this.get_column_by_name(this.get(id).id, each.fieldName).sortStrategy;
             this.prepare_sorting_expression([sortingState], each);
         }
 
@@ -458,7 +459,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }
 
     protected prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
-        DataUtil.mergeDefaultProperties(expression, SortingStateDefaults);
         if (expression.dir === SortingDirection.None) {
             stateCollections.forEach(state => {
                 state.splice(state.findIndex((expr) => expr.fieldName === expression.fieldName), 1);
