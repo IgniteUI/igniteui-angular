@@ -19,7 +19,6 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
-import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -45,7 +44,6 @@ import {
 import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
-import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 import { TransactionService } from '../services';
@@ -70,9 +68,7 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
-        IgxGridFilterComponent,
         IgxGridFilterConditionPipe,
-        IgxGridFilterExpressionComponent,
         IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
@@ -90,7 +86,6 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridFilterComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
