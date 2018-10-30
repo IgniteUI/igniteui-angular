@@ -122,7 +122,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation, filteringService);
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                  filteringService);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 

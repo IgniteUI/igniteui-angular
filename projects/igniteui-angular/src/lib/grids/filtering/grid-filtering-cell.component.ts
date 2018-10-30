@@ -160,7 +160,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     public onChipClicked(expression?: IFilteringExpression) {
         if (expression) {
-            this.expressionsList.forEach((item)=> {
+            this.expressionsList.forEach((item) => {
                 if (item.expression === expression) {
                     item.isSelected = true;
                 } else {
@@ -168,7 +168,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 }
             });
         } else if (this.expressionsList.length > 0) {
-            this.expressionsList.forEach((item)=> {
+            this.expressionsList.forEach((item) => {
                 item.isSelected = false;
             });
             this.expressionsList[0].isSelected = true;
@@ -198,7 +198,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth;
-            
+
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
@@ -256,13 +256,14 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                             if (this.moreIcon.nativeElement === document.activeElement) {
                                 this.navService.goToFirstCell();
                             }
-                        } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) === document.activeElement) {
+                        } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) ===
+                                   document.activeElement) {
                             this.navService.goToFirstCell();
                         }
                     } else {
                         this.navService.goToFirstCell();
                     }
-                    
+
                 } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
                     eventArgs.preventDefault();
                     this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex + 1);
@@ -276,12 +277,12 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         return {
             [this.baseClass]: !this.getIsMoreIconVisible(),
             [`${this.baseClass}--hidden`]: this.getIsMoreIconVisible()
-        }
+        };
     }
 
     public focusChip() {
         if (this.currentTemplate === this.defaultFilter) {
-            if(this.getIsMoreIconVisible() === false) {
+            if (this.getIsMoreIconVisible() === false) {
                 this.moreIcon.nativeElement.focus();
             } else {
                 this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();

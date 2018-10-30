@@ -194,8 +194,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
                     !this.grid.filteringService.isFilterComplex(this.column.field)) {
                     this.grid.filteringService.filteredColumn = this.column;
                 }
-            }
-            else if (this.column.sortable) {
+            } else if (this.column.sortable) {
                 const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
                 const sortDir = groupingExpr ?
                     this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc

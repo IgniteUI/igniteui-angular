@@ -55,7 +55,7 @@ export class IgxFilteringService implements OnDestroy {
         return this.gridAPI.get(this.gridId);
     }
 
-    public subscribeToEvents(){
+    public subscribeToEvents() {
         if (!this.isColumnResizedSubscribed) {
             this.isColumnResizedSubscribed = true;
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {

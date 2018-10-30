@@ -134,7 +134,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(this.locale);
     private chipsAreaWidth: number;
-    private offset: number = 0;
+    private offset = 0;
     private conditionChanged = new Subject();
     private unaryConditionChanged = new Subject();
     private _column = null;
@@ -471,7 +471,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.selected) {
             if (this.chipsArea.chipsList) {
                 this.chipsArea.chipsList.forEach((chip) => {
-                    if(chip !== eventArgs.owner) {
+                    if (chip !== eventArgs.owner) {
                         chip.selected = false;
                     }
                 });
@@ -583,7 +583,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (count <= 2) {
             this.offset = 0;
         } else {
-            let dif = chipAraeChildren[count].id === 'chip' ? count - 2 : count - 1;
+            const dif = chipAraeChildren[count].id === 'chip' ? count - 2 : count - 1;
             this.offset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[dif].getBoundingClientRect().left) + 1;
         }
 
