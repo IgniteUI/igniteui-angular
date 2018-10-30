@@ -10,6 +10,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
+    let fix;
+    let grid;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -23,11 +25,13 @@ describe('IgxTreeGrid - Filtering actions', () => {
         .compileComponents();
     }));
 
-    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
+    beforeEach(() => {
+        fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
+        grid = fix.componentInstance.treeGrid;
+    });
 
+    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -59,10 +63,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a string column using the \'endswith\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -94,10 +94,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a number column using the \'greaterThan\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -135,10 +131,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a number column using the \'lessThan\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -176,10 +168,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a date column using the \'before\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -217,10 +205,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a date column using the \'after\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -261,10 +245,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should allow row collapsing after filtering is applied', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
