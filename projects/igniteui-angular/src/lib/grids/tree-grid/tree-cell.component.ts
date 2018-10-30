@@ -43,7 +43,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public get indentation() {
-        return this.row.indentation;
+        return this.row.treeRow.level;
     }
 
     /**
