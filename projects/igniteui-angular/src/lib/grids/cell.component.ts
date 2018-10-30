@@ -722,6 +722,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
+        if (event.altKey) {
+            if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+                (this.gridAPI as any).trigger_row_expansion_toggle(this.gridID, this.row, event);
+            }
+            return;
+        }
+
         const args = {cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
@@ -886,5 +893,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
                    .map((child) => valToPxlsUsingRange(range, child)));
+    }
+
+    private isToggleKey(key) {
+        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
     }
 }

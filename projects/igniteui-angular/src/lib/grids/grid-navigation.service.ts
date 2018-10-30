@@ -438,10 +438,12 @@ export class IgxGridNavigationService {
             this.grid.nativeElement.querySelector(
                 `igx-grid-row[data-rowindex="${index}"]`);
     }
+
     private getAllRows() {
         return this.isTreeGrid ? this.grid.nativeElement.querySelectorAll('igx-tree-grid-row') :
         this.grid.nativeElement.querySelectorAll('igx-grid-row');
     }
+
     private get isTreeGrid() {
         return this.grid.nativeElement.tagName.toLowerCase() === 'igx-tree-grid';
     }
