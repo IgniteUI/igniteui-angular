@@ -166,6 +166,17 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
+    /**
+     * Returns if the `IgxGridComponent` has summarized columns.
+     * ```typescript
+     * const summarizedGrid = this.grid.hasSummarizedColumns;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    get hasSummarizedColumns(): boolean {
+        return false;
+    }
+
     private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
@@ -203,6 +214,41 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI.add_child_row(this.id, parentRowID, data);
     }
 
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
+         if (this.primaryKey && this.foreignKey) {
+            super.deleteRowFromData(rowID, index);
+        } else {
+            const record = this.treeGridRecordsMap.get(rowID);
+            const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
+            index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
+                childData.indexOf(rowID);
+            childData.splice(index, 1);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected calcMaxSummaryHeight() {
+        return 0;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportExcel(): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportCsv(): boolean {
+        return false;
+    }
 
     /**
     * @hidden

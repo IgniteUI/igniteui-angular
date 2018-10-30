@@ -9,8 +9,11 @@ import { TreeGridFunctions,
          TREE_ROW_SELECTION_CSS_CLASS,
          TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Selection', () => {
+    configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -26,6 +29,7 @@ describe('IgxTreeGrid - Selection', () => {
     }));
 
     describe('API Row Selection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -192,6 +196,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('UI Row Selection', () => {
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -302,6 +307,7 @@ describe('IgxTreeGrid - Selection', () => {
         }));
 
         it('should update header checkbox when reselecting all filtered-in rows', fakeAsync(() => {
+            pending('General Grid Issue #2793');
             treeGrid.filter('Age', 30, IgxNumberFilteringOperand.instance().condition('lessThan'));
             tick(100);
 
@@ -369,7 +375,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('Cell Selection', () => {
-
+        configureTestSuite();
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
@@ -478,23 +484,26 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells.length).toBe(0);
         });
 
-        it('should persist selection after scrolling', () => {
+        it('should persist selection after scrolling', async () => {
             treeGrid.paging = false;
             fix.detectChanges();
 
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            await wait();
             fix.detectChanges();
 
             // scroll down 150 pixels
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait();
             fix.detectChanges();
 
             // then scroll back to top
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            await wait();
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
