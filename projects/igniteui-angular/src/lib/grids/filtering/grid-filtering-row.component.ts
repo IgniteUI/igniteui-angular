@@ -443,7 +443,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public toggleOperatorsDropDown(eventArgs, index) {
-        this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target;
+        this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target.parentElement;
         this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
     }
 
