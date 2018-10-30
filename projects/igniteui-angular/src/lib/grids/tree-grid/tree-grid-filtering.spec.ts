@@ -4,9 +4,10 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../public_api';
-import { IgxTreeGridFilteringComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { fixMarkup } from 'highlight.js';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
@@ -22,7 +23,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(() => {
@@ -259,8 +260,9 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     describe('Filtering: Row editing', () => {
+        let treeGrid;
         beforeEach(() => {
-            fix = TestBed.createComponent(IgxTreeGridFilteringREComponent);
+            fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
         });
