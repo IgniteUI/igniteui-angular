@@ -49,7 +49,7 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
     - A new boolean `hideGroupedColumns` input controls whether the grouped columns should be hidden as well (defaults to false).
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.
-    - `sortStrategy` input exposed to provide custom sort strategy for the `igxGrid`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStragey` class and override all or some of its public/protected members.
+    - `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStragey` class and override all or some of its public/protected members.
 - `igxFor`
     - Added support for variable heights.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
@@ -155,6 +155,11 @@ When you focus a specific cell and press one of the following key combinations, 
     - For more detailed information see the [official keyboard navigation specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
     
 ## 6.1.8
+
+### General
+
+- `igxGrid`
+    - `sortStrategy` input exposed to provide custom sort strategy for the `igxGridColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStragey` class and override all or some of its public/protected members.
 
 ### Bug fixes
 
