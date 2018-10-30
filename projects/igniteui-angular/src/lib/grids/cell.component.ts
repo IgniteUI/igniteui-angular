@@ -526,7 +526,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.selected) {
             return;
         }
-        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current editted row
+        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current edited row
         const inEditRow = this.belongsToEditRow; // Check if cell is in current editable mode, if any
         this._clearCellSelection();
         this._saveCellSelection();
@@ -538,8 +538,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (editRowState) { // If there is a row being edited
                 if (inEditRow && !this.column.editable) { // and this cell is in the row and is NOT editable, submit the values and close
                     this.exitRowEdit(true, true, editRowState);
-                } else if (!inEditRow) { // or this is not in the editted row
-                    this.exitRowEdit(true, !this.column.editable, editRowState); // submit data and close the overlay depending on editable
                 }
             }
             this.selected = true;
@@ -560,7 +558,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
         const grid = this.grid;
-        if (grid.rowEditable) {
+        if (grid.rowEditable/*  && grid.rowChangesCount */) {
             grid.endRowTransaction(commit, close, row);
         }
     }
