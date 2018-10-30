@@ -8,6 +8,9 @@ import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent 
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { fixMarkup } from 'highlight.js';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
+import { TreeGridSampleComponent } from 'src/app/tree-grid/tree-grid.sample';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
@@ -261,20 +264,40 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     describe('Filtering: Row editing', () => {
-        let treeGrid;
+        let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
         });
 
-        it('a filtered parent row removes the row from the list.', fakeAsync(() => {
+        it('it should remove a filtered parent row from the filtered list', fakeAsync(() => {
             // TODO
             // 1.) Filter by any condition
             // 2.) Edit a parent row that meets the filtering condition so that it is not meeting it anymore
             // 3.) Verify the parent node and its children are removed from the filtered list
             // 4.) Remove filtering
             // 5.) Verify the update is preserved
+
+            const newCellValue = 'John McJohn';
+            treeGrid.filter('Name', 'in', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+
+            // get the first filtered cell
+            const targetCell = treeGrid.getCellByColumn(0, 'Name');
+            targetCell.update(newCellValue);
+            tick();
+            fix.detectChanges();
+
+            // verify that the edited row was removed from the filtered list
+            expect(treeGrid.filteredData.length).toBe(1);
+
+            treeGrid.clearFilter();
+            tick();
+            fix.detectChanges();
+
+            // check if the changes made were preserved
+            expect(treeGrid.data.filter(c => c.Name === newCellValue).length).toBeGreaterThan(0);
         }));
 
         it('a parent row  that has filtered child does not remove it from the list.', fakeAsync(() => {
