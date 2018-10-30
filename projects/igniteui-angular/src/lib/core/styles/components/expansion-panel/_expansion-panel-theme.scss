@@ -26,6 +26,8 @@
 
 @function igx-expansion-panel-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $header-background: null,
     $header-focus-background: null,
     $header-title-color: null,
@@ -47,6 +49,10 @@
         body-background: #fff,
         disabled-color: igx-color($palette, 'grays', 500)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);
@@ -155,6 +161,8 @@
         align-content: center;
         justify-content: center;
         user-select: none;
+
+        color: --var($theme, 'header-icon-color');
 
         igx-icon {
             color: --var($theme, 'header-icon-color');

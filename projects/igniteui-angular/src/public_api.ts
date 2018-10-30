@@ -61,7 +61,7 @@ export * from './lib/combo/combo.component';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/drop-down.component';
-export * from './lib/grid/index';
+export * from './lib/grids/grid/index';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
@@ -83,3 +83,4 @@ export * from './lib/toast/toast.component';
  */
 export * from './lib/services/index';
 export * from './lib/core/dates';
+export * from './lib/core/density';

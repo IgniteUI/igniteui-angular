@@ -22,6 +22,7 @@
 ///   @include igx-bottom-nav($my-tabbar-theme);
 @function igx-bottom-nav-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $background: null,
     $idle-item-color: null,
@@ -33,6 +34,10 @@
         idle-item-color: igx-color($palette, 'grays', 700),
         active-item-color: igx-color($palette, 'primary')
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($idle-item-color) and $background {
         $idle-item-color: rgba(text-contrast($background), .7);

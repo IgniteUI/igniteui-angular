@@ -13,7 +13,6 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, F
 import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { RemoteService } from 'src/app/shared/remote.combo.service';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -665,14 +664,14 @@ describe('igxCombo', () => {
                         lastVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':last-child');
                         expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[0]);
                         expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[10]);
-                        combo.dropdown.verticalScrollContainer.scrollTo(6);
+                        combo.dropdown.verticalScrollContainer.scrollTo(10);
                         setTimeout(function () {
                             fixture.detectChanges();
                             dropdownContainer = fixture.debugElement.query(By.css('.' + CSS_CLASS_CONTAINER)).nativeElement;
                             firstVisibleItem = dropdownContainer.querySelector('.' + CSS_CLASS_DROPDOWNLISTITEM + ':first-child');
                             expect(firstVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
                             expect(lastVisibleItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
-                            expect(firstVisibleItem.textContent.trim()).toEqual(combo.data[5]);
+                            expect(lastVisibleItem.textContent.trim()).toEqual(combo.data[11]);
                             dropdownContent.dispatchEvent(homeEvent);
                             setTimeout(function () {
                                 fixture.detectChanges();
@@ -2017,19 +2016,21 @@ describe('igxCombo', () => {
 
             const verifyComboData = function () {
                 fixture.detectChanges();
+                let ind = combo.dropdown.verticalScrollContainer.state.startIndex;
                 for (let itemIndex = 0; itemIndex < 10; itemIndex++) {
-                    expect(combo.data[itemIndex].id).toEqual(productIndex);
-                    expect(combo.data[itemIndex].product).toEqual('Product ' + productIndex);
+                    expect(combo.data[itemIndex].id).toEqual(ind);
+                    expect(combo.data[itemIndex].product).toEqual('Product ' + ind);
                     const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
                     const dropdownItems = dropdownList.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-                    expect(dropdownItems[itemIndex].innerText.trim()).toEqual('Product ' + productIndex);
-                    productIndex++;
+                    expect(dropdownItems[itemIndex].innerText.trim()).toEqual('Product ' + ind);
+                    ind++;
                 }
             };
 
             combo.toggle();
             fixture.detectChanges();
             verifyComboData();
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex).toEqual(productIndex);
             await wait(10);
 
             productIndex = 42;
@@ -2037,6 +2038,9 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
+            // index is at bottom
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
+            .toEqual(productIndex);
             await wait(20);
 
             productIndex = 485;
@@ -2044,6 +2048,9 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             await wait(20);
             verifyComboData();
+            // index is at bottom
+            expect(combo.dropdown.verticalScrollContainer.state.startIndex + combo.dropdown.verticalScrollContainer.state.chunkSize - 1)
+            .toEqual(productIndex);
             await wait(20);
 
             productIndex = 873;
@@ -3356,57 +3363,6 @@ export class IgxComboBindingTestComponent {
                 this.items = data;
             }
         );
-    }
-}
-
-@Component({
-    template: `
-<label id="mockID">Combo Label</label>
-<igx-combo #combo class="input-container" width="300px" [itemsMaxHeight]="250"
-[data]="rData | async" [valueKey]="'ID'" [displayKey]="'ProductName'"
-(onDataPreLoad)="dataLoading($event)" (onSearchInput)="searchInput($event)" (onOpening)="searchInput('')"
-placeholder="Location(s)" searchPlaceholder="Search..." [filterable]="false">
-</igx-combo>
-`,
-    providers: [RemoteService, HttpClient]
-})
-export class IgxComboRemoteBindingTestComponent implements OnInit, AfterViewInit {
-
-    @ViewChild('combo', { read: IgxComboComponent })
-    public combo: IgxComboComponent;
-    public rData: any;
-    public prevRequest: any;
-
-    constructor(private remoteService: RemoteService, public cdr: ChangeDetectorRef) {
-
-    }
-
-    public ngOnInit() {
-        this.rData = this.remoteService.remoteData;
-    }
-
-    public ngAfterViewInit() {
-        this.remoteService.getData(this.combo.virtualizationState, null, (data) => {
-            this.combo.totalItemCount = data.Count;
-            this.cdr.detectChanges();
-        });
-    }
-
-    public dataLoading(evt) {
-        if (this.prevRequest) {
-            this.prevRequest.unsubscribe();
-        }
-
-        this.prevRequest = this.remoteService.getData(this.combo.virtualizationState, null, () => {
-            this.cdr.detectChanges();
-            this.combo.triggerCheck();
-        });
-    }
-
-    public searchInput(searchText) {
-        this.remoteService.getData(this.combo.virtualizationState, searchText, (data) => {
-            this.combo.totalItemCount = searchText ? data.Results.length : data.Count;
-        });
     }
 }
 

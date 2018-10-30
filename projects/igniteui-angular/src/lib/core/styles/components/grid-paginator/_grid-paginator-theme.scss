@@ -23,6 +23,8 @@
 ///   @include igx-grid-paginator($my-grid-paginator-theme);
 @function igx-grid-paginator-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $text-color: null,
     $background-color: null,
     $border-color: null
@@ -33,6 +35,10 @@
         background-color: hexrgba(igx-color($palette, 'grays', 100)),
         border-color: igx-color($palette, 'grays', 400)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @return extend($default-theme, (
         palette: $palette,
@@ -59,6 +65,7 @@
         padding: rem(5px) 0;
         font-size: 12px;
         border-top: 1px dotted --var($theme, 'border-color');
+        z-index: 1;
 
         &:empty {
             padding: 0;

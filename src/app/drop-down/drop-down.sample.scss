@@ -17,13 +17,13 @@ button {
 // Import the IgniteUI themes library first
 @import '../../../projects/igniteui-angular/src/lib/core/styles/themes/index';
 
-:host {
-    // Change theme palette to purple.
-    $new-drop-down-theme: igx-drop-down-theme(
-        $palette: igx-palette(#09f, purple)
-    );
-
-    // Pass the theme to a to the `igx-drop-down` mixin
-    @include igx-drop-down($new-drop-down-theme);
-
-}
+//:host {
+//    // Change theme palette to purple.
+//    $new-drop-down-theme: igx-drop-down-theme(
+//        $palette: igx-palette(#09f, purple)
+//    );
+//
+//    // Pass the theme to a to the `igx-drop-down` mixin
+//    @include igx-drop-down($new-drop-down-theme);
+//
+//}

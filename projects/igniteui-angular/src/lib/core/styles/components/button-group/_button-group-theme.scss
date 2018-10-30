@@ -36,6 +36,7 @@
 ///   @include igx-button-group($my-button-group-theme);
 @function igx-button-group-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $item-text-color: null,
     $item-background: null,
@@ -67,6 +68,10 @@
         disabled-text-color: igx-color($palette, 'grays', 400),
         disabled-background-color: igx-color($palette, 'grays', 100)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($item-text-color) and $item-background  {
         $item-text-color: text-contrast($item-background);
@@ -128,7 +133,7 @@
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
 
-    $group-radius: 2px;
+    $group-radius: 4px;
     $group-shadow: igx-elevation($elevations, 2);
 
     $group-item-min-width: 24px;

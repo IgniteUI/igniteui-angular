@@ -20,7 +20,8 @@ import {
     VerticalAlignment,
     OverlaySettings,
     Point,
-    OverlayEventArgs
+    OverlayEventArgs,
+    OverlayCancelableEventArgs
 } from './utilities';
 import * as utilities from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
@@ -274,7 +275,8 @@ describe('igxOverlay', () => {
             tick();
 
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onOpening.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
 
@@ -285,7 +287,8 @@ describe('igxOverlay', () => {
 
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onClosing.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
@@ -294,7 +297,7 @@ describe('igxOverlay', () => {
             const secondCallId = overlayInstance.show(fix.componentInstance.item);
             tick();
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
 
             tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(2);
@@ -303,7 +306,7 @@ describe('igxOverlay', () => {
             overlayInstance.hide(secondCallId);
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(2);
@@ -630,6 +633,43 @@ describe('igxOverlay', () => {
             const wrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             expect(wrapper.getBoundingClientRect().left).toBe(100);
             expect(fix.componentInstance.customComponent.nativeElement.getBoundingClientRect().left).toBe(400);
+        }));
+
+        it('fix for @2798 - Allow canceling of open and close of IgxDropDown through onOpening and onClosing events', fakeAsync(() => {
+            const fix = TestBed.createComponent(SimpleRefComponent);
+            fix.detectChanges();
+            const overlayInstance = fix.componentInstance.overlay;
+
+            overlayInstance.onClosing.subscribe((e: OverlayCancelableEventArgs) => {
+                e.cancel = true;
+            });
+
+            spyOn(overlayInstance.onClosed, 'emit').and.callThrough();
+            spyOn(overlayInstance.onClosing, 'emit').and.callThrough();
+            spyOn(overlayInstance.onOpened, 'emit').and.callThrough();
+            spyOn(overlayInstance.onOpening, 'emit').and.callThrough();
+
+            const firstCallId = overlayInstance.show(SimpleDynamicComponent);
+            tick();
+
+            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
+
+            overlayInstance.hide(firstCallId);
+            tick();
+
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
+            expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(0);
+
+            overlayInstance.onOpening.subscribe((e: OverlayCancelableEventArgs) => {
+                e.cancel = true;
+            });
+
+            overlayInstance.show(fix.componentInstance.item);
+            tick();
+
+            expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
+            expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
     });
 
@@ -1065,12 +1105,12 @@ describe('igxOverlay', () => {
                 expect(strategy.settings).toEqual(expectedDefaults);
             });
 
-        it(`Should use  target: new Point(0, 0) StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop,
+        it(`Should use  target: null StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop,
             closeAnimation: scaleOutVerTop as default options when using a ConnectedPositioningStrategy without passing options.`, () => {
                 const strategy = new ConnectedPositioningStrategy();
 
                 const expectedDefaults = {
-                    target: new Point(0, 0),
+                    target: null,
                     horizontalDirection: HorizontalAlignment.Right,
                     verticalDirection: VerticalAlignment.Bottom,
                     horizontalStartPoint: HorizontalAlignment.Left,
