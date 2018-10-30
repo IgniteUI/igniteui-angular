@@ -154,9 +154,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.cdr.detectChanges();
         }
 
-        this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
+            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
         this.input.nativeElement.focus();
-    }
+        }
 
     ngOnDestroy() {
         this.conditionChanged.unsubscribe();
@@ -397,11 +397,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public close() {
-        this.expressionsList.forEach((item) => {
-            if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
-                this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
-            }
-        });
+        if (this.expressionsList.length === 1 &&
+            this.expressionsList[0].expression.searchVal === null &&
+            this.expressionsList[0].expression.condition.isUnary === false) {
+            this.filteringService.clearFilter(this.column.field);
+        } else {
+            this.expressionsList.forEach((item) => {
+                if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
+                    this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
+                }
+            });
+        }
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
@@ -464,8 +470,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             chip.selected = !chip.selected;
+            }
         }
-    }
 
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
         const indexToRemove = this.expressionsList.indexOf(item);

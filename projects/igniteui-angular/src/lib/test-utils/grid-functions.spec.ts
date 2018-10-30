@@ -286,6 +286,15 @@ export class GridFunctions {
         }
     }
 
+    public static getChipText(chipElem) {
+        return chipElem.nativeElement.querySelector('div.igx-chip__content').innerText.trim();
+    }
+
+    public static clickChip(debugElement) {
+        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
+        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+    }
+
     /* Search-related members */
     public static findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
