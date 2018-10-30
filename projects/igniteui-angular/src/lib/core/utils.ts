@@ -104,6 +104,23 @@ export const enum KEYCODES {
 
 /**
  *@hidden
+ */
+export const enum KEYS {
+    ENTER = 'Enter',
+    SPACE = ' ',
+    SPACE_IE = 'Spacebar',
+    ESCAPE = 'Escape',
+    ESCAPE_IE = 'Esc',
+    LEFT_ARROW = 'ArrowLeft',
+    UP_ARROW = 'ArrowUp',
+    RIGHT_ARROW = 'ArrowRight',
+    DOWN_ARROW = 'ArrowDown',
+    F2 = 'F2',
+    TAB = 'Tab'
+}
+
+/**
+ *@hidden
 * Returns the actual size of the node content, using Range
 * ```typescript
 * let range = document.createRange();

@@ -109,5 +109,5 @@
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
     <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
-    <button igxButton igxRipple (click)="close()">Close</button>
+    <button #closeButton igxButton igxRipple (click)="close()">Close</button>
 </div>

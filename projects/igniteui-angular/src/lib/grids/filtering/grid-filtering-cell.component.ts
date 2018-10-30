@@ -17,7 +17,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
-import { KEYCODES, cloneArray } from '../../core/utils';
+import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 
 /**
@@ -233,7 +233,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     }
 
     public onKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
-        if (eventArgs.keyCode === KEYCODES.ENTER) {
+        if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
             this.onChipClicked(expression);
         }
@@ -241,7 +241,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     @HostListener('keydown', ['$event'])
     public onTabKeyDown(eventArgs) {
-        if (eventArgs.keyCode === KEYCODES.TAB) {
+        if (eventArgs.key === KEYS.TAB) {
             if (eventArgs.shiftKey) {
                 if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                     eventArgs.preventDefault();
