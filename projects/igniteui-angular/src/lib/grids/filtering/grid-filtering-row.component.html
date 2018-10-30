@@ -64,7 +64,7 @@
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
-<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('left')">
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="scrollChipsIntoView($event)" (click)="scrollChipsOnArrowPress('left')">
     <igx-icon>navigate_before</igx-icon>
 </button>
 

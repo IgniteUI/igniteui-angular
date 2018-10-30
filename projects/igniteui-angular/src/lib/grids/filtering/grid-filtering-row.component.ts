@@ -470,8 +470,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.keyCode === KEYCODES.ENTER) {
             eventArgs.preventDefault();
             chip.selected = !chip.selected;
-            }
         }
+    }
+
+    public scrollChipsIntoView(event) {
+        if (event.keyCode === KEYCODES.TAB) {
+            const chip = this.chipsArea.chipsList.first;
+            const chipRect = chip.elementRef.nativeElement.getBoundingClientRect();
+            const containerRect = this.container.nativeElement.getBoundingClientRect();
+
+            this.offset += Math.ceil(containerRect.left) - Math.ceil(chipRect.left);
+            this.transform(this.offset);
+        }
+    }
 
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
         const indexToRemove = this.expressionsList.indexOf(item);
