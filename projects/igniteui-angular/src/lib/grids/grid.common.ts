@@ -513,7 +513,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 target: this.column,
                 cancel: false
             };
-            this.column.grid.onColumnMovingEnd.emit(args);
 
             let nextPinnedWidth;
             if (this.column.pinned && !this.cms.column.pinned) {
@@ -530,6 +529,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
+            this.column.grid.onColumnMovingEnd.emit(args);
+
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
 
@@ -541,7 +542,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
-                    cell._updateCellSelectionStatus(true, event);
+                    cell.nativeElement.focus();
                 }
 
                 this.cms.selection = null;

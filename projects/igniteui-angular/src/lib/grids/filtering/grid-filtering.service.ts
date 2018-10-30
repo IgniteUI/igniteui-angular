@@ -34,6 +34,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnsWithComplexFilter = new Set<string>();
     private isColumnResizedSubscribed = false;
     private isChunkLoadedSubscribed = false;
+    private isColumnMovinEndSubscribed = false;
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
 
@@ -77,6 +78,15 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
         }
+
+        if (!this.isColumnMovinEndSubscribed) {
+            this.isColumnMovinEndSubscribed = true;
+            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+                this.grid.filterCellList.forEach((filterCell) => {
+                    filterCell.updateFilterCellArea();
+                });
+            });
+        }
     }
 
     public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
@@ -94,7 +104,7 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = true;
 
         this.grid.clearFilter(field);
-        
+
         const expr = this.grid.filteringExpressionsTree.find(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.

@@ -12,7 +12,7 @@
 <ng-template #defaultFilterUI>
     <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
         <igx-prefix #inputGroupPrefix
-                    (click)="toggleConditionsDropDown()"
+                    (click)="toggleConditionsDropDown(inputGroupPrefix)"
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
@@ -40,7 +40,7 @@
             <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
-                            (click)="toggleConditionsDropDown()"
+                            (click)="toggleConditionsDropDown(inputGroupPrefix)"
                             (keydown)="onPrefixKeyDown($event)"
                             [igxDropDownItemNavigation]="inputGroupConditions">
                     <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
