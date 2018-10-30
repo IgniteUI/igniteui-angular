@@ -158,9 +158,6 @@ When you focus a specific cell and press one of the following key combinations, 
 
 ### General
 
-- `igxGrid`
-    - `sortStrategy` input exposed to provide custom sort strategy for the `igxGridColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStragey` class and override all or some of its public/protected members.
-
 ### Bug fixes
 
 - Fix sorting and groupby expression not syncing when there are already sorted columns. #2786
