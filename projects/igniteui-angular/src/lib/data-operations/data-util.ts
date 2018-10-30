@@ -79,7 +79,7 @@ export class DataUtil {
             data: hierarchicalRecord.data,
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
-            indentationLevel: hierarchicalRecord.indentationLevel,
+            level: hierarchicalRecord.level,
             expanded: hierarchicalRecord.expanded
         };
         return rec;
@@ -233,7 +233,7 @@ export class DataUtil {
                 this.mergeTransactions(item.children, transactions, primaryKey, recursive);
             }
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = mergeObjects(mergeObjects({}, dataItem), transaction.newValue);
+                data[index] = recursive ? mergeObjects(mergeObjects({}, item), { data: transaction.newValue}) : transaction.newValue;
             }
         });
 

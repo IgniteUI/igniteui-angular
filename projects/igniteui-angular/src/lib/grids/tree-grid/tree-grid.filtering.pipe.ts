@@ -63,7 +63,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const state = { expressionsTree: expressionsTree };
 
-        this.resetFilteredOutProperty(grid.treeGridRecordsMap);
+        this.resetFilteredOutProperty(grid.records);
 
         if (!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
@@ -75,7 +75,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
         const result = this.filter(hierarchyData, state);
         const filteredData: any[] = [];
-        this.expandAllRecursive(grid, result, grid.expandedStates, filteredData);
+        this.expandAllRecursive(grid, result, grid.expansionStates, filteredData);
         grid.filteredData = filteredData;
 
         return result;
@@ -103,7 +103,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     }
 
     private updateNonProcessedRecord(grid: IgxTreeGridComponent, record: ITreeGridRecord) {
-        const rec = grid.treeGridRecordsMap.get(record.rowID);
+        const rec = grid.records.get(record.rowID);
         rec.isFilteredOutParent = record.isFilteredOutParent;
     }
 

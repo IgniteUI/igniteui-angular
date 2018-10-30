@@ -38,8 +38,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             grid.flatData = flatData;
         }
 
-        grid.treeGridRecordsMap = treeGridRecordsMap;
-        grid.treeGridRecords = hierarchicalRecords;
+        grid.records = treeGridRecordsMap;
+        grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
     }
 
@@ -86,8 +86,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     private setIndentationLevels(id: string, collection: ITreeGridRecord[], indentationLevel: number) {
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
-            record.indentationLevel = indentationLevel;
-            record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.indentationLevel);
+            record.level = indentationLevel;
+            record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.level);
 
             if (record.children && record.children.length > 0) {
                 this.setIndentationLevels(id, record.children, indentationLevel + 1);
@@ -105,9 +105,9 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
                 parent: parent,
-                indentationLevel: indentationLevel
+                level: indentationLevel
             };
-            record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.indentationLevel);
+            record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.level);
             flatData.push(item);
             map.set(record.rowID, record);
             record.children = item[childDataKey] ?
@@ -140,8 +140,8 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         const data: ITreeGridRecord[] = [];
 
-        grid.processedTreeGridRecords = collection;
-        grid.processedTreeGridRecordsMap = new Map<any, ITreeGridRecord>();
+        grid.processedRootRecords = collection;
+        grid.processedRecords = new Map<any, ITreeGridRecord>();
 
         this.getFlatDataRecursive(collection, data, expandedLevels, expandedStates, id, true);
 
@@ -165,10 +165,10 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
             hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
-                hierarchicalRecord.rowID, hierarchicalRecord.indentationLevel);
+                hierarchicalRecord.rowID, hierarchicalRecord.level);
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 
-            grid.processedTreeGridRecordsMap.set(hierarchicalRecord.rowID, hierarchicalRecord);
+            grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
             this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
                 expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded);
@@ -176,7 +176,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 
     private updateNonProcessedRecordExpansion(grid: IgxTreeGridComponent, record: ITreeGridRecord) {
-        const rec = grid.treeGridRecordsMap.get(record.rowID);
+        const rec = grid.records.get(record.rowID);
         rec.expanded = record.expanded;
     }
 }
@@ -245,7 +245,11 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 })
 export class IgxTreeGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxTreeGridAPIService) { }
+    private gridAPI: IgxTreeGridAPIService;
+
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+    }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);

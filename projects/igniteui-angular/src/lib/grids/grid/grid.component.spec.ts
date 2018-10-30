@@ -2740,7 +2740,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 expect(groupRows[0].expanded).toEqual(true);
-                expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                expect(grid.rowEditingOverlay.element.style.display).toEqual('');
             }));
 
             it('Do not hide/show row editing dialog when another group is collapsing/expanding and check that overlay is moving with row',
@@ -2763,14 +2763,14 @@ describe('IgxGrid Component Tests', () => {
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
 
                     row = grid.getRowByIndex(3).nativeElement;
                     expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
                     expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
 
@@ -2791,7 +2791,7 @@ describe('IgxGrid Component Tests', () => {
                     grid.toggleGroup(groupRows[1].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
                     expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
             }));
@@ -2822,7 +2822,7 @@ describe('IgxGrid Component Tests', () => {
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
             }));
         });
     });

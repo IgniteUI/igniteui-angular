@@ -79,7 +79,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 25,
                     Employees: []
                 };
-                treeGrid.addChildRow(847, newRow);
+                treeGrid.addRow(newRow, 847);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -95,7 +95,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 35,
                     Employees: []
                 };
-                treeGrid.addChildRow(317, newRow);
+                treeGrid.addRow(newRow, 317);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -118,7 +118,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 55,
                     Employees: []
                 };
-                treeGrid.addChildRow(12345, newRow); // there is no row with ID=12345
+                treeGrid.addRow(newRow, 12345); // there is no row with ID=12345
                 fix.detectChanges();
 
                 // Verify treeGrid remains unchanged
@@ -138,7 +138,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 25,
                     Employees: []
                 };
-                treeGrid.addChildRow(475, newRow);
+                treeGrid.addRow(newRow, 475);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -157,7 +157,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 25,
                     Employees: []
                 };
-                treeGrid.addChildRow(957, newRow);
+                treeGrid.addRow(newRow, 957);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -176,7 +176,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 25,
                     Employees: []
                 };
-                treeGrid.addChildRow(711, newRow);
+                treeGrid.addRow(newRow, 711);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -234,7 +234,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
-                treeGrid.addChildRow(1, newRow);
+                treeGrid.addRow(newRow, 1);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -250,7 +250,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
-                treeGrid.addChildRow(4, newRow);
+                treeGrid.addRow(newRow, 4);
                 fix.detectChanges();
 
                 expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
@@ -273,7 +273,7 @@ describe('IgxTreeGrid - CRUD', () => {
                     JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
-                treeGrid.addChildRow(12345, newRow);
+                treeGrid.addRow(newRow, 12345);
                 fix.detectChanges();
 
                 // Verify treeGrid remains unchanged
@@ -1169,14 +1169,14 @@ function verifyRowsCount(fix, expectedRootRowsCount, expectedVisibleRowsCount) {
 
 function verifyTreeGridRecordsCount(fix, expectedRootRecordsCount, expectedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.treeGridRecords.length).toBe(expectedRootRecordsCount);
-    expect(treeGrid.treeGridRecordsMap.size).toBe(expectedFlatRecordsCount);
+    expect(treeGrid.rootRecords.length).toBe(expectedRootRecordsCount);
+    expect(treeGrid.records.size).toBe(expectedFlatRecordsCount);
 }
 
 function verifyProcessedTreeGridRecordsCount(fix, expectedProcessedRootRecordsCount, expectedProcessedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.processedTreeGridRecords.length).toBe(expectedProcessedRootRecordsCount);
-    expect(treeGrid.processedTreeGridRecordsMap.size).toBe(expectedProcessedFlatRecordsCount);
+    expect(treeGrid.processedRootRecords.length).toBe(expectedProcessedRootRecordsCount);
+    expect(treeGrid.processedRecords.size).toBe(expectedProcessedFlatRecordsCount);
 }
 
 function verifyCellValue(fix, rowIndex, columnKey, expectedCellValue) {

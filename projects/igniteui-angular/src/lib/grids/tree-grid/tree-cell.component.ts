@@ -39,18 +39,30 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
         return super.resolveStyleClasses() + ' igx-grid__td--tree-cell';
     }
 
+    /**
+     * @hidden
+     */
     public get indentation() {
         return this.row.indentation;
     }
 
+    /**
+     * @hidden
+     */
     public get hasChildren() {
         return this.row.treeRow.children && this.row.treeRow.children.length > 0;
     }
 
+    /**
+     * @hidden
+     */
     get expanded(): boolean {
         return this.row.expanded;
     }
 
+    /**
+     * @hidden
+     */
     public toggle(event: Event) {
         event.stopPropagation();
         this.treeGridAPI.trigger_row_expansion_toggle(this.gridID, this.row, event);

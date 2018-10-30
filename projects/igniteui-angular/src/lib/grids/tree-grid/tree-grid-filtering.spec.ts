@@ -4,30 +4,39 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../public_api';
-import { IgxTreeGridFilteringComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { fixMarkup } from 'highlight.js';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
+import { TreeGridSampleComponent } from 'src/app/tree-grid/tree-grid.sample';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
+    let fix;
+    let grid;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeGridFilteringComponent
+                IgxTreeGridFilteringComponent,
+                IgxTreeGridFilteringRowEditingComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
-    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
+    beforeEach(() => {
+        fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
+        grid = fix.componentInstance.treeGrid;
+    });
 
+    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -59,10 +68,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a string column using the \'endswith\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -94,10 +99,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a number column using the \'greaterThan\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -135,10 +136,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a number column using the \'lessThan\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -176,10 +173,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a date column using the \'before\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -217,10 +210,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should correctly filter a date column using the \'after\' filtering conditions', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         for (let i = 0; i < 5; i++) {
             expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
         }
@@ -261,10 +250,6 @@ describe('IgxTreeGrid - Filtering actions', () => {
     });
 
     it('should allow row collapsing after filtering is applied', () => {
-        const fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.treeGrid;
-
         grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
 
@@ -273,9 +258,120 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(10);
 
         // collapse first row
-        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
     });
 
+    describe('Filtering: Row editing', () => {
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('should remove a filtered parent row from the filtered list', fakeAsync(() => {
+            const newCellValue = 'John McJohn';
+            treeGrid.filter('Name', 'in', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick();
+
+            // modify the first filtered node
+            const targetCell = treeGrid.getCellByColumn(0, 'Name');
+            targetCell.update(newCellValue);
+            tick();
+            fix.detectChanges();
+
+            // verify that the edited row was removed from the filtered list
+            expect(treeGrid.filteredData.length).toBe(1);
+
+            treeGrid.clearFilter();
+            tick();
+            fix.detectChanges();
+
+            // check if the changes made were preserved
+            expect(treeGrid.data.filter(c => c.Name === newCellValue).length).toBeGreaterThan(0);
+        }));
+
+        it('should not remove an edited parent node from the filtered list if it has a child node that meets the criteria',
+            fakeAsync(() => {
+                const newCellValue = 'John McJohn';
+                treeGrid.filter('Name', 'on', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick();
+
+                // modify a parent node which has a child that matches the filtering condition
+                const targetCell = treeGrid.getCellByColumn(0, 'Name');
+                targetCell.update(newCellValue);
+                tick();
+                fix.detectChanges();
+
+                // verify that the parent node is still in the filtered list
+                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
+
+                treeGrid.clearFilter();
+                tick();
+                fix.detectChanges();
+
+                // verify the changes were preserved after the filtering is removed
+                expect(treeGrid.data.filter(p => p.Name === targetCell.value).length).toBeGreaterThan(0);
+            }));
+
+        it(`should remove the parent node from the filtered list if
+                its only matching child is modified and does not match the filtering condition anymore`,
+            fakeAsync(() => {
+                const newCellValue = 'John McJohn';
+                const filterValue = 'Langdon';
+                treeGrid.filter('Name', filterValue, IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick();
+
+                // modify the first child node that meets the filtering condition
+                const targetCell = treeGrid.getCellByColumn(1, 'Name');
+                targetCell.update(newCellValue);
+                tick();
+                fix.detectChanges();
+
+                // verify that the parent node is no longer in the filtered list
+                expect(grid.filteredData).toBeFalsy();
+
+                treeGrid.clearFilter();
+                tick();
+
+                // verify that there is a parent which contains the updated child node
+                const filteredParentNodes = treeGrid.data.filter(function (n) {
+                    return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
+                });
+
+                // if there are any parent nodes in this collection then the changes were preserved
+                expect(filteredParentNodes.length).toBeGreaterThan(0);
+            }));
+
+        it('should not remove a parent node from the filtered list if it has at least one child node which matches the filtering condition',
+            fakeAsync(() => {
+                const newCellValue = 'Peter Peterson';
+                treeGrid.filter('Name', 'h', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick();
+
+                // modify the first child node which meets the filtering condition
+                const targetCell = treeGrid.getCellByColumn(1, 'Name');
+                targetCell.update(newCellValue);
+                tick();
+                fix.detectChanges();
+
+                // check if the edited child row is removed
+                expect(treeGrid.filteredData.filter(c => c.Name === newCellValue).length).toBe(0);
+
+                // check if the parent which contains the edited row is not removed
+                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.treeRow.parent.data.Name).length).toBeGreaterThan(0);
+
+                treeGrid.clearFilter();
+
+                // verify that there is a parent which contains the updated child node
+                const filteredParentNodes = treeGrid.data.filter(function (n) {
+                    return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
+                });
+
+                // if there are any parent nodes in this collection then the changes were preserved
+                expect(filteredParentNodes.length).toBeGreaterThan(0);
+            }));
+    });
 });

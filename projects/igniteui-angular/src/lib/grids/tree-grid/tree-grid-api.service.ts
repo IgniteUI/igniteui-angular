@@ -5,7 +5,7 @@ import { DataUtil, DataType } from '../../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
-import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
+import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxExpansionPanelDescriptionDirective } from '../../expansion-panel/expansion-panel.directives';
 import { IgxColumnComponent } from '../column.component';
 
@@ -18,27 +18,27 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public expand_row(id: string, rowID: any) {
         const grid = this.get(id);
-        const expandedStates = grid.expandedStates;
+        const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, true);
-        grid.expandedStates = expandedStates;
+        grid.expansionStates = expandedStates;
     }
 
     public collapse_row(id: string, rowID: any) {
         const grid = this.get(id);
-        const expandedStates = grid.expandedStates;
+        const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, false);
-        grid.expandedStates = expandedStates;
+        grid.expansionStates = expandedStates;
     }
 
     public toggle_row_expansion(id: string, rowID: any) {
         const grid = this.get(id);
-        const expandedStates = grid.expandedStates;
-        const treeRecord = grid.treeGridRecordsMap.get(rowID);
+        const expandedStates = grid.expansionStates;
+        const treeRecord = grid.records.get(rowID);
 
         if (treeRecord) {
-            const isExpanded = this.get_row_expansion_state(id, rowID, treeRecord.indentationLevel);
+            const isExpanded = this.get_row_expansion_state(id, rowID, treeRecord.level);
             expandedStates.set(rowID, !isExpanded);
-            grid.expandedStates = expandedStates;
+            grid.expansionStates = expandedStates;
         }
     }
 
@@ -46,41 +46,65 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const grid = this.get(id);
         const expanded = !row.treeRow.expanded;
 
-        const args: ITreeGridRowExpansionEventArgs = {
+        const args: IRowToggleEventArgs = {
             row: row,
             expanded: expanded,
             event: event,
             cancel: false
         };
-        grid.onRowExpansionToggle.emit(args);
+        grid.onRowToggle.emit(args);
 
         if (args.cancel) {
             return;
         }
 
-        const expandedStates = grid.expandedStates;
+        const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
-        grid.expandedStates = expandedStates;
+        grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            const editRow = this.get_edit_row_state(id);
+            if (editRow) {
+                const toggle = this.is_descendant(id, row.treeRow, editRow.rowID) ? expanded : undefined;
+                grid.refreshRowEditingOverlay(grid.rowInEditMode, toggle);
+            }
+        }
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
         const grid = this.get(id);
-        const states = grid.expandedStates;
+        const states = grid.expansionStates;
         const expanded = states.get(rowID);
 
         if (expanded !== undefined) {
             return expanded;
         } else {
-            return indentationLevel < grid.expandedLevels;
+            return indentationLevel < grid.expansionDepth;
+        }
+    }
+
+    public is_descendant(id: string, parentRow: ITreeGridRecord, childRowID): boolean {
+        const childRows: ITreeGridRecord[] = parentRow.children;
+        if (!childRows) {
+            return false;
+        }
+        const grid = this.get(id);
+        for (let rowIndex = 0, found = false, data; rowIndex < childRows.length; rowIndex++) {
+            data = childRows[rowIndex].data;
+            found = grid.primaryKey ? data[grid.primaryKey] === childRowID : data === childRowID;
+            if (found) {
+                return true;
+            } else {
+                return this.is_descendant(id, childRows[rowIndex], childRowID);
+            }
         }
     }
 
     public add_child_row(id: string, parentRowID: any, data: any) {
         const grid = this.get(id);
-        const parentRecord = grid.treeGridRecordsMap.get(parentRowID);
+        const parentRecord = grid.records.get(parentRowID);
 
         if (!parentRecord) {
-            return;
+            throw Error('Invalid parent row ID!');
         }
 
         if (grid.primaryKey && grid.foreignKey) {
@@ -107,7 +131,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (grid.primaryKey && grid.foreignKey) {
             super.update_row_in_array(id, value, rowID, index);
         } else {
-            const record = grid.treeGridRecordsMap.get(rowID);
+            const record = grid.records.get(rowID);
             const childData = record.parent ? record.parent.data[grid.childDataKey] : grid.data;
             index = grid.primaryKey ? childData.map(c => c[grid.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
