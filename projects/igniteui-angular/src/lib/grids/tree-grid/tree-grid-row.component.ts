@@ -42,7 +42,7 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     }
 
     public get indentation() {
-        return this._treeRow.indentationLevel;
+        return this._treeRow.level;
     }
 
     @HostBinding('attr.aria-expanded')

@@ -27,7 +27,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { ITreeGridRowExpansionEventArgs } from './tree-grid.interfaces';
+import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -86,13 +86,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     */
     public flatData: any[];
 
-    public treeGridRecords: ITreeGridRecord[];
+    public rootRecords: ITreeGridRecord[];
 
-    public treeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
+    public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
-    public processedTreeGridRecords: ITreeGridRecord[];
+    public processedRootRecords: ITreeGridRecord[];
 
-    public processedTreeGridRecordsMap: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
+    public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
@@ -114,7 +114,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     @Input()
     public foreignKey;
 
-    private _expandedLevels = Infinity;
+    private _expansionDepth = Infinity;
 
     /**
      * An @Input property that sets the count of levels to expand by default in the `IgxTreeGridComponent`.
@@ -124,29 +124,29 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 	 * @memberof IgxTreeGridRowComponent
      */
     @Input()
-    public get expandedLevels(): number {
-        return this._expandedLevels;
+    public get expansionDepth(): number {
+        return this._expansionDepth;
     }
 
-    public set expandedLevels(value: number) {
-        this._expandedLevels = value;
+    public set expansionDepth(value: number) {
+        this._expansionDepth = value;
         this.cdr.markForCheck();
     }
 
-    private _expandedStates:  Map<any, boolean> = new Map<any, boolean>();
+    private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
 
     @Input()
-    public get expandedStates() {
-        return this._expandedStates;
+    public get expansionStates() {
+        return this._expansionStates;
     }
 
-    public set expandedStates(value) {
-        this._expandedStates = this.cloneMap(value);
+    public set expansionStates(value) {
+        this._expansionStates = this.cloneMap(value);
         this.cdr.detectChanges();
     }
 
     @Output()
-    public onRowExpansionToggle = new EventEmitter<ITreeGridRowExpansionEventArgs>();
+    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     private _gridAPI: IgxTreeGridAPIService;
 
@@ -196,22 +196,26 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this._gridAPI.collapse_row(this.id, rowID);
     }
 
-    public toggleRowExpansion(rowID: any) {
+    public toggleRow(rowID: any) {
         this._gridAPI.toggle_row_expansion(this.id, rowID);
     }
 
     public expandAll() {
-        this._expandedLevels = Infinity;
-        this.expandedStates = new Map<any, boolean>();
+        this._expansionDepth = Infinity;
+        this.expansionStates = new Map<any, boolean>();
     }
 
     public collapseAll() {
-        this._expandedLevels = 0;
-        this.expandedStates = new Map<any, boolean>();
+        this._expansionDepth = 0;
+        this.expansionStates = new Map<any, boolean>();
     }
 
-    public addChildRow(parentRowID: any, data: any) {
-        this._gridAPI.add_child_row(this.id, parentRowID, data);
+    public addRow(data: any, parentRowID?: any) {
+        if (parentRowID) {
+            this._gridAPI.add_child_row(this.id, parentRowID, data);
+        } else {
+            super.addRow(data);
+        }
     }
 
     /**
@@ -221,7 +225,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
         } else {
-            const record = this.treeGridRecordsMap.get(rowID);
+            const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
