@@ -542,7 +542,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
-                    cell._updateCellSelectionStatus(true, event);
+                    cell.nativeElement.focus();
                 }
 
                 this.cms.selection = null;

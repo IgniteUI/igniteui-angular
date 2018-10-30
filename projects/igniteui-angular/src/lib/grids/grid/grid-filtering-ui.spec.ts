@@ -20,6 +20,7 @@ import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { KEYCODES } from '../../core/utils';
 import { IgxBadgeComponent } from '../../badge/badge.component';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -1571,7 +1572,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
-                IgxGridFilteringScrollComponent
+                IgxGridFilteringScrollComponent,
+                IgxGridFilteringMCHComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -2091,6 +2093,136 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(badge.componentInstance.value).toBe(1);
     });
 
+    // Integration scenario
+
+    // Filtering + Row Selectors
+    it('should display the Row Selector header checkbox above the filter row.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.rowSelectable = true;
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const frElem = filteringRow.nativeElement;
+        const chkBox = fix.debugElement.query(By.css('.igx-grid__cbx-selection')).query(By.directive(IgxCheckboxComponent));
+        const chkBoxElem = chkBox.nativeElement;
+        expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
+    });
+
+    // Filtering + Column Groups
+    it('should position filter row correctly when grid has column groups.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        const idCellChip = filteringCells[0].query(By.css('igx-chip'));
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+
+        const cellElem = filteringCells[0].nativeElement;
+        expect(cellElem.offsetParent.offsetHeight + cellElem.offsetHeight).toBeCloseTo(thead.clientHeight, 10);
+
+        idCellChip.nativeElement.click();
+        fix.detectChanges();
+
+        // check if it is positioned at the bottom of the thead.
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const frElem = filteringRow.nativeElement;
+        expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
+    });
+
+    it('should position filter row and chips correctly when grid has column groups and one is hidden.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        const grid = fix.componentInstance.grid;
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+        const expression = {
+            fieldName: 'ProductName',
+            searchVal: 'Ignite',
+            condition: IgxStringFilteringOperand.instance().condition('startsWith')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        grid.filteringExpressionsTree = filteringExpressionsTree;
+        fix.detectChanges();
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        expect(filteringCells.length).toEqual(6);
+
+        const groupCol = grid.getColumnByName('General');
+        groupCol.hidden = true;
+        fix.detectChanges();
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        expect(filteringCells.length).toEqual(1);
+
+        const chip = filteringCells[0].query(By.css('igx-chip'));
+        chip.nativeElement.click();
+        fix.detectChanges();
+
+        // check if it is positioned at the bottom of the thead.
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const frElem = filteringRow.nativeElement;
+        expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
+
+        closeFilterRow(fix);
+
+        groupCol.hidden = false;
+        fix.detectChanges();
+
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        expect(filteringCells.length).toEqual(6);
+
+        const prodNameChipContent = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+        expect(prodNameChipContent.nativeElement.textContent.trim()).toEqual('Ignite');
+    });
+
+    // Filtering + Moving
+    it('should move chip under the correct column when column is moved and filter row should open for correct column.', () => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        let stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+        // filter string col
+        stringCellChip.nativeElement.click();
+        fix.detectChanges();
+        filterBy('Contains', 'Angular', fix);
+        closeFilterRow(fix);
+
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        let stringCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+        expect(stringCellChipText.nativeElement.textContent.trim()).toEqual('Angular');
+
+        // swap columns
+        const stringCol = grid.getColumnByName('ProductName');
+        const numberCol = grid.getColumnByName('Downloads');
+        grid.moveColumn(stringCol, numberCol);
+        fix.detectChanges();
+
+        // check UI in filter cell is correct after moving
+        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        stringCellChip = filteringCells[2].query(By.css('igx-chip'));
+        expect(stringCellChip).not.toBeNull();
+        if (stringCellChip) {
+            stringCellChipText = filteringCells[2].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+            expect(stringCellChipText.nativeElement.textContent.trim()).toEqual('Angular');
+        }
+        const numberChip = filteringCells[1].query(By.css('igx-chip'));
+        const numberCellChipText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+        expect(numberCellChipText.nativeElement.textContent.trim()).toEqual('Filter');
+
+        // check if chip opens correct UI after moving
+        numberChip.nativeElement.click();
+        fix.detectChanges();
+
+        checkUIForType('number', fix.debugElement);
+    });
+
+
     it('Should allow setting initial filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
@@ -2114,6 +2246,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(GridFunctions.getChipText(colChips[1])).toEqual('o');
         expect(colOperands.length).toEqual(1);
         expect(colOperands[0].nativeElement.innerText).toEqual('AND');
+
     }));
 });
 
@@ -2237,12 +2370,32 @@ export class IgxGridFilteringComponent {
         <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             dataType="date">
         </igx-column>
-        <igx-column [field]="'AnotherField'" [header]="'Anogther Field'"
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>`
 })
 export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent { }
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+    <igx-column-group header="General Information" field='General'>
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column-group header="Details" field='Details'>
+            <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+            <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+                dataType="date">
+            </igx-column>
+        </igx-column-group>
+    </igx-column-group>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
 
 const expectedResults = [];
 
