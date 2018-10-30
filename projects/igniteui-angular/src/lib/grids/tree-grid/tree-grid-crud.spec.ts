@@ -1169,14 +1169,14 @@ function verifyRowsCount(fix, expectedRootRowsCount, expectedVisibleRowsCount) {
 
 function verifyTreeGridRecordsCount(fix, expectedRootRecordsCount, expectedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.treeGridRecords.length).toBe(expectedRootRecordsCount);
-    expect(treeGrid.treeGridRecordsMap.size).toBe(expectedFlatRecordsCount);
+    expect(treeGrid.rootRecords.length).toBe(expectedRootRecordsCount);
+    expect(treeGrid.records.size).toBe(expectedFlatRecordsCount);
 }
 
 function verifyProcessedTreeGridRecordsCount(fix, expectedProcessedRootRecordsCount, expectedProcessedFlatRecordsCount) {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-    expect(treeGrid.processedTreeGridRecords.length).toBe(expectedProcessedRootRecordsCount);
-    expect(treeGrid.processedTreeGridRecordsMap.size).toBe(expectedProcessedFlatRecordsCount);
+    expect(treeGrid.processedRootRecords.length).toBe(expectedProcessedRootRecordsCount);
+    expect(treeGrid.processedRecords.size).toBe(expectedProcessedFlatRecordsCount);
 }
 
 function verifyCellValue(fix, rowIndex, columnKey, expectedCellValue) {

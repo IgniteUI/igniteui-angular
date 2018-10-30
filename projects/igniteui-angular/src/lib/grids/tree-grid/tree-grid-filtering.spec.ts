@@ -253,7 +253,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(10);
 
         // collapse first row
-        (<IgxTreeGridComponent>grid).toggleRowExpansion((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
     });

@@ -154,11 +154,11 @@ describe('IgxTreeGrid - Selection', () => {
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             // Collapse row and verify visible selected rows
-            treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
-            treeGrid.toggleRowExpansion(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
