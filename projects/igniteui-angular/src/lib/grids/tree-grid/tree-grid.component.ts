@@ -114,6 +114,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     @Input()
     public foreignKey;
 
+    @Input()
+    public cascadeOnDelete = true;
+
     private _expansionDepth = Infinity;
 
     /**
@@ -246,6 +249,16 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
+
+            if (this.cascadeOnDelete) {
+                const treeRecord = this.records.get(rowID);
+                if (treeRecord.children && treeRecord.children.length > 0) {
+                    for (let i = 0; i < treeRecord.children.length; i++) {
+                        const child = treeRecord.children[i];
+                        this.deleteRowById(child.rowID);
+                    }
+                }
+            }
         } else {
             const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
