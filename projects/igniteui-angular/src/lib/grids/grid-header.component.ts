@@ -71,6 +71,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
 
 
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
         return this.column.width;

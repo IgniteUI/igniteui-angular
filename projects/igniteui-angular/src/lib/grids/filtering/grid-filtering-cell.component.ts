@@ -61,6 +61,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     protected complexChip: IgxChipComponent;
 
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
         return this.column.width;
