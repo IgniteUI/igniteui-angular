@@ -8,11 +8,20 @@ import {
 
 @Component({
     selector: 'igx-display-container',
-    template: '<ng-template #display_container igxScrollInertia [IgxScrollInertiaScrollContainer]="scrollContainer"></ng-template>'
+    template: `
+        <ng-template
+            #display_container
+            igxScrollInertia
+            [IgxScrollInertiaScrollContainer]="scrollContainer"
+            [IgxScrollInertiaDirection]="scrollDirection">
+        </ng-template>
+    `
 })
 export class DisplayContainerComponent {
     @ViewChild('display_container', { read: ViewContainerRef })
     public _vcr;
+
+    public scrollDirection: string;
 
     @HostBinding('class')
     public cssClass = 'igx-display-container';
