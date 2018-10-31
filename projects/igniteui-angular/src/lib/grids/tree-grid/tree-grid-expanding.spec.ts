@@ -172,6 +172,51 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         expect(rows.length).toBe(4);
     });
 
+    it('should expand/collapse rows when changing the "expanded" property', () => {
+        let rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(4);
+
+        // expand a root level row
+        let aRow = grid.getRowByIndex(0);
+        expect(aRow.cells.first.value).toBe(147, 'wrong root level row');
+        expect(aRow.expanded).toBe(false);
+        aRow.expanded = true;
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(7, 'root level row expanding problem');
+
+        // expand a second level row
+        aRow = grid.getRowByIndex(3);
+        expect(aRow.cells.first.value).toBe(317, 'wrong second level row');
+        expect(aRow.expanded).toBe(false);
+        aRow.expanded = true;
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(9, 'second level row expanding problem');
+
+        // check third level rows are having the correct values
+        aRow = grid.getRowByIndex(4);
+        expect(aRow.cells.first.value).toBe(711, 'wrong third level row');
+        aRow = grid.getRowByIndex(5);
+        expect(aRow.cells.first.value).toBe(998, 'wrong third level row');
+
+        // collapse a second level row
+        aRow = grid.getRowByIndex(3);
+        aRow.expanded = false;
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(7, 'second level row collapsing problem');
+
+        // collapse a root level row
+        aRow = grid.getRowByIndex(0);
+        aRow.expanded = false;
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toBe(4, 'root level row collapsing problem');
+    });
+
+    xit('should emits event when expanding rows (UI)', () => {
+
+    });
+
+    xit('should emits event when expanding rows (API)', () => {
+    });
 });
 
 describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
