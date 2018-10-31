@@ -28,7 +28,7 @@ import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService } from '../../services/transaction/transaction';
+import { TransactionService, HierarchicalTransaction } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 
@@ -153,7 +153,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<HierarchicalTransaction>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,

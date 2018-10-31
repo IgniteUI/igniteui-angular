@@ -3,30 +3,30 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
-export class IgxBaseTransactionService implements TransactionService {
+export class IgxBaseTransactionService<T extends Transaction> implements TransactionService<T> {
     protected _isPending = false;
-    protected _pendingTransactions: Transaction[] = [];
+    protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, State> = new Map();
     public onStateUpdate = new EventEmitter<void>();
 
-    public add(transaction: Transaction, recordRef?: any): void {
+    public add(transaction: T, recordRef?: any): void {
         if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
             this._pendingTransactions.push(transaction);
         }
     }
 
-    getTransactionLog(id?: any): Transaction[] | Transaction { return []; }
+    getTransactionLog(id?: any): T[] | T { return []; }
 
     undo(): void { }
 
     redo(): void { }
 
-    aggregatedState(mergeChanges: boolean): Transaction[] {
-        const result: Transaction[] = [];
+    aggregatedState(mergeChanges: boolean): T[] {
+        const result: T[] = [];
         this._pendingStates.forEach((state: State, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type });
+            result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
@@ -74,7 +74,7 @@ export class IgxBaseTransactionService implements TransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
+    protected updateState(states: Map<any, State>, transaction: T, recordRef?: any): void {
         let state = states.get(transaction.id);
         if (state) {
             if (isObject(state.value)) {
@@ -103,8 +103,8 @@ export class IgxBaseTransactionService implements TransactionService {
      * @param first Value to merge into
      * @param second Value to merge
      */
-    protected mergeValues<T>(first: T, second: T): T {
-        let result: T;
+    protected mergeValues<U>(first: U, second: U): U {
+        let result: U;
         if (isObject(first) || isObject(second)) {
             result = mergeObjects(mergeObjects({}, first), second);
         } else {

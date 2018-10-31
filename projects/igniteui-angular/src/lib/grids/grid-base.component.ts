@@ -1983,7 +1983,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     constructor(
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: TransactionService,
+        @Inject(IgxGridTransaction) private _transactions: TransactionService<Transaction>,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,

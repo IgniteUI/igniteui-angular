@@ -4,14 +4,14 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
-export class IgxTransactionService extends IgxBaseTransactionService {
-    private _transactions: Transaction[] = [];
-    private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
-    private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
+export class IgxTransactionService<T extends Transaction> extends IgxBaseTransactionService<T> {
+    private _transactions: T[] = [];
+    private _redoStack: { transaction: T, recordRef: any }[] = [];
+    private _undoStack: { transaction: T, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
     public onStateUpdate = new EventEmitter<void>();
 
-    public add(transaction: Transaction, recordRef?: any): void {
+    public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
         this.updateState(states, transaction, recordRef);
@@ -26,18 +26,18 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         }
     }
 
-    public getTransactionLog(id?: any): Transaction[] | Transaction {
+    public getTransactionLog(id?: any): T[] | T {
         if (id) {
             return [...this._transactions].reverse().find(t => t.id === id);
         }
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges: boolean): Transaction[] {
-        const result: Transaction[] = [];
+    public aggregatedState(mergeChanges: boolean): T[] {
+        const result: T[] = [];
         this._states.forEach((state: State, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type });
+            result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
@@ -73,7 +73,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         this._isPending = false;
         if (commit) {
             this._pendingStates.forEach((s: State, k: any) => {
-                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
+                this.add({ id: k, newValue: s.value, type: s.type } as T, s.recordRef);
             });
         }
         super.endPending(commit);
@@ -114,7 +114,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             return;
         }
         this._transactions.pop();
-        const action: { transaction: Transaction, recordRef: any } = this._undoStack.pop();
+        const action: { transaction: T, recordRef: any } = this._undoStack.pop();
         this._redoStack.push(action);
         this._states.clear();
         this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
@@ -135,7 +135,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    protected verifyAddedTransaction(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
+    protected verifyAddedTransaction(states: Map<any, State>, transaction: T, recordRef?: any): void {
         const state = states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
@@ -165,7 +165,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
+    protected updateState(states: Map<any, State>, transaction: T, recordRef?: any): void {
         let state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
