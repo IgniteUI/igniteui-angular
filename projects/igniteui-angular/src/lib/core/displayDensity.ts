@@ -18,8 +18,8 @@ export interface IDisplayDensity {
 }
 
 export interface IDensityChangedEventArgs {
-    oldDensity: DisplayDensity | string;
-    newDensity: DisplayDensity | string;
+    oldDensity: DisplayDensity | string | IDisplayDensity;
+    newDensity: DisplayDensity | string | IDisplayDensity;
 }
 
 /**
@@ -104,10 +104,15 @@ export class DisplayDensityBase implements DoCheck {
     }
 
     public ngDoCheck() {
+        const densityChangedArgs: IDensityChangedEventArgs = {
+            oldDensity: this.oldDisplayDensityOptions,
+            newDensity: this.displayDensityOptions
+        };
         if (this.oldDisplayDensityOptions && this.displayDensityOptions &&
             this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
+
+            this.onDensityChanged.emit(densityChangedArgs);
             this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
-            this.onDensityChanged.emit();
         }
     }
 }
