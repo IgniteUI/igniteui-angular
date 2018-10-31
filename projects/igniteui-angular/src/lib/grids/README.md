@@ -278,6 +278,7 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`field`|string|Column field name|
 |`header`|string|Column header text|
 |`sortable`|boolean|Set column to be sorted or not|
+|`sortStrategy`| Provide custom sort strategy to be used when sorting|
 |`editable`|boolean|Set column values to be editable|
 |`filterable`|boolean|Set column values to be filterable|
 |`hasSummary`| boolean  |Sets whether or not the specific column has summaries enabled.|
