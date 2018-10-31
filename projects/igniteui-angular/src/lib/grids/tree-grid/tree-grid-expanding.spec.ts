@@ -263,6 +263,35 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         });
         indicatorDivDOM.triggerEventHandler('click', new Event('click'));
     });
+
+    it('should update current page when \'collapseAll\' ', () => {
+        pending('Tree Grid issue: curent page is not updated when collapseAll');
+        // Test prerequisites
+        grid.paging = true;
+        grid.perPage = 4;
+        fix.detectChanges();
+        grid.expandAll();
+        fix.detectChanges();
+
+        // Verify current page
+        verifyGridPager(fix, 4, '147', '1 of 5', [true, true, false, false]);
+        expect(grid.totalPages).toBe(5);
+
+        // Go to fourth page
+        grid.page = 3;
+        fix.detectChanges();
+
+        // Verify current page
+        verifyGridPager(fix, 4, '17', '4 of 5', [false, false, false, false]);
+        expect(grid.totalPages).toBe(5);
+
+        grid.collapseAll();
+        fix.detectChanges();
+
+        // Verify current page is the first one and only root rows are visible.
+        verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
+        expect(grid.totalPages).toBe(1);
+    });
 });
 
 describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
@@ -319,4 +348,55 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         expect(rows.length).toBe(3);
     });
 
+    it('should update current page when \'collapseAll\' ', () => {
+        pending('Tree Grid issue: curent page is not updated when collapseAll');
+        // Test prerequisites
+        treeGrid.paging = true;
+        treeGrid.perPage = 2;
+        fix.detectChanges();
+        treeGrid.expandAll();
+        fix.detectChanges();
+
+        // Verify current page
+        verifyGridPager(fix, 2, '1', '1 of 4', [true, true, false, false]);
+        expect(treeGrid.totalPages).toBe(4);
+
+        // Go to fourth page
+        treeGrid.page = 3;
+        fix.detectChanges();
+
+        // Verify current page
+        verifyGridPager(fix, 2, '10', '4 of 4', [false, false, true, true]);
+        expect(treeGrid.totalPages).toBe(4);
+
+        treeGrid.collapseAll();
+        fix.detectChanges();
+
+        // Verify current page is the first one and only root rows are visible.
+        verifyGridPager(fix, 2, '1', '1 of 2', [true, true, false, false]);
+        expect(treeGrid.totalPages).toBe(2);
+    });
 });
+
+function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
+    const disabled = 'igx-button--disabled';
+    const grid = fix.componentInstance.treeGrid;
+    const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+
+    expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
+    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
+
+    if ( pagerText != null ) {
+        expect(gridElement.querySelector('.igx-paginator')).toBeDefined();
+        expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(1);
+        expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch(pagerText);
+    }
+    if ( buttonsVisibility != null && buttonsVisibility.length === 4 ) {
+        const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+        expect(pagingButtons.length).toEqual(4);
+        expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
+        expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);
+        expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
+        expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
+    }
+}
