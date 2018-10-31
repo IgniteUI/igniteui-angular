@@ -30,6 +30,7 @@ import {
 } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
+import { SortingStrategy } from '../data-operations/sorting-strategy';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -469,6 +470,31 @@ export class IgxColumnComponent implements AfterContentInit {
         this._filters = classRef;
     }
     /**
+     * Gets the column `sortStrategy`.
+     * ```typescript
+     * let sortStrategy = this.column.sortStrategy'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get sortStrategy(): any {
+        return this._sortStrategy;
+    }
+    /**
+     * Sets the column `sortStrategy`.
+     * ```typescript
+     * this.column.sortStrategy = new CustomSortingStrategy().
+     *
+     * class CustomSortingStrategy extends SortingStrategy {
+     * ...
+     * }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set sortStrategy(classRef: any) {
+        this._sortStrategy = classRef;
+    }
+    /**
      * Gets the default minimum `width` of the column.
      * ```typescript
      * let defaultMinWidth =  this.column.defaultMinWidth;
@@ -715,6 +741,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _filters = null;
+    /**
+     *@hidden
+     */
+    protected _sortStrategy = new SortingStrategy();
     /**
      *@hidden
      */

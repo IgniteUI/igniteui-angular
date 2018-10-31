@@ -576,7 +576,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             const column: IgxColumnComponent = drag.column;
             const isGrouped = column.grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped) {
-                column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase });
+                column.grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
+                    strategy: column.sortStrategy });
             }
         }
     }
