@@ -33,10 +33,9 @@ let NEXT_ID = 0;
  *
  * @export
  */
-export interface ISelectionEventArgs {
+export interface ISelectionEventArgs extends CancelableEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
-    cancel: boolean;
 }
 
 /** @hidden */
@@ -419,7 +418,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * @hidden
      */
     onToggleOpening(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false};
+        const eventArgs = { cancel: false };
         this.onOpening.emit(eventArgs);
         e.cancel = eventArgs.cancel;
         if (eventArgs.cancel) {
@@ -449,7 +448,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
      * @hidden
      */
     onToggleClosing(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false};
+        const eventArgs = { cancel: false };
         this.onClosing.emit(eventArgs);
         e.cancel = eventArgs.cancel;
     }
