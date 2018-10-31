@@ -4,8 +4,9 @@ import { IgxTreeGridModule } from './index';
 import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { first } from 'rxjs/operators';
 
-describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
+fdescribe('IgxTreeGrid - Expanding/Collapsing actions', () => {
     configureTestSuite();
     let fix;
     let grid;
@@ -22,7 +23,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         .compileComponents();
     }));
 
-    beforeEach(async() => {
+    beforeEach(() => {
         fix = TestBed.createComponent(IgxTreeGridExpandingComponent);
         fix.detectChanges();
         grid = fix.componentInstance.treeGrid;
@@ -211,15 +212,60 @@ describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
         expect(rows.length).toBe(4, 'root level row collapsing problem');
     });
 
-    xit('should emits event when expanding rows (UI)', () => {
-
+    it('should emits an event when expanding rows (API)', (done) => {
+        const aRow = grid.getRowByIndex(0);
+        grid.onRowToggle.pipe(first()).subscribe((args) => {
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID.ID).toBe(147);
+            done();
+        });
+        aRow.expanded = true;
     });
 
-    xit('should emits event when expanding rows (API)', () => {
+    it('should emits an event when collapsing rows (API)', (done) => {
+        const aRow = grid.getRowByIndex(0);
+        aRow.expanded = true;
+        grid.onRowToggle.pipe(first()).subscribe((args) => {
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeUndefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID.ID).toBe(147);
+            done();
+        });
+        aRow.expanded = false;
+    });
+
+    it('should emits an event when expanding rows (UI)', (done) => {
+        grid.onRowToggle.pipe(first()).subscribe((args) => {
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(true);
+            expect(args.rowID.ID).toBe(147);
+            done();
+        });
+        const rowsDOM = TreeGridFunctions.getAllRows(fix);
+        const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
+        indicatorDivDOM.triggerEventHandler('click', new Event('click'));
+    });
+
+    it('should emits an event when collapsing rows (UI)', (done) => {
+        const rowsDOM = TreeGridFunctions.getAllRows(fix);
+        const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
+        indicatorDivDOM.triggerEventHandler('click', new Event('click'));
+        grid.onRowToggle.pipe(first()).subscribe((args) => {
+            expect(args.cancel).toBe(false);
+            expect(args.event).toBeDefined();
+            expect(args.expanded).toBe(false);
+            expect(args.rowID.ID).toBe(147);
+            done();
+        });
+        indicatorDivDOM.triggerEventHandler('click', new Event('click'));
     });
 });
 
-describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
+fdescribe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
