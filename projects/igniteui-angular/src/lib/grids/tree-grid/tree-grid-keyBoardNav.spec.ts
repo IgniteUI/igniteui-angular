@@ -7,7 +7,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxTreeGrid - Key Board Navigation', () => {
+describe('IgxTreeGrid - Key Board Navigation', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 

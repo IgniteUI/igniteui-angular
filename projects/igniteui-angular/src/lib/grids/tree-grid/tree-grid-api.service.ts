@@ -67,12 +67,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
 
-        console.log(super.get_row_by_key(id, row.rowID).index);
         if (isScrolledToBottom) {
             grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
-                    console.log('focus', groupRowIndex, visibleColumnIndex);
                     grid.nativeElement.querySelector(
                         `[data-rowIndex="${groupRowIndex}"][data-visibleindex="${visibleColumnIndex}"]`).focus();
                 });
