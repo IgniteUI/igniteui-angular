@@ -13,6 +13,8 @@ import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
+import { ISortingStrategy } from '../data-operations/sorting-strategy';
+import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -328,13 +330,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-
-        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
+        strategy = strategy ? strategy : this.getSortStrategyPerColumn(id, fieldName);
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -345,6 +347,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
+            each.strategy = each.strategy ? each.strategy : this.getSortStrategyPerColumn(id, each.fieldName);
             this.prepare_sorting_expression([sortingState], each);
         }
 
@@ -493,4 +496,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     protected remove_grouping_expression(id, fieldName) {
         }
+
+    protected getSortStrategyPerColumn(id: string, fieldName: string) {
+        return this.get_column_by_name(this.get(id).id, fieldName) ?
+            this.get_column_by_name(id, fieldName).sortStrategy : undefined;
+    }
 }
