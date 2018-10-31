@@ -550,7 +550,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     protected _groupBy(expression: ISortingExpression) {
-        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
     }
 
     /**
