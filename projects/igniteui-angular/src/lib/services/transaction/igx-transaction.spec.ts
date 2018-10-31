@@ -287,7 +287,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
             expect(trans.getState(deleteTransaction.id)).toEqual({
-                value: {},
+                value: null,
                 recordRef: recordRef,
                 type: deleteTransaction.type
             });
@@ -309,7 +309,7 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('Key1')).toEqual(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([deleteTransaction]);
             expect(trans.getState(deleteTransaction.id)).toEqual({
-                value: {},
+                value: null,
                 recordRef: recordRef,
                 type: deleteTransaction.type
             });
@@ -450,6 +450,36 @@ describe('IgxTransaction', () => {
                 type: deleteTransaction.type
             });
             trans.clear();
+        });
+
+        it('Should properly confirm the length of the undo/redo stacks', () => {
+            const originalData = SampleTestData.generateProductData(11);
+            const transaction = new IgxTransactionService();
+            expect(transaction).toBeDefined();
+
+            // Stacks are clear by default
+            expect(transaction.canRedo).toBeFalsy();
+            expect(transaction.canUndo).toBeFalsy();
+            let addItem: Transaction = { id: 1, type: TransactionType.ADD, newValue: { Category: 'Something' } };
+            transaction.add(addItem);
+            expect(transaction.canRedo).toBeFalsy();
+            expect(transaction.canUndo).toBeTruthy();
+            addItem = { id: 2, type: TransactionType.ADD, newValue: { Category: 'Something 2' } };
+            transaction.add(addItem);
+            expect(transaction.canRedo).toBeFalsy();
+            expect(transaction.canUndo).toBeTruthy();
+            transaction.undo();
+            expect(transaction.canRedo).toBeTruthy();
+            expect(transaction.canUndo).toBeTruthy();
+            transaction.undo();
+            expect(transaction.canRedo).toBeTruthy();
+            expect(transaction.canUndo).toBeFalsy();
+            transaction.redo();
+            expect(transaction.canRedo).toBeTruthy();
+            expect(transaction.canUndo).toBeTruthy();
+            transaction.redo();
+            expect(transaction.canRedo).toBeFalsy();
+            expect(transaction.canUndo).toBeTruthy();
         });
 
         it('Should update data when data is list of objects', () => {

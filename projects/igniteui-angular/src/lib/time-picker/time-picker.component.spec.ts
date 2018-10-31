@@ -941,6 +941,18 @@ describe('IgxTimePicker', () => {
         const selectAMPM = AMPMColumn.children[3];
         expect(selectAMPM.nativeElement.innerText).toBe('AM');
     }));
+
+    describe('EditorProvider', () => {
+        it('Should return correct edit element', () => {
+            const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+            fixture.detectChanges();
+
+            const instance = fixture.componentInstance.timePicker;
+            const editElement = fixture.debugElement.query(By.css('input[igxInput]')).nativeElement;
+
+            expect(instance.getEditElement()).toBe(editElement);
+        });
+    });
 });
 
 @Component({

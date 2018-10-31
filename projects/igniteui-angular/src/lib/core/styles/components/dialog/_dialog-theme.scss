@@ -21,6 +21,8 @@
 ///   @include igx-dialog($my-dialog-theme);
 @function igx-dialog-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background: null,
     $title-color: null,
     $message-color: null
@@ -31,6 +33,10 @@
         title-color: igx-color($palette, grays, 800),
         message-color: igx-color($palette, grays, 600)
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($title-color) and $background{
         $title-color: text-contrast($background);
@@ -73,7 +79,7 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
-        border-radius: 2px;
+        border-radius: 4px;
         background: --var($theme, 'background');
         box-shadow: igx-elevation($elevations, 24);
         overflow: hidden;

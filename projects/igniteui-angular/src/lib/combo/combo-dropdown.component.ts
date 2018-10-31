@@ -1,22 +1,25 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, EventEmitter
+    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
 } from '@angular/core';
-import { take } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxComboComponent } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { Subject } from 'rxjs';
+import { CancelableEventArgs } from '../core/utils';
 
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html'
 })
-export class IgxComboDropDownComponent extends IgxDropDownBase {
+export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDestroy {
     private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
+    private destroy$ = new Subject<boolean>();
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -149,8 +152,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     navigateLast() {
         const vContainer = this.verticalScrollContainer;
         const scrollTarget = this.combo.totalItemCount ?
-        this.combo.totalItemCount - 1 :
-        Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
+            this.combo.totalItemCount - 1 :
+            Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
         if (vContainer.igxForOf.length <= vContainer.state.startIndex + vContainer.state.chunkSize) {
             this.focusItem(this.items.length - 1);
             return;
@@ -321,7 +324,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
-        virtualContainer.onChunkLoad.pipe(take(1)).subscribe({
+        virtualContainer.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe({
             next: (e: any) => {
                 callback(e);
             }
@@ -341,9 +344,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     /**
      * @hidden
      */
-    onToggleOpening() {
+    onToggleOpening(e: CancelableEventArgs) {
+        const eventArgs = { cancel: false };
+        this.onOpening.emit(eventArgs);
+        e.cancel = eventArgs.cancel;
+        if (eventArgs.cancel) {
+            return;
+        }
         this.combo.handleInputChange();
-        this.onOpening.emit();
     }
 
     /**
@@ -366,9 +374,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
     /**
      * @hidden
      */
-    onToggleClosing() {
+    onToggleClosing(e: CancelableEventArgs) {
         this.combo.searchValue = '';
-        super.onToggleClosing();
+        super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
 
@@ -377,5 +385,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase {
      */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
+    }
+
+    /**
+     *@hidden
+     */
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 }

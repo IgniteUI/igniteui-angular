@@ -6,8 +6,10 @@
 
             <div class="calendar-sample">
                 <h4 class="sample-title">Default Calendar</h4>
-                <button igxButton igxRipple type="raised" (click)="select()">Select</button>
-                <button igxButton igxRipple type="raised" (click)="deselect()">Deselect</button>
+                <div class="calendar-sample-buttons">
+                    <button igxButton="raised" igxRipple (click)="select()">Select</button>
+                    <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
+                </div>
                 <igx-card>
                     <igx-calendar #calendar1 weekStart="1" selection="range"></igx-calendar>
                 </igx-card>
@@ -16,7 +18,7 @@
             <div class="calendar-sample">
                 <h4 class="sample-title">Vertical Calendar</h4>
                 <igx-card>
-                    <igx-calendar #calendar weekStart="1" [vertical]="true"></igx-calendar>
+                    <igx-calendar #calendar2 weekStart="1" [vertical]="true"></igx-calendar>
                 </igx-card>
             </div>
 

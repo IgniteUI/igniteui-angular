@@ -1,11 +1,22 @@
 import { TransactionService, Transaction, State } from './transaction';
 import { EventEmitter, Injectable } from '@angular/core';
+import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxBaseTransactionService implements TransactionService {
     protected _isPending = false;
     protected _pendingTransactions: Transaction[] = [];
     protected _pendingStates: Map<any, State> = new Map();
+    public get canRedo(): boolean {
+        return false;
+    }
+    public get canUndo(): boolean {
+        return false;
+    }
+    public get enabled(): boolean {
+        return this._isPending;
+    }
+
     public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: Transaction, recordRef?: any): void {
@@ -32,10 +43,6 @@ export class IgxBaseTransactionService implements TransactionService {
 
     public getState(id: any): State {
         return this._pendingStates.get(id);
-    }
-
-    public get enabled(): boolean {
-        return this._isPending;
     }
 
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
@@ -76,13 +83,13 @@ export class IgxBaseTransactionService implements TransactionService {
     protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
         let state = states.get(transaction.id);
         if (state) {
-            if (typeof state.value === 'object') {
-                Object.assign(state.value, transaction.newValue);
+            if (isObject(state.value)) {
+                mergeObjects(state.value, transaction.newValue);
             } else {
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
             states.set(transaction.id, state);
         }
     }
@@ -93,23 +100,22 @@ export class IgxBaseTransactionService implements TransactionService {
      * @returns updated value including all the changes in provided state
      */
     protected updateValue(state: State) {
-        if (typeof state.recordRef === 'object') {
-            return Object.assign({}, state.recordRef, state.value);
-        } else {
-            return state.value;
-        }
+        return this.mergeValues(state.recordRef, state.value);
     }
 
     /**
-     * If provided value is object creates a new object and returns it, otherwise returns the value
-     * @param value Value to create copy for
-     * @returns Copy of provided value
+     * Merges second values in first value and the result in empty object. If values are primitive type
+     * returns second value if exists, or first value.
+     * @param first Value to merge into
+     * @param second Value to merge
      */
-    protected copyValue(value: any): any {
-        if (typeof value === 'object') {
-            return Object.assign({}, value);
+    protected mergeValues<T>(first: T, second: T): T {
+        let result: T;
+        if (isObject(first) || isObject(second)) {
+            result = mergeObjects(mergeObjects({}, first), second);
         } else {
-            return value;
+            result = second ? second : first;
         }
+        return result;
     }
 }

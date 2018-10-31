@@ -1,6 +1,7 @@
 <aside class="tsd-sources">
     {{#if implementationOf}}
-        <p><span>{{#localize}}Implementation of{{/localize}}</span> {{#with implementationOf}}{{> typeAndParent}}{{/with}}</p>
+        <p><span>{{#localize}}Implementation of{{/localize}}</span> {{#with
+            implementationOf}}{{> typeAndParent}}{{/with}}</p>
     {{/if}}
     {{#if inheritedFrom}}
         <p><span>{{#localize}}Inherited from{{/localize}}</span> {{#with inheritedFrom}}{{> typeAndParent}}{{/with}}</p>
@@ -12,7 +13,8 @@
         <ul>
             {{#each sources}}
                 {{#if url}}
-                    <li><span>{{#localize}}Defined in{{/localize}}</span> <a href="{{url}}">{{fileName}}:{{line}}</a></li>
+                    <li><span>{{#localize}}Defined in{{/localize}}</span> <a href="{{url}}">{{fileName}}:{{line}}</a>
+                    </li>
                 {{else}}
                     <li><span>{{#localize}}Defined in{{/localize}}</span> {{fileName}}:{{line}}</li>
                 {{/if}}

@@ -1,0 +1,34 @@
+<ng-container #defaultGroupRow>
+    <div (click)="toggle()" class="igx-grid__grouping-indicator">
+        <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
+        <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
+    </div>
+
+    <div class="igx-grid__group-content" #groupContent>
+        <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
+        </ng-container>
+    </div>
+
+    <ng-template #defaultGroupByTemplate>
+        <div class="igx-group-label">
+            <igx-icon fontSet="material" class="igx-group-label__icon">group_work</igx-icon>
+            <span class="igx-group-label__column-name">
+            {{ groupRow.expression ? groupRow.expression.fieldName : '' }}:
+            </span>
+
+            <ng-container *ngIf="dataType === 'boolean' || dataType === 'string'; else default" >
+                <span class="igx-group-label__text">{{ groupRow.value }}</span>
+            </ng-container>
+            <ng-template #default>
+                <ng-container *ngIf="dataType === 'number'">
+                    <span class="igx-group-label__text">{{ groupRow.value | number }}</span>
+                </ng-container>
+                <ng-container *ngIf="dataType === 'date'">
+                    <span class="igx-group-label__text">{{ groupRow.value | date }}</span>
+                </ng-container>
+            </ng-template>
+
+            <igx-badge [value]="groupRow.records ? groupRow.records.length : 0" class='igx-group-label__count-badge'></igx-badge>
+        </div>
+    </ng-template>
+</ng-container>

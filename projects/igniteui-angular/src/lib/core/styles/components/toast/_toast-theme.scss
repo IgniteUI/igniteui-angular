@@ -21,6 +21,8 @@
 ///   @include igx-toast($my-toast-theme);
 @function igx-toast-theme(
     $palette: $default-palette,
+    $preset: null,
+
     $background: null,
     $text-color: null
 ) {
@@ -29,6 +31,10 @@
         background: igx-color($palette, 'grays', 600),
         text-color: #fff
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);

@@ -16,12 +16,25 @@
 ///   igx-overlay($my-overlay-theme);
 ///
 @function igx-overlay-theme(
+    $palette: $default-palette,
+    $preset: null,
+
     $background-color: $overlay-color
 ) {
-    @return (
+
+    $default-theme: (
         name: 'igx-overlay',
         background-color: $background-color
     );
+
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
+    @return extend($default-theme, (
+        palette: $palette,
+        background-color: $background-color
+    ));
 }
 
 ///
@@ -42,6 +55,7 @@
         background-color: transparent;
         transition: background-color .25s $ease-in-out-quad;
         pointer-events: none;
+        z-index: 10;
     }
 
     %overlay-wrapper--modal {

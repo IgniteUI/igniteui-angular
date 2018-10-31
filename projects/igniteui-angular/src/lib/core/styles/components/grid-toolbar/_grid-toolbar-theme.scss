@@ -31,6 +31,7 @@
 
 @function igx-grid-toolbar-theme(
     $palette: $default-palette,
+    $preset: null,
 
     $background-color: null,
     $button-background: null,
@@ -69,8 +70,32 @@
         item-focus-text-color: igx-color($palette, 'grays', 600)
     );
 
+    @if $preset {
+        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+    }
+
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
+    }
+
+    @if not($item-text-color) and $dropdown-background {
+        $item-text-color: text-contrast($dropdown-background);
+    }
+
+    @if not($item-hover-text-color) and $dropdown-background {
+        $item-hover-text-color: text-contrast($dropdown-background);
+    }
+
+    @if not($item-focus-text-color) and $dropdown-background {
+        $item-focus-text-color: text-contrast($dropdown-background);
+    }
+
+    @if not($item-hover-text-color) and $item-hover-background {
+        $item-hover-text-color: text-contrast($item-hover-background);
+    }
+
+    @if not($item-focus-text-color) and $item-focus-background {
+        $item-focus-text-color: text-contrast($item-focus-background);
     }
 
     @if not($button-hover-background) and $background-color {
@@ -275,7 +300,6 @@
         position: relative;
 
         %igx-filtering-menu {
-            background: --var($theme, 'dropdown-background');
             padding: rem(0);
             right: 0;
             margin: 0;
@@ -284,6 +308,7 @@
     }
 
     %igx-grid-toolbar__dd-list {
+        background: --var($theme, 'dropdown-background');
         margin: 0;
     }
 

@@ -1,3 +1,8 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+    providedIn: 'root',
+})
 export class IgxSelectionAPIService {
     /**
      * If primaryKey is defined, then multiple selection is based on the primaryKey, and it is array of numbers, strings, etc.

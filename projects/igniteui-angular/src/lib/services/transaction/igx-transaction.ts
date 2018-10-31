@@ -1,6 +1,7 @@
 import { Transaction, State, TransactionType } from './transaction';
 import { IgxBaseTransactionService } from './base-transaction';
 import { EventEmitter, Injectable } from '@angular/core';
+import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
 export class IgxTransactionService extends IgxBaseTransactionService {
@@ -8,6 +9,15 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
+
+    get canUndo(): boolean {
+        return this._undoStack.length > 0;
+    }
+
+    get canRedo(): boolean {
+        return this._redoStack.length > 0;
+    }
+
     public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: Transaction, recordRef?: any): void {
@@ -35,7 +45,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     public aggregatedState(mergeChanges: boolean): Transaction[] {
         const result: Transaction[] = [];
         this._states.forEach((state: State, key: any) => {
-            const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
+            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
             result.push({ id: key, newValue: value, type: state.type });
         });
         return result;
@@ -181,26 +191,25 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                 case TransactionType.DELETE:
                     if (state.type === TransactionType.ADD) {
                         states.delete(transaction.id);
-                    } else if (state && state.type === TransactionType.UPDATE) {
+                    } else if (state.type === TransactionType.UPDATE) {
                         state.value = transaction.newValue;
                         state.type = TransactionType.DELETE;
                     }
                     break;
                 case TransactionType.UPDATE:
-                    //  TODO: move object.assign part in a method, probably change updateValue one!
-                    if (typeof state.value === 'object') {
+                    if (isObject(state.value)) {
                         if (state.type === TransactionType.ADD) {
-                            state.value = Object.assign({}, state.value, transaction.newValue);
+                            state.value = this.mergeValues(state.value, transaction.newValue);
                         }
                         if (state.type === TransactionType.UPDATE) {
-                            Object.assign(state.value, transaction.newValue);
+                            mergeObjects(state.value, transaction.newValue);
                         }
                     } else {
                         state.value = transaction.newValue;
                     }
             }
         } else {
-            state = { value: this.copyValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
             states.set(transaction.id, state);
         }
 
@@ -226,7 +235,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
             //  if values in any key are the same delete it from state's value
             //  if state's value is not object, simply compare with recordRef and remove
             //  the state if they are equal
-            if (typeof state.recordRef === 'object') {
+            if (isObject(state.recordRef)) {
                 for (const key of Object.keys(state.value)) {
                     if (JSON.stringify(state.recordRef[key]) === JSON.stringify(state.value[key])) {
                         delete state.value[key];
@@ -243,21 +252,5 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                 }
             }
         }
-    }
-
-    /**
-     * Merges second values in first value and the result in empty object. If values are primitive type
-     * returns second value if exists, or first value.
-     * @param first Value to merge into
-     * @param second Value to merge
-     */
-    protected mergeValues<T>(first: T, second: T): T {
-        let result: T;
-        if ((first && typeof first === 'object') || (second && typeof second === 'object')) {
-            result = Object.assign({}, first, second);
-        } else {
-            result = second ? second : first;
-        }
-        return result;
     }
 }

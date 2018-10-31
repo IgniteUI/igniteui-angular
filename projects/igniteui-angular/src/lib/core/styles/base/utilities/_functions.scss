@@ -397,10 +397,13 @@
 
 /// @ignore
 @function get-theme($themes, $theme)  {
-    $_theme: map-get($themes, $theme);
-    @if $_theme {
-        @return $_theme;
-    } @else {
+    @if type-of($themes) == 'map' and map-has-key($themes, $theme) {
+        @return map-get($themes, $theme);
+    }
+
+    @if (function-exists('get-function')) {
         @return call(get-function(#{$theme}-theme));
+    } @else {
+        @return call((#{$theme}-theme));
     }
 }
