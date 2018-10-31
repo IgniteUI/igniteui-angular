@@ -526,8 +526,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.selected) {
             return;
         }
-        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current editted row
-        const inEditRow = this.belongsToEditRow; // Check if cell is in current editable mode, if any
+        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current edited row
         this._clearCellSelection();
         this._saveCellSelection();
         const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
@@ -535,12 +534,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
             }
-            if (editRowState) { // If there is a row being edited
-                if (inEditRow && !this.column.editable) { // and this cell is in the row and is NOT editable, submit the values and close
-                    this.exitRowEdit(true, true, editRowState);
-                } else if (!inEditRow) { // or this is not in the editted row
-                    this.exitRowEdit(true, !this.column.editable, editRowState); // submit data and close the overlay depending on editable
-                }
+            if (editRowState && !this.inEditMode) {
+                // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
+                this.exitRowEdit(true, true, editRowState);
             }
             this.selected = true;
             if (fireFocus) {
@@ -550,14 +546,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private get belongsToEditRow(): boolean { // If the cell belongs to the row that is currently being edited
-        const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (cellInEditMode && this.grid.rowEditable) {
-            return this.cellID.rowID === cellInEditMode.cellID.rowID;
-        }
-        return false;
-    }
-
+    /** TODO: Refactor away, move to grid.endRowEdit! */
     private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
         const grid = this.grid;
         if (grid.rowEditable) {
