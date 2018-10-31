@@ -48,11 +48,7 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     }
 
     set expanded(value: boolean) {
-        if (this._treeRow.children &&
-            this._treeRow.children.length > 0 &&
-            this._treeRow.expanded !== value) {
-            (this.gridAPI as IgxTreeGridAPIService).trigger_row_expansion_toggle(this.gridID, this, undefined);
-        }
+        (this.gridAPI as IgxTreeGridAPIService).trigger_row_expansion_toggle(this.gridID, this._treeRow, value);
     }
 
     /**
