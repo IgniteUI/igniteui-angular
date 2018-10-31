@@ -6,7 +6,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 
-fdescribe('IgxTreeGrid - Expanding/Collapsing actions', () => {
+describe('IgxTreeGrid - Expanding/Collapsing actions', () => {
     configureTestSuite();
     let fix;
     let grid;
@@ -265,7 +265,7 @@ fdescribe('IgxTreeGrid - Expanding/Collapsing actions', () => {
     });
 });
 
-fdescribe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
+describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
