@@ -441,7 +441,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
-        this.endRowEdit(true);
+        this.endEdit(true);
         this._gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -783,7 +783,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
     }
 
     public ngDoCheck(): void {

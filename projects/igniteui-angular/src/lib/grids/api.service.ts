@@ -116,17 +116,25 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public set_cell_inEditMode(gridId: string, cell) {
         const grid = this.get(gridId);
+        const args: IGridEditEventArgs = {
+            row: cell.row,
+            cell: cell,
+            oldValue: cell.value,
+            cancel: false
+        };
+        grid.onCellEnterEditMode.emit(args);
+        if (args.cancel) {
+            return;
+        }
         if (grid.rowEditable) {
             const currentEditRow = this.get_edit_row_state(gridId);
             if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
-                grid.endRowEdit(true);
-                grid.startRowEdit(cell.row);
+                grid.endEdit(true);
+                grid.startRowEdit(cell);
             }
             if (!currentEditRow) {
-                grid.startRowEdit(cell.row);
+                grid.startRowEdit(cell);
             }
-            const rowState = { rowID: cell.cellID.rowID, rowIndex: cell.cellID.rowIndex };
-            this.set_edit_row_state(gridId, rowState);
         }
 
         if (!this.get_cell_inEditMode(gridId)) {
@@ -146,7 +154,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 }
             } else {
                 const grid = this.get(gridId);
-                grid.endRowEdit(true);
                 this.editCellState.delete(gridId);
             }
         }
@@ -274,11 +281,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         if (oldValue !== undefined && rowData !== undefined) {
             const args: IGridEditEventArgs = {
-                row: cellObj ? cellObj.row : null, cell: cellObj,
-                currentValue: oldValue,
-                newValue: editValue
+                row: cellObj ? cellObj.row : null,
+                cell: cellObj,
+                oldValue: oldValue,
+                newValue: editValue,
+                cancel: false
             };
-            grid.onEditDone.emit(args);
+            grid.onCellEdit.emit(args);
 
             //  if we are editing the cell for second or next time, get the old value from transaction
             const oldValueInTransaction = grid.transactions.getAggregatedValue(rowID, true);
@@ -312,12 +321,16 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             const args: IGridEditEventArgs = {
                 row: this.get_row_by_key(id, rowID),
                 cell: null,
-                currentValue: this.get(id).data[index],
-                newValue: value
+                oldValue: this.get(id).data[index],
+                newValue: value,
+                cancel: false
             };
-            grid.onEditDone.emit(args);
+            grid.onRowEdit.emit(args);
+            if (args.cancel) {
+                return;
+            }
             if (grid.transactions.enabled) {
-                grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
+                grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.oldValue);
             } else {
                 grid.data[index] = args.newValue;
             }
@@ -358,7 +371,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         ignoreCase: boolean) {
         const grid = this.get(id);
         const filteringTree = grid.filteringExpressionsTree;
-        this.escape_editMode(id);
+        grid.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;

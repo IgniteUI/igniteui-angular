@@ -1452,7 +1452,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                spyOn(grid, 'endRowEdit');
+                spyOn(grid, 'endEdit');
 
                 // put cell in edit mode
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1465,14 +1465,14 @@ describe('IgxGrid Component Tests', () => {
                 const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
                 const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Done');
                 doneButtonElement.nativeElement.click();
-                expect(grid.endRowEdit).toHaveBeenCalled();
-                expect(grid.endRowEdit).toHaveBeenCalledWith(true);
+                expect(grid.endEdit).toHaveBeenCalled();
+                expect(grid.endEdit).toHaveBeenCalledWith(true);
 
                 //  ged CANCLE button and click it
                 const cancelButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Cancel');
                 cancelButtonElement.nativeElement.click();
-                expect(grid.endRowEdit).toHaveBeenCalled();
-                expect(grid.endRowEdit).toHaveBeenCalledWith(false);
+                expect(grid.endEdit).toHaveBeenCalled();
+                expect(grid.endEdit).toHaveBeenCalledWith(false);
             }));
 
             it(`Should exit row editing AND COMMIT on clicking the DONE button in row edit overlay`, fakeAsync(() => {
@@ -1491,7 +1491,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 // 'click' on Done button
-                grid.endRowEdit(true);
+                grid.endEdit(true);
                 expect(gridAPI.submit_value).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -2385,7 +2385,7 @@ describe('IgxGrid Component Tests', () => {
                 const initialData = Object.assign({}, initialRow.rowData);
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditCancel, 'emit');
-                spyOn(grid.onRowEditDone, 'emit');
+                spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
                 tick();
@@ -2393,8 +2393,8 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // On button click
                 fixture.debugElement.queryAll(By.css('.igx-button--flat'))[1].nativeElement.click();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                expect(grid.onRowEdit.emit).toHaveBeenCalled();
+                expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                     newValue: Object.assign({}, initialData, { Downloads: 1337 }),
                     oldValue: initialData,
                     row: initialRow,
@@ -2413,7 +2413,7 @@ describe('IgxGrid Component Tests', () => {
                 const initialData = Object.assign({}, initialRow.rowData);
                 let targetCell: IgxGridCellComponent;
                 spyOn(grid.onRowEditCancel, 'emit');
-                spyOn(grid.onRowEditDone, 'emit');
+                spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
                 tick();
@@ -2440,7 +2440,7 @@ describe('IgxGrid Component Tests', () => {
                 const initialRow = grid.getRowByKey(0);
                 const initalData = Object.assign({}, initialRow.rowData);
                 let targetCell: IgxGridCellComponent;
-                spyOn(grid.onRowEditDone, 'emit');
+                spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
                 tick();
@@ -2449,8 +2449,8 @@ describe('IgxGrid Component Tests', () => {
                 // On filter
                 grid.filter('Downloads', 1330, IgxNumberFilteringOperand.instance().condition('greaterThan'), true);
                 fixture.detectChanges();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                expect(grid.onRowEdit.emit).toHaveBeenCalled();
+                expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                     newValue: Object.assign({}, initalData, { Downloads: 1337 }),
                     oldValue: initalData,
                     row: initialRow,
@@ -2468,7 +2468,7 @@ describe('IgxGrid Component Tests', () => {
                 const initialRow = grid.getRowByKey(0);
                 const initialData = Object.assign({}, initialRow.rowData);
                 let targetCell: IgxGridCellComponent;
-                spyOn(grid.onRowEditDone, 'emit');
+                spyOn(grid.onRowEdit, 'emit');
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.inEditMode = true;
                 tick();
@@ -2477,8 +2477,8 @@ describe('IgxGrid Component Tests', () => {
                 // On sort
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
                 fixture.detectChanges();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalled();
-                expect(grid.onRowEditDone.emit).toHaveBeenCalledWith({
+                expect(grid.onRowEdit.emit).toHaveBeenCalled();
+                expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
                     newValue: Object.assign({}, initialData, { Downloads: 1337 }),
                     oldValue: initialData,
                     row: initialRow,
@@ -2557,7 +2557,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
                 let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
                 let cell = grid.getCellByColumn(0, 'ProductName');
-                spyOn(grid, 'endRowEdit').and.callThrough();
+                spyOn(grid, 'endEdit').and.callThrough();
                 cell.inEditMode = true;
                 tick();
                 fixture.detectChanges();
@@ -2576,8 +2576,8 @@ describe('IgxGrid Component Tests', () => {
                 expect(parseInt(overlayText.textContent, 10)).toEqual(1);
 
                 fixture.componentInstance.buttons.last.element.nativeElement.click();
-                expect(grid.endRowEdit).toHaveBeenCalled();
-                expect(grid.endRowEdit).toHaveBeenCalledTimes(1);
+                expect(grid.endEdit).toHaveBeenCalled();
+                expect(grid.endEdit).toHaveBeenCalledTimes(1);
             }));
         });
 
@@ -2763,7 +2763,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 // Exit edit mode
-                grid.endRowEdit(true);
+                grid.endEdit(true);
                 tick();
                 fixture.detectChanges();
                 expect(grid.transactions.aggregatedState(false)).toEqual(initialState);
@@ -3335,14 +3335,14 @@ export class IgxGridWithEditingAndFeaturesComponent {
         <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
-        <ng-template igxRowEdit let-rowChangesCount="rowChangesCount" let-endRowEdit="endRowEdit">
+        <ng-template igxRowEdit let-rowChangesCount="rowChangesCount" let-endEdit="endEdit">
             <div class="igx-banner__message">
                 <span class="igx-banner__text">{{ rowChangesCount }} </span>
             </div>
             <div class="igx-banner__actions">
                 <div class="igx-banner__row">
-                    <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-                    <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Done</button>
+                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
                 </div>
             </div>
         </ng-template>

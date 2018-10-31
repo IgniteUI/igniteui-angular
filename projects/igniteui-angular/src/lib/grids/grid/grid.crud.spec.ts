@@ -154,8 +154,9 @@ describe('IgxGrid - CRUD operations', () => {
         const args: IGridEditEventArgs = {
             row,
             cell: null,
-            currentValue: { index: 1, value: 1 },
-            newValue: { index: 200, value: 200 }
+            oldValue: { index: 1, value: 1 },
+            newValue: { index: 200, value: 200 },
+            cancel: false
         };
 
         expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
@@ -174,8 +175,9 @@ describe('IgxGrid - CRUD operations', () => {
         const args: IGridEditEventArgs = {
             row: cell.row,
             cell,
-            currentValue: 1,
-            newValue: 200
+            oldValue: 1,
+            newValue: 200,
+            cancel: false
         };
 
         expect(grid.rowList.first.cells.first.value).not.toEqual(-100);

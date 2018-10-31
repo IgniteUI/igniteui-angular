@@ -18,7 +18,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -526,7 +526,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.selected) {
             return;
         }
-        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current edited row
         this._clearCellSelection();
         this._saveCellSelection();
         const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
@@ -534,23 +533,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
             }
-            if (editRowState && !this.inEditMode) {
+            if (!this.inEditMode) {
                 // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
-                this.exitRowEdit(true, true, editRowState);
+                this.grid.endEdit(true);
             }
             this.selected = true;
             if (fireFocus) {
                 this.nativeElement.focus();
             }
             this.grid.onSelection.emit({ cell: this, event });
-        }
-    }
-
-    /** TODO: Refactor away, move to grid.endRowEdit! */
-    private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
-        const grid = this.grid;
-        if (grid.rowEditable) {
-            grid.endRowTransaction(commit, close, row);
         }
     }
 
@@ -633,7 +624,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
             && editableCell.cellID.columnID === this.cellID.columnID) {
-            this.grid.endRowEdit(true);
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
@@ -817,9 +807,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
-                const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
-                this.gridAPI.submit_value(this.gridID);
-                this.exitRowEdit(true, true, rowInEdit);
+                this.grid.endEdit(true);
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -829,9 +817,20 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
-            const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
+            const editableCell = this;
+            const args: IGridEditEventArgs = {
+                cell: editableCell,
+                row: editableCell.row,
+                oldValue: editableCell.value,
+                newValue: editableCell.editValue,
+                cancel: false
+            };
+            this.grid.onCellEditCancel.emit(args);
+            if (args.cancel) {
+                return;
+            }
+            this.grid.endEdit(false);
             this.inEditMode = false;
-            this.exitRowEdit(false, true, rowInEdit);
             this.nativeElement.focus();
         }
     }
