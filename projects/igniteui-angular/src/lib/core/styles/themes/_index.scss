@@ -86,7 +86,7 @@
 
 @mixin igx-theme(
     $palette,
-    $preset: null,
+    $preset: $default-preset,
     $exclude: (),
     $legacy-support: true
 ) {
@@ -120,11 +120,11 @@
     }
 
     @if not(index($exclude, 'igx-bottom-nav')) {
-        @include igx-bottom-nav($theme: get-theme($preset, 'igx-bottom-nav'));
+        @include igx-bottom-nav(igx-bottom-nav-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-button')) {
-        @include igx-button($theme: get-theme($preset, 'igx-button'));
+        @include igx-button(igx-button-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-button-group')) {
@@ -262,4 +262,8 @@
     @if not(index($exclude, 'igx-time-picker')) {
         @include igx-time-picker($theme: get-theme($preset, 'igx-time-picker'));
     }
+}
+
+@mixin igx-green-theme() {
+    @include igx-theme($palette: $dark-green-palette, $preset: $dark-green-theme);
 }
