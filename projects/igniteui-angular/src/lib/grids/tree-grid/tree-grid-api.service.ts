@@ -41,12 +41,15 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public trigger_row_expansion_toggle(id: string, row: IgxTreeGridRowComponent, event: Event) {
+    public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event) {
         const grid = this.get(id);
-        const expanded = !row.treeRow.expanded;
+
+        if (!row.children || row.children.length <= 0 && row.expanded === expanded) {
+            return;
+        }
 
         const args: IRowToggleEventArgs = {
-            row: row,
+            rowID: row.rowID,
             expanded: expanded,
             event: event,
             cancel: false
