@@ -70,6 +70,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
         this.grid1.addRow({ 'employeeID': 24, 'PID': 5, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
     }
 
+    public deleteRow() {
+        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
+    }
+
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }

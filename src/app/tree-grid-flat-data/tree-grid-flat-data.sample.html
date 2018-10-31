@@ -37,9 +37,18 @@
             </igx-tree-grid>
 
             <div class="topMargin">
-                <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                <div class="toggle-group">
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+                    </div>
+                    <div class="switch-group">
+                        <igx-switch [(ngModel)]="grid1.cascadeOnDelete">Cascade On Delete</igx-switch>
+                    </div>
+                </div>
+
                 <div class="sample-buttons">
                     <button igxButton="raised" (click)="addRow()">Add row</button>
+                    <button igxButton="raised" (click)="deleteRow()">Delete selected row</button>
                 </div>
             </div>
         </div>
