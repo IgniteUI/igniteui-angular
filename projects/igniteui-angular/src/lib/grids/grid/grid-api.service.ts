@@ -35,8 +35,8 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
         if (name) {
             const names = typeof name === 'string' ? [ name ] : name;
-            const groupedCols = groupingState.filter((state) => !names.includes(state.fieldName));
-            const newSortingExpr = sortingState.filter((state) => !names.includes(state.fieldName));
+            const groupedCols = groupingState.filter((state) => names.indexOf(state.fieldName) < 0);
+            const newSortingExpr = sortingState.filter((state) => names.indexOf(state.fieldName) < 0);
             this.get(id).groupingExpressions = groupedCols;
             this.get(id).sortingExpressions = newSortingExpr;
             names.forEach((colName) => {
