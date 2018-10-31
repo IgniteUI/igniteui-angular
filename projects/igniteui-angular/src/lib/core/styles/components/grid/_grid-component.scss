@@ -349,6 +349,10 @@
             @extend %grid-cell-display--cosy !optional;
         }
 
+        @include e(thead) {
+            @extend %grid-thead--cosy !optional;
+        }
+
         @include e(thead-title) {
             @extend %grid-thead-title--cosy !optional;
         }
@@ -412,6 +416,10 @@
 
         @include e(td) {
             @extend %grid-cell-display--compact !optional;
+        }
+
+        @include e(thead) {
+            @extend %grid-thead--compact !optional;
         }
 
         @include e(thead-title) {

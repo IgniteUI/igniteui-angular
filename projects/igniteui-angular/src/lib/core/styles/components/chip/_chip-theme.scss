@@ -258,6 +258,7 @@
 
         position: relative;
         display: inline-flex;
+        flex: 1 0 auto;
         transition: $transition;
         transition-property: top, left;
         touch-action: none;
