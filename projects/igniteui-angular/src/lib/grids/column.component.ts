@@ -203,6 +203,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 }
 
                 this.grid.reflow();
+                this.grid.filteringService.refreshExpressions();
             }
         }
     }
@@ -950,6 +951,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -1002,6 +1004,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.reinitPinStates();
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
