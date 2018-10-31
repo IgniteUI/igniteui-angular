@@ -36,7 +36,7 @@
     );
 
     @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
+        $default-theme: extend($default-theme, map-get($preset, 'igx-bottom-nav'));
     }
 
     @if not($idle-item-color) and $background {
