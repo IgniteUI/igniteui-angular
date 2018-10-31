@@ -56,21 +56,21 @@
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
-                <div class="igx-grid__thead-item igx-grid__th--pinned">
+                <div class="igx-grid__thead-item igx-grid__th--pinned"  [igxHeaderGroupSizing]='col'>
                     <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [style.max-width.px]='col.width'></igx-grid-header>
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
                     <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
+                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
                 </div>
             </ng-template>
         </ng-container>
         <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
-            <div class="igx-grid__thead-item">
+            <div class="igx-grid__thead-item" [igxHeaderGroupSizing]='col'>
                 <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-header>
+                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
                 <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
+                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-filtering-cell>
             </div>
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
