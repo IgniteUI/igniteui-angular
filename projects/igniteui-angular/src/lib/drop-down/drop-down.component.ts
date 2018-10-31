@@ -602,9 +602,9 @@ export class IgxDropDownItemNavigationDirective {
     @HostListener('keydown', ['$event'])
     handleKeyDown(event: KeyboardEvent) {
         if (event) {
-            const key = event.code ? event.code.toLowerCase() : event.key.toLowerCase();
+            const key = event.key.toLowerCase();
             if (!this.target.collapsed) { // If dropdown is opened
-                const navKeys = ['esc', 'escape', 'enter', 'tab', 'space', 'spacebar',
+                const navKeys = ['esc', 'escape', 'enter', 'tab', 'space', 'spacebar', ' ',
             'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
@@ -625,6 +625,7 @@ export class IgxDropDownItemNavigationDirective {
                     break;
                 case 'space':
                 case 'spacebar':
+                case ' ':
                     this.onSpaceKeyDown(event);
                     break;
                 case 'arrowup':
