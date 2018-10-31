@@ -1,8 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
+import { IgxTreeGridModule } from './index';
 import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -198,7 +196,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-        treeGrid.expandedLevels = 0;
+        treeGrid.expansionDepth = 0;
         fix.detectChanges();
     });
 
@@ -257,7 +255,56 @@ describe('Row editing expanding/collapsing', () => {
         fix.detectChanges();
     });
 
-    it('Hide banner with collapsing a parent node, using UI', fakeAsync(() => {
+    it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(1, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+
+        const firstRow = rows[0];
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+
+        indicatorDiv.triggerEventHandler('click', new Event('click'));
+        tick();
+        fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+    }));
+
+    it('Hide banner with collapsing a node, using API', fakeAsync(() => {
+        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
+        // Then expand again parent row and see that overlay is visible. All this using API.
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        const cell = treeGrid.getCellByColumn(1, 'Name');
+        cell.inEditMode = true;
+        tick();
+        fix.detectChanges();
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        tick();
+        fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+    }));
+
+    // The following tests were written,
+    // when collapsing/expanding was not causing cell/row to exit edit mode.
+    // They were checking if row edit was hidden/shown.
+    // Later any collapse/expand of the tree grid was exiting edit mode.
+    // Please delete those test if you don't think this functionality will be reverted
+    // and cell will stay in edit mode even row is collapsed/expanded.
+
+    /*it('Hide banner with collapsing a parent node, using UI', fakeAsync(() => {
         // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
         // Then expand again parent row and see that overlay is visible. All this clicking row indicator.
         const rows = TreeGridFunctions.getAllRows(fix);
@@ -397,7 +444,7 @@ describe('Row editing expanding/collapsing', () => {
         expect(overlayContent.style.display).toEqual('');
     }));
 
-    xit('Hide banner while collapsing node that is NOT a parent one, but goes outside visible area, using UI', fakeAsync(() => {
+    it('Hide banner while collapsing node that is NOT a parent one, but goes outside visible area, using UI', fakeAsync(() => {
         // Test summary: First make grid 300px.
         // Edit a row, then expand row that is not parent of the edit row, but the expanded row has so many records
         // that they push the edit row outside the visible area - then row overlay should be hidden.
@@ -429,5 +476,5 @@ describe('Row editing expanding/collapsing', () => {
         tick();
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
-    }));
+    }));*/
 });

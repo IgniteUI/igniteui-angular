@@ -38,14 +38,18 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return a > b ? 1 : a < b ? -1 : 0;
     }
-    protected compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean) {
+    protected compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean, strategy: ISortingStrategy) {
         let a = this.getFieldValue(obj1, key);
         let b = this.getFieldValue(obj2, key);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
         }
-        return reverse * this.compareValues(a, b);
+        if (strategy) {
+            return reverse * strategy.compareValues(a, b);
+        } else {
+            return reverse * this.compareValues(a, b);
+        }
     }
     protected getFieldValue(obj: any, key: string): any {
         return obj[key];
@@ -83,7 +87,7 @@ export class SortingStrategy implements ISortingStrategy {
             false;
         const reverse = (expression.dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase);
+            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase, expression.strategy);
         };
         return this.arraySort(data, cmpFunc);
     }

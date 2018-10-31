@@ -182,10 +182,10 @@ export class IgxTreeGridRowEditingComponent {
 @Component({
     template: `
         <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [rowEditable]="true" width="900px" height="600px">
-            <igx-column [field]="'HireDate'" dataType="date"></igx-column>
-            <igx-column [field]="'Name'" dataType="string"></igx-column>
-            <igx-column [field]="'ID'" dataType="number"></igx-column>
-            <igx-column [field]="'Age'" dataType="number"></igx-column>
+            <igx-column [field]="'HireDate'" dataType="date" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'Name'" dataType="string" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'ID'" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'Age'" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
         </igx-tree-grid>
     `
 })

@@ -7,6 +7,16 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, State> = new Map();
+    public get canRedo(): boolean {
+        return false;
+    }
+    public get canUndo(): boolean {
+        return false;
+    }
+    public get enabled(): boolean {
+        return this._isPending;
+    }
+
     public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: T, recordRef?: any): void {
@@ -33,10 +43,6 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
 
     public getState(id: any): State {
         return this._pendingStates.get(id);
-    }
-
-    public get enabled(): boolean {
-        return this._isPending;
     }
 
     public getAggregatedValue(id: any, mergeChanges: boolean): any {

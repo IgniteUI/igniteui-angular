@@ -9,6 +9,15 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
     private _redoStack: { transaction: T, recordRef: any }[] = [];
     private _undoStack: { transaction: T, recordRef: any }[] = [];
     private _states: Map<any, State> = new Map();
+
+    get canUndo(): boolean {
+        return this._undoStack.length > 0;
+    }
+
+    get canRedo(): boolean {
+        return this._redoStack.length > 0;
+    }
+
     public onStateUpdate = new EventEmitter<void>();
 
     public add(transaction: T, recordRef?: any): void {
@@ -36,7 +45,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
     public aggregatedState(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: State, key: any) => {
-            const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
+            const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
             result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
