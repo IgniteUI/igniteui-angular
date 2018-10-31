@@ -395,7 +395,7 @@
     @return $split-arr;
 }
 
-/// @ignore
+// @ignore
 @function get-theme($themes, $theme)  {
     @if type-of($themes) == 'map' and map-has-key($themes, $theme) {
         @return map-get($themes, $theme);
@@ -406,4 +406,34 @@
     } @else {
         @return call((#{$theme}-theme));
     }
+}
+
+// @ignore
+@function resolve-value($ctx, $extra: null) {
+    $result: null;
+    @each $fn, $args in $ctx {
+        @if function-exists($fn) {
+            @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
+                $result: call($fn, $extra, $args...);
+            } @else if $result != null {
+                $result: call($fn, $result, $args...)
+            } @else {
+                $result: call($fn, $args...)
+            }
+        }
+    }
+    @return $result;
+}
+
+// @ignore
+@function apply-palette($preset, $palette) {
+    $result: ();
+    @each $key, $value in $preset {
+        @if type-of($value) == 'map' {
+            $result: extend($result, (#{$key}: #{resolve-value($value, $palette)}));
+        } @else {
+            $result: extend($result, (#{$key}: #{$value}));
+        }
+    }
+    @return $result;
 }
