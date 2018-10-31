@@ -48,6 +48,7 @@ describe('Scroll Inertia Directive ', () => {
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
     it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
+        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'vertical';
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
         const evt = {wheelDeltaY: -240, preventDefault: () => {}};
         scrInertiaDir.onWheel(evt);
@@ -58,6 +59,7 @@ describe('Scroll Inertia Directive ', () => {
 
     it('should change scroll left for related scrollbar if onWheel is executed with wheelDeltaX.', () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'horizontal';
         const evt = {wheelDeltaX: -240, preventDefault: () => {}};
         scrInertiaDir.onWheel(evt);
 
@@ -68,6 +70,7 @@ describe('Scroll Inertia Directive ', () => {
     // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
     it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'vertical';
         const evt = {deltaY: 1, preventDefault: () => {}};
         scrInertiaDir.onWheel(evt);
 
@@ -77,6 +80,7 @@ describe('Scroll Inertia Directive ', () => {
 
     it('should change scroll left for related scrollbar if onWheel is executed with deltaX.', () => {
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        fix.componentInstance.scrInertiaDir.IgxScrollInertiaDirection = 'horizontal';
         const evt = {deltaX: 1, preventDefault: () => {}};
         scrInertiaDir.onWheel(evt);
 

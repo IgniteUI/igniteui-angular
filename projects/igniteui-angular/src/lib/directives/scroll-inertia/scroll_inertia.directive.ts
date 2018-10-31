@@ -9,6 +9,9 @@ export class IgxScrollInertiaDirective implements OnInit {
     }
 
     @Input()
+    public IgxScrollInertiaDirection: string;
+
+    @Input()
     public IgxScrollInertiaScrollContainer: any;
 
     @Input()
@@ -121,7 +124,7 @@ export class IgxScrollInertiaDirective implements OnInit {
             /* For other browsers that don't provide wheelDelta, use the deltaY to determine direction and pass default values. */
             scrollDeltaY = this.calcAxisCoords(evt.deltaY, -1, 1);
         }
-        if (scrollDeltaX) {
+        if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
             this._scrollToX(
                 this._startX + scrollDeltaX * scrollStep
             );
@@ -131,7 +134,7 @@ export class IgxScrollInertiaDirective implements OnInit {
                 // Prevent navigating through pages when scrolling on Mac
                 evt.preventDefault();
             }
-        } else if (scrollDeltaY) {
+        } else if (scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
