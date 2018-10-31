@@ -13,6 +13,8 @@ import { IgxGridRowComponent } from './row.component';
 import { IgxChipComponent } from '../chips/chip.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../test-utils/helper-utils.spec';
+import { SortingStrategy } from '../data-operations/sorting-strategy';
+import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 
 describe('IgxGrid - GroupBy', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -1916,24 +1918,27 @@ describe('IgxGrid - GroupBy', () => {
     it('should update grouping expression when sorting a column first then grouping by it and changing sorting for it again', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
+        let strategy = new CustomSortingStrategy();
         fix.componentInstance.enableSorting = true;
         fix.detectChanges();
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false });
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: new CustomSortingStrategy() });
 
-        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false }]);
+        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
         expect(grid.groupingExpressions).toEqual([]);
 
+        strategy = SortingStateDefaults.strategy;
         grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false });
         grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
 
-        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }]);
-        expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }]);
+        expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
+        expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
     });
 
     it('should update grouping expression when sorting a column first then grouping by another and changing sorting for it', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
+        const strategy = SortingStateDefaults.strategy;
         fix.componentInstance.enableSorting = true;
         fix.detectChanges();
 
@@ -1941,8 +1946,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
 
         expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }
         ]);
         expect(grid.groupingExpressions).toEqual([]);
 
@@ -1950,11 +1955,12 @@ describe('IgxGrid - GroupBy', () => {
         grid.sort({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
 
         expect(grid.sortingExpressions).toEqual([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }
         ]);
-        expect(grid.groupingExpressions).toEqual([{ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false }]);
+        expect(grid.groupingExpressions).toEqual([{ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: strategy }]);
     });
 
     function sendInput(element, text, fix) {
@@ -2154,4 +2160,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
+}
+
+export class CustomSortingStrategy extends SortingStrategy {
 }
