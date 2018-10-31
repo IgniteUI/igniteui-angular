@@ -24,14 +24,16 @@ const lunr = require('lunr');
 const fs = require('fs');
 const sassPlug = require('sassdoc-plugin-localization');
 
+
 themeleon.use({
 
-/**
- * Log current source directory, destination directory, and context
- * variables.
- */
+    /**
+     * Builds a structure of json files which represents the retrieved comments per every sass declaration.  
+     */
     convert: (data, dir) => sassPlug.convert(data, dir),
-
+    /**
+     * Compares and replaces the applied translations from the jsons structure.
+     */
     render: (data, dir) => sassPlug.render(data, dir)
 });
 
@@ -47,7 +49,12 @@ themeleon.use({
  * The theme function describes the steps to render the theme.
  */
 const theme = themeleon(__dirname, function (t) {
-    // t.convert(t.ctx._data, './extras/sassdoc/en'); 
+    /**
+     * If only json conversion is needed the whole process of documentation rendering has to be stopped. 
+     */
+    if (t.ctx.convert) {
+        return t.convert(t.ctx._data, './extras/sassdoc/en'); 
+    }
   /**
    * Copy the assets folder from the theme's directory in the
    * destination directory.
@@ -106,7 +113,13 @@ const theme = themeleon(__dirname, function (t) {
    * as `index.html` in the destination directory.
    */
   t.handlebars('views/index.hbs', 'index.html', options);
-  t.render(t.ctx._data, './extras/sassdoc/en');
+
+  /**
+   * Applies the translations from the json files.
+   */
+  if (t.ctx.render) {
+      t.render(t.ctx._data, './extras/sassdoc/en');
+  }
 });
 /**
  * Actual theme function. It takes the destination directory `dest`
@@ -215,11 +228,7 @@ module.exports = function (dest, ctx) {
   // Avoid key collision with Handlebars default `data`.
   // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
   ctx._data = ctx.data;
-//   convert(ctx._data);
   delete ctx.data;
-//   return new Promise();
-//   return new themeleon("", ctx).apply({}, arguments);
-//   return theme.apply({}, arguments);
 
   /**
    * Now we have prepared the data, we can proxy to the Themeleon

@@ -13,12 +13,11 @@ const uglify = require('gulp-uglify');
 const process = require('process');
 const fs = require('fs');
 const chmod = require('gulp-chmod');
+const argv = require('yargs').argv;
+const sassdoc = require('sassdoc');
 const {
     spawnSync
 } = require('child_process');
-
-// const LANG = argv.lang === undefined ? 'en' : argv.lang;
-
 
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
@@ -250,6 +249,27 @@ gulp.task('typedoc:clean-docs-dir', () => {
 gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'typedoc:copy-translations'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.OUTPUT_PATH}/${TYPEDOC.REPO.TRANSLATIONS_REPO_NAME}/ja/ --templateStrings ${TYPEDOC.TEMPLATE_STRINGS_PATH} --localize jp`)
 );
+
+const SASSDOC = {
+    PROJECT_PATH: "projects/igniteui-angular/src/lib/core/styles",
+    DEST: "./dist/igniteui-angular/docs/sass",
+    OPTIONS: JSON.parse(fs.readFileSync('./.sassdocrc', 'utf8'))
+}
+
+gulp.task('sassdoc-build:export', () => {
+    const options = SASSDOC.OPTIONS;
+    options.convert = argv.convert;
+
+    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+        .pipe(sassdoc(options));
+});
+
+gulp.task('sassdoc-build:import', () => {
+    const options = SASSDOC.OPTIONS;
+    options.render = argv.render;
+    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+        .pipe(sassdoc(options))
+});
 
 gulp.task('typedoc-serve', ['typedoc-watch'], () => {
     browserSync.init({

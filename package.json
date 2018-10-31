@@ -21,6 +21,8 @@
         "lint:lib": "tslint 'projects/igniteui-angular/src/**/*.ts' && stylelint 'projects/igniteui-angular/src/lib/core/styles'",
         "typedoc:dev": "gulp typedoc-serve --silent",
         "build:typedoc:ja:localization": "gulp typedoc-build:doc:ja:localization && gulp typedoc:clean-translations",
+        "sassdoc-build:export": "gulp sassdoc-build:export --convert true",
+        "sassdoc-build:import": "gulp sassdoc-build:import --render true",
         "postinstall": "gulp copy-git-hooks"
     },
     "private": true,
