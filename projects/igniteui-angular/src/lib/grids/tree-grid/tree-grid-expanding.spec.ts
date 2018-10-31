@@ -1,8 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { async, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
+import { IgxTreeGridModule } from './index';
 import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -198,7 +196,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
         fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-        treeGrid.expandedLevels = 0;
+        treeGrid.expansionDepth = 0;
         fix.detectChanges();
     });
 
