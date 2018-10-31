@@ -8,6 +8,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxExpansionPanelDescriptionDirective } from '../../expansion-panel/expansion-panel.directives';
 import { IgxColumnComponent } from '../column.component';
+import { first } from 'rxjs/operators';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(id: string): any[] {
@@ -41,7 +42,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event) {
+    public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
         const grid = this.get(id);
 
         if (!row.children || row.children.length <= 0 && row.expanded === expanded) {
@@ -59,10 +60,26 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (args.cancel) {
             return;
         }
-
+        const groupRowIndex = super.get_row_by_key(id, row.rowID).index;
+        const isScrolledToBottom = grid.rowList.length > 0 && grid.rowList.last.index ===
+        grid.verticalScrollContainer.igxForOf.length - 1;
         const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
+
+        console.log(super.get_row_by_key(id, row.rowID).index);
+        if (isScrolledToBottom) {
+            grid.verticalScrollContainer.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    console.log('focus', groupRowIndex, visibleColumnIndex);
+                    grid.nativeElement.querySelector(
+                        `[data-rowIndex="${groupRowIndex}"][data-visibleindex="${visibleColumnIndex}"]`).focus();
+                });
+        }
+        if (expanded) {
+            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+        }
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {

@@ -12,14 +12,13 @@
     ViewChild
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent } from './grid-base.component';
-
+import { first } from 'rxjs/operators';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -715,7 +714,24 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
         if (event.altKey) {
             if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
-                (this.gridAPI as any).trigger_row_expansion_toggle(this.gridID, this.row, event);
+/*              const treeRowIndex = this.row.index;
+                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
+                const isScrolledToBottom = this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
+                this.grid.verticalScrollContainer.igxForOf.length - 1;
+                debugger;
+                if ((collapse && isScrolledToBottom) ||
+                (!collapse && (this.grid.verticalScrollContainer.dc.instance.notVirtual || isScrolledToBottom))) {
+                    console.log('scroll');
+                    this.grid.verticalScrollContainer.onChunkLoad
+                        .pipe(first())
+                        .subscribe(() => {
+                            this.grid.nativeElement.querySelector(
+                                `[data-rowIndex="${treeRowIndex}"][data-visibleindex="${this.visibleColumnIndex}"]`).focus();
+                                console.log('focus');
+                        });
+                } */
+                (this.gridAPI as any).trigger_row_expansion_toggle(
+                    this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
             }
             return;
         }

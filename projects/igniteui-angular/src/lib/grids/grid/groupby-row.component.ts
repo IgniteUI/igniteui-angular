@@ -163,8 +163,14 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle() {
-        this.grid.toggleGroup(this.groupRow);
+    public toggle(key?) {
+        const shouldExpand = (!key && !this.expanded) || (key && !this.expanded && (key === 'arrowleft' ||  key === 'left'));
+        if (shouldExpand) {
+            this.handleToggleScroll();
+        } else {
+            this.handleToggleScroll();
+            this.grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+        }
     }
 
     /**
@@ -181,22 +187,7 @@ export class IgxGridGroupByRowComponent {
 
         if (this.isToggleKey(key)) {
             if (!alt) { return; }
-            if (key === 'arrowleft' ||  key === 'left') {
-                if (this.expanded) {
-                    const groupRowIndex = this.index;
-                    if (this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
-                        this.grid.verticalScrollContainer.igxForOf.length - 1) {
-                        this.grid.verticalScrollContainer.onChunkLoad
-                            .pipe(first())
-                            .subscribe(() => {
-                                this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
-                            });
-                    }
-                    this.grid.toggleGroup(this.groupRow);
-                }
-            } else if (key === 'arrowright' || key === 'right') {
-                if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
-            }
+            this.toggle(key);
             return;
         }
         const args = {cell: null, groupRow: this, event: event, cancel: false };
@@ -258,5 +249,17 @@ export class IgxGridGroupByRowComponent {
 
     private isToggleKey(key) {
         return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
+    }
+    private handleToggleScroll() {
+        if (this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
+            this.grid.verticalScrollContainer.igxForOf.length - 1) {
+            const groupRowIndex = this.index;
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first())
+                .subscribe(() => {
+                    this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
+                });
+        }
+        this.grid.toggleGroup(this.groupRow);
     }
 }
