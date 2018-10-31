@@ -3,7 +3,7 @@ import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../data-operations/sorting-strategy';
+import { IGroupByResult, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
@@ -22,13 +22,18 @@ export class IgxGridSortingPipe implements PipeTransform {
 
     public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
         id: string, pipeTrigger: number): any[] {
-
-        const state = { expressions: [] };
+        let strategy: ISortingStrategy;
+        const state = { expressions: [], strategy };
         state.expressions = this.gridAPI.get(id).sortingExpressions;
 
         if (!state.expressions.length) {
             return collection;
         }
+
+        // DataUtil.sort needs a sorting strategy to start with, so it makes sense to start with the strategy from the first expression
+        // sorting-strategy.ts, sortDataRecursive method then takes care and use the corresponding strategy for each expression
+        strategy = expressions[0].strategy;
+        state.strategy = strategy;
 
         return DataUtil.sort(cloneArray(collection), state);
     }
