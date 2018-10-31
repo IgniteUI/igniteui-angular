@@ -146,7 +146,6 @@ export interface IColumnMovingEventArgs {
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
-    cancel: boolean;
 }
 
 export interface IFocusChangeEventArgs {
@@ -2688,6 +2687,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
+
+        const args = {
+            source: column,
+            target: dropTarget
+        };
+
+        this.onColumnMovingEnd.emit(args);
     }
 
     /**

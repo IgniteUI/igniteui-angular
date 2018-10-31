@@ -510,8 +510,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         if (this.isDropTarget) {
             const args = {
                 source: this.cms.column,
-                target: this.column,
-                cancel: false
+                target: this.column
             };
 
             let nextPinnedWidth;
@@ -522,14 +521,13 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             if ((nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
                 this.column.level !== this.cms.column.level ||
                 this.column.parent !== this.cms.column.parent ||
-                this.cms.cancelDrop || args.cancel) {
+                this.cms.cancelDrop) {
                     this.cms.cancelDrop = false;
+                    this.column.grid.onColumnMovingEnd.emit(args);
                     return;
             }
 
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
-
-            this.column.grid.onColumnMovingEnd.emit(args);
 
             if (this.cms.selection && this.cms.selection.column) {
                 const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);

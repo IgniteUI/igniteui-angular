@@ -259,10 +259,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
-            event.stopPropagation();
-        }
-
         if (event.key === KEYS.TAB) {
             event.stopPropagation();
             if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
