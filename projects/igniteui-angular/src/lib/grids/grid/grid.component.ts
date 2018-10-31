@@ -11,7 +11,7 @@ import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
@@ -118,7 +118,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensity) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs,
                 viewRef, navigation, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;

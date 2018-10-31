@@ -66,7 +66,7 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -1983,7 +1983,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensity) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         this.resizeHandler = () => {
             this.calculateGridSizes();

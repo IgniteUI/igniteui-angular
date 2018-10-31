@@ -13,7 +13,7 @@
     Inject,
     Optional
 } from '@angular/core';
-import { DisplayDensity, IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,
@@ -378,7 +378,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     protected _movedWhileRemoving = false;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensity) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         }
 

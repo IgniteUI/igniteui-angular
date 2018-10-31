@@ -13,25 +13,25 @@ export const enum DisplayDensity {
 /**
  * Describes the object used to configure the DisplayDensity in Angular DI.
  */
-export interface IDisplayDensity {
+export interface IDisplayDensityOptions {
     displayDensity: DisplayDensity;
 }
 
 export interface IDensityChangedEventArgs {
-    oldDensity: DisplayDensity | string | IDisplayDensity;
-    newDensity: DisplayDensity | string | IDisplayDensity;
+    oldDensity: DisplayDensity;
+    newDensity: DisplayDensity;
 }
 
 /**
  * Defines the DisplayDensity DI token.
  */
-export const DisplayDensityToken = new InjectionToken<IDisplayDensity>('DisplayDensity');
+export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('DisplayDensity');
 
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */
 export class DisplayDensityBase implements DoCheck {
-    protected _displayDensity: DisplayDensity | string;
+    protected _displayDensity: DisplayDensity;
 
     /**
      * Returns the theme of the component.
@@ -73,7 +73,7 @@ export class DisplayDensityBase implements DoCheck {
 
     @Output()
     public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
-    protected oldDisplayDensityOptions: IDisplayDensity = { displayDensity: DisplayDensity.comfortable };
+    protected oldDisplayDensityOptions: IDisplayDensityOptions = { displayDensity: DisplayDensity.comfortable };
 
     /**
      *@hidden
@@ -99,18 +99,17 @@ export class DisplayDensityBase implements DoCheck {
         return this._displayDensity === DisplayDensity.compact ||
             (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact);
     }
-    constructor(protected displayDensityOptions: IDisplayDensity) {
+    constructor(protected displayDensityOptions: IDisplayDensityOptions) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
     }
 
     public ngDoCheck() {
-        const densityChangedArgs: IDensityChangedEventArgs = {
-            oldDensity: this.oldDisplayDensityOptions,
-            newDensity: this.displayDensityOptions
-        };
         if (this.oldDisplayDensityOptions && this.displayDensityOptions &&
             this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
-
+            const densityChangedArgs: IDensityChangedEventArgs = {
+                oldDensity: this.oldDisplayDensityOptions.displayDensity,
+                newDensity: this.displayDensityOptions.displayDensity
+            };
             this.onDensityChanged.emit(densityChangedArgs);
             this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
         }

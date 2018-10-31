@@ -2,7 +2,7 @@ import { Component, Injectable, ViewChild, OnInit, Inject } from '@angular/core'
 
 import { IgxGridComponent,  SortingDirection, ISortingExpression, IgxInputGroupComponent } from 'igniteui-angular';
 import { IGridFocusChangeEventArgs } from 'projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { DisplayDensityToken, DisplayDensity, IDisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensityToken, DisplayDensity, IDisplayDensityOptions } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { detectChanges } from '@angular/core/src/render3';
 
 @Component({
@@ -17,7 +17,7 @@ export class GridGroupBySampleComponent implements OnInit {
     public hideGroupedColumns = false;
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensity) {}
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, hidden: true },

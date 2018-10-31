@@ -8,7 +8,7 @@ import {
     Inject
 } from '@angular/core';
 
-import { IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -218,7 +218,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensity) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
     }
 
