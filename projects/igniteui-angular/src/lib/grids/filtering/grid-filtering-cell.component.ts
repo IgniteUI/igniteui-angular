@@ -11,11 +11,9 @@ import {
     OnInit
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
-import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
+import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
-import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -29,6 +27,14 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
     templateUrl: './grid-filtering-cell.component.html'
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
+
+    private rootExpressionsTree: FilteringExpressionsTree;
+    private expressionsList: ExpressionUI[];
+    private baseClass = 'igx-grid__filtering-cell-indicator';
+    private currentTemplate = null;
+
+    public visibleExpressionsList: ExpressionUI[];
+    public moreFiltersCount = 0;
 
     @Input()
     public column: IgxColumnComponent;
@@ -54,17 +60,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @ViewChild('complexChip', { read: IgxChipComponent })
     protected complexChip: IgxChipComponent;
 
-    private rootExpressionsTree: FilteringExpressionsTree;
-    private filterPipe = new IgxGridFilterConditionPipe();
-    private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(window.navigator.language);
-    private expressionsList: ExpressionUI[];
-    private baseClass = 'igx-grid__filtering-cell-indicator';
-    private currentTemplate = null;
-
-    public visibleExpressionsList: ExpressionUI[];
-    public moreFiltersCount = 0;
-
     @HostBinding('style.min-width')
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
@@ -85,7 +80,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, private filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
+    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
         this.filteringService.subscribeToEvents();
     }
 
@@ -98,10 +93,48 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.updateFilterCellArea();
     }
 
+    @HostListener('keydown.tab', ['$event'])
+    public onTabKeyDown(eventArgs) {
+        if (eventArgs.shiftKey) {
+            if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
+                eventArgs.preventDefault();
+                this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex - 1);
+            } else if (this.column.visibleIndex === 0) {
+                eventArgs.preventDefault();
+            }
+        } else {
+            if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
+                if (this.currentTemplate === this.defaultFilter) {
+                    if (this.isMoreIconVisible() === false) {
+                        if (this.moreIcon.nativeElement === document.activeElement) {
+                            this.navService.goToFirstCell();
+                        }
+                    } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) ===
+                               document.activeElement) {
+                        this.navService.goToFirstCell();
+                    }
+                } else {
+                    this.navService.goToFirstCell();
+                }
+            } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
+                eventArgs.preventDefault();
+                this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex + 1);
+            }
+        }
+
+        eventArgs.stopPropagation();
+    }
+
+    /**
+     * Returns the chip to be focused.
+     */
     public getChipToFocus() {
         return this.filteringService.columnToChipToFocus.get(this.column.field);
     }
 
+    /**
+     * Updates the filtering cell area.
+     */
     public updateFilterCellArea() {
         this.expressionsList = this.filteringService.getExpressions(this.column.field);
         this.updateVisibleFilters();
@@ -128,44 +161,13 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         return this.defaultFilter;
     }
 
-    private removeExpression(indexToRemove: number) {
-        if (indexToRemove === 0 && this.expressionsList.length === 1) {
-            this.clearFiltering();
-            return;
-        }
-
-        this.filteringService.removeExpression(this.column.field, indexToRemove);
-
-        this.updateVisibleFilters();
-        this.filter();
-    }
-
-    public getOperator(operator: FilteringLogic): any {
-        return FilteringLogic[operator];
-    }
-
-    public getChipLabel(expression: IFilteringExpression): any {
-        if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
-        } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal);
-        } else {
-            return expression.searchVal;
-        }
-    }
-
-    private getIsMoreIconVisible(): boolean {
-        return this.filteringService.columnToMoreIconHidden.get(this.column.field);
-    }
-
+    /**
+     * Chip clicked event handler.
+     */
     public onChipClicked(expression?: IFilteringExpression) {
         if (expression) {
             this.expressionsList.forEach((item) => {
-                if (item.expression === expression) {
-                    item.isSelected = true;
-                } else {
-                    item.isSelected = false;
-                }
+                item.isSelected = (item.expression === expression);
             });
         } else if (this.expressionsList.length > 0) {
             this.expressionsList.forEach((item) => {
@@ -179,14 +181,85 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.filteringService.selectedExpression = expression;
     }
 
+    /**
+     * Chip removed event handler.
+     */
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove);
     }
 
+    /**
+     * Clears the filtering.
+     */
+    public clearFiltering(): void {
+        this.filteringService.clearFilter(this.column.field);
+        this.visibleExpressionsList = [];
+    }
+
+    /**
+     * Chip keydown event handler.
+     */
+    public onChipKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
+        if (eventArgs.key === KEYS.ENTER) {
+            eventArgs.preventDefault();
+            this.onChipClicked(expression);
+        }
+    }
+
+    /**
+     * Returns the filtering indicator class.
+     */
+    public filteringIndicatorClass() {
+        return {
+            [this.baseClass]: !this.isMoreIconVisible(),
+            [`${this.baseClass}--hidden`]: this.isMoreIconVisible()
+        };
+    }
+
+    /**
+     * Focus a chip depending on the current visible template.
+     */
+    public focusChip() {
+        if (this.currentTemplate === this.defaultFilter) {
+            if (this.isMoreIconVisible() === false) {
+                this.moreIcon.nativeElement.focus();
+            } else {
+                this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+            }
+        } else if (this.currentTemplate === this.emptyFilter) {
+            this.ghostChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+        } else if (this.currentTemplate === this.complexFilter) {
+            this.complexChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+        }
+    }
+
+    private removeExpression(indexToRemove: number) {
+        if (indexToRemove === 0 && this.expressionsList.length === 1) {
+            this.clearFiltering();
+            return;
+        }
+
+        this.filteringService.removeExpression(this.column.field, indexToRemove);
+
+        this.updateVisibleFilters();
+        this.filter();
+    }
+
+    private filter(): void {
+        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
+
+        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
+    }
+
+    private isMoreIconVisible(): boolean {
+        return this.filteringService.columnToMoreIconHidden.get(this.column.field);
+    }
+
     private updateVisibleFilters() {
         this.visibleExpressionsList = cloneArray(this.expressionsList);
 
+        // TODO: revise the usage of this.cdr.detectChanges() here
         this.cdr.detectChanges();
 
         if (this.moreIcon) {
@@ -218,79 +291,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 }
             }
             this.cdr.detectChanges();
-        }
-    }
-
-    public filter(): void {
-        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
-
-        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
-    }
-
-    public clearFiltering(): void {
-        this.filteringService.clearFilter(this.column.field);
-        this.visibleExpressionsList = [];
-    }
-
-    public onKeyDown(eventArgs: KeyboardEvent, expression?: IFilteringExpression) {
-        if (eventArgs.key === KEYS.ENTER) {
-            eventArgs.preventDefault();
-            this.onChipClicked(expression);
-        }
-    }
-
-    @HostListener('keydown', ['$event'])
-    public onTabKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.TAB) {
-            if (eventArgs.shiftKey) {
-                if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
-                    eventArgs.preventDefault();
-                    this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex - 1);
-                } else if (this.column.visibleIndex === 0) {
-                    eventArgs.preventDefault();
-                }
-            } else {
-                if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
-                    if (this.currentTemplate === this.defaultFilter) {
-                        if (this.getIsMoreIconVisible() === false) {
-                            if (this.moreIcon.nativeElement === document.activeElement) {
-                                this.navService.goToFirstCell();
-                            }
-                        } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) ===
-                                   document.activeElement) {
-                            this.navService.goToFirstCell();
-                        }
-                    } else {
-                        this.navService.goToFirstCell();
-                    }
-
-                } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
-                    eventArgs.preventDefault();
-                    this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex + 1);
-                }
-            }
-            eventArgs.stopPropagation();
-        }
-    }
-
-    public filteringIndicatorClass() {
-        return {
-            [this.baseClass]: !this.getIsMoreIconVisible(),
-            [`${this.baseClass}--hidden`]: this.getIsMoreIconVisible()
-        };
-    }
-
-    public focusChip() {
-        if (this.currentTemplate === this.defaultFilter) {
-            if (this.getIsMoreIconVisible() === false) {
-                this.moreIcon.nativeElement.focus();
-            } else {
-                this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
-            }
-        } else if (this.currentTemplate === this.emptyFilter) {
-            this.ghostChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
-        } else if (this.currentTemplate === this.complexFilter) {
-            this.complexChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
         }
     }
 }

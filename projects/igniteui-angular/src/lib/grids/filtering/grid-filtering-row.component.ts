@@ -24,8 +24,6 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
-import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe, DatePipe } from '@angular/common';
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
@@ -40,6 +38,36 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
+    private _positionSettings = {
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+
+    private _conditionsOverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+    };
+
+    private _operatorsOverlaySettings = {
+        closeOnOutsideClick: true,
+        modal: false,
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+    };
+
+    private rootExpressionsTree: FilteringExpressionsTree;
+    private chipsAreaWidth: number;
+    private chipAreaScrollOffset = 0;
+    private conditionChanged = new Subject();
+    private unaryConditionChanged = new Subject();
+    private _column = null;
+
+    public showArrows: boolean;
+    public expression: IFilteringExpression;
+    public expressionsList: Array<ExpressionUI>;
+
     @Input()
     get column(): IgxColumnComponent {
         return this._column;
@@ -53,8 +81,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
             this.resetExpression();
 
-            this.offset = 0;
-            this.transform(this.offset);
+            this.chipAreaScrollOffset = 0;
+            this.transform(this.chipAreaScrollOffset);
         }
     }
 
@@ -110,61 +138,34 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @ViewChild('closeButton')
     protected closeButton: ElementRef;
 
-    private _positionSettings = {
-        horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
-
-    private _conditionsOverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
-    };
-
-    private _operatorsOverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
-    };
-
-    private rootExpressionsTree: FilteringExpressionsTree;
-    private filterPipe = new IgxGridFilterConditionPipe();
-    private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(this.locale);
-    private chipsAreaWidth: number;
-    private offset = 0;
-    private conditionChanged = new Subject();
-    private unaryConditionChanged = new Subject();
-    private _column = null;
-    private conditionsDropDownClosed = new Subject();
-
-    public showArrows: boolean;
-    public expression: IFilteringExpression;
-    public expressionsList: Array<ExpressionUI>;
-
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(private filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
 
     ngAfterViewInit() {
         if (this.column.dataType === DataType.Date) {
+            // TODO: revise usage of cdr.detectChanges() here
             this.cdr.detectChanges();
         }
 
-            this._conditionsOverlaySettings.positionStrategy.settings.target = this.inputGroupPrefix.nativeElement;
         this.input.nativeElement.focus();
-        }
+    }
 
     ngOnDestroy() {
         this.conditionChanged.unsubscribe();
         this.unaryConditionChanged.unsubscribe();
-        this.conditionsDropDownClosed.unsubscribe();
+    }
+
+    @HostListener('keydown.tab', ['$event'])
+    public onTabKeydown(event) {
+        event.stopPropagation();
+        if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
+            event.preventDefault();
+        }
     }
 
     get disabled(): boolean {
@@ -203,12 +204,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     get placeholder(): string {
         if (this.expression.condition && this.expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(this.expression.condition.name));
+            return this.filteringService.getChipLabel(this.expression);
         } else {
             return 'Add filter value';
         }
     }
 
+    /**
+     * Event handler for keydown on the input group's prefix.
+     */
     public onPrefixKeyDown(event: KeyboardEvent) {
         if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
@@ -221,6 +225,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     * Event handler for keydown on the input.
+     */
     public onInputKeyDown(event: KeyboardEvent) {
         if (event.key === KEYS.ENTER) {
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
@@ -248,21 +255,224 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * @hidden
+     * Event handler for datepicker's close.
      */
     public datePickerClose() {
         this.input.nativeElement.focus();
     }
 
     /**
-     * @hidden
+     * Returns the filtering operation condition for a given value.
      */
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event) {
+    public getCondition(value: string): IFilteringOperation {
+        return this.column.filters.instance().condition(value);
+    }
+
+    /**
+     * Returns the icon name of the current condition.
+     */
+    public getIconName(): string {
+        if (this.column.dataType === DataType.Boolean && this.expression.searchVal === null) {
+            return this.getCondition(this.conditions[0]).iconName;
+        } else {
+            return this.expression.condition.iconName;
+        }
+    }
+
+    /**
+     * Returns whether a given condition is selected in dropdown.
+     */
+    public isConditionSelected(conditionName: string): boolean {
+        if (this.expression.condition) {
+            return this.expression.condition.name === conditionName;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Clears the current filtering.
+     */
+    public clearFiltering() {
+        this.filteringService.clearFilter(this.column.field);
+        this.resetExpression();
+        this.cdr.detectChanges();
+
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+    }
+
+    /**
+     * Clears the value of the input.
+     */
+    public clearInput() {
+        this.value = null;
+    }
+
+    /**
+     * Event handler for keydown on clear button.
+     */
+    public onClearKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === KEYS.ENTER) {
+            eventArgs.preventDefault();
+            this.clearInput();
+        }
+    }
+
+    /**
+     * Closes the filtering edit row.
+     */
+    public close() {
+        if (this.expressionsList.length === 1 &&
+            this.expressionsList[0].expression.searchVal === null &&
+            this.expressionsList[0].expression.condition.isUnary === false) {
+            this.filteringService.clearFilter(this.column.field);
+        } else {
+            this.expressionsList.forEach((item) => {
+                if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
+                    this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
+                }
+            });
+        }
+
+        this.filteringService.isFilterRowVisible = false;
+        this.filteringService.filteredColumn = null;
+        this.filteringService.selectedExpression = null;
+        this.cdr.detectChanges();
+
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+    }
+
+    /**
+     * Opens the conditions dropdown.
+     */
+    public toggleConditionsDropDown(target: any) {
+        this._conditionsOverlaySettings.positionStrategy.settings.target = target;
+        this.dropDownConditions.toggle(this._conditionsOverlaySettings);
+    }
+
+    /**
+     * Opens the logic operators dropdown.
+     */
+    public toggleOperatorsDropDown(eventArgs, index) {
+        this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target.parentElement;
+        this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
+    }
+
+    /**
+     * Event handler for change event in conditions dropdown.
+     */
+    public onConditionsChanged(eventArgs) {
+        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+        this.expression.condition = this.getCondition(value);
+        if (this.expression.condition.isUnary) {
+            this.unaryConditionChanged.next(value);
+        } else {
+            this.conditionChanged.next(value);
+        }
+
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
+    }
+
+    /**
+     *  Event handler for chip selected event.
+     */
+    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression) {
+        if (eventArgs.selected) {
+            if (this.chipsArea.chipsList) {
+                this.chipsArea.chipsList.forEach((chip) => {
+                    if (chip !== eventArgs.owner) {
+                        chip.selected = false;
+                    }
+                });
+            }
+            this.expression = expression;
+
+            if (this.input) {
+                this.input.nativeElement.focus();
+            }
+        } else if (this.expression === expression) {
+            this.resetExpression();
+        }
+    }
+
+    /**
+     * Event handler for chip keydown event.
+     */
+    public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
+        if (eventArgs.key === KEYS.ENTER) {
+            eventArgs.preventDefault();
+            chip.selected = !chip.selected;
+        }
+    }
+
+    /**
+     * Scrolls the first chip into view if the tab key is pressed on the left arrow.
+     */
+    public onLeftArrowKeyDown(event) {
         if (event.key === KEYS.TAB) {
-            event.stopPropagation();
-            if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
-                event.preventDefault();
+            this.chipAreaScrollOffset = 0;
+            this.transform(this.chipAreaScrollOffset);
+        }
+    }
+
+    /**
+     * Event handler for chip removed event.
+     */
+    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
+        const indexToRemove = this.expressionsList.indexOf(item);
+        this.removeExpression(indexToRemove, item.expression);
+
+        this.scrollChipsOnRemove();
+    }
+
+    /**
+     * Event handler for logic operator changed event.
+     */
+    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI) {
+        if (eventArgs.oldSelection) {
+            expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
+            this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
+            this.filter();
+        }
+    }
+
+    /**
+     * Scrolls the chips into the chip area when left or right arrows are pressed.
+     */
+    public scrollChipsOnArrowPress(arrowPosition: string) {
+        let count = 0;
+        const chipAraeChildren = this.chipsArea.element.nativeElement.children;
+        const containerRect = this.container.nativeElement.getBoundingClientRect();
+
+        if (arrowPosition === 'right') {
+            for (let index = 0; index < chipAraeChildren.length; index++) {
+                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.right)) {
+                    count++;
+                }
+            }
+
+            if (count < chipAraeChildren.length) {
+                this.chipAreaScrollOffset -= Math.ceil(chipAraeChildren[count].getBoundingClientRect().right) -
+                    Math.ceil(containerRect.right) + 1;
+                this.transform(this.chipAreaScrollOffset);
+            }
+        }
+
+        if (arrowPosition === 'left') {
+            for (let index = 0; index < chipAraeChildren.length; index++) {
+                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
+                    count++;
+                }
+            }
+
+            if (count > 0) {
+                this.chipAreaScrollOffset += Math.ceil(containerRect.left) -
+                    Math.ceil(chipAraeChildren[count - 1].getBoundingClientRect().left) + 1;
+                this.transform(this.chipAreaScrollOffset);
             }
         }
     }
@@ -273,6 +483,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
             this.showArrows = this.chipsAreaWidth >= containerWidth;
+
+            // TODO: revise the cdr.detectChanges() usage here
             this.cdr.detectChanges();
         });
     }
@@ -339,178 +551,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.showHideArrowButtons();
     }
 
-    public conditionChangedCallback() {
-        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
-            this.filter();
-        } else if (this.value) {
-            this.value = null;
-        }
-    }
-
-    public unaryConditionChangedCallback() {
-        if (this.value) {
-            this.value = null;
-        }
-        if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
-            this.addExpression(true);
-        }
-        this.filter();
-    }
-
-    public getCondition(value: string): IFilteringOperation {
-        return this.column.filters.instance().condition(value);
-    }
-
-    public getIconName(): string {
-        if (this.column.dataType === DataType.Boolean && this.expression.searchVal === null) {
-            return this.getCondition(this.conditions[0]).iconName;
-        } else {
-            return this.expression.condition.iconName;
-        }
-    }
-
-    public isConditionSelected(conditionName: string): boolean {
-        if (this.expression.condition) {
-            return this.expression.condition.name === conditionName;
-        } else {
-            return false;
-        }
-    }
-
-    public getOperator(operator: FilteringLogic): string {
-        return FilteringLogic[operator];
-    }
-
-    public getChipLabel(expression: IFilteringExpression): any {
-        if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
-        } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal);
-        } else {
-            return expression.searchVal;
-        }
-    }
-
-    public clearFiltering() {
-        this.filteringService.clearFilter(this.column.field);
-        this.resetExpression();
-        this.cdr.detectChanges();
-
-        this.offset = 0;
-        this.transform(this.offset);
-    }
-
-    public clearInput() {
-        this.value = null;
-    }
-
-    public onClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER) {
-            eventArgs.preventDefault();
-            this.clearInput();
-        }
-    }
-
-    public close() {
-        if (this.expressionsList.length === 1 &&
-            this.expressionsList[0].expression.searchVal === null &&
-            this.expressionsList[0].expression.condition.isUnary === false) {
-            this.filteringService.clearFilter(this.column.field);
-        } else {
-            this.expressionsList.forEach((item) => {
-                if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
-                    this.filteringService.removeExpression(this.column.field, this.expressionsList.indexOf(item));
-                }
-            });
-        }
-
-        this.filteringService.isFilterRowVisible = false;
-        this.filteringService.filteredColumn = null;
-        this.filteringService.selectedExpression = null;
-        this.cdr.detectChanges();
-
-        this.offset = 0;
-        this.transform(this.offset);
-    }
-
-    public toggleConditionsDropDown(target: any) {
-        this._conditionsOverlaySettings.positionStrategy.settings.target = target;
-        this.dropDownConditions.toggle(this._conditionsOverlaySettings);
-    }
-
-    public toggleOperatorsDropDown(eventArgs, index) {
-        this._operatorsOverlaySettings.positionStrategy.settings.target = eventArgs.target.parentElement;
-        this.dropDownOperators.toArray()[index].toggle(this._operatorsOverlaySettings);
-    }
-
-    public filter() {
-        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
-
-        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
-    }
-
-    public onConditionsChanged(eventArgs) {
-        const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-        this.expression.condition = this.getCondition(value);
-        if (this.expression.condition.isUnary) {
-            this.unaryConditionChanged.next(value);
-        } else {
-            this.conditionChanged.next(value);
-        }
-
-        if (this.input) {
-            this.input.nativeElement.focus();
-        }
-    }
-
-    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression) {
-        if (eventArgs.selected) {
-            if (this.chipsArea.chipsList) {
-                this.chipsArea.chipsList.forEach((chip) => {
-                    if (chip !== eventArgs.owner) {
-                        chip.selected = false;
-                    }
-                });
-            }
-            this.expression = expression;
-
-            if (this.input) {
-                this.input.nativeElement.focus();
-            }
-        } else if (this.expression === expression) {
-            this.resetExpression();
-        }
-    }
-
-    public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
-        if (eventArgs.key === KEYS.ENTER) {
-            eventArgs.preventDefault();
-            chip.selected = !chip.selected;
-        }
-    }
-
-    public scrollChipsIntoView(event) {
-        if (event.key === KEYS.TAB) {
-            this.offset = 0;
-            this.transform(this.offset);
-        }
-    }
-
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
-        const indexToRemove = this.expressionsList.indexOf(item);
-        this.removeExpression(indexToRemove, item.expression);
-
-        this.scrollChipsOnRemove();
-    }
-
-    public onLogicOperatorChanged(eventArgs: ISelectionEventArgs, expression: ExpressionUI) {
-        if (eventArgs.oldSelection) {
-            expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
-            this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
-            this.filter();
-        }
-    }
-
     private scrollChipsWhenAddingExpression() {
         const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         if (!chipAraeChildren || chipAraeChildren.length === 0) {
@@ -521,42 +561,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
         const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);
         if (lastChipRectRight >= containerRectRight) {
-            this.offset -= lastChipRectRight - containerRectRight;
-            this.transform(this.offset);
+            this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
+            this.transform(this.chipAreaScrollOffset);
         }
-    }
-
-    public scrollChipsOnArrowPress(event) {
-        let count = 0;
-        const chipAraeChildren = this.chipsArea.element.nativeElement.children;
-        const containerRect = this.container.nativeElement.getBoundingClientRect();
-
-        if (event === 'right') {
-            for (let index = 0; index < chipAraeChildren.length; index++) {
-                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.right)) {
-                    count++;
-                }
-            }
-
-            if (count < chipAraeChildren.length) {
-                this.offset -= Math.ceil(chipAraeChildren[count].getBoundingClientRect().right) - Math.ceil(containerRect.right) + 1;
-                this.transform(this.offset);
-            }
-        }
-
-        if (event === 'left') {
-            for (let index = 0; index < chipAraeChildren.length; index++) {
-                if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
-                    count++;
-                }
-            }
-
-            if (count > 0) {
-                this.offset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[count - 1].getBoundingClientRect().left) + 1;
-                this.transform(this.offset);
-            }
-        }
-
     }
 
     private transform(offset: number) {
@@ -577,12 +584,36 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
 
         if (count <= 2) {
-            this.offset = 0;
+            this.chipAreaScrollOffset = 0;
         } else {
             const dif = chipAraeChildren[count].id === 'chip' ? count - 2 : count - 1;
-            this.offset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[dif].getBoundingClientRect().left) + 1;
+            this.chipAreaScrollOffset += Math.ceil(containerRect.left) - Math.ceil(chipAraeChildren[dif].getBoundingClientRect().left) + 1;
         }
 
-        this.transform(this.offset);
+        this.transform(this.chipAreaScrollOffset);
+    }
+
+    private conditionChangedCallback() {
+        if (!!this.expression.searchVal || this.expression.searchVal === 0) {
+            this.filter();
+        } else if (this.value) {
+            this.value = null;
+        }
+    }
+
+    private unaryConditionChangedCallback() {
+        if (this.value) {
+            this.value = null;
+        }
+        if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
+            this.addExpression(true);
+        }
+        this.filter();
+    }
+
+    private filter() {
+        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
+
+        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
     }
 }

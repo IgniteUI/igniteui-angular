@@ -8,6 +8,8 @@ import { IFilteringExpression, FilteringLogic } from '../../data-operations/filt
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -27,22 +29,22 @@ export class ExpressionUI {
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
 
+    private columnsWithComplexFilter = new Set<string>();
+    private areEventsSubscribed = false;
+    private destroy$ = new Subject<boolean>();
+    private isFiltering = false;
+    private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
+    private filterPipe = new IgxGridFilterConditionPipe();
+    private titlecasePipe = new TitleCasePipe();
+    private datePipe = new DatePipe(window.navigator.language);
+
     public gridId: string;
     public isFilterRowVisible = false;
     public filteredColumn = null;
     public selectedExpression: IFilteringExpression = null;
-    private columnsWithComplexFilter = new Set<string>();
-    private isColumnResizedSubscribed = false;
-    private isChunkLoadedSubscribed = false;
-    private isColumnMovinEndSubscribed = false;
-    private destroy$ = new Subject<boolean>();
-    private isFiltering = false;
-
     public columnToChipToFocus = new Map<string, boolean>();
     public columnToMoreIconHidden = new Map<string, boolean>();
-    public index = -1;
-
-    private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
+    public columnStartIndex = -1;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
 
@@ -55,19 +57,20 @@ export class IgxFilteringService implements OnDestroy {
         return this.gridAPI.get(this.gridId);
     }
 
+    /**
+     * Subscribe to grid's events.
+     */
     public subscribeToEvents() {
-        if (!this.isColumnResizedSubscribed) {
-            this.isColumnResizedSubscribed = true;
+        if (!this.areEventsSubscribed) {
+            this.areEventsSubscribed = true;
+
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
                 this.updateFilteringCell(eventArgs.column.field);
             });
-        }
 
-        if (!this.isChunkLoadedSubscribed) {
-            this.isChunkLoadedSubscribed = true;
             this.grid.parentVirtDir.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
-                if (eventArgs.startIndex !== this.index) {
-                    this.index = eventArgs.startIndex;
+                if (eventArgs.startIndex !== this.columnStartIndex) {
+                    this.columnStartIndex = eventArgs.startIndex;
                     this.grid.filterCellList.forEach((filterCell) => {
                         filterCell.updateFilterCellArea();
                         if (filterCell.getChipToFocus()) {
@@ -77,10 +80,7 @@ export class IgxFilteringService implements OnDestroy {
                     });
                 }
             });
-        }
 
-        if (!this.isColumnMovinEndSubscribed) {
-            this.isColumnMovinEndSubscribed = true;
             this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe((event) => {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
@@ -89,6 +89,9 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
+    /**
+     * Execute filtering on the grid.
+     */
     public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
         this.isFiltering = true;
 
@@ -100,6 +103,9 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = false;
     }
 
+    /**
+     * Clear the filter of a given column.
+     */
     public clearFilter(field: string): void {
         this.isFiltering = true;
 
@@ -116,6 +122,9 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = false;
     }
 
+    /**
+     * Register filtering SVG icons in the icon service.
+     */
     public registerSVGIcons(): void {
         for (const icon of icons) {
             if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
@@ -124,6 +133,9 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
+    /**
+     * Returns the ExpressionUI array for a given column.
+     */
     public getExpressions(columnId: string): ExpressionUI[] {
         if (!this.columnToExpressionsMap.has(columnId)) {
             const column = this.grid.columns.find((col) => col.field === columnId);
@@ -138,6 +150,9 @@ export class IgxFilteringService implements OnDestroy {
         return this.columnToExpressionsMap.get(columnId);
     }
 
+    /**
+     * Recreates all ExpressionUIs for all columns. Executed after filtering to refresh the cache.
+     */
     public refreshExpressions() {
         if (!this.isFiltering) {
             this.columnsWithComplexFilter.clear();
@@ -158,6 +173,9 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
+    /**
+     * Remove an ExpressionUI for a given column.
+     */
     public removeExpression(columnId: string, indexToRemove: number) {
         const expressionsList = this.getExpressions(columnId);
 
@@ -174,6 +192,9 @@ export class IgxFilteringService implements OnDestroy {
         expressionsList.splice(indexToRemove, 1);
     }
 
+    /**
+     * Generate filtering tree for a given column from existing ExpressionUIs.
+     */
     public createSimpleFilteringTree(columnId: string): FilteringExpressionsTree {
         const expressionsList = this.getExpressions(columnId);
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, columnId);
@@ -202,6 +223,9 @@ export class IgxFilteringService implements OnDestroy {
         return expressionsTree;
     }
 
+    /**
+     * Returns whether a complex filter is applied to a given column.
+     */
     public isFilterComplex(columnId: string) {
         if (this.columnsWithComplexFilter.has(columnId)) {
             return true;
@@ -214,6 +238,26 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         return isComplex;
+    }
+
+    /**
+     * Returns the string representation of the FilteringLogic operator.
+     */
+    public getOperatorAsString(operator: FilteringLogic): any {
+        return FilteringLogic[operator];
+    }
+
+    /**
+     * Genererate the label of a chip from a given filtering expression.
+     */
+    public getChipLabel(expression: IFilteringExpression): any {
+        if (expression.condition.isUnary) {
+            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+        } else if (expression.searchVal instanceof Date) {
+            return this.datePipe.transform(expression.searchVal);
+        } else {
+            return expression.searchVal;
+        }
     }
 
     private updateFilteringCell(columnId: string) {
