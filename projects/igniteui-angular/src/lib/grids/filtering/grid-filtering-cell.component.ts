@@ -270,13 +270,17 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
-            const moreIconWidth = this.moreIcon.nativeElement.offsetWidth;
+            const moreIconWidth = this.moreIcon.nativeElement.offsetWidth - 
+            parseInt(document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
 
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
                     if (index % 2 === 0) {
                         visibleChipsCount++;
+                    } else {
+                        viewWidth += parseInt(document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-left'], 10)
+                        viewWidth += parseInt(document.defaultView.getComputedStyle(chipsAreaElements[index])['margin-right'], 10)
                     }
                 } else {
                     if (index % 2 !== 0 && viewWidth + moreIconWidth > areaWidth) {
