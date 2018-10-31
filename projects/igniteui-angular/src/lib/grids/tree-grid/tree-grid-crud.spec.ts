@@ -118,8 +118,14 @@ describe('IgxTreeGrid - CRUD', () => {
                     Age: 55,
                     Employees: []
                 };
-                treeGrid.addRow(newRow, 12345); // there is no row with ID=12345
-                fix.detectChanges();
+                let error = '';
+                try {
+                    treeGrid.addRow(newRow, 12345);
+                    fix.detectChanges();
+                } catch (ex) {
+                    error = (ex as Error).message;
+                }
+                expect(error).toMatch('Invalid parent row ID!');
 
                 // Verify treeGrid remains unchanged
                 expect(treeGrid.onRowAdded.emit).not.toHaveBeenCalled();
@@ -266,6 +272,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 // Try adding child row to a non-existing parent row
                 spyOn(treeGrid.onRowAdded, 'emit');
+                let error = '';
                 const newRow = {
                     ID: 777,
                     ParentID: 12345,  // there is no row with ID=12345
@@ -273,8 +280,13 @@ describe('IgxTreeGrid - CRUD', () => {
                     JobTitle: 'Senior Web Developer',
                     Age: 33
                 };
-                treeGrid.addRow(newRow, 12345);
-                fix.detectChanges();
+                try {
+                    treeGrid.addRow(newRow, 12345);
+                    fix.detectChanges();
+                } catch (ex) {
+                    error = (ex as Error).message;
+                }
+                expect(error).toMatch('Invalid parent row ID!');
 
                 // Verify treeGrid remains unchanged
                 expect(treeGrid.onRowAdded.emit).not.toHaveBeenCalled();

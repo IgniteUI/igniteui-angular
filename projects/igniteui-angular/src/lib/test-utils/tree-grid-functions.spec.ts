@@ -128,7 +128,7 @@ export class TreeGridFunctions {
         }
 
         // Verify rowComponent's indentation API.
-        expect(rowComponent.indentation).toBe(expectedIndentationLevel);
+        expect(rowComponent.treeRow.level).toBe(expectedIndentationLevel);
 
         // Verify expand/collapse icon's position.
         TreeGridFunctions.verifyTreeRowIconPosition(rowDOM, expectedIndentationLevel);
