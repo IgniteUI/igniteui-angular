@@ -1074,6 +1074,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
                 fix.detectChanges();
                 treeGrid = fix.componentInstance.treeGrid;
+                treeGrid.cascadeOnDelete = false;
             });
 
             it('should delete a root level row by ID', () => {
@@ -1167,8 +1168,47 @@ describe('IgxTreeGrid - CRUD', () => {
                 const someRow = treeGrid.getRowByIndex(0);
                 someRow.delete();
             });
-        });
 
+            it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by ID)', () => {
+                treeGrid.cascadeOnDelete = true;
+
+                let aRow = treeGrid.getRowByIndex(0);
+                expect(aRow.rowID).toBe(1);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                treeGrid.deleteRow(aRow.rowID);
+                fix.detectChanges();
+                aRow = treeGrid.getRowByIndex(0);
+                expect(aRow.rowID).toBe(6);
+
+                verifyRowsCount(fix, 3, 3);
+                verifyTreeGridRecordsCount(fix, 2, 3);
+                verifyProcessedTreeGridRecordsCount(fix, 2, 3);
+            });
+
+            it('should delete child rows of a parent row when the "cascadeOnDelete" is set (delete by API)', () => {
+                treeGrid.cascadeOnDelete = true;
+
+                let aRow = treeGrid.getRowByIndex(0);
+                expect(aRow.rowID).toBe(1);
+
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                aRow.delete();
+                fix.detectChanges();
+                aRow = treeGrid.getRowByIndex(0);
+                expect(aRow.rowID).toBe(6);
+
+                verifyRowsCount(fix, 3, 3);
+                verifyTreeGridRecordsCount(fix, 2, 3);
+                verifyProcessedTreeGridRecordsCount(fix, 2, 3);
+            });
+        });
     });
 });
 
