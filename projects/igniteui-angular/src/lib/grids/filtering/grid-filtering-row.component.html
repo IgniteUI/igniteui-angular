@@ -64,7 +64,7 @@
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
 
-<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="scrollChipsIntoView($event)" (click)="scrollChipsOnArrowPress('left')">
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
     <igx-icon>navigate_before</igx-icon>
 </button>
 
@@ -85,13 +85,13 @@
                         fontSet="filtering-icons"
                         [name]="item.expression.condition.iconName">
                     </igx-icon>
-                    <span>{{getChipLabel(item.expression)}}</span>
+                    <span>{{filteringService.getChipLabel(item.expression)}}</span>
                 </igx-chip>
 
                 <span id='operand' *ngIf="!last">
                     <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators">
                         <igx-icon>expand_more</igx-icon>
-                        <span>{{getOperator(item.afterOperator)}}</span>
+                        <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)">
                             <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>

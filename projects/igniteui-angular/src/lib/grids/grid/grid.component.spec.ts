@@ -1762,6 +1762,31 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).not.toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             }));
+
+            it(`Should exit row editing when clicking on a cell from a deleted row`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid as any;
+                grid.deleteRow(1);
+                tick();
+                fixture.detectChanges();
+                spyOn(grid, 'endRowTransaction');
+
+                const firstCell = grid.getCellByColumn(2, 'ProductName');
+                firstCell.inEditMode = true;
+                tick();
+                fixture.detectChanges();
+                expect(grid.endRowTransaction).toHaveBeenCalledTimes(0);
+
+                const targetCell = grid.getCellByColumn(0, 'ProductName');
+                targetCell.onFocus({});
+                tick();
+                fixture.detectChanges();
+                expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
+                expect(targetCell.focused).toBeTruthy();
+                expect(firstCell.focused).toBeFalsy();
+            }));
         });
 
         describe('Row Editing - Paging', () => {
