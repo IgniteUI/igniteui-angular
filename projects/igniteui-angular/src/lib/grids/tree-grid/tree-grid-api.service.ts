@@ -40,6 +40,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             expandedStates.set(rowID, !isExpanded);
             grid.expansionStates = expandedStates;
         }
+        this.ensure_exit_edit_row(id);
     }
 
     public trigger_row_expansion_toggle(id: string, row: IgxTreeGridRowComponent, event: Event) {
@@ -61,13 +62,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            const editRow = this.get_edit_row_state(id);
-            if (editRow) {
-                const toggle = this.is_descendant(id, row.treeRow, editRow.rowID) ? expanded : undefined;
-                grid.refreshRowEditingOverlay(grid.rowInEditMode, toggle);
-            }
-        }
+        this.ensure_exit_edit_row(id);
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
@@ -82,19 +77,12 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public is_descendant(id: string, parentRow: ITreeGridRecord, childRowID): boolean {
-        const childRows: ITreeGridRecord[] = parentRow.children;
-        if (!childRows) {
-            return false;
-        }
+    private ensure_exit_edit_row(id: string) {
         const grid = this.get(id);
-        for (let rowIndex = 0, found = false, data; rowIndex < childRows.length; rowIndex++) {
-            data = childRows[rowIndex].data;
-            found = grid.primaryKey ? data[grid.primaryKey] === childRowID : data === childRowID;
-            if (found) {
-                return true;
-            } else {
-                return this.is_descendant(id, childRows[rowIndex], childRowID);
+        if (grid.rowEditable) {
+            const editRow = this.get_edit_row_state(id);
+            if (editRow) {
+                grid.endRowEdit(true);
             }
         }
     }
