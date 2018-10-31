@@ -256,6 +256,10 @@ const SASSDOC = {
     OPTIONS: JSON.parse(fs.readFileSync('./.sassdocrc', 'utf8'))
 }
 
+gulp.task('sassdoc:clean-docs-dir', () => {
+    del.sync(SASSDOC.DEST);
+});
+
 gulp.task('sassdoc-build:export', () => {
     const options = SASSDOC.OPTIONS;
     options.convert = argv.convert;
