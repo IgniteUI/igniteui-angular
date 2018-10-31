@@ -231,7 +231,7 @@ describe('IgxTreeGrid - Expanding/Collapsing actions using flat data source', ()
 
 });
 
-fdescribe('Row editing expanding/collapsing', () => {
+describe('Row editing expanding/collapsing', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
@@ -255,7 +255,7 @@ fdescribe('Row editing expanding/collapsing', () => {
         fix.detectChanges();
     });
 
-    it('Hide banner with collapsing node, using UI', fakeAsync(() => {
+    it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
         const rows = TreeGridFunctions.getAllRows(fix);
 
         const cell = treeGrid.getCellByColumn(1, 'Name');
