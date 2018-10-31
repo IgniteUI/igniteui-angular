@@ -118,7 +118,8 @@ const theme = themeleon(__dirname, function (t) {
    * Applies the translations from the json files.
    */
   if (t.ctx.render) {
-      t.render(t.ctx._data, './extras/sassdoc/en');
+      const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
+      t.render(t.ctx._data, jsonDir);
   }
 });
 /**
