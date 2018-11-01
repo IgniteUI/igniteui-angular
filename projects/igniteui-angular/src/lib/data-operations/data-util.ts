@@ -1,6 +1,5 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { ISortingState } from './sorting-state.interface';
 import { IGroupByResult, IgxSorting } from './sorting-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
@@ -8,6 +7,7 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
+import { ISortingExpression } from './sorting-expression.interface';
 
 export enum DataType {
     String = 'string',
@@ -16,9 +16,9 @@ export enum DataType {
     Date = 'date'
 }
 export class DataUtil {
-    public static sort<T>(data: T[], state: ISortingState): T[] {
+    public static sort<T>(data: T[], expressions: ISortingExpression []): T[] {
         const sorting = new IgxSorting();
-        return sorting.sort(data, state.expressions);
+        return sorting.sort(data, expressions);
     }
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
         const sorting = new IgxSorting();

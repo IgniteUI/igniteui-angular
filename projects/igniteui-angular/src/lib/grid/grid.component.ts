@@ -30,11 +30,11 @@ import { Subject, of } from 'rxjs';
 import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
+import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
@@ -44,13 +44,14 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
+import { IgxGroupByRowTemplateDirective } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
+import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
-import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -4021,8 +4022,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
-            const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+            const sortingPipe = new IgxGridSortingPipe();
+            data = sortingPipe.transform(data, this.sortingExpressions, -1);
         }
 
         return data;

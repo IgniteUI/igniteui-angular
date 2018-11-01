@@ -175,13 +175,9 @@ export abstract class IgxBaseExporter {
             grid.sortingExpressions.length > 0 &&
             !options.ignoreSorting) {
 
-            const sortingState = {
-                expressions: grid.sortingExpressions
-            };
-
             this._sort = cloneObject(grid.sortingExpressions[0]);
 
-            data =  DataUtil.sort(data, sortingState);
+            data =  DataUtil.sort(data, grid.sortingExpressions);
         }
 
         return data;
