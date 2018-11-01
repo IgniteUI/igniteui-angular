@@ -8,6 +8,7 @@ import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interfa
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { ISortingExpression } from './sorting-expression.interface';
+import { FilteringStrategy } from './filtering-strategy';
 
 export enum DataType {
     String = 'string',
@@ -107,7 +108,7 @@ export class DataUtil {
     }
     public static filter<T>(data: T[], state: IFilteringState): T[] {
         if (!state.strategy) {
-            return data;
+            state.strategy = new FilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
