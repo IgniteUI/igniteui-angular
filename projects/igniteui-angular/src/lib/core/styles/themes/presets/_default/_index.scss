@@ -1,5 +1,25 @@
+@import './avatar';
+@import './badge';
+@import './banner';
+@import './bottom-nav';
 @import './button';
+@import './button-group';
+@import './calendar';
+@import './card';
+@import './carousel';
+@import './checkbox';
+@import './ripple';
 
 $default-preset: (
-    igx-button: $dark-button
+    igx-avatar: $_default-avatar,
+    igx-badge: $_default-badge,
+    igx-banner: $_default-banner,
+    igx-bottom-nav: $_default-bottom-nav,
+    igx-button: $_default-button,
+    igx-button-group: $_default-button-group,
+    igx-calendar: $_default-calendar,
+    igx-card: $_default-card,
+    igx-carousel: $_default-carousel,
+    igx-checkbox: $_default-checkbox,
+    igx-ripple: $_default-ripple,
 );
