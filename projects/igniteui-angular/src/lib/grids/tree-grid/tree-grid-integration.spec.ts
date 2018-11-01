@@ -1,5 +1,6 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
@@ -437,19 +438,32 @@ describe('IgxTreeGrid - Integration', () => {
             // Verify non-editable columns are skipped while navigating
         }));
 
-        it('updates are preserved after GroupBy is removed', fakeAsync(() => {
-            // TODO
-            // Test for parent and child nodes
-        }));
-
         it('updates are preserved after Filtering is removed', fakeAsync(() => {
             // TODO
             // Test for parent and child nodes
         }));
 
         it('updates are preserved after Sorting is removed', fakeAsync(() => {
-            // TODO
-            // Test for parent and child nodes
+            treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            // Verify first level records are desc sorted
+            expect(treeGrid.getCellByColumn(0, 'Name').value).toEqual('Ana Sanders');
+            expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('Elizabeth Richards');
+            expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Thomas Hardy');
+
+            const targetCell = treeGrid.getCellByColumn(1, 'Name');
+            targetCell.update('Bojidar Kraev');
+            tick();
+            fix.detectChanges();
+
+            expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('Bojidar Kraev');
+
+            treeGrid.clearSort();
+            fix.detectChanges();
+            expect(treeGrid.getCellByColumn(9, 'Name').value).toEqual('Bojidar Kraev');
+            expect(treeGrid.getCellByColumn(8, 'Name').value).toEqual('Ana Sanders');
+            expect(treeGrid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
         }));
     });
 });
