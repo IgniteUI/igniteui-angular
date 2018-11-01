@@ -4393,28 +4393,30 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         const newValue = this.transactions.getAggregatedValue(row.rowID, true);
         const lastCommitedValue = // Last commited value (w/o pending)
         this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : {};
-        const cell = this.gridAPI.get_cell_inEditMode(this.id);
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, row.rowID);  // Get actual index in data
         let oldValue = Object.assign({}, this.data[rowIndex]);
         if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
         }
-        const args: IGridEditEventArgs = {
-            newValue,
+        const currentGridState = this.gridAPI.get_grid_edit_state(this.id, row,
+            null,
+            newValue);
+        const emitArgs = currentGridState.args;
+        Object.assign(emitArgs, {
             oldValue,
             row,
-            cell,
-            cancel: false
-        };
+            cell: null
+        });
         if (!commit) {
-            this.onRowEditCancel.emit(args);
+            this.onRowEditCancel.emit(emitArgs);
         } else {
-            this.updateRow(row.rowID, args.newValue);
+            this.gridAPI.update_row(emitArgs.newValue, this.id, row.rowID, currentGridState);
         }
-        if (args.cancel) {
+        if (emitArgs.cancel) {
             this.transactions.startPending();
             return;
         }
+        this.transactions.endPending(commit);
         this.closeRowEditingOverlay();
     }
 
@@ -4434,9 +4436,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         const rowObj = row ? this.getRowByKey(row.rowID) : null;
 
         if (commit) {
-            if (this.transactions.enabled && this.rowEditable === true) {
-                this.transactions.endPending(true);
-            }
             this.gridAPI.submit_value(this.id);
         } else {
             this.gridAPI.escape_editMode(this.id);

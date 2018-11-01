@@ -162,7 +162,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }
 
 
-    public get_cell_inEditMode(gridId) {
+    public get_cell_inEditMode(gridId): {
+        cellID: {
+            rowID: any,
+            columnID: number,
+            rowIndex: number
+        },
+        cell: any
+    } {
         const editCellId = this.editCellState.get(gridId);
         if (editCellId) {
             return editCellId;
@@ -265,13 +272,18 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
-        const cellObj = (editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID) ?
-            editableCell.cell : grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+        columnID = columnID !== undefined && columnID !== null ? columnID : null;
+        let cellObj;
+        if ((editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID)) {
+            cellObj = editableCell.cell;
+        } else {
+            cellObj = column ? grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID) : null;
+        }
         let rowIndex = this.get_row_index_in_data(id, rowID);
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = grid.data[rowIndex][column.field];
+            oldValue = columnID ? grid.data[rowIndex][column.field] : null;
             rowData = grid.data[rowIndex];
         }
 
@@ -282,7 +294,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
             if (rowIndex !== -1) {
-                oldValue = dataWithTransactions[rowIndex][column.field];
+                oldValue = columnID ? dataWithTransactions[rowIndex][column.field] : null;
                 rowData = dataWithTransactions[rowIndex];
             }
         }
@@ -344,30 +356,28 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public update_row(value: any, id: string, rowID: any): void {
+    public update_row(value: any, id: string, rowID: any, gridState?: {
+        args: IGridEditEventArgs,
+        isRowSelected: boolean,
+        rowData: any
+    }): void {
         const grid = this.get(id);
-        const isRowSelected = grid.selection.is_item_selected(id, rowID);
+        const currentGridState = gridState ? gridState : this.get_grid_edit_state(id, rowID, null, value);
+        const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
         if (index !== -1) {
-            const args: IGridEditEventArgs = {
-                row: this.get_row_by_key(id, rowID),
-                cell: null,
-                oldValue: this.get(id).data[index],
-                newValue: value,
-                cancel: false
-            };
-            grid.onRowEdit.emit(args);
-            if (args.cancel) {
+            grid.onRowEdit.emit(emitArgs);
+            if (emitArgs.cancel) {
                 return;
             }
             if (grid.transactions.enabled) {
-                grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.oldValue);
+                grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
             } else {
-                grid.data[index] = args.newValue;
+                grid.data[index] = emitArgs.newValue;
             }
-            if (isRowSelected) {
+            if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
-                const newRowID = (grid.primaryKey) ? args.newValue[grid.primaryKey] : args.newValue;
+                const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
                 grid.selection.select_item(id, newRowID);
             }
             (grid as any)._pipeTrigger++;
