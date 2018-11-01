@@ -1,7 +1,4 @@
-import { DataUtil } from './data-util';
-import { IFilteringOperation } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { IFilteringState } from './filtering-state.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export interface IFilteringStrategy {
@@ -9,11 +6,11 @@ export interface IFilteringStrategy {
 }
 
 export class FilteringStrategy implements IFilteringStrategy {
-    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
+    public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
         let i;
         let rec;
         const len = data.length;
-        const res: T[] = [];
+        const res = [];
         if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
             return data;
         }
@@ -26,13 +23,13 @@ export class FilteringStrategy implements IFilteringStrategy {
         return res;
     }
 
-    public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
+    protected findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
         const cond = expr.condition;
         const val = rec[expr.fieldName];
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
-    public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
+    protected matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;

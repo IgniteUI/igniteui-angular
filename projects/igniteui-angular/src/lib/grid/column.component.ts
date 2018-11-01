@@ -8,29 +8,27 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
 import { IgxGridRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridComponent } from './grid.component';
 import {
-    IFilteringExpressionsTree, IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand
 } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
-import { SortingStrategy } from '../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -477,7 +475,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get sortStrategy(): any {
+    public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
     /**
@@ -491,7 +489,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public set sortStrategy(classRef: any) {
+    public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
     /**
@@ -744,7 +742,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy = new SortingStrategy();
+    protected _sortStrategy: ISortingStrategy = new DefaultSortingStrategy();
     /**
      *@hidden
      */
