@@ -148,8 +148,8 @@
     You have {{ rowChangesCount }} uncommitted changes on this row
 </ng-template>
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">

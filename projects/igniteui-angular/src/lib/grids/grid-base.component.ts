@@ -4430,7 +4430,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param commit
      */
-    public endEdit(commit = true) {
+    public endEdit(commit = true, event?: Event) {
         const row = this.gridAPI.get_edit_row_state(this.id);
         const cell = this.gridAPI.get_cell_inEditMode(this.id);
         const rowObj = row ? this.getRowByKey(row.rowID) : null;
@@ -4445,7 +4445,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         }
         this.endRowTransaction(commit, row, rowObj);
         const currentCell = (row && cell) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cell.cellID.columnID) : null;
-        if (currentCell) {
+        if (currentCell && event) {
             currentCell.nativeElement.focus();
         }
     }

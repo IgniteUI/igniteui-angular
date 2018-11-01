@@ -533,7 +533,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
             }
-            if (!this.inEditMode) {
+            if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
                 // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
                 this.grid.endEdit(true);
             }
