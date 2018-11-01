@@ -224,16 +224,15 @@ export class DataUtil {
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, recursive?: boolean): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
         data.forEach((item: any, index: number) => {
-            const dataItem = recursive ? item.data : item;
-            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
+            const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
-            if (item.children && recursive) {
-                this.mergeTransactions(item.children, transactions, primaryKey, recursive);
+            if (Array.isArray(item.children)) {
+                this.mergeTransactions(item.children, transactions, primaryKey);
             }
             if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = recursive ? mergeObjects(mergeObjects({}, item), { data: transaction.newValue}) : transaction.newValue;
+                data[index] = transaction.newValue;
             }
         });
 
