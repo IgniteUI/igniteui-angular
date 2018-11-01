@@ -154,3 +154,13 @@ this.treegrid1.deleteRow(rowForDel.rowID);
 ```
 
 **NOTE:** The `cascadeOnDelete` property is taken into account only if our tree grid is defined with **primary and foreign keys**. If **child collection** is used instead, then child records will always be deleted when their respective parent is deleted.
+
+### Known Limitations
+
+|Limitation|Description|
+|--- |--- |
+|Templating Tree Cells|When templating a tree cell, content that spans outside the boundaries of the cell will not be shown unless positioned in an overlay.|
+|Summaries|Summaries are currently not supported for the tree grid.|
+|Search API|Search API is currently not supported for the tree grid.|
+|Export|Exporting is currently not supported for the tree grid.|
+|Group By|Group By feature is not supported, because it is inherent to the tree grid.|
