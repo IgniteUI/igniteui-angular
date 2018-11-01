@@ -627,7 +627,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
-            .map((row) => { 
+            .map((row) => {
                 if (row.cells) {
                     return row.cells.filter((cell) => cell.columnIndex === this.index);
                 }
