@@ -104,7 +104,7 @@ export class DisplayDensityBase implements DoCheck {
     }
 
     public ngDoCheck() {
-        if (this.oldDisplayDensityOptions && this.displayDensityOptions &&
+        if (this.oldDisplayDensityOptions && this.displayDensityOptions && !this._displayDensity &&
             this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: this.oldDisplayDensityOptions.displayDensity,
