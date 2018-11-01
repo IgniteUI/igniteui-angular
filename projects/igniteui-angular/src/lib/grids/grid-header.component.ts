@@ -186,7 +186,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
             if (this.column.sortable) {
-                const groupingExpr = this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field);
+                const groupingExpr = this.grid.groupingExpressions ?
+                    this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
                 const sortDir = groupingExpr ?
                     this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
                     : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;

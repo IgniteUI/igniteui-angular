@@ -303,6 +303,40 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     }
 
     /**
+     * An @Input property that sets the message displayed inside the GroupBy drop area where columns can be dragged on.
+     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * ```html
+     * <igx-grid dropAreaMessage="Drop here to group!">
+     *      <igx-column [groupable]="true" field="ID"></igx-column>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+
+    /**
+     * An @Input property that sets the template that will be rendered as a GroupBy drop area.
+     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * ```html
+     * <igx-grid [dropAreaTemplate]="dropAreaRef">
+     *      <igx-column [groupable]="true" field="ID"></igx-column>
+     * </igx-grid>
+     *
+     * <ng-template #myDropArea>
+     *      <span> Custom drop area! </span>
+     * </ng-template>
+     * ```
+     * ```ts
+     * @ViewChild('myDropArea', { read: TemplateRef })
+     * public dropAreaRef: TemplateRef<any>;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    /**
      * Emitted when a new `IgxColumnComponent` gets grouped/ungrouped, or multiple columns get
      * grouped/ungrouped at once by using the Group By API.
      * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
@@ -340,6 +374,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('defaultDropArea', { read: TemplateRef })
+    public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
      * A list of all group rows.
@@ -766,6 +806,17 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
         }
         return data;
+    }
+
+    /**
+    * @hidden
+    */
+   public get dropAreaTemplateResolved(): TemplateRef<any> {
+        if (this.dropAreaTemplate) {
+            return this.dropAreaTemplate;
+        } else {
+            return this.defaultDropAreaTemplate;
+        }
     }
 
     /**

@@ -801,6 +801,311 @@ export class SampleTestData {
         }];
     }
 
+    /* Tree data: Every employee node has ID, Name, HireDate, Age and Employees */
+    public static employeeTreeData = () => ([
+        {
+            ID: 147,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 475,
+                    Name: 'Michael Langdon',
+                    HireDate: new Date(2011, 6, 3),
+                    Age: 43,
+                    OnPTO: false,
+                    Employees: null
+                },
+                {
+                    ID: 957,
+                    Name: 'Thomas Hardy',
+                    HireDate: new Date(2009, 6, 19),
+                    Age: 29,
+                    OnPTO: true,
+                    Employees: undefined
+                },
+                {
+                    ID: 317,
+                    Name: 'Monica Reyes',
+                    HireDate: new Date(2014, 8, 18),
+                    Age: 31,
+                    OnPTO: false,
+                    Employees: [
+                        {
+                            ID: 711,
+                            Name: 'Roland Mendel',
+                            HireDate: new Date(2015, 9, 17),
+                            Age: 35,
+                            OnPTO: true,
+                        },
+                        {
+                            ID: 998,
+                            Name: 'Sven Ottlieb',
+                            HireDate: new Date(2009, 10, 11),
+                            Age: 44,
+                            OnPTO: false,
+                        }
+                    ]
+                }]
+        },
+        {
+            ID: 847,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 225,
+                    Name: 'Laurence Johnson',
+                    HireDate: new Date(2014, 4, 4),
+                    OnPTO: true,
+                    Age: 44,
+                },
+                {
+                    ID: 663,
+                    Name: 'Elizabeth Richards',
+                    HireDate: new Date(2017, 11, 9),
+                    Age: 25,
+                    OnPTO: false,
+                    Employees: [
+                        {
+                            ID: 141,
+                            Name: 'Trevor Ashworth',
+                            HireDate: new Date(2010, 3, 22),
+                            OnPTO: false,
+                            Age: 39
+                        }
+                    ]
+                }]
+        },
+        {
+            ID: 19,
+            Name: 'Victoria Lincoln',
+            HireDate: new Date(2014, 1, 22),
+            Age: 49,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 15,
+                    Name: 'Antonio Moreno',
+                    HireDate: new Date(2014, 4, 4),
+                    Age: 44,
+                    OnPTO: true,
+                    Employees: []
+                }]
+        },
+        {
+            ID: 17,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 12,
+                    Name: 'Pedro Afonso',
+                    HireDate: new Date(2007, 11, 18),
+                    Age: 50,
+                    OnPTO: false,
+                    Employees: [
+                        {
+                            ID: 101,
+                            Name: 'Patricio Simpson',
+                            HireDate: new Date(2017, 11, 9),
+                            Age: 25,
+                            OnPTO: false,
+                            Employees: []
+                        },
+                        {
+                            ID: 99,
+                            Name: 'Francisco Chang',
+                            HireDate: new Date(2010, 3, 22),
+                            OnPTO: true,
+                            Age: 39
+                        },
+                        {
+                            ID: 299,
+                            Name: 'Peter Lewis',
+                            HireDate: new Date(2018, 3, 18),
+                            OnPTO: false,
+                            Age: 25
+                        }
+                    ]
+                },
+                {
+                    ID: 101,
+                    Name: 'Casey Harper',
+                    HireDate: new Date(2016, 2, 19),
+                    OnPTO: false,
+                    Age: 27
+                }]
+        }
+    ])
+
+    /* Small tree data: Every employee node has ID, Name, HireDate, Age and Employees */
+    public static employeeSmallTreeData = () => ([
+        {
+            ID: 147,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            Employees: [
+                {
+                    ID: 475,
+                    Name: 'Michael Langdon',
+                    HireDate: new Date(2011, 6, 3),
+                    Age: 30,
+                    Employees: null
+                },
+                {
+                    ID: 957,
+                    Name: 'Thomas Hardy',
+                    HireDate: new Date(2009, 6, 19),
+                    Age: 29,
+                    Employees: undefined
+                },
+                {
+                    ID: 317,
+                    Name: 'Monica Reyes',
+                    HireDate: new Date(2014, 8, 18),
+                    Age: 31,
+                    Employees: [
+                        {
+                            ID: 711,
+                            Name: 'Roland Mendel',
+                            HireDate: new Date(2015, 9, 17),
+                            Age: 35
+                        },
+                        {
+                            ID: 998,
+                            Name: 'Sven Ottlieb',
+                            HireDate: new Date(2009, 10, 11),
+                            Age: 44
+                        },
+                        {
+                            ID: 299,
+                            Name: 'Peter Lewis',
+                            HireDate: new Date(2018, 3, 18),
+                            Age: 25
+                        }
+                    ]
+                }]
+        },
+        {
+            ID: 19,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61
+        },
+        {
+            ID: 847,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+            Employees: [
+                {
+                    ID: 663,
+                    Name: 'Elizabeth Richards',
+                    HireDate: new Date(2017, 11, 9),
+                    Age: 25
+                }]
+        }
+    ])
+
+    /* All types tree data: Every employee node has ID, Name, HireDate, Age, OnPTO and Employees */
+    public static employeeAllTypesTreeData = () => ([
+        {
+            ID: 147,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 475,
+                    Name: 'Michael Langdon',
+                    HireDate: new Date(2011, 6, 3),
+                    Age: 30,
+                    OnPTO: true,
+                    Employees: null
+                },
+                {
+                    ID: 957,
+                    Name: 'Thomas Hardy',
+                    HireDate: new Date(2009, 6, 19),
+                    Age: 29,
+                    OnPTO: false,
+                    Employees: undefined
+                },
+                {
+                    ID: 317,
+                    Name: 'Monica Reyes',
+                    HireDate: new Date(2014, 8, 18),
+                    Age: 31,
+                    OnPTO: true,
+                    Employees: [
+                        {
+                            ID: 711,
+                            Name: 'Roland Mendel',
+                            HireDate: new Date(2015, 9, 17),
+                            Age: 35,
+                            OnPTO: false,
+                        },
+                        {
+                            ID: 998,
+                            Name: 'Sven Ottlieb',
+                            HireDate: new Date(2009, 10, 11),
+                            Age: 44,
+                            OnPTO: false,
+                        },
+                        {
+                            ID: 299,
+                            Name: 'Peter Lewis',
+                            HireDate: new Date(2018, 3, 18),
+                            Age: 25,
+                            OnPTO: false,
+                        }
+                    ]
+                }]
+        },
+        {
+            ID: 19,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61,
+            OnPTO: true
+        },
+        {
+            ID: 847,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+            OnPTO: false,
+            Employees: [
+                {
+                    ID: 663,
+                    Name: 'Elizabeth Richards',
+                    HireDate: new Date(2017, 11, 9),
+                    Age: 25,
+                    OnPTO: true
+                }]
+        }
+    ])
+
+    public static employeePrimaryForeignKeyTreeData = () => ([
+        { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
+        { ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
+        { ID: 3, ParentID: 2, Name: 'Tanya Bennett', JobTitle: 'Director', Age: 29 },
+        { ID: 4, ParentID: 1, Name: 'Jack Simon', JobTitle: 'Software Developer', Age: 33 },
+        { ID: 6, ParentID: -1, Name: 'Erma Walsh', JobTitle: 'CEO', Age: 52 },
+        { ID: 7, ParentID: 2, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Age: 35 },
+        { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 },
+        { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 }
+    ])
+
     /**
      * Generates simple array of primitve values
      * @param rows Number of items to add to the array

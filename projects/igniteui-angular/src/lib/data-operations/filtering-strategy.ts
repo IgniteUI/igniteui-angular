@@ -8,27 +8,14 @@ export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[];
 }
 
-export class FilteringStrategy implements IFilteringStrategy {
-    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
-        let i;
-        let rec;
-        const len = data.length;
-        const res: T[] = [];
-        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
-            return data;
-        }
-        for (i = 0; i < len; i++) {
-            rec = data[i];
-            if (this.matchRecord(rec, expressionsTree)) {
-                res.push(rec);
-            }
-        }
-        return res;
-    }
+export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
+    public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[];
+
+    protected abstract getFieldValue(rec: object, fieldName: string): any;
 
     public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
         const cond = expr.condition;
-        const val = rec[expr.fieldName];
+        const val = this.getFieldValue(rec, expr.fieldName);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
@@ -62,5 +49,28 @@ export class FilteringStrategy implements IFilteringStrategy {
         }
 
         return true;
+    }
+}
+
+export class FilteringStrategy extends BaseFilteringStrategy {
+    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
+        let i;
+        let rec;
+        const len = data.length;
+        const res: T[] = [];
+        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
+            return data;
+        }
+        for (i = 0; i < len; i++) {
+            rec = data[i];
+            if (this.matchRecord(rec, expressionsTree)) {
+                res.push(rec);
+            }
+        }
+        return res;
+    }
+
+    protected getFieldValue(rec: object, fieldName: string): any {
+        return rec[fieldName];
     }
 }

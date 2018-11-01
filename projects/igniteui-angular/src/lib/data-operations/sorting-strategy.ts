@@ -39,8 +39,8 @@ export class SortingStrategy implements ISortingStrategy {
         return a > b ? 1 : a < b ? -1 : 0;
     }
     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean, strategy: ISortingStrategy) {
-        let a = obj1[key];
-        let b = obj2[key];
+        let a = this.getFieldValue(obj1, key);
+        let b = this.getFieldValue(obj2, key);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
@@ -50,6 +50,9 @@ export class SortingStrategy implements ISortingStrategy {
         } else {
             return reverse * this.compareValues(a, b);
         }
+    }
+    protected getFieldValue(obj: any, key: string): any {
+        return obj[key];
     }
     protected arraySort<T>(data: T[], compareFn?): T[] {
         return data.sort(compareFn);
@@ -61,10 +64,10 @@ export class SortingStrategy implements ISortingStrategy {
         const key = expression.fieldName;
         const len = data.length;
         res.push(data[index]);
-        groupval = data[index][key];
+        groupval = this.getFieldValue(data[index], key);
         index++;
         for (i = index; i < len; i++) {
-            if (this.compareValues(data[i][key], groupval) === 0) {
+            if (this.compareValues(this.getFieldValue(data[i], key), groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
@@ -75,10 +78,12 @@ export class SortingStrategy implements ISortingStrategy {
     private sortByFieldExpression<T>(data: T[], expression: ISortingExpression): T[] {
 
         const key = expression.fieldName;
+        const firstRow = data[0];
+        const firstRowValue = firstRow ? this.getFieldValue(firstRow, key) : undefined;
         const ignoreCase = expression.ignoreCase ?
-            data[0] && (typeof data[0][key] === 'string' ||
-                data[0][key] === null ||
-                data[0][key] === undefined) :
+            firstRow && (typeof firstRowValue === 'string' ||
+                firstRowValue === null ||
+                firstRowValue === undefined) :
             false;
         const reverse = (expression.dir === SortingDirection.Desc ? -1 : 1);
         const cmpFunc = (obj1, obj2) => {
@@ -143,5 +148,11 @@ export class SortingStrategy implements ISortingStrategy {
             i += group.length;
         }
         return result;
+    }
+}
+
+export class TreeGridSortingStrategy extends SortingStrategy {
+    protected getFieldValue(obj: any, key: string): any {
+        return obj['data'][key];
     }
 }
