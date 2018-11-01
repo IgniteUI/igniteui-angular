@@ -1466,73 +1466,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterCellsForTypeNumber.queryAll(By.css('.igx-filtering-chips')).length).toBe(1);
     }));
 
-    it('Should display populated filter dialog without redrawing it', async () => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-        grid.width = '400px';
-        grid.getColumnByName('ID').width = '50px';
-        await wait();
-
-        // filter the ProductName by two conditions
-        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
-        const expression = {
-            fieldName: 'ProductName',
-            searchVal: 'Ignite',
-            condition: IgxStringFilteringOperand.instance().condition('startsWith')
-        };
-        const expression1 = {
-            fieldName: 'ProductName',
-            searchVal: 'Angular',
-            condition: IgxStringFilteringOperand.instance().condition('contains')
-        };
-        filteringExpressionsTree.filteringOperands.push(expression);
-        filteringExpressionsTree.filteringOperands.push(expression1);
-        grid.filter('ProductName', null, filteringExpressionsTree);
-
-        fix.detectChanges();
-
-        // scroll horizontally to the right, so ProductName column is out of view
-        const horScroll = grid.parentVirtDir.getHorizontalScroll();
-        horScroll.scrollLeft = 1000;
-        await wait(100);
-        fix.detectChanges();
-
-        // scroll horizontally to the left, so ProductName is back in view
-        horScroll.scrollLeft = 0;
-        await wait(100);
-        fix.detectChanges();
-
-        // click filter icon
-        const filterButton = fix.debugElement.queryAll(By.css('igx-chip'))[0];
-        filterButton.nativeElement.click();
-        fix.detectChanges();
-
-        const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const filterIcon = filterUiRow.query(By.css('igx-icon'));
-        filterIcon.triggerEventHandler('mousedown', null);
-        filterIcon.nativeElement.click();
-        await wait(100);
-        fix.detectChanges();
-
-        // await fix.whenStable();
-
-        const filterUI = fix.debugElement.query(By.css('.igx-grid__filtering-row-main'));
-        // verify 'And' button is selected
-        const chipArea = filterUI.query(By.css('igx-chips-area'));
-        const chips = chipArea.queryAll(By.css('igx-chip'));
-        const andButton = chipArea.query(By.css('#operand'));
-        expect(andButton).not.toBeNull();
-        expect(andButton).toBeDefined();
-
-        // verify both filter expression components are present
-        expect(chips).not.toBeNull();
-        expect(chips).toBeDefined();
-        expect(chips.length).toBe(2, 'not all filter-expression components are visible');
-    });
-
-it('Should correctly create FilteringExpressionsTree and populate filterUI.', fakeAsync(() => {
+    it('Should correctly create FilteringExpressionsTree and populate filterUI.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
