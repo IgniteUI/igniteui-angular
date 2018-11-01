@@ -1,5 +1,4 @@
 import { async, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
