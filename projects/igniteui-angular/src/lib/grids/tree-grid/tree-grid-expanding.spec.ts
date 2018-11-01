@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
 import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent,
