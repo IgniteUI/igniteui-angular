@@ -3,16 +3,21 @@ import {
 } from '@angular/core/testing';
 import { DataGenerator } from './test-util/data-generator';
 
-import {
-    DataUtil,
-    FilteringLogic, FilteringStrategy, IFilteringExpressionsTree,
-    IFilteringState, IGroupByRecord, IGroupingState,
-    IPagingState, ISortingExpression, PagingError, SortingDirection,
-    IgxStringFilteringOperand, IgxNumberFilteringOperand,
-    IgxDateFilteringOperand, IgxBooleanFilteringOperand, FilteringExpressionsTree
-} from '../../public_api';
 import { IGroupByResult, DefaultSortingStrategy } from './sorting-strategy';
 import { cloneArray } from '../core/utils';
+import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
+import { DataUtil } from './data-util';
+import { IGroupingState } from './groupby-state.interface';
+import { IGroupByRecord } from './groupby-record.interface';
+import { FilteringStrategy } from './filtering-strategy';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from './filtering-expressions-tree';
+import { IFilteringState } from './filtering-state.interface';
+import { FilteringLogic } from './filtering-expression.interface';
+import { IgxNumberFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxBooleanFilteringOperand } from './filtering-condition';
+import { IPagingState, PagingError } from './paging-state.interface';
 
 /* Test sorting */
 function testSort() {
