@@ -1415,24 +1415,23 @@
 
     %igx-grid__group-expand-btn {
         position: absolute;
-        top: calc(50% - 18px);
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 6px);
+        cursor: pointer;
+        top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'comfortable');
 
-        &%igx-button--icon {
-            color: --var($theme, 'expand-all-icon-color');
-
-            &:hover {
-                color: --var($theme, 'expand-all-icon-hover-color');
-            }
+        &:hover {
+            color: --var($theme, 'expand-icon-hover-color');
         }
     }
 
     %igx-grid__group-expand-btn--cosy {
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'cosy')} - 6px);
+        top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'cosy');
     }
 
     %igx-grid__group-expand-btn--compact {
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'compact')} - 6px);
+        top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
     @for $i from 1 through 10 {
