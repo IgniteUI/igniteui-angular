@@ -1,0 +1,38 @@
+$_default-button-group: (
+    name: 'igx-button-group',
+    item-background: #fff,
+    item-border-color: transparent,
+
+    item-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-hover-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    item-hover-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    item-selected-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    item-selected-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    item-selected-border-color: (
+        igx-color: ('grays', 600),
+        rgba: .12
+    ),
+
+    disabled-text-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    disabled-background-color: (
+        igx-color: ('grays', 100)
+    )
+);

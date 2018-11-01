@@ -1,0 +1,20 @@
+$_default-card: (
+    name: 'igx-card',
+    background: #fff,
+
+    header-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    subtitle-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    content-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    actions-text-color: (
+        igx-color: ('grays', 600)
+    )
+);

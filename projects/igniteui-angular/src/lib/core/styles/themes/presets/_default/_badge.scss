@@ -1,0 +1,9 @@
+$_default-badge: (
+    name: 'igx-badge',
+    icon-color: #fff,
+    text-color: #fff,
+    border-color: #fff,
+    background-color: (
+        igx-color: ('primary', 500)
+    )
+);

@@ -108,15 +108,15 @@
     // @debug 'All excluded: #{$excluded}';
 
     @if not(index($exclude, 'igx-ripple')) {
-        @include igx-ripple($theme: get-theme($preset, 'igx-ripple'));
+        @include igx-ripple(igx-ripple-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-avatar')) {
-        @include igx-avatar($theme: get-theme($preset, 'igx-avatar'));
+        @include igx-avatar(igx-avatar-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-badge')) {
-        @include igx-badge($theme: get-theme($preset, 'igx-badge'));
+        @include igx-badge(igx-badge-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-bottom-nav')) {
@@ -128,27 +128,27 @@
     }
 
     @if not(index($exclude, 'igx-button-group')) {
-        @include igx-button-group($theme: get-theme($preset, 'igx-button-group'));
+        @include igx-button-group(igx-button-group-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-banner')) {
-        @include igx-banner($theme: get-theme($preset, 'igx-banner'));
+        @include igx-banner(igx-banner-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-calendar')) {
-        @include igx-calendar($theme: get-theme($preset, 'igx-calendar'));
+        @include igx-calendar(igx-calendar-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-card')) {
-        @include igx-card($theme: get-theme($preset, 'igx-card'));
+        @include igx-card(igx-card-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-carousel')) {
-        @include igx-carousel($theme: get-theme($preset, 'igx-carousel'));
+        @include igx-carousel(igx-carousel-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-checkbox')) {
-        @include igx-checkbox($theme: get-theme($preset, 'igx-checkbox'));
+        @include igx-checkbox(igx-checkbox-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-chip')) {

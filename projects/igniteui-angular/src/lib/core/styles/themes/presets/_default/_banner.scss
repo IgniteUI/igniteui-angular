@@ -1,0 +1,20 @@
+$_default-banner: (
+    name: 'igx-banner',
+    banner-background: #fff,
+
+    banner-message-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    banner-border-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    banner-illustration-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    banner-illustration-color: (
+        igx-color: ('grays', 900)
+    )
+);

@@ -20,31 +20,29 @@
 ///   @include igx-banner($my-banner-theme);
 @function igx-banner-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
     $banner-illustration-background: null,
     $banner-illustration-color: null
 ) {
-    $default-theme: (
-        name: 'igx-banner',
-        banner-background: #fff,
-        banner-message-color: igx-color($palette, 'grays', 900),
-        banner-border-color: igx-color($palette, 'grays', 400),
-        banner-illustration-background: igx-color($palette, 'grays', 100),
-        banner-illustration-color: igx-color($palette, 'grays', 900)
-    );
+    // $default-theme: (
+    //     name: 'igx-banner',
+    //     banner-background: #fff,
+    //     banner-message-color: igx-color($palette, 'grays', 900),
+    //     banner-border-color: igx-color($palette, 'grays', 400),
+    //     banner-illustration-background: igx-color($palette, 'grays', 100),
+    //     banner-illustration-color: igx-color($palette, 'grays', 900)
+    // );
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($preset, 'igx-banner'), $palette);
 
     @if not($banner-message-color) and $banner-background {
         $banner-message-color: text-contrast($banner-background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         banner-background: $banner-background,
         banner-message-color: $banner-message-color,
