@@ -323,7 +323,7 @@ export class TreeGridFunctions {
                 expect(newCell.focused).toEqual(true);
 
                 resolve();
-            });
+            })
 
     public static moveCellLeftRight =
         (fix, treeGrid: IgxTreeGridComponent,
@@ -347,7 +347,7 @@ export class TreeGridFunctions {
                 expect(newCell.focused).toEqual(true);
 
                 resolve();
-            });
+            })
 
     public static moveCellWithTab =
         (fix, treeGrid: IgxTreeGridComponent,
@@ -374,7 +374,7 @@ export class TreeGridFunctions {
                 expect(newCell.focused).toEqual(true);
 
                 resolve();
-            });
+            })
 
     public static moveCellWithShiftTab =
         (fix, treeGrid: IgxTreeGridComponent,
@@ -400,7 +400,7 @@ export class TreeGridFunctions {
                 expect(newCell.focused).toEqual(true);
 
                 resolve();
-            });
+            })
 
     public static moveEditableCellWithTab =
         (fix, treeGrid: IgxTreeGridComponent,
@@ -424,7 +424,7 @@ export class TreeGridFunctions {
                 }
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
-            });
+            })
 
     public static moveEditableCellWithShiftTab =
         (fix, treeGrid: IgxTreeGridComponent,
@@ -448,5 +448,5 @@ export class TreeGridFunctions {
                 }
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
-            });
+            })
 }
