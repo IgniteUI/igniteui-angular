@@ -572,6 +572,10 @@
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'comfortable') - rem(20px)) / 2;
         }
+
+        %grid-row:last-of-type {
+            border-bottom: none;
+        }
     }
 
     %grid-thead--cosy {
