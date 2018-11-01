@@ -57,6 +57,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         const groupRowIndex = super.get_row_by_key(id, row.rowID).index;
+        const shouldScroll = !(grid.unpinnedWidth - grid.totalWidth >= 0);
         const isScrolledToBottom = grid.rowList.length > 0 && grid.rowList.last.index ===
         grid.verticalScrollContainer.igxForOf.length - 1;
         const expandedStates = grid.expansionStates;
@@ -73,6 +74,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
         if (expanded) {
             grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+            if (shouldScroll) {
+                grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            }
         }
     }
 
