@@ -52,6 +52,7 @@
 /// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
 /// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
+/// @param {Color} $treegrid-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -123,7 +124,9 @@
     $drop-area-text-color: null,
     $drop-area-icon-color: null,
     $drop-area-background: null,
-    $drop-area-on-drop-background: null
+    $drop-area-on-drop-background: null,
+
+    $treegrid-filtered-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -190,6 +193,7 @@
 
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
+        treegrid-filtered-text-color: igx-color($palette, grays, 500)
     );
 
     @if $preset {
@@ -379,6 +383,7 @@
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
+        treegrid-filtered-text-color: $treegrid-filtered-text-color
     ));
 }
 
@@ -648,6 +653,14 @@
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
         }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
     }
 
     %igx-grid__tr--edit {
@@ -693,6 +706,50 @@
         background: --var($theme, 'header-background') !important;
     }
 
+    %igx-grid-row--filtered {
+        %grid-cell-text {
+            color: --var($theme, 'treegrid-filtered-text-color');
+        }
+    }
+
+    %grid-row--selected--filtered {
+        %grid-cell-text {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'row-selected-background'));
+            }
+        }
+
+        %grid-cell--selected {
+            %igx-grid__tree-grouping-indicator {
+                color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+
+                &:hover {
+                    color: text-contrast(--var($theme, 'cell-selected-background'));
+                }
+            }
+        }
+    }
+
+    %igx-grid__tree-grouping-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: rem(8);
+        cursor: pointer;
+
+        color: --var($theme, 'expand-icon-color');
+
+        &:hover {
+            color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
     %grid-cell-display {
         position: relative;
         display: flex;
@@ -704,6 +761,10 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: left;
+    }
+
+    %igx-grid__td--tree-cell {
+        overflow: hidden;
     }
 
     %grid-cell-text {
@@ -728,6 +789,14 @@
         color: --var($theme, 'cell-selected-text-color');
         background-color: --var($theme, 'cell-selected-background') !important;
         border-bottom: 0;
+
+        %igx-grid__tree-grouping-indicator {
+            color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+
+            &:hover {
+                color: text-contrast(--var($theme, 'cell-selected-background'));
+            }
+        }
     }
 
     %igx-grid__td--edited {
@@ -1367,6 +1436,10 @@
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
         }
 
+        %igx-grid__tree-cell--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
+        }
+
         // COSY
         %igx-grid__row-indentation-cosy--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
@@ -1376,12 +1449,20 @@
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
         }
 
+        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+        }
+
         // COMPACT
         %igx-grid__row-indentation-compact--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+        }
+
+        %igx-grid__tree-cell-compact--padding-level-#{$i} {
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
         }
     }
