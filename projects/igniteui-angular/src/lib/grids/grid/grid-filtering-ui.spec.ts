@@ -1715,7 +1715,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
 
         expect(grid.rowList.length).toEqual(8);
-
     }));
 
     it('should update UI when chip is removed from filter row.', fakeAsync(() => {
@@ -1768,11 +1767,9 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const stringCellText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
         expect(stringCellText.nativeElement.textContent).toBe('Filter');
-
     }));
 
-
-    it('Should correctly update empty filter cells when scrolling horizontally.', fakeAsync(() => {
+    it('Should correctly update empty filter cells when scrolling horizontally.', async() => {
         const fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
         const grid = fix.componentInstance.grid;
         fix.detectChanges();
@@ -1787,7 +1784,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         // Scroll to the right
         grid.parentVirtDir.getHorizontalScroll().scrollLeft = 300;
-        tick();
+        await wait();
         fix.detectChanges();
 
         emptyFilterCells = fix.debugElement.queryAll(By.directive(IgxGridFilteringCellComponent)).filter((cell) => {
@@ -1797,7 +1794,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         emptyFilterHeader = emptyFilterCells[0].parent.query(By.directive(IgxGridHeaderComponent));
         expect(emptyFilterHeader.componentInstance.column.field).toEqual('Downloads');
-    }));
+    });
 
     it('Should correctly update filtering row rendered when changing current column by clicking on a header.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
