@@ -1,9 +1,7 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, ViewChild, HostBinding } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridCellComponent } from './tree-cell.component';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 
 @Component({

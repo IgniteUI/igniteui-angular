@@ -1,4 +1,3 @@
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 export interface ITreeGridRecord {
     rowID: any;

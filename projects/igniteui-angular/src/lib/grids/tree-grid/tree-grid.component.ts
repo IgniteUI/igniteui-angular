@@ -23,7 +23,6 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 

@@ -1,12 +1,8 @@
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { cloneArray } from '../../core/utils';
-import { DataUtil, DataType } from '../../data-operations/data-util';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { IgxExpansionPanelDescriptionDirective } from '../../expansion-panel/expansion-panel.directives';
 import { IgxColumnComponent } from '../column.component';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
