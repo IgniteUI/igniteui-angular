@@ -64,7 +64,18 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.column.width;
+        // HACK - think of a better solution
+        const colWidth = this.column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (isPercentageWidth) {
+            const firstContentCell = this.column.cells[0];
+            if (firstContentCell) {
+                return firstContentCell.nativeElement.getBoundingClientRect().width + 'px';
+            }
+        } else {
+            return this.column.width;
+        }
     }
 
     @HostBinding('class.igx-grid__filtering-cell')
