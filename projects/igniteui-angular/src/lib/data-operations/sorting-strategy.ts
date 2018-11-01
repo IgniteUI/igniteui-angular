@@ -24,7 +24,7 @@ export class DefaultSortingStrategy implements ISortingStrategy {
         return this.arraySort(data, cmpFunc);
     }
 
-    protected compareValues(a: any, b: any) {
+    public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
         if (an) {

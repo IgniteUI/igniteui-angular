@@ -23,13 +23,13 @@ export class FilteringStrategy implements IFilteringStrategy {
         return res;
     }
 
-    protected findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
+    public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
         const cond = expr.condition;
         const val = rec[expr.fieldName];
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
-    protected matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
+    public matchRecord(rec: object, expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (expressions) {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;

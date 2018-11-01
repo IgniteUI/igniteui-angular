@@ -1417,7 +1417,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Input()
-    get sortingExpressions() {
+    get sortingExpressions(): ISortingExpression [] {
         return this._sortingExpressions;
     }
 
@@ -1432,7 +1432,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    set sortingExpressions(value) {
+    set sortingExpressions(value: ISortingExpression []) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 

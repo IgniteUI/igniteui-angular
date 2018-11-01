@@ -1,23 +1,19 @@
-import { Component, ViewChild } from '@angular/core';
 import {
-    async,
-    TestBed
+    async
 } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
 
 import {
-    DataType,
     DataUtil,
-    FilteringLogic, FilteringStrategy, IDataState, IFilteringExpressionsTree,
+    FilteringLogic, FilteringStrategy, IFilteringExpressionsTree,
     IFilteringState, IGroupByRecord, IGroupingState,
-    IPagingState, ISortingExpression, ISortingState, PagingError, SortingDirection,
+    IPagingState, ISortingExpression, PagingError, SortingDirection,
     IgxStringFilteringOperand, IgxNumberFilteringOperand,
     IgxDateFilteringOperand, IgxBooleanFilteringOperand, FilteringExpressionsTree
 } from '../../public_api';
 import { IGroupByResult } from './sorting-strategy';
 import { cloneArray } from '../core/utils';
+import { DefaultSortingStrategy } from 'dist/igniteui-angular/public_api';
 /* Test sorting */
 function testSort() {
     let data: any[] = [];
@@ -30,7 +26,9 @@ function testSort() {
         it('sorts descending column \'number\'', () => {
             const se: ISortingExpression = {
                 dir: SortingDirection.Desc,
-                fieldName: 'number'
+                fieldName: 'number',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             const res = DataUtil.sort(data, { expressions: [se] });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
@@ -39,7 +37,9 @@ function testSort() {
         it('sorts ascending column \'boolean\'', () => {
             const se: ISortingExpression = {
                 dir: SortingDirection.Asc,
-                fieldName: 'boolean'
+                fieldName: 'boolean',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             const res = DataUtil.sort(data, { expressions: [se] });
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
@@ -49,11 +49,15 @@ function testSort() {
         it('sorts descending column \'boolean\', sorts \'date\' ascending', () => {
             const se0: ISortingExpression = {
                 dir: SortingDirection.Desc,
-                fieldName: 'boolean'
+                fieldName: 'boolean',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             const se1: ISortingExpression = {
                 dir: SortingDirection.Asc,
-                fieldName: 'date'
+                fieldName: 'date',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             const res = DataUtil.sort(data, { expressions: [se0, se1] });
             expect(dataGenerator.getValuesForColumn(res, 'number'))
@@ -63,7 +67,9 @@ function testSort() {
             data[4].string = data[4].string.toUpperCase();
             const se0: ISortingExpression = {
                 dir: SortingDirection.Desc,
-                fieldName: 'string'
+                fieldName: 'string',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             let res = DataUtil.sort(data, {
                 expressions: [se0]
@@ -90,7 +96,9 @@ function testGroupBy() {
         data = dataGenerator.data;
         expr = {
             dir: SortingDirection.Asc,
-            fieldName: 'boolean'
+            fieldName: 'boolean',
+            ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
         };
         state = {
             expressions: [expr],
@@ -174,7 +182,9 @@ function testGroupBy() {
         it('two level groups', () => {
             const expr2 = {
                 fieldName: 'string',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             };
             state.expressions.push(expr2);
             // sort
@@ -413,52 +423,10 @@ function testPage() {
         });
     });
 }
-function testProcess() {
-    describe('test process', () => {
-        it('calls process as applies filtering, sorting, paging', () => {
-            let metadata;
-            const filteringState: IFilteringState = {
-                expressionsTree: new FilteringExpressionsTree(FilteringLogic.And)
-            };
-            filteringState.expressionsTree.filteringOperands = [
-                {
-                    condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
-                    fieldName: 'number',
-                    searchVal: 1
-                }
-            ];
-            const state: IDataState = {
-                filtering: filteringState,
-                paging: {
-                    index: 1,
-                    recordsPerPage: 2
-                },
-                sorting: {
-                    expressions: [
-                        {
-                            dir: SortingDirection.Desc,
-                            fieldName: 'number'
-                        }
-                    ]
-                }
-            };
-            const dataGenerator: DataGenerator = new DataGenerator();
-            const data: object[] = dataGenerator.data;
-            const result = DataUtil.process(data, state);
-            expect(dataGenerator.getValuesForColumn(result, 'number'))
-                .toEqual([2]);
-            metadata = state.paging.metadata;
-            expect(metadata.countPages === 2 && metadata.error === PagingError.None)
-                .toBeTruthy();
-        });
-    });
-}
 /* //Test paging */
 describe('DataUtil', () => {
     testSort();
     testGroupBy();
     testFilter();
     testPage();
-    // test process
-    testProcess();
 });
