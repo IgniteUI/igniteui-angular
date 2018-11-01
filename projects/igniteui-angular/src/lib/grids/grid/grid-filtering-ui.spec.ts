@@ -1978,6 +1978,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     it('should update UI when filtering via the API.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
+        grid.width = '1600px';
         grid.columnWidth = '400px';
         fix.detectChanges();
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
