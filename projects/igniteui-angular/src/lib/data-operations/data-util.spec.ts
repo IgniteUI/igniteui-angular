@@ -30,7 +30,7 @@ function testSort() {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             };
-            const res = DataUtil.sort(data, { expressions: [se] });
+            const res = DataUtil.sort(data, [se]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
@@ -41,7 +41,7 @@ function testSort() {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             };
-            const res = DataUtil.sort(data, { expressions: [se] });
+            const res = DataUtil.sort(data, [se]);
             expect(dataGenerator.getValuesForColumn(res, 'boolean'))
                 .toEqual([false, false, false, true, true]);
         });
@@ -59,7 +59,7 @@ function testSort() {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             };
-            const res = DataUtil.sort(data, { expressions: [se0, se1] });
+            const res = DataUtil.sort(data, [se0, se1]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([1, 3, 0, 2, 4]);
         });
@@ -71,15 +71,11 @@ function testSort() {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             };
-            let res = DataUtil.sort(data, {
-                expressions: [se0]
-            });
+            let res = DataUtil.sort(data, [se0]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual([3, 2, 1, 0, 4], 'expressionDefaults.ignoreCase = false');
             se0.ignoreCase = true;
-            res = DataUtil.sort(data, {
-                expressions: [se0]
-            });
+            res = DataUtil.sort(data, [se0]);
             expect(dataGenerator.getValuesForColumn(res, 'number'))
                 .toEqual(dataGenerator.generateArray(4, 0));
         });
@@ -109,7 +105,7 @@ function testGroupBy() {
     describe('Test groupBy', () => {
         it('groups by descending column "boolean", expanded', () => {
             // sort
-            let res = DataUtil.sort(data, { expressions: [expr] });
+            let res = DataUtil.sort(data, [expr]);
             // first group pipe
             const gres = DataUtil.group(res, state);
             // second group pipe
@@ -137,7 +133,7 @@ function testGroupBy() {
         it('groups by descending column "boolean", collapsed', () => {
             state.defaultExpanded = false;
             // sort
-            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
@@ -161,7 +157,7 @@ function testGroupBy() {
                 hierarchy: [{ fieldName: 'boolean', value: false }]
             });
             // sort
-            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
@@ -188,7 +184,7 @@ function testGroupBy() {
             };
             state.expressions.push(expr2);
             // sort
-            const sorted = DataUtil.sort(data, { expressions: [expr, expr2] });
+            const sorted = DataUtil.sort(data, [expr, expr2]);
             // first group pipe
             const gres = DataUtil.group(sorted, state);
             // second group pipe
@@ -215,7 +211,7 @@ function testGroupBy() {
 
         it('groups by descending column "boolean", paging', () => {
             // sort
-            const sorted = DataUtil.sort(data, { expressions: [expr] });
+            const sorted = DataUtil.sort(data, [expr]);
             // first group pipe
             const grouped = DataUtil.group(sorted, state);
             // page
