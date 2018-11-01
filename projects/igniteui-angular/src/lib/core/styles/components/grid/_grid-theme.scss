@@ -60,7 +60,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $header-background: null,
     $header-text-color: null,
@@ -192,9 +192,7 @@
         group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
     );
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($preset, 'igx-grid'), $palette);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -260,7 +258,6 @@
         $group-row-background: $header-background
     }
 
-    ///////
     @if not($expand-icon-color) and $group-row-background {
         $expand-icon-color: text-contrast($group-row-background)
     }
@@ -276,8 +273,6 @@
     @if not($group-count-background) and $group-row-selected-background {
         $group-count-background: text-contrast($group-row-selected-background);
     }
-    ////////
-
 
     @if not($expand-all-icon-color) and $header-background {
         $expand-all-icon-color: rgba(text-contrast($header-background), .87);
@@ -315,7 +310,7 @@
         $drop-area-text-color: text-contrast($drop-area-background)
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         header-background: $header-background,
@@ -349,6 +344,7 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
+        edit-mode-color: $edit-mode-color,
         edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
@@ -374,6 +370,7 @@
         group-count-text-color: $group-count-text-color,
 
         group-row-background: $group-row-background,
+        group-row-selected-background: $group-row-selected-background,
 
         drop-area-text-color: $drop-area-text-color,
         drop-area-icon-color: $drop-area-icon-color,

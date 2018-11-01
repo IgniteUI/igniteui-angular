@@ -8,6 +8,15 @@
 @import './card';
 @import './carousel';
 @import './checkbox';
+@import './chip';
+@import './column-hiding';
+@import './combo';
+@import './date-picker';
+@import './dialog';
+@import './drop-down';
+@import './expansion-panel';
+@import './grid';
+@import './grid-filtering';
 @import './ripple';
 
 $default-preset: (
@@ -21,5 +30,14 @@ $default-preset: (
     igx-card: $_default-card,
     igx-carousel: $_default-carousel,
     igx-checkbox: $_default-checkbox,
+    igx-chip: $_default-chip,
+    igx-column-hiding: $_default-column-hiding,
+    igx-combo: $_default-combo,
+    igx-date-picker: extend($_default-calendar, $_default-date-picker),
+    igx-dialog: $_default-dialog,
+    igx-drop-down: $_default-drop-down,
+    igx-expansion-panel: $_default-expansion-panel,
+    igx-grid: $_default-grid,
+    igx-grid-filtering: $_default-grid-filtering,
     igx-ripple: $_default-ripple,
 );
