@@ -21,6 +21,9 @@ import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { Transaction, TransactionType } from '../services';
 
+/**
+ * @hidden
+ */
 export enum DataType {
     String = 'string',
     Number = 'number',
@@ -28,6 +31,9 @@ export enum DataType {
     Date = 'date'
 }
 
+/**
+ * @hidden
+ */
 export class DataUtil {
     public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {
