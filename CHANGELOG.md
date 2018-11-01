@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.1.8
 
+### General
+
+- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+
 ### Bug fixes
 
 - Fix sorting and groupby expression not syncing when there are already sorted columns. #2786
