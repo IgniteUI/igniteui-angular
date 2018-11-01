@@ -23,6 +23,7 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
 
@@ -233,8 +234,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                filteringService);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
