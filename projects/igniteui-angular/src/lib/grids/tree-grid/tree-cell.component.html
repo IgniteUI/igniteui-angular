@@ -1,0 +1,39 @@
+<ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
+        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'">
+    <ng-container *ngIf="column.dataType === 'boolean' || column.dataType === 'string' || formatter; else default" >
+        <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
+    </ng-container>
+    <ng-template #default>
+        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
+    </ng-template>
+</ng-template>
+<ng-template #inlineEditor  let-cell="cell">
+    <ng-container *ngIf="column.dataType === 'string'">
+        <igx-input-group>
+            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [igxFocus]="focused">
+        </igx-input-group>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'number'">
+        <igx-input-group>
+            <input igxInput [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [igxFocus]="focused"  type="number">
+        </igx-input-group>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'boolean'">
+        <igx-checkbox [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [checked]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [disableRipple]="true"></igx-checkbox>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'date'">
+        <igx-datePicker [(ngModel)]="gridAPI.get_cell_inEditMode(gridID).cell.editValue" [labelVisibility]="false"></igx-datePicker>
+    </ng-container>
+</ng-template>
+<ng-container *ngIf="!inEditMode">
+    <ng-container *ngIf="indentation > 0">
+        <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
+    </ng-container>
+    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
+         (click)="toggle($event)" (focus)="onIndicatorFocus($event)" tabindex="-1">
+        <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
+        <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
+    </div>
+</ng-container>
+<ng-container *ngTemplateOutlet="template; context: context">
+</ng-container>
