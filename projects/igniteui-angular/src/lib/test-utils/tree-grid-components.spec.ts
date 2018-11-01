@@ -165,7 +165,7 @@ export class IgxTreeGridCrudComponent {
 // Test Component for tree-grid row editing
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" [rowEditable]='true' childDataKey="Employees" width="900px" height="600px">
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" [rowEditable]='true' childDataKey="Employees" width="900px" height="600px">
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'ID'" dataType="number"></igx-column>

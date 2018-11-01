@@ -1,5 +1,6 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
@@ -8,9 +9,14 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxNumberFilteringOperand } from '../../../public_api';
+import { IgxGridCellComponent } from '../grid';
+import { IgxTreeGridCellComponent } from './tree-cell.component';
+import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 
@@ -29,7 +35,7 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridBooleanTreeColumnComponent,
                 IgxTreeGridRowEditingComponent
             ],
-            imports: [NoopAnimationsModule, IgxTreeGridModule]
+            imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule]
         })
             .compileComponents();
     }));
@@ -394,7 +400,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(editRowTop - bannerBottom).toBeLessThan(2);
         }));
 
-        it('banner hides when you expand/collapse the edited row', fakeAsync(() => {
+        fit('banner hides when you expand/collapse the edited row', fakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.collapseAll();
             fix.detectChanges();
@@ -404,25 +410,40 @@ describe('IgxTreeGrid - Integration', () => {
             tick();
             fix.detectChanges();
 
-            let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
+            const banner = document.getElementsByClassName(CSS_CLASS_BANNER)[0];
+           
+            console.log(banner.attributes);
 
-            const row = cell.row as IgxTreeGridRowComponent;
-            grid.expandRow(row.rowID);
-            tick();
-            fix.detectChanges();
+            // let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            // expect(banner.parent.attributes['aria-hidden']).toEqual('false');
 
-            banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.inEditMode).toBeFalsy();
-            //expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+            // const row = cell.row as IgxTreeGridRowComponent;
+            // grid.expandRow(row.rowID);
+            // tick();
+            // fix.detectChanges();
 
-            cell = grid.getCellByColumn(0, 'Name');
-            cell.inEditMode = true;
-            tick();
-            fix.detectChanges();
+            // banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            // expect(cell.inEditMode).toBeFalsy();
+            // // expect(banner.parent.attributes['aria-hidden']).toEqual('true');
 
-            banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(banner.parent.attributes['aria-hidden']).toEqual('false');
+            // cell = grid.getCellByColumn(0, 'Name');
+            // cell.inEditMode = true;
+            // tick();
+            // fix.detectChanges();
+
+            // banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+            // expect(banner.parent.attributes['aria-hidden']).toEqual('false');
+
+            // grid.collapseRow(row.rowID);
+            // tick();
+            // fix.detectChanges();
+
+            // banner = fix.debugElement.query(By.css('.igx-overlay__content'));
+            // // console.log(banner);
+            // expect(cell.inEditMode).toBeFalsy();
+            // expect(banner.parent.attributes['aria-hidden']).toEqual('true');
+
+
 
             // TODO
             // Verify the changes are preserved
@@ -432,24 +453,67 @@ describe('IgxTreeGrid - Integration', () => {
         }));
 
         it('TAB navigation cannot leave the edited row and the banner.', fakeAsync(() => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            const cell = grid.getCellByColumn(2, 'Name');
+            cell.inEditMode = true;
+            tick();
+            fix.detectChanges();
             // TODO
             // Verify the focus do not go to the next row
             // Verify non-editable columns are skipped while navigating
         }));
 
-        it('updates are preserved after GroupBy is removed', fakeAsync(() => {
-            // TODO
-            // Test for parent and child nodes
-        }));
+        it('should preserve updates after removing Filtering', () => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
 
-        it('updates are preserved after Filtering is removed', fakeAsync(() => {
-            // TODO
-            // Test for parent and child nodes
-        }));
+            const childCell = grid.getCellByColumn(2, 'Age');
+            const childRowID = childCell.row.rowID;
+            const parentCell = grid.getCellByColumn(0, 'Age');
+            const parentRowID = parentCell.row.rowID;
 
-        it('updates are preserved after Sorting is removed', fakeAsync(() => {
-            // TODO
-            // Test for parent and child nodes
-        }));
+            childCell.update(18);
+            parentCell.update(33);
+            fix.detectChanges();
+
+            grid.clearFilter();
+            fix.detectChanges();
+
+            const childRow = grid.rowList.filter(r => r.rowID === childRowID)[0] as IgxTreeGridRowComponent;
+            const editedChildCell = childRow.cells.filter(c => c.column.field === 'Age')[0];
+            expect(editedChildCell.value).toEqual(18);
+
+            const parentRow = grid.rowList.filter(r => r.rowID === parentRowID)[0] as IgxTreeGridRowComponent;
+            const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
+            expect(editedParentCell.value).toEqual(33);
+
+        });
+
+        it('should preserve updates after removing Sorting', () => {
+            const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc });
+            fix.detectChanges();
+
+            const childCell = grid.getCellByColumn(0, 'Age');
+            const childRowID = childCell.row.rowID;
+            const parentCell = grid.getCellByColumn(1, 'Age');
+            const parentRowID = parentCell.row.rowID;
+
+            childCell.update(14);
+            parentCell.update(80);
+            fix.detectChanges();
+
+            grid.clearSort();
+            fix.detectChanges();
+
+            const childRow = grid.rowList.filter(r => r.rowID === childRowID)[0] as IgxTreeGridRowComponent;
+            const editedChildCell = childRow.cells.filter(c => c.column.field === 'Age')[0];
+            expect(editedChildCell.value).toEqual(14);
+
+            const parentRow = grid.rowList.filter(r => r.rowID === parentRowID)[0] as IgxTreeGridRowComponent;
+            const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
+            expect(editedParentCell.value).toEqual(80);
+        });
     });
 });
