@@ -689,10 +689,6 @@
         outline-style: none;
         position: relative;
 
-        &:last-of-type {
-            border-bottom: 0;
-        }
-
         &:hover {
             background-color: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
