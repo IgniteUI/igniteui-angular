@@ -4320,7 +4320,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         const rowObject = row ? this.getRowByKey(row.rowID) : null;
         const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
         if (cellInEdit) {
-            this.gridAPI.submit_value(this.id, commit);
+            this.gridAPI.submit_value(this.id);
         }
         this.endRowTransaction(commit, true, row, rowObject);
         const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cellInEdit.cellID.columnID) : null;
