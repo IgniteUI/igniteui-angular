@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, isEqual } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
+import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -30,6 +30,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public register(grid: T) {
         this.state.set(grid.id, grid);
+        this.destroyMap.set(grid.id, new Subject<boolean>());
     }
 
     public unsubscribe(grid: T) {
@@ -45,12 +46,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.editRowState.delete(id);
+        this.destroyMap.delete(id);
     }
 
     public reset(oldId: string, newId: string) {
         const destroy = this.destroyMap.get(oldId);
         const summary = this.summaryCacheMap.get(oldId);
         const editCellState = this.editCellState.get(oldId);
+        const editRowState = this.editRowState.get(oldId);
         const grid = this.get(oldId);
 
         this.unset(oldId);
@@ -70,6 +73,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (editCellState) {
             this.editCellState.set(newId, editCellState);
         }
+
+        if (editRowState) {
+            this.editRowState.set(newId, editRowState);
+    }
     }
 
     public get_column_by_name(id: string, name: string): IgxColumnComponent {
@@ -183,7 +190,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        return grid.primaryKey ? grid.data.findIndex(record => record[grid.primaryKey] === rowID) : grid.data.indexOf(rowID);
+        const data = this.get_all_data(id);
+        return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
@@ -271,6 +279,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     } {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -285,8 +294,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = columnID ? grid.data[rowIndex][column.field] : null;
-            rowData = grid.data[rowIndex];
+            oldValue = columnID ? data[rowIndex][column.field] : null;
+            rowData = data[rowIndex];
         }
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
@@ -321,6 +330,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const currentGridEditState = gridEditState || this.get_grid_edit_state(id, rowID, columnID, editValue);
         const emittedArgs = currentGridEditState.args;
         const column = grid.columnList.toArray()[columnID];
@@ -346,7 +356,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, currentGridEditState.rowData);
             } else {
-                grid.data[rowIndex][column.field] = emittedArgs.newValue;
+                data[rowIndex][column.field] = emittedArgs.newValue;
             }
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -364,12 +374,13 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const currentGridState = gridState ? gridState : this.get_grid_edit_state(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
         let row = this.get_row_by_key(id, rowID);
         row = row || rowID;
-        let oldValue = grid.data[index];
+        let oldValue = data[index];
         if (grid.transactions.enabled) {
             const valueInTransactions = grid.transactions.getState(rowID);
             oldValue = valueInTransactions ? Object.assign({}, oldValue, valueInTransactions) : oldValue;
@@ -386,7 +397,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled && emitArgs.newValue !== null) {
                 grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
             } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
-                grid.data[index] = emitArgs.newValue;
+                data[index] = emitArgs.newValue;
             }
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -395,6 +406,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
             (grid as any)._pipeTrigger++;
         }
+    }
+
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data[index] = value;
     }
 
     public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
@@ -563,6 +579,15 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     protected remove_grouping_expression(id, fieldName) {
         }
+
+    public should_apply_number_style(column: IgxColumnComponent): boolean {
+        return column.dataType === DataType.Number;
+    }
+
+    public get_all_data(id: string): any[] {
+        const grid = this.get(id);
+        return grid.data;
+    }
 
     protected getSortStrategyPerColumn(id: string, fieldName: string) {
         return this.get_column_by_name(this.get(id).id, fieldName) ?
