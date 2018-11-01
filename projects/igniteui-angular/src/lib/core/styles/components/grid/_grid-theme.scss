@@ -1374,6 +1374,7 @@
     %igx-grid__grouping-indicator {
         position: relative;
         display: flex;
+        user-select: none;
         justify-content: center;
         align-items: center;
         cursor: pointer;
@@ -1416,6 +1417,7 @@
     %igx-grid__group-expand-btn {
         position: absolute;
         cursor: pointer;
+        user-select: none;
         top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
         left: map-get($grid-grouping-indicator-padding, 'comfortable');
 
