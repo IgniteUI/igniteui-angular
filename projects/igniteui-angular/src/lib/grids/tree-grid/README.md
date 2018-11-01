@@ -1,6 +1,6 @@
 # igx-tree-grid
-**igx-tree-grid** component provides the capability to manipulate and represent hierarchical data with consistent schema, formatted as a table.
-A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid.html)
+**igx-tree-grid** component provides the capability to represent and manipulate hierarchical data with consistent schema, formatted as a table.
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid.html).
 
 ## Usage
 ```html
@@ -14,7 +14,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Getting Started
 
 ### Dependencies
-The tree grid is exported as as an `NgModule`, thus all you need to do in your application is to import the _IgxTreeGridModule_ inside your `AppModule`
+The tree grid is exported as an `NgModule`, thus all you need to do in your application is to import the _IgxTreeGridModule_ inside your `AppModule`.
 
 ```typescript
 // app.module.ts
@@ -106,7 +106,7 @@ export const data = [
 ];
 ```
 
-In order for the `IgxTreeGridComponent` to build the hierarchy, we will have to set its `primaryKey` and `foreignKey` properties to the respective names of the data object properties for its own ID and its parent's ID. (If a row has a ParentID of **-1**, then that means this row is a root row.)
+In order for the `IgxTreeGridComponent` to build the hierarchy, we will have to set its `primaryKey` and `foreignKey` properties to the respective names of the data object properties. If a row has a ParentID that does not match any row in the tree grid, then that means this row is a root row.
 
 ```html
 <igx-tree-grid #treeGrid1 [data]="data" primaryKey="ID" foreignKey="ParentID"
@@ -126,10 +126,8 @@ In order for the `IgxTreeGridComponent` to build the hierarchy, we will have to 
 ```typescript
 const record = {
     ID: this.treegrid1.data[this.treegrid1.data.length - 1].ID + 1,
-    ParentID: null,
     Name: this.newRecord
 };
-this.treegrid1.addRow(record); // Adds a new row at level 0.
 this.treegrid1.addRow(record, 1); // Adds a new child row to the row with ID=1.
 ```
 
