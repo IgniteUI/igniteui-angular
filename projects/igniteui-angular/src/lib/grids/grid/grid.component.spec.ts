@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridTransaction } from '../grid-base.component';
+import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
@@ -969,6 +969,43 @@ describe('IgxGrid Component Tests', () => {
                 // UIInteractions.triggerKeyDownEvtUponElem('escape', rv.nativeElement, true);
                 // await wait(DEBOUNCETIME);
                 // expect(row.inEditMode).toBe(false);
+            }));
+
+            it('Emit all events with proper arguments', fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+
+                const grid = fix.componentInstance.grid;
+                spyOn(grid.onCellEnterEditMode, 'emit').and.callThrough();
+                spyOn(grid.onCellEdit, 'emit').and.callThrough();
+                spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
+                spyOn(grid.onRowEnterEditMode, 'emit').and.callThrough();
+                spyOn(grid.onRowEdit, 'emit').and.callThrough();
+                spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
+
+                const row = grid.getRowByIndex(0);
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                const cellDom = cell.nativeElement;
+
+                cellDom.dispatchEvent(new Event('focus'));
+                fix.detectChanges();
+                tick();
+
+                cellDom.dispatchEvent(new Event('dblclick'));
+                expect(row.inEditMode).toBe(true);
+
+                let cellArgs: IGridEditEventArgs = { row: cell.row, cell: cell, oldValue: cell.value, cancel: false };
+                let rowArgs: IGridEditEventArgs = { row: row, cell: cell, oldValue: row.rowData, cancel: false };
+                expect(grid.onCellEnterEditMode.emit).toHaveBeenCalledWith(cellArgs);
+                expect(grid.onRowEnterEditMode.emit).toHaveBeenCalledWith(rowArgs);
+
+                UIInteractions.triggerKeyDownEvtUponElem('escape', cellDom, true);
+                tick();
+
+                cellArgs = { cell: cell, row: cell.row, oldValue: cell.value, newValue: cell.value, cancel: false };
+                rowArgs = { row: null, cell: null, oldValue: row.rowData, newValue: row.rowData, cancel: false };
+                expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+                // expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
             }));
 
             it('Should display the banner below the edited row if it is not the last one', fakeAsync(() => {
