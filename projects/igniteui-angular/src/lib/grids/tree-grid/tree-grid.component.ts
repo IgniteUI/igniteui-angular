@@ -23,6 +23,7 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 let NEXT_ID = 0;
 
@@ -79,23 +80,43 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public flatData: any[];
 
     /**
-    * Returns an array of the root level `ITreeGridRecord`s.
-    */
+     * Returns an array of the root level `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the root record with index=2
+     * const states = this.grid.rootRecords[2];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public rootRecords: ITreeGridRecord[];
 
     /**
-    * Returns a map of all `ITreeGridRecord`s.
-    */
+     * Returns a map of all `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the record with primaryKey=2
+     * const states = this.grid.records.get(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
-    * Returns an array of processed root `ITreeGridRecord`s.
-    */
+     * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed root record with index=2
+     * const states = this.grid.processedRootRecords[2];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public processedRootRecords: ITreeGridRecord[];
 
     /**
-    * Returns a map of all processed `ITreeGridRecord`s.
-    */
+     * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed record with primaryKey=2
+     * const states = this.grid.processedRecords.get(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
@@ -164,6 +185,15 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return this._expansionStates;
     }
 
+    /**
+     * Sets a list of key-value pairs [row ID, expansion state].
+     * ```typescript
+     * const states = new Map<any, boolean>();
+     * states.set(1, true);
+     * this.grid.expansionStates = states;
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
         this.cdr.detectChanges();
@@ -235,6 +265,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Expands the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be expanded.
+     * ```typescript
+     * this.grid.expandRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public expandRow(rowID: any) {
         this._gridAPI.expand_row(this.id, rowID);
@@ -243,6 +277,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Collapses the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be collapsed.
+     * ```typescript
+     * this.grid.collapseRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public collapseRow(rowID: any) {
         this._gridAPI.collapse_row(this.id, rowID);
@@ -251,6 +289,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Toggles the expansion state of the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be toggled.
+     * ```typescript
+     * this.grid.toggleRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public toggleRow(rowID: any) {
         this._gridAPI.toggle_row_expansion(this.id, rowID);
@@ -258,6 +300,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     /**
      * Expands all rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public expandAll() {
         this._expansionDepth = Infinity;
@@ -266,6 +312,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     /**
      * Collapses all rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public collapseAll() {
         this._expansionDepth = 0;
@@ -279,10 +329,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      * ```typescript
      * const record = {
      *     ID: this.grid.data[this.grid1.data.length - 1].ID + 1,
-     *     parentID: null,
      *     Name: this.newRecord
      * };
-     * this.grid.addRow(record); // Adds a new row at level 0.
      * this.grid.addRow(record, 1); // Adds a new child row to the row with ID=1.
      * ```
      * @param data

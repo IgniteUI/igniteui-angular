@@ -18,17 +18,19 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
      * The rendered cells in the row component.
      *
      * ```typescript
-     * // get the cells of the third selected row
-     * let selectedRowCells = this.grid.selectedRows[2].cells;
+     * const row = this.grid.getRowByKey(1);
+     * const cells = row.cells;
      * ```
      */
     @ViewChildren('treeCell')
     public cells: QueryList<any>;
 
     /**
-     *  The flat data row passed to the tree grid row component.
+     * The `ITreeGridRecord` passed to the row component.
      *
      * ```typescript
+     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
+     * const treeRow = row.treeRow;
      * ```
      */
     @Input()
@@ -42,11 +44,27 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         }
     }
 
+    /**
+     * Returns a value indicating whether the row component is expanded.
+     *
+     * ```typescript
+     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
+     * const expanded = row.expanded;
+     * ```
+     */
     @HostBinding('attr.aria-expanded')
     get expanded(): boolean {
         return this._treeRow.expanded;
     }
 
+    /**
+     * Sets a value indicating whether the row component is expanded.
+     *
+     * ```typescript
+     * const row = this.grid.getRowByKey(1) as IgxTreeGridRowComponent;
+     * row.expanded = true;
+     * ```
+     */
     set expanded(value: boolean) {
         (this.gridAPI as IgxTreeGridAPIService).trigger_row_expansion_toggle(this.gridID, this._treeRow, value);
     }
