@@ -627,8 +627,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
-            .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
-            .reduce((a, b) => a.concat(b), []);
+            .map((row) => { 
+                if (row.cells) {
+                    return row.cells.filter((cell) => cell.columnIndex === this.index);
+                }
+            }).reduce((a, b) => a.concat(b), []);
     }
     /**
      * Gets the column visible index.
