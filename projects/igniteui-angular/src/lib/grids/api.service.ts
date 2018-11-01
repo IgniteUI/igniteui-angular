@@ -242,10 +242,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 editableCell.cellID.columnID, editableCell.cell.editValue);
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
                 if (!editableCell.cell.editValue) {
+                    gridEditState.args.newValue = 0;
                     this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, 0, gridEditState);
                 } else {
                     const val = parseFloat(editableCell.cell.editValue);
                     if (!isNaN(val) || isFinite(val)) {
+                        gridEditState.args.newValue = val;
                         this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, val, gridEditState);
                     }
                 }
@@ -365,14 +367,25 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const currentGridState = gridState ? gridState : this.get_grid_edit_state(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
+        let row = this.get_row_by_key(id, rowID);
+        row = row || rowID;
+        let oldValue = grid.data[index];
+        if (grid.transactions.enabled) {
+            const valueInTransactions = grid.transactions.getState(rowID);
+            oldValue = valueInTransactions ? Object.assign({}, oldValue, valueInTransactions) : oldValue;
+        }
+        Object.assign(emitArgs, { oldValue, row});
         if (index !== -1) {
             grid.onRowEdit.emit(emitArgs);
             if (emitArgs.cancel) {
                 return;
             }
-            if (grid.transactions.enabled) {
+            if (this.get_edit_row_state(id)) {
+                grid.transactions.endPending(false);
+            }
+            if (grid.transactions.enabled && emitArgs.newValue !== null) {
                 grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
-            } else {
+            } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
                 grid.data[index] = emitArgs.newValue;
             }
             if (currentGridState.isRowSelected) {
