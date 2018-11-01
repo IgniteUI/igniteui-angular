@@ -9,7 +9,8 @@ export * from './overlay/overlay';
 export * from './overlay/position';
 export {
     HorizontalAlignment, VerticalAlignment, Point,
-    OverlayEventArgs, OverlaySettings, PositionSettings
+    OverlayEventArgs, OverlayAnimationEventArgs,
+    OverlaySettings, PositionSettings
 } from './overlay/utilities';
 export * from './overlay/scroll';
 export * from './transaction/igx-transaction';

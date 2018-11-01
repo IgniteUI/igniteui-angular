@@ -88,11 +88,12 @@ export function isDate(value: any) {
 }
 
 /**
- * Cehcks if the two passed arguments are equal
+ * Checks if the two passed arguments are equal
  * Currently supports date objects
  * @param obj1
  * @param obj2
  * @returns: `boolean`
+ * @hidden
  */
 export function isEqual(obj1, obj2): boolean {
     if (isDate(obj1) && isDate(obj2)) {
