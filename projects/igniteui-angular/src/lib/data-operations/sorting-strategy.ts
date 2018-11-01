@@ -7,6 +7,14 @@ export interface ISortingStrategy {
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
+    private static _instance: DefaultSortingStrategy = null;
+
+    protected constructor() {}
+
+    public static instance(): DefaultSortingStrategy {
+        return this._instance || (this._instance = new this());
+    }
+
     public sort(data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);

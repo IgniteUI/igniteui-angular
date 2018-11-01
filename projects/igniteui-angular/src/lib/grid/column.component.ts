@@ -742,7 +742,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy: ISortingStrategy = new DefaultSortingStrategy();
+    protected _sortStrategy: ISortingStrategy = DefaultSortingStrategy.instance();
     /**
      *@hidden
      */
