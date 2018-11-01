@@ -137,7 +137,7 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support updating a row through the grid API', () => {
-        spyOn(grid.onEditDone, 'emit').and.callThrough();
+        spyOn(grid.onCellEdit, 'emit').and.callThrough();
 
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
@@ -159,13 +159,13 @@ describe('IgxGrid - CRUD operations', () => {
             cancel: false
         };
 
-        expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
         expect(grid.rowList.first.cells.first.value).toEqual(200);
         expect(grid.data[0].index).toEqual(200);
     });
 
     it('should support updating a cell value through the grid API', () => {
-        spyOn(grid.onEditDone, 'emit').and.callThrough();
+        spyOn(grid.onCellEdit, 'emit').and.callThrough();
 
         // Update a non-existing cell
         grid.updateCell(-100, 100, 'index');
@@ -187,7 +187,7 @@ describe('IgxGrid - CRUD operations', () => {
         grid.updateCell('change', 1, 'index');
         fix.detectChanges();
 
-        expect(grid.onEditDone.emit).toHaveBeenCalledWith(args);
+        expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
         expect(grid.rowList.first.cells.first.value).toEqual(200);
         expect(grid.rowList.first.cells.first.nativeElement.textContent).toMatch('200');
     });
@@ -364,7 +364,7 @@ describe('IgxGrid - CRUD operations', () => {
             [data]="data"
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
-            (onEditDone)="editDone($event)"
+            (onCellEdit)="editDone($event)"
             [autoGenerate]="true"
             [primaryKey]="'index'">
         </igx-grid>
