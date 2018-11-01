@@ -151,8 +151,24 @@
         @extend %grid-cell-display !optional;
     }
 
+    @include e(td, $m: tree-cell ) {
+        @extend %igx-grid__td--tree-cell !optional;
+    }
+
     @include e(td, $m: selected) {
         @extend %grid-cell--selected !optional;
+    }
+
+    @include e(tr, $mods: (selected, filtered)) {
+        @extend %grid-row--selected--filtered !optional;
+    }
+
+    @include e(tr, $m: filtered) {
+        @extend %igx-grid-row--filtered !optional;
+    }
+
+    @include e(tree-grouping-indicator) {
+        @extend %igx-grid__tree-grouping-indicator !optional;
     }
 
     @include e(td, $m: edited) {
@@ -283,6 +299,9 @@
         @include e(group-row, $m: padding-level-#{$i}) {
             @extend %igx-grid__group-row--padding-level-#{$i} !optional;
         }
+        @include e(tree-cell, $m: padding-level-#{$i}) {
+            @extend %igx-grid__tree-cell--padding-level-#{$i} !optional;
+        }
     }
 
     @include m(cosy) {
@@ -346,6 +365,9 @@
             }
             @include e(group-row, $m: padding-level-#{$i}) {
                 @extend %igx-grid__group-row--padding-cosy-level-#{$i} !optional;
+            }
+            @include e(tree-cell, $m: padding-level-#{$i}) {
+                @extend %igx-grid__tree-cell-cosy--padding-level-#{$i} !optional;
             }
         }
     }
@@ -411,6 +433,9 @@
             }
             @include e(group-row, $m: padding-level-#{$i}) {
                 @extend %igx-grid__group-row-compact--padding-level-#{$i} !optional;
+            }
+            @include e(tree-cell, $m: padding-level-#{$i}) {
+                @extend %igx-grid__tree-cell-compact--padding-level-#{$i} !optional;
             }
         }
     }

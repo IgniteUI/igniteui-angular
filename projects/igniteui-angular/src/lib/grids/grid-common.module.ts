@@ -54,6 +54,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 @NgModule({
     declarations: [
@@ -109,6 +110,8 @@ import {
         IgxRowComponent,
         IgxGridFilterConditionPipe,
         IgxGridTransactionPipe,
+        IgxDatePipeComponent,
+        IgxDecimalPipeComponent,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxIconModule,
@@ -155,6 +158,7 @@ import {
     providers: [
         IgxSelectionAPIService,
         IgxColumnMovingService,
+        IgxGridNavigationService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
