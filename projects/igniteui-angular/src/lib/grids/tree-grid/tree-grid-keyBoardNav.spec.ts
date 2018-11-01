@@ -102,7 +102,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
         it('should not cahnge selection when press Alt + arrow Left/Right keys on a cell in a row without children', async () => {
             spyOn(treeGrid.onRowToggle, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(1, 'Name');
+            const cell = treeGrid.getCellByColumn(1, 'Name');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
 
@@ -366,7 +366,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
         it('should select row when press Space key on a cell', async () => {
             treeGrid.rowSelectable = true;
-            //treeGrid.primaryKey = 'ID';
+            // treeGrid.primaryKey = 'ID';
             fix.detectChanges();
 
             // Click Space on a treeGrid cell
@@ -508,384 +508,385 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
     });
 
     const testNavigationUpDown =
-        (fix, treeGrid: IgxTreeGridComponent, columnName: string) => new Promise(async (resolve, reject) => {
-            spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            const firstCell = treeGrid.getCellByColumn(0, columnName);
+        (fixture, treegrid: IgxTreeGridComponent, columnName: string) => new Promise(async (resolve, reject) => {
+            spyOn(treegrid.onSelection, 'emit').and.callThrough();
+            const firstCell = treegrid.getCellByColumn(0, columnName);
 
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, firstCell);
 
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             for (let i = 0; i < 9; i++) {
-                await TreeGridFunctions.moveCellUpDown(fix, treeGrid, i, columnName);
-                expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(i + 2);
+                await TreeGridFunctions.moveCellUpDown(fixture, treegrid, i, columnName);
+                expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(i + 2);
             }
 
             for (let i = 9; i > 0; i--) {
-                await TreeGridFunctions.moveCellUpDown(fix, treeGrid, i, columnName, false);
-                expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes((10 - i) + 10);
+                await TreeGridFunctions.moveCellUpDown(fixture, treegrid, i, columnName, false);
+                expect(treegrid.onSelection.emit).toHaveBeenCalledTimes((10 - i) + 10);
             }
             resolve();
         });
 
     const testNavigationLeftRight =
-        (fix, treeGrid: IgxTreeGridComponent, rowIndex, columns) => new Promise(async (resolve, reject) => {
-            const firstCell = treeGrid.getCellByColumn(0, columns[0]);
-            spyOn(treeGrid.onSelection, 'emit').and.callThrough();
+        (fixture, treegrid: IgxTreeGridComponent, rowIndex, columns) => new Promise(async (resolve, reject) => {
+            const firstCell = treegrid.getCellByColumn(0, columns[0]);
+            spyOn(treegrid.onSelection, 'emit').and.callThrough();
 
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
 
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             for (let i = 0; i < columns.length - 1; i++) {
-                await TreeGridFunctions.moveCellLeftRight(fix, treeGrid, rowIndex, columns[i], columns[i + 1]);
-                expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(i + 2);
+                await TreeGridFunctions.moveCellLeftRight(fixture, treegrid, rowIndex, columns[i], columns[i + 1]);
+                expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(i + 2);
             }
 
-            let cell = treeGrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
+            let cell = treegrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
 
             for (let i = columns.length - 1; i > 0; i--) {
-                await TreeGridFunctions.moveCellLeftRight(fix, treeGrid, rowIndex, columns[i], columns[i - 1], false);
-                expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2 * columns.length - i);
+                await TreeGridFunctions.moveCellLeftRight(fixture, treegrid, rowIndex, columns[i], columns[i - 1], false);
+                expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2 * columns.length - i);
             }
 
-            cell = treeGrid.getCellByColumn(rowIndex, columns[0]);
+            cell = treegrid.getCellByColumn(rowIndex, columns[0]);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2 * columns.length - 1);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2 * columns.length - 1);
             resolve();
         });
 
     const testNavigationTopBottom =
-        (fix, treeGrid: IgxTreeGridComponent, columnName: string) => new Promise(async (resolve, reject) => {
+        (fixture, treegrid: IgxTreeGridComponent, columnName: string) => new Promise(async (resolve, reject) => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            const cell = treeGrid.getCellByColumn(1, columnName);
+            const cell = treegrid.getCellByColumn(1, columnName);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
 
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            let newCell = treeGrid.getCellByColumn(9, columnName);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+            let newCell = treegrid.getCellByColumn(9, columnName);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, newCell);
             expect(newCell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             newCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            newCell = treeGrid.getCellByColumn(0, columnName);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+            newCell = treegrid.getCellByColumn(0, columnName);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, newCell);
             expect(newCell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
             resolve();
         });
 
     const testNavigationLeftmostRightmostCell =
-        (fix, treeGrid: IgxTreeGridComponent, rowIndex, columns) => new Promise(async (resolve, reject) => {
-            spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(rowIndex, columns[1]);
+        (fixture, treegrid: IgxTreeGridComponent, rowIndex, columns) => new Promise(async (resolve, reject) => {
+            spyOn(treegrid.onSelection, 'emit').and.callThrough();
+            let cell = treegrid.getCellByColumn(rowIndex, columns[1]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(rowIndex, columns[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(rowIndex, columns[0]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(rowIndex, columns[columns.length - 1]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(4);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(4);
             resolve();
         });
 
     const testNavigationHomeEnd =
-        (fix, treeGrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
+        (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
             spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(2, columns[2]);
+            let cell = treegrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(9, columns[columns.length - 1]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(9, columns[columns.length - 1]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(0, columns[0]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(0, columns[0]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(9, columns[columns.length - 1]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            cell = treegrid.getCellByColumn(9, columns[columns.length - 1]);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(4);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(4);
 
             resolve();
         });
 
     const testNavigationTab =
-        (fix, treeGrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(2, columns[2]);
+        (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
+            spyOn(treegrid.onSelection, 'emit').and.callThrough();
+            const cell = treegrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             // Test tab on child row
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 2, 2, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 2, 2, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 2, 3, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 2, 3, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 2, 4, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(4);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 2, 4, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(4);
 
             // Test tab on parent row
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 3, 0, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(5);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 3, 0, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(5);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 3, 1, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(6);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 3, 1, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(6);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 3, 2, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(7);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 3, 2, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(7);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 3, 3, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(8);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 3, 3, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(8);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 3, 4, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(9);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 3, 4, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(9);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 4, 0, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(10);
+            await TreeGridFunctions.moveCellWithTab(fixture, treegrid, 4, 0, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(10);
 
             resolve();
         });
 
     const testNavigationShiftTab =
-        (fix, treeGrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            spyOn(treeGrid.onSelection, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(3, columns[1]);
+        (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
+            spyOn(treegrid.onSelection, 'emit').and.callThrough();
+            const cell = treegrid.getCellByColumn(3, columns[1]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
 
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             // Test tab on child row
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 3, 1, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(2);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 3, 1, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 3, 0, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(3);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 3, 0, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 2, 4, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(4);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 2, 4, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(4);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 2, 3, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(5);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 2, 3, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(5);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 2, 2, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(6);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 2, 2, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(6);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 2, 1, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(7);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 2, 1, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(7);
 
-            await TreeGridFunctions.moveCellWithShiftTab(fix, treeGrid, 2, 0, columns);
-            expect(treeGrid.onSelection.emit).toHaveBeenCalledTimes(8);
+            await TreeGridFunctions.moveCellWithShiftTab(fixture, treegrid, 2, 0, columns);
+            expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(8);
 
             resolve();
         });
 
     const testExpandCollapse =
-        (fix, treeGrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse) => new Promise(async (resolve, reject) => {
-            spyOn(treeGrid.onRowToggle, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(cellRowIndex, cellColumn);
-            let rows = TreeGridFunctions.getAllRows(fix);
+        (fixture, treegrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse) =>
+        new Promise(async (resolve, reject) => {
+            spyOn(treegrid.onRowToggle, 'emit').and.callThrough();
+            const cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
+            let rows = TreeGridFunctions.getAllRows(fixture);
             expect(rows.length).toBe(rowsCount);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fix);
+            rows = TreeGridFunctions.getAllRows(fixture);
             expect(rows.length).toBe(rowsCountAfterCollapse);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fix);
+            rows = TreeGridFunctions.getAllRows(fixture);
             expect(rows.length).toBe(rowsCountAfterCollapse);
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
+            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fix);
+            rows = TreeGridFunctions.getAllRows(fixture);
             expect(rows.length).toBe(rowsCount);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
+            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fix);
+            rows = TreeGridFunctions.getAllRows(fixture);
             expect(rows.length).toBe(rowsCount);
             TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(cell.focused).toEqual(true);
-            expect(treeGrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
+            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
             resolve();
         });
 
     const testEditingNavigationTab =
-        (fix, treeGrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            let cell = treeGrid.getCellByColumn(2, columns[2]);
+        (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
+            const cell = treegrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
             expect(cell.inEditMode).toBe(true);
 
             // Test tab on child row
-            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 2, 2, columns);
+            await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 2, columns);
 
-            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 2, 3, columns);
+            await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 3, columns);
 
-            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 2, 4, columns);
+            await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 4, columns);
 
             // Test tab on parent row
-            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 3, 0, columns);
+            await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 3, 0, columns);
 
             resolve();
         });
 
     const testEditingNavigationShiftTab =
-        (fix, treeGrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            let cell = treeGrid.getCellByColumn(2, columns[2]);
+        (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
+            const cell = treeGrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            fixture.detectChanges();
             expect(cell.inEditMode).toBe(true);
 
             // Test on parent row
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 3, 1, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 3, 1, columns);
 
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 3, 0, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 3, 0, columns);
 
             // Test on child row
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 2, 4, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 2, 4, columns);
 
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 2, 3, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 2, 3, columns);
 
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 2, 2, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 2, 2, columns);
 
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 2, 1, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 2, 1, columns);
 
-            await TreeGridFunctions.moveEditableCellWithShiftTab(fix, treeGrid, 2, 0, columns);
+            await TreeGridFunctions.moveEditableCellWithShiftTab(fixture, treegrid, 2, 0, columns);
 
             resolve();
         });
