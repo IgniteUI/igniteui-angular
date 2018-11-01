@@ -64,7 +64,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
 
-        if (isScrolledToBottom) {
+        if (isScrolledToBottom && (visibleColumnIndex !== undefined || visibleColumnIndex !== null)) {
             grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {

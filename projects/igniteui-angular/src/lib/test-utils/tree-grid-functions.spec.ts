@@ -356,16 +356,15 @@ export class TreeGridFunctions {
             columns) => new Promise(async (resolve, reject) => {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-               
+
                 UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
-                if (columnIndex == columns.length - 1) {
+                if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
-                }
-                else {
+                } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
                 if (cell !== undefined && cell !== null) {
@@ -384,10 +383,9 @@ export class TreeGridFunctions {
             columns) => new Promise(async (resolve, reject) => {
                 const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex == 0) {
+                if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
-                }
-                else {
+                } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
 
@@ -411,10 +409,9 @@ export class TreeGridFunctions {
             columns) => new Promise(async (resolve, reject) => {
                 const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex == columns.length - 1) {
+                if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
-                }
-                else {
+                }  else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
 
@@ -436,10 +433,9 @@ export class TreeGridFunctions {
             columns) => new Promise(async (resolve, reject) => {
                 const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex == 0) {
+                if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
-                }
-                else {
+                }  else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
 
