@@ -202,11 +202,8 @@ export class IgxGridNavigationService {
         const allCells = rowElement.querySelectorAll('igx-grid-cell');
         const lastCell = allCells[allCells.length - 1];
         if (this.isColumnFullyVisible(index)) {
-            debugger;
-            console.log('visible', lastCell.dataset.visibleindex);
             lastCell.focus();
         } else {
-            console.log('notVisible');
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
@@ -369,19 +366,16 @@ export class IgxGridNavigationService {
     public goToLastCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            console.log('top');
             const rows = this.getAllRows();
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);
         } else {
-            console.log('scroll');
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.getAllRows();
                 if (rows.length > 0) {
                     const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
-                    console.log(rowIndex);
                     this.onKeydownEnd(rowIndex);
                 }
                 });
