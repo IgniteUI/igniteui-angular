@@ -31,6 +31,7 @@ $my-custom-palette: igx-palette(orange, royalblue);
     @include igx-button($custom-button);
 }
 
+
 .dark-green-theme {
     $igx-background-color: #484848;
     $igx-foreground-color: text-contrast($igx-background-color);
