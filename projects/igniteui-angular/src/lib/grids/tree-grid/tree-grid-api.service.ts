@@ -56,6 +56,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (args.cancel) {
             return;
         }
+        visibleColumnIndex = visibleColumnIndex ? visibleColumnIndex : 0;
         const groupRowIndex = super.get_row_by_key(id, row.rowID).index;
         const shouldScroll = !(grid.unpinnedWidth - grid.totalWidth >= 0);
         const isScrolledToBottom = grid.rowList.length > 0 && grid.rowList.last.index ===
@@ -64,7 +65,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
 
-        if (isScrolledToBottom && (visibleColumnIndex !== undefined || visibleColumnIndex !== null)) {
+        if (isScrolledToBottom) {
             grid.verticalScrollContainer.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
