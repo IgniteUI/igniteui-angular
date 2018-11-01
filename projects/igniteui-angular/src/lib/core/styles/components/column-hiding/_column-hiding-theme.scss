@@ -21,29 +21,21 @@
 ////
 @function igx-column-hiding-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $title-color: null,
     $background-color: null
 ) {
-    $name: 'igx-column-hiding';
-
-    $default-theme: (
-        name: $name,
-        title-color: igx-color($palette, 'primary'),
-        background-color: transparent
-    );
+    $theme: apply-palette(map-get($preset, 'igx-column-hiding'), $palette);
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);
     }
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
-        palette: $palette
+    @return extend($theme, (
+        palette: $palette,
+        title-color: $title-color,
+        background-color: $background-color
     ));
 }
 
@@ -57,6 +49,7 @@
     %column-hiding-display {
         display: flex;
         flex-flow: column nowrap;
+        background: --var($theme, 'background-color');
         width: 100%;
         flex: 1 1 auto;
     }

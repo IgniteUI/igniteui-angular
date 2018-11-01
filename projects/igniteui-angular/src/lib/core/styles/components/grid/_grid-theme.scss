@@ -61,7 +61,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $header-background: null,
     $header-text-color: null,
@@ -196,9 +196,7 @@
         tree-filtered-text-color: igx-color($palette, grays, 500)
     );
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($preset, 'igx-grid'), $palette);
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($default-theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($default-theme, 'cell-selected-background')), .5);
@@ -319,7 +317,7 @@
         $drop-area-text-color: text-contrast($drop-area-background)
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         header-background: $header-background,
@@ -353,6 +351,7 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
+        edit-mode-color: $edit-mode-color,
         edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
@@ -378,6 +377,7 @@
         group-count-text-color: $group-count-text-color,
 
         group-row-background: $group-row-background,
+        group-row-selected-background: $group-row-selected-background,
 
         drop-area-text-color: $drop-area-text-color,
         drop-area-icon-color: $drop-area-icon-color,

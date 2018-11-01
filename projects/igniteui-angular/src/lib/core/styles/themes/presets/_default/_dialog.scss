@@ -1,0 +1,12 @@
+$_default-dialog: (
+    name: 'igx-dialog',
+    background: #fff,
+
+    title-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    message-color: (
+        igx-color: ('grays', 600)
+    )
+);

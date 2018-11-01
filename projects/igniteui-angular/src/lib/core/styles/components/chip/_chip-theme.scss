@@ -40,6 +40,7 @@
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
     $palette: $default-palette,
+    $preset: $default-preset,
     $roundness: null,
 
     $text-color: null,
@@ -94,6 +95,8 @@
         focus-selected-background: igx-color($palette, 'grays', 400),
         focus-selected-border-color: transparent
     );
+
+    $theme: apply-palette(map-get($preset, 'igx-chip'), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -183,7 +186,7 @@
         $focus-selected-border-color: $border-color;
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         roundness: $roundness,
 

@@ -1,0 +1,7 @@
+$_default-column-hiding: (
+    name: 'igx-column-hiding',
+    background-color: transparent,
+    title-color: (
+        igx-color: ('primary', 500)
+    )
+);
