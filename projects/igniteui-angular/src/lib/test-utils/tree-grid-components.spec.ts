@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { Calendar } from '../calendar/calendar';
 
 @Component({
     template: `
