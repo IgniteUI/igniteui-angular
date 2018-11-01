@@ -3654,11 +3654,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.data);
+            const data = this.filteredData && this.filteredData.length ?  this.filteredData : this.data;
+            this.allRowsSelected = this.selection.are_all_selected(this.id, data);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked = this.selection.are_all_selected(this.id, this.data);
+                    this.headerCheckbox.checked = this.allRowsSelected;
                 }
             }
             this.cdr.markForCheck();
