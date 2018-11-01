@@ -50,13 +50,13 @@ function testSort() {
             const se0: ISortingExpression = {
                 dir: SortingDirection.Desc,
                 fieldName: 'boolean',
-                ignoreCase: true,
+                ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
             };
             const se1: ISortingExpression = {
                 dir: SortingDirection.Asc,
                 fieldName: 'date',
-                ignoreCase: true,
+                ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
             };
             const res = DataUtil.sort(data, [se0, se1]);
@@ -68,7 +68,7 @@ function testSort() {
             const se0: ISortingExpression = {
                 dir: SortingDirection.Desc,
                 fieldName: 'string',
-                ignoreCase: true,
+                ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
             };
             let res = DataUtil.sort(data, [se0]);
