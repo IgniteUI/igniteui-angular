@@ -59,7 +59,7 @@ export class IgxComboSortingPipe implements PipeTransform {
         public combo: IgxComboComponent
     ) { }
 
-    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[]) {
+    public transform(collection: any[]) {
         const state = { expressions: [] };
         state.expressions = this.combo.sortingExpressions;
 
