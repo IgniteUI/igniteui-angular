@@ -1,3 +1,5 @@
+import { ISortingStrategy } from './sorting-strategy';
+
 /**
  * Represents sorting expressions.
  */
@@ -11,4 +13,5 @@ export interface ISortingExpression {
    fieldName: string;
    dir: SortingDirection;
    ignoreCase?: boolean;
+   strategy?: ISortingStrategy;
 }

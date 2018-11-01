@@ -15,7 +15,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
-    public density = 'compact';
+    public density = '';
     public displayDensities;
 
     public ngOnInit(): void {
@@ -68,6 +68,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public addRow() {
         this.grid1.addRow({ 'employeeID': 24, 'PID': 5, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+    }
+
+    public deleteRow() {
+        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
     }
 
     public selectDensity(event) {

@@ -12,13 +12,17 @@ export interface Transaction {
     newValue: any;
 }
 
+export interface HierarchicalTransaction extends Transaction {
+    parentId: any;
+}
+
 export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
 }
 
-export interface TransactionService {
+export interface TransactionService <T extends Transaction> {
     /**
      * Returns whether transaction is enabled for this service
      */
@@ -30,17 +34,27 @@ export interface TransactionService {
     onStateUpdate?: EventEmitter<void>;
 
     /**
+     * @returns if there are any transactions in the Undo stack
+     */
+    canUndo: boolean;
+
+    /**
+     * @returns if there are any transactions in the Redo stack
+     */
+    canRedo: boolean;
+
+    /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
-    add(transaction: Transaction, recordRef?: any): void;
+    add(transaction: T, recordRef?: any): void;
 
     /**
-     * Returns an array of all transactions. If id is provided returns last transaction for provided id
+     * Returns an array of all T. If id is provided returns last transaction for provided id
      * @returns All the transaction on last transaction for provided id
      */
-    getTransactionLog(id?: any): Transaction[] | Transaction;
+    getTransactionLog(id?: any): T[] | T;
 
     /**
      * Remove the last transaction if any
@@ -53,12 +67,12 @@ export interface TransactionService {
     redo(): void;
 
     /**
-     * Returns aggregated state of all transactions including pending ones
+     * Returns aggregated changes from all transactions
      * @param mergeChanges If set to true will merge each state's value over relate recordRef
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
      */
-    aggregatedState(mergeChanges: boolean): Transaction[];
+    aggregatedState(mergeChanges: boolean): T[];
 
     /**
      * Returns the state of the record with provided id

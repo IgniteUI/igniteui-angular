@@ -42,12 +42,15 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public trigger_row_expansion_toggle(id: string, row: IgxTreeGridRowComponent, event: Event) {
+    public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event) {
         const grid = this.get(id);
-        const expanded = !row.treeRow.expanded;
+
+        if (!row.children || row.children.length <= 0 && row.expanded === expanded) {
+            return;
+        }
 
         const args: IRowToggleEventArgs = {
-            row: row,
+            rowID: row.rowID,
             expanded: expanded,
             event: event,
             cancel: false
@@ -61,13 +64,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            const editRow = this.get_edit_row_state(id);
-            if (editRow) {
-                const toggle = this.is_descendant(id, row.treeRow, editRow.rowID) ? expanded : undefined;
-                grid.refreshRowEditingOverlay(grid.rowInEditMode, toggle);
-            }
-        }
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
@@ -79,23 +75,6 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return expanded;
         } else {
             return indentationLevel < grid.expansionDepth;
-        }
-    }
-
-    public is_descendant(id: string, parentRow: ITreeGridRecord, childRowID): boolean {
-        const childRows: ITreeGridRecord[] = parentRow.children;
-        if (!childRows) {
-            return false;
-        }
-        const grid = this.get(id);
-        for (let rowIndex = 0, found = false, data; rowIndex < childRows.length; rowIndex++) {
-            data = childRows[rowIndex].data;
-            found = grid.primaryKey ? data[grid.primaryKey] === childRowID : data === childRowID;
-            if (found) {
-                return true;
-            } else {
-                return this.is_descendant(id, childRows[rowIndex], childRowID);
-            }
         }
     }
 

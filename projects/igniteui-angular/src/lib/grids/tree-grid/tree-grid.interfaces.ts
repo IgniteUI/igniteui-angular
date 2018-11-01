@@ -11,8 +11,8 @@ export interface ITreeGridRecord {
 }
 
 export interface IRowToggleEventArgs {
-    row: IgxTreeGridRowComponent;
+    rowID: any;
     expanded: boolean;
-    event: Event;
+    event?: Event;
     cancel: boolean;
 }

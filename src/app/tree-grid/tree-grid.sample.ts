@@ -16,7 +16,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
-    public density = 'compact';
+    public density = '';
     public displayDensities;
 
     public ngOnInit(): void {

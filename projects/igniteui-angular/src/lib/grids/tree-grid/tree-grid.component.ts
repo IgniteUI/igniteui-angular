@@ -1,5 +1,4 @@
 import {
-    ContentChild,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,10 +7,6 @@ import {
     HostBinding,
     Input,
     IterableDiffers,
-    QueryList,
-    TemplateRef,
-    ViewChild,
-    ViewChildren,
     ViewContainerRef,
     Output,
     EventEmitter,
@@ -28,26 +23,26 @@ import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService } from '../../services/transaction/transaction';
+import { TransactionService, HierarchicalTransaction } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 
 /**
- * **Ignite UI for Angular Grid** -
+ * **Ignite UI for Angular Tree Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
  *
- * The Ignite UI Grid is used for presenting and manipulating tabular data in the simplest way possible.  Once data
- * has been bound, it can be manipulated through filtering, sorting & editing operations.
+ * The Ignite UI Tree Grid displays and manipulates hierarchical data with consistent schema formatted as a table and
+ * provides features such as sorting, filtering, editing, column pinning, paging, column moving and hiding.
  *
  * Example:
  * ```html
- * <igx-grid [data]="employeeData" autoGenerate="false">
+ * <igx-tree-grid [data]="employeeData" primaryKey="employeeID" foreignKey="PID" autoGenerate="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
- * </igx-grid>
+ * </igx-tree-grid>
  * ```
  */
 @Component({
@@ -64,9 +59,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
-     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
+     * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxTreeGridComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -86,20 +81,32 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     */
     public flatData: any[];
 
+    /**
+    * Returns an array of the root level `ITreeGridRecord`s.
+    */
     public rootRecords: ITreeGridRecord[];
 
+    /**
+    * Returns a map of all `ITreeGridRecord`s.
+    */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    /**
+    * Returns an array of processed root `ITreeGridRecord`s.
+    */
     public processedRootRecords: ITreeGridRecord[];
 
+    /**
+    * Returns a map of all processed `ITreeGridRecord`s.
+    */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
      * An @Input property that sets the child data key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [showToolbar]="true" [childDataKey]="employees" [autoGenerate]="true"></igx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="employees" [autoGenerate]="true"></igx-tree-grid>
      * ```
-	 * @memberof IgxTreeGridRowComponent
+	 * @memberof IgxTreeGridComponent
      */
     @Input()
     public childDataKey;
@@ -107,21 +114,34 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * An @Input property that sets the foreign key of the `IgxTreeGridComponent`.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></igx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [primaryKey]="employeeID" [foreignKey]="parentID" [autoGenerate]="true"></igx-tree-grid>
      * ```
-	 * @memberof IgxTreeGridRowComponent
+	 * @memberof IgxTreeGridComponent
      */
     @Input()
     public foreignKey;
 
+    /**
+     * An @Input property indicating whether child records should be deleted when their parent gets deleted.
+     * By default it is set to true and deletes all children along with the parent.
+     * ```html
+     * <igx-tree-grid [data]="employeeData" [primaryKey]="employeeID" [foreignKey]="parentID" cascadeOnDelete="false" [autoGenerate]="true">
+     * </igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public cascadeOnDelete = true;
+
     private _expansionDepth = Infinity;
 
     /**
-     * An @Input property that sets the count of levels to expand by default in the `IgxTreeGridComponent`.
+     * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
+     * set to `Infinity` which means all levels would be expanded.
      * ```html
-     * <igx-tree-grid #grid [data]="localData" [childDataKey]="employees" expandedLevels="1" [autoGenerate]="true"></iigx-tree-grid>
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="employees" expansionDepth="1" [autoGenerate]="true"></igx-tree-grid>
      * ```
-	 * @memberof IgxTreeGridRowComponent
+	 * @memberof IgxTreeGridComponent
      */
     @Input()
     public get expansionDepth(): number {
@@ -135,6 +155,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
 
+    /**
+     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
+     * ```typescript
+     * const expansionStates = this.grid.expansionStates;
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     @Input()
     public get expansionStates() {
         return this._expansionStates;
@@ -145,6 +172,25 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.cdr.detectChanges();
     }
 
+    /**
+     * Emitted when the expanded state of a row gets changed.
+     * ```typescript
+     * rowToggle(event: IRowToggleEventArgs){
+     *  // the id of the row
+     *  const rowID = event.rowID;
+     *  // the new expansion state
+     *  const newExpandedState = event.expanded;
+     *  // the original event that triggered onRowToggle
+     *  const originalEvent = event.event;
+     *  // whether the event should be cancelled
+     *  event.cancel = true;
+     * }
+     * ```
+     * ```html
+     * <igx-tree-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     @Output()
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
@@ -153,7 +199,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<HierarchicalTransaction>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -167,11 +213,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
     /**
-     * Returns if the `IgxGridComponent` has summarized columns.
+     * @hidden
+     * Returns if the `IgxTreeGridComponent` has summarized columns.
      * ```typescript
      * const summarizedGrid = this.grid.hasSummarizedColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxTreeGridComponent
      */
     get hasSummarizedColumns(): boolean {
         return false;
@@ -188,28 +235,63 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return mapCloned;
     }
 
+    /**
+     * Expands the `IgxTreeGridRowComponent` with the specified rowID.
+     * @param rowID The identifier of the row to be expanded.
+     */
     public expandRow(rowID: any) {
         this._gridAPI.expand_row(this.id, rowID);
     }
 
+    /**
+     * Collapses the `IgxTreeGridRowComponent` with the specified rowID.
+     * @param rowID The identifier of the row to be collapsed.
+     */
     public collapseRow(rowID: any) {
         this._gridAPI.collapse_row(this.id, rowID);
     }
 
+    /**
+     * Toggles the expansion state of the `IgxTreeGridRowComponent` with the specified rowID.
+     * @param rowID The identifier of the row to be toggled.
+     */
     public toggleRow(rowID: any) {
         this._gridAPI.toggle_row_expansion(this.id, rowID);
     }
 
+    /**
+     * Expands all rows.
+     */
     public expandAll() {
         this._expansionDepth = Infinity;
         this.expansionStates = new Map<any, boolean>();
     }
 
+    /**
+     * Collapses all rows.
+     */
     public collapseAll() {
         this._expansionDepth = 0;
         this.expansionStates = new Map<any, boolean>();
     }
 
+    /**
+     * Creates a new `IgxTreeGridRowComponent` with the given data. If a parentRowID is not specified, the newly created
+     * row would be added at the root level. Otherwise, it would be added as a child of the row whose primaryKey matches
+     * the specified parentRowID. If the parentRowID does not exist, an error would be thrown.
+     * ```typescript
+     * const record = {
+     *     ID: this.grid.data[this.grid1.data.length - 1].ID + 1,
+     *     parentID: null,
+     *     Name: this.newRecord
+     * };
+     * this.grid.addRow(record); // Adds a new row at level 0.
+     * this.grid.addRow(record, 1); // Adds a new child row to the row with ID=1.
+     * ```
+     * @param data
+     * @param parentRowID
+     * @memberof IgxTreeGridComponent
+     */
     public addRow(data: any, parentRowID?: any) {
         if (parentRowID) {
             const parentRecord = this.records.get(parentRowID);
@@ -246,6 +328,16 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
+
+            if (this.cascadeOnDelete) {
+                const treeRecord = this.records.get(rowID);
+                if (treeRecord.children && treeRecord.children.length > 0) {
+                    for (let i = 0; i < treeRecord.children.length; i++) {
+                        const child = treeRecord.children[i];
+                        this.deleteRowById(child.rowID);
+                    }
+                }
+            }
         } else {
             const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
@@ -274,6 +366,39 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      */
     protected getExportCsv(): boolean {
         return false;
+    }
+
+    /**
+     * @hidden
+     */
+    protected restoreHighlight(): void {
+    }
+
+    /**
+     * @hidden
+     */
+    public refreshSearch(updateActiveInfo?: boolean): number {
+        return 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public clearSearch() {
     }
 
     /**

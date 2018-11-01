@@ -1983,7 +1983,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     constructor(
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: TransactionService,
+        @Inject(IgxGridTransaction) private _transactions: TransactionService<Transaction>,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -3464,7 +3464,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
     }
 
     /**

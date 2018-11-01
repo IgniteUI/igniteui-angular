@@ -17,7 +17,7 @@ import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { TransactionService } from '../../services/transaction/transaction';
+import { TransactionService, Transaction } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
@@ -109,7 +109,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -589,7 +589,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     protected _groupBy(expression: ISortingExpression) {
-        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
     }
 
     /**
