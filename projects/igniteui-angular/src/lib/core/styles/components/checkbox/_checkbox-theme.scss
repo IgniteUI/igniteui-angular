@@ -27,7 +27,7 @@
 ///   @include igx-checkbox($my-checkbox-theme);
 @function igx-checkbox-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $label-color: null,
     $empty-color: null,
@@ -56,16 +56,12 @@
         disabled-color: rgba(255, 255, 255, .3)
     );
 
-    $default-theme: map-get((
-        dark: $dark-theme,
+    $theme: map-get((
+        dark: apply-palette(map-get($preset, 'igx-checkbox'), $palette),
         light: $light-theme
     ), $variant);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,

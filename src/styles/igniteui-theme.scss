@@ -19,13 +19,18 @@ $my-custom-palette: igx-palette(orange, royalblue);
     color: $igx-foreground-color;
     @include scrollbar-love();
 
-    @include igx-theme($default-palette);
+    @include igx-theme($default-palette, $legacy-support: true);
 
-    $custom-btn-preset: extend(map-get($default-preset, 'igx-button'), (button-roundness: 20px));
+    $custom-btn-preset: extend(
+        map-get($default-preset, 'igx-button'),
+        (button-roundness: 20px)
+    );
+
     $custom-button: igx-button-theme($palette: $my-custom-palette, $preset: (igx-button: $custom-btn-preset));
 
     @include igx-button($custom-button);
 }
+
 
 .dark-green-theme {
     $igx-background-color: #484848;
