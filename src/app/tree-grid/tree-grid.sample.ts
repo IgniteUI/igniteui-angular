@@ -186,7 +186,7 @@ export class TreeGridSampleComponent implements OnInit {
                             {
                                 'ID': 'CACTU',
                                 'CompanyName':
-                                'Cactus Comidas para llevar',
+                                    'Cactus Comidas para llevar',
                                 'ContactName': 'Patricio Simpson',
                                 'ContactTitle': 'Sales Agent',
                                 'Address': 'Cerrito 333',
@@ -268,7 +268,7 @@ export class TreeGridSampleComponent implements OnInit {
                             {
                                 'ID': 'ERNSH',
                                 'CompanyName':
-                                'Ernst Handel',
+                                    'Ernst Handel',
                                 'ContactName': 'Roland Mendel',
                                 'ContactTitle': 'Sales Manager',
                                 'Address': 'Kirchgasse 6',
@@ -424,5 +424,23 @@ export class TreeGridSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public addRowToFRANS() {
+        this.grid1.addRow(
+            {
+                'ID': 'WNVKO',
+                'CompanyName': 'Around the Horn',
+                'ContactName': 'Thomas Hardy',
+                'ContactTitle': 'Sales Representative',
+                'Address': '120 Hanover Sq.',
+                'City': 'London',
+                'Region': null,
+                'PostalCode': 'WA1 1DP',
+                'Country': 'UK',
+                'Phone': '(171) 555-7788',
+                'Fax': '(171) 555-6750'
+            },
+            'FRANS');
     }
 }

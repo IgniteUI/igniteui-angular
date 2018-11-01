@@ -13,18 +13,24 @@ export function cloneArray(array, deep?: boolean) {
     return arr;
 }
 
-export function cloneHierarchicalArray(array: any[], childDataKey: any, deep?: boolean): any[] {
+/**
+ * Doesn't clone leaf items
+ * @hidden
+ */
+export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
     const result: any[] = [];
-    if (array) {
+    if (!array) {
         return result;
     }
 
     for (const item of array) {
-        const children = item[childDataKey];
-        if (children && Array.isArray(children)) {
-            item[childDataKey] = cloneHierarchicalArray(children, childDataKey, deep);
+        if (Array.isArray(item[childDataKey])) {
+            const clonedItem = cloneValue(item);
+            clonedItem[childDataKey] = cloneHierarchicalArray(clonedItem[childDataKey], childDataKey);
+            result.push(clonedItem);
+        } else {
+            result.push(item);
         }
-        result.push(deep ? cloneValue(item) : item);
     }
     return result;
 }

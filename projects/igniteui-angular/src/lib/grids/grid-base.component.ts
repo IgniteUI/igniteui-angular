@@ -1525,7 +1525,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * Get transactions service for the grid.
      */
-    get transactions() {
+    get transactions(): TransactionService<Transaction, State> {
         return this._transactions;
     }
 
@@ -1983,7 +1983,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     constructor(
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: TransactionService<Transaction>,
+        @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,

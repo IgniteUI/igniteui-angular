@@ -19,9 +19,9 @@ import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { Transaction, TransactionType } from '../services';
+import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
-import { mergeObjects } from '../core/utils';
+import { mergeObjects, cloneArray, cloneValue } from '../core/utils';
 
 export enum DataType {
     String = 'string',
@@ -242,30 +242,35 @@ export class DataUtil {
         return data;
     }
 
+    // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
     public static mergeHierarchicalTransactions(
-        data: any[], transactions: Transaction[], childDataKey: any, primaryKey?: any): any[] {
+        data: any[], transactions: HierarchicalTransaction[], childDataKey: any, primaryKey?: any): any[] {
 
-        data.forEach((dataItem: any, index: number) => {
-            const children = dataItem[childDataKey];
-            if (children) {
-                dataItem[childDataKey] = this.mergeHierarchicalTransactions(children, transactions, childDataKey, primaryKey);
-            }
+        for (let index = 0; index < data.length; index++) {
+            const dataItem = data[index];
             const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
-            const transaction = transactions.find(t => t.id === rowId);
-            if (transaction && transaction.type === TransactionType.UPDATE) {
-                data[index] = mergeObjects(mergeObjects({}, dataItem), transaction.newValue);
+            const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
+            const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
+            if (updateTransaction || addedTransactions.length > 0) {
+                data[index] = mergeObjects(cloneValue(dataItem), updateTransaction && updateTransaction.newValue);
             }
-
-            const addTransactions = transactions.filter(t => t.id.parentId === rowId);
-            for (const t of addTransactions) {
-                if (!children) {
-                    dataItem[childDataKey] = [];
+            if (addedTransactions.length > 0) {
+                if (!data[index][childDataKey]) {
+                    data[index][childDataKey] = [];
                 }
-
-                dataItem[childDataKey].push(t.newValue);
+                for (const addedTransaction of addedTransactions) {
+                    data[index][childDataKey].push(addedTransaction.newValue);
+                }
             }
-        });
-
+            if (data[index][childDataKey]) {
+                data[index][childDataKey] = this.mergeHierarchicalTransactions(
+                    data[index][childDataKey],
+                    transactions,
+                    childDataKey,
+                    primaryKey
+                );
+            }
+        }
         return data;
     }
 }

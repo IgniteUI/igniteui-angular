@@ -3,10 +3,10 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
-export class IgxBaseTransactionService<T extends Transaction> implements TransactionService<T> {
+export class IgxBaseTransactionService<T extends Transaction, S extends State> implements TransactionService<T, S> {
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
-    protected _pendingStates: Map<any, State> = new Map();
+    protected _pendingStates: Map<any, S> = new Map();
     public get canRedo(): boolean {
         return false;
     }
@@ -34,14 +34,14 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
 
     aggregatedState(mergeChanges: boolean): T[] {
         const result: T[] = [];
-        this._pendingStates.forEach((state: State, key: any) => {
+        this._pendingStates.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
             result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
 
-    public getState(id: any): State {
+    public getState(id: any): S {
         return this._pendingStates.get(id);
     }
 
@@ -80,7 +80,7 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, State>, transaction: T, recordRef?: any): void {
+    protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         let state = states.get(transaction.id);
         if (state) {
             if (isObject(state.value)) {
@@ -89,7 +89,7 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
     }
@@ -99,7 +99,7 @@ export class IgxBaseTransactionService<T extends Transaction> implements Transac
      * @param state State to update value for
      * @returns updated value including all the changes in provided state
      */
-    protected updateValue(state: State) {
+    protected updateValue(state: S) {
         return this.mergeValues(state.recordRef, state.value);
     }
 

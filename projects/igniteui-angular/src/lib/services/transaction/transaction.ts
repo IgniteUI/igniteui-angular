@@ -22,7 +22,11 @@ export interface State {
     type: TransactionType;
 }
 
-export interface TransactionService <T extends Transaction> {
+export interface HierarchicalState extends State {
+    parentId: any;
+}
+
+export interface TransactionService <T extends Transaction, S extends State> {
     /**
      * Returns whether transaction is enabled for this service
      */
@@ -79,7 +83,7 @@ export interface TransactionService <T extends Transaction> {
      * @param id The id of the record
      * @returns State of the record if any
      */
-    getState(id: any): State;
+    getState(id: any): S;
 
     /**
      * Returns value of the required id including all uncommitted changes

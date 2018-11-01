@@ -4,11 +4,11 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
-export class IgxTransactionService<T extends Transaction> extends IgxBaseTransactionService<T> {
-    private _transactions: T[] = [];
-    private _redoStack: { transaction: T, recordRef: any }[] = [];
-    private _undoStack: { transaction: T, recordRef: any }[] = [];
-    private _states: Map<any, State> = new Map();
+export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
+    protected _transactions: T[] = [];
+    protected _redoStack: { transaction: T, recordRef: any }[] = [];
+    protected _undoStack: { transaction: T, recordRef: any }[] = [];
+    protected _states: Map<any, S> = new Map();
 
     get canUndo(): boolean {
         return this._undoStack.length > 0;
@@ -44,14 +44,14 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
 
     public aggregatedState(mergeChanges: boolean): T[] {
         const result: T[] = [];
-        this._states.forEach((state: State, key: any) => {
+        this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
             result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
 
-    public getState(id: any): State {
+    public getState(id: any): S {
         return this._states.get(id);
     }
 
@@ -81,7 +81,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
-            this._pendingStates.forEach((s: State, k: any) => {
+            this._pendingStates.forEach((s: S, k: any) => {
                 this.add({ id: k, newValue: s.value, type: s.type } as T, s.recordRef);
             });
         }
@@ -89,7 +89,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
     }
 
     public commit(data: any[]): void {
-        this._states.forEach((s: State) => {
+        this._states.forEach((s: S) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
                 case TransactionType.ADD:
@@ -144,7 +144,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    protected verifyAddedTransaction(states: Map<any, State>, transaction: T, recordRef?: any): void {
+    protected verifyAddedTransaction(states: Map<any, S>, transaction: T, recordRef?: any): void {
         const state = states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
@@ -174,7 +174,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, State>, transaction: T, recordRef?: any): void {
+    protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         let state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
@@ -209,7 +209,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
@@ -224,7 +224,7 @@ export class IgxTransactionService<T extends Transaction> extends IgxBaseTransac
      * empty object removes it from states.
      * @param state State to clean
      */
-    protected cleanState(id: any, states: Map<any, State>): void {
+    protected cleanState(id: any, states: Map<any, S>): void {
         const state = states.get(id);
         //  do nothing if
         //  there is no state, or

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, cloneHierarchicalArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -266,11 +266,10 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                 return DataUtil.mergeTransactions(
                     cloneArray(collection),
                     grid.transactions.aggregatedState(true),
-                    grid.primaryKey,
-                    true);
+                    grid.primaryKey);
             } else if (childDataKey) {
                 return DataUtil.mergeHierarchicalTransactions(
-                    cloneArray(collection),
+                    cloneHierarchicalArray(collection, childDataKey),
                     grid.transactions.aggregatedState(true),
                     childDataKey,
                     grid.primaryKey);
