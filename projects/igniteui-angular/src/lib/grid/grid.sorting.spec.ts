@@ -164,7 +164,7 @@ describe('IgxGrid - Grid Sorting', () => {
         const thirdColumn = 'LastName';
         const exprs = [
             { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
-            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
+            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
         ];
 
         grid.sortingExpressions = exprs;
@@ -208,7 +208,7 @@ describe('IgxGrid - Grid Sorting', () => {
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
         const invalidAndValidExp = [
-            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
             {fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
         ];
 
