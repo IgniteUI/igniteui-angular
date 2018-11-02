@@ -104,6 +104,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.updateFilterCellArea();
     }
 
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
         if (eventArgs.shiftKey) {
