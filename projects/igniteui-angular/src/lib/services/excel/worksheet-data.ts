@@ -2,6 +2,7 @@ import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
 
+/** @hidden */
 export class WorksheetData {
     private _columnCount: number;
     private _rowCount: number;

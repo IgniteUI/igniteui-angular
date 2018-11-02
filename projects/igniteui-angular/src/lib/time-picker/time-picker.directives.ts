@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import { IgxTimePickerComponent } from './time-picker.component';
 
+/** @hidden */
 @Directive({
     selector: '[igxItemList]'
 })

@@ -181,6 +181,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridSorting',
     pure: true
@@ -212,6 +213,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridPaging',
     pure: true

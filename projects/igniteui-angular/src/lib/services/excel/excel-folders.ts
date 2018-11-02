@@ -6,6 +6,7 @@ import {
 import { IExcelFolder } from './excel-interfaces';
 import { WorksheetData } from './worksheet-data';
 
+/** @hidden */
 export class RootExcelFolder implements IExcelFolder {
     public get folderName() {
         return  '';
@@ -24,6 +25,7 @@ export class RootExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class RootRelsExcelFolder implements IExcelFolder {
     public get folderName() {
         return  '_rels';
@@ -38,6 +40,7 @@ export class RootRelsExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class DocPropsExcelFolder implements IExcelFolder {
     public get folderName() {
         return  'docProps';
@@ -55,6 +58,7 @@ export class DocPropsExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class XLExcelFolder implements IExcelFolder {
     public get folderName() {
         return  'xl';
@@ -88,6 +92,7 @@ export class XLExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class XLRelsExcelFolder implements IExcelFolder {
     public get folderName() {
         return  '_rels';
@@ -102,6 +107,7 @@ export class XLRelsExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class ThemeExcelFolder implements IExcelFolder {
     public get folderName() {
         return  'theme';
@@ -116,6 +122,7 @@ export class ThemeExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class WorksheetsExcelFolder implements IExcelFolder {
     public get folderName() {
         return  'worksheets';
@@ -130,6 +137,7 @@ export class WorksheetsExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class TablesExcelFolder implements IExcelFolder {
     public get folderName() {
         return 'tables';
@@ -144,6 +152,7 @@ export class TablesExcelFolder implements IExcelFolder {
     }
 }
 
+/** @hidden */
 export class WorksheetsRelsExcelFolder implements IExcelFolder {
     public get folderName() {
         return '_rels';
