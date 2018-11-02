@@ -42,7 +42,8 @@ import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
-
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 
 const appRoutes = [
     {
@@ -218,6 +219,14 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'treeGrid',
+        component: TreeGridSampleComponent
+    },
+    {
+        path: 'treeGridFlatData',
+        component: TreeGridFlatDataSampleComponent
     },
     {
         path: 'tooltip',

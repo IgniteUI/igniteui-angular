@@ -24,6 +24,11 @@ All notable changes for each version of this project will be documented in this 
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
 - Transaction Provider - `TransactionService` is an injectable middleware that a component can use to accumulate changes without affecting the underlying data. The provider exposes API to access, manipulate changes (undo and redo) and discard or commit all to the data.
 For more detailed information, see the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/services/transaction/README.md).
+- `igxTreeGrid`:
+    - New `IgxTreeGridComponent` added.
+    - The `igxTreeGrid` is used to display and manipulate hierarchical data with consistent schema, formatted as a table and provides a line of advanced features such as sorting, filtering, editing, column pinning, column moving, column hiding, paging and others.
+    - The `igxTreeGrid` provides two ways of defining the relations among our data objects - by using a **child collection** for every data object or by using **primary and foreign keys** for every data object.
+    - For more details on using the `igxTreeGrid`, take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid.html).
 - `igxGrid`:
     - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
 

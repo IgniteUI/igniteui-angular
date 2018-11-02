@@ -1067,8 +1067,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.cells.length > 0) {
             let cellsContentWidths = [];
             if (this.cells[0].nativeElement.children.length > 0) {
-                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
-                    .map((child) => valToPxlsUsingRange(range, child)))));
+                this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
                 cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
             }
