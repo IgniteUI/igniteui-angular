@@ -22,6 +22,7 @@ import { IgxGridAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
+import { IgxGridComponent } from './grid.component';
 
 /**
  * @hidden
@@ -224,7 +225,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit {
         }
     }
 
-    get grid(): any {
+    get grid(): IgxGridComponent {
         return this.gridAPI.get(this.gridID);
     }
 

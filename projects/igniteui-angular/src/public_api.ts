@@ -36,6 +36,7 @@ export * from './lib/data-operations/filtering-strategy';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
 export * from './lib/data-operations/groupby-state.interface';
+export * from './lib/data-operations/grouping-strategy';
 export * from './lib/data-operations/sorting-expression.interface';
 export * from './lib/data-operations/sorting-strategy';
 export * from './lib/data-operations/paging-state.interface';

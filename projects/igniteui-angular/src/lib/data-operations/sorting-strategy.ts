@@ -1,6 +1,7 @@
 import { cloneArray } from '../core/utils';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
+import { IGroupingExpression } from './grouping-expression.interface';
 
 export interface ISortingStrategy {
     sort: (data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean) => any[];
@@ -53,24 +54,14 @@ export class DefaultSortingStrategy implements ISortingStrategy {
     }
 }
 
-export interface IGroupByResult {
-    data: any[];
-    metadata: IGroupByRecord[];
-}
-
 export class IgxSorting {
     public sort(data: any[], expressions: ISortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
     }
-    public groupBy(data: any[], expressions: ISortingExpression[]): IGroupByResult {
-        const metadata: IGroupByRecord[] = [];
-        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata);
-        return {
-            data: grouping,
-            metadata: metadata
-        };
-    }
-    private groupedRecordsByExpression<T>(data: T[], index: number, expression: ISortingExpression): T[] {
+
+    private groupedRecordsByExpression(data: any[],
+            index: number,
+            expression: IGroupingExpression): any[] {
         let i;
         let groupval;
         const res = [];
@@ -79,8 +70,9 @@ export class IgxSorting {
         res.push(data[index]);
         groupval = data[index][key];
         index++;
+        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (i = index; i < len; i++) {
-            if (data[i][key] === groupval) {
+            if (comparer(data[i][key], groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
@@ -121,7 +113,7 @@ export class IgxSorting {
         }
         return data;
     }
-    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
+    protected groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
         parent: IGroupByRecord, metadata: IGroupByRecord[]): T[] {
         let i = 0;
         let result = [];
