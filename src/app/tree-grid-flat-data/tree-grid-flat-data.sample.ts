@@ -90,4 +90,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
     }
+
+    public commit() {
+        this.grid1.transactions.commit(this.data);
+    }
 }

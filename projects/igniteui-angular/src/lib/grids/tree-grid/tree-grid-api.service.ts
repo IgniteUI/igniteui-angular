@@ -6,9 +6,10 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../column.component';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
-    public get_all_data(id: string): any[] {
+    public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        return grid.flatData;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
+        return data ? data : [];
     }
 
     public expand_row(id: string, rowID: any) {
