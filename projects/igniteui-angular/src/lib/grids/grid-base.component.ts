@@ -4282,7 +4282,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }) {
         const args: IGridEditEventArgs = {
             rowID: cell.rowID,
-            cellID: cell,
             oldValue: this.gridAPI.get_row_by_key(this.id, cell.rowID).rowData,
             cancel: false
         };
@@ -4339,7 +4338,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!targetRow) {
             return;
         }
-        const target = targetRow.element.nativeElement;
+        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -4360,10 +4359,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
 
     private endRowTransaction(commit: boolean, row: any, rowObject: IgxRowComponent<IgxGridBaseComponent>) {
-        const newValue = this.transactions.getAggregatedValue(row.rowID, true);
+        const valueInTransactions = this.transactions.getAggregatedValue(row.rowID, true);
         const lastCommitedValue = // Last commited value (w/o pending)
-            this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : {};
+            this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : null;
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, row.rowID);  // Get actual index in data
+        const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data(this.id)[rowIndex];
         let oldValue = Object.assign({}, this.data[rowIndex]);
         if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
@@ -4375,7 +4375,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         Object.assign(emitArgs, {
             oldValue,
             row,
-            cell: null
         });
         if (!commit) {
             this.onRowEditCancel.emit(emitArgs);
@@ -4413,7 +4412,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
             return;
         }
-        this.endRowTransaction(commit, row, rowObj);
+        this.endRowTransaction(commit, row.rowID, rowObj);
         const currentCell = (row && cell) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cell.cellID.columnID) : null;
         if (currentCell && event) {
             currentCell.nativeElement.focus();

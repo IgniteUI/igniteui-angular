@@ -121,7 +121,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public set_cell_inEditMode(gridId: string, cell) {
+    public set_cell_inEditMode(gridId: string, cell: IgxGridCellComponent) {
         const grid = this.get(gridId);
         const args: IGridEditEventArgs = {
             rowID: cell.cellID.rowID,
@@ -207,7 +207,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
-    public get_edit_row_state(gridId) {
+    public get_edit_row_state(gridId): {
+        rowID: any,
+        rowIndex: number
+    } {
         const editRow = this.editRowState.get(gridId);
         return editRow ? editRow : null;
 

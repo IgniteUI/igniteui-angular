@@ -359,7 +359,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait(DEBOUNCETIME);
 
                 expect(cell.inEditMode).toBe(false);
-                expect(cell.value).toBe(selectedDate);
+                expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
 
             it('should exit edit mode on filtering', (async () => {
