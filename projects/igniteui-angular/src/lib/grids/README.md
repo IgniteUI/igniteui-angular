@@ -190,9 +190,12 @@ A list of the events emitted by the **igx-grid**:
 |Name|Description|
 |--- |--- |
 |_Event emitters_|_Notify for a change_|
-|`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
-|`onRowEditDone`|Emitted when a row value is submitted. Returns `{ state: State }`|
-|`onRowEditCancel`|Emitted when a row value is submitted. Returns `{ state: State }`|
+|`onCellEditEnter`|Emitted when cell enters edit mode.|
+|`onCellEdit`|Emitted when cell editing has been performed in the grid and the value has been submitted.|
+|`onCellEditCancel`|Emitted when cell editing has been performed in the grid and the value has **not** been submitted.|
+|`onRowEditEnter`|Emitted when row enters edit mode.|
+|`onRowEdit`|Emitted when row editing has been performed in the grid and the value has been submitted.|
+|`onRowEditCancel`|Emitted when row editing has been performed in the grid and the value has **not** been submitted.|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|

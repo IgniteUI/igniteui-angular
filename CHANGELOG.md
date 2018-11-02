@@ -32,6 +32,8 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
 - `igxGrid`:
     - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
 
+    - **Breaking change** `onEditDone` is renamed to `onCellEdit` and new cell editing events are introduced: `onCellEditEnter` and `onCellEditCancel`. When row editing is enabled, the corresponding events are emitted by the grid - `onRowEditEnter`, `onRowEdit`, `onRowEditCancel`. All these events have arguments that are using the `IGridEditEventArgs` interface.
+
     - Row editing - allows modification of several cells in the row, before submitting, at once, all those changes to the grid's data source. Leverages the pending changes functionality of the new transaction provider.
 
         ```html
