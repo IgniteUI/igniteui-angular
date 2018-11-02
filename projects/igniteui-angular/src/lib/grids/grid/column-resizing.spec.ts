@@ -84,7 +84,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('88px');
+        expect(grid.columns[0].width).toEqual('64px');
 
         expect(grid.columns[2].cells[0].value).toEqual('Brown');
 
@@ -162,7 +162,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('88px');
+        expect(grid.columns[1].width).toEqual('70px');
     }));
 
     it('should resize sortable columns.', fakeAsync(() => {
@@ -280,7 +280,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('88px');
+        expect(grid.columns[0].width).toEqual('70px');
 
         headerResArea = headers[1].nativeElement.children[2];
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 197, 5);
@@ -312,7 +312,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[1].width).toEqual('88px');
+        expect(grid.columns[1].width).toEqual('64px');
     }));
 
     it('should resize pinned column with preset max width.', fakeAsync(() => {
@@ -361,7 +361,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('102px');
+        expect(grid.columns[0].width).toEqual('78px');
 
         resizeArea = headers[1].componentInstance.resizeArea.nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 248, 5);
@@ -375,14 +375,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[2].width).toEqual('97px');
+        expect(grid.columns[2].width).toEqual('78px');
 
         resizeArea = headers[3].componentInstance.resizeArea.nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 400, 5);
         tick();
         fixture.detectChanges();
 
-        expect(grid.columns[3].width).toEqual('88px');
+        expect(grid.columns[3].width).toEqual('73px');
 
         resizeArea = headers[5].componentInstance.resizeArea.nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 486, 5);
@@ -683,7 +683,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         column.autosize();
         tick();
         fixture.detectChanges();
-        expect(column.width).toEqual('128px');
+        expect(column.width).toEqual('104px');
     }));
 
     it('should autosize MCHs programmatically.', fakeAsync(() => {

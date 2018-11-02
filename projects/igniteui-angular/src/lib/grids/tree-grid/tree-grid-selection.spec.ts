@@ -29,13 +29,13 @@ describe('IgxTreeGrid - Selection', () => {
 
     describe('API Row Selection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
+            await wait();
             fix.detectChanges();
         });
 
@@ -133,6 +133,7 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -140,6 +141,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
@@ -196,13 +198,13 @@ describe('IgxTreeGrid - Selection', () => {
 
     describe('UI Row Selection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
+            await wait();
             fix.detectChanges();
         });
 
@@ -293,6 +295,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 8);
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -300,6 +303,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
@@ -380,9 +384,6 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
-            treeGrid.rowSelectable = false;
             fix.detectChanges();
         });
 
@@ -490,19 +491,19 @@ describe('IgxTreeGrid - Selection', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             // scroll down 150 pixels
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             // then scroll back to top
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);

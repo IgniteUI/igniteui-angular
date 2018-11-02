@@ -256,6 +256,14 @@ export class IgxGridNavigationService {
 
     public navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
         if (currentRowIndex === 0) {
+            this.grid.rowList.first.cells.first._clearCellSelection();
+
+            if (this.grid.allowFiltering) {
+                const visColLength = this.grid.visibleColumns.length;
+                this.grid.headerContainer.scrollTo(visColLength - 1);
+                this.grid.filteringService.columnToChipToFocus.set(this.grid.visibleColumns[visColLength - 1].field, true);
+            }
+
             return;
         }
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);

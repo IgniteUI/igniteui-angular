@@ -358,26 +358,23 @@ describe('IgxGrid - Summaries', () => {
         expect(emptySummaries[1].summaryResult).toBe(undefined);
         expect(emptySummaries[2].summaryResult).toBe(undefined);
     });
-    it('should calculate summaries only over filteredData', async(() => {
+    it('should calculate summaries only over filteredData', fakeAsync(() => {
         const fixture = TestBed.createComponent(SummaryColumnComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid1;
-        const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
         const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
+        const colChips = GridFunctions.getFilterChipsForColumn('UnitsInStock', fixture);
 
-        filterIcon.nativeElement.click();
+        colChips[0].nativeElement.click();
         fixture.detectChanges();
-        select.nativeElement.value = 'equals';
-        select.nativeElement.dispatchEvent(new Event('change'));
 
-        UIInteractions.sendInput(input, '0');
+        GridFunctions.filterBy('Equals', '0', fixture);
         fixture.detectChanges();
-        filterIcon.nativeElement.click();
+
+        GridFunctions.closeFilterRow(fixture);
         fixture.detectChanges();
+
         const filterResult = grid.rowList.length;
         expect(filterResult).toEqual(3);
         let index = 0;
@@ -612,7 +609,7 @@ describe('IgxGrid - Summaries', () => {
         expect(grid.hasSummarizedColumns).toBe(true);
     }));
 
-    it('should properly render custom summaries', async(() => {
+    it('should properly render custom summaries', fakeAsync(() => {
         const fixture = TestBed.createComponent(CustomSummariesComponent);
         fixture.detectChanges();
 
@@ -625,21 +622,13 @@ describe('IgxGrid - Summaries', () => {
         expect(earliest).toBe('5/17/1990');
         expect(maxValue).toBe('39,004');
 
-        const filterUIContainer = fixture.debugElement.query(By.css('igx-grid-filter'));
-        const filterIcon = filterUIContainer.query(By.css('igx-icon'));
-        const input = filterUIContainer.query(By.directive(IgxInputDirective));
-        const select = filterUIContainer.query(By.css('select'));
-        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
+        const colChips = GridFunctions.getFilterChipsForColumn('UnitsInStock', fixture);
+        colChips[0].nativeElement.click();
+        fixture.detectChanges();
 
-        filterIcon.nativeElement.click();
-        fixture.detectChanges();
-        select.nativeElement.value = 'lessThan';
-        select.nativeElement.dispatchEvent(new Event('change'));
+        GridFunctions.filterBy('Less Than', '0', fixture);
+        GridFunctions.closeFilterRow(fixture);
 
-        UIInteractions.sendInput(input, '0');
-        fixture.detectChanges();
-        filterIcon.nativeElement.click();
-        fixture.detectChanges();
         const filterResult = grid.rowList.length;
         expect(filterResult).toEqual(0);
 
@@ -722,14 +711,14 @@ export class NoActiveSummariesComponent {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
+        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">
             </igx-column>
             <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
             </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true">
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="hasSummary">
             </igx-column>
@@ -851,14 +840,14 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
 @Component({
     template: `
-        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'">
+        <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
             <igx-column field="ProductID" header="Product ID">
             </igx-column>
             <igx-column field="ProductName" [hasSummary]="true">
             </igx-column>
             <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
             </igx-column>
-            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" [filterable]="true" [summaries]="dealsSummary">
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true"  [summaries]="dealsSummary">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
                 [summaries]="earliest">
