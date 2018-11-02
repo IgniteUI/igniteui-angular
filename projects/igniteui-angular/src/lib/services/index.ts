@@ -9,7 +9,7 @@ export * from './overlay/overlay';
 export * from './overlay/position';
 export {
     HorizontalAlignment, VerticalAlignment, Point,
-    OverlayEventArgs, OverlayAnimationEventArgs,
+    OverlayEventArgs, OverlayAnimationEventArgs, OverlayCancelableEventArgs,
     OverlaySettings, PositionSettings
 } from './overlay/utilities';
 export * from './overlay/scroll';
