@@ -19,7 +19,6 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
@@ -806,8 +805,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
-            const sortingPipe = new IgxGridSortingPipe(this._gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+            const sortingPipe = new IgxGridSortingPipe();
+            data = sortingPipe.transform(data, this.sortingExpressions, -1);
         }
         return data;
     }

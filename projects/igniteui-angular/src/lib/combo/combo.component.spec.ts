@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -14,7 +13,7 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { configureTestSuite } from '../test-utils/configure-suite';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2201,7 +2200,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
@@ -2222,7 +2222,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             combo.groupKey = '';
 

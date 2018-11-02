@@ -2,17 +2,13 @@ import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
-    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
-    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -25,19 +21,18 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    AfterViewChecked,
     ViewContainerRef,
     InjectionToken,
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isNavigationKey, mergeObjects, CancelableEventArgs } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -47,8 +42,6 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
-import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
-import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
 import { DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -65,7 +58,6 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -1449,7 +1441,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    get sortingExpressions() {
+    get sortingExpressions(): ISortingExpression [] {
         return this._sortingExpressions;
     }
 
@@ -1464,7 +1456,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    set sortingExpressions(value) {
+    set sortingExpressions(value: ISortingExpression []) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 
@@ -3546,7 +3538,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
+        this.gridAPI.sort(this.id, expression);
     }
 
     /**

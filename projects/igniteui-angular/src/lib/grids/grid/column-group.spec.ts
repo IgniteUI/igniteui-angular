@@ -5,12 +5,12 @@ import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand } from '../../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridHeaderComponent } from '../grid-header.component';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -1073,8 +1073,7 @@ describe('IgxGrid - multi-column headers', () => {
         tick();
         fixture.detectChanges();
         // Sort column
-        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc});
-        tick();
+        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1102,8 +1101,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc});
-        tick();
+        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1249,7 +1247,8 @@ describe('IgxGrid - multi-column headers', () => {
         grid.getColumnByName('Country').groupable = true;
         grid.getColumnByName('Phone').groupable = true;
 
-        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
 
         // verify grouping expressions
         const grExprs = grid.groupingExpressions;
