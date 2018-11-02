@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { Calendar } from '../calendar/calendar';
 
 @Component({
     template: `
@@ -46,6 +45,38 @@ export class IgxTreeGridFilteringComponent {
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="300px" height="400px" columnWidth="100px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithScrollsComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="600px" height="600px" columnWidth="100px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithNoScrollsComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
 }
 
 @Component({
