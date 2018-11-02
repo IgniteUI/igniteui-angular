@@ -201,34 +201,6 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
     });
 
-    // This case is not valid anymore
-    xit('Grid sort by invalid expressions fieldName shouldn\'t change anything', () => {
-        const gridData = fixture.componentInstance.data;
-        const firstColumn = 'ID';
-        const secondColumn = 'Name';
-        const thirdColumn = 'LastName';
-        const invalidExpressions = [
-            {FieldName: secondColumn, dir: SortingDirection.Desc },
-            {FieldName: firstColumn }
-        ];
-
-        grid.sortingExpressions = invalidExpressions;
-
-        fixture.detectChanges();
-
-        let expectedResult = 'Jane';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Brown';
-        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expectedResult = 'Connor';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Walker';
-        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, firstColumn).value).toEqual(gridData[index].ID));
-    });
-
     // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
     it(`Grid sort by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
