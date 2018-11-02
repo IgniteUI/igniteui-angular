@@ -855,6 +855,40 @@ describe('IgxForOf directive -', () => {
             const hDirective = fix.componentInstance.childVirtDirs.toArray()[0];
             expect(hDirective.getItemCountInView()).toBe(2);
         });
+
+        it('should emit the onChunkPreload/onChunkLoad only when startIndex or chunkSize have changed.', async () => {
+            const verticalDir = fix.componentInstance.parentVirtDir;
+            const chunkLoadSpy = spyOn<any>(verticalDir.onChunkLoad, 'emit').and.callThrough();
+            const chunkPreLoadSpy = spyOn<any>(verticalDir.onChunkPreload, 'emit').and.callThrough();
+            // scroll so that start index does not change.
+            fix.componentInstance.scrollTop(1);
+            fix.detectChanges();
+            await wait();
+            expect(chunkLoadSpy).toHaveBeenCalledTimes(0);
+            expect(chunkPreLoadSpy).toHaveBeenCalledTimes(0);
+
+            // scroll so that start index changes.
+            fix.componentInstance.scrollTop(100);
+            fix.detectChanges();
+            await wait();
+
+            expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
+            expect(chunkPreLoadSpy).toHaveBeenCalledTimes(1);
+
+            // change size so that chunk size does not change
+            fix.componentInstance.height = '399px';
+            fix.detectChanges();
+            await wait();
+
+            expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
+
+            // change size so that chunk size changes
+            fix.componentInstance.height = '1500px';
+            fix.detectChanges();
+            await wait(100);
+
+            expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
+        });
     });
 
     describe('variable size component', () => {
