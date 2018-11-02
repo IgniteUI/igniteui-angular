@@ -185,7 +185,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             await testNavigationLeftmostRightmostCell(fix, treeGrid, 2, treeColumns);
         });
 
-        fit('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
+        it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
             await testNavigationHomeEnd(fix, treeGrid, treeColumns);
         });
 
