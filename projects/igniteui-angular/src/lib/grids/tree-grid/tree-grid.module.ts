@@ -20,7 +20,7 @@ import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
     IgxTreeGridSortingPipe,
     IgxTreeGridFilteringPipe,
     IgxTreeGridPagingPipe,
-	IgxTreeGridTransactionPipe
+    IgxTreeGridTransactionPipe
   ],
   exports: [
     IgxTreeGridComponent,

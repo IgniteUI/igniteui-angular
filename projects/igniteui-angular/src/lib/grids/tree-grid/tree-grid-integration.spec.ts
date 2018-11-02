@@ -9,7 +9,6 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -405,13 +404,12 @@ describe('IgxTreeGrid - Integration', () => {
             grid.collapseAll();
             fix.detectChanges();
 
-            let cell = grid.getCellByColumn(0, 'Name');
+            const cell = grid.getCellByColumn(0, 'Name');
             cell.inEditMode = true;
             tick();
             fix.detectChanges();
 
             const banner = document.getElementsByClassName(CSS_CLASS_BANNER)[0];
-           
             console.log(banner.attributes);
 
             // let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
