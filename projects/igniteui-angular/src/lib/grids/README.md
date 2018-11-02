@@ -165,12 +165,13 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`id`|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
 |`data`|Array|The data source for the grid.|
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
-|`paging`|bool|Enables the paging feature. Defaults to _false_.|
+|`paging`|boolean|Enables the paging feature. Defaults to _false_.|
 |`perPage`|number|Visible items per page, default is 15|
-|`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
-|`filteringExpressionsTree`|IFilteringExpressionsTree|The filtering state of the grid.|
+|`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
+|`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
+|`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
 |`sortingExpressions`|Array|The sorting state of the grid.|
-|`rowSelectable`|Boolean|Enables multiple row selection, default is _false_.|
+|`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
@@ -178,9 +179,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
-|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
-|`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
-|`rowEditable` | Boolean | enables/disables row editing mode |
+|`groupsExpanded`| boolean | Determines whether created groups are rendered expanded or collapsed.  |
+|`hideGroupedColumns`| boolean | Determines whether the grouped columns are hidden as well.  |
+|`rowEditable` | boolean | enables/disables row editing mode |
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 
 ### Outputs

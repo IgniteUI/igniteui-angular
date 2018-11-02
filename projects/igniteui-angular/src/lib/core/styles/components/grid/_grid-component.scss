@@ -34,8 +34,16 @@
         @extend %grid-thead-group !optional;
     }
 
+    @include e(thead-subgroup) {
+        @extend %grid-thead-subgroup !optional;
+    }
+
     @include e(thead-title, $m: pinned-last) {
         @extend %grid-thead-title--pinned !optional;
+    }
+
+    @include e(thead-item) {
+        @extend %grid-thead-item !optional;
     }
 
     @include e(tbody) {
@@ -129,6 +137,10 @@
 
     @include e(th, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(th, $m: filtering) {
+        @extend %grid-cell-header--filtering !optional;
     }
 
     @include e(th-title) {
@@ -292,6 +304,39 @@
         @extend %igx-grid__row-editing-outlet !optional;
     }
 
+    @include e(filtering-cell) {
+        @extend %igx-grid__filtering-cell !optional;
+    }
+
+    @include e(filtering-cell-indicator) {
+        @extend %igx-grid__filtering-cell-indicator !optional;
+    }
+
+    @include e(filtering-cell-indicator, $m: 'hidden') {
+        @extend %igx-grid__filtering-cell-indicator !optional;
+        @extend %igx-grid__filtering-cell-indicator--hidden !optional;
+    }
+
+    @include e(filtering-row) {
+        @extend %igx-grid__filtering-row !optional;
+    }
+
+    @include e(filtering-row-buttons) {
+        @extend %igx-grid__filtering-row-buttons !optional;
+    }
+
+    @include e(filtering-row-main) {
+        @extend %igx-grid__filtering-row-main !optional;
+    }
+
+    @include e(filtering-row-scroll-start) {
+        @extend %igx-grid__filtering-scroll-start !optional;
+    }
+
+    @include e(filtering-row-scroll-end) {
+        @extend %igx-grid__filtering-scroll-end !optional;
+    }
+
     @for $i from 1 through 10 {
         @include e(row-indentation, $m: level-#{$i}) {
             @extend %igx-grid__row-indentation--level-#{$i} !optional;
@@ -321,6 +366,10 @@
 
         @include e(td) {
             @extend %grid-cell-display--cosy !optional;
+        }
+
+        @include e(thead) {
+            @extend %grid-thead--cosy !optional;
         }
 
         @include e(thead-title) {
@@ -389,6 +438,10 @@
 
         @include e(td) {
             @extend %grid-cell-display--compact !optional;
+        }
+
+        @include e(thead) {
+            @extend %grid-thead--compact !optional;
         }
 
         @include e(thead-title) {

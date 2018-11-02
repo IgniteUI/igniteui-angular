@@ -152,7 +152,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(1);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('50px');
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('51px');
 
             for (let i = 2; i <= 30; i++) {
                 grid.addRow({ index: i, value: i });
@@ -161,7 +161,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(30);
-            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1529px');
+            expect(window.getComputedStyle(gridBody.nativeElement).height).toMatch('1530px');
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(false);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             grid.height = '200px';
@@ -239,7 +239,7 @@ describe('IgxGrid Component Tests', () => {
 
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
-            expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(rowHeight.offsetHeight).toBe(51);
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
             grid.displayDensity = 'cosy';
             fixture.detectChanges();
@@ -247,7 +247,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
-            expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(rowHeight.offsetHeight).toBe(41);
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
             grid.displayDensity = 'compact';
             fixture.detectChanges();
@@ -255,7 +255,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
-            expect(rowHeight.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(rowHeight.offsetHeight).toBe(33);
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
         }));
 
@@ -609,7 +609,7 @@ describe('IgxGrid Component Tests', () => {
             const recsCount = grid.data.length;
 
             // tbody should have height equal to all items * item height
-            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51 - 1);
+            expect(grid.tbody.nativeElement.clientHeight).toEqual(recsCount * 51);
             expect(grid.rowList.length).toBeGreaterThan(0);
         }));
 

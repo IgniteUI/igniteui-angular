@@ -23,6 +23,7 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { TransactionService } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
 
@@ -48,7 +49,7 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [ IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) } ]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
@@ -233,8 +234,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                filteringService);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
