@@ -209,6 +209,46 @@ describe('IgxGrid - GroupBy', () => {
             grid.groupingExpressions);
     });
 
+    it('should allow grouping with a custom comparer', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.componentInstance.data[0].ReleaseDate = new Date(2017, 1, 1, 15, 30, 0, 0);
+        fix.componentInstance.data[1].ReleaseDate = new Date(2017, 1, 1, 20, 30, 0, 0);
+        fix.componentInstance.height = null;
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ReleaseDate',
+            dir: SortingDirection.Desc,
+            ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance(),
+            groupingComparer: (a: Date, b: Date) => {
+                if (a instanceof Date && b instanceof Date &&
+                    a.getFullYear() === b.getFullYear() &&
+                    a.getMonth() === b.getMonth() &&
+                    a.getDate() === b.getDate()) {
+                    return 0;
+                }
+                return DefaultSortingStrategy.instance().compareValues(a, b);
+            }
+        });
+        fix.detectChanges();
+        let groupRows = grid.groupsRowList.toArray();
+        // verify groups count
+        expect(groupRows.length).toEqual(5);
+        // now click the chip to change sorting, the grouping expression should hold
+        // the comparer and reapply the same grouping again
+        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        // click grouping direction arrow
+        const event = { owner: { id: 'ReleaseDate' } };
+        grid.onChipClicked(event);
+        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        expect(chips.length).toBe(1);
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
+        expect(chips[0].querySelector('igx-icon').innerText.trim()).toBe('arrow_upward');
+        groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toEqual(5);
+    });
+
     it('should allows expanding/collapsing groups.', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;

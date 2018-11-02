@@ -2,6 +2,7 @@ import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 
 import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
 import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
+import { DefaultSortingStrategy } from 'projects/igniteui-angular/src/public_api';
 
 @Component({
     providers: [],
@@ -76,7 +77,7 @@ export class GridGroupBySampleComponent implements OnInit {
                 return;
             }
         }
-        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
     }
     toggleDensity() {
         switch (this._density) {

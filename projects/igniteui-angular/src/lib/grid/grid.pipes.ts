@@ -2,11 +2,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../data-operations/sorting-strategy';
+import { IGroupByResult } from '../data-operations/grouping-strategy';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 
 /**
  *@hidden
@@ -39,7 +40,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+    public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
         id: string, pipeTrigger: number): IGroupByResult {
 
@@ -72,7 +73,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
+    public transform(collection: IGroupByResult, expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
         id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 

@@ -1,6 +1,7 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { IGroupByResult, IgxSorting } from './sorting-strategy';
+import { IgxSorting } from './sorting-strategy';
+import { IGroupByResult, IgxGrouping } from './grouping-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -22,8 +23,8 @@ export class DataUtil {
         return sorting.sort(data, expressions);
     }
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
-        const sorting = new IgxSorting();
-        return sorting.groupBy(data, state.expressions);
+        const grouping = new IgxGrouping();
+        return grouping.groupBy(data, state.expressions);
     }
     public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
         if (state.expressions.length === 0) {

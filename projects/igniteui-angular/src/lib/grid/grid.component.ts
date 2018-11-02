@@ -34,6 +34,7 @@ import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
@@ -284,7 +285,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions(): ISortingExpression[] {
+    get groupingExpressions(): IGroupingExpression[] {
         return this._groupingExpressions;
     }
 
@@ -299,7 +300,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    set groupingExpressions(value: ISortingExpression[]) {
+    set groupingExpressions(value: IGroupingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -2721,13 +2722,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public groupBy(...rest): void {
+    public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.gridAPI.submit_value(this.id);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._groupByMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.groupBy_multiple(this.id, expression);
         } else {
-            this._groupBy(rest[0]);
+            this.gridAPI.groupBy(this.id, expression);
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
@@ -3417,20 +3417,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupBy(expression: ISortingExpression) {
-        this.gridAPI.groupBy(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupByMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.groupBy_multiple(this.id, expressions);
     }
 
     /**
