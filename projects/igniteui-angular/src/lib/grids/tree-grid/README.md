@@ -49,7 +49,7 @@ When we are using the child collection option, every data object contains a chil
 
 ```typescript
 export const EMPLOYEE_DATA = [
-    {        
+    {
         Name: "Johnathan Winchester",
         ID: 1,
         HireDate: new Date(2008, 3, 20),
@@ -57,7 +57,7 @@ export const EMPLOYEE_DATA = [
         Employees: [
             {
                 Name: "Michael Burke",
-                ID: 3,                
+                ID: 3,
                 HireDate: new Date(2011, 6, 3),
                 Age: 43,
                 Employees: []
@@ -66,13 +66,13 @@ export const EMPLOYEE_DATA = [
                 Name: "Thomas Anderson"
                 ID: 2,
                 HireDate: new Date(2009, 6, 19),
-                Age: 29,                
+                Age: 29,
                 Employees: []
             },
             ...
         ]
     },
-    ...            
+    ...
 ]
 ```
 
