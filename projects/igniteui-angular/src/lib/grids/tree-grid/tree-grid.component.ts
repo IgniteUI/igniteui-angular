@@ -395,7 +395,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
-                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
+                if (treeRecord && treeRecord.children && treeRecord.children.length > 0 && !this.transactions.enabled) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
                         this.deleteRowById(child.rowID);
@@ -407,7 +407,17 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
-            childData.splice(index, 1);
+            if (this.transactions.enabled) {
+                this.transactions.add({
+                    id: rowID,
+                    type: TransactionType.DELETE,
+                    newValue: null,
+                    parentId: record.parent ? record.parent.rowID : undefined
+                },
+                this.data);
+            } else {
+                childData.splice(index, 1);
+            }
         }
     }
 

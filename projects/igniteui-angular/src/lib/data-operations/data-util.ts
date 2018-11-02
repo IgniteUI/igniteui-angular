@@ -67,7 +67,8 @@ export class DataUtil {
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
             level: hierarchicalRecord.level,
-            expanded: hierarchicalRecord.expanded
+            expanded: hierarchicalRecord.expanded,
+            path: [...hierarchicalRecord.path]
         };
         return rec;
     }
