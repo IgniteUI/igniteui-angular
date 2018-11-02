@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar/index';
@@ -8,10 +8,10 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IGridCellEventArgs, IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
-import { first } from 'rxjs/operators';
 import { IgxGridRowComponent } from './row.component';
 import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column Pinning ', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -223,7 +223,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc });
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
 
         fix.detectChanges();
 

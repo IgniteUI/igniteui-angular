@@ -30,11 +30,12 @@ import { Subject, of } from 'rxjs';
 import { take, takeUntil, debounceTime, merge, delay, repeat } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, DisplayDensity } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
+import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { GroupedRecords, IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
+import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../services/index';
@@ -44,13 +45,14 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
 import { ISummaryExpression } from './grid-summary';
-import { IgxGroupByRowTemplateDirective, IgxColumnMovingDragDirective } from './grid.common';
+import { IgxGroupByRowTemplateDirective } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridSortingPipe, IgxGridPreGroupingPipe } from './grid.pipes';
+import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './row.component';
-import { DataUtil, IFilteringOperation, IFilteringExpressionsTree, FilteringExpressionsTree } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringOperation } from '../data-operations/filtering-condition';
 
 let NEXT_ID = 0;
 const DEBOUNCE_TIME = 16;
@@ -283,7 +285,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions(): ISortingExpression[] {
+    get groupingExpressions(): IGroupingExpression[] {
         return this._groupingExpressions;
     }
 
@@ -298,7 +300,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    set groupingExpressions(value: ISortingExpression[]) {
+    set groupingExpressions(value: IGroupingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -1417,7 +1419,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * @memberof IgxGridComponent
      */
     @Input()
-    get sortingExpressions() {
+    get sortingExpressions(): ISortingExpression [] {
         return this._sortingExpressions;
     }
 
@@ -1432,7 +1434,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    set sortingExpressions(value) {
+    set sortingExpressions(value: ISortingExpression []) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 
@@ -2704,13 +2706,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.gridAPI.escape_editMode(this.id);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -2721,13 +2722,12 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
      * ```
      * @memberof IgxGridComponent
      */
-    public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public groupBy(...rest): void {
+    public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.gridAPI.submit_value(this.id);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._groupByMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.groupBy_multiple(this.id, expression);
         } else {
-            this._groupBy(rest[0]);
+            this.gridAPI.groupBy(this.id, expression);
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
@@ -3422,34 +3422,6 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
     /**
      * @hidden
      */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupBy(expression: ISortingExpression) {
-        this.gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupByMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.groupBy_multiple(this.id, expressions);
-    }
-
-    /**
-     * @hidden
-     */
     protected _getStateForGroupRow(groupRow: IGroupByRecord): IGroupByExpandState {
         return this.gridAPI.groupBy_get_expanded_for_group(this.id, groupRow);
     }
@@ -4036,8 +4008,8 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
-            const sortingPipe = new IgxGridSortingPipe(this.gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+            const sortingPipe = new IgxGridSortingPipe();
+            data = sortingPipe.transform(data, this.sortingExpressions, -1);
         }
 
         return data;

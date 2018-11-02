@@ -1,14 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridFilterComponent } from './grid-filtering.component';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 const SORTING_ICON_NONE_CONTENT = 'none';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -16,7 +15,7 @@ const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
 describe('IgxGrid - Grid Sorting', () => {
     let fixture;
-    let grid;
+    let grid: IgxGridComponent;
     beforeEach(async(() => {
 
         TestBed.configureTestingModule({
@@ -37,7 +36,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should sort grid ascending by column name', () => {
         const currentColumn = 'Name';
         const lastNameColumn = 'LastName';
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
 
         fixture.detectChanges();
 
@@ -51,7 +50,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual(expectedResult);
 
         // Ignore case on sorting set to true
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         expectedResult = 'ALex';
@@ -61,7 +60,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should sort grid descending by column name', () => {
         const currentColumn = 'Name';
         // Ignore case on sorting set to false
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         let expectedResult = 'Rick';
@@ -71,7 +70,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
 
         // Ignore case on sorting set to true
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true});
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         expectedResult = 'Rick';
@@ -84,7 +83,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should not sort grid when trying to sort by invalid column', () => {
         const gridData = fixture.componentInstance.data;
         const invalidColumn = 'Age';
-        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc});
+        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
 
         let expectedResult = 'Jane';
         expect(grid.getCellByColumn(0, 'Name').value).toEqual(expectedResult);
@@ -97,7 +96,8 @@ describe('IgxGrid - Grid Sorting', () => {
 
     it('Should sort grid by current column by expression (Ascending)', () => {
         const currentColumn = 'ID';
-        grid.sortingExpressions = [{ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true }];
+        grid.sortingExpressions = [{ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance() }];
 
         fixture.detectChanges();
 
@@ -107,7 +107,8 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should sort grid by current column by expression (Descending with ignoreCase)', () => {
         const currentColumn = 'Name';
 
-        grid.sortingExpressions = [{fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true }];
+        grid.sortingExpressions = [{fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance() }];
 
         fixture.detectChanges();
 
@@ -120,8 +121,10 @@ describe('IgxGrid - Grid Sorting', () => {
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
 
-        grid.sortingExpressions = [{fieldName: secondColumn, dir: SortingDirection.Asc},
-            {fieldName: firstColumn, dir: SortingDirection.Desc }];
+        grid.sortingExpressions = [
+            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
 
         fixture.detectChanges();
 
@@ -140,8 +143,10 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.sortingExpressions.length).toEqual(1);
         expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
 
-        grid.sortingExpressions = [{fieldName: secondColumn, dir: SortingDirection.Asc},
-            {fieldName: firstColumn, dir: SortingDirection.Desc }];
+        grid.sortingExpressions = [
+            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
         fixture.detectChanges();
 
         expect(grid.sortingExpressions.length).toEqual(2);
@@ -158,8 +163,8 @@ describe('IgxGrid - Grid Sorting', () => {
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
         const exprs = [
-            { fieldName: secondColumn, dir: SortingDirection.Asc },
-            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true}
+            { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
         ];
 
         grid.sortingExpressions = exprs;
@@ -196,39 +201,16 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, firstColumn).value).toEqual(7);
     });
 
-    it('Grid sort by invalid expressions fieldName shouldn\'t change anything', () => {
-        const gridData = fixture.componentInstance.data;
-        const firstColumn = 'ID';
-        const secondColumn = 'Name';
-        const thirdColumn = 'LastName';
-        const invalidExpressions = [{FieldName: secondColumn, dir: SortingDirection.Desc },
-            {FieldName: firstColumn }];
-
-        grid.sortingExpressions = invalidExpressions;
-
-        fixture.detectChanges();
-
-        let expectedResult = 'Jane';
-        expect(grid.getCellByColumn(0, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Brown';
-        expect(grid.getCellByColumn(0, thirdColumn).value).toEqual(expectedResult);
-        expectedResult = 'Connor';
-        expect(grid.getCellByColumn(grid.data.length - 1, secondColumn).value).toEqual(expectedResult);
-        expectedResult = 'Walker';
-        expect(grid.getCellByColumn(grid.data.length - 1, thirdColumn).value).toEqual(expectedResult);
-
-        grid.rowList.map((item, index) =>
-            expect(grid.getCellByColumn(index, firstColumn).value).toEqual(gridData[index].ID));
-    });
-
     // sort now allows only params of type ISortingExpression hence it is not possible to pass invalid expressions
     it(`Grid sort by mixed valid and invalid expressions should update the
             data only by valid ones (through API)`, () => {
         const firstColumn = 'ID';
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
-        const invalidAndValidExp = [{fieldName: secondColumn, dir: SortingDirection.Desc },
-            {fieldName: firstColumn, dir: SortingDirection.Asc }];
+        const invalidAndValidExp = [
+            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            {fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
 
         grid.sort(invalidAndValidExp);
 
@@ -316,15 +298,14 @@ describe('IgxGrid - Grid Sorting', () => {
     });
 
     it('Should have a valid sorting icon when sorting using the API.', () => {
-        const firstHeaderCell = fixture.debugElement.query(By.css('.header-id'));
         const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc});
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc});
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
 

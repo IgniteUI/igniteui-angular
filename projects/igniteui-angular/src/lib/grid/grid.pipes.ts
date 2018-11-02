@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByResult, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { IGroupByResult } from '../data-operations/grouping-strategy';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './api.service';
 import { IgxGridComponent } from './grid.component';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 
 /**
  *@hidden
@@ -18,24 +18,14 @@ import { IgxGridComponent } from './grid.component';
 })
 export class IgxGridSortingPipe implements PipeTransform {
 
-    constructor(private gridAPI: IgxGridAPIService) { }
+    constructor() { }
 
-    public transform(collection: any[], expressions: ISortingExpression | ISortingExpression[],
-        id: string, pipeTrigger: number): any[] {
-        let strategy: ISortingStrategy;
-        const state = { expressions: [], strategy };
-        state.expressions = this.gridAPI.get(id).sortingExpressions;
-
-        if (!state.expressions.length) {
+    public transform(collection: any[], expressions: ISortingExpression[], pipeTrigger: number): any[] {
+        if (!expressions.length) {
             return collection;
         }
 
-        // DataUtil.sort needs a sorting strategy to start with, so it makes sense to start with the strategy from the first expression
-        // sorting-strategy.ts, sortDataRecursive method then takes care and use the corresponding strategy for each expression
-        strategy = expressions[0].strategy;
-        state.strategy = strategy;
-
-        return DataUtil.sort(cloneArray(collection), state);
+        return DataUtil.sort(cloneArray(collection), expressions);
     }
 }
 
@@ -50,7 +40,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[],
+    public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
         id: string, pipeTrigger: number): IGroupByResult {
 
@@ -83,7 +73,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 
     constructor(private gridAPI: IgxGridAPIService) { }
 
-    public transform(collection: IGroupByResult, expression: ISortingExpression | ISortingExpression[],
+    public transform(collection: IGroupByResult, expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
         id: string, groupsRecords: any[], pipeTrigger: number): any[] {
 

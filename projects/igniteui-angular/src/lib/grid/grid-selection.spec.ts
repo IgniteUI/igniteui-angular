@@ -1,15 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../calendar';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
-const selectedCellClass = '.igx-grid__td--selected';
 let data = [
     { ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z' },
     { ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z' },
@@ -783,7 +783,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true });
+        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
@@ -886,7 +886,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true });
+        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
         fixture.detectChanges();
         const cellAfterSorting = fixture.debugElement.query(By.css('.igx-grid__td--selected'));
         expect(grid.selectedCells).toBeDefined();

@@ -1,30 +1,30 @@
 import { cloneArray } from '../core/utils';
 import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
+import { IGroupingExpression } from './grouping-expression.interface';
 
 export interface ISortingStrategy {
-    sort: (data: any[], expressions: ISortingExpression[]) => any[];
-    groupBy: (data: any[], expressions: ISortingExpression[]) => IGroupByResult;
-    compareValues: (a: any, b: any) => number;
+    sort: (data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean) => any[];
 }
 
-export interface IGroupByResult {
-    data: any[];
-    metadata: IGroupByRecord[];
-}
+export class DefaultSortingStrategy implements ISortingStrategy {
+    private static _instance: DefaultSortingStrategy = null;
 
-export class SortingStrategy implements ISortingStrategy {
-    public sort(data: any[], expressions: ISortingExpression[]): any[] {
-        return this.sortDataRecursive(data, expressions);
+    protected constructor() {}
+
+    public static instance(): DefaultSortingStrategy {
+        return this._instance || (this._instance = new this());
     }
-    public groupBy(data: any[], expressions: ISortingExpression[]): IGroupByResult {
-        const metadata: IGroupByRecord[] = [];
-        const grouping = this.groupDataRecursive(data, expressions, 0, null, metadata);
-        return {
-            data: grouping,
-            metadata: metadata
+
+    public sort(data: any[], fieldName: string, dir: SortingDirection, ignoreCase: boolean) {
+        const key = fieldName;
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1, obj2) => {
+            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase);
         };
+        return this.arraySort(data, cmpFunc);
     }
+
     public compareValues(a: any, b: any) {
         const an = (a === null || a === undefined);
         const bn = (b === null || b === undefined);
@@ -38,23 +38,30 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return a > b ? 1 : a < b ? -1 : 0;
     }
-    protected compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean, strategy: ISortingStrategy) {
+
+    protected compareObjects(obj1: object, obj2: object, key: string, reverse: number, ignoreCase: boolean) {
         let a = obj1[key];
         let b = obj2[key];
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
         }
-        if (strategy) {
-            return reverse * strategy.compareValues(a, b);
-        } else {
-            return reverse * this.compareValues(a, b);
-        }
+        return reverse * this.compareValues(a, b);
     }
-    protected arraySort<T>(data: T[], compareFn?): T[] {
+
+    protected arraySort(data: any[], compareFn?): any[] {
         return data.sort(compareFn);
     }
-    private groupedRecordsByExpression<T>(data: T[], index: number, expression: ISortingExpression): T[] {
+}
+
+export class IgxSorting {
+    public sort(data: any[], expressions: ISortingExpression[]): any[] {
+        return this.sortDataRecursive(data, expressions);
+    }
+
+    private groupedRecordsByExpression(data: any[],
+            index: number,
+            expression: IGroupingExpression): any[] {
         let i;
         let groupval;
         const res = [];
@@ -63,8 +70,9 @@ export class SortingStrategy implements ISortingStrategy {
         res.push(data[index]);
         groupval = data[index][key];
         index++;
+        const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (i = index; i < len; i++) {
-            if (this.compareValues(data[i][key], groupval) === 0) {
+            if (comparer(data[i][key], groupval) === 0) {
                 res.push(data[i]);
             } else {
                 break;
@@ -72,26 +80,12 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return res;
     }
-    private sortByFieldExpression<T>(data: T[], expression: ISortingExpression): T[] {
-
-        const key = expression.fieldName;
-        const ignoreCase = expression.ignoreCase ?
-            data[0] && (typeof data[0][key] === 'string' ||
-                data[0][key] === null ||
-                data[0][key] === undefined) :
-            false;
-        const reverse = (expression.dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => {
-            return this.compareObjects(obj1, obj2, key, reverse, ignoreCase, expression.strategy);
-        };
-        return this.arraySort(data, cmpFunc);
-    }
     private sortDataRecursive<T>(data: T[],
                                  expressions: ISortingExpression[],
                                  expressionIndex: number = 0): T[] {
         let i;
         let j;
-        let expr;
+        let expr: ISortingExpression;
         let gbData;
         let gbDataLen;
         const exprsLen = expressions.length;
@@ -101,7 +95,7 @@ export class SortingStrategy implements ISortingStrategy {
             return data;
         }
         expr = expressions[expressionIndex];
-        data = this.sortByFieldExpression(data, expr);
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }
@@ -119,7 +113,7 @@ export class SortingStrategy implements ISortingStrategy {
         }
         return data;
     }
-    private groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
+    protected groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
         parent: IGroupByRecord, metadata: IGroupByRecord[]): T[] {
         let i = 0;
         let result = [];
