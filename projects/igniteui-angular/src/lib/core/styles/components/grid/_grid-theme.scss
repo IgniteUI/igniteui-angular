@@ -52,6 +52,7 @@
 /// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
 /// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
+/// @param {Color} $tree-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -123,7 +124,9 @@
     $drop-area-text-color: null,
     $drop-area-icon-color: null,
     $drop-area-background: null,
-    $drop-area-on-drop-background: null
+    $drop-area-on-drop-background: null,
+
+    $tree-filtered-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -190,11 +193,15 @@
 
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
+        tree-filtered-text-color: igx-color($palette, grays, 500)
     );
 
     @if $preset {
         $default-theme: map-get($preset, map-get($default-theme, 'name'));
     }
+
+    $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($default-theme, 'row-selected-background')), .5);
+    $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($default-theme, 'cell-selected-background')), .5);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -260,7 +267,6 @@
         $group-row-background: $header-background
     }
 
-    ///////
     @if not($expand-icon-color) and $group-row-background {
         $expand-icon-color: text-contrast($group-row-background)
     }
@@ -276,8 +282,6 @@
     @if not($group-count-background) and $group-row-selected-background {
         $group-count-background: text-contrast($group-row-selected-background);
     }
-    ////////
-
 
     @if not($expand-all-icon-color) and $header-background {
         $expand-all-icon-color: rgba(text-contrast($header-background), .87);
@@ -379,6 +383,9 @@
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
+        tree-filtered-text-color: $tree-filtered-text-color,
+        tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
     ));
 }
 
@@ -409,8 +416,6 @@
     $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
-    // $grid-cell-padding: 0 rem(24px);
-    // $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
@@ -648,6 +653,14 @@
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
         }
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'row-selected-text-color');
+
+            &:hover {
+                color: --var($theme, 'row-selected-text-color');
+            }
+        }
     }
 
     %igx-grid__tr--edit {
@@ -693,6 +706,78 @@
         background: --var($theme, 'header-background') !important;
     }
 
+    %igx-grid-row--filtered {
+        %grid-cell-text {
+            color: --var($theme, 'tree-filtered-text-color');
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'tree-filtered-text-color');
+
+            &:hover {
+                color: --var($theme, 'tree-filtered-text-color');
+            }
+        }
+
+        %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
+            %igx-grid__tree-grouping-indicator {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+
+                &:hover {
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
+                }
+            }
+        }
+    }
+
+    %grid-row--selected--filtered {
+        %grid-cell-text {
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
+
+            &:hover {
+                color: --var($theme, 'tree-selected-filtered-row-text-color');
+            }
+        }
+
+        %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
+            %igx-grid__tree-grouping-indicator {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+
+                &:hover {
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
+                }
+            }
+        }
+    }
+
+    %igx-grid__tree-grouping-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        outline-style: none;
+        margin-right: rem(8);
+        cursor: pointer;
+
+        color: --var($theme, 'expand-icon-color');
+
+        &:hover {
+            color: --var($theme, 'expand-icon-hover-color')
+        }
+    }
+
     %grid-cell-display {
         position: relative;
         display: flex;
@@ -704,6 +789,10 @@
         line-height: $grid-cell-lh;
         color: inherit;
         text-align: left;
+    }
+
+    %igx-grid__td--tree-cell {
+        overflow: hidden;
     }
 
     %grid-cell-text {
@@ -728,6 +817,14 @@
         color: --var($theme, 'cell-selected-text-color');
         background-color: --var($theme, 'cell-selected-background') !important;
         border-bottom: 0;
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'cell-selected-text-color');
+
+            &:hover {
+                color: --var($theme, 'cell-selected-text-color');
+            }
+        }
     }
 
     %igx-grid__td--edited {
@@ -1367,6 +1464,10 @@
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
         }
 
+        %igx-grid__tree-cell--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'comfortable')};
+        }
+
         // COSY
         %igx-grid__row-indentation-cosy--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'cosy')} + #{$indicator-icon-width});
@@ -1376,12 +1477,20 @@
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
         }
 
+        %igx-grid__tree-cell-cosy--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'cosy')};
+        }
+
         // COMPACT
         %igx-grid__row-indentation-compact--level-#{$i} {
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'compact')} + #{$indicator-icon-width});
         }
 
         %igx-grid__group-row-compact--padding-level-#{$i} {
+            padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
+        }
+
+        %igx-grid__tree-cell-compact--padding-level-#{$i} {
             padding-left: #{$i*map-get($grid-grouping-indicator-padding, 'compact')};
         }
     }

@@ -104,14 +104,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
-        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
-        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
-        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
-        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
-        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
+        return this.resolveClasses();
     }
-
 
     /**
      * @hidden
@@ -147,10 +141,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     @HostBinding('attr.aria-selected')
     public isSelected: boolean;
 
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.aria-dirty')
+    /** @hidden */
     public get dirty(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);
         if (row) {
@@ -160,10 +151,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
         return false;
     }
 
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.aria-deleted')
+    /** @hidden */
     public get deleted(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);
         if (row) {
@@ -319,4 +307,17 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     notGroups(arr) {
         return arr.filter(c => !c.columnGroup);
     }
+
+    /**
+     * @hidden
+     */
+    protected resolveClasses(): string {
+        const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
+        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
+        const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
+        const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
+        return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
+    }
+
 }

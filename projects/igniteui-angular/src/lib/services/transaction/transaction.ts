@@ -30,6 +30,16 @@ export interface TransactionService {
     onStateUpdate?: EventEmitter<void>;
 
     /**
+     * @returns if there are any transactions in the Undo stack
+     */
+    canUndo: boolean;
+
+    /**
+     * @returns if there are any transactions in the Redo stack
+     */
+    canRedo: boolean;
+
+    /**
      * Adds provided  transaction with recordRef if any
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
@@ -53,7 +63,7 @@ export interface TransactionService {
     redo(): void;
 
     /**
-     * Returns aggregated state of all transactions including pending ones
+     * Returns aggregated changes from all transactions
      * @param mergeChanges If set to true will merge each state's value over relate recordRef
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record

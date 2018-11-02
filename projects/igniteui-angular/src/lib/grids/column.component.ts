@@ -31,6 +31,7 @@ import {
     IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
+import { SortingStrategy } from '../data-operations/sorting-strategy';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -481,6 +482,33 @@ export class IgxColumnComponent implements AfterContentInit {
         this._filters = classRef;
     }
     /**
+     * Gets the column `sortStrategy`.
+     * ```typescript
+     * let sortStrategy = this.column.sortStrategy'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get sortStrategy(): any {
+        return this._sortStrategy;
+    }
+    /**
+     * Sets the column `sortStrategy`.
+     * ```typescript
+     * this.column.sortStrategy = new CustomSortingStrategy().
+     *
+     * class CustomSortingStrategy extends SortingStrategy {
+     * ...
+     * }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set sortStrategy(classRef: any) {
+        this._sortStrategy = classRef;
+    }
+
+
+    /**
      * Gets the default minimum `width` of the column.
      * ```typescript
      * let defaultMinWidth =  this.column.defaultMinWidth;
@@ -726,6 +754,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _filters = null;
+    /**
+     *@hidden
+     */
+    protected _sortStrategy = new SortingStrategy();
     /**
      *@hidden
      */
@@ -1035,8 +1067,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.cells.length > 0) {
             let cellsContentWidths = [];
             if (this.cells[0].nativeElement.children.length > 0) {
-                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
-                    .map((child) => valToPxlsUsingRange(range, child)))));
+                this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
                 cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
             }

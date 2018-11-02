@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray } from '../core/utils';
-import { DataUtil } from '../data-operations/data-util';
+import { cloneArray, isEqual } from '../core/utils';
+import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -13,6 +13,8 @@ import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
+import { ISortingStrategy } from '../data-operations/sorting-strategy';
+import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -28,6 +30,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public register(grid: T) {
         this.state.set(grid.id, grid);
+        this.destroyMap.set(grid.id, new Subject<boolean>());
     }
 
     public unsubscribe(grid: T) {
@@ -43,12 +46,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.editRowState.delete(id);
+        this.destroyMap.delete(id);
     }
 
     public reset(oldId: string, newId: string) {
         const destroy = this.destroyMap.get(oldId);
         const summary = this.summaryCacheMap.get(oldId);
         const editCellState = this.editCellState.get(oldId);
+        const editRowState = this.editRowState.get(oldId);
         const grid = this.get(oldId);
 
         this.unset(oldId);
@@ -67,6 +72,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         if (editCellState) {
             this.editCellState.set(newId, editCellState);
+        }
+
+        if (editRowState) {
+            this.editRowState.set(newId, editRowState);
         }
     }
 
@@ -167,7 +176,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        return grid.primaryKey ? grid.data.findIndex(record => record[grid.primaryKey] === rowID) : grid.data.indexOf(rowID);
+        const data = this.get_all_data(id);
+        return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
     public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
@@ -219,7 +229,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public submit_value(gridId, detectChanges = true) {
+    public submit_value(gridId) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
@@ -235,9 +245,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 this.update_cell(gridId, editableCell.cellID.rowID, editableCell.cellID.columnID, editableCell.cell.editValue);
             }
             this.escape_editMode(gridId, editableCell.cellID);
-            if (detectChanges) {
-                this.get(gridId).cdr.detectChanges();
-            }
         }
     }
 
@@ -245,6 +252,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     //  and one without transaction
     public update_cell(id: string, rowID, columnID, editValue) {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -254,8 +262,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = grid.data[rowIndex][column.field];
-            rowData = grid.data[rowIndex];
+            oldValue = data[rowIndex][column.field];
+            rowData = data[rowIndex];
         }
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
@@ -285,13 +293,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (oldValue !== undefined && oldValue === args.newValue) { return; }
-
+            if (oldValue !== undefined && isEqual(oldValue, args.newValue)) { return; }
             const transaction: Transaction = { id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: args.newValue } };
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, rowData);
             } else {
-                grid.data[rowIndex][column.field] = args.newValue;
+                data[rowIndex][column.field] = args.newValue;
             }
             if (grid.primaryKey === column.field && isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -305,20 +312,21 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public update_row(value: any, id: string, rowID: any): void {
         const grid = this.get(id);
+        const data = this.get_all_data(id);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const index = this.get_row_index_in_data(id, rowID);
         if (index !== -1) {
             const args: IGridEditEventArgs = {
                 row: this.get_row_by_key(id, rowID),
                 cell: null,
-                currentValue: this.get(id).data[index],
+                currentValue: data[index],
                 newValue: value
             };
             grid.onEditDone.emit(args);
             if (grid.transactions.enabled) {
                 grid.transactions.add({id: rowID, newValue: args.newValue, type: TransactionType.UPDATE}, args.currentValue);
             } else {
-                grid.data[index] = args.newValue;
+                this.update_row_in_array(id, args.newValue, rowID, index);
             }
             if (isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -329,13 +337,18 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean): void {
+    protected update_row_in_array(id: string, value: any, rowID: any, index: number) {
+        const grid = this.get(id);
+        grid.data[index] = value;
+    }
+
+    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
         if (dir === SortingDirection.None) {
             this.remove_grouping_expression(id, fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-
-        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase });
+        strategy = strategy ? strategy : this.getSortStrategyPerColumn(id, fieldName);
+        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -346,6 +359,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
+            each.strategy = each.strategy ? each.strategy : this.getSortStrategyPerColumn(id, each.fieldName);
             this.prepare_sorting_expression([sortingState], each);
         }
 
@@ -493,5 +507,19 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }
 
     protected remove_grouping_expression(id, fieldName) {
-        }
+    }
+
+    public should_apply_number_style(column: IgxColumnComponent): boolean {
+        return column.dataType === DataType.Number;
+    }
+
+    public get_all_data(id: string): any[] {
+        const grid = this.get(id);
+        return grid.data;
+    }
+
+    protected getSortStrategyPerColumn(id: string, fieldName: string) {
+        return this.get_column_by_name(this.get(id).id, fieldName) ?
+            this.get_column_by_name(id, fieldName).sortStrategy : undefined;
+    }
 }
