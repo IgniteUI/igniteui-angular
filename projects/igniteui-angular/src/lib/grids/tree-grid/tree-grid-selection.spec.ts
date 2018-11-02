@@ -35,7 +35,6 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
             await wait();
             fix.detectChanges();
         });
@@ -203,7 +202,6 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
             await wait();
             fix.detectChanges();
         });
