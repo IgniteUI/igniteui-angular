@@ -205,7 +205,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
      */
     public clearFiltering(): void {
         this.filteringService.clearFilter(this.column.field);
-        this.visibleExpressionsList = [];
+        this.cdr.detectChanges();
     }
 
     /**
