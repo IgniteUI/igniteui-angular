@@ -12,14 +12,13 @@
     ViewChild
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
-
+import { first } from 'rxjs/operators';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -707,6 +706,21 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
+        if (event.altKey) {
+            if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
+                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                if (collapse) {
+                    (this.gridAPI as any).trigger_row_expansion_toggle(
+                        this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                } else if (expand) {
+                    (this.gridAPI as any).trigger_row_expansion_toggle(
+                        this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                }
+            return;
+            }
+        }
+
         const args = {cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
@@ -880,5 +894,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
                    .map((child) => valToPxlsUsingRange(range, child)));
+    }
+
+    private isToggleKey(key) {
+        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
     }
 }

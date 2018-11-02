@@ -47,7 +47,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [ IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) } ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {

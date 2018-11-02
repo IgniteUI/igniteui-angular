@@ -2034,7 +2034,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
-        if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
+        if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
             event.preventDefault();
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
