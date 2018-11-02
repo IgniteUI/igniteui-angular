@@ -172,7 +172,7 @@ describe('IgxGrid - CRUD operations', () => {
 
         const cell = grid.getCellByColumn(0, 'index');
         const args: IGridEditEventArgs = {
-            rowID: cell.row,
+            rowID: cell.cellID.rowID,
             cellID: cell.cellID,
             oldValue: 1,
             newValue: 200,

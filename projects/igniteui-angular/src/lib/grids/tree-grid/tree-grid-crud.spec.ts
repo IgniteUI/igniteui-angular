@@ -312,7 +312,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 3, 10);
 
                 // Update row on level 1
-                const oldRow = treeGrid.getRowByKey(147).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(147).rowData);
                 const newRow = {
                     ID: 999,
                     Name: 'New Name',
@@ -341,7 +341,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 3, 10);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(299).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(299).rowData);
                 const newRow = {
                     ID: 888,
                     Name: 'New Name',
@@ -370,7 +370,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 3, 10);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(299).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(299).rowData);
                 const newRow = {
                     ID: 888,
                     Name: 'New Name',
@@ -468,7 +468,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
 
                 // Update row on level 1
-                const oldRow = treeGrid.getRowByKey(1).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(1).rowData);
                 const newRow = {
                     ID: 1,
                     ParentID: -1,
@@ -500,7 +500,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // Second visible row is on level 2 (childrow)
 
                 // Update row on level 1
-                const oldRow = treeGrid.getRowByKey(1).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(1).rowData);
                 const newRow = {
                     ID: 999, // Original ID is 1 and the new one is 999, which will transform its child rows into root rows.
                     ParentID: -1,
@@ -531,7 +531,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 8, 8);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).rowData);
                 const newRow = {
                     ID: 888,
                     ParentID: 2,
@@ -560,7 +560,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyRowsCount(fix, 8, 8);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).rowData);
                 const newRow = {
                     ID: 888,
                     ParentID: 2,
@@ -590,7 +590,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
 
                 // Update row on level 3
-                const oldRow = treeGrid.getRowByKey(7).rowData;
+                const oldRow = Object.assign({}, treeGrid.getRowByKey(7).rowData);
                 const newRow = {
                     ID: 888,
                     ParentID: -1, // Original ID is 2 and the new one is -1, which will make the row a root row.
