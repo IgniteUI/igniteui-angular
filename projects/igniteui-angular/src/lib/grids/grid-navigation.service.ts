@@ -314,7 +314,7 @@ export class IgxGridNavigationService {
                     if (tag === 'igx-grid-row' || tag === 'igx-tree-grid-row') {
                         rowElement = this.getRowByIndex(currentRowIndex);
                     } else {
-                        rowElement = rowElement = this.grid.nativeElement.querySelector(
+                        rowElement = this.grid.nativeElement.querySelector(
                             `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
                     }
                     this.focusNextElement(rowElement, visibleColumnIndex);

@@ -23,9 +23,9 @@ import { first } from 'rxjs/operators';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-                private selection: IgxSelectionAPIService,
-                public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+        private selection: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -138,7 +138,7 @@ export class IgxGridGroupByRowComponent {
     @HostBinding('class')
     get styleClasses(): string {
         return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
-        (this.focused ? ` ${this.defaultCssClass}--active` : '');
+            (this.focused ? ` ${this.defaultCssClass}--active` : '');
     }
 
     /**
@@ -164,11 +164,9 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     public toggle(key?) {
-        const shouldExpand = (!key && !this.expanded) || (key && !this.expanded && (key === 'arrowleft' ||  key === 'left'));
-        if (shouldExpand) {
-            this.handleToggleScroll();
-        } else {
-            this.handleToggleScroll();
+        const shouldExpand = (!key && !this.expanded) || (key && !this.expanded && (key === 'arrowleft' || key === 'left'));
+        this.handleToggleScroll();
+        if (!shouldExpand) {
             this.grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
         }
     }
@@ -190,14 +188,14 @@ export class IgxGridGroupByRowComponent {
             this.toggle(key);
             return;
         }
-        const args = {cell: null, groupRow: this, event: event, cancel: false };
+        const args = { cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
             return;
         }
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
-        this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
+            this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':
@@ -244,7 +242,7 @@ export class IgxGridGroupByRowComponent {
 
     private isKeySupportedInGroupRow(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'tab'].indexOf(key) !== -1;
+            'tab'].indexOf(key) !== -1;
     }
 
     private isToggleKey(key) {
