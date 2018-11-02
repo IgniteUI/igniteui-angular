@@ -305,8 +305,8 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid = fix.componentInstance.treeGrid;
             });
 
-            it('should support updating a root row through the treeGrid API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+            it('should support updating a root row through the treeGrid API', fakeAsync(() => {
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'John Winchester');
                 verifyRowsCount(fix, 3, 10);
@@ -322,20 +322,20 @@ describe('IgxTreeGrid - CRUD', () => {
                 };
                 treeGrid.updateRow(newRow, 147);
                 fix.detectChanges();
-
+                tick();
                 const rowComponent = treeGrid.getRowByKey(999);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 147,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 4);
-            });
+            }));
 
             it('should support updating a child row through the treeGrid API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
@@ -353,18 +353,18 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(888);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: treeGrid.getRowByKey(299).rowID,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
             });
 
             it('should support updating a child row through the rowObject API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
@@ -381,12 +381,11 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid.getRowByKey(299).update(newRow);
                 fix.detectChanges();
 
-                const rowComponent = treeGrid.getRowByKey(888);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 299,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
@@ -412,10 +411,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: cellComponent.row,
-                    cell: cellComponent,
-                    currentValue: oldCellValue,
-                    newValue: newCellValue
+                    rowID: cellComponent.cellID.rowID,
+                    cellID: cellComponent.cellID,
+                    oldValue: oldCellValue,
+                    newValue: newCellValue,
+                    cancel: false
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -441,10 +441,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 const cellComponent = treeGrid.getCellByKey(299, 'Age');
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: cellComponent.row,
-                    cell: cellComponent,
-                    currentValue: oldCellValue,
-                    newValue: newCellValue
+                    rowID: cellComponent.cellID.rowID,
+                    cellID: cellComponent.cellID,
+                    oldValue: oldCellValue,
+                    newValue: newCellValue,
+                    cancel: false
                 });
                 verifyCellValue(fix, 6, 'Age', '18');
                 verifyRowsCount(fix, 3, 10);
@@ -460,7 +461,7 @@ describe('IgxTreeGrid - CRUD', () => {
             });
 
             it('should support updating a root row through the treeGrid API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
@@ -479,11 +480,11 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(1);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 1,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -491,7 +492,7 @@ describe('IgxTreeGrid - CRUD', () => {
             });
 
             it('should support updating a root row by changing its ID (its children should become root rows)', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 0, 'Name', 'Casey Houston');
                 verifyRowsCount(fix, 8, 8);
@@ -511,11 +512,11 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(999);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 1,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 0, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
@@ -524,7 +525,7 @@ describe('IgxTreeGrid - CRUD', () => {
             });
 
             it('should support updating a child row through the treeGrid API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
@@ -542,18 +543,18 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(888);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 7,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
             });
 
             it('should support updating a child row through the rowObject API', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
@@ -570,19 +571,18 @@ describe('IgxTreeGrid - CRUD', () => {
                 treeGrid.getRowByKey(7).update(newRow);
                 fix.detectChanges();
 
-                const rowComponent = treeGrid.getRowByKey(888);
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 7,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 3, 'Name', 'New Name');
                 verifyRowsCount(fix, 8, 8);
             });
 
             it('should support updating a child row by changing its original parentID', () => {
-                spyOn(treeGrid.onCellEdit, 'emit').and.callThrough();
+                spyOn(treeGrid.onRowEdit, 'emit').and.callThrough();
 
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyCellValue(fix, 5, 'Name', 'Erma Walsh');
@@ -602,11 +602,11 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
 
                 const rowComponent = treeGrid.getRowByKey(4); // original component: Name = 'Jack Simon'
-                expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: rowComponent,
-                    cell: null,
-                    currentValue: oldRow,
-                    newValue: newRow
+                expect(treeGrid.onRowEdit.emit).toHaveBeenCalledWith({
+                    rowID: 7,
+                    oldValue: oldRow,
+                    newValue: newRow,
+                    cancel: false
                 });
                 verifyCellValue(fix, 3, 'Name', 'Jack Simon');
                 verifyCellValue(fix, 5, 'Name', 'New Name');
@@ -634,10 +634,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: cellComponent.row,
-                    cell: cellComponent,
-                    currentValue: oldCellValue,
-                    newValue: newCellValue
+                    rowID: cellComponent.cellID.rowID,
+                    cellID: cellComponent.cellID,
+                    oldValue: oldCellValue,
+                    newValue: newCellValue,
+                    cancel: false
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
@@ -664,10 +665,11 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 const cellComponent = treeGrid.getCellByKey(7, 'Name');
                 expect(treeGrid.onCellEdit.emit).toHaveBeenCalledWith({
-                    row: cellComponent.row,
-                    cell: cellComponent,
-                    currentValue: oldCellValue,
-                    newValue: newCellValue
+                    rowID: cellComponent.cellID.rowID,
+                    cellID: cellComponent.cellID,
+                    oldValue: oldCellValue,
+                    newValue: newCellValue,
+                    cancel: false
                 });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { cloneArray, isEqual } from '../core/utils';
+import { cloneArray, isEqual, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -285,16 +285,18 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const column = grid.columnList.toArray()[columnID];
         columnID = columnID !== undefined && columnID !== null ? columnID : null;
         let cellObj;
-        if ((editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID)) {
-            cellObj = editableCell.cell;
-        } else {
-            cellObj = column ? grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID) : null;
+        if (columnID !== null) {
+            if ((editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID)) {
+                cellObj = editableCell;
+            } else {
+                cellObj = grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
+            }
         }
         let rowIndex = this.get_row_index_in_data(id, rowID);
         let oldValue: any;
         let rowData: any;
         if (rowIndex !== -1) {
-            oldValue = columnID ? data[rowIndex][column.field] : null;
+            oldValue = columnID !== null ? data[rowIndex][column.field] : null;
             rowData = data[rowIndex];
         }
 
@@ -305,7 +307,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
             if (rowIndex !== -1) {
-                oldValue = columnID ? dataWithTransactions[rowIndex][column.field] : null;
+                oldValue = columnID !== null ? dataWithTransactions[rowIndex][column.field] : null;
                 rowData = dataWithTransactions[rowIndex];
             }
         }
@@ -317,7 +319,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         };
         if (columnID !== null) {
             Object.assign(args, {
-                cellID: cellObj
+                cellID: cellObj.cellID
             });
         }
         return {
@@ -361,7 +363,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled) {
                 grid.transactions.add(transaction, currentGridEditState.rowData);
             } else {
-                data[rowIndex][column.field] = emittedArgs.newValue;
+                const rowValue = this.get_all_data(id)[rowIndex];
+                mergeObjects(rowValue, {[column.field]: emittedArgs.newValue });
             }
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -400,7 +403,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (grid.transactions.enabled && emitArgs.newValue !== null) {
                 grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
             } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
-                data[index] = emitArgs.newValue;
+                Object.assign(data[index], emitArgs.newValue);
             }
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
