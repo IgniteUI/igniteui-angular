@@ -112,7 +112,25 @@ export const enum KEYCODES {
     UP_ARROW = 38,
     RIGHT_ARROW = 39,
     DOWN_ARROW = 40,
-    F2 = 113
+    F2 = 113,
+    TAB = 9
+}
+
+/**
+ *@hidden
+ */
+export const enum KEYS {
+    ENTER = 'Enter',
+    SPACE = ' ',
+    SPACE_IE = 'Spacebar',
+    ESCAPE = 'Escape',
+    ESCAPE_IE = 'Esc',
+    LEFT_ARROW = 'ArrowLeft',
+    UP_ARROW = 'ArrowUp',
+    RIGHT_ARROW = 'ArrowRight',
+    DOWN_ARROW = 'ArrowDown',
+    F2 = 'F2',
+    TAB = 'Tab'
 }
 
 /**

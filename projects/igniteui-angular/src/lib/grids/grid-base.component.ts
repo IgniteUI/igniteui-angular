@@ -67,6 +67,8 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -143,7 +145,6 @@ export interface IColumnMovingEventArgs {
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
-    cancel: boolean;
 }
 
 export interface IFocusChangeEventArgs {
@@ -242,11 +243,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 }
             }
 
-            this._filteringExpressionsTree = value;
-            this._pipeTrigger++;
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._filteringExpressionsTree = filteringExpressionTreeClone;
+
+            this.filteringService.refreshExpressions();
             this.clearSummaryCache();
             this.cdr.markForCheck();
-            this.cdr.detectChanges();
         }
     }
 
@@ -724,6 +728,36 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public columnPinningTitle = '';
 
     /**
+     * Returns if the filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowFiltering;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    get allowFiltering() {
+        return this._allowFiltering;
+    }
+
+    /**
+     * Sets if the filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set allowFiltering(value) {
+        if (this._allowFiltering !== value) {
+            this._allowFiltering = value;
+            this.filteringService.registerSVGIcons();
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+            }
+        }
+    }
+
+    /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1172,6 +1206,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
     public headerList: QueryList<IgxGridHeaderComponent>;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridFilteringCellComponent, { read: IgxGridFilteringCellComponent })
+    public filterCellList: QueryList<IgxGridFilteringCellComponent>;
 
     @ViewChildren('row')
     private _rowList: QueryList<IgxGridRowComponent>;
@@ -1983,6 +2023,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected _columnPinning = false;
+    protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -2064,7 +2105,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         private resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
-        private navigation: IgxGridNavigationService) {
+        private navigation: IgxGridNavigationService,
+        public filteringService: IgxFilteringService) {
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -2077,6 +2119,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public ngOnInit() {
         this.gridAPI.register(this);
         this.navigation.grid = this;
+        this.filteringService.gridId = this.id;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -2678,6 +2721,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
+
+        const args = {
+            source: column,
+            target: dropTarget
+        };
+
+        this.onColumnMovingEnd.emit(args);
     }
 
     /**
@@ -3351,7 +3401,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
         }
 
         if (!this._height) {
