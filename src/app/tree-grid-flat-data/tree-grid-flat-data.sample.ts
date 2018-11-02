@@ -94,4 +94,12 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public commit() {
         this.grid1.transactions.commit(this.data);
     }
+
+    public undo() {
+        this.grid1.transactions.undo();
+    }
+
+    public redo() {
+        this.grid1.transactions.redo();
+    }
 }

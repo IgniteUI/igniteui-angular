@@ -2,11 +2,10 @@ import { HierarchicalTransaction, HierarchicalState, TransactionType, Hierarchic
 import { Injectable } from '@angular/core';
 import { IgxTransactionService } from '..';
 
+/** @experimental @hidden */
 @Injectable()
 export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction, S extends HierarchicalState>
     extends IgxTransactionService<T, S> {
-
-    private _hierarchicalTransactionNodes: Map<any, HierarchicalTransactionNode> = new Map();
 
     public aggregatedState(mergeChanges: boolean): T[] {
         const result: T[] = [];
@@ -18,16 +17,18 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         return result;
     }
 
-    public addHierarchicalTransactionNode(id: any, parentId?: any) {
-        if (!this._hierarchicalTransactionNodes.has(id)) {
-            const node = { id: id, childNodes: [], parentId: parentId };
-            this.updateHierarchy(node);
-            this._hierarchicalTransactionNodes.set(id, node);
+    public commit (data: any[], cascadeOnDelete?: boolean, childDataKey?: any, foreignKey?: any): void {
+        if (childDataKey) {
+            if (cascadeOnDelete) {
+                const deletedStates = this.aggregatedState(true).filter(t => t.type === TransactionType.DELETE);
+                for (const state of deletedStates) {
+                    this.deleteChildren(state);
+                }
+                super.commit(data);
+            }
         }
-    }
 
-    public getHierarchicalTransactionNode(id: any): HierarchicalTransactionNode {
-        return this._hierarchicalTransactionNodes.get(id);
+        this.clear();
     }
 
     protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
@@ -36,21 +37,19 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         if (currentState && transaction.type === TransactionType.ADD) {
             currentState.parentId = transaction.parentId;
         }
-        if (transaction.type === TransactionType.DELETE) {
-            this.clearStateForDeletedItems(this._hierarchicalTransactionNodes.get(transaction.id));
-        }
     }
 
-    private updateHierarchy(node: HierarchicalTransactionNode) {
-        this._hierarchicalTransactionNodes.forEach((currentNode: HierarchicalTransactionNode, id: any) => {
-            if (currentNode.id === node.parentId) {
-                currentNode.childNodes.push(node);
-            }
-
-            if (currentNode.parentId === node.id) {
-                node.childNodes.push(currentNode);
-            }
-        });
+    private deleteChildren(state: HierarchicalTransaction) {
+        if (!this._states.get(state.id)) {
+            this._states.set(state.id,
+                {
+                    value: state.newValue,
+                    recordRef: null,
+                    type: TransactionType.DELETE,
+                    parentId: state.parentId
+                } as S);
+        }
+        this._states.get(state.id).type = TransactionType.DELETE;
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
@@ -58,18 +57,6 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         for (const prop of Object.keys(obj)) {
             if (Array.isArray(obj[prop])) {
                 delete obj[prop];
-            }
-        }
-    }
-
-    private clearStateForDeletedItems(node: HierarchicalTransactionNode) {
-        if (!node) {
-            return;
-        }
-        for (const childNode of node.childNodes) {
-            if (this._states.get(childNode.id)) {
-                this._states.delete(childNode.id);
-                this.clearStateForDeletedItems(childNode);
             }
         }
     }

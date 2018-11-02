@@ -249,6 +249,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         return result;
     }
 }
+/** @hidden */
 @Pipe({
     name: 'treeGridTransaction',
     pure: true
@@ -282,7 +283,6 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     cloneHierarchicalArray(collection, childDataKey),
                     grid.transactions.aggregatedState(true),
                     childDataKey,
-                    grid.transactions,
                     grid.primaryKey
                 );
             }

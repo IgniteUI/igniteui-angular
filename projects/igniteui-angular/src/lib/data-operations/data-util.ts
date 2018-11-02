@@ -231,22 +231,17 @@ export class DataUtil {
     }
 
     // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
+    /** @experimental @hidden */
     public static mergeHierarchicalTransactions(
         data: any[],
         transactions: HierarchicalTransaction[],
         childDataKey: any,
-        transactionService: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         primaryKey?: any,
         parentKey?: any): any[] {
 
         for (let index = 0; index < data.length; index++) {
             const dataItem = data[index];
             const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
-
-            if (!transactionService.getHierarchicalTransactionNode(rowId)) {
-                transactionService.addHierarchicalTransactionNode(rowId, parentKey);
-            }
-
             const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
             const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
             if (updateTransaction || addedTransactions.length > 0) {
@@ -265,7 +260,6 @@ export class DataUtil {
                     data[index][childDataKey],
                     transactions,
                     childDataKey,
-                    transactionService,
                     primaryKey,
                     rowId
                 );

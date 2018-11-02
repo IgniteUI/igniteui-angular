@@ -77,6 +77,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     /**
      * Get transactions service for the grid.
+     * @experimental @hidden
      */
     get transactions(): IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
         return this._transactions;
