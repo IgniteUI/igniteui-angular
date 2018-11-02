@@ -2742,24 +2742,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         this.onRowDeleted.emit({ data: data[index] });
 
-        //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it's state to DELETE
-        if (index !== -1) {
-            if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, data[index]);
-            } else {
-                this.deleteRowFromData(rowId, index);
-            }
-        } else {
-            this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
-        }
-
-        if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowId)) {
+        //  first deselect row then delete it
+        if (this.rowSelectable && this.selection.is_item_selected(this.id, rowId)) {
             this.deselectRows([rowId]);
         } else {
             this.checkHeaderCheckboxStatus();
         }
+
+        this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
 
@@ -2773,7 +2763,19 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected deleteRowFromData(rowID: any, index: number) {
-        this.data.splice(index, 1);
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        if (index !== -1) {
+            if (this.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                this.transactions.add(transaction, this.data[index]);
+            } else {
+                this.data.splice(index, 1);
+            }
+        } else {
+            const state: State = this.transactions.getState(rowID);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+        }
     }
 
     /**
@@ -3717,7 +3719,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.selectRows([1,2,5], true);
      * ```
      * @param rowIDs
-     * @param clearCurrentSelection if true clears the curren selection
+     * @param clearCurrentSelection if true clears the current selection
      * @memberof IgxGridComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {

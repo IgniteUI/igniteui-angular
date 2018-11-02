@@ -350,7 +350,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
-                if (treeRecord.children && treeRecord.children.length > 0) {
+                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
                         this.deleteRowById(child.rowID);

@@ -13,6 +13,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    private nextRow = 1;
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
@@ -426,10 +427,11 @@ export class TreeGridSampleComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    public addRowToFRANS() {
-        this.grid1.addRow(
+    public addChildRow() {
+        const selectedRowId = this.grid1.selectedRows()[0];
+        this.grid1.addRow (
             {
-                'ID': 'WNVKO',
+                'ID': `ADD${this.nextRow++}`,
                 'CompanyName': 'Around the Horn',
                 'ContactName': 'Thomas Hardy',
                 'ContactTitle': 'Sales Representative',
@@ -441,6 +443,11 @@ export class TreeGridSampleComponent implements OnInit {
                 'Phone': '(171) 555-7788',
                 'Fax': '(171) 555-6750'
             },
-            'FRANS');
+            selectedRowId);
     }
+
+    public deleteRow() {
+        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
+    }
+
 }
