@@ -1611,6 +1611,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowEditable = false;
+    private _currentRowState: any;
+    /**
+     * @hidden
+    */
+    public get currentRowState(): any {
+        return this._currentRowState;
+    }
 
     /**
      * Provides access to the `IgxToolbarComponent`.
@@ -4291,6 +4298,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         }
         const rowState = { rowID: cell.rowID, rowIndex: cell.rowIndex };
         this.gridAPI.set_edit_row_state(this.id, rowState);
+        this._currentRowState = this.transactions.getAggregatedValue(args.rowID, true);
         this.transactions.startPending();
         this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
@@ -4358,28 +4366,33 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
 
-    private endRowTransaction(commit: boolean, row: any, rowObject: IgxRowComponent<IgxGridBaseComponent>) {
-        const valueInTransactions = this.transactions.getAggregatedValue(row.rowID, true);
-        const lastCommitedValue = // Last commited value (w/o pending)
-            this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : null;
-        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, row.rowID);  // Get actual index in data
+    private endRowTransaction(commit: boolean, rowID: any, rowObject: IgxRowComponent<IgxGridBaseComponent>) {
+        const valueInTransactions = this.transactions.getAggregatedValue(rowID, true);
+        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowID);  // Get actual index in data
         const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data(this.id)[rowIndex];
-        let oldValue = Object.assign({}, this.data[rowIndex]);
-        if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
-        }
-        const currentGridState = this.gridAPI.create_grid_edit_args(this.id, row,
+        const oldValue =  Object.assign(
+            {},
+            this.gridAPI.get_all_data(this.id)[rowIndex],
+            this._currentRowState
+        );
+        // if (this.transactions.enabled) {
+        // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
+        //     const lastCommitedValue = // Last commited value (w/o pending)
+        //         this.transactions.getState(rowID) ? Object.assign({}, this.transactions.getState(rowID).value) : null;
+        //     oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
+        // }
+        const currentGridState = this.gridAPI.create_grid_edit_args(this.id, rowID,
             null,
             newValue);
         const emitArgs = currentGridState.args;
         Object.assign(emitArgs, {
             oldValue,
-            row,
+            rowID,
         });
         if (!commit) {
             this.onRowEditCancel.emit(emitArgs);
         } else {
-            this.gridAPI.update_row(emitArgs.newValue, this.id, row.rowID, currentGridState);
+            this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
         }
         if (emitArgs.cancel) {
             this.transactions.startPending();

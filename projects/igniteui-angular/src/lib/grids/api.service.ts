@@ -317,7 +317,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 newValue: editValue,
                 cancel: false
         };
-        if (columnID !== null) {
+        if (cellObj) {
             Object.assign(args, {
                 cellID: cellObj.cellID
             });
@@ -386,10 +386,16 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const currentGridState = gridState ? gridState : this.create_grid_edit_args(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
-        let oldValue = data[index];
-        if (grid.transactions.enabled) {
-            const valueInTransactions = grid.transactions.getState(rowID);
-            oldValue = valueInTransactions ? Object.assign({}, oldValue, valueInTransactions) : oldValue;
+        const currentRowInEditMode = this.get_edit_row_state(id);
+        let oldValue = Object.assign({}, data[index]);
+        if (grid.currentRowState && grid.currentRowState[grid.primaryKey] === rowID
+            || currentRowInEditMode && currentRowInEditMode.rowID === rowID) {
+            oldValue = Object.assign(oldValue, grid.currentRowState);
+        } else if (grid.transactions.enabled) {
+            // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
+            const lastCommitedValue = // Last commited value (w/o pending)
+                grid.transactions.getState(rowID) ? Object.assign({}, grid.transactions.getState(rowID).value) : null;
+            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
         }
         Object.assign(emitArgs, { oldValue, rowID});
         if (index !== -1) {
@@ -397,7 +403,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (emitArgs.cancel) {
                 return;
             }
-            if (this.get_edit_row_state(id)) {
+            if (currentRowInEditMode) {
                 grid.transactions.endPending(false);
             }
             if (grid.transactions.enabled && emitArgs.newValue !== null) {
