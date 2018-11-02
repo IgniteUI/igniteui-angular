@@ -272,7 +272,9 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     cloneHierarchicalArray(collection, childDataKey),
                     grid.transactions.aggregatedState(true),
                     childDataKey,
-                    grid.primaryKey);
+                    grid.transactions,
+                    grid.primaryKey
+                );
             }
         }
 

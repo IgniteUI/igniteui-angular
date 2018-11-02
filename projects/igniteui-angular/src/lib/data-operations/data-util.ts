@@ -1,26 +1,13 @@
-import {
-    IgxFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxStringFilteringOperand
-} from './filtering-condition';
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
-import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
-
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy, IGroupByResult, TreeGridSortingStrategy } from './sorting-strategy';
-
+import { IGroupByResult, TreeGridSortingStrategy } from './sorting-strategy';
 import { IPagingState, PagingError } from './paging-state.interface';
-
 import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
-import { mergeObjects, cloneArray, cloneValue } from '../core/utils';
+import { Transaction, TransactionType, HierarchicalTransaction, IgxHierarchicalTransactionService, HierarchicalState } from '../services';
+import { mergeObjects, cloneValue } from '../core/utils';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
 export enum DataType {
@@ -244,11 +231,21 @@ export class DataUtil {
 
     // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
     public static mergeHierarchicalTransactions(
-        data: any[], transactions: HierarchicalTransaction[], childDataKey: any, primaryKey?: any): any[] {
+        data: any[],
+        transactions: HierarchicalTransaction[],
+        childDataKey: any,
+        transactionService: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
+        primaryKey?: any,
+        parentKey?: any): any[] {
 
         for (let index = 0; index < data.length; index++) {
             const dataItem = data[index];
             const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
+
+            if (!transactionService.getHierarchicalTransactionNode(rowId)) {
+                transactionService.addHierarchicalTransactionNode(rowId, parentKey);
+            }
+
             const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
             const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
             if (updateTransaction || addedTransactions.length > 0) {
@@ -267,7 +264,9 @@ export class DataUtil {
                     data[index][childDataKey],
                     transactions,
                     childDataKey,
-                    primaryKey
+                    transactionService,
+                    primaryKey,
+                    rowId
                 );
             }
         }

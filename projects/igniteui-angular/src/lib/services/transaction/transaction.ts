@@ -26,6 +26,12 @@ export interface HierarchicalState extends State {
     parentId: any;
 }
 
+export interface HierarchicalTransactionNode {
+    id: any;
+    parentId?: any;
+    childNodes: HierarchicalTransactionNode[];
+}
+
 export interface TransactionService <T extends Transaction, S extends State> {
     /**
      * Returns whether transaction is enabled for this service
