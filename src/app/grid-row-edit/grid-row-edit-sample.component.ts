@@ -18,6 +18,34 @@ export class GridRowEditSampleComponent {
     private update_value;
     private update_row;
     private update_column;
+    private cssRed = `color: #aa2222;`;
+    private cssGreen = `color: #22aa22;`;
+    private cssBlue = `color: #2222aa;`;
+    private cssBig = `font-size: 16px; font-weight: 800;`;
+    public events = {
+        cell: {
+            done: true,
+            enter: true,
+            cancel: true
+        },
+        row: {
+            done: true,
+            enter: true,
+            cancel: true
+        }
+    };
+    public cancel = {
+        cell: {
+            done: false,
+            enter: false,
+            cancel: false
+        },
+        row: {
+            done: false,
+            enter: false,
+            cancel: false
+        }
+    };
     public currentActiveGrid: {
         id: string,
         transactions: any[]
@@ -123,12 +151,50 @@ export class GridRowEditSampleComponent {
         return null;
     }
 
+    rowEditEnter(evt) {
+        if (this.events.row.enter) {
+            console.log('%cRow' + '%c Edit ENTER', this.cssBig, this.cssBlue);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.row.enter;
+    }
     rowEditDone(evt) {
-        console.log('Row edit done:\n', evt);
+        if (this.events.row.done) {
+            console.log('%cRow' + '%c Edit DONE', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.row.done;
     }
 
     rowEditCancel(evt) {
-        console.log('Row edit cancel:\n', evt);
+        if (this.events.row.cancel) {
+            console.log('%cRow' + '%c Edit CANCEL', this.cssBig, this.cssRed);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.row.cancel;
+    }
+
+    cellEnterEditMode(evt) {
+        if (this.events.cell.enter) {
+            console.log('%cCell' + '%c Edit ENTER', this.cssBig, this.cssBlue);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.cell.enter;
+    }
+    cellEditDone(evt) {
+        if (this.events.cell.done) {
+            console.log('%cCell' + '%c Edit DONE', this.cssBig, this.cssGreen);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.cell.done;
+    }
+
+    cellEditCancel(evt) {
+        if (this.events.cell.cancel) {
+            console.log('%cCell' + '%c Edit CANCEL', this.cssBig, this.cssRed);
+            console.log(evt);
+        }
+        evt.cancel = this.cancel.cell.cancel;
     }
 
     private generatePerformanceData(rowsCount: number = 100000, colsCount: number = 300) {

@@ -258,8 +258,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     public update(value: any) {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
         if (editableCell && editableCell.cellID.rowID === this.rowID) {
-            this.grid.endRowEdit(true);
-            this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
+            this.grid.endEdit(false);
         }
         this.gridAPI.update_row(value, this.gridID, this.rowID);
         this.cdr.markForCheck();
