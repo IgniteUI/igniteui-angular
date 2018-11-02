@@ -61,6 +61,7 @@ export * from './lib/combo/combo.component';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/drop-down.component';
+export * from './lib/drop-down/drop-down-item.component';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/icon/index';
