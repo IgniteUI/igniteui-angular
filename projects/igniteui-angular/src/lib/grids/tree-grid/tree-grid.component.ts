@@ -15,18 +15,16 @@ import {
     forwardRef
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { cloneArray, mergeObjects } from '../../core/utils';
-import { DisplayDensity } from '../../core/displayDensity';
-import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService, HierarchicalTransaction, TransactionType, HierarchicalState } from '../../services/transaction/transaction';
+import { TransactionService, HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxHierarchicalTransactionService } from '../../services';
+import { mergeObjects } from '../../core/utils';
+import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 
 let NEXT_ID = 0;
 
@@ -51,8 +49,8 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [{ provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-    { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }]
+    providers: [ { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) } ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
@@ -90,23 +88,43 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public flatData: any[];
 
     /**
-    * Returns an array of the root level `ITreeGridRecord`s.
-    */
+     * Returns an array of the root level `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the root record with index=2
+     * const states = this.grid.rootRecords[2];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public rootRecords: ITreeGridRecord[];
 
     /**
-    * Returns a map of all `ITreeGridRecord`s.
-    */
+     * Returns a map of all `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the record with primaryKey=2
+     * const states = this.grid.records.get(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
-    * Returns an array of processed root `ITreeGridRecord`s.
-    */
+     * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed root record with index=2
+     * const states = this.grid.processedRootRecords[2];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public processedRootRecords: ITreeGridRecord[];
 
     /**
-    * Returns a map of all processed `ITreeGridRecord`s.
-    */
+     * Returns a map of all processed (filtered and sorted) `ITreeGridRecord`s.
+     * ```typescript
+     * // gets the processed record with primaryKey=2
+     * const states = this.grid.processedRecords.get(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public processedRecords: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
     /**
@@ -161,7 +179,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.cdr.markForCheck();
     }
 
-    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+    private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
 
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
@@ -175,6 +193,15 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return this._expansionStates;
     }
 
+    /**
+     * Sets a list of key-value pairs [row ID, expansion state].
+     * ```typescript
+     * const states = new Map<any, boolean>();
+     * states.set(1, true);
+     * this.grid.expansionStates = states;
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
         this.cdr.detectChanges();
@@ -216,7 +243,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService) {
-        super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -232,12 +259,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return false;
     }
 
-    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
+    private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
         mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
 
-            mapCloned.set(key, value);
+          mapCloned.set(key, value);
         });
 
         return mapCloned;
@@ -246,6 +273,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Expands the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be expanded.
+     * ```typescript
+     * this.grid.expandRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public expandRow(rowID: any) {
         this._gridAPI.expand_row(this.id, rowID);
@@ -254,6 +285,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Collapses the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be collapsed.
+     * ```typescript
+     * this.grid.collapseRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public collapseRow(rowID: any) {
         this._gridAPI.collapse_row(this.id, rowID);
@@ -262,6 +297,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * Toggles the expansion state of the `IgxTreeGridRowComponent` with the specified rowID.
      * @param rowID The identifier of the row to be toggled.
+     * ```typescript
+     * this.grid.toggleRow(2);
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public toggleRow(rowID: any) {
         this._gridAPI.toggle_row_expansion(this.id, rowID);
@@ -269,6 +308,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     /**
      * Expands all rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public expandAll() {
         this._expansionDepth = Infinity;
@@ -277,6 +320,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
 
     /**
      * Collapses all rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxTreeGridComponent
      */
     public collapseAll() {
         this._expansionDepth = 0;
@@ -290,10 +337,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      * ```typescript
      * const record = {
      *     ID: this.grid.data[this.grid1.data.length - 1].ID + 1,
-     *     parentID: null,
      *     Name: this.newRecord
      * };
-     * this.grid.addRow(record); // Adds a new row at level 0.
      * this.grid.addRow(record, 1); // Adds a new child row to the row with ID=1.
      * ```
      * @param data
@@ -345,7 +390,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      * @hidden
      */
     protected deleteRowFromData(rowID: any, index: number) {
-        if (this.primaryKey && this.foreignKey) {
+         if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
 
             if (this.cascadeOnDelete) {
@@ -423,7 +468,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
     * @hidden
     */
-    public getContext(rowData): any {
+   public getContext(rowData): any {
         return {
             $implicit: rowData,
             templateID: 'dataRow'

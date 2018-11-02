@@ -20,8 +20,8 @@ import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interfa
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
-import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 import { mergeObjects, cloneArray, cloneValue } from '../core/utils';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
 export enum DataType {
     String = 'string',
