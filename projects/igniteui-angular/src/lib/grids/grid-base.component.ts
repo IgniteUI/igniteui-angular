@@ -78,8 +78,12 @@ export interface IGridCellEventArgs {
 }
 
 export interface IGridEditEventArgs extends CancelableEventArgs {
-    row: IgxRowComponent<IgxGridBaseComponent>;
-    cell: IgxGridCellComponent;
+    rowID: any;
+    cellID?: {
+        rowID: any,
+        columnID: any,
+        rowIndex: number
+    };
     oldValue: any;
     newValue?: any;
     event?: Event;
@@ -814,7 +818,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * }
      * ```
      * ```html
-     * <igx-grid #grid3 (onCellEnterEditMode)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
      *          [primaryKey]="'ProductID'" [rowSelectable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
@@ -824,7 +828,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onCellEnterEditMode = new EventEmitter<IGridEditEventArgs>();
+    public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * An @Output property emitting an event when `IgxGridCellComponent` editing has been performed in the grid.
@@ -856,7 +860,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *
      * Bind to the event in markup as follows:
      * ```html
-     * <igx-grid #grid3 (onRowEnterEditMode)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
      *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
@@ -873,7 +877,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onRowEnterEditMode = new EventEmitter<IGridEditEventArgs>();
+    public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * An @Output property emitting an event when [rowEditable]="true" & `endEdit(true)` is called.
@@ -2851,13 +2855,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                const gridEditState = this.gridAPI.get_grid_edit_state(this.id, rowSelector, columnId, value);
+                const gridEditState = this.gridAPI.create_grid_edit_args(this.id, rowSelector, columnId, value);
                 this.gridAPI.update_cell(this.id, rowSelector, columnId, value, gridEditState);
                 if (editableCell && editableCell.cellID.rowID === rowSelector &&
                     editableCell.cellID.columnID === columnId) {
-                        if (gridEditState.args.cancel) {
-                            return;
-                        }
+                    if (gridEditState.args.cancel) {
+                        return;
+                    }
                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
                 this.cdr.markForCheck();
@@ -4140,14 +4144,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public isExpandedGroup(group: IGroupByRecord): boolean {
         return undefined;
-                    }
+    }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     protected getGroupByRecords(): IGroupByRecord[] {
-            return null;
-        }
+        return null;
+    }
 
     // For paging we need just the increment between the start of the page and the current row
     private getPagingIncrement(groupByIncrement: number, groupIndexData: number[], page: number) {
@@ -4244,19 +4248,18 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return arr.filter(c => !c.columnGroup);
     }
 
-/*     @HostListener('keydown.pagedown', ['$event'])
-    public onKeydownPageDown(event) {
-        event.preventDefault();
+    /*     @HostListener('keydown.pagedown', ['$event'])
+        public onKeydownPageDown(event) {
+            event.preventDefault();
+            this.nativeElement.focus();
+        }
 
-        this.nativeElement.focus();
-    }
-
-    @HostListener('keydown.pageup', ['$event'])
-    public onKeydownPageUp(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.scrollPrevPage();
-        this.nativeElement.focus();
-    } */
+        @HostListener('keydown.pageup', ['$event'])
+        public onKeydownPageUp(event) {
+            event.preventDefault();
+            this.verticalScrollContainer.scrollPrevPage();
+            this.nativeElement.focus();
+        } */
 
     private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
         if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
@@ -4272,21 +4275,25 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public startRowEdit(cell: IgxGridCellComponent) {
+    public startRowEdit(cell: {
+        rowID: any,
+        columnID: any,
+        rowIndex: any
+    }) {
         const args: IGridEditEventArgs = {
-            row: cell.row,
-            cell: cell,
-            oldValue: cell.row.rowData,
+            rowID: cell.rowID,
+            cellID: cell,
+            oldValue: this.gridAPI.get_row_by_key(this.id, cell.rowID).rowData,
             cancel: false
         };
-        this.onRowEnterEditMode.emit(args);
+        this.onRowEditEnter.emit(args);
         if (args.cancel) {
             return;
         }
-        const rowState = { rowID: cell.row.rowID, rowIndex: cell.row.index };
+        const rowState = { rowID: cell.rowID, rowIndex: cell.rowIndex };
         this.gridAPI.set_edit_row_state(this.id, rowState);
         this.transactions.startPending();
-        this.configureRowEditingOverlay(cell.row);
+        this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
@@ -4318,16 +4325,21 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
-        this.configureRowEditingOverlay(row);
+        this.configureRowEditingOverlay(row.rowID);
         if (!this.rowEditingOverlay.collapsed) {
             this.rowEditingOverlay.reposition();
         }
     }
 
-    private configureRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
+    private configureRowEditingOverlay(rowID: any) {
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
-        this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
+        // this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
+        const targetRow = this.gridAPI.get_row_by_key(this.id, rowID);
+        if (!targetRow) {
+            return;
+        }
+        const target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -4350,13 +4362,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private endRowTransaction(commit: boolean, row: any, rowObject: IgxRowComponent<IgxGridBaseComponent>) {
         const newValue = this.transactions.getAggregatedValue(row.rowID, true);
         const lastCommitedValue = // Last commited value (w/o pending)
-        this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : {};
+            this.transactions.getState(row.rowID) ? Object.assign({}, this.transactions.getState(row.rowID).value) : {};
         const rowIndex = this.gridAPI.get_row_index_in_data(this.id, row.rowID);  // Get actual index in data
         let oldValue = Object.assign({}, this.data[rowIndex]);
         if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
             oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
         }
-        const currentGridState = this.gridAPI.get_grid_edit_state(this.id, row,
+        const currentGridState = this.gridAPI.create_grid_edit_args(this.id, row,
             null,
             newValue);
         const emitArgs = currentGridState.args;

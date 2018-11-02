@@ -92,8 +92,8 @@
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
                     [rowEditable]="true" [paging]="true" [perPage]="10" (onRowEdit)="rowEditDone($event)"
-                    (onRowEditCancel)="rowEditCancel($event)" (onRowEnterEditMode)="rowEditEnter($event)"
-                    (onCellEnterEditMode)="cellEnterEditMode($event)" (onCellEdit)="cellEditDone($event)"
+                    (onRowEditCancel)="rowEditCancel($event)" (onRowEditEnter)="rowEditEnter($event)"
+                    (onCellEditEnter)="cellEnterEditMode($event)" (onCellEdit)="cellEditDone($event)"
                     (onCellEditCancel)="cellEditCancel($event)">
                     <igx-column width="100px" [editable]="false">
                         <ng-template igxCell let-cell="cell" let-val>

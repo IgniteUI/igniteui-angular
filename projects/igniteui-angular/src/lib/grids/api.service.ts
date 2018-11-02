@@ -124,12 +124,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     public set_cell_inEditMode(gridId: string, cell) {
         const grid = this.get(gridId);
         const args: IGridEditEventArgs = {
-            row: cell.row,
-            cell: cell,
+            rowID: cell.cellID.rowID,
+            cellID: cell.cellID,
             oldValue: cell.value,
             cancel: false
         };
-        grid.onCellEnterEditMode.emit(args);
+        grid.onCellEditEnter.emit(args);
         if (args.cancel) {
             return;
         }
@@ -137,17 +137,17 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             const currentEditRow = this.get_edit_row_state(gridId);
             if (currentEditRow && currentEditRow.rowID !== cell.cellID.rowID) {
                 grid.endEdit(true);
-                grid.startRowEdit(cell);
+                grid.startRowEdit(cell.cellID);
             }
             if (!currentEditRow) {
-                grid.startRowEdit(cell);
+                grid.startRowEdit(cell.cellID);
             }
         }
 
         if (!this.get_cell_inEditMode(gridId)) {
             const cellCopy = Object.assign({}, cell);
             cellCopy.row = Object.assign({}, cell.row);
-            this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
+        this.editCellState.set(gridId, { cellID: cell.cellID, cell: cellCopy });
         }
     }
 
@@ -246,7 +246,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     public submit_value(gridId, detectChanges = true) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
-            const gridEditState = this.get_grid_edit_state(gridId, editableCell.cellID.rowID,
+            const gridEditState = this.create_grid_edit_args(gridId, editableCell.cellID.rowID,
                 editableCell.cellID.columnID, editableCell.cell.editValue);
             if (!editableCell.cell.column.inlineEditorTemplate && editableCell.cell.column.dataType === 'number') {
                 if (!editableCell.cell.editValue) {
@@ -273,7 +273,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public get_grid_edit_state(id: string, rowID, columnID, editValue): {
+    public create_grid_edit_args(id: string, rowID, columnID, editValue): {
         args: IGridEditEventArgs,
         isRowSelected: boolean,
         rowData: any
@@ -309,14 +309,19 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 rowData = dataWithTransactions[rowIndex];
             }
         }
-        return {
-            args: {
-                row: cellObj ? cellObj.row : null,
-                cell: cellObj,
+        const args = {
+            rowID,
                 oldValue: oldValue,
                 newValue: editValue,
                 cancel: false
-            },
+        };
+        if (columnID !== null) {
+            Object.assign(args, {
+                cellID: cellObj
+            });
+        }
+        return {
+            args,
             isRowSelected,
             rowData
         };
@@ -331,7 +336,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }): void {
         const grid = this.get(id);
         const data = this.get_all_data(id);
-        const currentGridEditState = gridEditState || this.get_grid_edit_state(id, rowID, columnID, editValue);
+        const currentGridEditState = gridEditState || this.create_grid_edit_args(id, rowID, columnID, editValue);
         const emittedArgs = currentGridEditState.args;
         const column = grid.columnList.toArray()[columnID];
         const rowIndex = this.get_row_index_in_data(id, rowID);
@@ -375,17 +380,15 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     }): void {
         const grid = this.get(id);
         const data = this.get_all_data(id);
-        const currentGridState = gridState ? gridState : this.get_grid_edit_state(id, rowID, null, value);
+        const currentGridState = gridState ? gridState : this.create_grid_edit_args(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
-        let row = this.get_row_by_key(id, rowID);
-        row = row || rowID;
         let oldValue = data[index];
         if (grid.transactions.enabled) {
             const valueInTransactions = grid.transactions.getState(rowID);
             oldValue = valueInTransactions ? Object.assign({}, oldValue, valueInTransactions) : oldValue;
         }
-        Object.assign(emitArgs, { oldValue, row});
+        Object.assign(emitArgs, { oldValue, rowID});
         if (index !== -1) {
             grid.onRowEdit.emit(emitArgs);
             if (emitArgs.cancel) {

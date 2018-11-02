@@ -976,10 +976,10 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 const grid = fix.componentInstance.grid;
-                spyOn(grid.onCellEnterEditMode, 'emit').and.callThrough();
+                spyOn(grid.onCellEditEnter, 'emit').and.callThrough();
                 spyOn(grid.onCellEdit, 'emit').and.callThrough();
                 spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
-                spyOn(grid.onRowEnterEditMode, 'emit').and.callThrough();
+                spyOn(grid.onRowEditEnter, 'emit').and.callThrough();
                 spyOn(grid.onRowEdit, 'emit').and.callThrough();
                 spyOn(grid.onRowEditCancel, 'emit').and.callThrough();
 
@@ -997,8 +997,8 @@ describe('IgxGrid Component Tests', () => {
 
                 let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, cancel: false };
                 let rowArgs: IGridEditEventArgs = { rowID: row.rowID, oldValue: row.rowData, cancel: false };
-                expect(grid.onCellEnterEditMode.emit).toHaveBeenCalledWith(cellArgs);
-                expect(grid.onRowEnterEditMode.emit).toHaveBeenCalledWith(rowArgs);
+                expect(grid.onCellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
+                expect(grid.onRowEditEnter.emit).toHaveBeenCalledWith(rowArgs);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDom, true);
                 tick();
@@ -1022,7 +1022,7 @@ describe('IgxGrid Component Tests', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom, true);
                 tick();
 
-                const newRowValue = grid.transactions().getAggregatedValue(row.rowID, true);
+                const newRowValue = grid.transactions.getAggregatedValue(row.rowID, true);
                 cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: newCellValue, cancel: false };
                 rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: newRowValue, cancel: false };
                 expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);

@@ -137,7 +137,7 @@ describe('IgxGrid - CRUD operations', () => {
     });
 
     it('should support updating a row through the grid API', () => {
-        spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        spyOn(grid.onRowEdit, 'emit').and.callThrough();
 
         // Update non-existing row
         grid.updateRow({ index: -100, value: -100 }, 100);
@@ -152,14 +152,13 @@ describe('IgxGrid - CRUD operations', () => {
 
         const row = grid.rowList.toArray()[0];
         const args: IGridEditEventArgs = {
-            row,
-            cell: null,
+            rowID: 1,
             oldValue: { index: 1, value: 1 },
             newValue: { index: 200, value: 200 },
             cancel: false
         };
 
-        expect(grid.onCellEdit.emit).toHaveBeenCalledWith(args);
+        expect(grid.onRowEdit.emit).toHaveBeenCalledWith(args);
         expect(grid.rowList.first.cells.first.value).toEqual(200);
         expect(grid.data[0].index).toEqual(200);
     });
@@ -173,8 +172,8 @@ describe('IgxGrid - CRUD operations', () => {
 
         const cell = grid.getCellByColumn(0, 'index');
         const args: IGridEditEventArgs = {
-            row: cell.row,
-            cell,
+            rowID: cell.row,
+            cellID: cell.cellID,
             oldValue: 1,
             newValue: 200,
             cancel: false
@@ -365,6 +364,7 @@ describe('IgxGrid - CRUD operations', () => {
             (onRowAdded)="rowAdded($event)"
             (onRowDeleted)="rowDeleted($event)"
             (onCellEdit)="editDone($event)"
+            (onRowEdit)="editDone($event)"
             [autoGenerate]="true"
             [primaryKey]="'index'">
         </igx-grid>
@@ -392,7 +392,7 @@ export class DefaultCRUDGridComponent {
 
     public editDone(event: IGridEditEventArgs) {
         if (event.newValue === 'change') {
-            event.newValue = event.cell ? 200 : { index: 200, value: 200 };
+            event.newValue = event.cellID ? 200 : { index: 200, value: 200 };
         }
     }
 }
