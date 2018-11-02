@@ -7,6 +7,8 @@ enum MoveDirection {
     LEFT = 'left',
     RIGHT = 'right'
 }
+
+/** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
     public grid: IgxGridBaseComponent;
