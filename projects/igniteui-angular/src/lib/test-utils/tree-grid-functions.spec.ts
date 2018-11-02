@@ -305,7 +305,6 @@ export class TreeGridFunctions {
             rowIndex: number,
             columnName: string,
             moveDown: boolean = true) => new Promise(async (resolve, reject) => {
-
                 let cell = treeGrid.getCellByColumn(rowIndex, columnName);
                 const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
                 const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
@@ -331,7 +330,6 @@ export class TreeGridFunctions {
             firstColumnName: string,
             nextColumnName: string,
             moveRight: boolean = true) => new Promise(async (resolve, reject) => {
-
                 const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
 
@@ -341,7 +339,7 @@ export class TreeGridFunctions {
 
                 const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
                 if (cell !== undefined && cell !== null) {
-                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 }
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
@@ -381,18 +379,19 @@ export class TreeGridFunctions {
             rowIndex: number,
             columnIndex,
             columns) => new Promise(async (resolve, reject) => {
-                const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex === 0) {
-                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
-                } else {
-                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
-                }
 
                 cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
+                if (columnIndex === 0) {
+                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
+                }
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 if (cell !== undefined && cell !== null) {
                     TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 }
@@ -407,17 +406,19 @@ export class TreeGridFunctions {
             rowIndex: number,
             columnIndex,
             columns) => new Promise(async (resolve, reject) => {
-                const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex === columns.length - 1) {
-                    newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
-                }  else {
-                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
-                }
 
                 UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (columnIndex === columns.length - 1) {
+                    newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
+                }
 
                 if (cell !== undefined && cell !== null) {
                     expect(cell.inEditMode).toBe(false);
@@ -431,17 +432,19 @@ export class TreeGridFunctions {
             rowIndex: number,
             columnIndex,
             columns) => new Promise(async (resolve, reject) => {
-                const cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
-                if (columnIndex === 0) {
-                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
-                }  else {
-                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
-                }
 
                 cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (columnIndex === 0) {
+                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
+                }
 
                 if (cell !== undefined && cell !== null) {
                     expect(cell.inEditMode).toBe(false);

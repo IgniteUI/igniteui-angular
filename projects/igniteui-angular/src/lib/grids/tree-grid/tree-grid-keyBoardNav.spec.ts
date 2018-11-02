@@ -520,6 +520,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
             firstCell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
+            fixture.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, firstCell);
 
@@ -586,6 +587,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
+            fixture.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
 
@@ -618,6 +620,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
+            fixture.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
@@ -658,6 +661,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
+            fixture.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
@@ -776,64 +780,64 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
     const testExpandCollapse =
         (fixture, treegrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse) =>
-        new Promise(async (resolve, reject) => {
-            spyOn(treegrid.onRowToggle, 'emit').and.callThrough();
-            const cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
-            let rows = TreeGridFunctions.getAllRows(fixture);
-            expect(rows.length).toBe(rowsCount);
+            new Promise(async (resolve, reject) => {
+                spyOn(treegrid.onRowToggle, 'emit').and.callThrough();
+                const cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
+                let rows = TreeGridFunctions.getAllRows(fixture);
+                expect(rows.length).toBe(rowsCount);
 
-            cell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
+                cell.nativeElement.dispatchEvent(new Event('focus'));
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
-            expect(cell.focused).toEqual(true);
+                TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+                expect(cell.focused).toEqual(true);
 
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fixture);
-            expect(rows.length).toBe(rowsCountAfterCollapse);
-            TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
-            expect(cell.focused).toEqual(true);
-            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
+                rows = TreeGridFunctions.getAllRows(fixture);
+                expect(rows.length).toBe(rowsCountAfterCollapse);
+                TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
+                TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+                expect(cell.focused).toEqual(true);
+                expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fixture);
-            expect(rows.length).toBe(rowsCountAfterCollapse);
-            TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
-            expect(cell.focused).toEqual(true);
-            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
+                rows = TreeGridFunctions.getAllRows(fixture);
+                expect(rows.length).toBe(rowsCountAfterCollapse);
+                TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
+                TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+                expect(cell.focused).toEqual(true);
+                expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(1);
 
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fixture);
-            expect(rows.length).toBe(rowsCount);
-            TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
-            expect(cell.focused).toEqual(true);
-            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
+                rows = TreeGridFunctions.getAllRows(fixture);
+                expect(rows.length).toBe(rowsCount);
+                TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
+                TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+                expect(cell.focused).toEqual(true);
+                expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
 
-            cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
-            await wait(DEBOUNCETIME);
-            fixture.detectChanges();
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
 
-            rows = TreeGridFunctions.getAllRows(fixture);
-            expect(rows.length).toBe(rowsCount);
-            TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
-            TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
-            expect(cell.focused).toEqual(true);
-            expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
-            resolve();
-        });
+                rows = TreeGridFunctions.getAllRows(fixture);
+                expect(rows.length).toBe(rowsCount);
+                TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
+                TreeGridFunctions.verifyTreeGridCellSelected(treegrid, cell);
+                expect(cell.focused).toEqual(true);
+                expect(treegrid.onRowToggle.emit).toHaveBeenCalledTimes(2);
+                resolve();
+            });
 
     const testEditingNavigationTab =
         (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
