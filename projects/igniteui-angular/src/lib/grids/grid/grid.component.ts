@@ -23,6 +23,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
 
@@ -56,7 +57,9 @@ export interface IGroupingDoneEventArgs {
     preserveWhitespaces: false,
     providers: [IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) }],
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
+        IgxFilteringService
+    ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
@@ -117,8 +120,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                  filteringService);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 

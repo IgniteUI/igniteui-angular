@@ -19,15 +19,18 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true },
-            { field: 'ContactName', width: 150, resizable: true, movable: true },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
-            { field: 'Address', width: 150, resizable: true, movable: true },
-            { field: 'City', width: 150, resizable: true, movable: true },
-            { field: 'Region', width: 150, resizable: true, movable: true },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true },
-            { field: 'Phone', width: 150, resizable: true, movable: true },
-            { field: 'Fax', width: 150, resizable: true, movable: true }
+            { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
+            { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
+            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
+            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
         ];
         this.data = [
             {
@@ -40,7 +43,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '12209',
                 'Country': 'Germany',
                 'Phone': '030-0074321',
-                'Fax': '030-0076545'
+                'Fax': '030-0076545',
+                'Employees': 68,
+                'DateCreated': new Date(2018, 8, 17),
+                'Contract': true
             },
             {
                 'ID': 'ANATR',
@@ -53,7 +59,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '05021',
                 'Country': 'Mexico',
                 'Phone': '(5) 555-4729',
-                'Fax': '(5) 555-3745'
+                'Fax': '(5) 555-3745',
+                'Employees': 47,
+                'DateCreated': new Date(2015, 10, 1),
+                'Contract': true
             },
             {
                 'ID': 'ANTON',
@@ -66,7 +75,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '05023',
                 'Country': 'Mexico',
                 'Phone': '(5) 555-3932',
-                'Fax': null
+                'Fax': null,
+                'Employees': 16,
+                'DateCreated': new Date(2016, 5, 5),
+                'Contract': false
             },
             {
                 'ID': 'AROUT',
@@ -79,7 +91,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'WA1 1DP',
                 'Country': 'UK',
                 'Phone': '(171) 555-7788',
-                'Fax': '(171) 555-6750'
+                'Fax': '(171) 555-6750',
+                'Employees': 71,
+                'DateCreated': new Date(2010, 2, 15),
+                'Contract': false
             },
             {
                 'ID': 'BERGS',
@@ -92,7 +107,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'S-958 22',
                 'Country': 'Sweden',
                 'Phone': '0921-12 34 65',
-                'Fax': '0921-12 34 67'
+                'Fax': '0921-12 34 67',
+                'Employees': 213,
+                'DateCreated': new Date(2015, 2, 5),
+                'Contract': true
             },
             {
                 'ID': 'BLAUS',
@@ -105,7 +123,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '68306',
                 'Country': 'Germany',
                 'Phone': '0621-08460',
-                'Fax': '0621-08924'
+                'Fax': '0621-08924',
+                'Employees': 347,
+                'DateCreated': new Date(2016, 7, 1),
+                'Contract': true
             },
             {
                 'ID': 'BLONP',
@@ -118,7 +139,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '67000',
                 'Country': 'France',
                 'Phone': '88.60.15.31',
-                'Fax': '88.60.15.32'
+                'Fax': '88.60.15.32',
+                'Employees': 34,
+                'DateCreated': new Date(2016, 10, 5),
+                'Contract': true
             },
             {
                 'ID': 'BOLID',
@@ -131,7 +155,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '28023',
                 'Country': 'Spain',
                 'Phone': '(91) 555 22 82',
-                'Fax': '(91) 555 91 99'
+                'Fax': '(91) 555 91 99',
+                'Employees': 54,
+                'DateCreated': new Date(2016, 4, 20),
+                'Contract': true
             },
             {
                 'ID': 'BONAP',
@@ -144,7 +171,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '13008',
                 'Country': 'France',
                 'Phone': '91.24.45.40',
-                'Fax': '91.24.45.41'
+                'Fax': '91.24.45.41',
+                'Employees': 68,
+                'DateCreated': new Date(2018, 3, 5),
+                'Contract': false
             },
             {
                 'ID': 'BOTTM',
@@ -157,7 +187,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'T2F 8M4',
                 'Country': 'Canada',
                 'Phone': '(604) 555-4729',
-                'Fax': '(604) 555-3745'
+                'Fax': '(604) 555-3745',
+                'Employees': 107,
+                'DateCreated': new Date(2017, 6, 10),
+                'Contract': true
             },
             {
                 'ID': 'BSBEV',
@@ -170,7 +203,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'EC2 5NT',
                 'Country': 'UK',
                 'Phone': '(171) 555-1212',
-                'Fax': null
+                'Fax': null,
+                'Employees': 197,
+                'DateCreated': new Date(2017, 10, 4),
+                'Contract': true
             },
             {
                 'ID': 'CACTU',
@@ -184,7 +220,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '1010',
                 'Country': 'Argentina',
                 'Phone': '(1) 135-5555',
-                'Fax': '(1) 135-4892'
+                'Fax': '(1) 135-4892',
+                'Employees': 33,
+                'DateCreated': new Date(2014, 5, 12),
+                'Contract': false
             },
             {
                 'ID': 'CENTC',
@@ -197,7 +236,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '05022',
                 'Country': 'Mexico',
                 'Phone': '(5) 555-3392',
-                'Fax': '(5) 555-7293'
+                'Fax': '(5) 555-7293',
+                'Employees': 18,
+                'DateCreated': new Date(2015, 6, 27),
+                'Contract': true
             },
             {
                 'ID': 'CHOPS',
@@ -210,7 +252,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '3012',
                 'Country': 'Switzerland',
                 'Phone': '0452-076545',
-                'Fax': null
+                'Fax': null,
+                'Employees': 380,
+                'DateCreated': new Date(2011, 8, 6),
+                'Contract': true
             },
             {
                 'ID': 'COMMI',
@@ -222,7 +267,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '05432-043',
                 'Country': 'Brazil',
                 'Phone': '(11) 555-7647',
-                'Fax': null
+                'Fax': null,
+                'Employees': 137,
+                'DateCreated': new Date(2012, 6, 10),
+                'Contract': false
             },
             {
                 'ID': 'CONSH',
@@ -235,7 +283,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'WX1 6LT',
                 'Country': 'UK',
                 'Phone': '(171) 555-2282',
-                'Fax': '(171) 555-9199'
+                'Fax': '(171) 555-9199',
+                'Employees': 150,
+                'DateCreated': new Date(2012, 6, 10),
+                'Contract': false
             },
             {
                 'ID': 'DRACD',
@@ -248,7 +299,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '52066',
                 'Country': 'Germany',
                 'Phone': '0241-039123',
-                'Fax': '0241-059428'
+                'Fax': '0241-059428',
+                'Employees': 265,
+                'DateCreated': new Date(2014, 9, 11),
+                'Contract': true
             },
             {
                 'ID': 'DUMON',
@@ -261,7 +315,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '44000',
                 'Country': 'France',
                 'Phone': '40.67.88.88',
-                'Fax': '40.67.89.89'
+                'Fax': '40.67.89.89',
+                'Employees': 24,
+                'DateCreated': new Date(2015, 8, 4),
+                'Contract': true
             },
             {
                 'ID': 'EASTC',
@@ -274,7 +331,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'WX3 6FW',
                 'Country': 'UK',
                 'Phone': '(171) 555-0297',
-                'Fax': '(171) 555-3373'
+                'Fax': '(171) 555-3373',
+                'Employees': 123,
+                'DateCreated': new Date(2013, 4, 18),
+                'Contract': false
             },
             {
                 'ID': 'ERNSH',
@@ -288,7 +348,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '8010',
                 'Country': 'Austria',
                 'Phone': '7675-3425',
-                'Fax': '7675-3426'
+                'Fax': '7675-3426',
+                'Employees': 9,
+                'DateCreated': new Date(2013, 7, 9),
+                'Contract': true
             },
             {
                 'ID': 'FAMIA',
@@ -301,7 +364,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '05442-030',
                 'Country': 'Brazil',
                 'Phone': '(11) 555-9857',
-                'Fax': null
+                'Fax': null,
+                'Employees': 67,
+                'DateCreated': new Date(2015, 6, 17),
+                'Contract': true
             },
             {
                 'ID': 'FISSA',
@@ -314,7 +380,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '28034',
                 'Country': 'Spain',
                 'Phone': '(91) 555 94 44',
-                'Fax': '(91) 555 55 93'
+                'Fax': '(91) 555 55 93',
+                'Employees': 87,
+                'DateCreated': new Date(2017, 3, 15),
+                'Contract': false
             },
             {
                 'ID': 'FOLIG',
@@ -327,7 +396,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '59000',
                 'Country': 'France',
                 'Phone': '20.16.10.16',
-                'Fax': '20.16.10.17'
+                'Fax': '20.16.10.17',
+                'Employees': 37,
+                'DateCreated': new Date(2014, 5, 14),
+                'Contract': false
             },
             {
                 'ID': 'FOLKO',
@@ -340,7 +412,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': 'S-844 67',
                 'Country': 'Sweden',
                 'Phone': '0695-34 67 21',
-                'Fax': null
+                'Fax': null,
+                'Employees': 42,
+                'DateCreated': new Date(2011, 3, 21),
+                'Contract': true
             },
             {
                 'ID': 'FRANK',
@@ -353,7 +428,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '80805',
                 'Country': 'Germany',
                 'Phone': '089-0877310',
-                'Fax': '089-0877451'
+                'Fax': '089-0877451',
+                'Employees': 17,
+                'DateCreated': new Date(2010, 7, 24),
+                'Contract': true
             },
             {
                 'ID': 'FRANR',
@@ -366,7 +444,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '44000',
                 'Country': 'France',
                 'Phone': '40.32.21.21',
-                'Fax': '40.32.21.20'
+                'Fax': '40.32.21.20',
+                'Employees': 20,
+                'DateCreated': new Date(2011, 7, 14),
+                'Contract': true
             },
             {
                 'ID': 'FRANS',
@@ -378,7 +459,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'PostalCode': '10100',
                 'Country': 'Italy',
                 'Phone': '011-4988260',
-                'Fax': '011-4988261'
+                'Fax': '011-4988261',
+                'Employees': 5,
+                'DateCreated': new Date(2012, 8, 3),
+                'Contract': false
             }
         ];
     }
