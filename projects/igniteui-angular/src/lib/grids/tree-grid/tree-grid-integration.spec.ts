@@ -352,9 +352,10 @@ describe('IgxTreeGrid - Integration', () => {
             expect(bannerTop - editRowBottom).toBeLessThan(2);
         }));
 
-        xit('shows the banner above the edited parent node if it is the last one', fakeAsync(() => {
+        it('shows the banner above the edited parent node if it is the last one', fakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.height = '200px';
+            tick(16); // height animationFrame
             fix.detectChanges();
             grid.collapseAll();
             fix.detectChanges();
@@ -368,9 +369,6 @@ describe('IgxTreeGrid - Integration', () => {
 
             const bannerBottom = banner.getBoundingClientRect().bottom;
             const editRowTop = editRow.getBoundingClientRect().top;
-            console.log(banner.getBoundingClientRect());
-            console.log(editRow.getBoundingClientRect());
-            console.log(grid.height);
 
             // The banner appears below the row
             expect(bannerBottom).toBeLessThanOrEqual(editRowTop);
@@ -399,7 +397,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(editRowTop - bannerBottom).toBeLessThan(2);
         }));
 
-        fit('banner hides when you expand/collapse the edited row', fakeAsync(() => {
+        it('banner hides when you expand/collapse the edited row', fakeAsync(() => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             grid.collapseAll();
             fix.detectChanges();

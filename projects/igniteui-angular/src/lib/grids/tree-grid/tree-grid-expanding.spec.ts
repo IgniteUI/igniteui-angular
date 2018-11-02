@@ -1,7 +1,11 @@
-import { async, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
-import { IgxTreeGridExpandingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridExpandingComponent,
+    IgxTreeGridPrimaryForeignKeyComponent,
+    IgxTreeGridRowEditingComponent
+} from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
@@ -621,7 +625,6 @@ describe('Row editing expanding/collapsing', () => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
         fix.detectChanges();
         treeGrid = fix.componentInstance.treeGrid;
-        fix.detectChanges();
     });
 
     it('Hide banner with collapsing a node, using UI', fakeAsync(() => {
@@ -631,39 +634,35 @@ describe('Row editing expanding/collapsing', () => {
         cell.inEditMode = true;
         tick();
         fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
 
         const firstRow = rows[0];
         const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         tick();
-        fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
 
         indicatorDiv.triggerEventHandler('click', new Event('click'));
         tick();
-        fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
     }));
 
     it('Hide banner with collapsing a node, using API', fakeAsync(() => {
-        // Test summary: Edit first child of the first row, then collapse parent row and see that row overlay is hidden.
-        // Then expand again parent row and see that overlay is visible. All this using API.
-        const rows = TreeGridFunctions.getAllRows(fix);
-
         const cell = treeGrid.getCellByColumn(1, 'Name');
         cell.inEditMode = true;
         tick();
         fix.detectChanges();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
         tick();
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
         tick();
         fix.detectChanges();
-        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy();
+        expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
     }));
 
     // The following tests were written,
@@ -847,29 +846,6 @@ describe('Row editing expanding/collapsing', () => {
         expect(overlayContent.style.display).toEqual('');
     }));*/
 });
-
-function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
-    const disabled = 'igx-button--disabled';
-    const grid = fix.componentInstance.treeGrid;
-    const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-
-    expect(grid.getCellByColumn(0, 'ID').value).toMatch(firstCellValue);
-    expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
-
-    if ( pagerText != null ) {
-        expect(gridElement.querySelector('.igx-paginator')).toBeDefined();
-        expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(1);
-        expect(gridElement.querySelector('.igx-paginator > span').textContent).toMatch(pagerText);
-    }
-    if ( buttonsVisibility != null && buttonsVisibility.length === 4 ) {
-        const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
-        expect(pagingButtons.length).toEqual(4);
-        expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
-        expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);
-        expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
-        expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
-    }
-}
 
 function verifyGridPager( fix, rowsCount, firstCellValue,  pagerText,  buttonsVisibility) {
     const disabled = 'igx-button--disabled';
