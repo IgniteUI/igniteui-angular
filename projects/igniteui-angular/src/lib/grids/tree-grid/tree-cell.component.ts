@@ -1,8 +1,5 @@
-import { Component, forwardRef, Input, HostBinding, ChangeDetectorRef, ElementRef, ViewChild, Inject } from '@angular/core';
-import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxRowComponent } from '../row.component';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
@@ -72,7 +69,6 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
      * @hidden
      */
     public onIndicatorFocus(event: Event) {
-        this.grid.endRowEdit(true);
         this.gridAPI.submit_value(this.gridID, false);
         this.onFocus(event);
     }

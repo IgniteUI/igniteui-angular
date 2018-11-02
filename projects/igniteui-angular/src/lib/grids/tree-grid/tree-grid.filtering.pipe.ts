@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';

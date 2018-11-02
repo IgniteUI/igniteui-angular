@@ -1,16 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+
+import { async, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../../public_api';
-import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridFilteringComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { fixMarkup } from 'highlight.js';
-import { IFilteringOperation } from '../../data-operations/filtering-condition';
-import { TreeGridSampleComponent } from 'src/app/tree-grid/tree-grid.sample';
-import { IgxTreeGridCellComponent } from './tree-cell.component';
 
 describe('IgxTreeGrid - Filtering actions', () => {
     configureTestSuite();
@@ -20,14 +15,13 @@ describe('IgxTreeGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeGridFilteringComponent,
-                IgxTreeGridFilteringRowEditingComponent
+                IgxTreeGridFilteringComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
         })
-            .compileComponents();
+        .compileComponents();
     }));
 
     beforeEach(() => {
@@ -263,7 +257,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(7);
     });
 
-    describe('Filtering: Row editing', () => {
+describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
@@ -374,4 +368,5 @@ describe('IgxTreeGrid - Filtering actions', () => {
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
             }));
     });
+
 });

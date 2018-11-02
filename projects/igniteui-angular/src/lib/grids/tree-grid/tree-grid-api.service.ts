@@ -1,19 +1,14 @@
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { cloneArray, mergeObjects } from '../../core/utils';
-import { DataUtil, DataType } from '../../data-operations/data-util';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { IgxExpansionPanelDescriptionDirective } from '../../expansion-panel/expansion-panel.directives';
 import { IgxColumnComponent } from '../column.component';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
-    public get_all_data(id: string, transactions?: boolean): any[] {
+    public get_all_data(id: string): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
-        return data ? data : [];
+        return grid.flatData;
     }
 
     public expand_row(id: string, rowID: any) {
