@@ -986,6 +986,7 @@ describe('IgxGrid Component Tests', () => {
                 const row = grid.getRowByIndex(0);
                 const cell = grid.getCellByColumn(0, 'ProductName');
                 const cellDom = cell.nativeElement;
+                let cellInput = null;
 
                 cellDom.dispatchEvent(new Event('focus'));
                 fix.detectChanges();
@@ -994,18 +995,38 @@ describe('IgxGrid Component Tests', () => {
                 cellDom.dispatchEvent(new Event('dblclick'));
                 expect(row.inEditMode).toBe(true);
 
-                let cellArgs: IGridEditEventArgs = { row: cell.row, cell: cell, oldValue: cell.value, cancel: false };
-                let rowArgs: IGridEditEventArgs = { row: row, cell: cell, oldValue: row.rowData, cancel: false };
+                let cellArgs: IGridEditEventArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, cancel: false };
+                let rowArgs: IGridEditEventArgs = { rowID: row.rowID, oldValue: row.rowData, cancel: false };
                 expect(grid.onCellEnterEditMode.emit).toHaveBeenCalledWith(cellArgs);
                 expect(grid.onRowEnterEditMode.emit).toHaveBeenCalledWith(rowArgs);
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDom, true);
                 tick();
 
-                cellArgs = { cell: cell, row: cell.row, oldValue: cell.value, newValue: cell.value, cancel: false };
-                rowArgs = { row: null, cell: null, oldValue: row.rowData, newValue: row.rowData, cancel: false };
+                expect(row.inEditMode).toBe(false);
+                cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: cell.value, cancel: false };
+                rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: row.rowData, cancel: false };
                 expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
-                // expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
+                expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
+
+                cellDom.dispatchEvent(new Event('dblclick'));
+                tick();
+                expect(row.inEditMode).toBe(true);
+
+                const newCellValue = 'Aaaaa';
+                cellInput = cellDom.querySelector('[igxinput]');
+                cellInput.value = newCellValue;
+                cellInput.dispatchEvent(new Event('input'));
+                tick();
+
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom, true);
+                tick();
+
+                const newRowValue = grid.transactions().getAggregatedValue(row.rowID, true);
+                cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: cell.value, newValue: newCellValue, cancel: false };
+                rowArgs = { rowID: row.rowID, oldValue: row.rowData, newValue: newRowValue, cancel: false };
+                expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
+                expect(grid.onRowEditCancel.emit).toHaveBeenCalledWith(rowArgs);
             }));
 
             it('Should display the banner below the edited row if it is not the last one', fakeAsync(() => {
