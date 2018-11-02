@@ -7,10 +7,12 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const DEBOUNCETIME = 30;
+const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
 describe('IgxTreeGrid - Key Board Navigation', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
+
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -42,15 +44,11 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should navigate with arrow Left and Right keys on parent row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 0;
-            await testNavigationLeftRight(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftRight(fix, treeGrid, 0, treeColumns);
         });
 
         it('should navigate with arrow Left and Right keys on child row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 1;
-            await testNavigationLeftRight(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftRight(fix, treeGrid, 1, treeColumns);
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down keys on gridCells', async () => {
@@ -62,49 +60,34 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys on parent row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 0;
-            await testNavigationLeftmostRightmostCell(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftmostRightmostCell(fix, treeGrid, 0, treeColumns);
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys on child row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 2;
-            await testNavigationLeftmostRightmostCell(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftmostRightmostCell(fix, treeGrid, 2, treeColumns);
         });
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationHomeEnd(fix, treeGrid, columns);
+            await testNavigationHomeEnd(fix, treeGrid, treeColumns);
         });
 
         it('should move selection when Tab key is pressed ', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationTab(fix, treeGrid, columns);
+            await testNavigationTab(fix, treeGrid, treeColumns);
         });
 
         it('should move selection when Shift + Tab keys are pressed ', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationShiftTab(fix, treeGrid, columns);
+            await testNavigationShiftTab(fix, treeGrid, treeColumns);
         });
 
-        it('should expand/callapce row when Alt + arrow Left/Right keys are pressed on a treeCell', async () => {
-            const cellColumn = 'ID';
-            const cellRowIndex = 0;
-            const rowsCount = 10;
-            const rowsCountAfterCollapse = 4;
-            await testExpandCollapse(fix, treeGrid, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse);
+        it('should expand/collapse row when Alt + arrow Left/Right keys are pressed on a treeCell', async () => {
+            await testExpandCollapse(fix, treeGrid, 0, 'ID', 10, 4);
         });
 
-        it('should expand/callapce row when Alt + arrow Left/Right keys are pressed on a gridCell', async () => {
-            const cellColumn = 'HireDate';
-            const cellRowIndex = 3;
-            const rowsCount = 10;
-            const rowsCountAfterCollapse = 7;
-            await testExpandCollapse(fix, treeGrid, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse);
+        it('should expand/collapse row when Alt + arrow Left/Right keys are pressed on a gridCell', async () => {
+            await testExpandCollapse(fix, treeGrid, 3, 'HireDate', 10, 7);
         });
 
-        it('should not cahnge selection when press Alt + arrow Left/Right keys on a cell in a row without children', async () => {
+        it('should not change selection when press Alt + arrow Left/Right keys on a cell in a row without children', async () => {
             spyOn(treeGrid.onRowToggle, 'emit').and.callThrough();
             const cell = treeGrid.getCellByColumn(1, 'Name');
             let rows = TreeGridFunctions.getAllRows(fix);
@@ -139,7 +122,6 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should change editable cell when Tab key is pressed', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;
@@ -147,11 +129,10 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             treeGrid.getColumnByName('OnPTO').editable = true;
             fix.detectChanges();
 
-            await testEditingNavigationTab(fix, treeGrid, columns);
+            await testEditingNavigationTab(fix, treeGrid, treeColumns);
         });
 
         it('should change editable cell when Shift + Tab keys are pressed', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;
@@ -159,7 +140,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             treeGrid.getColumnByName('OnPTO').editable = true;
             fix.detectChanges();
 
-            await testEditingNavigationShiftTab(fix, treeGrid, columns);
+            await testEditingNavigationShiftTab(fix, treeGrid, treeColumns);
         });
     });
 
@@ -181,15 +162,11 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should navigate with arrow Left and Right keys on parent row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 0;
-            await testNavigationLeftRight(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftRight(fix, treeGrid, 0, treeColumns);
         });
 
         it('should navigate with arrow Left and Right keys on child row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 1;
-            await testNavigationLeftRight(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftRight(fix, treeGrid, 1, treeColumns);
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down keys on gridCells', async () => {
@@ -201,47 +178,31 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys on parent row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 0;
-            await testNavigationLeftmostRightmostCell(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftmostRightmostCell(fix, treeGrid, 0, treeColumns);
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys on child row', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            const rowIndex = 2;
-            await testNavigationLeftmostRightmostCell(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftmostRightmostCell(fix, treeGrid, 2, treeColumns);
         });
 
-        it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationHomeEnd(fix, treeGrid, columns);
+        fit('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
+            await testNavigationHomeEnd(fix, treeGrid, treeColumns);
         });
 
         it('should move selection when Tab key is pressed ', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationTab(fix, treeGrid, columns);
+            await testNavigationTab(fix, treeGrid, treeColumns);
         });
 
         it('should move selection when Shift + Tab keys are pressed ', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
-            await testNavigationShiftTab(fix, treeGrid, columns);
+            await testNavigationShiftTab(fix, treeGrid, treeColumns);
         });
 
-        it('should expand/callapce row when Alt + arrow Left/Right keys are pressed on a treeCell', async () => {
-            const cellColumn = 'ID';
-            const cellRowIndex = 0;
-            const rowsCount = 8;
-            const rowsCountAfterCollapse = 4;
-            await testExpandCollapse(fix, treeGrid, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse);
+        it('should expand/collapse row when Alt + arrow Left/Right keys are pressed on a treeCell', async () => {
+            await testExpandCollapse(fix, treeGrid, 0, 'ID', 8, 4);
         });
 
-        it('should expand/callapce row when Alt + arrow Left/Right keys are pressed on a gridCell', async () => {
-            const cellColumn = 'OnPTO';
-            const cellRowIndex = 3;
-            const rowsCount = 8;
-            const rowsCountAfterCollapse = 7;
-
-            let cell = treeGrid.getCellByColumn(cellRowIndex, 'Name');
+        it('should expand/collapse row when Alt + arrow Left/Right keys are pressed on a gridCell', async () => {
+            let cell = treeGrid.getCellByColumn(3, 'Name');
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
@@ -253,9 +214,9 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            cell = treeGrid.getCellByColumn(cellRowIndex, 'OnPTO');
+            cell = treeGrid.getCellByColumn(3, 'OnPTO');
 
-            await testExpandCollapse(fix, treeGrid, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse);
+            await testExpandCollapse(fix, treeGrid, 3, 'OnPTO', 8, 7);
         });
 
         it('should allow pageup/pagedown navigation when the treeGrid is focused', async () => {
@@ -289,7 +250,6 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should change editable cell when Tab key is pressed', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;
@@ -297,11 +257,10 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             treeGrid.getColumnByName('OnPTO').editable = true;
             fix.detectChanges();
 
-            await testEditingNavigationTab(fix, treeGrid, columns);
+            await testEditingNavigationTab(fix, treeGrid, treeColumns);
         });
 
         it('should change editable cell and scroll down when Tab key is pressed', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;
@@ -330,11 +289,10 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             expect(cell.inEditMode).toBe(true);
 
             // Press tab key and verify the correct cell is opened
-            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 5, 4, columns);
+            await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 5, 4, treeColumns);
         });
 
         it('should change editable cell when Shift + Tab keys are pressed', async () => {
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('ID').editable = true;
             treeGrid.getColumnByName('Name').editable = true;
             treeGrid.getColumnByName('HireDate').editable = true;
@@ -342,37 +300,33 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             treeGrid.getColumnByName('OnPTO').editable = true;
             fix.detectChanges();
 
-            await testEditingNavigationShiftTab(fix, treeGrid, columns);
+            await testEditingNavigationShiftTab(fix, treeGrid, treeColumns);
         });
 
         it('should change correct selected cell when there are pinned columns and press tab', async () => {
-            const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('HireDate').pinned = true;
             fix.detectChanges();
 
-            await testNavigationTab(fix, treeGrid, columns);
+            await testNavigationTab(fix, treeGrid, ['HireDate', 'ID', 'Name', 'Age', 'OnPTO']);
         });
 
         it('should change correct selected cell when there are pinned columns and press tab', async () => {
-            const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('HireDate').pinned = true;
             fix.detectChanges();
 
-            await testNavigationShiftTab(fix, treeGrid, columns);
+            await testNavigationShiftTab(fix, treeGrid, ['HireDate', 'ID', 'Name', 'Age', 'OnPTO']);
         });
 
         it('should navigate with arrow Left and Right keys on parent row', async () => {
-            const columns = ['HireDate', 'ID', 'Name', 'Age', 'OnPTO'];
             treeGrid.getColumnByName('HireDate').pinned = true;
             const rowIndex = 0;
             fix.detectChanges();
 
-            await testNavigationLeftRight(fix, treeGrid, rowIndex, columns);
+            await testNavigationLeftRight(fix, treeGrid, rowIndex, ['HireDate', 'ID', 'Name', 'Age', 'OnPTO']);
         });
 
         it('should select row when press Space key on a cell', async () => {
             treeGrid.rowSelectable = true;
-            // treeGrid.primaryKey = 'ID';
             fix.detectChanges();
 
             // Click Space on a treeGrid cell
@@ -424,7 +378,6 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
         it('should select correct cells after expand/collapse row', async () => {
             // Select first cell and expand collapse
-            const columns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
             let rows;
             let cell = treeGrid.getCellByColumn(0, 'ID');
             cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -494,7 +447,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(cell.focused).toEqual(true);
 
-            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 8, 0, columns);
+            await TreeGridFunctions.moveCellWithTab(fix, treeGrid, 8, 0, treeColumns);
 
             await TreeGridFunctions.moveCellLeftRight(fix, treeGrid, 8, 'Name', 'ID', false);
 
