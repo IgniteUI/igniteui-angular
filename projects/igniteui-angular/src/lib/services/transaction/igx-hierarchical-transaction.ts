@@ -63,6 +63,9 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
     }
 
     private clearStateForDeletedItems(node: HierarchicalTransactionNode) {
+        if (!node) {
+            return;
+        }
         for (const childNode of node.childNodes) {
             if (this._states.get(childNode.id)) {
                 this._states.delete(childNode.id);
