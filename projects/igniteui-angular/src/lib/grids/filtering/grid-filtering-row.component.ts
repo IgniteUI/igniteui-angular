@@ -18,7 +18,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/drop-down.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
-import { HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
+import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
@@ -43,14 +43,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         verticalStartPoint: VerticalAlignment.Bottom
     };
 
-    private _conditionsOverlaySettings = {
+    private _conditionsOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
-    private _operatorsOverlaySettings = {
+    private _operatorsOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -147,6 +147,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
+        this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
+
         if (this.column.dataType === DataType.Date) {
             // TODO: revise usage of cdr.detectChanges() here
             this.cdr.detectChanges();
