@@ -6,7 +6,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 
-fdescribe('IgxTreeGrid - Expanding / Collapsing', () => {
+describe('IgxTreeGrid - Expanding / Collapsing', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
