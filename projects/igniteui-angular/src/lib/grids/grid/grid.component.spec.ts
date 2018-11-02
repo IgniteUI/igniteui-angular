@@ -1493,7 +1493,7 @@ describe('IgxGrid Component Tests', () => {
                 // 'click' on Done button
                 grid.endRowEdit(true);
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
@@ -1517,7 +1517,7 @@ describe('IgxGrid Component Tests', () => {
                 grid.addRow({ ProductID: 99, ProductName: 'ADDED', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') });
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
@@ -1542,7 +1542,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
@@ -1584,7 +1584,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
@@ -1609,7 +1609,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 1, columnID: 2, rowIndex: 0 });
                 expect(cell.inEditMode).toBeFalsy();
@@ -2084,7 +2084,7 @@ describe('IgxGrid Component Tests', () => {
 
                 // Verify the data source is updated
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 const newDataCellValue = fix.componentInstance.data[0].Downloads;
                 expect(newDataCellValue).toBe(111);
 
@@ -2281,7 +2281,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
 
                 expect(gridAPI.submit_value).toHaveBeenCalled();
-                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id, true);
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 4, columnID: 2, rowIndex: 3 });
                 expect(cell.inEditMode).toBeFalsy();

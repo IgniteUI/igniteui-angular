@@ -52,7 +52,7 @@
 /// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
 /// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
-/// @param {Color} $treegrid-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+/// @param {Color} $tree-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
 ///
 /// @param {Color} $filtering-header-background [#fff] - The background color of the filtered column header.
 /// @param {Color} $filtering-header-text-color [rgba(0, 0, 0, .74)] - The text color color of the filtered column header.
@@ -131,11 +131,11 @@
     $drop-area-background: null,
     $drop-area-on-drop-background: null,
 
-    $treegrid-filtered-text-color: null,
     $filtering-header-background: null,
     $filtering-header-text-color: null,
     $filtering-row-background: null,
-    $filtering-row-text-color: null
+    $filtering-row-text-color: null,
+    $tree-filtered-text-color: null
 ) {
     $default-theme: (
         name: 'igx-grid',
@@ -202,17 +202,20 @@
 
         group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
         group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
-        treegrid-filtered-text-color: igx-color($palette, grays, 500),
 
         filtering-header-background: #fff,
         filtering-header-text-color: igx-color($palette, 'grays', 800),
         filtering-row-background: #fff,
-        filtering-row-text-color: igx-color($palette, 'grays', 800)
+        filtering-row-text-color: igx-color($palette, 'grays', 800),
+        tree-filtered-text-color: igx-color($palette, grays, 500)
     );
 
     @if $preset {
         $default-theme: map-get($preset, map-get($default-theme, 'name'));
     }
+
+    $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($default-theme, 'row-selected-background')), .5);
+    $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($default-theme, 'cell-selected-background')), .5);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -414,12 +417,15 @@
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
-        treegrid-filtered-text-color: $treegrid-filtered-text-color,
 
         filtering-header-background: $filtering-header-background,
         filtering-header-text-color: $filtering-header-text-color,
         filtering-row-background: $filtering-row-background,
-        filtering-row-text-color: $filtering-row-text-color
+        filtering-row-text-color: $filtering-row-text-color,
+
+        tree-filtered-text-color: $tree-filtered-text-color,
+        tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
     ));
 }
 
@@ -450,8 +456,6 @@
     $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
-    // $grid-cell-padding: 0 rem(24px);
-    // $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
@@ -723,10 +727,10 @@
         }
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'row-selected-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'row-selected-background'));
+                color: --var($theme, 'row-selected-text-color');
             }
         }
     }
@@ -776,29 +780,55 @@
 
     %igx-grid-row--filtered {
         %grid-cell-text {
-            color: --var($theme, 'treegrid-filtered-text-color');
+            color: --var($theme, 'tree-filtered-text-color');
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'tree-filtered-text-color');
+
+            &:hover {
+                color: --var($theme, 'tree-filtered-text-color');
+            }
+        }
+
+        %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
+            %igx-grid__tree-grouping-indicator {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+
+                &:hover {
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
+                }
+            }
         }
     }
 
     %grid-row--selected--filtered {
         %grid-cell-text {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
         }
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'row-selected-background'));
+                color: --var($theme, 'tree-selected-filtered-row-text-color');
             }
         }
 
         %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
             %igx-grid__tree-grouping-indicator {
-                color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
 
                 &:hover {
-                    color: text-contrast(--var($theme, 'cell-selected-background'));
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
                 }
             }
         }
@@ -808,6 +838,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        user-select: none;
+        outline-style: none;
         margin-right: rem(8);
         cursor: pointer;
 
@@ -859,10 +891,10 @@
         border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+            color: --var($theme, 'cell-selected-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'cell-selected-background'));
+                color: --var($theme, 'cell-selected-text-color');
             }
         }
     }

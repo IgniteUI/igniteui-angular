@@ -1,9 +1,11 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent } from '../grids/tree-grid';
+import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent, IgxGridCellComponent } from '../grids/tree-grid';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { UIInteractions, wait } from './ui-interactions.spec';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
+const DEBOUNCETIME = 30;
 
 export const TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
 export const TREE_ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
@@ -285,4 +287,169 @@ export class TreeGridFunctions {
     public static verifyGridCellHasSelectedClass(cellDOM) {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
+
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
+        expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
+
+        if (selected) {
+            const selectedCell = treeGrid.selectedCells[0];
+            expect(selectedCell.value).toEqual(cell.value);
+            expect(selectedCell.column.field).toEqual(cell.column.field);
+            expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
+            expect(selectedCell.value).toEqual(cell.value);
+        }
+    }
+
+    public static moveCellUpDown =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            columnName: string,
+            moveDown: boolean = true) => new Promise(async (resolve, reject) => {
+                let cell = treeGrid.getCellByColumn(rowIndex, columnName);
+                const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
+                const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
+
+                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columnName);
+                if (cell !== undefined && cell !== null) {
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                }
+                const newCell = treeGrid.getCellByColumn(newRowIndex, columnName);
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+                expect(newCell.focused).toEqual(true);
+
+                resolve();
+            })
+
+    public static moveCellLeftRight =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            firstColumnName: string,
+            nextColumnName: string,
+            moveRight: boolean = true) => new Promise(async (resolve, reject) => {
+                const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
+                const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
+
+                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
+                if (cell !== undefined && cell !== null) {
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                }
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+                expect(newCell.focused).toEqual(true);
+
+                resolve();
+            })
+
+    public static moveCellWithTab =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            columnIndex,
+            columns) => new Promise(async (resolve, reject) => {
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let newCell;
+
+                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (columnIndex === columns.length - 1) {
+                    newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
+                }
+                if (cell !== undefined && cell !== null) {
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                }
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+                expect(newCell.focused).toEqual(true);
+
+                resolve();
+            })
+
+    public static moveCellWithShiftTab =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            columnIndex,
+            columns) => new Promise(async (resolve, reject) => {
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let newCell;
+
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                if (columnIndex === 0) {
+                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
+                }
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (cell !== undefined && cell !== null) {
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                }
+                TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
+                expect(newCell.focused).toEqual(true);
+
+                resolve();
+            })
+
+    public static moveEditableCellWithTab =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            columnIndex,
+            columns) => new Promise(async (resolve, reject) => {
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let newCell;
+
+                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (columnIndex === columns.length - 1) {
+                    newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
+                }
+
+                if (cell !== undefined && cell !== null) {
+                    expect(cell.inEditMode).toBe(false);
+                }
+                expect(newCell.inEditMode).toBe(true);
+                resolve();
+            })
+
+    public static moveEditableCellWithShiftTab =
+        (fix, treeGrid: IgxTreeGridComponent,
+            rowIndex: number,
+            columnIndex,
+            columns) => new Promise(async (resolve, reject) => {
+                let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                let newCell;
+
+                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+
+                cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (columnIndex === 0) {
+                    newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
+                } else {
+                    newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
+                }
+
+                if (cell !== undefined && cell !== null) {
+                    expect(cell.inEditMode).toBe(false);
+                }
+                expect(newCell.inEditMode).toBe(true);
+                resolve();
+            })
 }
