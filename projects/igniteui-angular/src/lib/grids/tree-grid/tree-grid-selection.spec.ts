@@ -133,6 +133,7 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -140,6 +141,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
@@ -293,6 +295,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 8);
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -300,6 +303,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
