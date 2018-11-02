@@ -243,7 +243,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public submit_value(gridId, detectChanges = true) {
+    public submit_value(gridId) {
         const editableCell = this.get_cell_inEditMode(gridId);
         if (editableCell) {
             const gridEditState = this.create_grid_edit_args(gridId, editableCell.cellID.rowID,
@@ -267,9 +267,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 return;
             }
             this.escape_editMode(gridId, editableCell.cellID);
-            if (detectChanges) {
-                this.get(gridId).cdr.detectChanges();
-            }
         }
     }
 

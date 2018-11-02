@@ -771,6 +771,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fix.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseInt(cell.value, 10)).toBe(146);
                 expect(editTemplate.nativeElement.type).toBe('number');
@@ -793,6 +794,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fix.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe('Abc Def');
                 expect(editTemplate.nativeElement.type).toBe('text');
@@ -819,6 +821,7 @@ describe('IgxTreeGrid - CRUD', () => {
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
+                fix.detectChanges();
             });
         });
 
@@ -915,6 +918,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fix.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseInt(cell.value, 10)).toBe(146);
                 expect(editTemplate.nativeElement.type).toBe('number');
@@ -937,6 +941,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fix.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe('Abc Def');
                 expect(editTemplate.nativeElement.type).toBe('text');

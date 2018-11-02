@@ -1640,8 +1640,8 @@ describe('IgxGrid Component Tests', () => {
                 grid.filter('ProductName', 'a', IgxStringFilteringOperand.instance().condition('contains'), true);
                 fix.detectChanges();
 
-                expect(gridAPI.submit_value).toHaveBeenCalledTimes(1);
-                // expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
                 expect(cell.inEditMode).toBeFalsy();
@@ -1665,8 +1665,8 @@ describe('IgxGrid Component Tests', () => {
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
                 fix.detectChanges();
 
-                expect(gridAPI.submit_value).not.toHaveBeenCalled();
-                // expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
+                expect(gridAPI.submit_value).toHaveBeenCalled();
+                expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
                 expect(cell.inEditMode).toBeFalsy();
@@ -2143,10 +2143,9 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toBe(110); // SORT does not submit
 
                 // Verify the data source is updated
-                // expect(gridAPI.submit_value).toHaveBeenCalled();
-                // expect(gridAPI.submit_value).toHaveBeenCalledWith(grid.id);
-                const newDataCellValue = fix.componentInstance.grid.rowList.first.rowData.Downloads;
-                expect(newDataCellValue).toBe(110);
+                expect(newDataCellValue).toBe(111);
+                const newDataCellValue = fix.componentInstance.data[0].Downloads;
+                expect(newDataCellValue).toBe(111);
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 0, columnID: 0, rowIndex: 0 });
