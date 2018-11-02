@@ -44,6 +44,7 @@ import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-st
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 
 const appRoutes = [
     {
@@ -231,6 +232,9 @@ const appRoutes = [
     {
         path: 'tooltip',
         component: TooltipSampleComponent
+    }, {
+        path: 'hierarhicalGrid',
+        component: HierarchicalGridSampleComponent
     }
 ];
 

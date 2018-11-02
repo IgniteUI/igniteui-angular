@@ -237,4 +237,25 @@ export class DataUtil {
             .map(t => t.newValue));
         return data;
     }
+
+    public static isExpanded<T>(state, record, primaryKey): boolean {
+        for (let i = 0; i < state.length; i++) {
+            if ((primaryKey && state[i].rowID === record[primaryKey]) ||
+                (!primaryKey && state[i].rowID === record)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static addHierarchy<T>(data: T[], state, primaryKey, childKey): T[] {
+        const result = [];
+
+        data.forEach((v) => {
+            result.push(v);
+            if (v[childKey] && DataUtil.isExpanded(state, v, primaryKey)) {
+                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey] });
+            }
+        });
+        return result;
+    }
 }

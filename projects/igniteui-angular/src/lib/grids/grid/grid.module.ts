@@ -39,7 +39,12 @@ import { DeprecateMethod } from '../../core/deprecateDecorators';
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxGridPreGroupingPipe,
+    IgxGridPostGroupingPipe,
+    IgxGridPagingPipe,
+    IgxGridSortingPipe,
+    IgxGridFilteringPipe,
   ],
   imports: [
     CommonModule,

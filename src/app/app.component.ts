@@ -257,6 +257,10 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        }, {
+            link: '/hierarhicalGrid',
+            icon: 'view_column',
+            name: 'Hierarchical Grid'
         }
     ];
 
