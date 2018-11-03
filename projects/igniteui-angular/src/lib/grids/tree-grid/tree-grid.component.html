@@ -120,7 +120,7 @@
 
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass"> 
-        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endRowEdit: endRowEdit.bind(this) }"></ng-container>
+        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
     </div>
 </div>
 <ng-template #defaultRowEditTemplate >
@@ -129,8 +129,8 @@
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
-            <button igxButton igxRowEditTabStop (click)="endRowEdit(false)">Cancel</button>
-            <button igxButton igxRowEditTabStop (click)="endRowEdit(true)">Done</button>
+            <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+            <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
         </div>
     </div>
 </ng-template>
