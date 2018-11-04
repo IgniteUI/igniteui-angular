@@ -17,39 +17,12 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         return result;
     }
 
-    public commit (data: any[], cascadeOnDelete?: boolean, childDataKey?: any, foreignKey?: any): void {
-        if (childDataKey) {
-            if (cascadeOnDelete) {
-                const deletedStates = this.aggregatedState(true).filter(t => t.type === TransactionType.DELETE);
-                for (const state of deletedStates) {
-                    this.deleteChildren(state);
-                }
-                super.commit(data);
-            }
-        }
-
-        this.clear();
-    }
-
     protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         super.updateState(states, transaction, recordRef);
         const currentState = states.get(transaction.id);
         if (currentState && transaction.type === TransactionType.ADD) {
             currentState.parentId = transaction.parentId;
         }
-    }
-
-    private deleteChildren(state: HierarchicalTransaction) {
-        if (!this._states.get(state.id)) {
-            this._states.set(state.id,
-                {
-                    value: state.newValue,
-                    recordRef: null,
-                    type: TransactionType.DELETE,
-                    parentId: state.parentId
-                } as S);
-        }
-        this._states.get(state.id).type = TransactionType.DELETE;
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead

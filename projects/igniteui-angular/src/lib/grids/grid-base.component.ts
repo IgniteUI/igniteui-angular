@@ -2861,6 +2861,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             return;
         }
 
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
         this.onRowDeleted.emit({ data: data[index] });
 
         //  first deselect row then delete it

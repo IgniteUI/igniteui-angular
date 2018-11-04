@@ -393,20 +393,35 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
+    public deleteRowById(rowId: any) {
+        if (this.transactions.enabled && this.cascadeOnDelete) {
+            this.transactions.startPending();
+        }
+
+        super.deleteRowById(rowId);
+
+        if (this.transactions.enabled && this.cascadeOnDelete) {
+            this.transactions.endPending(true);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
-                if (treeRecord && treeRecord.children && treeRecord.children.length > 0 && !this.transactions.enabled) {
+                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
-                        this.deleteRowById(child.rowID);
+                        super.deleteRowById(child.rowID);
                     }
                 }
             }
-        } else {
+       } else {
             const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :

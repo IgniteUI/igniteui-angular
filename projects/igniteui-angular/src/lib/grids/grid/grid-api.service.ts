@@ -111,7 +111,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
         this.get(id).groupingExpansionState = expansionState;
         if (grid.rowEditable) {
-            grid.refreshRowEditingOverlay(grid.rowInEditMode, toggleRowEditingOverlay);
+            grid.repositionRowEditingOverlay(grid.rowInEditMode);
         }
     }
 
