@@ -278,12 +278,12 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
             if (foreignKey) {
                 return DataUtil.mergeTransactions(
                     cloneArray(collection),
-                    grid.transactions.aggregatedState(true),
+                    grid.transactions.getAggregatedChanges(true),
                     grid.primaryKey);
             } else if (childDataKey) {
                 return DataUtil.mergeHierarchicalTransactions(
                     cloneHierarchicalArray(collection, childDataKey),
-                    grid.transactions.aggregatedState(true),
+                    grid.transactions.getAggregatedChanges(true),
                     childDataKey,
                     grid.primaryKey
                 );

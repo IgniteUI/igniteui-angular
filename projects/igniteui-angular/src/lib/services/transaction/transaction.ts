@@ -64,10 +64,11 @@ export interface TransactionService<T extends Transaction, S extends State> {
     add(transaction: T, recordRef?: any): void;
 
     /**
-     * Returns an array of all T. If id is provided returns last transaction for provided id
-     * @returns All the transaction on last transaction for provided id
+     * Returns all recorded transactions in chronological order.
+     * @param id Optional record id to get transactions for
+     * @returns All transaction in the service or for the specified record
      */
-    getTransactionLog(id?: any): T[] | T;
+    getTransactionLog(id?: any): Transaction[];
 
     /**
      * Remove the last transaction if any
@@ -85,7 +86,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
      */
-    aggregatedState(mergeChanges: boolean): T[];
+    getAggregatedChanges(mergeChanges: boolean): T[];
 
     /**
      * Returns the state of the record with provided id

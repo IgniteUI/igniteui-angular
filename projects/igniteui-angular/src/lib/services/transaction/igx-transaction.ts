@@ -39,14 +39,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         }
     }
 
-    public getTransactionLog(id?: any): T[] | T {
+    public getTransactionLog(id?: any): T[] {
         if (id) {
-            return [...this._transactions].reverse().find(t => t.id === id);
+            return this._transactions.filter(t => t.id === id);
         }
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges: boolean): T[] {
+    public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
