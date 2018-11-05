@@ -18,6 +18,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, true);
         grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
     }
 
     public collapse_row(id: string, rowID: any) {
@@ -25,6 +28,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, false);
         grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
     }
 
     public toggle_row_expansion(id: string, rowID: any) {
