@@ -86,3 +86,4 @@ export * from './lib/toast/toast.component';
 export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
+export { CancelableEventArgs } from './lib/core/utils';
