@@ -158,7 +158,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     @ViewChild('thumbTo')
     private thumbTo: ElementRef;
 
-    private _minValue = 0;
 
     // Measures & Coordinates
     private width = 0;
@@ -173,6 +172,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     // From/upperValue in percent values
     private hasViewInit = false;
     private timer;
+    private _minValue = 0;
     private _maxValue = 100;
     private _lowerBound?: number;
     private _upperBound?: number;
@@ -306,7 +306,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             return;
         }
 
-        this._lowerBound = value;
+        this._lowerBound = this.valueInRange(value, this.minValue, this.maxValue);
     }
 
     /**
@@ -342,7 +342,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
             return;
         }
 
-        this._upperBound = value;
+        this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
     }
 
     /**
@@ -370,9 +370,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *```
      */
     public set lowerValue(value: number) {
-        if (value < this.lowerBound || this.upperBound < value) {
-            return;
-        }
+        value = this.valueInRange(value, this.lowerBound, this.upperBound);
 
         if (this.isRange && value > this.upperValue) {
             return;
@@ -406,9 +404,7 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
      *```
      */
     public set upperValue(value: number) {
-        if (value < this.lowerBound || this.upperBound < value) {
-            return;
-        }
+        value = this.valueInRange(value, this.lowerBound, this.upperBound);
 
         if (this.isRange && value < this.lowerValue) {
             return;
@@ -725,6 +721,10 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         );
     }
 
+    private valueInRange(value, min = 0, max = 100) {
+        return Math.max(Math.min(value, max), min);
+    }
+
     private invalidateValue() {
         if (!this.isRange) {
             if (this.value >= this._lowerBound && this.value <= this._upperBound) {
@@ -885,11 +885,11 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
     }
 
     private setPointerPercent() {
-        this.pPointer = this.limit(this.toFixed(this.xPointer / this.width));
+        this.pPointer = this.valueInRange(this.toFixed(this.xPointer / this.width), this.pMin, this.pMax);
     }
 
     private valueToFraction(value: number) {
-        return this.limit((value - this.minValue) / (this.maxValue - this.minValue));
+        return this.valueInRange((value - this.minValue) / (this.maxValue - this.minValue), this.pMin, this.pMax);
     }
 
     private fractionToValue(fraction: number): number {
@@ -897,14 +897,6 @@ export class IgxSliderComponent implements ControlValueAccessor, EditorProvider,
         const min: number = this.minValue;
 
         return (max - min) * fraction + min;
-    }
-
-    private fractionToPercent(fraction: number): number {
-        return this.toFixed(fraction * 100);
-    }
-
-    private limit(num: number): number {
-        return Math.max(this.pMin, Math.min(num, this.pMax));
     }
 
     private updateTrack() {
