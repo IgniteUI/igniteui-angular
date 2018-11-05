@@ -46,7 +46,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges: boolean): T[] {
+    public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;

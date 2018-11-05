@@ -4035,7 +4035,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
                 cloneArray(data),
-                this.transactions.aggregatedState(true),
+                this.transactions.getAggregatedChanges(true),
                 this.primaryKey
             );
         }
@@ -4514,7 +4514,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
-            result.push(...this.transactions.aggregatedState(true)
+            result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
         }

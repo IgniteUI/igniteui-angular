@@ -37,7 +37,7 @@ and then inject it in the component's constructor:
    |getTransactionLog      | Returns an array of all transactions. If id is provided returns last transaction for provided id | id? |
    |undo                   | Remove the last transaction if any                            | -                         |
    |redo                   | Applies the last undone transaction if any                    | -                         |
-   |aggregatedState        | Returns aggregated state of all transactions including pending ones| mergeChanges         |
+   |getAggregatedChanges   | Returns aggregated state of all transactions including pending ones| mergeChanges         |
    |getState               | Returns the state of the record with provided id              | id                        |
    |getAggregatedValue     | Returns value of the required id including all uncommitted changes| id, mergeChanges      |
    |commit                 | Applies all transactions over the provided data               | data                      |

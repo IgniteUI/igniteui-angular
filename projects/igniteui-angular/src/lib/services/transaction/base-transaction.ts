@@ -32,7 +32,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
 
     redo(): void { }
 
-    aggregatedState(mergeChanges: boolean): T[] {
+    getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._pendingStates.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;

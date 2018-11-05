@@ -7,7 +7,7 @@ import { IgxTransactionService } from '..';
 export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction, S extends HierarchicalState>
     extends IgxTransactionService<T, S> {
 
-    public aggregatedState(mergeChanges: boolean): T[] {
+    public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
