@@ -37,6 +37,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             expandedStates.set(rowID, !isExpanded);
             grid.expansionStates = expandedStates;
         }
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
     }
 
     public trigger_row_expansion_toggle(id: string, row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
@@ -79,6 +82,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (shouldScroll) {
                 grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
             }
+        }
+        if (grid.rowEditable) {
+            grid.endEdit(true);
         }
     }
 
