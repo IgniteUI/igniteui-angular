@@ -74,6 +74,7 @@ import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { HierarchicalTransactionWrapperComponent } from './tree-grid/hierarchical-transaction-wrapper';
 
 const components = [
     AppComponent,
@@ -136,7 +137,8 @@ const components = [
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,
-    TooltipSampleComponent
+    TooltipSampleComponent,
+    HierarchicalTransactionWrapperComponent
 ];
 
 @NgModule({
@@ -161,7 +163,7 @@ const components = [
         IgxExcelExporterService,
         IgxCsvExporterService,
         IgxOverlayService,
-        { provide: DisplayDensityToken, useFactory: () => { return { displayDensity: DisplayDensity.comfortable } } }
+        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
     ],
     bootstrap: [AppComponent]
 })

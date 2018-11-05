@@ -1,5 +1,8 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 
+/**
+ * @hidden
+ */
 export class CharSeparatedValueData {
     private _headerRecord = '';
     private _dataRecords = '';

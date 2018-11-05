@@ -12,6 +12,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    private nextRow = 1;
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
@@ -67,7 +68,19 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public addRow() {
-        this.grid1.addRow({ 'employeeID': 24, 'PID': 5, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+        this.grid1.addRow({ 'employeeID': 24, 'PID': -1, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+    }
+
+    public addChildRow() {
+        const selectedRowId = this.grid1.selectedRows()[0];
+        this.grid1.addRow (
+            {
+                'employeeID': this.data.length + this.nextRow++,
+                'firstName': `Added `,
+                'lastName': 'Added',
+                'Title': 'Sales Manager'
+            },
+            selectedRowId);
     }
 
     public deleteRow() {
@@ -76,5 +89,21 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public commit() {
+        this.grid1.transactions.commit(this.data);
+    }
+
+    public undo() {
+        this.grid1.transactions.undo();
+    }
+
+    public redo() {
+        this.grid1.transactions.redo();
+    }
+
+    public log() {
+        console.dir(this.grid1.transactions);
     }
 }

@@ -56,11 +56,14 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-template igxGridFor let-rowData [igxGridForOf]="data | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
+    <ng-template igxGridFor let-rowData [igxGridForOf]="data 
+	| treeGridTransaction:id:pipeTrigger	
+	| treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
     | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger 
     | treeGridSorting:sortingExpressions:id:pipeTrigger
     | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
     | treeGridPaging:page:perPage:id:pipeTrigger"
+
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>
@@ -122,7 +125,7 @@
 </div>
 <ng-template #defaultRowEditTemplate >
     <div class="igx-banner__message">
-        <span class="igx-banner__text">You have {{ rowChangesCount }} uncommitted changes on this row</span>
+        <span class="igx-banner__text">You have {{ rowChangesCount }} changes in this row</span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">

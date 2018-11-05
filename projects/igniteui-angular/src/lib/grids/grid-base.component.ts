@@ -33,7 +33,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isNavigationKey, CancelableEventArgs } from '../core/utils';
+import { cloneArray, isNavigationKey, mergeObjects, CancelableEventArgs } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -1587,7 +1587,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Get transactions service for the grid.
      */
-    get transactions() {
+    get transactions(): TransactionService<Transaction, State> {
         return this._transactions;
     }
 
@@ -2015,7 +2015,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-            this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+            if (this.rowEditable) {
+                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+            }
         });
     }
 
@@ -2050,7 +2052,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     constructor(
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: TransactionService,
+        @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -2812,26 +2814,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
 
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
         this.onRowDeleted.emit({ data: data[index] });
 
-        //  if there is a row (index !== 0) delete it
-        //  if there is a row in ADD or UPDATE state change it's state to DELETE
-        if (index !== -1) {
-            if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
-                this.transactions.add(transaction, data[index]);
-            } else {
-                this.deleteRowFromData(rowId, index);
-            }
-        } else {
-            this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
-        }
-
-        if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowId)) {
+        //  first deselect row then delete it
+        if (this.rowSelectable && this.selection.is_item_selected(this.id, rowId)) {
             this.deselectRows([rowId]);
         } else {
             this.checkHeaderCheckboxStatus();
         }
+
+        this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
 
@@ -2845,7 +2838,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected deleteRowFromData(rowID: any, index: number) {
-        this.data.splice(index, 1);
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        if (index !== -1) {
+            if (this.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                this.transactions.add(transaction, this.data[index]);
+            } else {
+                this.data.splice(index, 1);
+            }
+        } else {
+            const state: State = this.transactions.getState(rowID);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+        }
     }
 
     /**
@@ -3495,7 +3500,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-        if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
+        if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
         this.cdr.detectChanges();
@@ -3795,7 +3800,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * this.grid.selectRows([1,2,5], true);
      * ```
      * @param rowIDs
-     * @param clearCurrentSelection if true clears the curren selection
+     * @param clearCurrentSelection if true clears the current selection
      * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
@@ -3983,7 +3988,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
                 cloneArray(data),
-                this.transactions.aggregatedState(true),
+                this.transactions.getAggregatedChanges(true),
                 this.primaryKey
             );
         }
@@ -4272,18 +4277,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.nativeElement.focus();
         } */
 
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
-            return;
+        private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
+            if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+                return;
+            }
+            if (!row) {
+                this.toggleRowEditingOverlay(false);
+            } else {
+                this.repositionRowEditingOverlay(row);
+            }
         }
-        if (!row) {
-            this.toggleRowEditingOverlay(false);
-        } else {
-            this.repositionRowEditingOverlay(row);
-        }
-    }
 
-    /**
+        /**
      * @hidden
      */
     public startRowEdit(cell: {
@@ -4318,6 +4323,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
+        this.rowEditingOverlay.element.parentElement.style.display = '';
     }
 
     /**
@@ -4336,9 +4342,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
-        this.configureRowEditingOverlay(row.rowID);
         if (!this.rowEditingOverlay.collapsed) {
-            this.rowEditingOverlay.reposition();
+            const rowStyle = this.rowEditingOverlay.element.parentElement.style;
+            if (row) {
+                rowStyle.display = '';
+                this.configureRowEditingOverlay(row.rowID);
+                this.rowEditingOverlay.reposition();
+            } else {
+                rowStyle.display = 'none';
+            }
         }
     }
 
@@ -4365,6 +4377,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.data[rowIndex], value);
+    }
     /**
      * TODO: Refactor
      * @hidden
@@ -4452,7 +4467,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
-            result.push(...this.transactions.aggregatedState(true)
+            result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
         }

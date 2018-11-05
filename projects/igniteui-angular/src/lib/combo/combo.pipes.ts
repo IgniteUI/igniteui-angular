@@ -38,6 +38,7 @@ export class IgxComboFilteringPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 export class SimpleFilteringStrategy extends FilteringStrategy {
     public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
         const cond = expr.condition;

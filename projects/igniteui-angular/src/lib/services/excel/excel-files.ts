@@ -5,24 +5,36 @@ import { WorksheetData } from './worksheet-data';
 import * as JSZip from 'jszip/dist/jszip';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 
+/**
+ * @hidden
+ */
 export class RootRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('.rels', ExcelStrings.getRels());
     }
 }
 
+/**
+ * @hidden
+ */
 export class AppFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('app.xml', ExcelStrings.getApp());
     }
 }
 
+/**
+ * @hidden
+ */
 export class CoreFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('core.xml', ExcelStrings.getCore());
     }
 }
 
+/**
+ * @hidden
+ */
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const hasSharedStrings = worksheetData.isEmpty === false;
@@ -30,12 +42,18 @@ export class WorkbookRelsFile implements IExcelFile {
     }
 }
 
+/**
+ * @hidden
+ */
 export class ThemeFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('theme1.xml', ExcelStrings.getTheme());
     }
 }
 
+/**
+ * @hidden
+ */
 export class WorksheetFile implements IExcelFile {
     private static MIN_WIDTH = 8.34;
 
@@ -124,24 +142,36 @@ export class WorksheetFile implements IExcelFile {
     /* tslint:enable member-ordering */
 }
 
+/**
+ * @hidden
+ */
 export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('styles.xml', ExcelStrings.getStyles(worksheetData.dataDictionary && worksheetData.dataDictionary.hasNonStringValues));
     }
 }
 
+/**
+ * @hidden
+ */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('workbook.xml', ExcelStrings.getWorkbook());
     }
 }
 
+/**
+ * @hidden
+ */
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('[Content_Types].xml', ExcelStrings.getContentTypesXML(!worksheetData.isEmpty, worksheetData.options.exportAsTable));
     }
 }
 
+/**
+ * @hidden
+ */
 export class SharedStringsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const dict = worksheetData.dataDictionary;
@@ -160,6 +190,9 @@ export class SharedStringsFile implements IExcelFile {
     }
 }
 
+/**
+ * @hidden
+ */
 export class TablesFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const columnCount = worksheetData.columnCount;
@@ -187,6 +220,9 @@ export class TablesFile implements IExcelFile {
     }
 }
 
+/**
+ * @hidden
+ */
 export class WorksheetRelsFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         folder.file('sheet1.xml.rels', ExcelStrings.getWorksheetRels());

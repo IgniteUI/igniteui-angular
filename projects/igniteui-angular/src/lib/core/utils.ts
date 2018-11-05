@@ -14,6 +14,28 @@ export function cloneArray(array, deep?: boolean) {
 }
 
 /**
+ * Doesn't clone leaf items
+ * @hidden
+ */
+export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
+    const result: any[] = [];
+    if (!array) {
+        return result;
+    }
+
+    for (const item of array) {
+        if (Array.isArray(item[childDataKey])) {
+            const clonedItem = cloneValue(item);
+            clonedItem[childDataKey] = cloneHierarchicalArray(clonedItem[childDataKey], childDataKey);
+            result.push(clonedItem);
+        } else {
+            result.push(item);
+        }
+    }
+    return result;
+}
+
+/**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
  * @param obj1 Object to merge into
  * @param obj2 Object to merge from
@@ -88,11 +110,12 @@ export function isDate(value: any) {
 }
 
 /**
- * Cehcks if the two passed arguments are equal
+ * Checks if the two passed arguments are equal
  * Currently supports date objects
  * @param obj1
  * @param obj2
  * @returns: `boolean`
+ * @hidden
  */
 export function isEqual(obj1, obj2): boolean {
     if (isDate(obj1) && isDate(obj2)) {
@@ -201,6 +224,7 @@ export function isFirefox(): boolean {
     return firefoxBrowser;
 }
 
+/** @hidden */
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;

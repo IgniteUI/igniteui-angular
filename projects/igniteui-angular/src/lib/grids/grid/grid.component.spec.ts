@@ -2656,7 +2656,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(trans.onStateUpdate.emit).not.toHaveBeenCalled();
-                let state = trans.aggregatedState(false);
+                let state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
 
                 cell = grid.getCellByColumn(1, 'ProductName');
@@ -2670,14 +2670,14 @@ describe('IgxGrid Component Tests', () => {
 
                 // Called once because row edit ended on row 1;
                 expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(1);
                 expect(state[0].type).toEqual(TransactionType.UPDATE);
                 expect(state[0].newValue['ProductName']).toEqual('Chaiiii');
 
                 grid.endEdit(true);
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
                 expect(state.length).toEqual(2);
                 expect(state[0].type).toEqual(TransactionType.UPDATE);
@@ -2688,7 +2688,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue).toBeNull();
@@ -2697,7 +2697,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(2);
                 expect(state[1].type).toEqual(TransactionType.UPDATE);
                 expect(state[1].newValue['ProductName']).toEqual(updateValue);
@@ -2708,7 +2708,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue).toBeNull();
@@ -2716,7 +2716,7 @@ describe('IgxGrid Component Tests', () => {
 
                 trans.commit(grid.data);
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
 
@@ -2729,7 +2729,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 trans.clear();
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
                 expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
@@ -2787,7 +2787,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                const initialState = grid.transactions.aggregatedState(false);
+                const initialState = grid.transactions.getAggregatedChanges(false);
                 expect(cell.value).toBe('Chai');
 
                 // Set to same value
@@ -2795,7 +2795,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(cell.value).toBe('Chai');
-                expect(grid.transactions.aggregatedState(false)).toEqual(initialState);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual(initialState);
 
                 // Change value and check if it's logged
                 cell.update('Updated value');
@@ -2807,7 +2807,7 @@ describe('IgxGrid Component Tests', () => {
                     newValue: {ProductName: 'Updated value'},
                     type: TransactionType.UPDATE
                 };
-                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
             }));
 
             it(`Should not log a transaction when a cell's value does not change - Date`, fakeAsync(() => {
@@ -2818,7 +2818,7 @@ describe('IgxGrid Component Tests', () => {
                 const cellStock = grid.getCellByColumn(0, 'UnitsInStock');
                 const cellDate = grid.getCellByColumn(0, 'OrderDate');
                 const initialCellValue = cellDate.value;
-                const initialState = grid.transactions.aggregatedState(false);
+                const initialState = grid.transactions.getAggregatedChanges(false);
 
                 // Enter edit mode
                 cellDate.onKeydownEnterEditMode({ stopPropagation: () => {}, preventDefault: () => {}});
@@ -2832,7 +2832,7 @@ describe('IgxGrid Component Tests', () => {
                 grid.endEdit(true);
                 tick();
                 fixture.detectChanges();
-                expect(grid.transactions.aggregatedState(true)).toEqual(initialState);
+                expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
 
                 const newValue = new Date('01/01/2000');
                 cellDate.update(newValue);
@@ -2843,7 +2843,7 @@ describe('IgxGrid Component Tests', () => {
                     newValue: {OrderDate: newValue},
                     type: TransactionType.UPDATE
                 };
-                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
             }));
 
             it('Should allow to change of a cell in added row in grid with transactions', fakeAsync(() => {
@@ -2891,12 +2891,13 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 expect(groupRows[0].expanded).toEqual(false);
-                expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                expect(overlayContent.style.display).toEqual('none');
                 grid.toggleGroup(groupRows[0].groupRow);
                 tick();
                 fix.detectChanges();
                 expect(groupRows[0].expanded).toEqual(true);
-                expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                expect(overlayContent.style.display).toEqual('');
             }));
 
             it('Do not hide/show row editing dialog when another group is collapsing/expanding and check that overlay is moving with row',
@@ -2913,43 +2914,44 @@ describe('IgxGrid Component Tests', () => {
                     cell.inEditMode = true;
                     tick();
                     fix.detectChanges();
-                    const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                    const overlayElem: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
                     const groupRows = grid.groupsRowList.toArray();
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                    expect(overlayContent.style.display).toEqual('');
 
                     row = grid.getRowByIndex(3).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(overlayContent.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
 
                     grid.toggleGroup(groupRows[1].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
 
                     grid.toggleGroup(groupRows[1].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(overlayContent.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
             }));
 
             it('Hide/show row editing dialog when hierarchical group is collapsed/expanded',
@@ -2968,17 +2970,17 @@ describe('IgxGrid Component Tests', () => {
                     cell.inEditMode = true;
                     tick();
                     fix.detectChanges();
-                    const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
                     const groupRows = grid.groupsRowList.toArray();
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                    expect(overlayContent.style.display).toEqual('none');
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('block');
+                    expect(overlayContent.style.display).toEqual('');
             }));
         });
     });
