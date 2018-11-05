@@ -20,9 +20,11 @@ import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { TransactionService } from '../../services/transaction/transaction';
+import { TransactionService, HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { mergeObjects } from '../../core/utils';
+import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
@@ -72,6 +74,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             this._id = value;
             this._gridAPI.reset(oldId, this._id);
         }
+    }
+
+    /**
+     * Get transactions service for the grid.
+     * @experimental @hidden
+     */
+    get transactions(): IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
+        return this._transactions;
     }
 
     /**
@@ -226,7 +236,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -353,10 +363,21 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             } else {
                 const parentData = parentRecord.data;
                 const childKey = this.childDataKey;
-                if (!parentData[childKey]) {
-                    parentData[childKey] = [];
+                if (this.transactions.enabled) {
+                    const rowId = this.primaryKey ? data[this.primaryKey] : data;
+                    this.transactions.add({
+                        id: rowId,
+                        parentId: parentRowID,
+                        newValue: data,
+                        type: TransactionType.ADD
+                    } as HierarchicalTransaction,
+                        null);
+                } else {
+                    if (!parentData[childKey]) {
+                        parentData[childKey] = [];
+                    }
+                    parentData[childKey].push(data);
                 }
-                parentData[childKey].push(data);
 
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
@@ -372,25 +393,50 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
+    public deleteRowById(rowId: any) {
+        if (this.transactions.enabled && this.cascadeOnDelete) {
+            this.transactions.startPending();
+        }
+
+        super.deleteRowById(rowId);
+
+        if (this.transactions.enabled && this.cascadeOnDelete) {
+            this.transactions.endPending(true);
+        }
+    }
+
+    /**
+     * @hidden
+     */
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
-                if (treeRecord.children && treeRecord.children.length > 0) {
+                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
-                        this.deleteRowById(child.rowID);
+                        super.deleteRowById(child.rowID);
                     }
                 }
             }
-        } else {
+       } else {
             const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
-            childData.splice(index, 1);
+            if (this.transactions.enabled) {
+                this.transactions.add({
+                    id: rowID,
+                    type: TransactionType.DELETE,
+                    newValue: null,
+                    parentId: record.parent ? record.parent.rowID : undefined
+                },
+                this.data);
+            } else {
+                childData.splice(index, 1);
+            }
         }
     }
 
@@ -456,5 +502,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             $implicit: rowData,
             templateID: 'dataRow'
         };
+    }
+
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.flatData[rowIndex], value);
     }
 }

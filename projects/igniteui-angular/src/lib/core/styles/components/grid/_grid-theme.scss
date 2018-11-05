@@ -900,12 +900,18 @@
     }
 
     %igx-grid__td--edited {
-        font-style: italic;
-        color: --var($theme, 'cell-edited-value-color');
+        %grid-cell-text {
+            font-style: italic;
+            color: --var($theme, 'cell-edited-value-color');
+        }
     }
 
     %igx-grid__tr--deleted {
-        text-decoration-line: line-through;
+        %grid-cell-text {
+            font-style: italic;
+            color: igx-color(map-get($theme, 'palette'), 'error');
+            text-decoration-line: line-through;
+        }
     }
 
     %igx-grid__td--editing {
