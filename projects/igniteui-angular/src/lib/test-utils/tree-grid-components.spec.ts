@@ -224,3 +224,18 @@ export class IgxTreeGridFilteringRowEditingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="900px" height="600px">
+        <igx-column [editable]="true" [field]="'ID'" dataTtype="number"></igx-column>
+        <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSelectionRowEditingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}

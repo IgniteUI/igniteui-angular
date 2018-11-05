@@ -257,7 +257,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(rows.length).toBe(7);
     });
 
-describe('Filtering: Row editing', () => {
+    describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
@@ -329,6 +329,7 @@ describe('Filtering: Row editing', () => {
 
                 treeGrid.clearFilter();
                 tick();
+                fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
                 const filteredParentNodes = treeGrid.data.filter(function (n) {
@@ -358,6 +359,8 @@ describe('Filtering: Row editing', () => {
                 expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.treeRow.parent.data.Name).length).toBeGreaterThan(0);
 
                 treeGrid.clearFilter();
+                tick();
+                fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
                 const filteredParentNodes = treeGrid.data.filter(function (n) {
