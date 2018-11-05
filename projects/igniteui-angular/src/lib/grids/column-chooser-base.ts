@@ -11,6 +11,7 @@ export enum ColumnDisplayOrder {
     DisplayOrder = 'DisplayOrder'
 }
 
+/** @hidden */
 export abstract class ColumnChooserBase implements OnDestroy {
     /**
      * Gets the grid columns that are going to be manipulated.

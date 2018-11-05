@@ -1,5 +1,9 @@
 import { Directive, HostBinding } from '@angular/core';
 
+
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxLabel]'
 })

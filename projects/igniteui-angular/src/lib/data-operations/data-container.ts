@@ -9,10 +9,17 @@ import { ISortingExpression, SortingDirection } from './sorting-expression.inter
 import { ISortingState } from './sorting-state.interface';
 import { ISortingStrategy, SortingStrategy } from './sorting-strategy';
 
+/**
+ * @hidden
+ */
 export enum DataAccess {
     OriginalData,
     TransformedData
 }
+
+/**
+ * @hidden
+ */
 export class DataContainer {
     public data: any[];
     /**

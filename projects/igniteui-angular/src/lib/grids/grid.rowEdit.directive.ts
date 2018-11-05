@@ -3,21 +3,25 @@ import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxGridNavigationService } from './grid-navigation.service';
 
+/** @hidden */
 @Directive({
     selector: '[igxRowEdit]'
 })
 export class IgxRowEditTemplateDirective { }
 
+/** @hidden */
 @Directive({
     selector: '[igxRowEditText]'
 })
 export class IgxRowEditTextDirective { }
 
+/** @hidden */
 @Directive({
     selector: '[igxRowEditActions]'
 })
 export class IgxRowEditActionsDirective { }
 
+/** @hidden */
 @Directive({
     selector: `[igxRowEditTabStop]`
 })

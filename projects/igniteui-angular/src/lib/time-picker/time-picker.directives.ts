@@ -18,9 +18,7 @@ import {
 } from '@angular/core';
 import { IgxTimePickerComponent } from './time-picker.component';
 
-/**
- * @hidden
- */
+/** @hidden */
 @Directive({
     selector: '[igxItemList]'
 })
@@ -210,6 +208,9 @@ export class IgxItemListDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxHourItem]'
 })
@@ -249,6 +250,9 @@ export class IgxHourItemDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxMinuteItem]'
 })
@@ -288,6 +292,9 @@ export class IgxMinuteItemDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxAmPmItem]'
 })
@@ -327,6 +334,9 @@ export class IgxAmPmItemDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxTimePickerTemplate]'
 })

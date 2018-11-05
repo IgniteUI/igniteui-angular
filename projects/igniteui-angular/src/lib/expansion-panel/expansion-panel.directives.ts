@@ -1,5 +1,8 @@
 import { Directive, HostBinding, Input } from '@angular/core';
 
+/**
+ * @hidden
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-expansion-panel-title'
@@ -9,6 +12,9 @@ export class IgxExpansionPanelTitleDirective {
     public cssClass = `igx-expansion-panel__header-title`;
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-expansion-panel-description'
@@ -18,6 +24,9 @@ export class IgxExpansionPanelDescriptionDirective {
     public cssClass = `igx-expansion-panel__header-description`;
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: 'igx-expansion-panel-icon'
