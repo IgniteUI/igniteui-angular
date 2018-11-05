@@ -39,9 +39,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         }
     }
 
-    public getTransactionLog(id?: any): T[] | T {
+    public getTransactionLog(id?: any): T[] {
         if (id) {
-            return [...this._transactions].reverse().find(t => t.id === id);
+            return this._transactions.filter(t => t.id === id);
         }
         return [...this._transactions];
     }

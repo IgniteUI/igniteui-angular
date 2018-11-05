@@ -26,7 +26,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         }
     }
 
-    getTransactionLog(id?: any): T[] | T { return []; }
+    getTransactionLog(id?: any): T[] { return []; }
 
     undo(): void { }
 
