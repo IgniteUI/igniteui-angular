@@ -19,6 +19,9 @@ export interface IExpansionPanelEventArgs {
     panel: IgxExpansionPanelComponent;
 }
 
+/**
+ * @hidden
+ */
 export enum ICON_POSITION {
     LEFT = 'left',
     NONE = 'none',

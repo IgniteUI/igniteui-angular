@@ -10,6 +10,9 @@ import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
 import { IgxPrefixModule, IgxPrefixDirective} from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule, IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 
+/**
+ * @hidden
+ */
 @NgModule({
   declarations: [
     IgxChipsAreaComponent,

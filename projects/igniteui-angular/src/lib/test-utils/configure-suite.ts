@@ -3,6 +3,7 @@ import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
  * Destroy fixtures after each, reset testing module after all
+ * @hidden
  */
 export const configureTestSuite = () => {
   let originReset;
