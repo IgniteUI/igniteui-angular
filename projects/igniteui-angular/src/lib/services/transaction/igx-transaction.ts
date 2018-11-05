@@ -4,11 +4,11 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 
 @Injectable()
-export class IgxTransactionService extends IgxBaseTransactionService {
-    private _transactions: Transaction[] = [];
-    private _redoStack: { transaction: Transaction, recordRef: any }[] = [];
-    private _undoStack: { transaction: Transaction, recordRef: any }[] = [];
-    private _states: Map<any, State> = new Map();
+export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
+    protected _transactions: T[] = [];
+    protected _redoStack: { transaction: T, recordRef: any, useInUndo?: boolean }[] = [];
+    protected _undoStack: { transaction: T, recordRef: any, useInUndo?: boolean }[] = [];
+    protected _states: Map<any, S> = new Map();
 
     get canUndo(): boolean {
         return this._undoStack.length > 0;
@@ -20,38 +20,42 @@ export class IgxTransactionService extends IgxBaseTransactionService {
 
     public onStateUpdate = new EventEmitter<void>();
 
-    public add(transaction: Transaction, recordRef?: any): void {
+    public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
+        this.addTransaction(transaction, states, recordRef);
+    }
+
+    private addTransaction(transaction: T, states: Map<any, S>, recordRef?: any, useInUndo: boolean = true) {
         this.updateState(states, transaction, recordRef);
 
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
         transactions.push(transaction);
 
         if (!this._isPending) {
-            this._undoStack.push({ transaction, recordRef });
+            this._undoStack.push({ transaction, recordRef, useInUndo });
             this._redoStack = [];
             this.onStateUpdate.emit();
         }
     }
 
-    public getTransactionLog(id?: any): Transaction[] | Transaction {
+    public getTransactionLog(id?: any): T[] {
         if (id) {
-            return [...this._transactions].reverse().find(t => t.id === id);
+            return this._transactions.filter(t => t.id === id);
         }
         return [...this._transactions];
     }
 
-    public aggregatedState(mergeChanges: boolean): Transaction[] {
-        const result: Transaction[] = [];
-        this._states.forEach((state: State, key: any) => {
+    public getAggregatedChanges(mergeChanges: boolean): T[] {
+        const result: T[] = [];
+        this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
-            result.push({ id: key, newValue: value, type: state.type });
+            result.push({ id: key, newValue: value, type: state.type } as T);
         });
         return result;
     }
 
-    public getState(id: any): State {
+    public getState(id: any): S {
         return this._states.get(id);
     }
 
@@ -81,15 +85,17 @@ export class IgxTransactionService extends IgxBaseTransactionService {
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
-            this._pendingStates.forEach((s: State, k: any) => {
-                this.add({ id: k, newValue: s.value, type: s.type }, s.recordRef);
+            let i = 0;
+            this._pendingStates.forEach((s: S, k: any) => {
+                this.addTransaction({ id: k, newValue: s.value, type: s.type } as T, this._states, s.recordRef, i === 0);
+                i++;
             });
         }
         super.endPending(commit);
     }
 
     public commit(data: any[]): void {
-        this._states.forEach((s: State) => {
+        this._states.forEach((s: S) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
             switch (s.type) {
                 case TransactionType.ADD:
@@ -122,9 +128,14 @@ export class IgxTransactionService extends IgxBaseTransactionService {
         if (this._undoStack.length <= 0) {
             return;
         }
-        this._transactions.pop();
-        const action: { transaction: Transaction, recordRef: any } = this._undoStack.pop();
-        this._redoStack.push(action);
+
+        let action: { transaction: T, recordRef: any, useInUndo?: boolean };
+        do {
+            action = this._undoStack.pop();
+            this._transactions.pop();
+            this._redoStack.push(action);
+        } while (!action.useInUndo);
+
         this._states.clear();
         this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
         this.onStateUpdate.emit();
@@ -132,10 +143,21 @@ export class IgxTransactionService extends IgxBaseTransactionService {
 
     public redo(): void {
         if (this._redoStack.length > 0) {
-            const undoItem = this._redoStack.pop();
+            //  remove first item from redo stack (it should always has useInUndo === true)
+            //  and then all next items until there are items and useInUndo === false.
+            //  If there are no more items, or next item's useInUndo === true leave.
+            let undoItem: { transaction: T, recordRef: any, useInUndo?: boolean };
+            undoItem = this._redoStack.pop();
             this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
             this._transactions.push(undoItem.transaction);
             this._undoStack.push(undoItem);
+
+            while (this._redoStack[this._redoStack.length - 1] && !this._redoStack[this._redoStack.length - 1].useInUndo) {
+                undoItem = this._redoStack.pop();
+                this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
+                this._transactions.push(undoItem.transaction);
+                this._undoStack.push(undoItem);
+            }
             this.onStateUpdate.emit();
         }
     }
@@ -144,7 +166,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * Verifies if the passed transaction is correct. If not throws an exception.
      * @param transaction Transaction to be verified
      */
-    protected verifyAddedTransaction(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
+    protected verifyAddedTransaction(states: Map<any, S>, transaction: T, recordRef?: any): void {
         const state = states.get(transaction.id);
         switch (transaction.type) {
             case TransactionType.ADD:
@@ -159,7 +181,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     //  cannot delete or update deleted items
                     throw new Error(`Cannot add this transaction. Transaction with id: ${transaction.id} has been already deleted.`);
                 }
-                if (!state && !recordRef) {
+                if (!state && !recordRef && !this._isPending) {
                     //  cannot initially add transaction or delete item with no recordRef
                     throw new Error(`Cannot add this transaction. This is first transaction of type ${transaction.type} ` +
                         `for id ${transaction.id}. For first transaction of this type recordRef is mandatory.`);
@@ -174,7 +196,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * @param transaction Transaction to apply to the current state
      * @param recordRef Reference to the value of the record in data source, if any, where transaction should be applied
      */
-    protected updateState(states: Map<any, State>, transaction: Transaction, recordRef?: any): void {
+    protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         let state = states.get(transaction.id);
         //  if TransactionType is ADD simply add transaction to states;
         //  if TransactionType is DELETE:
@@ -209,7 +231,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
                     }
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type };
+            state = { value: cloneValue(transaction.newValue), recordRef: recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 
@@ -224,7 +246,7 @@ export class IgxTransactionService extends IgxBaseTransactionService {
      * empty object removes it from states.
      * @param state State to clean
      */
-    protected cleanState(id: any, states: Map<any, State>): void {
+    protected cleanState(id: any, states: Map<any, S>): void {
         const state = states.get(id);
         //  do nothing if
         //  there is no state, or
