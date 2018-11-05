@@ -6,6 +6,10 @@ import { Calendar,
     IgxCheckboxComponent } from '../../public_api';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { ComponentFixture } from '@angular/core/testing';
+import { IgxInputDirective } from '../input-group';
+import { IgxGridHeaderComponent } from '../grids/grid-header.component';
+import { IgxChipComponent } from '../chips';
 
 const SUMMARY_CLASS = '.igx-grid-summary';
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -20,6 +24,9 @@ const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const DISABLED_CHIP = 'igx-chip--disabled';
 const CHIP_REMOVE_ICON = '.igx-chip__remove-icon';
 const CHIP = 'igx-chip';
+const FILTER_UI_ROW = 'igx-grid-filtering-row';
+const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
+const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
 
 export class GridFunctions {
 
@@ -286,6 +293,15 @@ export class GridFunctions {
         }
     }
 
+    public static getChipText(chipElem) {
+        return chipElem.nativeElement.querySelector('div.igx-chip__content').innerText.trim();
+    }
+
+    public static clickChip(debugElement) {
+        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
+        debugElement.componentInstance.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+    }
+
     /* Search-related members */
     public static findNext(grid: IgxGridComponent, text: string) {
         const promise = new Promise((resolve) => {
@@ -379,5 +395,86 @@ export class GridFunctions {
         expect(chkInput.checked).toBe(isChecked);
     }
 
-}
+    // Filtering
+    public static removeFilterChipByIndex(index: number, filterUIRow) {
+        const filterChip = filterUIRow.queryAll(By.css('igx-chip'))[index];
+        const removeButton = filterChip.query(By.css('div.igx-chip__remove'));
+        removeButton.nativeElement.click();
+    }
 
+    public static selectFilteringCondition(cond: string, ddList) {
+        const ddItems = ddList.nativeElement.children;
+        let i;
+        for ( i = 0; i < ddItems.length; i++) {
+            if (ddItems[i].textContent === cond) {
+                ddItems[i].click();
+                return;
+            }
+        }
+    }
+
+    public static filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        // open dropdown
+        this.openFilterDD(fix.debugElement);
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        this.selectFilteringCondition(condition, ddList);
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
+
+        input.nativeElement.value = value;
+        input.nativeElement.dispatchEvent(new Event('input'));
+        fix.detectChanges();
+
+        // Enter key to submit
+        this.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        fix.detectChanges();
+    }
+
+    public static resetFilterRow(fix: ComponentFixture<any> ) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingBtns.queryAll(By.css('button'))[0];
+        reset.nativeElement.click();
+        fix.detectChanges();
+    }
+
+    public static closeFilterRow(fix: ComponentFixture<any>) {
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const close = editingBtns.queryAll(By.css('button'))[1];
+        close.nativeElement.click();
+        fix.detectChanges();
+    }
+
+    public static openFilterDD(elem: DebugElement) {
+        const filterUIRow = elem.query(By.css(FILTER_UI_ROW));
+        const filterIcon = filterUIRow.query(By.css('igx-icon'));
+        filterIcon.nativeElement.click();
+    }
+
+    public static simulateKeyboardEvent(element, eventName, inputKey) {
+        element.nativeElement.dispatchEvent(new KeyboardEvent(eventName, { key: inputKey }));
+    }
+
+    public static getColumnHeader(columnField: string, fix: ComponentFixture<any>) {
+        return fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent)).find((header) => {
+            return header.componentInstance.column.field === columnField;
+        });
+    }
+
+    public static getFilterChipsForColumn(columnField: string, fix: ComponentFixture<any>) {
+        const columnHeader = this.getColumnHeader(columnField, fix);
+        return columnHeader.parent.queryAll(By.directive(IgxChipComponent));
+    }
+
+    public static getFilterOperandsForColumn(columnField: string, fix: ComponentFixture<any>) {
+        const columnHeader = this.getColumnHeader(columnField, fix);
+        return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_CONNECTOR));
+    }
+
+    public static getFilterIndicatorForColumn(columnField: string, fix: ComponentFixture<any>) {
+        const columnHeader = this.getColumnHeader(columnField, fix);
+        return columnHeader.parent.queryAll(By.css('.' + FILTER_UI_INDICATOR));
+    }
+}
