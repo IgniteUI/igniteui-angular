@@ -15,7 +15,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeGridFilteringComponent
+                IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent
             ],
             imports: [
                 BrowserAnimationsModule,
