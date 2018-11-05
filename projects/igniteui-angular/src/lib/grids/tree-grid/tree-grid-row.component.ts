@@ -3,11 +3,12 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
+import { State, TransactionType } from '../../services';
 
 @Component({
     selector: 'igx-tree-grid-row',
     templateUrl: 'tree-grid-row.component.html',
-    providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent)}]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
 export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
     private _treeRow: ITreeGridRecord;
@@ -74,5 +75,26 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
         return `${classes} ${filteredClass}`;
+    }
+
+    /** @hidden */
+    public get deleted(): boolean {
+        return this.hasDeletedParent(this.rowID) || super.isRowDeleted();
+    }
+
+    private hasDeletedParent(rowId: any): boolean {
+        if (this.grid.cascadeOnDelete) {
+            const node = this.grid.records.get(rowId);
+            for (const parentId of node.path) {
+                const state: State = this.grid.transactions.getState(parentId);
+                if (state && state.type === TransactionType.DELETE) {
+                    if (this.gridAPI.get_row_by_key(this.grid.id, parentId).deleted) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

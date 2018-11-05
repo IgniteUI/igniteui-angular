@@ -307,6 +307,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
             if (rowIndex !== -1) {
+                //  Check if below change will work on added rows with transactions
+                // oldValue = this.get_all_data(id, true)[rowIndex][column.field];
+                // rowData = this.get_all_data(id, true)[rowIndex];
                 oldValue = columnID !== null ? dataWithTransactions[rowIndex][column.field] : null;
                 rowData = dataWithTransactions[rowIndex];
             }
@@ -596,9 +599,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return column.dataType === DataType.Number;
     }
 
-    public get_all_data(id: string): any[] {
+    public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        return grid.data;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
+        return data ? data : [];
     }
 
     protected getSortStrategyPerColumn(id: string, fieldName: string) {

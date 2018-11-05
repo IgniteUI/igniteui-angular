@@ -153,12 +153,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
 
     /** @hidden */
     public get deleted(): boolean {
-        const row: State = this.grid.transactions.getState(this.rowID);
-        if (row) {
-            return row.type === TransactionType.DELETE;
-        }
-
-        return false;
+        return this.isRowDeleted();
     }
 
     public get inEditMode(): boolean {
@@ -319,4 +314,12 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
     }
 
+    protected isRowDeleted(): boolean {
+        const state: State = this.grid.transactions.getState(this.rowID);
+        if (state) {
+            return state.type === TransactionType.DELETE;
+        }
+
+        return false;
+    }
 }
