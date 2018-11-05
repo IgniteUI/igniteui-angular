@@ -12,6 +12,7 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { ColumnPinningTestComponent, ColumnGroupsPinningTestComponent } from '../../test-utils/grid-base-components.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('Column Pinning UI', () => {
     configureTestSuite();
@@ -49,7 +50,7 @@ describe('Column Pinning UI', () => {
         });
 
         afterAll(() => {
-            HelperUtils.clearOverlay();
+            UIInteractions.clearOverlay();
         });
 
         it ('title is initially empty.', async(() => {

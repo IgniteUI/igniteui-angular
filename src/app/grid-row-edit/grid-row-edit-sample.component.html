@@ -18,7 +18,8 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                        <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                            style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
@@ -31,7 +32,8 @@
                 <igx-checkbox class="properties-toggle" [(ngModel)]="pinFlag">Pinned Columns</igx-checkbox>
                 <igx-checkbox class="properties-toggle" [(ngModel)]="hideFlag">Hidden Columns</igx-checkbox>
                 <igx-checkbox class="properties-toggle" [(ngModel)]="summaryFlag" (ngModelChange)="refreshAll()">Summaries</igx-checkbox>
-                <igx-checkbox class="properties-toggle" [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()">Custom Template</igx-checkbox>
+                <igx-checkbox class="properties-toggle" [(ngModel)]="customTemplate" (ngModelChange)="refreshAll()">Custom
+                    Template</igx-checkbox>
             </div>
             <div>
                 <label>Cell Update API</label>
@@ -46,7 +48,8 @@
                         Row
                     </label>
                     <select [(ngModel)]="update_row">
-                        <option *ngFor="let row of gridRowEditTransaction.data" [value]="row[gridRowEditTransaction.primaryKey]">{{ row[gridRowEditTransaction.primaryKey] }}</option>
+                        <option *ngFor="let row of gridRowEditTransaction.data" [value]="row[gridRowEditTransaction.primaryKey]">{{
+                            row[gridRowEditTransaction.primaryKey] }}</option>
                     </select>
                 </div>
                 <div class="properties-input">
@@ -54,15 +57,44 @@
                         Column
                     </label>
                     <select [(ngModel)]="update_column">
-                        <option *ngFor="let column of gridRowEditTransaction.columns" [value]="column.field">{{ column.field }}</option>
+                        <option *ngFor="let column of gridRowEditTransaction.columns" [value]="column.field">{{
+                            column.field }}</option>
                     </select>
                 </div>
                 <button igxButton class="igx-button--raised" (click)="updateCell(update_value, update_row, update_column)">Update</button>
             </div>
+            <div>
+                <h4>Log Grid Edit Events</h4>
+                <div>
+                    <igx-switch [(ngModel)]="events.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
+                    <igx-switch [(ngModel)]="events.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
+                    <igx-switch [(ngModel)]="events.cell.cancel"><span class='red'>Cell - CANCEL</span></igx-switch>
+                </div>
+                <div>
+                    <igx-switch [(ngModel)]="events.row.enter"><span class='blue'>Row - ENTER</span></igx-switch>
+                    <igx-switch [(ngModel)]="events.row.done"><span class='green'>Row - DONE</span></igx-switch>
+                    <igx-switch [(ngModel)]="events.row.cancel"><span class='red'>Row - CANCEL</span></igx-switch>
+                </div>
+            </div>
+            <div>
+                <h4>Cancel Grid Edit Events</h4>
+                <div>
+                    <igx-switch [(ngModel)]="cancel.cell.enter"><span class='blue'>Cell - ENTER</span></igx-switch>
+                    <igx-switch [(ngModel)]="cancel.cell.done"><span class='green'>Cell - DONE</span></igx-switch>
+                    <igx-switch [(ngModel)]="cancel.cell.cancel"><span class='red'>Cell - CANCEL</span></igx-switch>
+                </div>
+                <div>
+                    <igx-switch [(ngModel)]="cancel.row.enter"><span class='blue'>Row - ENTER</span></igx-switch>
+                    <igx-switch [(ngModel)]="cancel.row.done"><span class='green'>Row - DONE</span></igx-switch>
+                    <igx-switch [(ngModel)]="cancel.row.cancel"><span class='red'>Row - CANCEL</span></igx-switch>
+                </div>
+            </div>
             <app-grid-with-transactions>
                 <igx-grid #gridRowEditTransaction [data]="data" [primaryKey]="'ProductID'" width="900px" height="700px"
-                    [rowEditable]="true" [paging]="true" [perPage]="10" (onRowEditDone)="rowEditDone($event)"
-                    (onRowEditCancel)="rowEditCancel($event)">
+                    [rowEditable]="true" [paging]="true" [perPage]="10" (onRowEdit)="rowEditDone($event)"
+                    (onRowEditCancel)="rowEditCancel($event)" (onRowEditEnter)="rowEditEnter($event)"
+                    (onCellEditEnter)="cellEnterEditMode($event)" (onCellEdit)="cellEditDone($event)"
+                    (onCellEditCancel)="cellEditCancel($event)">
                     <igx-column width="100px" [editable]="false">
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
@@ -77,7 +109,8 @@
                         [hidden]="hideFlag" [dataType]="'string'" editable="true"></igx-column>
                     <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                                style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column width="100px" field="OrderDate" header="Order Date" [dataType]="'date'"></igx-column>
@@ -95,7 +128,8 @@
                     <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
                         [hasSummary]="summaryFlag" editable="true" [sortable]="true">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                            <input name="units" [igxFocus]="true" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                                style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column width="100px" field="OrderDate2" [dataType]="'date'" header="PINNED DATE" editable="true"
@@ -112,13 +146,21 @@
                             </div>
                             <div class="igx-banner__actions">
                                 <div class="igx-banner__row">
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowEdit()">Cancel</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit()">Cancel</button>
                                     <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                         Changes</button>
-                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endRowEdit(true)">Apply</button>
+                                    <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(true)">Apply</button>
                                 </div>
                             </div>
                         </div>
+                    </ng-template>
+                    <ng-template igxRowEditText let-rowChangesCount>
+                        Changes: {{rowChangesCount}}
+                    </ng-template>
+                    <!-- https://github.com/angular/angular/issues/16643 -->
+                    <ng-template igxRowEditActions let-endEdit>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(true)">Apply</button>
                     </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>
@@ -141,7 +183,8 @@
                 <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                            style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="OrderDate" [dataType]="'date'"></igx-column>
@@ -153,7 +196,8 @@
                     editable="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" editable="true">
                     <ng-template igxCellEditor let-cell="cell">
-                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                        <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                            style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
                 <igx-column width="100px" field="PINNED ORDER DATE" [dataType]="'date'" editable="true" pinned="true"></igx-column>
@@ -174,7 +218,8 @@
                     <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
                     <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
                         <ng-template igxCellEditor let-cell="cell">
-                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue" style="color: black; width: 30px;" />
+                            <input name="units" [(ngModel)]="cell.gridAPI.get_cell_inEditMode(cell.gridID).cell.editValue"
+                                style="color: black; width: 30px;" />
                         </ng-template>
                     </igx-column>
                     <igx-column field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
@@ -189,8 +234,8 @@
         <article class="grid-row-edit-wrapper">
             <h4>Performance grid with transactions and row edit</h4>
             <app-grid-with-transactions>
-                <igx-grid #gridPerformance  [primaryKey]="'ID'" [data]="performanceData" [rowEditable]="true" [width]="'1200px'" [height]="'800px'"
-                    [rowSelectable]="true">
+                <igx-grid #gridPerformance [primaryKey]="'ID'" [data]="performanceData" [rowEditable]="true" [width]="'1200px'"
+                    [height]="'800px'" [rowSelectable]="true">
                     <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field"
                         [header]="c.field" [width]="c.width">
                     </igx-column>

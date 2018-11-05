@@ -1,0 +1,43 @@
+<ng-template #emptyFilter>
+        <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
+            <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" [displayDensity]="'cosy'">
+                <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
+                <span [attr.draggable]="false">Filter</span>
+            </igx-chip>
+        </igx-chips-area>
+</ng-template>
+
+<ng-template #defaultFilter>
+    <igx-chips-area #chipsArea class="igx-filtering-chips">
+        <ng-container *ngFor="let item of visibleExpressionsList; let last = last;" >
+            <igx-chip
+                [removable]="true"
+                [displayDensity]="'cosy'"
+                (click)="onChipClicked(item.expression)"
+                (keydown)="onChipKeyDown($event, item.expression)"
+                (onRemove)="onChipRemoved($event, item)">
+                <igx-icon igxPrefix
+                    fontSet="filtering-icons"
+                    [name]="item.expression.condition.iconName">
+                </igx-icon>
+                <span #label>
+                    {{filteringService.getChipLabel(item.expression)}}
+                </span>
+            </igx-chip>
+            <span class="igx-filtering-chips__connector" *ngIf="!last">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
+        </ng-container>
+        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" tabindex="0">
+            <igx-icon>filter_list</igx-icon>
+            <igx-badge [value]="moreFiltersCount"></igx-badge>
+        </div>
+    </igx-chips-area>
+</ng-template>
+
+<ng-template #complexFilter>
+    <igx-chip #complexChip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
+        <igx-icon igxPrefix>filter_list</igx-icon>
+        <span>Complex Filter</span>
+    </igx-chip>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>

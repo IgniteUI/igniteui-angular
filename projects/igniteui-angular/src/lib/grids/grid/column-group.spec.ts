@@ -10,6 +10,7 @@ import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxGridHeaderComponent } from '../grid-header.component';
 
 const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
 const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
@@ -2019,8 +2020,8 @@ function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroup
 // tests column and column group header rendering
 function testColumnGroupHeaderRendering(column: DebugElement, width: number, height: number,
     title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) {
-    expect(column.nativeElement.offsetHeight).toBe(height);
-    expect(column.nativeElement.offsetWidth).toBe(width);
+    expect(column.nativeElement.parentElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.parentElement.offsetWidth).toBe(width);
 
     const colHeaderTitle = column.children
         .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_TITLE_CLASS))[0];
@@ -2028,7 +2029,10 @@ function testColumnGroupHeaderRendering(column: DebugElement, width: number, hei
 
     const colGroupDirectChildren = column.children
         .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_GROUP_CLASS))[0]
-        .children.filter(c => c.nativeElement.classList.contains(descendentColumnCssClass));
+        .children.filter(c => {
+            const header = c.query(By.directive(IgxGridHeaderComponent));
+           return header.nativeElement.classList.contains(descendentColumnCssClass);
+        });
 
     expect(colGroupDirectChildren.length).toBe(descendentColumnCount);
 }

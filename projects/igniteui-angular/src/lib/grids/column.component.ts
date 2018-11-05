@@ -31,6 +31,8 @@ import {
     IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
+import { SortingStrategy } from '../data-operations/sorting-strategy';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -112,17 +114,17 @@ export class IgxColumnComponent implements AfterContentInit {
     public editable = null;
     /**
      * Sets/gets whether the column is filterable.
-     * Default value is `false`.
+     * Default value is `true`.
      * ```typescript
      * let isFilterable = this.column.filterable;
      * ```
      * ```html
-     * <igx-column [filterable] = "true"></igx-column>
+     * <igx-column [filterable] = "false"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = false;
+    public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -172,7 +174,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._hidden !== value) {
             this._hidden = value;
             if (this.grid) {
-                this.grid.endRowEdit(true);
+                this.grid.endEdit(true);
             }
             const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
             if (cellInEditMode) {
@@ -201,6 +203,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 }
 
                 this.grid.reflow();
+                this.grid.filteringService.refreshExpressions();
             }
         }
     }
@@ -481,6 +484,33 @@ export class IgxColumnComponent implements AfterContentInit {
         this._filters = classRef;
     }
     /**
+     * Gets the column `sortStrategy`.
+     * ```typescript
+     * let sortStrategy = this.column.sortStrategy'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get sortStrategy(): any {
+        return this._sortStrategy;
+    }
+    /**
+     * Sets the column `sortStrategy`.
+     * ```typescript
+     * this.column.sortStrategy = new CustomSortingStrategy().
+     *
+     * class CustomSortingStrategy extends SortingStrategy {
+     * ...
+     * }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set sortStrategy(classRef: any) {
+        this._sortStrategy = classRef;
+    }
+
+
+    /**
      * Gets the default minimum `width` of the column.
      * ```typescript
      * let defaultMinWidth =  this.column.defaultMinWidth;
@@ -597,8 +627,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
-            .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
-            .reduce((a, b) => a.concat(b), []);
+            .map((row) => {
+                if (row.cells) {
+                    return row.cells.filter((cell) => cell.columnIndex === this.index);
+                }
+            }).reduce((a, b) => a.concat(b), []);
     }
     /**
      * Gets the column visible index.
@@ -677,6 +710,16 @@ export class IgxColumnComponent implements AfterContentInit {
     public widthSetByUser: boolean;
 
     /**
+     * Returns the filteringExpressionsTree of the column.
+     * ```typescript
+     * let tree =  this.column.filteringExpressionsTree;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get filteringExpressionsTree(): FilteringExpressionsTree {
+        return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
+    }
+    /**
      * Sets/gets the parent column.
      * ```typescript
      * let parentColumn = this.column.parent;
@@ -729,6 +772,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _sortStrategy = new SortingStrategy();
+    /**
+     *@hidden
+     */
     protected _hidden = false;
     /**
      *@hidden
@@ -745,7 +792,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '88';
+    protected _defaultMinWidth = '64';
     /**
      *@hidden
      */
@@ -803,6 +850,9 @@ export class IgxColumnComponent implements AfterContentInit {
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
                     break;
+                default:
+                    this.summaries = IgxSummaryOperand;
+                    break;
             }
         }
         if (!this.filters) {
@@ -855,9 +905,8 @@ export class IgxColumnComponent implements AfterContentInit {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         if (this.grid) {
-            this.grid.endRowEdit(true);
+            this.grid.endEdit(true);
         }
-        this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
         }
@@ -904,6 +953,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -917,9 +967,8 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public unpin(index?) {
         if (this.grid) {
-            this.grid.endRowEdit();
+            this.grid.endEdit(true);
         }
-        this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;
         }
@@ -956,6 +1005,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.reinitPinStates();
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -1035,8 +1085,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.cells.length > 0) {
             let cellsContentWidths = [];
             if (this.cells[0].nativeElement.children.length > 0) {
-                this.cells.forEach((cell) => cellsContentWidths.push(Math.max(...Array.from(cell.nativeElement.children)
-                    .map((child) => valToPxlsUsingRange(range, child)))));
+                this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
                 cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
             }
@@ -1059,7 +1108,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
             }
 
-            if (this.sortable || this.filterable) {
+            if (this.sortable || (this.grid.allowFiltering && this.filterable)) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
             }
 

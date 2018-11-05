@@ -14,6 +14,28 @@ export function cloneArray(array, deep?: boolean) {
 }
 
 /**
+ * Doesn't clone leaf items
+ * @hidden
+ */
+export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
+    const result: any[] = [];
+    if (!array) {
+        return result;
+    }
+
+    for (const item of array) {
+        if (Array.isArray(item[childDataKey])) {
+            const clonedItem = cloneValue(item);
+            clonedItem[childDataKey] = cloneHierarchicalArray(clonedItem[childDataKey], childDataKey);
+            result.push(clonedItem);
+        } else {
+            result.push(item);
+        }
+    }
+    return result;
+}
+
+/**
  * Deep clones all first level keys of Obj2 and merges them to Obj1
  * @param obj1 Object to merge into
  * @param obj2 Object to merge from
@@ -88,6 +110,21 @@ export function isDate(value: any) {
 }
 
 /**
+ * Checks if the two passed arguments are equal
+ * Currently supports date objects
+ * @param obj1
+ * @param obj2
+ * @returns: `boolean`
+ * @hidden
+ */
+export function isEqual(obj1, obj2): boolean {
+    if (isDate(obj1) && isDate(obj2)) {
+        return obj1.getTime() === obj2.getTime();
+    }
+    return obj1 === obj2;
+}
+
+/**
  *@hidden
  */
 export const enum KEYCODES {
@@ -98,7 +135,25 @@ export const enum KEYCODES {
     UP_ARROW = 38,
     RIGHT_ARROW = 39,
     DOWN_ARROW = 40,
-    F2 = 113
+    F2 = 113,
+    TAB = 9
+}
+
+/**
+ *@hidden
+ */
+export const enum KEYS {
+    ENTER = 'Enter',
+    SPACE = ' ',
+    SPACE_IE = 'Spacebar',
+    ESCAPE = 'Escape',
+    ESCAPE_IE = 'Esc',
+    LEFT_ARROW = 'ArrowLeft',
+    UP_ARROW = 'ArrowUp',
+    RIGHT_ARROW = 'ArrowRight',
+    DOWN_ARROW = 'ArrowDown',
+    F2 = 'F2',
+    TAB = 'Tab'
 }
 
 /**
@@ -169,6 +224,7 @@ export function isFirefox(): boolean {
     return firefoxBrowser;
 }
 
+/** @hidden */
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;

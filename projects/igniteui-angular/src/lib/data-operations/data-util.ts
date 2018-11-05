@@ -1,26 +1,18 @@
-import {
-    IgxFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxStringFilteringOperand
-} from './filtering-condition';
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
-import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
-
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy, IGroupByResult } from './sorting-strategy';
-
+import { IGroupByResult, TreeGridSortingStrategy } from './sorting-strategy';
 import { IPagingState, PagingError } from './paging-state.interface';
-
 import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { Transaction, TransactionType } from '../services';
+import { Transaction, TransactionType, HierarchicalTransaction, IgxHierarchicalTransactionService, HierarchicalState } from '../services';
+import { mergeObjects, cloneValue } from '../core/utils';
+import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
+/**
+ * @hidden
+ */
 export enum DataType {
     String = 'string',
     Number = 'number',
@@ -28,6 +20,9 @@ export enum DataType {
     Date = 'date'
 }
 
+/**
+ * @hidden
+ */
 export class DataUtil {
     public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {
@@ -52,6 +47,38 @@ export class DataUtil {
         // apply default settings for each sorting expression(if not set)
         return state.strategy.sort(data, state.expressions);
     }
+
+    public static hierarchicalSort(hierarchicalData: ITreeGridRecord[], state: ISortingState, parent: ITreeGridRecord): ITreeGridRecord[] {
+        state.strategy = new TreeGridSortingStrategy();
+        let res: ITreeGridRecord[] = [];
+
+        hierarchicalData.forEach((hr: ITreeGridRecord) => {
+            const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
+            rec.parent = parent;
+            if (rec.children) {
+                rec.children = DataUtil.hierarchicalSort(rec.children, state, rec);
+            }
+            res.push(rec);
+        });
+
+        res = DataUtil.sort(res, state);
+
+        return res;
+    }
+
+    public static cloneTreeGridRecord(hierarchicalRecord: ITreeGridRecord) {
+        const rec: ITreeGridRecord = {
+            rowID: hierarchicalRecord.rowID,
+            data: hierarchicalRecord.data,
+            children: hierarchicalRecord.children,
+            isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
+            level: hierarchicalRecord.level,
+            expanded: hierarchicalRecord.expanded,
+            path: [...hierarchicalRecord.path]
+        };
+        return rec;
+    }
+
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
         // set defaults
         DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
@@ -192,9 +219,12 @@ export class DataUtil {
      * @param primaryKey Primary key of the collection, if any
      */
     public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
-        data.forEach((value, index) => {
-            const rowId = primaryKey ? value[primaryKey] : value;
+        data.forEach((item: any, index: number) => {
+            const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
+            if (Array.isArray(item.children)) {
+                this.mergeTransactions(item.children, transactions, primaryKey);
+            }
             if (transaction && transaction.type === TransactionType.UPDATE) {
                 data[index] = transaction.newValue;
             }
@@ -203,6 +233,44 @@ export class DataUtil {
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
+        return data;
+    }
+
+    // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
+    /** @experimental @hidden */
+    public static mergeHierarchicalTransactions(
+        data: any[],
+        transactions: HierarchicalTransaction[],
+        childDataKey: any,
+        primaryKey?: any,
+        parentKey?: any): any[] {
+
+        for (let index = 0; index < data.length; index++) {
+            const dataItem = data[index];
+            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
+            const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
+            const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
+            if (updateTransaction || addedTransactions.length > 0) {
+                data[index] = mergeObjects(cloneValue(dataItem), updateTransaction && updateTransaction.newValue);
+            }
+            if (addedTransactions.length > 0) {
+                if (!data[index][childDataKey]) {
+                    data[index][childDataKey] = [];
+                }
+                for (const addedTransaction of addedTransactions) {
+                    data[index][childDataKey].push(addedTransaction.newValue);
+                }
+            }
+            if (data[index][childDataKey]) {
+                data[index][childDataKey] = this.mergeHierarchicalTransactions(
+                    data[index][childDataKey],
+                    transactions,
+                    childDataKey,
+                    primaryKey,
+                    rowId
+                );
+            }
+        }
         return data;
     }
 }

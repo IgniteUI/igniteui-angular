@@ -440,7 +440,7 @@ export class DefaultCRUDGridComponent extends BasicGridComponent {
 
     public editDone(event: IGridEditEventArgs) {
         if (event.newValue === 'change') {
-            event.newValue = event.cell ? 200 : { index: 200, value: 200 };
+            event.newValue = event.cellID ? 200 : { index: 200, value: 200 };
         }
     }
 }

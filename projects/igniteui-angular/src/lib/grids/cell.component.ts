@@ -12,14 +12,13 @@
     ViewChild
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey } from '../core/utils';
+import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent } from './grid-base.component';
-
+import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
+import { first } from 'rxjs/operators';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -369,33 +368,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
-
-        if (this.column.cellClasses) {
-            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
-                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
-                if (value) {
-                    defaultClasses.push(name);
-                }
-            }, this);
-        }
-
-        const classList = {
-            'igx_grid__cell--edit': this.inEditMode,
-            'igx-grid__td--number': this.column.dataType === DataType.Number,
-            'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__td--selected': this.selected,
-            'igx-grid__td--edited': this.dirty
-        };
-
-        Object.entries(classList).forEach(([klass, value]) => {
-            if (value) {
-                defaultClasses.push(klass);
-            }
-        });
-        return defaultClasses.join(' ');
+        return this.resolveStyleClasses();
     }
 
     /**
@@ -526,8 +499,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.selected) {
             return;
         }
-        const editRowState = this.grid.rowEditable ? this.gridAPI.get_edit_row_state(this.gridID) : null; // Get current editted row
-        const inEditRow = this.belongsToEditRow; // Check if cell is in current editable mode, if any
         this._clearCellSelection();
         this._saveCellSelection();
         const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
@@ -535,33 +506,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
                 this.inEditMode = true;
             }
-            if (editRowState) { // If there is a row being edited
-                if (inEditRow && !this.column.editable) { // and this cell is in the row and is NOT editable, submit the values and close
-                    this.exitRowEdit(true, true, editRowState);
-                } else if (!inEditRow) { // or this is not in the editted row
-                    this.exitRowEdit(true, !this.column.editable, editRowState); // submit data and close the overlay depending on editable
-                }
+            if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
+                // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
+                this.grid.endEdit(true);
             }
             this.selected = true;
             if (fireFocus) {
                 this.nativeElement.focus();
             }
             this.grid.onSelection.emit({ cell: this, event });
-        }
-    }
-
-    private get belongsToEditRow(): boolean { // If the cell belongs to the row that is currently being edited
-        const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (cellInEditMode && this.grid.rowEditable) {
-            return this.cellID.rowID === cellInEditMode.cellID.rowID;
-        }
-        return false;
-    }
-
-    private exitRowEdit(commit = true, close = true, row?: {rowID: any, rowIndex: number}) {
-        const grid = this.grid;
-        if (grid.rowEditable) {
-            grid.endRowTransaction(commit, close, row);
         }
     }
 
@@ -642,12 +595,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public update(val: any) {
         const rowSelector = this.cellID.rowID;
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        const gridEditState = this.gridAPI.create_grid_edit_args(this.gridID, rowSelector, this.cellID.columnID, val);
+        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val, gridEditState);
         if (editableCell && editableCell.cellID.rowID === this.cellID.rowID
             && editableCell.cellID.columnID === this.cellID.columnID) {
-            this.grid.endRowEdit(true);
+            if (gridEditState.args.cancel) {
+                return;
+            }
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
-        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val);
         this.cdr.markForCheck();
         this.grid.refreshSearch();
     }
@@ -750,6 +706,21 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             event.stopPropagation();
         }
 
+        if (event.altKey) {
+            if (this.row.nativeElement.tagName.toLowerCase() === 'igx-tree-grid-row' && this.isToggleKey(key)) {
+                const collapse = (this.row as any).expanded && (key === 'left' || key === 'arrowleft');
+                const expand = !(this.row as any).expanded && (key === 'right' || key === 'arrowright');
+                if (collapse) {
+                    (this.gridAPI as any).trigger_row_expansion_toggle(
+                        this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                } else if (expand) {
+                    (this.gridAPI as any).trigger_row_expansion_toggle(
+                        this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+                }
+            return;
+            }
+        }
+
         const args = {cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
@@ -828,9 +799,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public onKeydownEnterEditMode(event) {
         if (this.column.editable) {
             if (this.inEditMode) {
-                const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
-                this.gridAPI.submit_value(this.gridID);
-                this.exitRowEdit(true, true, rowInEdit);
+                this.grid.endEdit(true);
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -840,9 +809,20 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
-            const rowInEdit = this.gridAPI.get_edit_row_state(this.gridID);
+            const editableCell = this;
+            const args: IGridEditEventArgs = {
+                cellID: editableCell.cellID,
+                rowID: editableCell.cellID.rowID,
+                oldValue: editableCell.value,
+                newValue: editableCell.editValue,
+                cancel: false
+            };
+            this.grid.onCellEditCancel.emit(args);
+            if (args.cancel) {
+                return;
+            }
+            this.grid.endEdit(false);
             this.inEditMode = false;
-            this.exitRowEdit(false, true, rowInEdit);
             this.nativeElement.focus();
         }
     }
@@ -875,4 +855,48 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     }
 
+    /**
+     * @hidden
+     */
+    protected resolveStyleClasses(): string {
+        const defaultClasses = ['igx-grid__td igx-grid__td--fw'];
+
+        if (this.column.cellClasses) {
+            Object.entries(this.column.cellClasses).forEach(([name, cb]) => {
+                const value = typeof cb === 'function' ? (cb as any)(this.row.rowData, this.column.field) : cb;
+                if (value) {
+                    defaultClasses.push(name);
+                }
+            }, this);
+        }
+
+        const classList = {
+            'igx_grid__cell--edit': this.inEditMode,
+            'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
+            'igx-grid__td--editing': this.inEditMode,
+            'igx-grid__th--pinned': this.column.pinned,
+            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--selected': this.selected,
+            'igx-grid__td--edited': this.dirty
+        };
+
+        Object.entries(classList).forEach(([klass, value]) => {
+            if (value) {
+                defaultClasses.push(klass);
+            }
+        });
+        return defaultClasses.join(' ');
+    }
+
+    /**
+     * @hidden
+     */
+    public calculateSizeToFit(range: any): number {
+        return Math.max(...Array.from(this.nativeElement.children)
+                   .map((child) => valToPxlsUsingRange(range, child)));
+    }
+
+    private isToggleKey(key) {
+        return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key.toLowerCase()) !== -1;
+    }
 }

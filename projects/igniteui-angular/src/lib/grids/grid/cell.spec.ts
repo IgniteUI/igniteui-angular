@@ -259,6 +259,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(87);
             }));
@@ -279,6 +280,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(0.3698);
                 expect(editTemplate.nativeElement.type).toBe('number');
@@ -300,6 +302,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
 
@@ -312,6 +315,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
             }));
@@ -335,6 +339,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomBoolean.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(false);
             }));
@@ -358,8 +363,9 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
-                expect(cell.value).toBe(selectedDate);
+                expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
 
             it('should exit edit mode on filtering', (async () => {
@@ -441,6 +447,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.value).toBe('Rick Gilmore');
                 expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
             }));
@@ -956,7 +963,7 @@ describe('IgxGrid - Cell component', () => {
         await wait(50);
 
         fix.detectChanges();
-        expect(parseInt(displayContainer.style.top, 10)).toEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
+        expect(parseInt(displayContainer.style.top, 10)).toBeLessThanOrEqual(-1 * (grid.rowHeight - bottomCellVisibleHeight));
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');

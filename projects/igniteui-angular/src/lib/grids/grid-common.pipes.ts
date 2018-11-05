@@ -18,6 +18,7 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'gridTransaction',
     pure: true
@@ -31,8 +32,8 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
         if (collection && grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
-                cloneArray(collection, true),
-                grid.transactions.aggregatedState(true),
+                cloneArray(collection),
+                grid.transactions.getAggregatedChanges(true),
                 grid.primaryKey);
             return result;
         }

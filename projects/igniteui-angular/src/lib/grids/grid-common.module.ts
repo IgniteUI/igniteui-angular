@@ -19,10 +19,11 @@ import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
-import { IgxGridFilterComponent } from './grid-filtering.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -43,12 +44,17 @@ import {
 import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
-import { IgxGridFilterExpressionComponent } from './grid-filtering-expression.component';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
 import { IgxColumnPinningModule } from './column-pinning.component';
 import { TransactionService } from '../services';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
-import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.rowEdit.directive';
+import {
+    IgxRowEditTemplateDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditTabStopDirective
+} from './grid.rowEdit.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 
 @NgModule({
     declarations: [
@@ -63,14 +69,16 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
-        IgxGridFilterComponent,
         IgxGridFilterConditionPipe,
-        IgxGridFilterExpressionComponent,
         IgxGridTransactionPipe,
+        IgxGridFilteringCellComponent,
+        IgxGridFilteringRowComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxRowComponent
@@ -85,7 +93,6 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridFilterComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
@@ -93,6 +100,8 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxCellEditorTemplateDirective,
         IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
+        IgxRowEditActionsDirective,
+        IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
@@ -100,6 +109,8 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxRowComponent,
         IgxGridFilterConditionPipe,
         IgxGridTransactionPipe,
+        IgxDatePipeComponent,
+        IgxDecimalPipeComponent,
         IgxButtonModule,
         IgxDatePickerModule,
         IgxIconModule,
@@ -118,7 +129,9 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
         IgxColumnHidingModule,
         IgxDropDownModule,
         IgxButtonGroupModule,
-        IgxColumnPinningModule
+        IgxColumnPinningModule,
+        IgxGridFilteringCellComponent,
+        IgxGridFilteringRowComponent,
     ],
     imports: [
         CommonModule,
@@ -146,6 +159,7 @@ import { IgxRowEditTemplateDirective, IgxRowEditTabStopDirective} from './grid.r
     providers: [
         IgxSelectionAPIService,
         IgxColumnMovingService,
+        IgxGridNavigationService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })

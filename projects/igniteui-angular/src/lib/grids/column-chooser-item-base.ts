@@ -47,6 +47,7 @@ export abstract class ItemPropertyValueChanged {
     }
 }
 
+/** @hidden */
 export class ColumnChooserItemBase extends ItemPropertyValueChanged {
     @Input()
     get column() {

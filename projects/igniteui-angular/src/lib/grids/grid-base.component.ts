@@ -32,7 +32,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isNavigationKey } from '../core/utils';
+import { cloneArray, isNavigationKey, mergeObjects, CancelableEventArgs } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
@@ -59,11 +59,16 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
     IgxRowEditTemplateDirective,
-    IgxRowEditTabStopDirective
+    IgxRowEditTabStopDirective,
+    IgxRowEditTextDirective,
+    IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DisplayDensity } from '../core/displayDensity';
+import { IgxGridRowComponent } from './grid';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -74,17 +79,16 @@ export interface IGridCellEventArgs {
     event: Event;
 }
 
-export interface IGridEditEventArgs {
-    row: IgxRowComponent<IgxGridBaseComponent>;
-    cell: IgxGridCellComponent;
-    currentValue: any;
-    newValue: any;
-}
-
-export interface IGridRowEditEventArgs {
-    row: IgxRowComponent<IgxGridBaseComponent>;
-    newValue: any;
+export interface IGridEditEventArgs extends CancelableEventArgs {
+    rowID: any;
+    cellID?: {
+        rowID: any,
+        columnID: any,
+        rowIndex: number
+    };
     oldValue: any;
+    newValue?: any;
+    event?: Event;
 }
 
 export interface IPinColumnEventArgs {
@@ -141,7 +145,6 @@ export interface IColumnMovingEventArgs {
 export interface IColumnMovingEndEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
-    cancel: boolean;
 }
 
 export interface IFocusChangeEventArgs {
@@ -157,7 +160,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public data: any[];
@@ -168,7 +171,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public autoGenerate = false;
@@ -180,7 +183,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [emptyGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
@@ -196,7 +199,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true" [filteringLogic]="filtering"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set filteringLogic(value: FilteringLogic) {
         this._filteringExpressionsTree.operator = value;
@@ -207,7 +210,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let filteringExpressionsTree = this.grid.filteringExpressionsTree;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get filteringExpressionsTree() {
@@ -227,7 +230,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ];
      * this.grid.filteringExpressionsTree = (logic);
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set filteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
@@ -240,11 +243,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
                 }
             }
 
-            this._filteringExpressionsTree = value;
-            this._pipeTrigger++;
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._filteringExpressionsTree = filteringExpressionTreeClone;
+
+            this.filteringService.refreshExpressions();
             this.clearSummaryCache();
             this.cdr.markForCheck();
-            this.cdr.detectChanges();
         }
     }
 
@@ -253,7 +259,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let filteredData = this.grid.filteredData;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get filteredData() {
         return this._filteredData;
@@ -267,7 +273,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *       Name: "A"
      * }];
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set filteredData(value) {
         this._filteredData = value;
@@ -290,7 +296,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * const paging = this.grid.paging;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get paging(): boolean {
@@ -302,7 +308,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set paging(value: boolean) {
         this._paging = value;
@@ -320,7 +326,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * let gridPage = this.grid.page;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get page(): number {
@@ -347,7 +353,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * let itemsPerPage = this.grid.perPage;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get perPage(): number {
@@ -359,7 +365,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [perPage]="5" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set perPage(val: number) {
         if (val < 0) {
@@ -368,7 +374,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         this._perPage = val;
         this.page = 0;
-        this.endRowEdit(true);
+        this.endEdit(true);
         this.restoreHighlight();
     }
 
@@ -377,7 +383,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public paginationTemplate: TemplateRef<any>;
@@ -389,7 +395,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let gridTheme = this.grid.displayDensity;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get displayDensity(): DisplayDensity | string {
@@ -401,7 +407,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [displayDensity]="'compact'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set displayDensity(val: DisplayDensity | string) {
         switch (val) {
@@ -415,6 +421,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
+
         this.onDensityChanged.emit();
     }
 
@@ -424,7 +431,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let gridColHiding = this.grid.columnHiding;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get columnHiding() {
@@ -437,7 +444,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true" [showToolbar]="true" [columnHiding]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set columnHiding(value) {
         if (this._columnHiding !== value) {
@@ -457,7 +464,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let rowSelectable = this.grid.rowSelectable;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get rowSelectable(): boolean {
@@ -469,7 +476,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [showToolbar]="true" [rowSelectable]="true" [columnHiding]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
@@ -488,7 +495,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
  * ```typescript
  * let rowEditable = this.grid.rowEditable;
  * ```
- * @memberof IgxGridComponent
+ * @memberof IgxGridBaseComponent
  */
     @Input()
     get rowEditable(): boolean {
@@ -499,7 +506,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     * ```html
     * <igx-grid #grid [showToolbar]="true" [rowEditable]="true" [columnHiding]="true"></igx-grid>
     * ```
-    * @memberof IgxGridComponent
+    * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
         this._rowEditable = val;
@@ -511,7 +518,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let gridHeight = this.grid.height;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @HostBinding('style.height')
     @Input()
@@ -524,9 +531,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
-    public set height(value: any) {
+    public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
@@ -541,7 +548,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * let gridWidth = this.grid.width;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @HostBinding('style.width')
     @Input()
@@ -554,9 +561,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [width]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
-    public set width(value: any) {
+    public set width(value: string) {
         if (this._width !== value) {
             this._width = value;
             requestAnimationFrame(() => {
@@ -573,7 +580,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * let gridHeaderWidth = this.grid.headerWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get headerWidth() {
         return parseInt(this._width, 10) - 17;
@@ -584,7 +591,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-even-class'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public evenRowCSS = 'igx-grid__tr--even';
@@ -594,7 +601,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [evenRowCSS]="'igx-grid--my-odd-class'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public oddRowCSS = 'igx-grid__tr--odd';
@@ -604,7 +611,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const rowHeight = this.grid.rowHeight;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get rowHeight() {
@@ -616,7 +623,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [rowHeight]="100" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set rowHeight(value) {
         this._rowHeight = parseInt(value, 10);
@@ -627,7 +634,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [columnWidth]="100" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get columnWidth(): string {
@@ -643,7 +650,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="6" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public primaryKey;
@@ -653,7 +660,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public emptyGridMessage = 'Grid has no data.';
@@ -663,51 +670,17 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="Data" [emptyGridMessage]="'The grid is empty'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public emptyFilteredGridMessage = 'No records found.';
-
-    /**
-     * An @Input property that sets the message displayed inside the GroupBy drop area where columns can be dragged on.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid dropAreaMessage="Drop here to group!">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
-
-    /**
-     * An @Input property that sets the template that will be rendered as a GroupBy drop area.
-     * Note: The grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * ```html
-     * <igx-grid [dropAreaTemplate]="dropAreaRef">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-grid>
-     *
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
-     * ```ts
-     * @ViewChild('myDropArea', { read: TemplateRef })
-     * public dropAreaRef: TemplateRef<any>;
-     * ```
-	 * @memberof IgxGridComponent
-     */
-    @Input()
-    public dropAreaTemplate: TemplateRef<any>;
 
     /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
      * ```html
      * <igx-grid [showToolbar]="true" [columnHiding]="true" columnHidingTitle="Column Hiding"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public columnHidingTitle = '';
@@ -717,7 +690,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      *  let colPinning = this.grid.columnPinning;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get columnPinning() {
@@ -730,7 +703,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set columnPinning(value) {
         if (this._columnPinning !== value) {
@@ -749,10 +722,40 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [columnPinning]="'true" [columnPinningTitle]="'Column Hiding'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public columnPinningTitle = '';
+
+    /**
+     * Returns if the filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowFiltering;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    get allowFiltering() {
+        return this._allowFiltering;
+    }
+
+    /**
+     * Sets if the filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set allowFiltering(value) {
+        if (this._allowFiltering !== value) {
+            this._allowFiltering = value;
+            this.filteringService.registerSVGIcons();
+            if (this.gridAPI.get(this.id)) {
+                this.markForCheck();
+            }
+        }
+    }
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
@@ -764,7 +767,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     alert("The cell has been clicked!");
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onCellClick = new EventEmitter<IGridCellEventArgs>();
@@ -779,7 +782,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     alert("The cell has been selected!");
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onSelection = new EventEmitter<IGridCellEventArgs>();
@@ -794,7 +797,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     alert("The selected row has been changed!");
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
@@ -809,27 +812,24 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     }
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnPinning = new EventEmitter<IPinColumnEventArgs>();
 
     /**
-     * An @Output property emitting an event when `IgxGridCellComponent` or `IgxGridRowComponent`
-     * editing has been performed in the grid.
+     * An @Output property emitting an event when `IgxGridCellComponent`
+     * editing has been performed in the grid and the values have **not** been submitted.
      * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
      * objects in the event arguments are defined for the corresponding
      * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
-     * On `IgxGridRowComponent` editing, only the `IgxGridRowComponent` object is defined, for the `IgxGridRowComponent`
-     * that is being edited.
-     * The `IgxGridCellComponent` object is null on `IgxGridRowComponent` editing.
      * ```typescript
-     * editDone(event: IgxColumnComponent){
+     * editCancel(event: IgxColumnComponent){
      *    const column: IgxColumnComponent = event;
      * }
      * ```
      * ```html
-     * <igx-grid #grid3 (onEditDone)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
      *          [primaryKey]="'ProductID'" [rowSelectable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
@@ -839,19 +839,91 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridComponent
      */
     @Output()
-    public onEditDone = new EventEmitter<IGridEditEventArgs>();
+    public onCellEditCancel = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(true)` is called.
-     * Emiited when changing rows during edit mode, selecting an un-editable cell in the edited row,
-     * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
-     * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
+     * An @Output property emitting an event when `IgxGridCellComponent` enters edit mode.
+     * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
+     * objects in the event arguments are defined for the corresponding
+     * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
+     * ```typescript
+     * editStart(event: IgxColumnComponent){
+     *    const column: IgxColumnComponent = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onCellEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * An @Output property emitting an event when `IgxGridCellComponent` editing has been performed in the grid.
+     * On `IgxGridCellComponent` editing, both `IgxGridCellComponent` and `IgxGridRowComponent`
+     * objects in the event arguments are defined for the corresponding
+     * `IgxGridCellComponent` that is being edited and the `IgxGridRowComponent` the `IgxGridCellComponent` belongs to.
+     * ```typescript
+     * editDone(event: IgxColumnComponent){
+     *    const column: IgxColumnComponent = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Output()
+    public onCellEdit = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" a row enters edit mode.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
-     * <igx-grid #grid3 (onRowEditDone)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
+     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
+     *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
+     *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
+     * </igx-grid>
+     * ```
+     * ```typescript
+     *      editStart(emitted: { row: IgxGridRowComponent, newValue: any, oldValue: any }): void {
+     *          const editedRow = emitted.row;
+     *          const cancelValue = emitted.newValue;
+     *          const oldValue = emitted.oldValue;
+     *      }
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Output()
+    public onRowEditEnter = new EventEmitter<IGridEditEventArgs>();
+
+    /**
+     * An @Output property emitting an event when [rowEditable]="true" & `endEdit(true)` is called.
+     * Emitted when changing rows during edit mode, selecting an un-editable cell in the edited row,
+     * performing data operations (filtering, sorting, etc.) while editing a row, hitting the `Commit`
+     * button inside of the rowEditingOverlay or hitting the `Enter` key while editing a cell.
+     *
+     * Emits the current row and it's state.
+     *
+     * Bind to the event in markup as follows:
+     * ```html
+     * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
      *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
@@ -865,17 +937,17 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *          const oldValue = emitted.oldValue;
      *      }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
-    public onRowEditDone = new EventEmitter<IGridRowEditEventArgs>();
+    public onRowEdit = new EventEmitter<IGridEditEventArgs>();
 
     /**
-     * An @Output property emitting an event when [rowEditable]="true" & `endRowEdit(false)` is called.
-     * Emiited when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
+     * An @Output property emitting an event when [rowEditable]="true" & `endEdit(false)` is called.
+     * Emitted when changing hitting `Esc` key during cell editing and when click on the `Cancel` button
      * in the row editing overlay.
      *
-     * Emitts the current row and it's state.
+     * Emits the current row and it's state.
      *
      * Bind to the event in markup as follows:
      * ```html
@@ -893,10 +965,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *          const oldValue = emitted.oldValue;
      *      }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
-    public onRowEditCancel = new EventEmitter<IGridRowEditEventArgs>();
+    public onRowEditCancel = new EventEmitter<IGridEditEventArgs>();
 
     /**
      * Emitted when a grid column is initialized. Returns the column object.
@@ -911,7 +983,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *       column.editable = true;
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnInit = new EventEmitter<IgxColumnComponent>();
@@ -926,7 +998,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     const sortingDirection = event;
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onSortingDone = new EventEmitter<ISortingExpression>();
@@ -942,7 +1014,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onFilteringDone)="filteringDone($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
@@ -957,7 +1029,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onPagingDone = new EventEmitter<IPageEventArgs>();
@@ -973,7 +1045,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" (onRowAdded)="rowAdded($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onRowAdded = new EventEmitter<IRowDataEventArgs>();
@@ -989,7 +1061,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" (onRowDeleted)="rowDeleted($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
@@ -999,7 +1071,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onDataPreLoad = new EventEmitter<IForOfState>();
@@ -1015,7 +1087,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" (onColumnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
@@ -1031,7 +1103,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" (onContextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onContextMenu = new EventEmitter<IGridCellEventArgs>();
@@ -1047,7 +1119,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid #grid [data]="localData" (onDoubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
@@ -1062,7 +1134,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
@@ -1077,7 +1149,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingStart)="movingStart($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
@@ -1093,7 +1165,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMoving)="moving($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
@@ -1109,7 +1181,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingEnd)="movingEnds($event)"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
@@ -1135,15 +1207,21 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     @ViewChildren(IgxGridHeaderComponent, { read: IgxGridHeaderComponent })
     public headerList: QueryList<IgxGridHeaderComponent>;
 
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxGridFilteringCellComponent, { read: IgxGridFilteringCellComponent })
+    public filterCellList: QueryList<IgxGridFilteringCellComponent>;
+
     @ViewChildren('row')
-    private _rowList: QueryList<any>;
+    private _rowList: QueryList<IgxGridRowComponent>;
 
     /**
      * A list of `IgxGridRowComponent`.
      * ```typescript
      * const rowList = this.grid.rowList;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public get rowList() {
         const res = new QueryList<any>();
@@ -1165,7 +1243,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const dataList = this.grid.dataRowList;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public get dataRowList() {
         const res = new QueryList<any>();
@@ -1184,7 +1262,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @ViewChild('emptyFilteredGrid', { read: TemplateRef })
     public emptyFilteredGridTemplate: TemplateRef<any>;
@@ -1194,16 +1272,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * const emptyTempalte = this.grid.emptyGridTemplate;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultDropArea', { read: TemplateRef })
-    public defaultDropAreaTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -1290,22 +1362,29 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     @ViewChild('igxRowEditingOverlayOutlet', { read: IgxOverlayOutletDirective })
-    public rowEditingOutletDirective: IgxOverlayOutletDirective;
+    private rowEditingOutletDirective: IgxOverlayOutletDirective;
 
     /**
      * @hidden
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef })
-    public defaultRowEditTemplate: TemplateRef<any>;
+    private defaultRowEditTemplate: TemplateRef<any>;
     /**
      * @hidden
      */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
+    /** @hidden */
     public get rowEditContainer(): TemplateRef<any> {
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
+    /** @hidden */
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
+    public rowEditText: TemplateRef<any>;
+    /** @hidden */
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
+    public rowEditActions: TemplateRef<any>;
 
     /**
      * @hidden
@@ -1346,9 +1425,10 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     /**
      * @hidden
+     * TODO: Nav service logic doesn't handle 0 results from this querylist
      */
     public get rowEditTabs(): QueryList<IgxRowEditTabStopDirective> {
-        return this.rowEditCustom ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
+        return this.rowEditTabsCUSTOM.length ? this.rowEditTabsCUSTOM : this.rowEditTabsDEFAULT;
     }
 
     /**
@@ -1412,7 +1492,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const sortingState = this.grid.sortingExpressions;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get sortingExpressions() {
@@ -1428,7 +1508,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     ignoreCase: true
      * }];
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set sortingExpressions(value) {
         this._sortingExpressions = cloneArray(value);
@@ -1442,7 +1522,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const gridVirtState = this.grid1.virtualizationState;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get virtualizationState() {
         return this.verticalScrollContainer.state;
@@ -1461,7 +1541,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const itemCount = this.grid1.totalItemCount;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get totalItemCount() {
         return this.verticalScrollContainer.totalItemCount;
@@ -1473,7 +1553,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid1.totalItemCount = 55;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set totalItemCount(count) {
         this.verticalScrollContainer.totalItemCount = count;
@@ -1518,7 +1598,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * <igx-grid [columnHiding]="true" [showToolbar]="true" [hiddenColumnsText]="'Hidden Columns'"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set hiddenColumnsText(value) {
         this._hiddenColumnsText = value;
@@ -1531,7 +1611,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const pinnedText = this.grid.pinnedColumnsText;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get pinnedColumnsText() {
@@ -1544,7 +1624,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set pinnedColumnsText(value) {
         this._pinnedColumnsText = value;
@@ -1553,7 +1633,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * Get transactions service for the grid.
      */
-    get transactions() {
+    get transactions(): TransactionService<Transaction, State> {
         return this._transactions;
     }
 
@@ -1571,13 +1651,20 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _exportExcelText: string = null;
     private _exportCsvText: string = null;
     private _rowEditable = false;
+    private _currentRowState: any;
+    /**
+     * @hidden
+    */
+    public get currentRowState(): any {
+        return this._currentRowState;
+    }
 
     /**
      * Provides access to the `IgxToolbarComponent`.
      * ```typescript
      * const gridToolbar = this.grid.toolbar;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
@@ -1599,7 +1686,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const toolbarGrid = this.grid.showToolbar;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get showToolbar(): boolean {
@@ -1611,7 +1698,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" ></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set showToolbar(newValue: boolean) {
         if (this._showToolbar !== newValue) {
@@ -1628,7 +1715,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const toolbarTitle  = this.grid.toolbarTitle;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get toolbarTitle(): string {
@@ -1640,7 +1727,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [toolbarTitle]="'My Grid'"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set toolbarTitle(newValue: string) {
         if (this._toolbarTitle !== newValue) {
@@ -1657,11 +1744,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * cosnt excelExporter = this.grid.exportExcel;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get exportExcel(): boolean {
-        return this._exportExcel;
+        return this.getExportExcel();
     }
 
     /**
@@ -1669,7 +1756,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportExcel]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set exportExcel(newValue: boolean) {
         if (this._exportExcel !== newValue) {
@@ -1686,11 +1773,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const exportCsv = this.grid.exportCsv;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get exportCsv(): boolean {
-        return this._exportCsv;
+        return this.getExportCsv();
     }
 
     /**
@@ -1698,7 +1785,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [autoGenerate]="true" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set exportCsv(newValue: boolean) {
         if (this._exportCsv !== newValue) {
@@ -1715,7 +1802,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const exportText = this.grid.exportText;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get exportText(): string {
@@ -1727,7 +1814,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [data]="localData" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set exportText(newValue: string) {
         if (this._exportText !== newValue) {
@@ -1744,7 +1831,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const excelText = this.grid.exportExcelText;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get exportExcelText(): string {
@@ -1756,7 +1843,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [exportExcelText]="'My Excel Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportCsv]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set exportExcelText(newValue: string) {
         if (this._exportExcelText !== newValue) {
@@ -1773,7 +1860,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const csvText = this.grid.exportCsvText;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     public get exportCsvText(): string {
@@ -1785,7 +1872,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```html
      * <igx-grid [exportCsvText]="'My Csv Exporter" [showToolbar]="true" [exportText]="'My Exporter'" [exportExcel]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public set exportCsvText(newValue: string) {
         if (this._exportCsvText !== newValue) {
@@ -1809,7 +1896,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *     const toolbarExporting = event;
      * }
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Output()
     public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
@@ -1923,7 +2010,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    protected _sortingExpressions = [];
+    protected _sortingExpressions: Array<ISortingExpression> = [];
     /**
      * @hidden
      */
@@ -1936,6 +2023,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected _columnPinning = false;
+    protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;
@@ -1958,7 +2046,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Bottom,
-        openAnimation: null,
         closeAnimation: null
     });
 
@@ -1975,7 +2062,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
-            this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+            if (this.rowEditable) {
+                this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+            }
         });
     }
 
@@ -1995,7 +2084,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
-        if (isNavigationKey(key) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
+        if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
             event.preventDefault();
             if (key === 'pagedown') {
                 this.verticalScrollContainer.scrollNextPage();
@@ -2010,7 +2099,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     constructor(
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) private _transactions: TransactionService,
+        @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -2018,7 +2107,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         private resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
-        private navigation: IgxGridNavigationService) {
+        private navigation: IgxGridNavigationService,
+        public filteringService: IgxFilteringService) {
         this.resizeHandler = () => {
             this.calculateGridSizes();
             this.zone.run(() => this.markForCheck());
@@ -2031,6 +2121,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public ngOnInit() {
         this.gridAPI.register(this);
         this.navigation.grid = this;
+        this.filteringService.gridId = this.id;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
@@ -2039,18 +2130,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
-        this.onEditDone.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
-        this.onRowEditDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
+        this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.rowEditable) {
-                this.endRowEdit(true);
-            } else {
-                this.gridAPI.submit_value(this.id);
-            }
+            this.endEdit(true);
         });
-        this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
-        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
-        this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.clearSummaryCache();
             this._pipeTrigger++;
@@ -2119,6 +2206,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             requestAnimationFrame(() => {
                 this.summariesHeight = 0;
                 this.reflow();
+                this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
         this._ngAfterViewInitPaassed = true;
@@ -2198,7 +2286,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *       newValue: true
      * });
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
         const col = this.getColumnByName(args.column.field);
@@ -2213,7 +2301,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const nativeEl = this.grid.nativeElement.
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get nativeElement() {
         return this.elementRef.nativeElement;
@@ -2235,7 +2323,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const rowHeigh = this.grid.defaultRowHeight;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get defaultRowHeight(): number {
         switch (this._displayDensity) {
@@ -2254,7 +2342,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get calcPinnedContainerMaxWidth(): number {
         return (this.calcWidth * 80) / 100;
@@ -2265,7 +2353,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const minUnpinnedColWidth = this.grid.unpinnedAreaMinWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get unpinnedAreaMinWidth(): number {
         return (this.calcWidth * 20) / 100;
@@ -2276,7 +2364,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get pinnedWidth() {
         return this.getPinnedWidth();
@@ -2287,7 +2375,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const unpinnedWidth = this.grid.getUnpinnedWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get unpinnedWidth() {
         return this.getUnpinnedWidth();
@@ -2305,7 +2393,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const colums = this.grid.columns.
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get columns(): IgxColumnComponent[] {
         return this._columns;
@@ -2316,7 +2404,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const pinnedColumns = this.grid.pinnedColumns.
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get pinnedColumns(): IgxColumnComponent[] {
         return this._pinnedColumns.filter((col) => !col.hidden);
@@ -2327,7 +2415,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const unpinnedColumns = this.grid.unpinnedColumns.
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
@@ -2339,7 +2427,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * const myCol = this.grid1.getColumnByName("ID");
      * ```
      * @param name
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getColumnByName(name: string): IgxColumnComponent {
         return this.columnList.find((col) => col.field === name);
@@ -2351,7 +2439,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * const myRow = this.grid1.getRowByIndex(1);
      * ```
      * @param index
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getRowByIndex(index: number): IgxRowComponent<IgxGridBaseComponent> {
         return this.gridAPI.get_row_by_index(this.id, index);
@@ -2364,7 +2452,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * const myRow = this.grid1.getRowByKey("cell5");
      * ```
      * @param keyValue
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getRowByKey(keyValue: any): IgxRowComponent<IgxGridBaseComponent> {
         return this.gridAPI.get_row_by_key(this.id, keyValue);
@@ -2375,7 +2463,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const visibleColumns = this.grid.visibleColumns.
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get visibleColumns(): IgxColumnComponent[] {
         return this.columnList.filter((col) => !col.hidden);
@@ -2388,7 +2476,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param rowIndex
      * @param columnField
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
         const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
@@ -2405,7 +2493,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param rowSelector match any rowID
      * @param columnField
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
         return this.gridAPI.get_cell_by_key(this.id, rowSelector, columnField);
@@ -2416,7 +2504,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const totalPages = this.grid.totalPages;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get totalPages(): number {
         if (this.pagingState) {
@@ -2431,7 +2519,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const totalRecords = this.grid.totalRecords;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get totalRecords(): number {
         if (this.pagingState) {
@@ -2444,7 +2532,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get isFirstPage(): boolean {
         return this.page === 0;
@@ -2455,7 +2543,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
@@ -2466,7 +2554,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const gridWidth = this.grid.totalWidth;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get totalWidth(): number {
         // Take only top level columns
@@ -2581,7 +2669,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * grid.moveColumn(compName, persDetails);
      * ```
-	  * @memberof IgxGridComponent
+	  * @memberof IgxGridBaseComponent
 	  */
     public moveColumn(column: IgxColumnComponent, dropTarget: IgxColumnComponent, pos: DropPosition = DropPosition.None) {
 
@@ -2635,6 +2723,13 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         this._moveColumns(column, dropTarget, position);
         this.cdr.detectChanges();
+
+        const args = {
+            source: column,
+            target: dropTarget
+        };
+
+        this.onColumnMovingEnd.emit(args);
     }
 
     /**
@@ -2642,7 +2737,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid1.nextPage();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public nextPage(): void {
         if (!this.isLastPage) {
@@ -2655,7 +2750,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid1.previousPage();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public previousPage(): void {
         if (!this.isFirstPage) {
@@ -2669,7 +2764,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid1.paginate(1);
      * ```
      * @param val
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public paginate(val: number): void {
         if (val < 0 || val > this.totalPages - 1) {
@@ -2684,7 +2779,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid1.markForCheck();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public markForCheck() {
         if (this.rowList) {
@@ -2703,9 +2798,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid1.addRow(record);
      * ```
      * @param data
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
-    public addRow(data: any): void {
+    public addRow(data: any, parentID?: any): void {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         if (this.transactions.enabled) {
@@ -2731,7 +2826,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid1.deleteRow(0);
      * ```
      * @param rowSelector
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public deleteRow(rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
@@ -2745,10 +2840,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public deleteRowById(rowId: any) {
         let index: number;
+        const data = this.gridAPI.get_all_data(this.id);
         if (this.primaryKey) {
-            index = this.data.map((record) => record[this.primaryKey]).indexOf(rowId);
+            index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
         } else {
-            index = this.data.indexOf(rowId);
+            index = data.indexOf(rowId);
         }
         const state: State = this.transactions.getState(rowId);
         const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
@@ -2765,32 +2861,42 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             return;
         }
 
-        this.onRowDeleted.emit({ data: this.data[index] });
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+        this.onRowDeleted.emit({ data: data[index] });
 
+        //  first deselect row then delete it
+        if (this.rowSelectable && this.selection.is_item_selected(this.id, rowId)) {
+            this.deselectRows([rowId]);
+        } else {
+            this.checkHeaderCheckboxStatus();
+        }
+
+        this.deleteRowFromData(rowId, index);
+        this._pipeTrigger++;
+        this.cdr.markForCheck();
+
+        this.refreshSearch();
+        if (data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+            this.page--;
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected deleteRowFromData(rowID: any, index: number) {
         //  if there is a row (index !== 0) delete it
         //  if there is a row in ADD or UPDATE state change it's state to DELETE
         if (index !== -1) {
             if (this.transactions.enabled) {
-                const transaction: Transaction = { id: rowId, type: TransactionType.DELETE, newValue: null };
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
                 this.transactions.add(transaction, this.data[index]);
             } else {
                 this.data.splice(index, 1);
             }
         } else {
-            this.transactions.add({ id: rowId, type: TransactionType.DELETE, newValue: null }, state.recordRef);
-        }
-
-        if (this.rowSelectable === true && this.selection.is_item_selected(this.id, rowId)) {
-            this.deselectRows([rowId]);
-        } else {
-            this.checkHeaderCheckboxStatus();
-        }
-        this._pipeTrigger++;
-        this.cdr.markForCheck();
-
-        this.refreshSearch();
-        if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-            this.page--;
+            const state: State = this.transactions.getState(rowID);
+            this.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
         }
     }
 
@@ -2803,7 +2909,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param value the new value which is to be set.
      * @param rowSelector corresponds to rowID.
      * @param column corresponds to column field.
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public updateCell(value: any, rowSelector: any, column: string): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
@@ -2811,11 +2917,15 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
                 const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
+                const gridEditState = this.gridAPI.create_grid_edit_args(this.id, rowSelector, columnId, value);
+                this.gridAPI.update_cell(this.id, rowSelector, columnId, value, gridEditState);
                 if (editableCell && editableCell.cellID.rowID === rowSelector &&
                     editableCell.cellID.columnID === columnId) {
+                    if (gridEditState.args.cancel) {
+                        return;
+                    }
                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
-                this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
                 this.refreshSearch();
             }
@@ -2833,7 +2943,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param value
      * @param rowSelector correspond to rowID
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
@@ -2853,11 +2963,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid.sort({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     public sort(...rest): void {
-        this.gridAPI.escape_editMode(this.id);
+        this.endEdit(false);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._sortMultiple(rest[0]);
         } else {
@@ -2876,7 +2986,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param value
      * @param conditionOrExpressionTree
      * @param ignoreCase
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
@@ -2904,7 +3014,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param value
      * @param condition
      * @param ignoreCase
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public filterGlobal(value: any, condition?, ignoreCase?) {
         this.gridAPI.filter_global(this.id, value, condition, ignoreCase);
@@ -2921,7 +3031,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * grid.enableSummaries('ProductName');
      * ```
      * @param rest
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public enableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
@@ -2945,7 +3055,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * grid.disableSummaries([{ fieldName: 'ProductName' }]);
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public disableSummaries(...rest) {
         if (rest.length === 1 && Array.isArray(rest[0])) {
@@ -2966,7 +3076,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.clearFilter();
      * ```
      * @param name
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public clearFilter(name?: string) {
         if (name) {
@@ -2986,7 +3096,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.clearSort();
      * ```
      * @param name
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public clearSort(name?: string) {
         if (!name) {
@@ -3014,7 +3124,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public refreshGridState(editCell?) {
-        this.endRowEdit(true);
+        this.endEdit(true);
         this.clearSummaryCache(editCell);
     }
 
@@ -3027,7 +3137,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param columnName
      * @param index
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public pinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
@@ -3041,7 +3151,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
      * @param columnName
      * @param index
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public unpinColumn(columnName: string | IgxColumnComponent, index?): boolean {
         const col = columnName instanceof IgxColumnComponent ? columnName : this.getColumnByName(columnName);
@@ -3054,7 +3164,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid.reflow();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public reflow() {
         this.calculateGridSizes();
@@ -3066,7 +3176,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid.recalculateSummaries();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public recalculateSummaries() {
         this.summariesHeight = 0;
@@ -3082,7 +3192,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value  (defaults to false).
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, 1, caseSensitive, exactMatch);
@@ -3097,7 +3207,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
         return this.find(text, -1, caseSensitive, exactMatch);
@@ -3110,7 +3220,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.refreshSearch();
      * ```
      * @param updateActiveInfo
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public refreshSearch(updateActiveInfo?: boolean): number {
         if (this.lastSearchInfo.searchText) {
@@ -3139,7 +3249,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid.clearSearch();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public clearSearch() {
         this.lastSearchInfo = {
@@ -3164,7 +3274,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const sortableGrid = this.grid.hasSortableColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasSortableColumns(): boolean {
         return this.columnList.some((col) => col.sortable);
@@ -3175,7 +3285,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const editableGrid = this.grid.hasEditableColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasEditableColumns(): boolean {
         return this.columnList.some((col) => col.editable);
@@ -3186,7 +3296,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const filterableGrid = this.grid.hasFilterableColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasFilterableColumns(): boolean {
         return this.columnList.some((col) => col.filterable);
@@ -3197,7 +3307,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const summarizedGrid = this.grid.hasSummarizedColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasSummarizedColumns(): boolean {
         const summarizedColumns = this.columnList.filter(col => col.hasSummary);
@@ -3209,7 +3319,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasMovableColumns(): boolean {
         return this.columnList && this.columnList.some((col) => col.movable);
@@ -3220,7 +3330,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const groupGrid = this.grid.hasColumnGroups;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get hasColumnGroups(): boolean {
         return this.columnList.some(col => col.columnGroup);
@@ -3231,7 +3341,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const selectedCells = this.grid.selectedCells;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get selectedCells(): IgxGridCellComponent[] | any[] {
         if (this.dataRowList) {
@@ -3296,7 +3406,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight + 1}px`;
+            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
         }
 
         if (!this._height) {
@@ -3436,7 +3547,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (this.rowSelectable) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
-        if (this.rowEditable && !this.rowEditingOverlay.collapsed) {
+        if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
         this.cdr.detectChanges();
@@ -3448,7 +3559,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * const pinnedWidth = this.grid.getPinnedWidth();
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public getPinnedWidth(takeHidden = false) {
         const fc = takeHidden ? this._pinnedColumns : this.pinnedColumns;
@@ -3469,7 +3580,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      * Gets calculated width of the unpinned area
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
         const width = this._width && this._width.indexOf('%') !== -1 ?
@@ -3482,7 +3593,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase);
+        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
     }
 
     /**
@@ -3561,7 +3672,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: any = null) {
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         // XXX: Deprecate index
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
@@ -3632,27 +3743,17 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     /**
-    * @hidden
-    */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
-    /**
      * @hidden
      */
     public checkHeaderCheckboxStatus(headerStatus?: boolean) {
         if (headerStatus === undefined) {
-            this.allRowsSelected = this.selection.are_all_selected(this.id, this.dataLength);
+            const dataLength = this.filteredData ? this.filteredData.length : this.dataLength;
+            this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
             if (this.headerCheckbox) {
                 this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
                 if (!this.headerCheckbox.indeterminate) {
                     this.headerCheckbox.checked =
-                        this.selection.are_all_selected(this.id, this.dataLength);
+                        this.allRowsSelected;
                 }
             }
             this.cdr.markForCheck();
@@ -3732,7 +3833,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const selectedRows = this.grid.selectedRows();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public selectedRows(): any[] {
         let selection: Set<any>;
@@ -3746,8 +3847,8 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.selectRows([1,2,5], true);
      * ```
      * @param rowIDs
-     * @param clearCurrentSelection if true clears the curren selection
-     * @memberof IgxGridComponent
+     * @param clearCurrentSelection if true clears the current selection
+     * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         let newSelection: Set<any>;
@@ -3761,7 +3862,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * this.grid.deselectRows([1,2,5]);
      * ```
      * @param rowIDs
-     * @memberof IgxGridComponent
+     * @memberof IgxGridBaseComponent
      */
     public deselectRows(rowIDs: any[]) {
         let newSelection: Set<any>;
@@ -3775,7 +3876,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * this.grid.selectAllRows();
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows() {
         this.triggerRowSelectionChange(this.selection.get_all_ids(this.dataWithAddedInTransactionRows, this.primaryKey));
@@ -3845,7 +3946,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 
         const editModeCell = this.gridAPI.get_cell_inEditMode(this.id);
         if (editModeCell) {
-            this.gridAPI.escape_editMode(this.id);
+            this.endEdit(false);
         }
 
         if (this.collapsedHighlightedItem) {
@@ -3920,7 +4021,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```typescript
      * const filteredData = this.grid1.filteredSortedData;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     get filteredSortedData(): any[] {
         return this.resolveFilteredSortedData();
@@ -3934,7 +4035,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
                 cloneArray(data),
-                this.transactions.aggregatedState(true),
+                this.transactions.getAggregatedChanges(true),
                 this.primaryKey
             );
         }
@@ -4030,27 +4131,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!directive) {
             return;
         }
-
-        const state = directive.state;
-        const start = state.startIndex;
-        const isColumn = directive.igxForScrollOrientation === 'horizontal';
-
-        const size = directive.getItemCountInView();
-
-        if (start >= goal) {
-            // scroll so that goal is at beggining of visible chunk
-            directive.scrollTo(goal);
-        } else if (start + size <= goal) {
-            // scroll so that goal is at end of visible chunk
-            if (isColumn) {
-                directive.getHorizontalScroll().scrollLeft =
-                    directive.getColumnScrollLeft(goal) -
-                    parseInt(directive.igxForContainerSize, 10) +
-                    parseInt(this.columns[goal].width, 10);
-            } else {
-                directive.scrollTo(goal - size + 1);
-            }
-        }
+        directive.scrollTo(goal);
     }
 
     private rebuildMatchCache() {
@@ -4126,14 +4207,14 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public isExpandedGroup(group: IGroupByRecord): boolean {
         return undefined;
-                    }
+    }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     protected getGroupByRecords(): IGroupByRecord[] {
-            return null;
-        }
+        return null;
+    }
 
     // For paging we need just the increment between the start of the page and the current row
     private getPagingIncrement(groupByIncrement: number, groupIndexData: number[], page: number) {
@@ -4230,37 +4311,52 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return arr.filter(c => !c.columnGroup);
     }
 
-/*     @HostListener('keydown.pagedown', ['$event'])
-    public onKeydownPageDown(event) {
-        event.preventDefault();
-
-        this.nativeElement.focus();
-    }
-
-    @HostListener('keydown.pageup', ['$event'])
-    public onKeydownPageUp(event) {
-        event.preventDefault();
-        this.verticalScrollContainer.scrollPrevPage();
-        this.nativeElement.focus();
-    } */
-
-    private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
-            return;
+    /*     @HostListener('keydown.pagedown', ['$event'])
+        public onKeydownPageDown(event) {
+            event.preventDefault();
+            this.nativeElement.focus();
         }
-        if (!row) {
-            this.toggleRowEditingOverlay(false);
-        } else {
-            this.repositionRowEditingOverlay(row);
-        }
-    }
 
-    /**
+        @HostListener('keydown.pageup', ['$event'])
+        public onKeydownPageUp(event) {
+            event.preventDefault();
+            this.verticalScrollContainer.scrollPrevPage();
+            this.nativeElement.focus();
+        } */
+
+        private changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent>) {
+            if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+                return;
+            }
+            if (!row) {
+                this.toggleRowEditingOverlay(false);
+            } else {
+                this.repositionRowEditingOverlay(row);
+            }
+        }
+
+        /**
      * @hidden
      */
-    public startRowEdit(row: IgxRowComponent<IgxGridBaseComponent>) {
+    public startRowEdit(cell: {
+        rowID: any,
+        columnID: any,
+        rowIndex: any
+    }) {
+        const args: IGridEditEventArgs = {
+            rowID: cell.rowID,
+            oldValue: this.gridAPI.get_row_by_key(this.id, cell.rowID).rowData,
+            cancel: false
+        };
+        this.onRowEditEnter.emit(args);
+        if (args.cancel) {
+            return;
+        }
+        const rowState = { rowID: cell.rowID, rowIndex: cell.rowIndex };
+        this.gridAPI.set_edit_row_state(this.id, rowState);
+        this._currentRowState = this.transactions.getAggregatedValue(args.rowID, true);
         this.transactions.startPending();
-        this.configureRowEditingOverlay(row);
+        this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
         this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
@@ -4269,12 +4365,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    public closeRowEditingOverlay(commit?: boolean) {
+    public closeRowEditingOverlay() {
         this.gridAPI.set_edit_row_state(this.id, null);
-        this.transactions.endPending(commit);
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
+        this.rowEditingOverlay.element.parentElement.style.display = '';
     }
 
     /**
@@ -4293,16 +4389,27 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
-        this.configureRowEditingOverlay(row);
         if (!this.rowEditingOverlay.collapsed) {
-            this.rowEditingOverlay.reposition();
+            const rowStyle = this.rowEditingOverlay.element.parentElement.style;
+            if (row) {
+                rowStyle.display = '';
+                this.configureRowEditingOverlay(row.rowID);
+                this.rowEditingOverlay.reposition();
+            } else {
+                rowStyle.display = 'none';
+            }
         }
     }
 
-    private configureRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent>) {
+    private configureRowEditingOverlay(rowID: any) {
         this.rowEditSettings.outlet = this.rowEditingOutletDirective;
         this.rowEditPositioningStrategy.settings.container = this.tbody.nativeElement;
-        this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
+        // this.rowEditPositioningStrategy.settings.target = row.element.nativeElement;
+        const targetRow = this.gridAPI.get_row_by_key(this.id, rowID);
+        if (!targetRow) {
+            return;
+        }
+        this.rowEditPositioningStrategy.settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
     }
 
@@ -4317,38 +4424,48 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
+    protected writeToData(rowIndex: number, value: any) {
+        mergeObjects(this.data[rowIndex], value);
+    }
     /**
+     * TODO: Refactor
      * @hidden
      */
-    private endRowTransaction(commit?: boolean, closeOverlay?: boolean, row?: any, rowObject?: IgxRowComponent<IgxGridBaseComponent>) {
-        const rowInEdit = row ? row : this.gridAPI.get_edit_row_state(this.id); // If row was passed, use it
-        if (!rowInEdit || this.rowEditingOverlay.collapsed) {
+
+    private endRowTransaction(commit: boolean, rowID: any, rowObject: IgxRowComponent<IgxGridBaseComponent>) {
+        const valueInTransactions = this.transactions.getAggregatedValue(rowID, true);
+        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowID);  // Get actual index in data
+        const newValue = valueInTransactions ? valueInTransactions : this.gridAPI.get_all_data(this.id)[rowIndex];
+        const oldValue =  Object.assign(
+            {},
+            this.gridAPI.get_all_data(this.id)[rowIndex],
+            this._currentRowState
+        );
+        // if (this.transactions.enabled) {
+        // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
+        //     const lastCommitedValue = // Last commited value (w/o pending)
+        //         this.transactions.getState(rowID) ? Object.assign({}, this.transactions.getState(rowID).value) : null;
+        //     oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
+        // }
+        const currentGridState = this.gridAPI.create_grid_edit_args(this.id, rowID,
+            null,
+            newValue);
+        const emitArgs = currentGridState.args;
+        Object.assign(emitArgs, {
+            oldValue,
+            rowID,
+        });
+        if (!commit) {
+            this.onRowEditCancel.emit(emitArgs);
+        } else {
+            this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
+        }
+        if (emitArgs.cancel) {
+            this.transactions.startPending();
             return;
         }
-        const newValue = this.transactions.getAggregatedValue(rowInEdit.rowID, true); // Visible value
-        const lastCommitedValue = // Last commited value (w/o pending)
-        this.transactions.getState(rowInEdit.rowID) ? Object.assign({}, this.transactions.getState(rowInEdit.rowID).value) : {};
-        // we want pure object, not object reference, as it changes when endPending is called
-        this.transactions.endPending(commit); // End pending
-        const rowObj = rowObject ? rowObject : this.getRowByKey(rowInEdit.rowID); // If row obj was pass, use it
-        const rowIndex = this.gridAPI.get_row_index_in_data(this.id, rowInEdit.rowID);
-        let oldValue = Object.assign({}, this.data[rowIndex]); // Get actual index in data
-        if (this.transactions.enabled) { // If transactions are enabled, old value == last commited value (as it's not applied in data yet)
-            oldValue = lastCommitedValue ? Object.assign(oldValue, lastCommitedValue) : oldValue;
-        }
-        const emitter = commit ? this.onRowEditDone : this.onRowEditCancel;
-        emitter.emit({
-            newValue,
-            oldValue,
-            row: rowObj
-        });
-        if (commit && newValue && !this.transactions.enabled) {
-            this.data[rowIndex] = newValue; // If no transactions, write to data directly
-        }
-        if (closeOverlay) {
-            this.closeRowEditingOverlay(commit);
-        }
-        this._pipeTrigger++;
+        this.transactions.endPending(commit);
+        this.closeRowEditingOverlay();
     }
 
     /**
@@ -4357,27 +4474,29 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      *
      * Binding to the event
      * ```html
-     * <button igxButton (click)="grid.endRowEdit(true)">Commit Row</button>
+     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
      * ```
      * @param commit
      */
-    public endRowEdit(commit = true) {
-        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed) {
+    public endEdit(commit = true, event?: Event) {
+        const row = this.gridAPI.get_edit_row_state(this.id);
+        const cell = this.gridAPI.get_cell_inEditMode(this.id);
+        const rowObj = row ? this.getRowByKey(row.rowID) : null;
+
+        if (commit) {
+            this.gridAPI.submit_value(this.id);
+        } else {
+            this.gridAPI.escape_editMode(this.id);
+        }
+        if (!this.rowEditable || this.rowEditingOverlay && this.rowEditingOverlay.collapsed || !row) {
             return;
         }
-        const row = this.gridAPI.get_edit_row_state(this.id);
-        const rowObject = row ? this.getRowByKey(row.rowID) : null;
-        const cellInEdit = this.gridAPI.get_cell_inEditMode(this.id);
-        if (cellInEdit) {
-            this.gridAPI.submit_value(this.id, commit);
-        }
-        this.endRowTransaction(commit, true, row, rowObject);
-        const currentCell = (row && cellInEdit) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cellInEdit.cellID.columnID) : null;
-        if (currentCell) {
+        this.endRowTransaction(commit, row.rowID, rowObj);
+        const currentCell = (row && cell) ? this.gridAPI.get_cell_by_index(this.id, row.rowIndex, cell.cellID.columnID) : null;
+        if (currentCell && event) {
             currentCell.nativeElement.focus();
         }
     }
-
     /**
      * @hidden
      */
@@ -4393,9 +4512,9 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     public get dataWithAddedInTransactionRows() {
-        const result = <any>cloneArray(this.data);
+        const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
-            result.push(...this.transactions.aggregatedState(true)
+            result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
         }
@@ -4404,6 +4523,20 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     }
 
     private get dataLength() {
-        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.data.length;
+        return this.transactions.enabled ? this.dataWithAddedInTransactionRows.length : this.gridAPI.get_all_data(this.id).length;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportExcel(): boolean {
+        return this._exportExcel;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getExportCsv(): boolean {
+        return this._exportCsv;
     }
 }

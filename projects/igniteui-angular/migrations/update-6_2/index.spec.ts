@@ -67,4 +67,15 @@ describe('Update 6.2.0', () => {
 <igx-icon fontSet="svg-icons" name="my-icon"></igx-icon>`);
         done();
     });
+
+    it('should rename igx-grid onEditDone event', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html',
+            `<igx-grid (onEditDone)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`
+        );
+        const tree = schematicRunner.runSchematic('migration-05', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`<igx-grid (onCellEdit)="handler"></igx-grid> <not-igx-grid (onEditDone)="handler"></not-igx-grid>`);
+        done();
+    });
 });

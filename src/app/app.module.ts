@@ -4,7 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService, IgxGridTransaction, IgxTransactionService} from 'igniteui-angular';
+    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule } from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
@@ -71,6 +72,9 @@ import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel
 import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
+import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
+import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { HierarchicalTransactionWrapperComponent } from './tree-grid/hierarchical-transaction-wrapper';
 
 const components = [
     AppComponent,
@@ -126,13 +130,15 @@ const components = [
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,
-
+    TreeGridSampleComponent,
+    TreeGridFlatDataSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,
-    TooltipSampleComponent
+    TooltipSampleComponent,
+    HierarchicalTransactionWrapperComponent
 ];
 
 @NgModule({
@@ -145,6 +151,7 @@ const components = [
         HttpClientModule,
         IgxIconModule.forRoot(),
         IgxGridModule.forRoot(),
+        IgxTreeGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
         SharedModule,
@@ -156,7 +163,7 @@ const components = [
         IgxExcelExporterService,
         IgxCsvExporterService,
         IgxOverlayService,
-        { provide: DisplayDensityToken, useFactory: () => { return { displayDensity: DisplayDensity.comfortable } } }
+        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
     ],
     bootstrap: [AppComponent]
 })

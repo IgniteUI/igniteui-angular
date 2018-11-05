@@ -252,6 +252,10 @@ gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'typedoc:clean-
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}/ja/ --templateStrings ${TYPEDOC.TEMPLATE_STRINGS_PATH} --localize jp`)
 );
 
+gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'typedoc:copy-translations'],
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.OUTPUT_PATH}/${TYPEDOC.REPO.TRANSLATIONS_REPO_NAME}/en/`)
+);
+
 const SASSDOC = {
     PROJECT_PATH: "projects/igniteui-angular/src/lib/core/styles",
     DEST: "./dist/igniteui-angular/docs/sass",

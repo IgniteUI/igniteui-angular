@@ -7,10 +7,12 @@ import {
 
 import { WorksheetData } from './worksheet-data';
 
+/** @hidden */
 export interface IExcelFile {
     writeElement(folder: JSZip, data: WorksheetData): void;
 }
 
+/** @hidden */
 export interface IExcelFolder {
     folderName: string;
 
