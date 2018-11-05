@@ -6,7 +6,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxTreeGridHierarchizingPipe } from './tree-grid.pipes';
-import { IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe } from './tree-grid.pipes';
+import { IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 
@@ -19,7 +19,8 @@ import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
     IgxTreeGridFlatteningPipe,
     IgxTreeGridSortingPipe,
     IgxTreeGridFilteringPipe,
-    IgxTreeGridPagingPipe
+    IgxTreeGridPagingPipe,
+    IgxTreeGridTransactionPipe
   ],
   exports: [
     IgxTreeGridComponent,

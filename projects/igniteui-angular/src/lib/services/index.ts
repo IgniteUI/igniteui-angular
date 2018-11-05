@@ -16,3 +16,4 @@ export * from './overlay/scroll';
 export * from './transaction/igx-transaction';
 export * from './transaction/base-transaction';
 export * from './transaction/transaction';
+export * from './transaction/igx-hierarchical-transaction';
