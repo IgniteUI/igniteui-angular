@@ -13,6 +13,6 @@
         ]
     },
     "include": [
-        "typescript/main.ts", "localization/index.js"
+        "typescript/main.ts"
     ]
 }

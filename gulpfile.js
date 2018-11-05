@@ -12,7 +12,6 @@ const postcss = require('gulp-postcss');
 const uglify = require('gulp-uglify');
 const process = require('process');
 const fs = require('fs');
-const chmod = require('gulp-chmod');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const {

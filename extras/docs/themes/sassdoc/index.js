@@ -21,7 +21,6 @@ const extend = require('extend');
 const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
-const fs = require('fs');
 const sassPlug = require('sassdoc-plugin-localization');
 
 
