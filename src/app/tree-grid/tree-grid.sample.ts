@@ -449,16 +449,4 @@ export class TreeGridSampleComponent implements OnInit {
     public deleteRow() {
         this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
     }
-
-    public commit() {
-        this.grid1.transactions.commit(this.data);
-    }
-
-    public undo() {
-        this.grid1.transactions.undo();
-    }
-
-    public redo() {
-        this.grid1.transactions.redo();
-    }
 }
