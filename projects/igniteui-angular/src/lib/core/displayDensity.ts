@@ -59,7 +59,6 @@ export class DisplayDensityBase implements DoCheck {
                 this._displayDensity = DisplayDensity.cosy;
                 break;
             case 'comfortable':
-            default:
                 this._displayDensity = DisplayDensity.comfortable;
         }
         if (currentDisplayDensity !== this._displayDensity) {
