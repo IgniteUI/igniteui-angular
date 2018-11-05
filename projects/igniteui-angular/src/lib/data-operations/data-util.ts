@@ -10,6 +10,9 @@ import { Transaction, TransactionType, HierarchicalTransaction, IgxHierarchicalT
 import { mergeObjects, cloneValue } from '../core/utils';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
 
+/**
+ * @hidden
+ */
 export enum DataType {
     String = 'string',
     Number = 'number',
@@ -17,6 +20,9 @@ export enum DataType {
     Date = 'date'
 }
 
+/**
+ * @hidden
+ */
 export class DataUtil {
     public static mergeDefaultProperties(target: object, defaults: object) {
         if (!defaults) {

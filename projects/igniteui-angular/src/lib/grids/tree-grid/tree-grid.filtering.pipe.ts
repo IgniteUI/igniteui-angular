@@ -9,6 +9,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent } from '../grid';
 
+/** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, undefined);
@@ -46,6 +47,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridFiltering',
     pure: true

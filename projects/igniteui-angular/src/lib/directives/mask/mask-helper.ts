@@ -1,4 +1,11 @@
+/**
+ * @hidden
+ */
 export const MASK_FLAGS = [ 'C', '&', 'a', 'A', '?', 'L', '9', '0', '#' ];
+
+/**
+ * @hidden
+ */
 export const KEYS = {
     Ctrl : 17,
     Z : 90,
@@ -8,6 +15,10 @@ export const KEYS = {
     DELETE : 46
   };
 
+
+/**
+ * @hidden
+ */
 export class MaskHelper {
     private _cursor;
     public get cursor() {

@@ -11,6 +11,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
+/** @hidden */
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html'

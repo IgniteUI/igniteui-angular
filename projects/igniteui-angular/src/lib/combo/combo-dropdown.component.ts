@@ -12,6 +12,7 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
 
+/** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html'

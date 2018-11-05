@@ -1491,6 +1491,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 }
 
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
         IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,

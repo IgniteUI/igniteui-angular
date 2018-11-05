@@ -18,6 +18,7 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'gridTransaction',
     pure: true
