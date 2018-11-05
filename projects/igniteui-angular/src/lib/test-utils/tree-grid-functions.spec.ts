@@ -15,6 +15,7 @@ export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
 export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 export const CELL_VALUE_DIV_CSS_CLASS = '.igx-grid__td-text';
+export const ROW_EDITING_BANNER_OVERLAY_CLASS = 'igx-overlay__content';
 
 export class TreeGridFunctions {
     public static getHeaderRow(fix) {
