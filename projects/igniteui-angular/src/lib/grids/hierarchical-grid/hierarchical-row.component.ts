@@ -30,6 +30,10 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         return this.grid.isExpanded(this.rowID);
     }
 
+    public get hasChildren() {
+        return  this.childData && this.childData.length > 0;
+    }
+
     /**
      * @hidden
      */

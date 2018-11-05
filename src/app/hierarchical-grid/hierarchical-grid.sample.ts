@@ -9,10 +9,13 @@ export class HierarchicalGridSampleComponent {
     localData = [];
 
     constructor() {
+        this.localData.push({ ID: -1, Name: ''});
         for (let i = 0; i < 10000; i++) {
             let prods = [];
-            for (let j = 0; j < 100; j++) {
-                prods.push({ID: j, ProductName: "A" + i + "_" + "j"});
+            for (let j = 0; j < 3; j++) {
+                prods.push({
+                ID: j, ProductName: "A" + i + "_" + "j",
+                SubProducts: [{ID: -2, ProductName: 'Test', SubSubProducts: [{ID: 100, ProductName: 'Test2'}]}]});
             }
             this.localData.push({ ID: i, Name: 'A' + i, Products: prods});
         }

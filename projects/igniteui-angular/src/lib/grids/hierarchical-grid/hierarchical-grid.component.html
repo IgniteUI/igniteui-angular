@@ -83,15 +83,21 @@
         </ng-template>
         <ng-template #child_record_template>
             <div [style.width.%]="95" style="overflow:auto;">
-                <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-                </igx-child-grid-row>
+                <div *ngFor="let layout of childLayoutList">
+                    <igx-child-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                    </igx-child-grid-row>
+                </div>
             </div>
         </ng-template>
         <ng-template #group_template>
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
-        <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : record_template))); context: getContext(rowData)"></ng-container>
+        <ng-template #record_template>
+                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                </igx-grid-row>
+            </ng-template>
+        <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))); context: getContext(rowData)"></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

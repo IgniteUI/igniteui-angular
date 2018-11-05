@@ -4161,7 +4161,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private checkIfGridIsAdded(node): boolean {
         if (node === this.nativeElement) {
             return true;
-        } else {
+        } else if (node.childNodes) {
             for (const childNode of node.childNodes) {
                 const added = this.checkIfGridIsAdded(childNode);
                 if (added) {

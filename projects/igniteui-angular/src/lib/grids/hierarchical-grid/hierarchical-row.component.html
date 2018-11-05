@@ -1,6 +1,8 @@
-<div (click)="toggle()" class="igx-grid__grouping-indicator" [tabIndex]="tabindex">
+<div (click)="toggle()" class="igx-grid__grouping-indicator" [tabIndex]="tabindex" >
+    <div *ngIf="hasChildren">
     <igx-icon *ngIf="!expanded" fontSet="material" name="chevron_right"></igx-icon>
     <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
+    </div>
 </div>
 
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
@@ -8,7 +10,7 @@
 </ng-container>
 <ng-container *ngIf="rowSelectable">
     <div class="igx-grid__cbx-selection">
-        
+
     </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">

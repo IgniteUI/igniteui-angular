@@ -4,11 +4,18 @@ import {
     Component,
     ElementRef,
     HostBinding,
-    Input
+    Input,
+    OnInit,
+    ViewChild,
+    AfterContentInit,
+    AfterViewInit,
+    ViewChildren
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,7 +23,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
     selector: 'igx-child-grid-row',
     templateUrl: './child-grid-row.component.html'
 })
-export class IgxChildGridRowComponent {
+export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
 
         /**
@@ -31,10 +38,22 @@ export class IgxChildGridRowComponent {
      * @hidden
      */
     public get childData() {
-        // figure out how to extract the key from child layout
         return this.rowData.childGridData;
     }
 
+    /**
+     * @hidden
+     */
+    public get layout() {
+        const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-layout-` + this.rowData.key);
+       return layout;
+    }
+
+     /**
+     * @hidden
+     */
+    @Input()
+    public gridID: string;
 
     /**
      *  The data passed to the row component.
@@ -47,9 +66,6 @@ export class IgxChildGridRowComponent {
     @Input()
     public rowData: any = [];
 
-    @Input()
-    public layoutKey: any;
-
     /**
      * The index of the row.
      *
@@ -61,11 +77,8 @@ export class IgxChildGridRowComponent {
     @Input()
     public index: number;
 
-    /**
-     * @hidden
-     */
-    @Input()
-    public gridID: string;
+    @ViewChild('hgrid')
+    private hGrid: IgxHierarchicalGridComponent;
 
     /**
      * @hidden
@@ -123,5 +136,21 @@ export class IgxChildGridRowComponent {
      */
     notGroups(arr) {
         return arr.filter(c => !c.columnGroup);
+    }
+
+    ngOnInit() {
+        // TODO - extract options and columns from layout.
+        console.log(this.layout);
+        this.hGrid.height = this.layout.height;
+        this.hGrid.width = this.layout.width;
+
+    }
+    ngAfterViewInit() {
+        this.hGrid.childLayoutList = this.layout.children;
+        this.hGrid.columnList.reset(this.layout.childColumns.toArray());
+        const columns = this.hGrid.columnList.toArray();
+        columns.forEach((c) => c.gridAPI = this.hGrid.hgridAPI);
+        const layouts = this.hGrid.childLayoutList.toArray();
+        layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
     }
 }

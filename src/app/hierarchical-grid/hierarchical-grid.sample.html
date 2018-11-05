@@ -1,10 +1,16 @@
-<div style='width:700px;'>
 <igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'700px'" [primaryKey]="ID">
     <igx-column [field]="'ID'"></igx-column>
     <igx-column [field]="'Name'"></igx-column>
-    <igx-layout [key]="'Products'">
+    <igx-layout [key]="'Products'" width='600px' height='300px'>
         <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'"></igx-column>
+        <igx-column [field]="'ProductName'" header='Test'></igx-column>
+        <igx-layout [key]="'SubProducts'"  width='500px' height='300px'>
+                <igx-column [field]="'ID'"></igx-column>
+                <igx-column [field]="'ProductName'"></igx-column>
+                <igx-layout [key]="'SubSubProducts'" width='400px' height='120px'>
+                    <igx-column [field]="'ID'"></igx-column>
+                    <igx-column [field]="'ProductName'"></igx-column>
+            </igx-layout>
+        </igx-layout>
     </igx-layout>
 </igx-hierarchical-grid>
-</div>

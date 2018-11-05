@@ -8,9 +8,16 @@ import {
     ViewChild,
     ViewChildren,
     QueryList,
-    ContentChildren
+    ContentChildren,
+    ElementRef,
+    NgZone,
+    ChangeDetectorRef,
+    IterableDiffers,
+    ViewContainerRef,
+    Inject,
+    ComponentFactoryResolver
 } from '@angular/core';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxChildLayoutComponent } from './igx-layout.component';
@@ -24,6 +31,11 @@ import {
     IgxGridPreGroupingPipe,
     IgxGridSortingPipe
 } from '.././grid/grid.pipes';
+import { IgxColumnComponent } from '../grid';
+import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxTransactionService, TransactionService } from '../../services';
+import { DOCUMENT } from '@angular/common';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 @Component({
@@ -36,7 +48,12 @@ let NEXT_ID = 0;
 })
 export class IgxHierarchicalGridComponent extends IgxGridComponent {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
-
+    public hgridAPI: IgxHierarchicalGridAPIService;
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
+    public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChild('hierarchical_record_template', { read: TemplateRef })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
@@ -63,7 +80,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
     /**
      * @hidden
      */
-    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: true })
+    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
     public childLayoutList: QueryList<IgxChildLayoutComponent>;
 
     public isChildGridRecord(record: any): boolean {
@@ -125,5 +142,21 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
             });
         }
         return inState && this.childLayoutList.length !== 0;
+    }
+
+    constructor(
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        selection: IgxSelectionAPIService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxGridNavigationService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 }

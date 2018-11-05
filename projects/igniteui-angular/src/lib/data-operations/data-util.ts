@@ -253,7 +253,7 @@ export class DataUtil {
         data.forEach((v) => {
             result.push(v);
             if (v[childKey] && DataUtil.isExpanded(state, v, primaryKey)) {
-                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey] });
+                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey], key: childKey });
             }
         });
         return result;
