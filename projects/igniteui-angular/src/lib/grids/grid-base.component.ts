@@ -4392,12 +4392,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!row) {
             return;
         }
-        this.configureRowEditingOverlay(row.rowID);
         if (!this.rowEditingOverlay.collapsed) {
             const rowStyle = this.rowEditingOverlay.element.parentElement.style;
             if (row) {
                 rowStyle.display = '';
-                this.configureRowEditingOverlay(row);
+                this.configureRowEditingOverlay(row.rowID);
                 this.rowEditingOverlay.reposition();
             } else {
                 rowStyle.display = 'none';

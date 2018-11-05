@@ -2891,12 +2891,13 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fix.detectChanges();
                 expect(groupRows[0].expanded).toEqual(false);
-                expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                expect(overlayContent.style.display).toEqual('none');
                 grid.toggleGroup(groupRows[0].groupRow);
                 tick();
                 fix.detectChanges();
                 expect(groupRows[0].expanded).toEqual(true);
-                expect(grid.rowEditingOverlay.element.style.display).toEqual('');
+                expect(overlayContent.style.display).toEqual('');
             }));
 
             it('Do not hide/show row editing dialog when another group is collapsing/expanding and check that overlay is moving with row',
@@ -2913,43 +2914,44 @@ describe('IgxGrid Component Tests', () => {
                     cell.inEditMode = true;
                     tick();
                     fix.detectChanges();
-                    const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                    const overlayElem: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
                     const groupRows = grid.groupsRowList.toArray();
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
+                    const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                    expect(overlayContent.style.display).toEqual('');
 
                     row = grid.getRowByIndex(3).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
+                    expect(overlayContent.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
 
                     grid.toggleGroup(groupRows[1].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    expect(overlayContent.style.display).toEqual('none');
 
                     grid.toggleGroup(groupRows[1].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
+                    expect(overlayContent.style.display).toEqual('');
                     row = grid.getRowByIndex(7).nativeElement;
-                    expect(row.getBoundingClientRect().bottom === overlayContent.getBoundingClientRect().top).toBeTruthy();
+                    expect(row.getBoundingClientRect().bottom === overlayElem.getBoundingClientRect().top).toBeTruthy();
             }));
 
             it('Hide/show row editing dialog when hierarchical group is collapsed/expanded',
@@ -2968,17 +2970,17 @@ describe('IgxGrid Component Tests', () => {
                     cell.inEditMode = true;
                     tick();
                     fix.detectChanges();
-                    const overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
                     const groupRows = grid.groupsRowList.toArray();
 
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('none');
+                    const overlayContent = grid.rowEditingOverlay.element.parentElement;
+                    expect(overlayContent.style.display).toEqual('none');
                     grid.toggleGroup(groupRows[0].groupRow);
                     tick();
                     fix.detectChanges();
-                    expect(grid.rowEditingOverlay.element.style.display).toEqual('');
+                    expect(overlayContent.style.display).toEqual('');
             }));
         });
     });
