@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onEditDone",
+            "replaceWith": "onCellEdit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        }
+    ]
+}
