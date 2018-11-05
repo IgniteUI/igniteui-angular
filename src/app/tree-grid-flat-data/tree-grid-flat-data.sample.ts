@@ -102,4 +102,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public redo() {
         this.grid1.transactions.redo();
     }
+
+    public log() {
+        console.dir(this.grid1.transactions);
+    }
 }
