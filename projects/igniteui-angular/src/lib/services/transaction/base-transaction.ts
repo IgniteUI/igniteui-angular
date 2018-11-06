@@ -95,7 +95,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    commit(data: any): void { }
+    commit(data: any[]): void { }
 
     /**
      * @inheritdoc
