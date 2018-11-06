@@ -17,5 +17,5 @@ export interface IPositionStrategy {
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-     position(contentElement: HTMLElement, size?: {}, document?: Document, initialCall?: boolean): void;
+    position(contentElement: HTMLElement, size?: { width: number, height: number }, document?: Document, initialCall?: boolean): void;
 }
