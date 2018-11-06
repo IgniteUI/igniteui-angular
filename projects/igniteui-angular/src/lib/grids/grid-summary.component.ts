@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, Input
 } from '@angular/core';
-import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
@@ -77,12 +76,10 @@ export class IgxGridSummaryComponent implements DoCheck {
     }
     public summaryItemHeight;
     public itemClass = 'igx-grid-summary__item';
-    private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
 
     ngDoCheck() {
-        this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
         this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
         this.cdr.detectChanges();
     }
