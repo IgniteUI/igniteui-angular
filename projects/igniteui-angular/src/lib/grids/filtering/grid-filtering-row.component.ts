@@ -275,7 +275,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Returns the icon name of the current condition.
      */
     public getIconName(): string {
-        if (this.column.dataType === DataType.Boolean && this.expression.searchVal === null) {
+        if (this.column.dataType === DataType.Boolean && this.expression.condition === null) {
             return this.getCondition(this.conditions[0]).iconName;
         } else {
             return this.expression.condition.iconName;
