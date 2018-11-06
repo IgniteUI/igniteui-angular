@@ -90,7 +90,7 @@ export interface OverlayInfo {
     elementRef?: ElementRef;
     componentRef?: ComponentRef<{}>;
     settings?: OverlaySettings;
-    initialSize?: { width?: number, height?: number, x?: number, y?: number };
+    initialSize?: { width: number, height: number };
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     closeAnimationPlayer?: AnimationPlayer;
