@@ -60,36 +60,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @ViewChild('complexChip', { read: IgxChipComponent })
     protected complexChip: IgxChipComponent;
 
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
-    get width() {
-        // HACK - think of a better solution
-        const colWidth = this.column.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-
-        if (isPercentageWidth) {
-            const firstContentCell = this.column.cells[0];
-            if (firstContentCell) {
-                return firstContentCell.nativeElement.getBoundingClientRect().width + 'px';
-            }
-        } else {
-            return this.column.width;
-        }
-    }
-
     @HostBinding('class.igx-grid__filtering-cell')
     public cssClass = 'igx-grid__filtering-cell';
-
-    @HostBinding('class.igx-grid__th--pinned-last')
-    get isLastPinned() {
-        const pinnedCols = this.filteringService.grid.pinnedColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
-    }
 
     constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
         this.filteringService.subscribeToEvents();

@@ -230,6 +230,22 @@ export function isNavigationKey(key: string): boolean {
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
 }
 
+/**
+ *@hidden
+ */
+export function flatten(arr: any[]) {
+    let result = [];
+
+    arr.forEach(el => {
+        result.push(el);
+        if (el.children) {
+            const children = Array.isArray(el.children) ? el.children : el.children.toArray();
+            result = result.concat(flatten(children));
+        }
+    });
+    return result;
+}
+
 export interface CancelableEventArgs {
     /**
      * Provides the ability to cancel the event.
