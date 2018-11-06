@@ -17,6 +17,9 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
+    /**
+     * @inheritdoc
+     */
     position(contentElement: HTMLElement, size?: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:

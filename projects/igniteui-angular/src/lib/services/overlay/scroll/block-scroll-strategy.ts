@@ -10,6 +10,9 @@ export class BlockScrollStrategy implements IScrollStrategy {
 
     constructor(scrollContainer?: HTMLElement) { }
 
+    /**
+     * @inheritdoc
+     */
     initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -19,11 +22,17 @@ export class BlockScrollStrategy implements IScrollStrategy {
         this._initialized = true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
         this._document.addEventListener('wheel', this.onWheel, true);
     }
 
+    /**
+     * @inheritdoc
+     */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
         this._document.removeEventListener('wheel', this.onWheel, true);

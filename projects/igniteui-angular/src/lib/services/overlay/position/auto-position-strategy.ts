@@ -31,6 +31,9 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
 
 
     // The position method should return a <div> container that will host the component
+    /**
+     * @inheritdoc
+     */
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         if (!initialCall) {
             super.position(contentElement, size);
