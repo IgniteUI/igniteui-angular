@@ -55,6 +55,8 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
 
 @NgModule({
     declarations: [
@@ -81,8 +83,8 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxGridFilteringRowComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
-        IgxRowComponent
-
+        IgxRowComponent,
+        IgxGridHeaderGroupComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -132,6 +134,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxColumnPinningModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridHeaderGroupComponent
     ],
     imports: [
         CommonModule,
@@ -160,6 +163,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxSelectionAPIService,
         IgxColumnMovingService,
         IgxGridNavigationService,
+        IgxColumnResizingService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })

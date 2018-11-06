@@ -21,15 +21,17 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
-import {
-    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
-    IgxStringFilteringOperand,
-    IgxGridBaseComponent,
-    FilteringExpressionsTree
-} from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { valToPxlsUsingRange } from '../core/utils';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { valToPxlsUsingRange, flatten } from '../core/utils';
+import {
+    IgxBooleanFilteringOperand,
+    IgxNumberFilteringOperand,
+    IgxDateFilteringOperand,
+    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { IgxGridBaseComponent } from './grid-base.component';
+import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1064,9 +1066,19 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get headerCell(): IgxGridHeaderComponent {
-        if (this.grid.headerList.length > 0) {
-            return flatten(this.grid.headerList.toArray()).find((h) => h.column === this);
-        }
+        return this.grid.headerCellList.find((header) => header.column === this);
+    }
+
+    /**
+     * Returns a reference to the filter cell of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let filterell = column.filterell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get filterell(): IgxGridFilteringCellComponent {
+        return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
     /**
@@ -1122,16 +1134,15 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.headerCell) {
             let headerCell;
-            const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
-            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
+            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
                     .map((child) => valToPxlsUsingRange(range, child)));
             } else {
-                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
-            if (this.sortable || (this.grid.allowFiltering && this.filterable)) {
-                headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+            if (this.sortable) {
+                headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
             }
 
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
@@ -1350,25 +1361,10 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             if (val.width && val.width.indexOf('%') !== -1) {
                 isChildrenWidthInPercent = true;
             }
-
             return acc + parseInt(val.width, 10);
         }, 0)}`;
         return isChildrenWidthInPercent ? width + '%' : width;
     }
 
     set width(val) { }
-}
-
-
-
-function flatten(arr: any[]) {
-    let result = [];
-
-    arr.forEach(el => {
-        result.push(el);
-        if (el.children) {
-            result = result.concat(flatten(el.children.toArray()));
-        }
-    });
-    return result;
 }
