@@ -74,6 +74,7 @@ import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 
 const components = [
     AppComponent,
@@ -136,7 +137,8 @@ const components = [
     ShadowsSampleComponent,
     TypographySampleComponent,
     RadioSampleComponent,
-    TooltipSampleComponent
+    TooltipSampleComponent,
+    GridColumnPercentageWidthsSampleComponent
 ];
 
 @NgModule({

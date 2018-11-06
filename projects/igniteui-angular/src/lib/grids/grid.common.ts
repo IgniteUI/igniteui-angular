@@ -123,6 +123,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
+
 /**
  * @hidden
  */
@@ -176,6 +177,8 @@ export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
 
     public cancelDrop: boolean;
+    public isColumnMoving: boolean;
+
     public selection: {
         column: IgxColumnComponent,
         rowID: any
@@ -256,7 +259,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
-
         if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
             return;
         }
@@ -270,7 +272,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerDown(event);
 
-        this.column.grid.isColumnMoving = true;
+        this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
         const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
@@ -296,7 +298,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.column.grid.cdr.detectChanges();
         }
 
-        if (this.column.grid.isColumnMoving) {
+        if (this.cms.isColumnMoving) {
             const args = {
                 source: this.column,
                 cancel: false
@@ -314,7 +316,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.zone.run(() => {
             super.onPointerUp(event);
 
-            this.column.grid.isColumnMoving = false;
+            this.cms.isColumnMoving = false;
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         });
@@ -332,10 +334,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             pageY = event.touches[0].pageY;
         }
 
-        this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
         this._dragGhost.style.flexBasis = null;
-        this._dragGhost.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -344,22 +344,21 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.classList.add('material-icons');
         this.cms.icon = icon;
 
+        const removeChildIndex = this.column.grid.hasMovableColumns ? 2 : 1;
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
+            this._dragGhost.children[removeChildIndex].remove();
+            this._dragGhost.children[removeChildIndex - 1].insertBefore(icon, this._dragGhost.children[removeChildIndex - 1].children[0]);
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.removeChild(this._dragGhost.firstElementChild);
-            this._dragGhost.removeChild(this._dragGhost.lastElementChild);
-            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
+            this._dragGhost.children[removeChildIndex].remove();
+            this._dragGhost.insertBefore(icon, this._dragGhost.children[removeChildIndex - 1]);
+            this._dragGhost.style.display = 'flex';
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
-            this._dragGhost.children[1].style.paddingLeft = '0px';
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
@@ -389,7 +388,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     get isDropTarget(): boolean {
-        return this._column && this._column.grid.hasMovableColumns;
+        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable;
     }
 
     get horizontalScroll(): any {
@@ -425,7 +424,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
             }
 
-            const pos = this.elementRef.nativeElement.getBoundingClientRect().left + parseFloat(this.column.width) / 2;
+            const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
+            const pos = clientRect.left + clientRect.width / 2;
 
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
@@ -530,17 +530,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
             if (this.cms.selection && this.cms.selection.column) {
-                const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
-
-                this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
-                    rowID: this.cms.selection.rowID,
-                    columnID: colID
-                }]));
-
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
 
                 if (cell) {
-                    cell.nativeElement.focus();
+                    cell._updateCellSelectionStatus(true, event);
                 }
 
                 this.cms.selection = null;
