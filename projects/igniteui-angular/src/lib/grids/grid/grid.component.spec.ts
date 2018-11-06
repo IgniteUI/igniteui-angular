@@ -2869,6 +2869,27 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(cell.value).toBe('Changed product');
             }));
+
+            it('Should properly mark cell/row as dirty if new value evaluates to `false`', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const targetRow = grid.getRowByIndex(0);
+                let targetRowElement = targetRow.element.nativeElement;
+                let targetCellElement = targetRow.cells.toArray()[1].nativeElement;
+                expect(targetRowElement.classList).not.toContain('igx-grid__tr--edited', 'row contains edited class w/o edits');
+                expect(targetCellElement.classList).not.toContain('igx-grid__td--edited', 'cell contains edited class w/o edits');
+
+                targetRow.cells.toArray()[1].update('');
+                tick();
+                fixture.detectChanges();
+
+                targetRowElement = targetRow.element.nativeElement;
+                targetCellElement = targetRow.cells.toArray()[1].nativeElement;
+                expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
+                expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
+            }));
         });
 
         describe('Row Editing - Grouping',  () => {
