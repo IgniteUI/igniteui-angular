@@ -7,9 +7,8 @@ import {
     Input,
     OnInit,
     ViewChild,
-    AfterContentInit,
     AfterViewInit,
-    ViewChildren
+    SimpleChanges
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
@@ -48,7 +47,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-layout-` + this.rowData.key);
        return layout;
     }
-
      /**
      * @hidden
      */
@@ -128,7 +126,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
                 private selectionAPI: IgxSelectionAPIService,
                 public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+                public cdr: ChangeDetectorRef) {
+                }
 
 
     /**
@@ -138,11 +137,20 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         return arr.filter(c => !c.columnGroup);
     }
 
+    private _handleLayoutChanges(changes: SimpleChanges) {
+        for (const change in changes) {
+            if (changes.hasOwnProperty(change)) {
+                this.hGrid[change] = changes[change].currentValue;
+            }
+        }
+    }
+
     ngOnInit() {
-        // TODO - extract options and columns from layout.
-        console.log(this.layout);
-        this.hGrid.height = this.layout.height;
-        this.hGrid.width = this.layout.width;
+        this.layout.onLayoutChange.subscribe((ch) => {
+            this._handleLayoutChanges(ch);
+        });
+        const changes = this.layout.initialChanges;
+        this._handleLayoutChanges(changes);
 
     }
     ngAfterViewInit() {

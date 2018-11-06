@@ -14,7 +14,10 @@ import {
     IterableDiffers,
     ViewContainerRef,
     NgZone,
-    AfterViewInit
+    AfterViewInit,
+    OnChanges,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -31,14 +34,19 @@ import { DOCUMENT } from '@angular/common';
     selector: 'igx-layout',
     template: ``
 })
-export class IgxChildLayoutComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit {
+export class IgxChildLayoutComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit, OnChanges {
     private layout_id = `igx-layout-`;
     private hgridAPI;
+    private isInit = false;
+    public initialChanges;
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     childColumns = new QueryList<IgxColumnComponent>();
 
     @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
     children = new QueryList<IgxChildLayoutComponent>();
+
+    @Output()
+    public onLayoutChange = new EventEmitter<any>();
 
     @Input() public key: string;
 
@@ -64,9 +72,16 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
         });
     }
     ngOnInit() {
+
         this.hgridAPI.registerLayout(this);
     }
     ngAfterViewInit() {
+    }
+    ngOnChanges(changes) {
+        this.onLayoutChange.emit(changes);
+        if (!this.isInit) {
+            this.initialChanges = changes;
+        }
     }
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
