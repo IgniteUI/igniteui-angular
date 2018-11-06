@@ -12,6 +12,9 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         this._scrollContainer = scrollContainer;
     }
 
+    /**
+     * @inheritdoc
+     */
     initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -22,6 +25,9 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         this._initialized = true;
     }
 
+    /**
+     * @inheritdoc
+     */
     attach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.addEventListener('scroll', this.onScroll, true);
@@ -30,6 +36,9 @@ export class AbsoluteScrollStrategy implements IScrollStrategy {
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     detach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll, true);
