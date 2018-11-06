@@ -1,19 +1,21 @@
-import { IScrollStrategy } from './IScrollStrategy';
+import { ScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
 
-export class BlockScrollStrategy implements IScrollStrategy {
+export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
     private _document: Document;
     private _initialScrollTop: number;
     private _initialScrollLeft: number;
     private _sourceElement: Element;
 
-    constructor(scrollContainer?: HTMLElement) { }
+    constructor(scrollContainer?: HTMLElement) {
+        super(scrollContainer);
+    }
 
     /**
      * @inheritdoc
      */
-    initialize(document: Document, overlayService: IgxOverlayService, id: string) {
+    public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
         }
