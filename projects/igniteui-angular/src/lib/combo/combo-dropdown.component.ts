@@ -2,7 +2,7 @@ import {
     ChangeDetectorRef, Component, ContentChild,
     ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxComboComponent } from './combo.component';
@@ -216,40 +216,31 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         // In that case the real item is not hidden, but not loaded at all by the virtualization,
         // and this is the same case as normal scroll up.
         const vContainer = this.verticalScrollContainer;
-        const extraScroll = this.combo.isAddButtonVisible();
-        if (direction) {
-            if (direction === Navigate.Down && extraScroll) {
-                if (vContainer.igxForOf[vContainer.igxForOf.length - 1] === this.focusedItem.value) {
-                    if (this.focusedItem) {
-                        this.focusedItem.isFocused = false;
-                    }
-                    this.focusedItem = this.children.last;
-                    this.focusedItem.isFocused = true;
-                    return;
-                } else if (vContainer.igxForOf[vContainer.state.chunkSize + vContainer.state.startIndex - 2] ===
-                    this.focusedItem.value) {
-                    this.subscribeNext(vContainer, () => {
-                        if (this.focusedItem.isHeader &&
-                            vContainer.state.startIndex + vContainer.state.chunkSize < vContainer.igxForOf.length) {
-                            vContainer.scrollNext();
-                        }
-                    });
-                    vContainer.scrollNext();
-                    return;
+        if (!vContainer.dc.instance.notVirtual) {
+            const extraScroll = this.combo.isAddButtonVisible() ? 1 : 0;
+            const data = vContainer.igxForOf;
+            if (data[data.length - 1 - extraScroll] === this.items[newIndex]) {
+                if (this.isScrolledToLast) {
+                    super.navigateItem(newIndex);
+                } else {
+                    this.navigateVirtualItem(direction, extraScroll);
                 }
-            }
-        }
-        if (newIndex === -1) {
-            this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.lastVisibleIndex && !this.isScrolledToLast) {
-            this.navigateVirtualItem(direction, extraScroll ? 1 : 0);
-        } else if (newIndex === this.lastVisibleIndex && this.isScrolledToLast) {
-            // When initially scrolling to the last item, a pseudo element is present in the children list
-            // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
-            if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
+            } else if (newIndex === -1) {
+                this.navigateVirtualItem(direction, extraScroll);
+            } else if (newIndex === this.lastVisibleIndex && !this.isScrolledToLast) {
+                this.navigateVirtualItem(direction, extraScroll);
+            } else if (newIndex === this.lastVisibleIndex && this.isScrolledToLast) {
+                // When initially scrolling to the last item, a pseudo element is present in the children list
+                // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
+                if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
+                    super.navigateItem(newIndex);
+                }
+                return;
+            } else if (this.focusedItem && direction === Navigate.Up && newIndex === 0 && this.isScrolledToLast) {
+                this.navigateVirtualItem(direction, extraScroll);
+            } else {
                 super.navigateItem(newIndex);
             }
-            return;
         } else {
             super.navigateItem(newIndex);
         }
@@ -302,11 +293,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             }
         }
         // If it is the very last item in the collection, when moving down
-        if (newScrollStartIndex + state.chunkSize === data.length + 1) {
-            vContainer.scrollTo(newScrollStartIndex);
+        newScrollStartIndex = newScrollStartIndex + state.chunkSize;
+        if (newScrollStartIndex === data.length + 1) {
+            vContainer.scrollTo(newScrollStartIndex - 2);
+            this.focusItem(this.items.length - 1 - extraScroll);
             return;
         }
-        vContainer.scrollTo(newScrollStartIndex);
+        vContainer.scrollTo(newScrollStartIndex - 2);
         this.subscribeNext(vContainer, () => {
             state = vContainer.state;
             data = vContainer.igxForOf;
@@ -325,9 +318,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
-        virtualContainer.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe({
+        virtualContainer.onChunkLoad.pipe(take(1), takeUntil(this.destroy$)).subscribe({
             next: (e: any) => {
                 callback(e);
+                console.log('sub fired');
             }
         });
     }
