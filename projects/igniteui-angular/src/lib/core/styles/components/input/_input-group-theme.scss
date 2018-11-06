@@ -270,11 +270,13 @@
         igx-prefix,
         [igxPrefix] {
             @extend %form-group-prefix;
+            outline-style: none;
         }
 
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix;
+            outline-style: none;
         }
     }
 

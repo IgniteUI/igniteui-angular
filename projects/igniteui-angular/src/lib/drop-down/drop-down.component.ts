@@ -751,6 +751,10 @@ export class IgxDropDownComponent extends IgxDropDownBase {
         return selectionChanged;
     }
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
     exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],

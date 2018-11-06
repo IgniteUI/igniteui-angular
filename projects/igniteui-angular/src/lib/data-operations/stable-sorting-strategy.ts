@@ -1,5 +1,8 @@
 import { SortingStrategy } from './sorting-strategy';
 
+/**
+ * @hidden
+ */
 export class StableSortingStrategy extends SortingStrategy {
     protected compareObjects(obj1: any, obj2: any): number {
         const res = super.compareObjects.apply(this, arguments);

@@ -161,7 +161,7 @@ const components = [
         IgxExcelExporterService,
         IgxCsvExporterService,
         IgxOverlayService,
-        { provide: DisplayDensityToken, useFactory: () => { return { displayDensity: DisplayDensity.comfortable } } }
+        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
     ],
     bootstrap: [AppComponent]
 })

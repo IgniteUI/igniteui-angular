@@ -1,5 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 
+/** @hidden */
 export class WorksheetDataDictionary {
     private static DEFAULT_FONT = '11pt Calibri';
     private static TEXT_PADDING = 5;

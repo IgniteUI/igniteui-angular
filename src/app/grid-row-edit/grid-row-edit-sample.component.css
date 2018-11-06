@@ -37,3 +37,18 @@
     padding: 4px;
     font-size: 16px;
 }
+
+.igx-switch {
+    min-width: 160px;
+}
+
+.red {
+    color: #aa2222;
+}
+.green {
+    color: #22aa22;
+}
+
+.blue {
+    color: #2222aa;
+}

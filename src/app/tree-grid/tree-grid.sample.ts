@@ -13,6 +13,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    private nextRow = 1;
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
@@ -186,7 +187,7 @@ export class TreeGridSampleComponent implements OnInit {
                             {
                                 'ID': 'CACTU',
                                 'CompanyName':
-                                'Cactus Comidas para llevar',
+                                    'Cactus Comidas para llevar',
                                 'ContactName': 'Patricio Simpson',
                                 'ContactTitle': 'Sales Agent',
                                 'Address': 'Cerrito 333',
@@ -268,7 +269,7 @@ export class TreeGridSampleComponent implements OnInit {
                             {
                                 'ID': 'ERNSH',
                                 'CompanyName':
-                                'Ernst Handel',
+                                    'Ernst Handel',
                                 'ContactName': 'Roland Mendel',
                                 'ContactTitle': 'Sales Manager',
                                 'Address': 'Kirchgasse 6',
@@ -424,5 +425,28 @@ export class TreeGridSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public addChildRow() {
+        const selectedRowId = this.grid1.selectedRows()[0];
+        this.grid1.addRow (
+            {
+                'ID': `ADD${this.nextRow++}`,
+                'CompanyName': 'Around the Horn',
+                'ContactName': 'Thomas Hardy',
+                'ContactTitle': 'Sales Representative',
+                'Address': '120 Hanover Sq.',
+                'City': 'London',
+                'Region': null,
+                'PostalCode': 'WA1 1DP',
+                'Country': 'UK',
+                'Phone': '(171) 555-7788',
+                'Fax': '(171) 555-6750'
+            },
+            selectedRowId);
+    }
+
+    public deleteRow() {
+        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
     }
 }

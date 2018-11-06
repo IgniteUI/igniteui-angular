@@ -17,12 +17,13 @@ import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { TransactionService } from '../../services/transaction/transaction';
+import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
 
 let NEXT_ID = 0;
 
@@ -56,7 +57,9 @@ export interface IGroupingDoneEventArgs {
     preserveWhitespaces: false,
     providers: [IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) }],
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
+        IgxFilteringService
+    ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
@@ -109,7 +112,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -117,8 +120,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService) {
+            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                  filteringService);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -481,7 +486,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      */
     public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
     public groupBy(...rest): void {
-        this.endRowEdit(true);
+        this.endEdit(true);
         this._gridAPI.submit_value(this.id);
         if (rest.length === 1 && rest[0] instanceof Array) {
             this._groupByMultiple(rest[0]);
@@ -834,7 +839,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endRowEdit(true));
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
     }
 
     public ngDoCheck(): void {

@@ -7,9 +7,10 @@ import { IgxColumnComponent } from '../column.component';
 import { first } from 'rxjs/operators';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
-    public get_all_data(id: string): any[] {
+    public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        return grid.flatData;
+        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
+        return data ? data : [];
     }
 
     public expand_row(id: string, rowID: any) {
@@ -17,6 +18,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, true);
         grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
     }
 
     public collapse_row(id: string, rowID: any) {
@@ -24,6 +28,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const expandedStates = grid.expansionStates;
         expandedStates.set(rowID, false);
         grid.expansionStates = expandedStates;
+        if (grid.rowEditable) {
+            grid.endEdit(true);
+        }
     }
 
     public toggle_row_expansion(id: string, rowID: any) {
@@ -35,6 +42,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             const isExpanded = this.get_row_expansion_state(id, rowID, treeRecord.level);
             expandedStates.set(rowID, !isExpanded);
             grid.expansionStates = expandedStates;
+        }
+        if (grid.rowEditable) {
+            grid.endEdit(true);
         }
     }
 
@@ -78,6 +88,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             if (shouldScroll) {
                 grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
             }
+        }
+        if (grid.rowEditable) {
+            grid.endEdit(true);
         }
     }
 

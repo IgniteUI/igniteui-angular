@@ -165,12 +165,13 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`id`|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
 |`data`|Array|The data source for the grid.|
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
-|`paging`|bool|Enables the paging feature. Defaults to _false_.|
+|`paging`|boolean|Enables the paging feature. Defaults to _false_.|
 |`perPage`|number|Visible items per page, default is 15|
-|`filteringLogic`|FilteringLogic|The filtering logic of the grid. Defaults to _AND_.|
-|`filteringExpressionsTree`|IFilteringExpressionsTree|The filtering state of the grid.|
+|`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
+|`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
+|`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
 |`sortingExpressions`|Array|The sorting state of the grid.|
-|`rowSelectable`|Boolean|Enables multiple row selection, default is _false_.|
+|`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`width`|string|The width of the grid element. You can pass values such as `1000px`, `75%`, etc.|
 |`evenRowCSS`|string|Additional styling classes applied to all even rows in the grid.|
@@ -178,9 +179,9 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`paginationTemplate`|TemplateRef|You can provide a custom `ng-template` for the pagination part of the grid.|
 |`groupingExpressions`| Array | The group by state of the grid.
 |`groupingExpansionState`| Array | The list of expansion states of the group rows. Contains the expansion state(expanded: boolean) and an unique identifier for the group row (Array<IGroupByExpandState>) that contains a list of the group row's parents described via their fieldName and value.
-|`groupsExpanded`| Boolean | Determines whether created groups are rendered expanded or collapsed.  |
-|`hideGroupedColumns`| Boolean | Determines whether the grouped columns are hidden as well.  |
-|`rowEditable` | Boolean | enables/disables row editing mode |
+|`groupsExpanded`| boolean | Determines whether created groups are rendered expanded or collapsed.  |
+|`hideGroupedColumns`| boolean | Determines whether the grouped columns are hidden as well.  |
+|`rowEditable` | boolean | enables/disables row editing mode |
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 
 ### Outputs
@@ -190,9 +191,12 @@ A list of the events emitted by the **igx-grid**:
 |Name|Description|
 |--- |--- |
 |_Event emitters_|_Notify for a change_|
-|`onEditDone`|Emitted when a cell value changes. Returns `{ currentValue: any, newValue: any }`|
-|`onRowEditDone`|Emitted when a row value is submitted. Returns `{ state: State }`|
-|`onRowEditCancel`|Emitted when a row value is submitted. Returns `{ state: State }`|
+|`onCellEditEnter`|Emitted when cell enters edit mode.|
+|`onCellEdit`|Emitted when cell editing has been performed in the grid and the value has been submitted.|
+|`onCellEditCancel`|Emitted when cell editing has been performed in the grid and the value has **not** been submitted.|
+|`onRowEditEnter`|Emitted when row enters edit mode.|
+|`onRowEdit`|Emitted when row editing has been performed in the grid and the value has been submitted.|
+|`onRowEditCancel`|Emitted when row editing has been performed in the grid and the value has **not** been submitted.|
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|

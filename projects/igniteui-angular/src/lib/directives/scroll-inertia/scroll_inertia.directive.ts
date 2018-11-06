@@ -1,6 +1,9 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+/**
+ * @hidden
+ */
 @Directive({ selector: '[igxScrollInertia]' })
 export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
@@ -471,6 +474,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     }
 
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxScrollInertiaDirective],
     exports: [IgxScrollInertiaDirective],

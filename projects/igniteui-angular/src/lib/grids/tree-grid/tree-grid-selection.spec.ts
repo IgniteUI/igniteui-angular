@@ -1,15 +1,25 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule, IgxGridCellComponent } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
-import { IgxTreeGridSimpleComponent, IgxTreeGridCellSelectionComponent } from '../../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions,
-         TREE_ROW_SELECTION_CSS_CLASS,
-         TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
+import {
+    IgxTreeGridSimpleComponent,
+    IgxTreeGridCellSelectionComponent,
+    IgxTreeGridSelectionRowEditingComponent
+} from '../../test-utils/tree-grid-components.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    TreeGridFunctions,
+    TREE_ROW_SELECTION_CSS_CLASS,
+    ROW_EDITING_BANNER_OVERLAY_CLASS,
+    TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS
+} from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { transpileModule } from 'typescript';
+import { TestabilityRegistry } from '@angular/core';
 
 describe('IgxTreeGrid - Selection', () => {
     configureTestSuite();
@@ -20,22 +30,23 @@ describe('IgxTreeGrid - Selection', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
-                IgxTreeGridCellSelectionComponent
+                IgxTreeGridCellSelectionComponent,
+                IgxTreeGridSelectionRowEditingComponent
             ],
-            imports: [IgxTreeGridModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
 
     describe('API Row Selection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
+            await wait();
             fix.detectChanges();
         });
 
@@ -133,6 +144,7 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -140,6 +152,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
@@ -196,13 +209,13 @@ describe('IgxTreeGrid - Selection', () => {
 
     describe('UI Row Selection', () => {
         configureTestSuite();
-        beforeEach(() => {
+        beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
+            await wait();
             fix.detectChanges();
         });
 
@@ -293,6 +306,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 8);
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
             tick(100);
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -300,6 +314,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
 
             treeGrid.clearFilter();
+            fix.detectChanges();
             tick(100);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
@@ -380,9 +395,6 @@ describe('IgxTreeGrid - Selection', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
-            treeGrid.primaryKey = 'ID';
-            treeGrid.rowSelectable = false;
             fix.detectChanges();
         });
 
@@ -490,19 +502,19 @@ describe('IgxTreeGrid - Selection', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
             treeGridCell.triggerEventHandler('focus', new Event('focus'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             // scroll down 150 pixels
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             // then scroll back to top
             treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
             treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            await wait();
+            await wait(100);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -553,6 +565,67 @@ describe('IgxTreeGrid - Selection', () => {
 
     });
 
+    describe('Cell/Row Selection With Row Editing', () => {
+        configureTestSuite();
+        beforeEach(async () => {
+            fix = TestBed.createComponent(IgxTreeGridSelectionRowEditingComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            await wait();
+            fix.detectChanges();
+        });
+
+        it('should display the banner correctly on row selection', fakeAsync(() => {
+            const targetCell = treeGrid.getCellByColumn(1, 'Name');
+            treeGrid.rowSelectable = true;
+            treeGrid.rowEditable = true;
+
+            // select the second row
+            treeGrid.selectRows([targetCell.cellID.rowID], true);
+            tick();
+            fix.detectChanges();
+
+            // check if any rows were selected
+            expect(treeGrid.selectedRows().length).toBeGreaterThan(0);
+
+            // enter edit mode
+            targetCell.inEditMode = true;
+            tick();
+            fix.detectChanges();
+
+            // the banner should appear
+            const banner = document.getElementsByClassName(ROW_EDITING_BANNER_OVERLAY_CLASS);
+            expect(banner).toBeTruthy();
+            expect(banner[0]).toBeTruthy();
+        }));
+
+        it('should display the banner correctly on cell selection', fakeAsync(() => {
+            treeGrid.rowEditable = true;
+
+            const allRows = TreeGridFunctions.getAllRows(fix);
+            const treeGridCells = TreeGridFunctions.getNormalCells(allRows[0]);
+
+            // select a cell
+            const targetCell = treeGridCells[0];
+            targetCell.triggerEventHandler('focus', new Event('focus'));
+            tick();
+            fix.detectChanges();
+
+            // there should be at least one selected cell
+            expect(treeGrid.selectedCells.length).toBeGreaterThan(0);
+
+            // enter edit mode
+            targetCell.triggerEventHandler('dblclick', new Event('dblclick'));
+            tick();
+            fix.detectChanges();
+
+            // the banner should appear
+            const banner = document.getElementsByClassName(ROW_EDITING_BANNER_OVERLAY_CLASS);
+            expect(banner).toBeTruthy();
+            expect(banner[0]).toBeTruthy();
+        }));
+    });
 });
 
 function getVisibleSelectedRows(fix) {

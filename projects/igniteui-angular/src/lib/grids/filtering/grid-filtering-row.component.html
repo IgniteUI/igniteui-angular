@@ -1,0 +1,113 @@
+<!-- Have to apply styles inline because of the overlay outlet ... -->
+<igx-drop-down #inputGroupConditions [height]="'200px'" (onSelection)="onConditionsChanged($event)">
+    <igx-drop-down-item
+        *ngFor="let condition of conditions"
+        [value]="condition"
+        [isSelected]="isConditionSelected(condition)">
+        <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
+        <span style="margin-left: 16px">{{ condition | filterCondition | titlecase }}</span>
+    </igx-drop-down-item>
+</igx-drop-down>
+
+<ng-template #defaultFilterUI>
+    <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+        <igx-prefix #inputGroupPrefix
+                    (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                    (keydown)="onPrefixKeyDown($event)"
+                    tabindex="0"
+                    [igxDropDownItemNavigation]="inputGroupConditions">
+            <igx-icon fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
+        </igx-prefix>
+        <input
+            #input
+            igxInput
+            tabindex="0"
+            [placeholder]="placeholder"
+            autocomplete="off"
+            [(ngModel)]="value"
+            [type]="type"
+            [readonly]="isUnaryCondition"
+            (keydown)="onInputKeyDown($event)"/>
+            <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
+                <igx-icon>clear</igx-icon>
+            </igx-suffix>
+    </igx-input-group>
+</ng-template>
+
+<ng-template #defaultDateUI>
+    <igx-datePicker tabindex="0" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
+        <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
+            <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+                <igx-prefix #inputGroupPrefix
+                            tabindex="0"
+                            (click)="toggleConditionsDropDown(inputGroupPrefix)"
+                            (keydown)="onPrefixKeyDown($event)"
+                            [igxDropDownItemNavigation]="inputGroupConditions">
+                    <igx-icon fontSet="filtering-icons" [name]="expression.condition.iconName"></igx-icon>
+                </igx-prefix>
+                <input #input
+                       igxInput
+                       tabindex="0"
+                (click)="openDialog()"
+                [placeholder]="placeholder"
+                autocomplete="off"
+                       [value]="displayData | date"
+                       [readonly]="true"
+                       (keydown)="onInputKeyDown($event)"/>
+                <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+            </ng-template>
+    </igx-datePicker>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
+
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-start" *ngIf="showArrows" (keydown)="onLeftArrowKeyDown($event)" (click)="scrollChipsOnArrowPress('left')">
+    <igx-icon>navigate_before</igx-icon>
+</button>
+
+<div #container class="igx-grid__filtering-row-main">
+    <div>
+         <igx-chips-area #chipsArea>
+            <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
+                <igx-chip #chip id='chip'
+                    (onSelection)="onChipSelected($event, item.expression)"
+                    (keydown)="onChipKeyDown($event, chip)"
+                    (onRemove)="onChipRemoved($event, item)"
+                    [selectable]="true"
+                    [selected]="item.isSelected"
+                    [displayDensity]="'cosy'"
+                    [removable]="true">
+                    <igx-icon
+                        igxPrefix
+                        fontSet="filtering-icons"
+                        [name]="item.expression.condition.iconName">
+                    </igx-icon>
+                    <span>{{filteringService.getChipLabel(item.expression)}}</span>
+                </igx-chip>
+
+                <span id='operand' *ngIf="!last">
+                    <button igxButton (click)="toggleOperatorsDropDown($event, i)" [igxDropDownItemNavigation]="operators">
+                        <igx-icon>expand_more</igx-icon>
+                        <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
+                    </button>
+                    <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)">
+                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
+                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
+                    </igx-drop-down>
+                </span>
+            </ng-container>
+        </igx-chips-area>
+    </div>
+</div>
+
+<button igxButton="icon" class="igx-grid__filtering-row-scroll-end" *ngIf="showArrows" (click)="scrollChipsOnArrowPress('right')">
+    <igx-icon>navigate_next</igx-icon>
+</button>
+
+<div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
+    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
+    <button #closeButton igxButton igxRipple (click)="close()">Close</button>
+</div>

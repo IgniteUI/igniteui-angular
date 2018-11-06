@@ -7,6 +7,7 @@ export interface IColumnVisibilityChangedEventArgs {
     newValue: boolean;
 }
 
+/** @hidden */
 @Directive({
     selector: '[igxColumnHidingItem]'
 })

@@ -1,3 +1,7 @@
+
+/**
+ * @hidden
+ */
 export class ExportUtilities {
     public static getKeysFromData(data: any[]) {
         const length = data.length;
