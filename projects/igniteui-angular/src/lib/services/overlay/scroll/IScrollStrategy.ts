@@ -3,7 +3,7 @@ import { IgxOverlayService } from '../overlay';
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_scroll.html).
  * Scroll strategies determines how the scrolling will be handled in the provided IgxOverlayService.
  */
-export class IScrollStrategy {
+export class ScrollStrategy {
     constructor(scrollContainer?: HTMLElement) { }
 
     /**
@@ -15,7 +15,7 @@ export class IScrollStrategy {
      * settings.scrollStrategy.initialize(document, overlay, id);
      * ```
      */
-    initialize(document: Document, overlayService: IgxOverlayService, id: string) { }
+     public initialize(document: Document, overlayService: IgxOverlayService, id: string) { }
 
     /**
      * Attaches the strategy
@@ -23,7 +23,7 @@ export class IScrollStrategy {
      * settings.scrollStrategy.attach();
      * ```
      */
-    attach(): void { }
+    public attach(): void { }
 
     /**
      * Detaches the strategy
@@ -31,5 +31,5 @@ export class IScrollStrategy {
      * settings.scrollStrategy.detach();
      * ```
      */
-    detach(): void { }
+    public detach(): void { }
 }

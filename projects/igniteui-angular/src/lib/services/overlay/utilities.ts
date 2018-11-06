@@ -1,7 +1,7 @@
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 
-import { IScrollStrategy, NoOpScrollStrategy } from './scroll';
+import { ScrollStrategy, NoOpScrollStrategy } from './scroll';
 import { AnimationMetadata, AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
@@ -35,7 +35,7 @@ export interface PositionSettings {
 
 export interface OverlaySettings {
     positionStrategy?: IPositionStrategy;
-    scrollStrategy?: IScrollStrategy;
+    scrollStrategy?: ScrollStrategy;
     modal?: boolean;
     closeOnOutsideClick?: boolean;
     outlet?: IgxOverlayOutletDirective | ElementRef;
