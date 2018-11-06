@@ -67,6 +67,7 @@ export class IgxGridHeaderGroupComponent {
         ];
 
         const classList = {
+            'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
             'igx-grid__drag-col-header': this.isHeaderDragged
         };
@@ -98,6 +99,10 @@ export class IgxGridHeaderGroupComponent {
         } else {
             return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
         }
+    }
+
+    get isPinned() {
+        return this.column.pinned;
     }
 
     get isHeaderDragged() {
