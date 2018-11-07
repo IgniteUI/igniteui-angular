@@ -1,16 +1,8 @@
-<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'700px'" [primaryKey]="ID">
-    <igx-column [field]="'ID'"></igx-column>
-    <igx-column [field]="'Name'"></igx-column>
-    <igx-layout [key]="'Products'">
-        <igx-column [field]="'ID'"></igx-column>
-        <igx-column [field]="'ProductName'" header='Test'></igx-column>
-        <igx-layout [key]="'SubProducts'">
-                <igx-column [field]="'ID'"></igx-column>
-                <igx-column [field]="'ProductName'"></igx-column>
-                <igx-layout [key]="'SubSubProducts'" >
-                    <igx-column [field]="'ID'"></igx-column>
-                    <igx-column [field]="'ProductName'"></igx-column>
-            </igx-layout>
+<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'700px'">
+    <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='true'>
+        <igx-layout [key]="'childData'" [autoGenerate]="true">
+                <igx-layout [key]="'childData'" [autoGenerate]="true" >
+                </igx-layout>
         </igx-layout>
     </igx-layout>
 </igx-hierarchical-grid>

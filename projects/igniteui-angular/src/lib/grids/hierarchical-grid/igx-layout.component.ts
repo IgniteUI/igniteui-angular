@@ -53,7 +53,7 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
     public parent = null;
 
     get id() {
-        return this.layout_id + this.key;
+        return this.layout_id + this.key + '-' + this.level;
     }
     get level() {
         let ptr = this.parent;
@@ -62,20 +62,19 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
             lvl++;
             ptr = ptr.parent;
         }
-        return lvl;
+        return lvl + 1;
     }
     ngAfterContentInit() {
-        console.log(this.childColumns);
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
             child.parent = this;
         });
+
     }
     ngOnInit() {
-
-        this.hgridAPI.registerLayout(this);
     }
     ngAfterViewInit() {
+        this.hgridAPI.registerLayout(this);
     }
     ngOnChanges(changes) {
         this.onLayoutChange.emit(changes);

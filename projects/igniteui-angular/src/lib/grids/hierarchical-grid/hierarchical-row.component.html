@@ -11,10 +11,10 @@
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
 <ng-container *ngIf="rowSelectable">
-    <div class="igx-grid__cbx-selection">
-
-    </div>
-</ng-container>
+        <div class="igx-grid__cbx-selection">
+            <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        </div>
+    </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">
     <igx-grid-cell *ngFor="let col of notGroups(pinnedColumns)" [column]="col" [row]="this" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [value]="rowData[col.field]" [cellTemplate]="col.bodyTemplate"></igx-grid-cell>
 </ng-container>

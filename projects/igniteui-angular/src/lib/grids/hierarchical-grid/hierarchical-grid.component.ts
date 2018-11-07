@@ -49,6 +49,7 @@ let NEXT_ID = 0;
 export class IgxHierarchicalGridComponent extends IgxGridComponent {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
+    public level = 0;
     /**
      * @hidden
      */
