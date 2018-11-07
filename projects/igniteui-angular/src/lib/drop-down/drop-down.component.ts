@@ -354,14 +354,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    public get focusedItem() {
+    public get focusedItem(): IgxDropDownItemBase {
         return this._focusedItem;
     }
 
     /**
      * @hidden
      */
-    public set focusedItem(item) {
+    public set focusedItem(item: IgxDropDownItemBase) {
         this._focusedItem = item;
     }
 

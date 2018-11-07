@@ -205,123 +205,114 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     /**
      * @hidden
      */
-    navigateItem(newIndex: number, direction?: number) {
-        // Virtual scrolling holds one hidden loaded element at the bottom of the drop down list.
-        // At the top there isn't such a hidden element.
-        // That's why we hold the first or the one before the last list item as focused, during keyboard navigation.
-        // This means that if we want to focus next element, it's the last hidden element when scrolling down
-        // and when scrolling up it is not loaded at all.
-        // It's more special case when srcolling down and the hidden element is group header,
-        // which is not part of the this.items collection.
-        // In that case the real item is not hidden, but not loaded at all by the virtualization,
-        // and this is the same case as normal scroll up.
+    public navigateItem(newIndex: number, direction?: number) {
         const vContainer = this.verticalScrollContainer;
-        if (!vContainer.dc.instance.notVirtual) {
-            const extraScroll = this.combo.isAddButtonVisible() ? 1 : 0;
-            const data = vContainer.igxForOf;
-            if (data[data.length - 1 - extraScroll] === this.items[newIndex]) {
-                if (this.isScrolledToLast) {
-                    super.navigateItem(newIndex);
-                } else {
-                    this.navigateVirtualItem(direction, extraScroll);
+        const allData = vContainer.igxForOf;
+        const extraScroll = this.combo.isAddButtonVisible() ? 1 : 0;
+        const notVirtual = vContainer.dc.instance.notVirtual;
+        if (notVirtual) { // If list has no scroll
+            super.navigateItem(newIndex);
+        } else {
+            if (direction === Navigate.Up) { // Navigate UP
+                this.navigateVirtual_up(allData, vContainer, extraScroll, newIndex);
+            } else if (direction === Navigate.Down) { // Navigate Down
+                this.navigateVirtual_down(allData, vContainer, extraScroll, newIndex);
+            }
+        }
+    }
+
+    private navigateVirtual_down(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
+        const focusedItem = this.focusedItem;
+        const items = this.items;
+        const children = this.children.toArray();
+        if (focusedItem && (focusedItem.value === allData[allData.length - 1]
+            || focusedItem.value === 'ADD ITEM')) { // If very last item
+            if (this.combo.isAddButtonVisible() && focusedItem.value !== 'ADD ITEM') { // If add button is visible
+                this.focusItem(items.length - 1); // Focus add button
+            }
+            return;
+        }
+        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(this.focusedItem.index) + 1 :
+            this.itemIndexInData(newIndex);
+        const maxDataIndex = vContainer.state.startIndex + vContainer.state.chunkSize - 1;
+        if (targetDataIndex < maxDataIndex) {
+            if (newIndex !== -1 || newIndex === children.length - 1 - extraScroll) { // Use normal nav for visible items
+                super.navigateItem(newIndex);
+            }
+        } else if (this.isScrolledToLast && targetDataIndex === maxDataIndex) { // If already at bottom and target is last item
+            this.focusItem(items.length - 1 - extraScroll);
+        } else {
+            let addedIndex = 0;
+            if (allData[targetDataIndex].isHeader) {
+                addedIndex = [...allData].splice(targetDataIndex, allData.length - 1).findIndex(e => !e.isHeader);
+                targetDataIndex = targetDataIndex + addedIndex;
+            }
+            if (addedIndex === -1 && this.combo.isAddButtonVisible()) { // If no more non-header + add button is visible
+                if (this.focusedItem) {
+                    this.focusedItem.isFocused = false;
                 }
-            } else if (newIndex === -1) {
-                this.navigateVirtualItem(direction, extraScroll);
-            } else if (newIndex === this.lastVisibleIndex && !this.isScrolledToLast) {
-                this.navigateVirtualItem(direction, extraScroll);
-            } else if (newIndex === this.lastVisibleIndex && this.isScrolledToLast) {
-                // When initially scrolling to the last item, a pseudo element is present in the children list
-                // We need to check if the element we're on is an actual element or an empty 'igx-combo-item' child
-                if (this.items[newIndex].element && this.items[newIndex].element.nativeElement.clientHeight) {
-                    super.navigateItem(newIndex);
-                }
-                return;
-            } else if (this.focusedItem && direction === Navigate.Up && newIndex === 0 && this.isScrolledToLast) {
-                this.navigateVirtualItem(direction, extraScroll);
+                this.focusItem(items.length);
+            } else if (targetDataIndex === allData.length - 1 && !this.isScrolledToLast) {
+                vContainer.scrollTo(targetDataIndex);
+                this.focusItem(items.length - 1 - extraScroll);
+            } else {
+                this.subscribeNext(vContainer, () => {
+                    this.focusItem(children[children.length - 2 - extraScroll].index);
+                });
+                vContainer.scrollTo(targetDataIndex);
+            }
+        }
+    }
+
+    private navigateVirtual_up(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
+        const focusedItem = this.focusedItem;
+        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden).value) { // If this is the very first item
+            this.focusComboHeader(); // Focus combo header
+            return;
+        }
+        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(focusedItem.index) - 1 :
+            this.itemIndexInData(newIndex);
+        if (newIndex !== -1) {
+            if (this.isScrolledToLast && targetDataIndex === vContainer.state.startIndex) {
+                vContainer.scrollTo(targetDataIndex);
+                this.focusItem(0);
             } else {
                 super.navigateItem(newIndex);
             }
         } else {
-            super.navigateItem(newIndex);
+            let addedIndex = 0;
+            if (allData[targetDataIndex].isHeader) {
+                addedIndex = [...allData].splice(0, targetDataIndex + 1).reverse().findIndex(e => !e.isHeader);
+                targetDataIndex = targetDataIndex - addedIndex;
+            }
+            if (addedIndex === -1) {
+                this.focusComboHeader();
+            } else {
+                this.subscribeNext(vContainer, () => {
+                    this.focusItem(0);
+                });
+                vContainer.scrollTo(targetDataIndex);
+            }
         }
     }
 
-    private navigateVirtualItem(direction: Navigate, extraScroll?: number) {
-        const vContainer = this.verticalScrollContainer;
-        // If the data is vitualized, data.length === vContainer.chunkSize, so the below checks are no-longer valid
-        if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
-            this.navigateRemoteItem(direction);
-            return;
-        }
-        let state = vContainer.state;
-        if (this.isScrolledToLast && direction === Navigate.Down) { // If on the bottom most item, do not subscribe
-            return;
-        }
-        // If on the topmost item, do not subscribe
-        if (this.verticalScrollContainer.getVerticalScroll().scrollTop === 0 && direction === Navigate.Up) {
-            return;
-        }
-        const isScrollUp = direction === Navigate.Up;
-        let newScrollStartIndex = isScrollUp ? state.startIndex - 1 : state.startIndex + 1;
-        if (newScrollStartIndex < 0) {
-            newScrollStartIndex = 0;
-        }
-        let data = vContainer.igxForOf;
+    private itemIndexInData(index: number) {
+        return this.children.toArray().findIndex(e => e.index === index) + this.verticalScrollContainer.state.startIndex;
+    }
 
-        if (data.length === 0) {
-            const newItem = this.children.first;
-            if (!newItem) { return; }
-            newItem.isFocused = true;
-            this._focusedItem = newItem;
-            return;
+    private focusComboHeader() {
+        this.combo.searchInput.nativeElement.focus();
+        if (this.focusedItem) {
+            this.focusedItem.isFocused = false;
         }
-        // Following the big comment above, when the new item is group header, then we need to load 2 elements at once.
-        if (data[newScrollStartIndex].isHeader && direction === Navigate.Up ||
-            data[newScrollStartIndex + state.chunkSize - 2].isHeader && direction === Navigate.Down) {
-            newScrollStartIndex = isScrollUp ? newScrollStartIndex - 1 : newScrollStartIndex + 1;
-            // newScrollStartIndex = mod && direction === Navigate.Down ? newScrollStartIndex + 1 : newScrollStartIndex;
-            if (newScrollStartIndex < 0) { // If the next item loaded is a header and is also the very first item in the list.
-                vContainer.scrollTo(0); // Scrolls to the beginning of the list and switches focus to the searchInput
-                this.subscribeNext(vContainer, () => {
-                    this.combo.searchInput.nativeElement.focus();
-                    if (this.focusedItem) {
-                        this.focusedItem.isFocused = false;
-                    }
-                    this.focusedItem = null;
-                });
-                return;
-            }
-        }
-        // If it is the very last item in the collection, when moving down
-        newScrollStartIndex = newScrollStartIndex + state.chunkSize;
-        if (newScrollStartIndex === data.length + 1) {
-            vContainer.scrollTo(newScrollStartIndex - 2);
-            this.focusItem(this.items.length - 1 - extraScroll);
-            return;
-        }
-        vContainer.scrollTo(newScrollStartIndex - 2);
-        this.subscribeNext(vContainer, () => {
-            state = vContainer.state;
-            data = vContainer.igxForOf;
-
-            // Because we are sure that if we scroll up then the top element is not a header, then we focus the first one.
-            // When we scroll down, if the newly loaded element that is hidden is group header,
-            // then we focus the last item from the this.items array.
-            // This is because the this.items doens't contains the group headers, while there are rendered in the combo drop down.
-            // If the newly loaded element that is hidden isn't a header, this means that the first visible item, the one that needs focus,
-            // should be either the one that is before the last item (this.items).
-            const isBottomHiddenHeader = data[state.startIndex + state.chunkSize - 1].isHeader;
-            const index = isScrollUp ? 0 : isBottomHiddenHeader ? this.items.length - 1 - extraScroll : this.items.length - 2 - extraScroll;
-
-            this.focusItem(index);
-        });
+        this.focusedItem = null;
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
         virtualContainer.onChunkLoad.pipe(take(1), takeUntil(this.destroy$)).subscribe({
             next: (e: any) => {
-                callback(e);
                 console.log('sub fired');
+                callback(e);
             }
         });
     }
