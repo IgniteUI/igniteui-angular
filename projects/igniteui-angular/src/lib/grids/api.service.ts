@@ -287,6 +287,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let cellObj;
         if (columnID !== null) {
             if ((editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID)) {
+                editableCell.cell.editValue = editValue;
                 cellObj = editableCell;
             } else {
                 cellObj = grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
