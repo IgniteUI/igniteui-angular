@@ -214,84 +214,80 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             super.navigateItem(newIndex);
         } else {
             if (direction === Navigate.Up) { // Navigate UP
-                this.navigateVirtual_up(allData, vContainer, extraScroll, newIndex);
-            } else if (direction === Navigate.Down) { // Navigate Down
-                this.navigateVirtual_down(allData, vContainer, extraScroll, newIndex);
+                this.navigateUp(allData, vContainer, extraScroll, newIndex);
+            } else if (direction === Navigate.Down) { // Navigate DOWN
+                this.navigateDown(allData, vContainer, extraScroll, newIndex);
             }
         }
     }
 
-    private navigateVirtual_down(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
+    private navigateDown(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
         const focusedItem = this.focusedItem;
         const items = this.items;
         const children = this.children.toArray();
-        if (focusedItem && (focusedItem.value === allData[allData.length - 1]
-            || focusedItem.value === 'ADD ITEM')) { // If very last item
+        if (focusedItem && (focusedItem.value === allData[allData.length - 1] || focusedItem.value === 'ADD ITEM')) { // If very last item
             if (this.combo.isAddButtonVisible() && focusedItem.value !== 'ADD ITEM') { // If add button is visible
                 this.focusItem(items.length - 1); // Focus add button
             }
             return;
         }
-        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(this.focusedItem.index) + 1 :
-            this.itemIndexInData(newIndex);
-        const maxDataIndex = vContainer.state.startIndex + vContainer.state.chunkSize - 1;
-        if (targetDataIndex < maxDataIndex) {
+        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(this.focusedItem.index) + 1 : this.itemIndexInData(newIndex);
+        const lastLoadedIndex = vContainer.state.startIndex + vContainer.state.chunkSize - 1; // Last item is not visible, so require scroll
+        if (targetDataIndex < lastLoadedIndex) { // If no scroll is required
             if (newIndex !== -1 || newIndex === children.length - 1 - extraScroll) { // Use normal nav for visible items
                 super.navigateItem(newIndex);
             }
-        } else if (this.isScrolledToLast && targetDataIndex === maxDataIndex) { // If already at bottom and target is last item
-            this.focusItem(items.length - 1 - extraScroll);
-        } else {
-            let addedIndex = 0;
-            if (allData[targetDataIndex].isHeader) {
-                addedIndex = [...allData].splice(targetDataIndex, allData.length - 1).findIndex(e => !e.isHeader);
-                targetDataIndex = targetDataIndex + addedIndex;
-            }
-            if (addedIndex === -1 && this.combo.isAddButtonVisible()) { // If no more non-header + add button is visible
-                if (this.focusedItem) {
-                    this.focusedItem.isFocused = false;
-                }
+        } else if (this.isScrolledToLast && targetDataIndex === lastLoadedIndex) { // If already at bottom and target is last item
+            this.focusItem(items.length - 1 - extraScroll); // Focus the last item (excluding Add Button)
+        } else { // If scroll is required
+            // If item is header, find next non-header index
+            const addedIndex = allData[targetDataIndex].isHeader ?
+            [...allData].splice(targetDataIndex, allData.length - 1).findIndex(e => !e.isHeader) : 0;
+            targetDataIndex += addedIndex; // Add steps to the target index
+            if (addedIndex === -1 && this.combo.isAddButtonVisible()) { // If there are no more non-header items & add button is visible
                 this.focusItem(items.length);
             } else if (targetDataIndex === allData.length - 1 && !this.isScrolledToLast) {
-                vContainer.scrollTo(targetDataIndex);
-                this.focusItem(items.length - 1 - extraScroll);
-            } else {
+                // If target is very last loaded item, but scroll is not at the bottom (item is in DOM but not visible)
+                vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
+                this.focusItem(items.length - 1 - extraScroll); // Target last item (excluding Add Button)
+            } else { // Perform virtual scroll
                 this.subscribeNext(vContainer, () => {
-                    this.focusItem(children[children.length - 2 - extraScroll].index);
+                    // children = all items in the DD (including addItemButton)
+                    // length - 2 instead of -1, because we do not want to focus the last loaded item (in DOM, but not visible)
+                    this.focusItem(children[children.length - 2 - extraScroll].index); // Focus last item (excluding Add Button)
                 });
-                vContainer.scrollTo(targetDataIndex);
+                vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
             }
         }
     }
 
-    private navigateVirtual_up(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
+    private navigateUp(allData: any[], vContainer: IgxForOfDirective<any>, extraScroll: number, newIndex?: number) {
         const focusedItem = this.focusedItem;
-        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden).value) { // If this is the very first item
-            this.focusComboHeader(); // Focus combo header
+        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden).value) { // If this is the very first non-header item
+            this.focusComboSearch(); // Focus combo header
             return;
         }
-        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(focusedItem.index) - 1 :
-            this.itemIndexInData(newIndex);
-        if (newIndex !== -1) {
+        let targetDataIndex = newIndex === -1 ? this.itemIndexInData(focusedItem.index) - 1 : this.itemIndexInData(newIndex);
+        if (newIndex !== -1) { // If no scroll is required
             if (this.isScrolledToLast && targetDataIndex === vContainer.state.startIndex) {
-                vContainer.scrollTo(targetDataIndex);
-                this.focusItem(0);
+                 // If virt scrollbar is @ bottom, first item is in DOM but not visible
+                vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
+                this.focusItem(0); // Focus first visible item
             } else {
-                super.navigateItem(newIndex);
+                super.navigateItem(newIndex); // Use normal navigation
             }
-        } else {
-            let addedIndex = 0;
-            if (allData[targetDataIndex].isHeader) {
-                addedIndex = [...allData].splice(0, targetDataIndex + 1).reverse().findIndex(e => !e.isHeader);
-                targetDataIndex = targetDataIndex - addedIndex;
-            }
-            if (addedIndex === -1) {
-                this.focusComboHeader();
+        } else { // Perform virtual scroll
+            // If item is header, find next non-header index
+            const addedIndex = allData[targetDataIndex].isHeader ?
+            [...allData].splice(0, targetDataIndex + 1).reverse().findIndex(e => !e.isHeader) : 0;
+            targetDataIndex -= addedIndex; // Add steps to targetDataIndex
+            if (addedIndex === -1) { // If there is no non-header
+                this.focusComboSearch(); // Focus combo search;
             } else {
                 this.subscribeNext(vContainer, () => {
-                    this.focusItem(0);
+                    this.focusItem(0); // Focus the first loaded item
                 });
-                vContainer.scrollTo(targetDataIndex);
+                vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
             }
         }
     }
@@ -300,7 +296,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         return this.children.toArray().findIndex(e => e.index === index) + this.verticalScrollContainer.state.startIndex;
     }
 
-    private focusComboHeader() {
+    private focusComboSearch() {
         this.combo.searchInput.nativeElement.focus();
         if (this.focusedItem) {
             this.focusedItem.isFocused = false;
@@ -311,7 +307,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
         virtualContainer.onChunkLoad.pipe(take(1), takeUntil(this.destroy$)).subscribe({
             next: (e: any) => {
-                console.log('sub fired');
                 callback(e);
             }
         });
