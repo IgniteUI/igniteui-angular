@@ -268,6 +268,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        console.log(collection);
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         if (collection && collection.length > 0 && grid.transactions.enabled) {
             const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
