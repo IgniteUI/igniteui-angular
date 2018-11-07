@@ -593,9 +593,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     public update(val: any) {
-        const rowSelector = this.cellID.rowID;
-        const gridEditState = this.gridAPI.create_grid_edit_args(this.gridID, rowSelector, this.cellID.columnID, val);
-        this.gridAPI.update_cell(this.gridID, rowSelector, this.cellID.columnID, val, gridEditState);
+        this.gridAPI.update_cell(this.gridID, this.cellID.rowID, this.cellID.columnID, val);
         this.cdr.markForCheck();
         this.grid.refreshSearch();
     }

@@ -2916,16 +2916,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
             const columnEdit = this.columnList.toArray().filter((col) => col.field === column);
             if (columnEdit.length > 0) {
                 const columnId = this.columnList.toArray().indexOf(columnEdit[0]);
-                const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-                const gridEditState = this.gridAPI.create_grid_edit_args(this.id, rowSelector, columnId, value);
-                this.gridAPI.update_cell(this.id, rowSelector, columnId, value, gridEditState);
-                if (editableCell && editableCell.cellID.rowID === rowSelector &&
-                    editableCell.cellID.columnID === columnId) {
-                    if (gridEditState.args.cancel) {
-                        return;
-                    }
-                    this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-                }
+                this.gridAPI.update_cell(this.id, rowSelector, columnId, value);
                 this.cdr.markForCheck();
                 this.refreshSearch();
             }

@@ -3,8 +3,6 @@ import { Subject } from 'rxjs';
 import { cloneArray, isEqual, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -14,7 +12,6 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
-import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -341,7 +338,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
         const currentGridEditState = gridEditState || this.create_grid_edit_args(id, rowID, columnID, editValue);
         const emittedArgs = currentGridEditState.args;
         const column = grid.columnList.toArray()[columnID];
