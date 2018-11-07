@@ -140,5 +140,4 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             mergeObjects(rowValue, newValue);
         }
     }
-
 }
