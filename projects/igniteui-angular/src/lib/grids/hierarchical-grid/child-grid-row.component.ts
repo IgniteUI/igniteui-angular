@@ -111,6 +111,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         return this.gridAPI.get(this.gridID);
     }
 
+
+    get level() {
+        return this.layout.level;
+    }
+
     /**
      * The native DOM element representing the row. Could be null in certain environments.
      *
@@ -160,5 +165,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         columns.forEach((c) => c.gridAPI = this.hGrid.hgridAPI);
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
+        this.hGrid.reflow();
     }
 }
