@@ -206,35 +206,59 @@ export class DataUtil {
         data: any[],
         transactions: HierarchicalTransaction[],
         childDataKey: any,
-        primaryKey?: any,
-        parentKey?: any): any[] {
+        primaryKey?: any): any[] {
 
-        for (let index = 0; index < data.length; index++) {
-            const dataItem = data[index];
-            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
-            const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
-            const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
-            if (updateTransaction || addedTransactions.length > 0) {
-                data[index] = mergeObjects(cloneValue(dataItem), updateTransaction && updateTransaction.newValue);
-            }
-            if (addedTransactions.length > 0) {
-                if (!data[index][childDataKey]) {
-                    data[index][childDataKey] = [];
+        for (let i = 0; i < transactions.length; i++) {
+            const transaction = transactions[i];
+            const path = transaction.path;
+
+            if (path) {
+                //  We need to get parent data row. If there is a path and path contains this row id,
+                //  this is the case for UPDATE and DELETE transactions type, remove the last id from
+                //  the path
+                if (path.find(id => id === transaction.id)) {
+                    path.splice(-1, 1);
                 }
-                for (const addedTransaction of addedTransactions) {
-                    data[index][childDataKey].push(addedTransaction.newValue);
+                const dataRow = this.getDataRowFromPath(data, primaryKey, childDataKey, path);
+                switch (transaction.type) {
+                    case TransactionType.ADD:
+                        //  if there is no dataRow, but there is a path this is ADD row added to
+                        //  DELETED ADD row - we just skip this
+                        if (dataRow) {
+                            if (!dataRow[childDataKey]) {
+                                dataRow[childDataKey] = [];
+                            }
+                            if (!dataRow[childDataKey].find(r => r[primaryKey] === transaction.id)) {
+                                dataRow[childDataKey].push(transaction.newValue);
+                            }
+                        }
+                        break;
+                    case TransactionType.UPDATE:
+                        const index = dataRow[childDataKey].findIndex(r => r[primaryKey] === transaction.id);
+                        const dataItem = dataRow[childDataKey][index];
+                        dataRow[childDataKey][index] = mergeObjects(cloneValue(dataItem), transaction.newValue);
+                        break;
                 }
-            }
-            if (data[index][childDataKey]) {
-                data[index][childDataKey] = this.mergeHierarchicalTransactions(
-                    data[index][childDataKey],
-                    transactions,
-                    childDataKey,
-                    primaryKey,
-                    rowId
-                );
+            } else {
+                //  if there is no path this is ADD row in root. Push the newValue to data
+                data.push(transaction.newValue);
             }
         }
         return data;
+    }
+
+    private static getDataRowFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
+        let collection: any[] = data;
+        let result: any;
+        for (let i = 0; i < path.length; i++) {
+            const rowIndex = collection ? collection.findIndex(r => r[primaryKey] === path[i]) : undefined;
+            result = collection ? collection[rowIndex] : undefined;
+            if (!result) {
+                break;
+            }
+            collection = result[childDataKey];
+        }
+
+        return result;
     }
 }

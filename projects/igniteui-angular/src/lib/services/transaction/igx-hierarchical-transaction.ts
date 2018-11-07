@@ -12,7 +12,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         this._states.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
             this.clearArraysFromObject(value);
-            result.push({ id: key, parentId: state.parentId, newValue: value, type: state.type } as T);
+            result.push({ id: key, path: state.path, newValue: value, type: state.type } as T);
         });
         return result;
     }
@@ -20,8 +20,8 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
     protected updateState(states: Map<any, S>, transaction: T, recordRef?: any): void {
         super.updateState(states, transaction, recordRef);
         const currentState = states.get(transaction.id);
-        if (currentState && transaction.type === TransactionType.ADD) {
-            currentState.parentId = transaction.parentId;
+        if (currentState) {
+            currentState.path = transaction.path;
         }
     }
 

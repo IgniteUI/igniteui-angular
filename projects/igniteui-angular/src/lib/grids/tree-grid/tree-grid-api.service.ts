@@ -5,6 +5,8 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../column.component';
 import { first } from 'rxjs/operators';
+import { HierarchicalTransaction, TransactionType } from '../../services';
+import { mergeObjects } from '../../core/utils';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(id: string, transactions?: boolean): any[] {
@@ -123,4 +125,22 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
+
+    protected updateCellData(grid: IgxTreeGridComponent, rowID: any, rowValue: any, rowData: any, newValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const record: ITreeGridRecord = grid.records.get(rowID);
+            const path = [...record.path];
+            path.push(rowID);
+            const transaction: HierarchicalTransaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue,
+                path: path
+            };
+            grid.transactions.add(transaction, rowData);
+        } else {
+            mergeObjects(rowValue, newValue);
+        }
+    }
+
 }

@@ -368,9 +368,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 const childKey = this.childDataKey;
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
+                    const path = [...parentRecord.path];
+                    path.push(parentRowID);
                     this.transactions.add({
                         id: rowId,
-                        parentId: parentRowID,
+                        path: path,
                         newValue: data,
                         type: TransactionType.ADD
                     } as HierarchicalTransaction,
@@ -397,13 +399,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      * @hidden
      */
     public deleteRowById(rowId: any) {
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        if (this.transactions.enabled && this.foreignKey && this.cascadeOnDelete) {
             this.transactions.startPending();
         }
 
         super.deleteRowById(rowId);
 
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        if (this.transactions.enabled && this.foreignKey && this.cascadeOnDelete) {
             this.transactions.endPending(true);
         }
     }
@@ -430,13 +432,15 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             if (this.transactions.enabled) {
+                const path = [...record.path];
+                path.push(rowID);
                 this.transactions.add({
                     id: rowID,
                     type: TransactionType.DELETE,
                     newValue: null,
-                    parentId: record.parent ? record.parent.rowID : undefined
+                    path: path
                 },
-                this.data);
+                childData[index]);
             } else {
                 childData.splice(index, 1);
             }

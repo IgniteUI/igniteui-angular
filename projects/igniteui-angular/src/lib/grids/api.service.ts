@@ -313,9 +313,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
         const args = {
             rowID,
-                oldValue: oldValue,
-                newValue: editValue,
-                cancel: false
+            oldValue: oldValue,
+            newValue: editValue,
+            cancel: false
         };
         if (cellObj) {
             Object.assign(args, {
@@ -357,22 +357,28 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             //  if edit (new) value is same as old value do nothing here
             if (emittedArgs.oldValue !== undefined
                 && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
-            const transaction: Transaction = {
-                id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: emittedArgs.newValue }
-            };
-            if (grid.transactions.enabled) {
-                grid.transactions.add(transaction, currentGridEditState.rowData);
-            } else {
-                const rowValue = this.get_all_data(id)[rowIndex];
-                mergeObjects(rowValue, {[column.field]: emittedArgs.newValue });
-            }
+            const rowValue = this.get_all_data(id)[rowIndex];
+            this.updateCellData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, emittedArgs.newValue);
             }
-            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
+            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID || !grid.transactions.enabled) {
                 (grid as any)._pipeTrigger++;
             }
+        }
+    }
+
+    protected updateCellData(grid, rowID, rowValue: any, rowData: any, newValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue
+            };
+            grid.transactions.add(transaction, rowData);
+        } else {
+            mergeObjects(rowValue, newValue);
         }
     }
 

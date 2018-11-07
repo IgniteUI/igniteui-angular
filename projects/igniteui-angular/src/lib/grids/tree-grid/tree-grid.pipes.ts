@@ -268,8 +268,10 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
+        console.log(collection);
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        if (collection && grid.transactions.enabled) {
+        const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
+        if (collection && aggregatedChanges.length > 0) {
             const primaryKey = grid.primaryKey;
             if (!primaryKey) {
                 return collection;
@@ -284,9 +286,10 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                     grid.transactions.getAggregatedChanges(true),
                     grid.primaryKey);
             } else if (childDataKey) {
+                const clone = cloneHierarchicalArray(collection, childDataKey);
                 return DataUtil.mergeHierarchicalTransactions(
-                    cloneHierarchicalArray(collection, childDataKey),
-                    grid.transactions.getAggregatedChanges(true),
+                    clone,
+                    aggregatedChanges,
                     childDataKey,
                     grid.primaryKey
                 );
