@@ -37,14 +37,15 @@ export class IgxFilteringService implements OnDestroy {
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(window.navigator.language);
+    private columnStartIndex = -1;
 
     public gridId: string;
     public isFilterRowVisible = false;
     public filteredColumn = null;
     public selectedExpression: IFilteringExpression = null;
-    public columnToChipToFocus = new Map<string, boolean>();
+    public columnToFocus = null;
+    public focusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
-    public columnStartIndex = -1;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
 
@@ -73,11 +74,11 @@ export class IgxFilteringService implements OnDestroy {
                     this.columnStartIndex = eventArgs.startIndex;
                     this.grid.filterCellList.forEach((filterCell) => {
                         filterCell.updateFilterCellArea();
-                        if (filterCell.getChipToFocus()) {
-                            this.columnToChipToFocus.set(filterCell.column.field, false);
-                            filterCell.focusChip();
-                        }
                     });
+                }
+                if (this.columnToFocus) {
+                    this.grid.filterCellList.find(cell => cell.column === this.columnToFocus).focusChip();
+                    this.columnToFocus = null;
                 }
             });
 

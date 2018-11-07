@@ -17,6 +17,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { first } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -96,7 +97,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     }
 
     ngOnInit(): void {
-        this.filteringService.columnToChipToFocus.set(this.column.field, false);
         this.filteringService.columnToMoreIconHidden.set(this.column.field, true);
     }
 
@@ -104,44 +104,33 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.updateFilterCellArea();
     }
 
-    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
-        if (eventArgs.shiftKey) {
-            if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
-                eventArgs.preventDefault();
-                this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex - 1);
-            } else if (this.column.visibleIndex === 0) {
-                eventArgs.preventDefault();
-            }
-        } else {
+        if (this.isLastElementFocused()) {
             if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
-                if (this.currentTemplate === this.defaultFilter) {
-                    if (this.isMoreIconVisible() === false) {
-                        if (this.moreIcon.nativeElement === document.activeElement) {
-                            this.navService.goToFirstCell();
-                        }
-                    } else if (this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`) ===
-                               document.activeElement) {
-                        this.navService.goToFirstCell();
-                    }
-                } else {
+                eventArgs.preventDefault();
+                if (!this.filteringService.grid.filteredData || this.filteringService.grid.filteredData.length > 0) {
                     this.navService.goToFirstCell();
                 }
             } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
                 eventArgs.preventDefault();
-                this.filteringService.grid.headerContainer.scrollTo(this.column.visibleIndex + 1);
+                this.ScrollToChip(this.column.visibleIndex + 1, true);
             }
         }
-
         eventArgs.stopPropagation();
     }
 
-    /**
-     * Returns the chip to be focused.
-     */
-    public getChipToFocus() {
-        return this.filteringService.columnToChipToFocus.get(this.column.field);
+    @HostListener('keydown.shift.tab', ['$event'])
+    public onShiftTabKeyDown(eventArgs) {
+        if (this.isFisrtElementFocused()) {
+            if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
+                eventArgs.preventDefault();
+                this.ScrollToChip(this.column.visibleIndex - 1, false);
+            } else if (this.column.visibleIndex === 0) {
+                eventArgs.preventDefault();
+            }
+        }
+        eventArgs.stopPropagation();
     }
 
     /**
@@ -199,6 +188,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove);
+        this.focusChip();
     }
 
     /**
@@ -224,20 +214,34 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
      */
     public filteringIndicatorClass() {
         return {
-            [this.baseClass]: !this.isMoreIconVisible(),
-            [`${this.baseClass}--hidden`]: this.isMoreIconVisible()
+            [this.baseClass]: !this.isMoreIconHidden(),
+            [`${this.baseClass}--hidden`]: this.isMoreIconHidden()
         };
     }
 
     /**
      * Focus a chip depending on the current visible template.
      */
-    public focusChip() {
+    public focusChip(fucusFirst?: boolean) {
         if (this.currentTemplate === this.defaultFilter) {
-            if (this.isMoreIconVisible() === false) {
-                this.moreIcon.nativeElement.focus();
+            if (fucusFirst) {
+                if (this.chipsArea.chipsList.length > 0) {
+                    this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+                } else {
+                    this.moreIcon.nativeElement.focus();
+                }
+            } else if (this.filteringService.focusNext) {
+                if (this.isMoreIconHidden() === false && this.chipsArea.chipsList.length === 0) {
+                    this.moreIcon.nativeElement.focus();
+                } else {
+                    this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+                }
             } else {
-                this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+                if (this.isMoreIconHidden() === false) {
+                    this.moreIcon.nativeElement.focus();
+                } else {
+                    this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`).focus();
+                }
             }
         } else if (this.currentTemplate === this.emptyFilter) {
             this.ghostChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
@@ -264,7 +268,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.filteringService.filter(this.column.field, this.rootExpressionsTree);
     }
 
-    private isMoreIconVisible(): boolean {
+    private isMoreIconHidden(): boolean {
         return this.filteringService.columnToMoreIconHidden.get(this.column.field);
     }
 
@@ -307,6 +311,37 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 }
             }
             this.cdr.detectChanges();
+        }
+    }
+
+    private ScrollToChip(columnIndex: number, scrollRight: boolean) {
+        this.filteringService.grid.nativeElement.focus({preventScroll: true});
+        this.filteringService.columnToFocus = this.filteringService.grid.visibleColumns[columnIndex];
+        this.filteringService.focusNext = scrollRight;
+        this.filteringService.grid.headerContainer.scrollTo(columnIndex);
+    }
+
+    private isFisrtElementFocused(): boolean {
+        if (this.chipsArea && this.chipsArea.chipsList.length > 0 &&
+            this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`) !== document.activeElement) {
+                return false;
+        } else {
+            return true;
+        }
+    }
+
+    private isLastElementFocused(): boolean {
+        if (this.chipsArea) {
+            if (this.isMoreIconHidden() && this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`) !==
+                document.activeElement) {
+                return false;
+            } else if (!this.isMoreIconHidden() && this.moreIcon.nativeElement !== document.activeElement) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 }
