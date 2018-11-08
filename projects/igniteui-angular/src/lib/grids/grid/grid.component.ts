@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit } from '@angular/core';
+    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
@@ -11,7 +11,7 @@ import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { DisplayDensity } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
@@ -121,9 +121,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService) {
+        filteringService: IgxFilteringService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService);
+                  filteringService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -413,13 +414,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     get groupAreaHostClass(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-drop-area--cosy';
-            case DisplayDensity.compact:
-                return 'igx-drop-area--compact';
-            default:
-                return 'igx-drop-area';
+        if (this.isCosy()) {
+            return 'igx-drop-area--cosy';
+        } else if (this.isCompact()) {
+            return 'igx-drop-area--compact';
+        } else {
+            return 'igx-drop-area';
         }
     }
 
@@ -843,6 +843,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     }
 
     public ngDoCheck(): void {
+        super.ngDoCheck();
         if (this.groupingDiffer) {
             const changes = this.groupingDiffer.diff(this.groupingExpressions);
             if (changes && this.columnList) {

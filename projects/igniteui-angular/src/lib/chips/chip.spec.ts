@@ -227,14 +227,15 @@ describe('IgxChip', () => {
         expect(firstChipSuffixText).toEqual('suf');
     });
 
-    it('should make chip comfortable when density is not set', () => {
+   it('should make chip comfortable when density is not set', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
         const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const firstComponent = components[0];
 
-        expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+        const isFirstChipComfortable = firstComponent.componentInstance.isComfortable();
+        expect(isFirstChipComfortable).toEqual(true);
 
         // Assert default css class is applied
         const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));
