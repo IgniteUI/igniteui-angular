@@ -204,6 +204,14 @@ export class IgxFilteringService implements OnDestroy {
         for (let i = 0; i < expressionsList.length; i++) {
             currExpressionUI = expressionsList[i];
 
+            if (!currExpressionUI.expression.condition.isUnary && currExpressionUI.expression.searchVal === null) {
+                if (currExpressionUI.afterOperator === FilteringLogic.And && !currAndBranch) {
+                    currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
+                    expressionsTree.filteringOperands.push(currAndBranch);
+                }
+                continue;
+            }
+
             if ((currExpressionUI.beforeOperator === undefined || currExpressionUI.beforeOperator === null ||
                  currExpressionUI.beforeOperator === FilteringLogic.Or) &&
                 currExpressionUI.afterOperator === FilteringLogic.And) {
