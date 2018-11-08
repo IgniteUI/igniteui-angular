@@ -424,10 +424,10 @@ export class IgxGridNavigationService {
                     this.grid.rowList.first.cells.first._clearCellSelection();
                     const visColLength = this.grid.visibleColumns.length;
                     if (this.grid.headerContainer.getItemCountInView() === visColLength) {
-                        this.grid.filterCellList.last.focusChip();
+                        this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList.last.column.field, false);
                     } else {
                         this.grid.filteringService.columnToFocus = this.grid.visibleColumns[visColLength - 1];
-                        this.grid.filteringService.focusNext = false;
+                        this.grid.filteringService.shouldFocusNext = false;
                         this.grid.headerContainer.scrollTo(visColLength - 1);
                     }
                 } else {

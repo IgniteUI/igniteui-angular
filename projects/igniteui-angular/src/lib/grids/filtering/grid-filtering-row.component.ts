@@ -342,8 +342,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             });
         }
 
-        this.filteringService.grid.filterCellList.find(cell => cell.column === this.filteringService.filteredColumn).updateFilterCellArea();
-        this.filteringService.grid.filterCellList.find(cell => cell.column === this.filteringService.filteredColumn).focusChip(true);
+        this.filteringService.updateFilteringCell(this.column.field);
+        this.filteringService.focusFilterCellChip(this.column.field, true);
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
