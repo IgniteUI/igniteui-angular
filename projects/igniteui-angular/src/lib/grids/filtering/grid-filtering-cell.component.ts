@@ -17,6 +17,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxGridGroupByRowComponent } from '../grid';
 
 /**
  * @hidden
@@ -105,15 +106,29 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
+        const pinnedColumns = this.filteringService.grid.pinnedColumns;
+        let nextIndex = this.column.visibleIndex + 1 - pinnedColumns.length;
+
         if (this.isLastElementFocused()) {
+            if (nextIndex < this.filteringService.grid.unpinnedColumns.length &&
+                pinnedColumns.indexOf(this.column) === pinnedColumns.length - 1 &&
+                !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex + 1)) {
+                this.ScrollToChip(0, true);
+                eventArgs.stopPropagation();
+                return;
+            }
             if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
-                eventArgs.preventDefault();
                 if (!this.filteringService.grid.filteredData || this.filteringService.grid.filteredData.length > 0) {
+                    if (this.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
+                        eventArgs.stopPropagation();
+                        return;
+                    }
                     this.navService.goToFirstCell();
                 }
-            } else if (!this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
                 eventArgs.preventDefault();
-                this.ScrollToChip(this.column.visibleIndex + 1, true);
+            } else if (!this.column.pinned && !this.navService.isColumnFullyVisible(this.column.visibleIndex + 1)) {
+                eventArgs.preventDefault();
+                this.ScrollToChip(nextIndex, true);
             }
         }
         eventArgs.stopPropagation();
@@ -122,9 +137,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
+            let prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
+
             if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                 eventArgs.preventDefault();
-                this.ScrollToChip(this.column.visibleIndex - 1, false);
+                this.ScrollToChip(prevIndex, false);
             } else if (this.column.visibleIndex === 0) {
                 eventArgs.preventDefault();
             }
@@ -301,7 +318,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     private ScrollToChip(columnIndex: number, shouldFocusNext: boolean) {
         this.filteringService.grid.nativeElement.focus({preventScroll: true});
-        this.filteringService.columnToFocus = this.filteringService.grid.visibleColumns[columnIndex];
+        this.filteringService.columnToFocus = this.filteringService.grid.unpinnedColumns[columnIndex];
         this.filteringService.shouldFocusNext = shouldFocusNext;
         this.filteringService.grid.headerContainer.scrollTo(columnIndex);
     }
