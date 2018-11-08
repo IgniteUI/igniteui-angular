@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
+import { IgxGridRowComponent } from './grid/grid-row.component';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -414,6 +415,18 @@ export class IgxGridNavigationService {
         }
     }
 
+    public moveFocusToFilterCell() {
+        this.grid.rowList.find(row => row instanceof  IgxGridRowComponent).cells.first._clearCellSelection();
+        const visColLength = this.grid.unpinnedColumns.length;
+        if (this.isColumnFullyVisible(visColLength - 1)) {
+            this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList.last.column.field, false);
+        } else {
+            this.grid.filteringService.columnToFocus = this.grid.unpinnedColumns[visColLength - 1];
+            this.grid.filteringService.shouldFocusNext = false;
+            this.grid.headerContainer.scrollTo(visColLength - 1);
+        }
+    }
+
     public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
         if (visibleColumnIndex === 0) {
                 if (this.isRowInEditMode(rowIndex)) {
@@ -421,15 +434,7 @@ export class IgxGridNavigationService {
                     return;
                 }
                 if (rowIndex === 0 && this.grid.allowFiltering) {
-                    this.grid.rowList.first.cells.first._clearCellSelection();
-                    const visColLength = this.grid.visibleColumns.length;
-                    if (this.grid.headerContainer.getItemCountInView() === visColLength) {
-                        this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList.last.column.field, false);
-                    } else {
-                        this.grid.filteringService.columnToFocus = this.grid.visibleColumns[visColLength - 1];
-                        this.grid.filteringService.shouldFocusNext = false;
-                        this.grid.headerContainer.scrollTo(visColLength - 1);
-                    }
+                    this.moveFocusToFilterCell();
                 } else {
                     this.navigateUp(currentRowEl, rowIndex,
                         this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
