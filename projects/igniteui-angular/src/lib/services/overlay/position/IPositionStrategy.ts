@@ -5,6 +5,9 @@ import { PositionSettings } from './../utilities';
  * Position strategies determine where to display the component in the provided IgxOverlayService.
  */
 export interface IPositionStrategy {
+    /**
+     * PositionSettings to use when position the component in the overlay
+     */
     settings: PositionSettings;
 
     /**

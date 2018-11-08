@@ -1,5 +1,5 @@
-import { ScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
+import { ScrollStrategy } from './scroll-strategy';
 
 export class AbsoluteScrollStrategy extends ScrollStrategy {
     private _initialized = false;
@@ -13,9 +13,7 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         this._scrollContainer = scrollContainer;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -26,9 +24,7 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         this._initialized = true;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public attach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.addEventListener('scroll', this.onScroll, true);
@@ -37,9 +33,7 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         }
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public detach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll, true);

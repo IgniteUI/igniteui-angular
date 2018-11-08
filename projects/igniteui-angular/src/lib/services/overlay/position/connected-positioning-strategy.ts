@@ -14,16 +14,16 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     closeAnimation: scaleOutVerTop
   };
 
+  /** @inheritdoc */
   public settings: PositionSettings;
+
   constructor(settings?: PositionSettings) {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
   // we no longer use the element inside the position() as its dimensions are cached in rect
-  /**
-   * @inheritdoc
-   */
-  position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
+  /** @inheritdoc */
+  position(contentElement: HTMLElement, size?: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
     contentElement.style.top = startPoint.y + this.settings.verticalDirection * size.height + 'px';
