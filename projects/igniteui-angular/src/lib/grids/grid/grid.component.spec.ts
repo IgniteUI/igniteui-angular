@@ -2144,8 +2144,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(110); // SORT does not submit
 
-                expect(gridAPI.escape_editMode).toHaveBeenCalled();
-                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id, { rowID: 0, columnID: 0, rowIndex: 0 });
+                expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
                 expect(cell.inEditMode).toBeFalsy();
             }));
 

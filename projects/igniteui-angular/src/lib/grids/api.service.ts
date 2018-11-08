@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, isEqual, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
-import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -14,7 +12,6 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
-import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -287,6 +284,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         let cellObj;
         if (columnID !== null) {
             if ((editableCell && editableCell.cellID.rowID === rowID && editableCell.cellID.columnID === columnID)) {
+                editableCell.cell.editValue = editValue;
                 cellObj = editableCell;
             } else {
                 cellObj = grid.columnList.toArray()[columnID].cells.find((cell) => cell.cellID.rowID === rowID);
