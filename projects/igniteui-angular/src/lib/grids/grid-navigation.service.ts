@@ -36,26 +36,35 @@ export class IgxGridNavigationService {
     }
 
     public isColumnFullyVisible(visibleColumnIndex: number) {
-        const horizontalScroll = this.grid.headerContainer.getHorizontalScroll();
+        let forOfDir;
+        if (this.grid.dataRowList.length > 0) {
+            forOfDir = this.grid.dataRowList.first.virtDirRow;
+        } else {
+            forOfDir = this.grid.headerContainer;
+        }
+        const horizontalScroll = forOfDir.getHorizontalScroll();
         if (!horizontalScroll.clientWidth ||
             this.grid.columnList.filter(c => !c.columnGroup).find((column) => column.visibleIndex === visibleColumnIndex).pinned) {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        return this.displayContainerWidth >=
-            this.grid.headerContainer.getColumnScrollLeft(index + 1) -
-            this.displayContainerScrollLeft;
+        return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft;
     }
 
     public isColumnLeftFullyVisible(visibleColumnIndex) {
-        const horizontalScroll = this.grid.headerContainer.getHorizontalScroll();
+        let forOfDir;
+        if (this.grid.dataRowList.length > 0) {
+            forOfDir = this.grid.dataRowList.first.virtDirRow;
+        } else {
+            forOfDir = this.grid.headerContainer;
+        }
+        const horizontalScroll = forOfDir.getHorizontalScroll();
         if (!horizontalScroll.clientWidth ||
             this.grid.columnList.filter(c => !c.columnGroup).find((column) => column.visibleIndex === visibleColumnIndex).pinned) {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
-        return this.displayContainerScrollLeft <=
-            this.grid.headerContainer.getColumnScrollLeft(index);
+        return this.displayContainerScrollLeft <= forOfDir.getColumnScrollLeft(index);
     }
 
     public get gridOrderedColumns(): IgxColumnComponent[] {
