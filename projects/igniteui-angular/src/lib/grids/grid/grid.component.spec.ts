@@ -2128,7 +2128,6 @@ describe('IgxGrid Component Tests', () => {
 
                 const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
 
-                spyOn(gridAPI, 'submit_value').and.callThrough();
                 spyOn(gridAPI, 'escape_editMode').and.callThrough();
 
                 cell.inEditMode = true;
@@ -2143,9 +2142,8 @@ describe('IgxGrid Component Tests', () => {
                 cell = grid.getCellByColumn(0, 'Downloads');
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(110); // SORT does not submit
-
+                expect(gridAPI.escape_editMode).toHaveBeenCalledTimes(1);
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith(grid.id);
-                expect(cell.inEditMode).toBeFalsy();
             }));
 
             it(`Should NOT include the new value in the results when sorting`, fakeAsync(() => {
