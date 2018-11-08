@@ -44,7 +44,7 @@ export class IgxFilteringService implements OnDestroy {
     public filteredColumn = null;
     public selectedExpression: IFilteringExpression = null;
     public columnToFocus = null;
-    public focusNext = false;
+    public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
@@ -77,7 +77,7 @@ export class IgxFilteringService implements OnDestroy {
                     });
                 }
                 if (this.columnToFocus) {
-                    this.grid.filterCellList.find(cell => cell.column === this.columnToFocus).focusChip();
+                    this.focusFilterCellChip(this.columnToFocus.field, false);
                     this.columnToFocus = null;
                 }
             });
@@ -261,10 +261,23 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    private updateFilteringCell(columnId: string) {
+    /**
+     * Updates the content of a filterCell.
+     */
+    public updateFilteringCell(columnId: string) {
         const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
         if (filterCell) {
             filterCell.updateFilterCellArea();
+        }
+    }
+
+    /**
+     * Focus a chip in a filterCell.
+     */
+    public focusFilterCellChip(columnId: string, focusFirst: boolean) {
+        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+        if (filterCell) {
+            filterCell.focusChip(focusFirst);
         }
     }
 

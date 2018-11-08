@@ -17,7 +17,6 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { first } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -122,7 +121,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
-        if (this.isFisrtElementFocused()) {
+        if (this.isFirstElementFocused()) {
             if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                 eventArgs.preventDefault();
                 this.ScrollToChip(this.column.visibleIndex - 1, false);
@@ -222,26 +221,12 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     /**
      * Focus a chip depending on the current visible template.
      */
-    public focusChip(fucusFirst?: boolean) {
+    public focusChip(focusFirst: boolean = false) {
         if (this.currentTemplate === this.defaultFilter) {
-            if (fucusFirst) {
-                if (this.chipsArea.chipsList.length > 0) {
-                    this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
-                } else {
-                    this.moreIcon.nativeElement.focus();
-                }
-            } else if (this.filteringService.focusNext) {
-                if (this.isMoreIconHidden() === false && this.chipsArea.chipsList.length === 0) {
-                    this.moreIcon.nativeElement.focus();
-                } else {
-                    this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
-                }
+            if (focusFirst) {
+                this.focusFirstElement();
             } else {
-                if (this.isMoreIconHidden() === false) {
-                    this.moreIcon.nativeElement.focus();
-                } else {
-                    this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`).focus();
-                }
+                this.focusElement();
             }
         } else if (this.currentTemplate === this.emptyFilter) {
             this.ghostChip.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
@@ -314,20 +299,16 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         }
     }
 
-    private ScrollToChip(columnIndex: number, scrollRight: boolean) {
+    private ScrollToChip(columnIndex: number, shouldFocusNext: boolean) {
         this.filteringService.grid.nativeElement.focus({preventScroll: true});
         this.filteringService.columnToFocus = this.filteringService.grid.visibleColumns[columnIndex];
-        this.filteringService.focusNext = scrollRight;
+        this.filteringService.shouldFocusNext = shouldFocusNext;
         this.filteringService.grid.headerContainer.scrollTo(columnIndex);
     }
 
-    private isFisrtElementFocused(): boolean {
-        if (this.chipsArea && this.chipsArea.chipsList.length > 0 &&
-            this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`) !== document.activeElement) {
-                return false;
-        } else {
-            return true;
-        }
+    private isFirstElementFocused(): boolean {
+        return !(this.chipsArea && this.chipsArea.chipsList.length > 0 &&
+            this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`) !== document.activeElement);
     }
 
     private isLastElementFocused(): boolean {
@@ -337,11 +318,32 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 return false;
             } else if (!this.isMoreIconHidden() && this.moreIcon.nativeElement !== document.activeElement) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    private focusFirstElement(): void {
+        if (this.chipsArea.chipsList.length > 0) {
+            this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
+        } else {
+            this.moreIcon.nativeElement.focus();
+        }
+    }
+
+    private focusElement(): void {
+        if (this.filteringService.shouldFocusNext) {
+            if (!this.isMoreIconHidden() && this.chipsArea.chipsList.length === 0) {
+                this.moreIcon.nativeElement.focus();
             } else {
-                return true;
+                this.chipsArea.chipsList.first.elementRef.nativeElement.querySelector(`.igx-chip__item`).focus();
             }
         } else {
-            return true;
+            if (!this.isMoreIconHidden()) {
+                this.moreIcon.nativeElement.focus();
+            } else {
+                this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`).focus();
+            }
         }
     }
 }
