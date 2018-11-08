@@ -1,5 +1,5 @@
-import { ScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
+import { ScrollStrategy } from './scroll-strategy';
 
 export class BlockScrollStrategy extends ScrollStrategy {
     private _initialized = false;
@@ -12,9 +12,7 @@ export class BlockScrollStrategy extends ScrollStrategy {
         super(scrollContainer);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
@@ -24,17 +22,13 @@ export class BlockScrollStrategy extends ScrollStrategy {
         this._initialized = true;
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
         this._document.addEventListener('wheel', this.onWheel, true);
     }
 
-    /**
-     * @inheritdoc
-     */
+    /** @inheritdoc */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
         this._document.removeEventListener('wheel', this.onWheel, true);

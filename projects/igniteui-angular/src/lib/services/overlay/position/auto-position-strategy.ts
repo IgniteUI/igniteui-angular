@@ -9,6 +9,7 @@ enum Axis {
 export class AutoPositionStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
     public offsetPadding = 16;
     private _initialSettings;
+
     getViewPort(document) { // Material Design implementation
         const clientRect = document.documentElement.getBoundingClientRect();
         const scrollPosition = {
@@ -29,12 +30,9 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
 
     }
 
-
     // The position method should return a <div> container that will host the component
-    /**
-     * @inheritdoc
-     */
-    position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
+    /** @inheritdoc */
+    position(contentElement: HTMLElement, size?: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         if (!initialCall) {
             super.position(contentElement, size);
             return;

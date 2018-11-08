@@ -1,5 +1,5 @@
-import { ScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
+import { ScrollStrategy } from './scroll-strategy';
 
 export class NoOpScrollStrategy extends ScrollStrategy {
     constructor(scrollContainer?: HTMLElement) {
