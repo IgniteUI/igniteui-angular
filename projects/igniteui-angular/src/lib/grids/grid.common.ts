@@ -227,7 +227,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     get draggable(): boolean {
-        return this.column && (this.column.movable || this.column.groupable);
+        return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
     }
 
     public get icon(): HTMLElement {

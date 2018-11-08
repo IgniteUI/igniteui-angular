@@ -568,7 +568,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable);
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
     private _setGroupColsVisibility(value) {
