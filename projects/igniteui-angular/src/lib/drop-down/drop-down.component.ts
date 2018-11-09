@@ -472,10 +472,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
-    /**
-     * @hidden
-     */
-    public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
+    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
         if (parentRect.top > elementRect.top) {
