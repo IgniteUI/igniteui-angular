@@ -347,6 +347,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.transform(this.chipAreaScrollOffset);
     }
 
+    /*
+    * Opens date-picker if condition is not unary
+    */
+    public openDatePicker(openDialog: Function) {
+        if (!this.expression.condition.isUnary) {
+            openDialog();
+        }
+    }
+
     /**
      * Opens the conditions dropdown.
      */
