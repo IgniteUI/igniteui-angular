@@ -107,7 +107,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
         const pinnedColumns = this.filteringService.grid.pinnedColumns;
-        let nextIndex = this.column.visibleIndex + 1 - pinnedColumns.length;
+        const nextIndex = this.column.visibleIndex + 1 - pinnedColumns.length;
 
         if (this.isLastElementFocused()) {
             if (nextIndex < this.filteringService.grid.unpinnedColumns.length &&
@@ -137,7 +137,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
-            let prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
+            const prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
 
             if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                 eventArgs.preventDefault();
