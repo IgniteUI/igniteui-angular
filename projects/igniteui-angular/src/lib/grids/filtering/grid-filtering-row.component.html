@@ -48,9 +48,9 @@
                 <input #input
                        igxInput
                        tabindex="0"
-                (click)="openDialog()"
-                [placeholder]="placeholder"
-                autocomplete="off"
+                       (click)="openDatePicker(openDialog)"
+                       [placeholder]="placeholder"
+                       autocomplete="off"
                        [value]="displayData | date"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
