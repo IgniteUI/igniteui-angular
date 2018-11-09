@@ -4,10 +4,11 @@ import {
     HostBinding,
     Input,
     Optional,
-    ViewChild
+    ViewChild,
+    Inject
 } from '@angular/core';
 
-import { DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -30,7 +31,7 @@ import { ConnectedPositioningStrategy } from '../services/overlay/position';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent {
+export class IgxGridToolbarComponent extends DisplayDensityBase {
 
     /**
      * @hidden
@@ -196,41 +197,6 @@ export class IgxGridToolbarComponent {
         return this.grid.pinnedColumns.length;
     }
 
-    private _displayDensity: DisplayDensity | string;
-
-    /**
-     * Returns the theme of the `IgxGridToolbarComponent`.
-     * The default theme is `comfortable`.
-     * Available options are `comfortable`, `cosy`, `compact`.
-     * ```typescript
-     * let toolbarTheme = this.grid.toolbar.displayDensity;
-     * ```
-     */
-    @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    /**
-     * Sets the theme of the `IgxGridToolbarComponent`.
-     * ```html
-     * <igx-grid #grid [data]="localData" [displayDensity]="'compact'" [autoGenerate]="true"></igx-grid>
-     * ```
-     */
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-    }
-
     /**
      * Returns the theme of the `IgxGridToolbarComponent`.
      * ```typescript
@@ -240,21 +206,21 @@ export class IgxGridToolbarComponent {
 
     @HostBinding('attr.class')
     get hostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.compact:
-                return 'igx-grid-toolbar--compact';
-            case DisplayDensity.cosy:
-                return 'igx-grid-toolbar--cosy';
-            case DisplayDensity.comfortable:
-            default:
-                return 'igx-grid-toolbar';
+        if (this.isCosy()) {
+            return 'igx-grid-toolbar--cosy';
+        } else if (this.isCompact()) {
+            return 'igx-grid-toolbar--compact';
+        } else {
+            return 'igx-grid-toolbar';
         }
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
-        @Optional() public csvExporter: IgxCsvExporterService) {
+        @Optional() public csvExporter: IgxCsvExporterService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
     }
 
     private _positionSettings: PositionSettings = {
