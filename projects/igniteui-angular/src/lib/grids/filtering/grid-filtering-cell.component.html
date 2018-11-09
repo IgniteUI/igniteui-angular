@@ -26,7 +26,7 @@
             </igx-chip>
             <span class="igx-filtering-chips__connector" *ngIf="!last">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
         </ng-container>
-        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" tabindex="0">
+        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" tabindex="0">
             <igx-icon>filter_list</igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>
