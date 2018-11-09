@@ -243,7 +243,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             this.filteringService.refreshExpressions();
             this.clearSummaryCache();
-            this.cdr.markForCheck();
+            this.markForCheck();
         }
     }
 

@@ -12,10 +12,9 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
-import { KEYS, cloneArray } from '../../core/utils';
+import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridGroupByRowComponent } from '../grid';
 
@@ -29,12 +28,10 @@ import { IgxGridGroupByRowComponent } from '../grid';
 })
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
 
-    private rootExpressionsTree: FilteringExpressionsTree;
-    private expressionsList: ExpressionUI[];
     private baseClass = 'igx-grid__filtering-cell-indicator';
     private currentTemplate = null;
 
-    public visibleExpressionsList: ExpressionUI[];
+    public expressionsList: ExpressionUI[];
     public moreFiltersCount = 0;
 
     @Input()
@@ -89,6 +86,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                 eventArgs.stopPropagation();
                 return;
             }
+
             if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
                 if (!this.filteringService.grid.filteredData || this.filteringService.grid.filteredData.length > 0) {
                     if (this.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
@@ -109,16 +107,23 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
-            const prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
-
             if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
                 eventArgs.preventDefault();
+                const prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
                 this.ScrollToChip(prevIndex, false);
             } else if (this.column.visibleIndex === 0) {
                 eventArgs.preventDefault();
             }
         }
         eventArgs.stopPropagation();
+    }
+
+    /**
+     * Returns whether a chip with a given index is visible or not.
+     */
+    public isChipVisible(index: number) {
+        const expression = this.expressionsList[index];
+        return !!(expression && expression.isVisible);
     }
 
     /**
@@ -233,13 +238,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         this.filteringService.removeExpression(this.column.field, indexToRemove);
 
         this.updateVisibleFilters();
-        this.filter();
-    }
-
-    private filter(): void {
-        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
-
-        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
+        this.filteringService.filter(this.column.field);
     }
 
     private isMoreIconHidden(): boolean {
@@ -247,21 +246,20 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     }
 
     private updateVisibleFilters() {
-        this.visibleExpressionsList = cloneArray(this.expressionsList);
-
-        // TODO: revise the usage of this.cdr.detectChanges() here
-        this.cdr.detectChanges();
+        this.expressionsList.forEach((ex) => ex.isVisible = true);
 
         if (this.moreIcon) {
             this.filteringService.columnToMoreIconHidden.set(this.column.field, true);
         }
+        this.cdr.detectChanges();
+
         if (this.chipsArea && this.expressionsList.length > 1) {
             const areaWidth = this.chipsArea.element.nativeElement.offsetWidth;
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
             let visibleChipsCount = 0;
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth -
-            parseInt(document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
+                parseInt(document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
 
             for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
@@ -280,9 +278,12 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
                     }
                     this.moreFiltersCount = this.expressionsList.length - visibleChipsCount;
                     this.filteringService.columnToMoreIconHidden.set(this.column.field, false);
-                    this.visibleExpressionsList.splice(visibleChipsCount);
                     break;
                 }
+            }
+
+            for (let i = visibleChipsCount; i < this.expressionsList.length; i++) {
+                this.expressionsList[i].isVisible = false;
             }
             this.cdr.detectChanges();
         }

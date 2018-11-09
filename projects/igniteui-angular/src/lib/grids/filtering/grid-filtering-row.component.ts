@@ -57,7 +57,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
-    private rootExpressionsTree: FilteringExpressionsTree;
     private chipsAreaWidth: number;
     private chipAreaScrollOffset = 0;
     private conditionChanged = new Subject();
@@ -352,8 +351,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             });
         }
 
-        this.filteringService.updateFilteringCell(this.column.field);
-        this.filteringService.focusFilterCellChip(this.column.field, true);
+        this.filteringService.updateFilteringCell(this.column);
+        this.filteringService.focusFilterCellChip(this.column, true);
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
@@ -641,8 +640,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     private filter() {
-        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
-
-        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
+        this.filteringService.filter(this.column.field);
     }
 }
