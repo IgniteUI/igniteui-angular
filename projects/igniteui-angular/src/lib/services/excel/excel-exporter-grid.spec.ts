@@ -400,7 +400,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export sorted tree grid properly.', async () => {
-            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc});
+            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             options.ignoreSorting = true;
             fix.detectChanges();
 
@@ -432,7 +432,7 @@ describe('Excel Exporter', () => {
         it('should export filtered and sorted tree grid properly.', async () => {
             treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFilteredSorted);
