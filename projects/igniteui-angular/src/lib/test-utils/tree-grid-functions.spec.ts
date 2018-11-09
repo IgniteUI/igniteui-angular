@@ -338,11 +338,11 @@ export class TreeGridFunctions {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
                 cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 if (cell !== undefined && cell !== null) {
                     TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 }
+                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
 
@@ -371,6 +371,7 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
+
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
 
@@ -420,12 +421,12 @@ export class TreeGridFunctions {
                 if (cell !== undefined && cell !== null) {
                     expect(cell.inEditMode).toBe(false);
                 }
-
                 if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
+
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })
@@ -446,12 +447,12 @@ export class TreeGridFunctions {
                 if (cell !== undefined && cell !== null) {
                     expect(cell.inEditMode).toBe(false);
                 }
-
                 if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
+
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })
