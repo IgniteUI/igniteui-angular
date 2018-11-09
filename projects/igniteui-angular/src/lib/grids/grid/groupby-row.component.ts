@@ -207,8 +207,12 @@ export class IgxGridGroupByRowComponent {
                 break;
             case 'tab':
                 if (event.shiftKey) {
-                    this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                    if (this.index === 0) {
+                        this.grid.navigation.moveFocusToFilterCell();
+                    } else {
+                        this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                    }
                 } else {
                     this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
                 }
