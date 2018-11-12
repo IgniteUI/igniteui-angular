@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar';
@@ -7,7 +7,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
