@@ -62,7 +62,7 @@ describe('IgxDatePicker', () => {
             expect(domDatePicker.id).toBe('customDatePicker');
         });
 
-        it('Datepicker open/close event', fakeAsync(() => {
+        it('Datepicker open/close event', async() => {
             const dom = fixture.debugElement;
 
             const target = dom.query(By.css('.igx-date-picker__input-date'));
@@ -71,17 +71,18 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onClose, 'emit');
 
             target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-            tick();
+            fixture.detectChanges();
+            await wait();
 
             expect(datePicker.onOpen.emit).toHaveBeenCalled();
             expect(datePicker.onOpen.emit).toHaveBeenCalledWith(datePicker);
 
             const overlay = dom.query(By.css('.igx-dialog'));
             overlay.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-            tick(350); // destroy timeout...
+            await wait(350); // destroy timeout...
             expect(datePicker.onClose.emit).toHaveBeenCalled();
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
-        }));
+        });
 
         it('Datepicker onSelection event and selectDate method propagation', () => {
             spyOn(datePicker.onSelection, 'emit');
