@@ -2452,6 +2452,27 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(colOperands[0].nativeElement.innerText).toEqual('AND');
         expect(colIndicator.length).toEqual(0);
     }));
+
+    it('Should close FilterRow when Escape is pressed.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        GridFunctions.simulateKeyboardEvent(filteringRow, 'keydown', 'Esc');
+        fix.detectChanges();
+
+        filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+
+        expect(filteringRow).toBeNull();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
