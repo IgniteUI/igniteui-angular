@@ -18,7 +18,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 
-describe('IgxGrid - GroupBy', () => {
+fdescribe('IgxGrid - GroupBy', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -282,7 +282,7 @@ describe('IgxGrid - GroupBy', () => {
         // the comparer and reapply the same grouping again
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event: IChipClickEventArgs = { owner: chips, cancel: false, originalEvent: null };
+        const event: IChipClickEventArgs = { owner: chips[0], cancel: false, originalEvent: null };
         grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -292,7 +292,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows.length).toEqual(5);
     });
 
-    it('should allows expanding/collapsing groups.', () => {
+    it('should allows expanding/collapsing groups.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -336,7 +336,7 @@ describe('IgxGrid - GroupBy', () => {
         for (const rec of groupRows[0].groupRow.records) {
             expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
-    });
+    }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
