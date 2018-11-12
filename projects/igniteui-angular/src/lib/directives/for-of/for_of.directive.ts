@@ -1098,9 +1098,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _updateVScrollOffset() {
         let scrollOffset = 0;
         const vScroll = this.vh.instance.elementRef.nativeElement;
-        scrollOffset = vScroll && parseInt(vScroll.style.height, 10) ?
-        vScroll.scrollTop - this.sizesCache[this.state.startIndex] : 0;
-        this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+        if(vScroll){
+            scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop)
+            scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
+        }
+        this.dc.instance._viewContainer.element.nativeElement.style.top = -scrollOffset + 'px';
     }
     private _updateHScrollOffset() {
         let scrollOffset = 0;
