@@ -228,11 +228,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         const focusedItem = this.focusedItem;
         const items = this.items;
         const children = this.children.toArray();
-        if (focusedItem && (focusedItem.value === allData[allData.length - 1] || focusedItem.value === 'ADD ITEM')) { // If very last item
-            if (this.combo.isAddButtonVisible() && focusedItem.value !== 'ADD ITEM') { // If add button is visible
-                this.navigateItem(items.length - 1); // Focus add button
+        if (focusedItem) {
+            if (focusedItem.value === 'ADD ITEM') { return; }
+            if (focusedItem.value === allData[allData.length - 1]) {
+                this.focusAddItemButton();
+                return;
             }
-            return;
         }
         let targetDataIndex = newIndex === -1 ? this.itemIndexInData(this.focusedItem.index) + 1 : this.itemIndexInData(newIndex);
         const lastLoadedIndex = vContainer.state.startIndex + vContainer.state.chunkSize - 1; // Last item is not visible, so require scroll
@@ -244,11 +245,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             super.navigateItem(items.length - 1 - extraScroll); // Focus the last item (excluding Add Button)
         } else { // If scroll is required
             // If item is header, find next non-header index
-            const addedIndex = allData[targetDataIndex].isHeader ?
-            [...allData].splice(targetDataIndex, allData.length - 1).findIndex(e => !e.isHeader) : 0;
+            const addedIndex = allData[targetDataIndex].isHeader ? this.findNextFocusableItem(targetDataIndex, Navigate.Down, allData) : 0;
             targetDataIndex += addedIndex; // Add steps to the target index
-            if (addedIndex === -1 && this.combo.isAddButtonVisible()) { // If there are no more non-header items & add button is visible
-                super.navigateItem(items.length);
+            if (addedIndex === -1) { // If there are no more non-header items & add button is visible
+                this.focusAddItemButton();
             } else if (targetDataIndex === allData.length - 1 && !this.isScrolledToLast) {
                 // If target is very last loaded item, but scroll is not at the bottom (item is in DOM but not visible)
                 vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
@@ -283,8 +283,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             }
         } else { // Perform virtual scroll
             // If item is header, find next non-header index
-            const addedIndex = allData[targetDataIndex].isHeader ?
-            [...allData].splice(0, targetDataIndex + 1).reverse().findIndex(e => !e.isHeader) : 0;
+            const addedIndex = allData[targetDataIndex].isHeader ? this.findNextFocusableItem(targetDataIndex, Navigate.Up, allData) : 0;
             targetDataIndex -= addedIndex; // Add steps to targetDataIndex
             if (addedIndex === -1) { // If there is no non-header
                 this.focusComboSearch(); // Focus combo search;
@@ -301,12 +300,25 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         return this.children.toArray().findIndex(e => e.index === index) + this.verticalScrollContainer.state.startIndex;
     }
 
+    private findNextFocusableItem(indexInData: number, direction: Navigate, data: any[]): number {
+        if (direction === Navigate.Up) {
+            return [...data].splice(0, indexInData + 1).reverse().findIndex(e => !e.isHeader);
+        }
+        return [...data].splice(indexInData, data.length - 1).findIndex(e => !e.isHeader);
+    }
+
     private focusComboSearch() {
         this.combo.searchInput.nativeElement.focus();
         if (this.focusedItem) {
             this.focusedItem.isFocused = false;
         }
         this.focusedItem = null;
+    }
+
+    private focusAddItemButton() {
+        if (this.combo.isAddButtonVisible()) {
+            super.navigateItem(this.items.length - 1);
+        }
     }
 
     private subscribeNext(virtualContainer: any, callback: (elem?) => void) {
