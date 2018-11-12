@@ -136,13 +136,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     navigateFirst() {
         const vContainer = this.verticalScrollContainer;
         if (vContainer.state.startIndex === 0) {
-            this.navigateItem(0);
+            super.navigateItem(0);
             return;
         }
         vContainer.scrollTo(0);
         this.subscribeNext(vContainer, () => {
             this.combo.triggerCheck();
-            this.navigateItem(0);
+            super.navigateItem(0);
             this.combo.triggerCheck();
         });
     }
@@ -156,13 +156,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             this.combo.totalItemCount - 1 :
             Math.max(this.combo.data.length - 1, vContainer.igxForOf.length - 1);
         if (vContainer.igxForOf.length <= vContainer.state.startIndex + vContainer.state.chunkSize) {
-            this.navigateItem(this.items.length - 1);
+            super.navigateItem(this.items.length - 1);
             return;
         }
         vContainer.scrollTo(scrollTarget);
         this.subscribeNext(vContainer, () => {
             this.combo.triggerCheck();
-            this.navigateItem(this.items.length - 1);
+            super.navigateItem(this.items.length - 1);
             this.combo.triggerCheck();
         });
     }
@@ -174,9 +174,9 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         this.verticalScrollContainer.addScrollTop(direction * this.combo.itemHeight);
         this.subscribeNext(this.verticalScrollContainer, () => {
             if (direction === Navigate.Up) {
-                this.navigateItem(0);
+                super.navigateItem(0);
             } else {
-                this.navigateItem(this.focusedItem.index);
+                super.navigateItem(this.focusedItem.index);
             }
         });
     }
