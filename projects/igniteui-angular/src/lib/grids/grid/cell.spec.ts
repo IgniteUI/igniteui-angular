@@ -1194,6 +1194,19 @@ describe('IgxGrid - Cell component', () => {
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
     }));
+
+    it('Select and deselect cell using selection service', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cell = grid.getCellByColumn(0, 'index');
+        const cellSelectionID = grid.id + '-cell';
+        grid.selection.select_item(cellSelectionID, cell.cellID);
+        expect(grid.selection.size(cellSelectionID)).toBe(1);
+        grid.selection.deselect_item(cellSelectionID, cell.cellID);
+        expect(grid.selection.size(cellSelectionID)).toBe(0);
+    });
 });
 
 @Component({
