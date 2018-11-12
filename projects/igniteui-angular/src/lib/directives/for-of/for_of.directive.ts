@@ -1245,8 +1245,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             if (this.isRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
-            }
-            else {
+            } else {
                 const inScrollTop = this.igxForScrollOrientation === 'horizontal' ?
                     this.hScroll.scrollLeft :
                     this.vh.instance.elementRef.nativeElement.scrollTop;
