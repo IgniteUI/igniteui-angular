@@ -10,6 +10,7 @@ import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 

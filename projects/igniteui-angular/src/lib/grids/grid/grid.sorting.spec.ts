@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
-import { GridTemplateStrings, ColumnDefinitions } from '../test-utils/template-strings.spec';
-import { BasicGridComponent } from '../test-utils/grid-base-components.spec';
-import { SampleTestData } from '../test-utils/sample-test-data.spec';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
+import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
+import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const SORTING_ICON_NONE_CONTENT = 'none';

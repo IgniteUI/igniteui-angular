@@ -11,11 +11,12 @@ import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridModule, IgxGridCellComponent } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxChipComponent } from '../../chips/chip.component';
+import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { DataParent } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();
@@ -41,39 +42,40 @@ describe('IgxGrid - GroupBy', () => {
         }).compileComponents();
     }));
 
-    const expandCollapceGroupRow =
-    (fix: ComponentFixture<DefaultGridComponent>,
-        groupRow: IgxGridGroupByRowComponent,
-        cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        if (cell != null) {
-            expect(cell.selected).toBe(true);
-        }
+    function expandCollapceGroupRow(fix: ComponentFixture<DefaultGridComponent>,
+                                    groupRow: IgxGridGroupByRowComponent,
+                                    cell: IgxGridCellComponent) {
+        return new Promise(async (resolve, reject) => {
+            expect(groupRow.focused).toBe(true);
+            expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+            if (cell != null) {
+                expect(cell.selected).toBe(true);
+            }
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', code: 'arrowleft', altKey: true }));
-        await wait(300);
-        fix.detectChanges();
+            groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', code: 'arrowleft', altKey: true }));
+            await wait(300);
+            fix.detectChanges();
 
-        expect(groupRow.expanded).toBe(false);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        if (cell != null) {
-            expect(cell.selected).toBe(true);
-        }
+            expect(groupRow.expanded).toBe(false);
+            expect(groupRow.focused).toBe(true);
+            expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+            if (cell != null) {
+                expect(cell.selected).toBe(true);
+            }
 
-        groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', code: 'arrowright', altKey: true }));
-        await wait(100);
-        fix.detectChanges();
+            groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', code: 'arrowright', altKey: true }));
+            await wait(100);
+            fix.detectChanges();
 
-        expect(groupRow.expanded).toBe(true);
-        expect(groupRow.focused).toBe(true);
-        expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
-        if (cell != null) {
-            expect(cell.selected).toBe(true);
-        }
-        resolve();
-    });
+            expect(groupRow.expanded).toBe(true);
+            expect(groupRow.focused).toBe(true);
+            expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+            if (cell != null) {
+                expect(cell.selected).toBe(true);
+            }
+            resolve();
+        });
+    }
 
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
@@ -280,7 +282,7 @@ describe('IgxGrid - GroupBy', () => {
         // the comparer and reapply the same grouping again
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event = { owner: { id: 'ReleaseDate' } };
+        const event: IChipClickEventArgs = { owner: chips, cancel: false, originalEvent: null };
         grid.onChipClicked(event);
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -334,7 +336,7 @@ describe('IgxGrid - GroupBy', () => {
         for (const rec of groupRows[0].groupRow.records) {
             expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
-    }));
+    });
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -444,8 +446,8 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
 
         grid.groupBy([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
@@ -466,9 +468,9 @@ describe('IgxGrid - GroupBy', () => {
         grid.primaryKey = 'ID';
         fix.detectChanges();
         grid.groupBy([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
@@ -490,10 +492,10 @@ describe('IgxGrid - GroupBy', () => {
         grid.primaryKey = 'ID';
         fix.detectChanges();
          grid.groupBy([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
@@ -517,16 +519,16 @@ describe('IgxGrid - GroupBy', () => {
         grid.primaryKey = 'ID';
         fix.detectChanges();
         grid.groupBy([
-            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false }
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
         const newExpressions = [
-            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false }
+            { fieldName: 'ReleaseDate', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ];
         grid.groupingExpressions = newExpressions;
         tick();
@@ -768,7 +770,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(30);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
 
         grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
@@ -802,7 +805,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(30);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
 
         grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
@@ -898,7 +902,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(100);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
         let cell = grid.getCellByColumn(2, 'Released');
         cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -948,7 +953,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(50);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
 
         let groupRow = grid.groupsRowList.toArray()[0];
@@ -995,7 +1001,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(30);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         await wait(30);
         fix.detectChanges();
 
@@ -1039,7 +1046,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.columnWidth = '100px';
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
 
         const groupRow = grid.groupsRowList.toArray()[0];
@@ -1060,7 +1068,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(50);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         fix.detectChanges();
         let cell = grid.getCellByColumn(1, 'ID');
         cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -1104,7 +1113,8 @@ describe('IgxGrid - GroupBy', () => {
         await wait(30);
         fix.detectChanges();
 
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
         await wait(30);
         fix.detectChanges();
 
@@ -2612,8 +2622,8 @@ describe('IgxGrid - GroupBy', () => {
         tick();
         fix.detectChanges();
         grid.groupBy([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
@@ -2633,8 +2643,8 @@ describe('IgxGrid - GroupBy', () => {
         grid.hideGroupedColumns = true;
         fix.detectChanges();
         grid.groupBy([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
@@ -2658,8 +2668,8 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         grid.groupBy([
-            { fieldName: 'Downloads', dir: SortingDirection.Asc },
-            { fieldName: 'ProductName', dir: SortingDirection.Asc }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         tick();
         fix.detectChanges();
