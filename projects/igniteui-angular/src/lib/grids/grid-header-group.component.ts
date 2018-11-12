@@ -109,11 +109,19 @@ export class IgxGridHeaderGroupComponent {
         return this.grid.draggedColumn ===  this.column;
     }
 
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-        public colReszingService: IgxColumnResizingService,
-        public filteringService: IgxFilteringService) { }
+    get hasLastPinnedChildColumn(): boolean {
+        const pinnedCols = this.grid.pinnedColumns;
+        if (this.column.allChildren) {
+            return this.column.allChildren.some((child) => {
+                return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
+            });
+        }
+
+    }
+
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+                public colReszingService: IgxColumnResizingService,
+                public filteringService: IgxFilteringService) { }
 
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
