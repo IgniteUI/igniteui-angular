@@ -14,6 +14,7 @@ const process = require('process');
 const fs = require('fs');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
+const typedoc = require('gulp-typedoc');
 const {
     spawnSync
 } = require('child_process');
@@ -145,6 +146,9 @@ gulp.task('typedoc-js', ['typedoc-ts'], () => {
             `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/main.js`
         ])
         .pipe(concat('main.js'))
@@ -217,6 +221,8 @@ const TYPEDOC = {
     EXPORT_JSON_PATH: 'dist/igniteui-angular/docs/typescript-exported',
     PROJECT_PATH: 'projects/igniteui-angular/src',
     TEMPLATE_STRINGS_PATH: 'extras/template/strings/shell-strings.json',
+    ENV_CONFIG: 'extras/docs/themes/config.json',
+    ENV_PRECONFIG: 'extras/docs/themes/preconfig.json'
 }
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],
@@ -254,6 +260,22 @@ gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'typedoc:clean-
 gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'copy-translations:localization:repo'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}/en/`)
 );
+
+gulp.task('test', () => {
+    const options = JSON.parse(fs.readFileSync('./tsconfig.json', 'utf8')).typedocOptions;
+    // options.env = "test";
+    options.experimentalDecorators = true;
+    options['gen-json'] = "exports";
+    options.plugins = ['typedoc-plugin-localization'];
+    return gulp.src(['projects/igniteui-angular/src/**/*.ts'])
+        .pipe(typedoc(options));
+})
+
+gulp.task('typedoc-build:stg:en:localization', () => {
+    const envConfigContent = JSON.parse(fs.readFileSync(TYPEDOC.ENV_CONFIG, 'utf8'));
+    const envLink = envConfigContent['jp'][process.env.NODE_ENV];
+    envLink && fs.writeFileSync(TYPEDOC.ENV_PRECONFIG, JSON.parse(envLink), { encoding: 'utf8' });
+})
 
 const SASSDOC = {
     PROJECT_PATH: "projects/igniteui-angular/src/lib/core/styles",
