@@ -210,6 +210,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         const notVirtual = vContainer.dc.instance.notVirtual;
         if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
             super.navigateItem(newIndex); // use default scroll
+        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
+            this.navigateRemoteItem(direction);
         } else {
             if (direction === Navigate.Up) { // Navigate UP
                 this.navigateUp(newIndex);
