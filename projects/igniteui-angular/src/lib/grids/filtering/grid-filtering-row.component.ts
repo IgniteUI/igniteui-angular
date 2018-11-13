@@ -172,6 +172,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    @HostListener('keydown.esc', ['$event'])
+    public onEscKeydown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
+    }
+
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -254,6 +261,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
+            event.preventDefault();
+            this.close();
         }
         event.stopPropagation();
     }
