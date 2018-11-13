@@ -57,6 +57,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
+    private _useInUndoStack = true;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -430,7 +431,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
+                        this._useInUndoStack = false;
                         super.deleteRowById(child.rowID);
+                        this._useInUndoStack = true;
                     }
                 }
             }
