@@ -2,22 +2,24 @@
 
 # Current Milestone
 
-## Milestone 5 (by November 30th, 2018)
+## Milestone 5 (.......)
 
-1. Hierarchical Grid POC (Proof of concept) [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
-2. **[Done]**Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
+1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
+2. TreeGrid summaries
 3. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
 4. Advanced Filtering Dialog
-5. **[Done]**Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
-6. **[Done]**Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
-7. **[Done]**Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
-8. **[Done]**Typography Updates 
-9. **[Done]**Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
-10. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
-11. **[Done]** Row Editing with transactions (Batch editing) [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
-12. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
-13. **[Done]** Drag and Drop Directive
-14. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+5. Grid GroupBy summaries
+6. Multi-cell selection
+7. Auto-complete (inline editable)
+8. Inline date and time pickers (with drop down/toggle)
+9. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+
+## Futrher Down the line
+
+1.	Excel-style filter
+2.	Row-pinning
+3.	Column Groups expand/collapse, with column grouping templates
+
 
 # Previous Milestones
 
@@ -66,6 +68,19 @@
 8. **[DONE]** Update to Angular 6
 9. **[DONE]** Design: Release Updated Design System (Sketch UI kits, UI patterns, screens, documentation)
 10. **[DONE]** Design: Data dense theme for data grid 
+
+## Milestone 4 (November 30th, 2018)
+
+1. **[Done]**Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
+2. **[Done]**Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
+3. **[Done]**Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
+4. **[Done]**Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
+5. **[Done]**Typography Updates 
+6. **[Done]**Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
+7. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
+8. **[Done]** Row Editing with transactions (Batch editing) [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
+9. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
+10. **[Done]** Drag and Drop Directive
 
 
 # Postponed
