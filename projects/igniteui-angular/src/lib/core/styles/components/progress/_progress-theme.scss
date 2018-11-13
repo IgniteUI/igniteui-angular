@@ -37,17 +37,6 @@
     $stripes-color: null,
     $text-color: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-progress-linear',
-    //     track-color: igx-color($palette, 'grays', 300),
-    //     fill-color-default: igx-color($palette, 'primary'),
-    //     fill-color-danger: igx-color($palette, 'error'),
-    //     fill-color-warning: igx-color($palette, 'warn'),
-    //     fill-color-info: igx-color($palette, 'info'),
-    //     fill-color-success: igx-color($palette, 'success'),
-    //     stripes-color: rgba(#fff, .7),
-    //     text-color: igx-color($palette, 'grays', 700)
-    // );
     $theme: apply-palette(map-get($schema, 'igx-progress-linear'), $palette);
 
     @return extend($theme, (
@@ -192,13 +181,6 @@
     $progress-circle-color: null,
     $text-color: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-progress-circular',
-    //     base-circle-color: igx-color($palette, 'grays', 300),
-    //     progress-circle-color: igx-color($palette, 'primary'),
-    //     text-color: igx-color($palette, 'grays', 700)
-    // );
-
     $theme: apply-palette(map-get($schema, 'igx-progress-circular'), $palette);
 
     @return extend($theme, (

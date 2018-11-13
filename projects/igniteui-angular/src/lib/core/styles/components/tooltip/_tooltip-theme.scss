@@ -44,7 +44,7 @@
         roundness: $border-radius
     );
 
-    $default-theme: map-get((
+    $theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
@@ -53,7 +53,7 @@
         $text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $default-palette,
         background: $background,
         text-color: $text-color,

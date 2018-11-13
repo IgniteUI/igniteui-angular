@@ -64,12 +64,12 @@
         thumb-disabled-color: #6c6c6c
     );
 
-    $default-theme: map-get((
+    $theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         thumb-on-color: $thumb-on-color,

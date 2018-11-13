@@ -52,27 +52,7 @@
     $item-selected-background: null,
     $item-selected-border-color: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-button-group',
-    //     item-text-color: igx-color($palette, 'grays', 700),
-    //     item-background: #fff,
-    //     item-border-color: transparent,
-
-    //     item-hover-text-color: igx-color($palette, 'grays', 800),
-    //     item-hover-background: igx-color($palette, 'grays', 400),
-
-    //     item-selected-text-color: igx-color($palette, 'grays', 800),
-    //     item-selected-background: igx-color($palette, 'grays', 400),
-    //     item-selected-border-color: rgba(igx-color($palette, 'grays', 600), .12),
-
-    //     disabled-text-color: igx-color($palette, 'grays', 400),
-    //     disabled-background-color: igx-color($palette, 'grays', 100)
-    // );
-
     $theme: apply-palette(map-get($schema, 'igx-button-group'), $palette);
-    // @if $preset {
-    //     $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    // }
 
     @if not($item-text-color) and $item-background  {
         $item-text-color: text-contrast($item-background);

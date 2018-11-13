@@ -67,35 +67,6 @@
     $focus-selected-background: null,
     $focus-selected-border-color: null
 ) {
-    $default-theme: (
-        name: 'igx-chip',
-
-        roundness: rem(32px),
-        text-color: igx-color($palette, 'grays', 700),
-        background: igx-color($palette, 'grays', 200),
-        border-color: transparent,
-
-        hover-text-color: igx-color($palette, 'grays', 700),
-        hover-background: igx-color($palette, 'grays', 300),
-        hover-border-color: transparent,
-
-        focus-text-color: igx-color($palette, 'grays', 700),
-        focus-background: igx-color($palette, 'grays', 400),
-        focus-border-color: transparent,
-
-        selected-text-color: igx-color($palette, 'grays', 700),
-        selected-background: igx-color($palette, 'grays', 300),
-        selected-border-color: transparent,
-
-        hover-selected-text-color: igx-color($palette, 'grays', 700),
-        hover-selected-background: igx-color($palette, 'grays', 400),
-        hover-selected-border-color: transparent,
-
-        focus-selected-text-color: igx-color($palette, 'grays', 700),
-        focus-selected-background: igx-color($palette, 'grays', 400),
-        focus-selected-border-color: transparent
-    );
-
     $theme: apply-palette(map-get($schema, 'igx-chip'), $palette);
 
     @if not($text-color) and $background {

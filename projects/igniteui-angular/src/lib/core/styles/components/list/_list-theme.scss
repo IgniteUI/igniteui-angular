@@ -31,17 +31,6 @@
     $item-background-active: null,
     $item-text-color-active: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-list',
-    //     background: #fff,
-    //     header-background: #fff,
-    //     header-text-color: igx-color($palette, 'secondary'),
-    //     item-background: #fff,
-    //     item-text-color: igx-color($palette, 'grays', 800),
-    //     item-background-active: hexrgba(igx-color($palette, 'grays', 100)),
-    //     item-text-color-active: igx-color($palette, 'grays', 800)
-    // );
-
     $theme: apply-palette(map-get($schema, 'igx-list'), $palette);
 
     @if not($header-background) and $background {

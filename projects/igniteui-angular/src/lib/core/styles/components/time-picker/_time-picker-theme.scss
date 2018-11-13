@@ -43,18 +43,6 @@
     $header-time-period-color: null,
     $background-color: null
 ) {
-    $default-theme: (
-        name: 'igx-time-picker',
-        text-color: igx-color($palette, 'grays', 500),
-        hover-text-color: igx-color($palette, 'secondary', 500),
-        selected-text-color: igx-color($palette, 'secondary', 500),
-        active-item-background: igx-color($palette, 'grays', 100),
-        header-background: igx-color($palette, 'secondary', 500),
-        header-hour-text-color: igx-contrast-color($palette, 'secondary', 500),
-        header-time-period-color: rgba(igx-contrast-color($palette, 'secondary', 500), .8),
-        background-color: white
-    );
-
     $theme: apply-palette(map-get($schema, 'igx-time-picker'), $palette);
 
     @if not($text-color) and $background-color {

@@ -41,19 +41,6 @@
     $inactive-color: null,
     $label-hover-color: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-grid-summary',
-    //     background-color: inherit,
-    //     label-color: igx-color($palette, 'primary', 500),
-    //     label-hover-color: igx-color($palette, 'primary', 700),
-    //     result-color: currentColor,
-    //     border-color: igx-color($palette, 'grays', 400),
-    //     pinned-border-width: 2px,
-    //     pinned-border-style: solid,
-    //     pinned-border-color: igx-color($palette, 'grays', 400),
-    //     inactive-color: igx-color($palette, 'grays', 400)
-    // );
-
     $theme: apply-palette(map-get($schema, 'igx-grid-summary'), $palette);
 
     @if not($result-color) and $background-color {

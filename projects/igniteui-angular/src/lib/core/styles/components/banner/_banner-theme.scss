@@ -27,15 +27,6 @@
     $banner-illustration-background: null,
     $banner-illustration-color: null
 ) {
-    // $default-theme: (
-    //     name: 'igx-banner',
-    //     banner-background: #fff,
-    //     banner-message-color: igx-color($palette, 'grays', 900),
-    //     banner-border-color: igx-color($palette, 'grays', 400),
-    //     banner-illustration-background: igx-color($palette, 'grays', 100),
-    //     banner-illustration-color: igx-color($palette, 'grays', 900)
-    // );
-
     $theme: apply-palette(map-get($schema, 'igx-banner'), $palette);
 
     @if not($banner-message-color) and $banner-background {

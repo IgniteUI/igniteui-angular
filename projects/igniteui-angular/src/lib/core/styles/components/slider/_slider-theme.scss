@@ -51,7 +51,7 @@
         disabled-base-track-color: rgba(#fff, .3)
     );
 
-    $default-theme: map-get((
+    $theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
@@ -60,7 +60,7 @@
         $label-text-color: text-contrast($label-background-color);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         track-color: $track-color,
         thumb-color: $thumb-color,
