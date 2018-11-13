@@ -338,6 +338,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             });
         }
 
+        this.column.filterCell.updateFilterCellArea();
+
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
