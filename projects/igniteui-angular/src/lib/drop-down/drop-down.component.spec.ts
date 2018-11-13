@@ -36,7 +36,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownTabsTestComponent,
                 DropDownWithValuesComponent,
                 IgxDropDownSelectComponent,
-                DropDownWithMaxHeightComponent
+                DropDownWithMaxHeightComponent,
+                DropDownWithUnusedMaxHeightComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -886,7 +887,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.collapsed).toEqual(true);
         }));
 
-        it('Should properly define maxHeight option', fakeAsync(() => {
+        it('Should properly set maxHeight option', fakeAsync(() => {
             const fixture = TestBed.createComponent(DropDownWithMaxHeightComponent);
             fixture.detectChanges();
             const dropdown = fixture.componentInstance.dropdown;
@@ -895,8 +896,21 @@ describe('IgxDropDown ', () => {
 
             fixture.detectChanges();
             const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
-            expect(dropdown.maxHeight).toBe('100px');
+            expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('100px');
+        }));
+
+        it('Should properly set maxHeight option (maxHeight value larger than needed)', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithUnusedMaxHeightComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
+            expect(ddList.style.maxHeight).toBe('700px');
         }));
     });
 
@@ -1697,14 +1711,14 @@ class DropDownWithValuesComponent {
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithMaxHeightComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
-    public dropdown: IgxDropDownComponent;
+class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
 
-    public items: any[] = [
-        { name: 'Product 1', id: 1 },
-        { name: 'Product 2', id: 2 },
-        { name: 'Product 3', id: 3 },
-        { name: 'Product 4', id: 3 },
-    ];
-}
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [maxHeight]="'700px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {}
