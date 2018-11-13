@@ -50,6 +50,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
     public level = 0;
+    private _childGridTemplates : Map<any, any> = new Map();
+
     /**
      * @hidden
      */
@@ -116,6 +118,19 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
      * @hidden
      */
     public getContext(rowData): any {
+        if (this.isChildGridRecord(rowData)) {
+            const cachedData = this._childGridTemplates.get(rowData.rowID);
+            if(cachedData) {
+                const view = cachedData.view;
+                const tmlpOutlet = cachedData.owner;
+                // check if view is currently attached somewhere elese
+                return {
+                    $implicit: rowData,
+                    view: view,
+                    owner: tmlpOutlet
+                };
+            }
+        }
         return {
             $implicit: rowData,
             templateID: this.isChildGridRecord(rowData) ? 'childRow' : 'dataRow'
@@ -143,6 +158,13 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
             });
         }
         return inState && this.childLayoutList.length !== 0;
+    }
+
+    public viewCreatedHandler(args) {
+        if (this.isChildGridRecord(args.context.$implicit)) {
+            const key = args.context.$implicit.rowID;
+            this._childGridTemplates.set(key, args);
+        }
     }
 
     constructor(

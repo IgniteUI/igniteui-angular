@@ -98,7 +98,11 @@
                 <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
-        <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))); context: getContext(rowData)"></ng-container>
+            <ng-template 
+            [igxTemplateOutlet]='(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)))'
+            [igxTemplateOutletContext]='getContext(rowData)'
+            (onViewCreated)='viewCreatedHandler($event)'></ng-template> 
+        <!-- <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))); context: getContext(rowData)"></ng-container> -->
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

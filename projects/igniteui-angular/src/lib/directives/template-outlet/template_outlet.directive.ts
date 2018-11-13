@@ -17,11 +17,27 @@ export class IgxTemplateOutletDirective implements OnChanges {
 
   @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
+  @Output()
+  public onViewCreated = new EventEmitter<any>(); 
 
-  constructor(private _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
+
+  constructor(public _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    const view  = this.igxTemplateOutletContext['view'];
+    if (view) {
+        // using external cached view.
+        if (this.igxTemplateOutletContext['view'] !== this._viewRef) {
+            const owner = this.igxTemplateOutletContext['owner'];
+            owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
+            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+            this._viewRef = view;
+            this._viewContainerRef.insert(view, 0);
+            this._updateExistingContext(this.igxTemplateOutletContext);
+        }        
+        return;
+    }
     const recreateView = this._shouldRecreateView(changes);
     if (recreateView) {
         // view should be re-created due to changes in the template or context.
@@ -60,6 +76,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
       if (this.igxTemplateOutlet) {
         this._viewRef = this._viewContainerRef.createEmbeddedView(
               this.igxTemplateOutlet, this.igxTemplateOutletContext);
+            this.onViewCreated.emit({owner: this, view: this._viewRef, context: this.igxTemplateOutletContext })
             const tmplId = this.igxTemplateOutletContext['templateID'];
             if (tmplId) {
                 // if context contains a template id, check if we have a view for that template already stored in the cache

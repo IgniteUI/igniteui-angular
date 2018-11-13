@@ -37,7 +37,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     public get childData() {
-        return this.rowData.childGridData;
+        return this.rowData.childGridData || this.hGrid.data;
     }
 
     /**
