@@ -189,6 +189,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             ungroupedColsArr.forEach((elem) => {
                 ungroupedCols.push(this.getColumnByName(elem.fieldName));
             }, this);
+            this.ngDoCheck();
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: newExpressions,
                 groupedColumns: groupedCols,
