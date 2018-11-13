@@ -74,7 +74,7 @@ describe('IgxDropDown ', () => {
             expect(currentItem.componentInstance.index).toEqual(0);
             expect(list.collapsed).toEqual(false);
 
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             expect(targetElement).toBeDefined();
 
             mockObj.code = 'arrowdown';
@@ -98,7 +98,7 @@ describe('IgxDropDown ', () => {
             button.click(mockObj);
             tick();
             fixture.detectChanges();
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED))[0];
 
             mockObj.code = 'arrowdown';
@@ -106,7 +106,7 @@ describe('IgxDropDown ', () => {
             targetElement.triggerEventHandler('keydown', mockObj);
             tick();
             fixture.detectChanges();
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
 
             mockObj.code = 'enter';
@@ -153,7 +153,7 @@ describe('IgxDropDown ', () => {
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(0);
 
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             mockObj.code = 'arrowdown';
             mockObj.key = 'arrowdown';
             targetElement.triggerEventHandler('keydown', mockObj);
@@ -210,7 +210,7 @@ describe('IgxDropDown ', () => {
             tick();
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             mockObj.code = 'ArrowDown';
             mockObj.key = 'ArrowDown';
             targetElement.triggerEventHandler('keydown', mockObj);
@@ -545,7 +545,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             targetElement.triggerEventHandler('keydown', mockObj);
             tick();
 
