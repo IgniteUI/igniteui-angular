@@ -17,7 +17,25 @@
 @import './expansion-panel';
 @import './grid';
 @import './grid-filtering';
+@import './grid-pagination';
+@import './grid-summary';
+@import './grid-toolbar';
+@import './icon';
+@import './input-group';
+@import './list';
+@import './navbar';
+@import './navdrawer';
+@import './overlay';
+@import './progress';
+@import './radio';
 @import './ripple';
+@import './slider';
+@import './snackbar';
+@import './switch';
+@import './tabs';
+@import './time-picker';
+@import './toast';
+@import './tooltip';
 
 $default-preset: (
     igx-avatar: $_default-avatar,
@@ -39,5 +57,24 @@ $default-preset: (
     igx-expansion-panel: $_default-expansion-panel,
     igx-grid: $_default-grid,
     igx-grid-filtering: $_default-grid-filtering,
+    igx-grid-paginator: $_default-grid-pagination,
+    igx-grid-summary: $_default-grid-summary,
+    igx-grid-toolbar: $_default-grid-toolbar,
+    igx-icon: $_default-icon,
+    igx-input-group: $_default-input-group,
+    igx-list: $_default-list,
+    igx-navbar: $_default-navbar,
+    igx-navdrawer: $_default-navdrawer,
+    igx-overlay: $_default-overlay,
+    igx-progress-linear: $_default-progress-linear,
+    igx-progress-circular: $_default-progress-circular,
+    igx-radio: $_default-radio,
     igx-ripple: $_default-ripple,
+    igx-slider: $_default-slider,
+    igx-snackbar: $_default-snackbar,
+    igx-switch: $_default-switch,
+    igx-tabs: $_default-tabs,
+    igx-time-picker: $_default-time-picker,
+    igx-toast: $_default-toast,
+    igx-tooltip: $_default-tooltip
 );

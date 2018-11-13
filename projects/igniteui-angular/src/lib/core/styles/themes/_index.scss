@@ -188,79 +188,79 @@
     }
 
     @if not(index($exclude, 'igx-grid-summary')) {
-        @include igx-grid-summary($theme: get-theme($preset, 'igx-grid-summary'));
+        @include igx-grid-summary(igx-grid-summary-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-grid-toolbar')) {
-        @include igx-grid-toolbar($theme: get-theme($preset, 'igx-grid-toolbar'));
+        @include igx-grid-toolbar(igx-grid-toolbar-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-icon')) {
-        @include igx-icon($theme: get-theme($preset, 'igx-icon'));
+        @include igx-icon(igx-icon-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-input-group')) {
-        @include igx-input-group($theme: get-theme($preset, 'igx-input-group'));
+        @include igx-input-group(igx-input-group-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-list')) {
-        @include igx-list($theme: get-theme($preset, 'igx-list'));
+        @include igx-list(igx-list-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-navbar')) {
-        @include igx-navbar($theme: get-theme($preset, 'igx-navbar'));
+        @include igx-navbar(igx-navbar-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-nav-drawer')) {
-        @include igx-navdrawer($theme: get-theme($preset, 'igx-navdrawer'));
+        @include igx-navdrawer(igx-navdrawer-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-overlay')) {
-        @include igx-overlay($theme: get-theme($preset, 'igx-overlay'));
+        @include igx-overlay(igx-overlay-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-grid-paginator')) {
-        @include igx-grid-paginator($theme: get-theme($preset, 'igx-grid-paginator'));
+        @include igx-grid-paginator(igx-grid-paginator-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'progress-circular')) {
-        @include igx-progress-circular($theme: get-theme($preset, 'igx-progress-circular'));
+        @include igx-progress-circular(igx-progress-circular-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'progress-linear')) {
-        @include igx-progress-linear($theme: get-theme($preset, 'igx-progress-linear'));
+        @include igx-progress-linear(igx-progress-linear-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-radio')) {
-        @include igx-radio($theme: get-theme($preset, 'igx-radio'));
+        @include igx-radio(igx-radio-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-slider')) {
-        @include igx-slider($theme: get-theme($preset, 'igx-slider'));
+        @include igx-slider(igx-slider-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-snackbar')) {
-        @include igx-snackbar($theme: get-theme($preset, 'igx-snackbar'));
+        @include igx-snackbar(igx-snackbar-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-switch')) {
-        @include igx-switch($theme: get-theme($preset, 'igx-switch'));
+        @include igx-switch(igx-switch-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-tabs')) {
-        @include igx-tabs($theme: get-theme($preset, 'igx-tabs'));
+        @include igx-tabs(igx-tabs-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-toast')) {
-        @include igx-toast($theme: get-theme($preset, 'igx-toast'));
+        @include igx-toast(igx-toast-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-tooltip')) {
-        @include igx-tooltip($theme: get-theme($preset, 'igx-tooltip'));
+        @include igx-tooltip(igx-tooltip-theme($palette, $preset));
     }
 
     @if not(index($exclude, 'igx-time-picker')) {
-        @include igx-time-picker($theme: get-theme($preset, 'igx-time-picker'));
+        @include igx-time-picker(igx-time-picker-theme($palette, $preset));
     }
 }
 

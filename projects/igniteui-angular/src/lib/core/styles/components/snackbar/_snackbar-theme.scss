@@ -24,22 +24,13 @@
 ///   @include igx-snackbar($my-snackbar-theme);
 @function igx-snackbar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $background: null,
     $text-color: null,
     $button-color: null
 ) {
-    $default-theme: (
-        name: 'igx-snackbar',
-        background: #323232,
-        text-color: #fff,
-        button-color: igx-color($palette, 'secondary')
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($preset, 'igx-snackbar'), $palette);
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -49,7 +40,7 @@
         $text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         text-color: $text-color,

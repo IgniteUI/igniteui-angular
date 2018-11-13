@@ -1,0 +1,26 @@
+$_default-list: (
+    name: 'igx-list',
+
+    background: #fff,
+
+    header-background: #fff,
+
+    header-text-color:  (
+        igx-color: ('secondary', 500)
+    ),
+
+    item-background: #fff,
+
+    item-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    item-background-active: (
+        igx-color: ('grays', 100),
+        hexrgba: ()
+    ),
+
+    item-text-color-active: (
+        igx-color: ('grays', 800)
+    )
+);

@@ -1,0 +1,32 @@
+$_default-slider: (
+    name: 'igx-slider',
+
+    track-color: (
+        igx-color: ('secondary', 500),
+    ),
+
+    thumb-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    disabled-thumb-color: (
+        igx-color: ('grays', 400),
+        hexrgba: ()
+    ),
+
+    label-background-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    label-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    base-track-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    disabled-base-track-color: (
+        igx-color: ('grays', 400)
+    )
+);

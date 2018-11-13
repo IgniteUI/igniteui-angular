@@ -25,7 +25,7 @@
 ///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $label-color: null,
     $empty-color: null,
@@ -36,13 +36,7 @@
 ) {
     $name: 'igx-radio';
 
-    $dark-theme: (
-        name: $name,
-        label-color: igx-color($palette, 'grays', 900),
-        empty-color: igx-color($palette, 'grays', 600),
-        fill-color: igx-color($palette, 'secondary', 500),
-        disabled-color: igx-color($palette, 'grays', 400)
-    );
+    $dark-theme: apply-palette(map-get($preset, 'igx-radio'), $palette);
 
     $light-theme: (
         name: $name,
@@ -56,10 +50,6 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
 
     @return extend($default-theme, (
         palette: $palette,

@@ -1,0 +1,15 @@
+$_default-snackbar: (
+    name: 'igx-snackbar',
+
+    background: (
+        igx-color: ('grays', 900)
+    ),
+
+    text-color: (
+        igx-contrast-color: ('grays', 900)
+    ),
+
+    button-color: (
+        igx-color: ('secondary', 500)
+    )
+);

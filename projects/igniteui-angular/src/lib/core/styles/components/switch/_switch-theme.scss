@@ -28,7 +28,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $thumb-on-color: null,
     $track-on-color: null,
@@ -46,21 +46,7 @@
 ) {
     $name: 'igx-switch';
 
-    $dark-theme: (
-        name: $name,
-
-        thumb-on-color: igx-color($palette, 'secondary', 500),
-        track-on-color: rgba(igx-color($palette, 'secondary', 500), .5),
-
-        thumb-off-color: #fafafa,
-        track-off-color: rgba(0, 0, 0, .5),
-
-        label-color: igx-color($palette, grays, 900),
-        label-disabled-color: igx-color($palette, grays, 400),
-
-        track-disabled-color: rgba(0, 0, 0, .12),
-        thumb-disabled-color: hexrgba(igx-color($palette, 'grays', 400))
-    );
+    $dark-theme: apply-palette(map-get($preset, 'igx-switch'), $palette);
 
     $light-theme: (
         name: $name,
@@ -82,10 +68,6 @@
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
 
     @return extend($default-theme, (
         palette: $palette,

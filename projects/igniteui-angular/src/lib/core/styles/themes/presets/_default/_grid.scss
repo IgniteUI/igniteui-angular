@@ -168,5 +168,21 @@ $_default-grid: (
     group-row-selected-background: (
         igx-color: ('grays', 200),
         hexrgba: ()
+    ),
+
+    filtering-header-background: #fff,
+
+    filtering-header-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    filtering-row-background: #fff,
+
+    filtering-row-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    tree-filtered-text-color: (
+        igx-color: ('grays', 500)
     )
 );

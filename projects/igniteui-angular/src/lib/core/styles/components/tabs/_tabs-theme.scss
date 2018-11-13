@@ -38,7 +38,7 @@
 
 @function igx-tabs-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $item-text-color: null,
     $item-background: null,
@@ -59,33 +59,30 @@
     $tab-ripple-color: null,
     $button-ripple-color: null
 ) {
-    $default-theme: (
-        name: 'igx-tabs',
+    // $default-theme: (
+    //     name: 'igx-tabs',
 
-        item-text-color: igx-color($palette, 'grays', 700),
-        item-background: #fff,
+    //     item-text-color: igx-color($palette, 'grays', 700),
+    //     item-background: #fff,
 
-        item-hover-color: igx-color($palette, 'grays', 700),
-        item-hover-background: igx-color($palette, 'grays', 200),
+    //     item-hover-color: igx-color($palette, 'grays', 700),
+    //     item-hover-background: igx-color($palette, 'grays', 200),
 
-        item-active-icon-color: igx-color($palette, 'primary', 500),
-        item-active-color: igx-color($palette, 'primary', 500),
-        item-active-background: igx-color($palette, 'grays', 200),
+    //     item-active-icon-color: igx-color($palette, 'primary', 500),
+    //     item-active-color: igx-color($palette, 'primary', 500),
+    //     item-active-background: igx-color($palette, 'grays', 200),
 
-        indicator-color: igx-color($palette, 'primary', 500),
+    //     indicator-color: igx-color($palette, 'primary', 500),
 
-        button-color: igx-color($palette, 'grays', 500),
-        button-background: #fff,
-        button-hover-background: igx-color($palette, 'grays', 100),
-        button-hover-color: igx-color($palette, 'grays', 600),
+    //     button-color: igx-color($palette, 'grays', 500),
+    //     button-background: #fff,
+    //     button-hover-background: igx-color($palette, 'grays', 100),
+    //     button-hover-color: igx-color($palette, 'grays', 600),
 
-        tab-ripple-color: igx-color($palette, 'grays', 100),
-        button-ripple-color: igx-color($palette, 'grays', 100)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    //     tab-ripple-color: igx-color($palette, 'grays', 100),
+    //     button-ripple-color: igx-color($palette, 'grays', 100)
+    // );
+    $theme: apply-palette(map-get($preset, 'igx-tabs'), $palette);
 
     @if not($item-text-color) and $item-background {
         $item-text-color: text-contrast($item-background);
@@ -127,7 +124,7 @@
         $button-ripple-color: text-contrast($button-background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,

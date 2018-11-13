@@ -1,0 +1,33 @@
+$_default-time-picker: (
+    name: 'igx-time-picker',
+
+    text-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    hover-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    selected-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    active-item-background: (
+        igx-color: ('grays', 100)
+    ),
+    header-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    header-hour-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    header-time-period-color: (
+        igx-contrast-color: ('secondary', 500),
+        rgba: .8
+    ),
+
+    background-color: white
+);

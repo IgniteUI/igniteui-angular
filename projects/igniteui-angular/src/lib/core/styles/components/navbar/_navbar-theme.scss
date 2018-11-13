@@ -24,7 +24,7 @@
 ///   @include igx-navbar($my-navbar-theme);
 @function igx-navbar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $preset: $default-preset,
 
     $background: null,
     $text-color: null,
@@ -32,18 +32,9 @@
     $hover-icon-color: null,
     $disable-shadow: false
 ) {
-    $default-theme: (
-        name: 'igx-navbar',
-        background: igx-color($palette, 'primary'),
-        text-color: #fff,
-        idle-icon-color: #fff,
-        hover-icon-color: #fff,
-        nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none)
-    );
+    $nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($preset, 'igx-navbar'), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -57,12 +48,13 @@
         $hover-icon-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
-        hover-icon-color: $hover-icon-color
+        hover-icon-color: $hover-icon-color,
+        nav-shadow: $nav-shadow
     ));
 }
 

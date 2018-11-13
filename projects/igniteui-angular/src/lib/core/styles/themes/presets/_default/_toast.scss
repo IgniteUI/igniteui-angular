@@ -1,0 +1,11 @@
+$_default-toast: (
+    name: 'igx-toast',
+
+    background: (
+        igx-color: ('grays', 600)
+    ),
+
+    text-color: (
+        igx-contrast-color: ('grays', 600)
+    )
+);
