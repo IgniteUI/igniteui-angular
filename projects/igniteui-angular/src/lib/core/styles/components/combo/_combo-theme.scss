@@ -14,12 +14,12 @@
 /// @requires igx-color
 @function igx-combo-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
     $empty-list-background: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-combo'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-combo'), $palette);
 
     @return extend($theme, (
         palette: $palette,

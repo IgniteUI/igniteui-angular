@@ -28,7 +28,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-switch-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $thumb-on-color: null,
     $track-on-color: null,
@@ -46,7 +46,7 @@
 ) {
     $name: 'igx-switch';
 
-    $dark-theme: apply-palette(map-get($preset, 'igx-switch'), $palette);
+    $dark-theme: apply-palette(map-get($schema, 'igx-switch'), $palette);
 
     $light-theme: (
         name: $name,

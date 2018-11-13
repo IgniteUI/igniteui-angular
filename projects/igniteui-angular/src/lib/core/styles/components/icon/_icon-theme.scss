@@ -20,13 +20,13 @@
 ///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $color: null,
     $size: null,
     $disabled-color: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-icon'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-icon'), $palette);
 
     @return extend($theme, (
         palette: $palette,

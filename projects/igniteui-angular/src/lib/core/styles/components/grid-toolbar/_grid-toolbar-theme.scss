@@ -31,7 +31,7 @@
 
 @function igx-grid-toolbar-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $background-color: null,
     $button-background: null,
@@ -70,7 +70,7 @@
     //     item-focus-text-color: igx-color($palette, 'grays', 600)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-grid-toolbar'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-grid-toolbar'), $palette);
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);

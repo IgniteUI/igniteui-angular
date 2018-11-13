@@ -426,9 +426,9 @@
 }
 
 // @ignore
-@function apply-palette($preset, $palette) {
+@function apply-palette($schema, $palette) {
     $result: ();
-    @each $key, $value in $preset {
+    @each $key, $value in $schema {
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: #{resolve-value($value, $palette)}));
         } @else {

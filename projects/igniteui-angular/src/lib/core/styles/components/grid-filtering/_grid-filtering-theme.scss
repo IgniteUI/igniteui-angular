@@ -34,7 +34,7 @@
 ///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
@@ -66,7 +66,7 @@
     //     menu-button-disabled-text-color: initial
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-grid-filtering'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-grid-filtering'), $palette);
 
     @if not($menu-text-color) and $menu-background {
         $menu-text-color: text-contrast($menu-background);

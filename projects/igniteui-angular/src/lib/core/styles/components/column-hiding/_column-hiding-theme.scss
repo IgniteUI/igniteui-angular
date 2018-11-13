@@ -21,12 +21,12 @@
 ////
 @function igx-column-hiding-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $title-color: null,
     $background-color: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-column-hiding'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-column-hiding'), $palette);
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);

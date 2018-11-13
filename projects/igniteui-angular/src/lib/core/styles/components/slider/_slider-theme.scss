@@ -24,7 +24,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-slider-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $track-color: null,
     $thumb-color: null,
@@ -36,7 +36,7 @@
 ) {
     $name: 'igx-slider';
 
-    $dark-theme: apply-palette(map-get($preset, 'igx-slider'), $palette);
+    $dark-theme: apply-palette(map-get($schema, 'igx-slider'), $palette);
 
     $light-theme: (
         name: $name,

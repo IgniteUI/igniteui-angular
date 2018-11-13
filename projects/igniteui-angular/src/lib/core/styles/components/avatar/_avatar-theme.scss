@@ -23,14 +23,14 @@
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-avatar-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
     $icon-background: null,
     $icon-color: null,
     $initials-background: null,
     $initials-color: null,
     $image-background: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-avatar'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-avatar'), $palette);
 
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);

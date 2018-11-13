@@ -17,10 +17,10 @@
 ///   igx-ripple($my-ripple-theme);
 @function igx-ripple-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
     $color: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-ripple'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-ripple'), $palette);
 
     @return extend($theme, (
         palette: $palette,

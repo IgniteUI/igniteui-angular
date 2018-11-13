@@ -26,7 +26,7 @@
 
 @function igx-expansion-panel-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $header-background: null,
     $header-focus-background: null,
@@ -38,7 +38,7 @@
     $disabled-color: null
 
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-expansion-panel'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-expansion-panel'), $palette);
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);

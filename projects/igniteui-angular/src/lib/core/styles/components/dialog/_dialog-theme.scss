@@ -21,13 +21,13 @@
 ///   @include igx-dialog($my-dialog-theme);
 @function igx-dialog-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $background: null,
     $title-color: null,
     $message-color: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-dialog'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-dialog'), $palette);
 
     @if not($title-color) and $background{
         $title-color: text-contrast($background);

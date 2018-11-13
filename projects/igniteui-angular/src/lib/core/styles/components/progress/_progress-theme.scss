@@ -26,7 +26,7 @@
 ///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $track-color: null,
     $fill-color-default: null,
@@ -48,7 +48,7 @@
     //     stripes-color: rgba(#fff, .7),
     //     text-color: igx-color($palette, 'grays', 700)
     // );
-    $theme: apply-palette(map-get($preset, 'igx-progress-linear'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-progress-linear'), $palette);
 
     @return extend($theme, (
         palette: $palette,
@@ -186,7 +186,7 @@
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function igx-progress-circular-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $base-circle-color: null,
     $progress-circle-color: null,
@@ -199,7 +199,7 @@
     //     text-color: igx-color($palette, 'grays', 700)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-progress-circular'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-progress-circular'), $palette);
 
     @return extend($theme, (
         palette: $palette,

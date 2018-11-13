@@ -17,10 +17,10 @@
 ///
 @function igx-overlay-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
     $background-color: null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-overlay'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-overlay'), $palette);
 
     @return extend($theme, (
         palette: $palette,

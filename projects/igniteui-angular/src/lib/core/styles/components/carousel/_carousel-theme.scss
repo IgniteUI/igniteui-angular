@@ -30,7 +30,7 @@
 ///   @include igx-carousel($my-carousel-theme);
 @function igx-carousel-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $button-background: null,
     $button-hover-background: null,
@@ -43,7 +43,7 @@
 
     $disable-button-shadow: true
 ){
-    $theme: apply-palette(map-get($preset, 'igx-carousel'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-carousel'), $palette);
     $button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1));
 
     @if not($button-arrow-color) and $button-background {

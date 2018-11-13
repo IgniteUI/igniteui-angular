@@ -32,7 +32,7 @@
 /// @requires igx-contrast-color
 @function igx-drop-down-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $background-color: null,
     $header-text-color: null,
@@ -57,7 +57,7 @@
     $disabled-item-background:null,
     $disabled-item-text-color:null
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-drop-down'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-drop-down'), $palette);
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);

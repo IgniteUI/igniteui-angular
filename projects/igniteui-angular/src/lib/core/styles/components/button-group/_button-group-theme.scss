@@ -36,7 +36,7 @@
 ///   @include igx-button-group($my-button-group-theme);
 @function igx-button-group-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $item-text-color: null,
     $item-background: null,
@@ -69,7 +69,7 @@
     //     disabled-background-color: igx-color($palette, 'grays', 100)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-button-group'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-button-group'), $palette);
     // @if $preset {
     //     $default-theme: map-get($preset, map-get($default-theme, 'name'));
     // }

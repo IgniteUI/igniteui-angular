@@ -11,9 +11,9 @@
 /// @requires extend
 @function igx-date-picker-theme(
     $palette: $default-palette,
-    $preset: $default-preset
+    $schema: $light-schema
 ) {
-    $theme: apply-palette(map-get($preset, 'igx-date-picker'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-date-picker'), $palette);
     @return extend($theme, (palette: $palette));
 }
 

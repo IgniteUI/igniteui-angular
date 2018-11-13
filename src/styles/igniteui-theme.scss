@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/presets/dark-green/index';
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/schemas/dark-green/index';
 
 @import 'mixins';
 @import 'app-palettes';
@@ -22,11 +22,11 @@ $my-custom-palette: igx-palette(orange, royalblue);
     @include igx-theme($default-palette, $legacy-support: true);
 
     $custom-btn-preset: extend(
-        map-get($default-preset, 'igx-button'),
+        map-get($light-schema, 'igx-button'),
         (button-roundness: 20px)
     );
 
-    $custom-button: igx-button-theme($palette: $my-custom-palette, $preset: (igx-button: $custom-btn-preset));
+    $custom-button: igx-button-theme($palette: $my-custom-palette, $schema: (igx-button: $custom-btn-preset));
 
     @include igx-button($custom-button);
 }

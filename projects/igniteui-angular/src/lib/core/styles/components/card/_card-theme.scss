@@ -26,7 +26,7 @@
 ///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $background: null,
     $header-text-color: null,
@@ -43,7 +43,7 @@
     //     actions-text-color: igx-color($palette, grays, 600)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-card'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-card'), $palette);
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);

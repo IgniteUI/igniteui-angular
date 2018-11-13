@@ -29,7 +29,7 @@
 ///   @include igx-grid-summary($my-summary-theme);
 @function igx-grid-summary-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $background-color: null,
     $label-color: null,
@@ -54,7 +54,7 @@
     //     inactive-color: igx-color($palette, 'grays', 400)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-grid-summary'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-grid-summary'), $palette);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);

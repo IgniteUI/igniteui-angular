@@ -60,7 +60,7 @@
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
     $palette: $default-palette,
-    $preset: $default-preset,
+    $schema: $light-schema,
 
     $content-background: null,
     $content-text-color: null,
@@ -130,7 +130,7 @@
     //     date-disabled-text-color: rgba(hexrgba(igx-color($palette, 'grays', 500)), .6)
     // );
 
-    $theme: apply-palette(map-get($preset, 'igx-calendar'), $palette);
+    $theme: apply-palette(map-get($schema, 'igx-calendar'), $palette);
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
