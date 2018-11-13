@@ -10,39 +10,27 @@
 
 @include igx-core();
 
-$my-custom-palette: igx-palette(orange, royalblue);
-
 .default-theme {
     $igx-background-color: #fff;
     $igx-foreground-color: text-contrast($igx-background-color);
+
     background: $igx-background-color;
     color: $igx-foreground-color;
+
     @include scrollbar-love();
-
     @include igx-theme($default-palette, $legacy-support: true);
-
-    $custom-btn-preset: extend(
-        map-get($light-schema, 'igx-button'),
-        (button-roundness: 20px)
-    );
-
-    $custom-button: igx-button-theme($palette: $my-custom-palette, $schema: (igx-button: $custom-btn-preset));
-
-    @include igx-button($custom-button);
 }
 
 
 .dark-green-theme {
     $igx-background-color: #484848;
     $igx-foreground-color: text-contrast($igx-background-color);
+
     background: $igx-background-color;
     color: $igx-foreground-color;
+
     @include scrollbar-love($igx-background-color);
     @include igx-green-theme();
-    // @include igx-theme($my-custom-palette, $preset: $dark-green-theme);
-    // @include igx-button(igx-button-theme($my-custom-palette, $preset: $dark-green-theme));
-
-    // @include igx-theme($default-palette, $preset: $dark-green-theme);
 
     .igniteui-logo__text {
         fill: #fff;
