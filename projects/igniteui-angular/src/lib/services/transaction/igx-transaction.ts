@@ -26,7 +26,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this.addTransaction(transaction, states, recordRef);
     }
 
-    private addTransaction(transaction: T, states: Map<any, S>, recordRef?: any, useInUndo: boolean = true) {
+    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any, useInUndo: boolean = true) {
         this.updateState(states, transaction, recordRef);
 
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;

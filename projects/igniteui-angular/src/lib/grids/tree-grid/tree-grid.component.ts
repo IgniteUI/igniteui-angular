@@ -57,6 +57,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
+    private _useInUndoStack = true;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -368,8 +369,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 const childKey = this.childDataKey;
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
-                    const path = [...parentRecord.path];
+                    const path: any[] = [];
                     path.push(parentRowID);
+                    path.push(...this.getPath(rowId));
                     this.transactions.add({
                         id: rowId,
                         path: path,
@@ -398,31 +400,29 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    public deleteRowById(rowId: any) {
-        if (this.transactions.enabled && this.foreignKey && this.cascadeOnDelete) {
-            this.transactions.startPending();
-        }
-
-        super.deleteRowById(rowId);
-
-        if (this.transactions.enabled && this.foreignKey && this.cascadeOnDelete) {
-            this.transactions.endPending(true);
-        }
-    }
-
-    /**
-     * @hidden
-     */
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
-            super.deleteRowFromData(rowID, index);
+             if (this.transactions.enabled) {
+                 const path = this.getPath(rowID);
+                 const transaction: HierarchicalTransaction = { id: rowID, type: TransactionType.DELETE, newValue: null, path };
+                 let recordRef = this.data[index];
+                 if (!recordRef) {
+                     const state: HierarchicalState = this.transactions.getState(rowID);
+                     recordRef = state && state.recordRef;
+                 }
+                 this.transactions.add(transaction, recordRef, this._useInUndoStack);
+             } else {
+                 super.deleteRowFromData(rowID, index);
+             }
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
                 if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
+                        this._useInUndoStack = false;
                         super.deleteRowById(child.rowID);
+                        this._useInUndoStack = true;
                     }
                 }
             }
@@ -432,8 +432,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             if (this.transactions.enabled) {
-                const path = [...record.path];
-                path.push(rowID);
+                const path = this.getPath(rowID);
                 this.transactions.add({
                     id: rowID,
                     type: TransactionType.DELETE,
@@ -445,6 +444,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 childData.splice(index, 1);
             }
         }
+    }
+
+    private getPath(rowId: any): any[] {
+        const path: any[] = [];
+        let record = this.records.get(rowId);
+
+        while (record.parent) {
+            path.push(record.parent.rowID);
+            record = record.parent;
+        }
+
+        return path;
     }
 
     /**
