@@ -55,3 +55,4 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         }
     }
 }
+
