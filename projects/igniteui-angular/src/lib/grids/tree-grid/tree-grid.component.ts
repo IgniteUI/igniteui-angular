@@ -52,12 +52,11 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
-    private _useInUndoStack = true;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -184,7 +183,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.cdr.markForCheck();
     }
 
-    private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
+    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
@@ -267,12 +266,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         return false;
     }
 
-    private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
+    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
         mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
 
-          mapCloned.set(key, value);
+            mapCloned.set(key, value);
         });
 
         return mapCloned;
@@ -371,7 +370,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
                     const path: any[] = [];
                     path.push(parentRowID);
-                    path.push(...this.getPath(rowId));
+                    path.push(...this.getPath(parentRowID));
+                    path.reverse();
                     this.transactions.add({
                         id: rowId,
                         path: path,
@@ -398,35 +398,43 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
     /**
+     * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
+     * Requires that the `primaryKey` property is set.
+     * The method accept rowSelector as a parameter, which is the rowID.
+     * ```typescript
+     * this.grid1.deleteRow(0);
+     * ```
+     * @param rowSelector
+     * @memberof IgxGridBaseComponent
+     */
+    public deleteRowById(rowId: any) {
+        if (this.primaryKey && this.foreignKey && this.cascadeOnDelete && this.transactions.enabled) {
+            this.transactions.startPending();
+        }
+        super.deleteRowById(rowId);
+
+        if (this.primaryKey && this.foreignKey && this.cascadeOnDelete && this.transactions.enabled) {
+            this.transactions.endPending(true);
+        }
+    }
+
+    /**
      * @hidden
      */
     protected deleteRowFromData(rowID: any, index: number) {
-         if (this.primaryKey && this.foreignKey) {
-             if (this.transactions.enabled) {
-                 const path = this.getPath(rowID);
-                 const transaction: HierarchicalTransaction = { id: rowID, type: TransactionType.DELETE, newValue: null, path };
-                 let recordRef = this.data[index];
-                 if (!recordRef) {
-                     const state: HierarchicalState = this.transactions.getState(rowID);
-                     recordRef = state && state.recordRef;
-                 }
-                 this.transactions.add(transaction, recordRef, this._useInUndoStack);
-             } else {
-                 super.deleteRowFromData(rowID, index);
-             }
+        if (this.primaryKey && this.foreignKey) {
+            super.deleteRowFromData(rowID, index);
 
             if (this.cascadeOnDelete) {
                 const treeRecord = this.records.get(rowID);
                 if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
-                        this._useInUndoStack = false;
                         super.deleteRowById(child.rowID);
-                        this._useInUndoStack = true;
                     }
                 }
             }
-       } else {
+        } else {
             const record = this.records.get(rowID);
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
@@ -439,7 +447,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     newValue: null,
                     path: path
                 },
-                childData[index]);
+                    childData[index]);
             } else {
                 childData.splice(index, 1);
             }
@@ -515,7 +523,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
     * @hidden
     */
-   public getContext(rowData): any {
+    public getContext(rowData): any {
         return {
             $implicit: rowData,
             templateID: 'dataRow'

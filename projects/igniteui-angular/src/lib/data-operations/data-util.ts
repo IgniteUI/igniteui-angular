@@ -231,6 +231,7 @@ export class DataUtil {
                             if (!dataRow[childDataKey].find(r => r[primaryKey] === transaction.id)) {
                                 dataRow[childDataKey].push(transaction.newValue);
                             }
+                        } else {
                         }
                         break;
                     case TransactionType.UPDATE:
