@@ -430,9 +430,9 @@
     $result: ();
     @each $key, $value in $schema {
         @if type-of($value) == 'map' {
-            $result: extend($result, (#{$key}: #{resolve-value($value, $palette)}));
+            $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: #{$value}));
+            $result: extend($result, (#{$key}: $value));
         }
     }
     @return $result;
