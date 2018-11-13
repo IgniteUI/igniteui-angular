@@ -1,0 +1,15 @@
+{
+    "$schema": "../../common/schema/theme-props.schema.json",
+    "changes": [
+        {
+            "name": "$chip-background",
+            "replaceWith": "$background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$chip-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-chip-theme"
+        }
+    ]
+}
