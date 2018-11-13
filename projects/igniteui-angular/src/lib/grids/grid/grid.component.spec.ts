@@ -25,6 +25,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 const DEBOUNCETIME = 30;
 
@@ -1664,7 +1665,8 @@ describe('IgxGrid Component Tests', () => {
                 cell.inEditMode = true;
                 tick();
 
-                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
                 fix.detectChanges();
 
                 // expect(gridAPI.submit_value).toHaveBeenCalled();
@@ -2111,7 +2113,8 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
                 tick();
 
-                grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true });
+                grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.submit_value).toHaveBeenCalled();
@@ -2136,7 +2139,8 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
                 cell.update(111);
                 // Do not exit edit mode
-                grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true });
+                grid.sort({ fieldName: 'Downloads', dir: SortingDirection.Desc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
 
@@ -2160,7 +2164,8 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 cell.update(newValue);
 
-                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
 
@@ -2179,7 +2184,8 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fix.componentInstance.grid;
 
-                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
 
@@ -2532,7 +2538,8 @@ describe('IgxGrid Component Tests', () => {
                 component.cellInEditMode.editValue = 1337;
                 fixture.detectChanges();
                 // On sort
-                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true });
+                grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance() });
                 fixture.detectChanges();
                 expect(grid.onRowEdit.emit).toHaveBeenCalled();
                 expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
@@ -2656,7 +2663,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(trans.onStateUpdate.emit).not.toHaveBeenCalled();
-                let state = trans.aggregatedState(false);
+                let state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
 
                 cell = grid.getCellByColumn(1, 'ProductName');
@@ -2670,14 +2677,14 @@ describe('IgxGrid Component Tests', () => {
 
                 // Called once because row edit ended on row 1;
                 expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(1);
                 expect(state[0].type).toEqual(TransactionType.UPDATE);
                 expect(state[0].newValue['ProductName']).toEqual('Chaiiii');
 
                 grid.endEdit(true);
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
                 expect(state.length).toEqual(2);
                 expect(state[0].type).toEqual(TransactionType.UPDATE);
@@ -2688,7 +2695,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue).toBeNull();
@@ -2697,7 +2704,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(2);
                 expect(state[1].type).toEqual(TransactionType.UPDATE);
                 expect(state[1].newValue['ProductName']).toEqual(updateValue);
@@ -2708,7 +2715,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 expect(trans.onStateUpdate.emit).toHaveBeenCalled();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(3);
                 expect(state[2].type).toEqual(TransactionType.DELETE);
                 expect(state[2].newValue).toBeNull();
@@ -2716,7 +2723,7 @@ describe('IgxGrid Component Tests', () => {
 
                 trans.commit(grid.data);
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
                 expect(row.classList).not.toContain('igx-grid__tr--deleted');
 
@@ -2729,7 +2736,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 trans.clear();
                 tick();
-                state = trans.aggregatedState(false);
+                state = trans.getAggregatedChanges(false);
                 expect(state.length).toEqual(0);
                 expect(cell.nativeElement.classList).not.toContain('igx-grid__tr--edited');
             }));
@@ -2787,7 +2794,7 @@ describe('IgxGrid Component Tests', () => {
 
                 const grid = fixture.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
-                const initialState = grid.transactions.aggregatedState(false);
+                const initialState = grid.transactions.getAggregatedChanges(false);
                 expect(cell.value).toBe('Chai');
 
                 // Set to same value
@@ -2795,7 +2802,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 fixture.detectChanges();
                 expect(cell.value).toBe('Chai');
-                expect(grid.transactions.aggregatedState(false)).toEqual(initialState);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual(initialState);
 
                 // Change value and check if it's logged
                 cell.update('Updated value');
@@ -2807,7 +2814,7 @@ describe('IgxGrid Component Tests', () => {
                     newValue: {ProductName: 'Updated value'},
                     type: TransactionType.UPDATE
                 };
-                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
             }));
 
             it(`Should not log a transaction when a cell's value does not change - Date`, fakeAsync(() => {
@@ -2818,7 +2825,7 @@ describe('IgxGrid Component Tests', () => {
                 const cellStock = grid.getCellByColumn(0, 'UnitsInStock');
                 const cellDate = grid.getCellByColumn(0, 'OrderDate');
                 const initialCellValue = cellDate.value;
-                const initialState = grid.transactions.aggregatedState(false);
+                const initialState = grid.transactions.getAggregatedChanges(false);
 
                 // Enter edit mode
                 cellDate.onKeydownEnterEditMode({ stopPropagation: () => {}, preventDefault: () => {}});
@@ -2832,7 +2839,7 @@ describe('IgxGrid Component Tests', () => {
                 grid.endEdit(true);
                 tick();
                 fixture.detectChanges();
-                expect(grid.transactions.aggregatedState(true)).toEqual(initialState);
+                expect(grid.transactions.getAggregatedChanges(true)).toEqual(initialState);
 
                 const newValue = new Date('01/01/2000');
                 cellDate.update(newValue);
@@ -2843,7 +2850,7 @@ describe('IgxGrid Component Tests', () => {
                     newValue: {OrderDate: newValue},
                     type: TransactionType.UPDATE
                 };
-                expect(grid.transactions.aggregatedState(false)).toEqual([expectedTransaction]);
+                expect(grid.transactions.getAggregatedChanges(false)).toEqual([expectedTransaction]);
             }));
 
             it('Should allow to change of a cell in added row in grid with transactions', fakeAsync(() => {
@@ -2869,6 +2876,27 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 expect(cell.value).toBe('Changed product');
             }));
+
+            it('Should properly mark cell/row as dirty if new value evaluates to `false`', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                const targetRow = grid.getRowByIndex(0);
+                let targetRowElement = targetRow.element.nativeElement;
+                let targetCellElement = targetRow.cells.toArray()[1].nativeElement;
+                expect(targetRowElement.classList).not.toContain('igx-grid__tr--edited', 'row contains edited class w/o edits');
+                expect(targetCellElement.classList).not.toContain('igx-grid__td--edited', 'cell contains edited class w/o edits');
+
+                targetRow.cells.toArray()[1].update('');
+                tick();
+                fixture.detectChanges();
+
+                targetRowElement = targetRow.element.nativeElement;
+                targetCellElement = targetRow.cells.toArray()[1].nativeElement;
+                expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
+                expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
+            }));
         });
 
         describe('Row Editing - Grouping',  () => {
@@ -2877,7 +2905,8 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fix.componentInstance.instance;
                 grid.primaryKey = 'ID';
                 fix.detectChanges();
-                grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+                grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
+                    strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
                 const cell = grid.getCellByColumn(1, 'ProductName');
@@ -2906,7 +2935,8 @@ describe('IgxGrid Component Tests', () => {
                     const grid = fix.componentInstance.instance;
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
-                    grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+                    grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
+                        strategy: DefaultSortingStrategy.instance() });
                     tick();
                     fix.detectChanges();
                     let row: HTMLElement;
@@ -2960,10 +2990,12 @@ describe('IgxGrid Component Tests', () => {
                     const grid = fix.componentInstance.instance;
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
-                    grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+                    grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
+                        strategy: DefaultSortingStrategy.instance() });
                     tick();
                     fix.detectChanges();
-                    grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false });
+                    grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false,
+                        strategy: DefaultSortingStrategy.instance() });
                     tick();
                     fix.detectChanges();
                     const cell = grid.getCellByColumn(2, 'ProductName');

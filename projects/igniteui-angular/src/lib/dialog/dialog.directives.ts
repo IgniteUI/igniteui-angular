@@ -1,6 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, HostBinding } from '@angular/core';
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: 'igx-dialog-title,[igxDialogTitle]'
 })
@@ -10,6 +13,9 @@ export class IgxDialogTitleDirective {
     public defaultStyle = true;
  }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: 'igx-dialog-actions,[igxDialogActions]'
 })

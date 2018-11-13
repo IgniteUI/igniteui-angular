@@ -9,6 +9,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent } from '../grid';
 
+/** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
         return this.filterImpl(data, expressionsTree, undefined);
@@ -46,6 +47,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridFiltering',
     pure: true
@@ -60,7 +62,10 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const state = { expressionsTree: expressionsTree };
+        const state = {
+            expressionsTree: expressionsTree,
+            strategy: new TreeGridFilteringStrategy()
+        };
 
         this.resetFilteredOutProperty(grid.records);
 
@@ -71,7 +76,6 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
             return hierarchyData;
         }
 
-        DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
         const result = this.filter(hierarchyData, state);
         const filteredData: any[] = [];
         this.expandAllRecursive(grid, result, grid.expansionStates, filteredData);

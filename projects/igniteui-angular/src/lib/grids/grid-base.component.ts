@@ -2,17 +2,13 @@ import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
     ComponentFactoryResolver,
     ContentChildren,
     ContentChild,
-    DoCheck,
     ElementRef,
     EventEmitter,
     HostBinding,
-    HostListener,
     Inject,
     Input,
     IterableChangeRecord,
@@ -25,17 +21,16 @@ import {
     TemplateRef,
     ViewChild,
     ViewChildren,
-    AfterViewChecked,
     ViewContainerRef,
-    InjectionToken
+    InjectionToken,
+    Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, first } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isNavigationKey, mergeObjects, CancelableEventArgs } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -46,8 +41,6 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
-import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
-import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
 import { ISummaryExpression } from './grid-summary';
 import { DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -64,8 +57,7 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
-import { DisplayDensity } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -153,7 +145,7 @@ export interface IFocusChangeEventArgs {
     cancel: boolean;
 }
 
-export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -387,43 +379,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @Input()
     public paginationTemplate: TemplateRef<any>;
-
-    /**
-     * Return the display density currently applied to the grid.
-     * The default value is `comfortable`.
-     * Available options are `comfortable`, `cosy`, `compact`.
-     * ```typescript
-     * let gridTheme = this.grid.displayDensity;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    /**
-     * Sets the display density currently applied to the grid.
-     * ```html
-     * <igx-grid #grid [data]="localData" [displayDensity]="'compact'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
-
-        this.onDensityChanged.emit();
-    }
 
     /**
      * Returns whether the column hiding UI for the `IgxGridComponent` is enabled.
@@ -1192,12 +1147,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     /**
      * @hidden
      */
-    @Output()
-    protected onDensityChanged = new EventEmitter<any>();
-
-    /**
-     * @hidden
-     */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
@@ -1448,26 +1397,22 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
+        if (this.isCosy()) {
                 return 'igx-grid--cosy';
-            case DisplayDensity.compact:
+        } else if (this.isCompact()) {
                 return 'igx-grid--compact';
-            default:
+        } else {
                 return 'igx-grid';
         }
     }
 
     get bannerClass(): string {
         let bannerClass = '';
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
+        if (this.isCosy()) {
                 bannerClass = 'igx-banner--cosy';
-                break;
-            case DisplayDensity.compact:
+        } else if (this.isCompact()) {
                 bannerClass = 'igx-banner--compact';
-                break;
-            default:
+        } else {
                 bannerClass = 'igx-banner';
         }
         bannerClass += this.rowEditPositioningStrategy.isTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
@@ -1495,7 +1440,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    get sortingExpressions() {
+    get sortingExpressions(): ISortingExpression [] {
         return this._sortingExpressions;
     }
 
@@ -1510,7 +1455,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    set sortingExpressions(value) {
+    set sortingExpressions(value: ISortingExpression []) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
 
@@ -2032,7 +1977,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     private _height = '100%';
     private _width = '100%';
     private _rowHeight;
-    private _displayDensity = DisplayDensity.comfortable;
     private _ngAfterViewInitPaassed = false;
     private _horizontalForOfs;
 
@@ -2108,10 +2052,12 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         protected differs: IterableDiffers,
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
-        public filteringService: IgxFilteringService) {
-        this.resizeHandler = () => {
-            this.calculateGridSizes();
-            this.zone.run(() => this.markForCheck());
+        public filteringService: IgxFilteringService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
+            this.resizeHandler = () => {
+                this.calculateGridSizes();
+                this.zone.run(() => this.markForCheck());
         };
     }
 
@@ -2326,13 +2272,11 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
 	 * @memberof IgxGridBaseComponent
      */
     get defaultRowHeight(): number {
-        switch (this._displayDensity) {
-            case DisplayDensity.compact:
+        if (this.isCosy()) {
+            return 40;
+        } else if (this.isCompact()) {
                 return 32;
-            case DisplayDensity.cosy:
-                return 40;
-            case DisplayDensity.comfortable:
-            default:
+        } else {
                 return 50;
         }
     }
@@ -3593,7 +3537,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * @hidden
      */
     protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
+        this.gridAPI.sort(this.id, expression);
     }
 
     /**
@@ -4035,7 +3979,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
         if (!this.filteredData && this.transactions.enabled) {
             data = DataUtil.mergeTransactions(
                 cloneArray(data),
-                this.transactions.aggregatedState(true),
+                this.transactions.getAggregatedChanges(true),
                 this.primaryKey
             );
         }
@@ -4514,7 +4458,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     public get dataWithAddedInTransactionRows() {
         const result = <any>cloneArray(this.gridAPI.get_all_data(this.id));
         if (this.transactions.enabled) {
-            result.push(...this.transactions.aggregatedState(true)
+            result.push(...this.transactions.getAggregatedChanges(true)
                 .filter(t => t.type === TransactionType.ADD)
                 .map(t => t.newValue));
         }

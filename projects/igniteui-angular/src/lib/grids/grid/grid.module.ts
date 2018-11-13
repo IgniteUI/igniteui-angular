@@ -19,6 +19,9 @@ import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 
+/**
+ * @hidden
+ */
 @NgModule({
   declarations: [
     IgxGridComponent,

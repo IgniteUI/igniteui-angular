@@ -3,6 +3,9 @@ import {Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
 
 import { CommonModule } from '@angular/common';
 
+/**
+ * @hidden
+ */
 @Directive({selector: '[igxTemplateOutlet]'})
 export class IgxTemplateOutletDirective implements OnChanges {
   private _viewRef !: EmbeddedViewRef<any>;
@@ -102,6 +105,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
       }
   }
 }
+
+/**
+ * @hidden
+ */
 @NgModule({
     declarations: [IgxTemplateOutletDirective],
     entryComponents: [],

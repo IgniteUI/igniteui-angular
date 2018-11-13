@@ -110,11 +110,12 @@ export function isDate(value: any) {
 }
 
 /**
- * Cehcks if the two passed arguments are equal
+ * Checks if the two passed arguments are equal
  * Currently supports date objects
  * @param obj1
  * @param obj2
  * @returns: `boolean`
+ * @hidden
  */
 export function isEqual(obj1, obj2): boolean {
     if (isDate(obj1) && isDate(obj2)) {
@@ -223,6 +224,7 @@ export function isFirefox(): boolean {
     return firefoxBrowser;
 }
 
+/** @hidden */
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;

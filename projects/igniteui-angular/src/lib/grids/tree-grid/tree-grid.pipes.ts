@@ -191,6 +191,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridSorting',
     pure: true
@@ -204,24 +205,23 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
 
     public transform(
         hierarchicalData: ITreeGridRecord[],
-        expressions: ISortingExpression | ISortingExpression[],
+        expressions: ISortingExpression[],
         id: string,
         pipeTrigger: number): ITreeGridRecord[] {
-        const state = { expressions: [] };
         const grid = this.gridAPI.get(id);
-        state.expressions = grid.sortingExpressions;
 
         let result: ITreeGridRecord[];
-        if (!state.expressions.length) {
+        if (!expressions.length) {
             result = hierarchicalData;
         } else {
-            result = DataUtil.hierarchicalSort(hierarchicalData, state, undefined);
+            result = DataUtil.treeGridSort(hierarchicalData, expressions);
         }
 
         return result;
     }
 }
 
+/** @hidden */
 @Pipe({
     name: 'treeGridPaging',
     pure: true
@@ -276,12 +276,12 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
             if (foreignKey) {
                 return DataUtil.mergeTransactions(
                     cloneArray(collection),
-                    grid.transactions.aggregatedState(true),
+                    grid.transactions.getAggregatedChanges(true),
                     grid.primaryKey);
             } else if (childDataKey) {
                 return DataUtil.mergeHierarchicalTransactions(
                     cloneHierarchicalArray(collection, childDataKey),
-                    grid.transactions.aggregatedState(true),
+                    grid.transactions.getAggregatedChanges(true),
                     childDataKey,
                     grid.primaryKey
                 );

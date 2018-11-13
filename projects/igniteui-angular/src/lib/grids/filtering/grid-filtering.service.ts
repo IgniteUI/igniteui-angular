@@ -37,14 +37,15 @@ export class IgxFilteringService implements OnDestroy {
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
     private datePipe = new DatePipe(window.navigator.language);
+    private columnStartIndex = -1;
 
     public gridId: string;
     public isFilterRowVisible = false;
     public filteredColumn = null;
     public selectedExpression: IFilteringExpression = null;
-    public columnToChipToFocus = new Map<string, boolean>();
+    public columnToFocus = null;
+    public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
-    public columnStartIndex = -1;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
 
@@ -73,11 +74,11 @@ export class IgxFilteringService implements OnDestroy {
                     this.columnStartIndex = eventArgs.startIndex;
                     this.grid.filterCellList.forEach((filterCell) => {
                         filterCell.updateFilterCellArea();
-                        if (filterCell.getChipToFocus()) {
-                            this.columnToChipToFocus.set(filterCell.column.field, false);
-                            filterCell.focusChip();
-                        }
                     });
+                }
+                if (this.columnToFocus) {
+                    this.focusFilterCellChip(this.columnToFocus.field, false);
+                    this.columnToFocus = null;
                 }
             });
 
@@ -204,6 +205,14 @@ export class IgxFilteringService implements OnDestroy {
         for (let i = 0; i < expressionsList.length; i++) {
             currExpressionUI = expressionsList[i];
 
+            if (!currExpressionUI.expression.condition.isUnary && currExpressionUI.expression.searchVal === null) {
+                if (currExpressionUI.afterOperator === FilteringLogic.And && !currAndBranch) {
+                    currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
+                    expressionsTree.filteringOperands.push(currAndBranch);
+                }
+                continue;
+            }
+
             if ((currExpressionUI.beforeOperator === undefined || currExpressionUI.beforeOperator === null ||
                  currExpressionUI.beforeOperator === FilteringLogic.Or) &&
                 currExpressionUI.afterOperator === FilteringLogic.And) {
@@ -260,10 +269,23 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    private updateFilteringCell(columnId: string) {
+    /**
+     * Updates the content of a filterCell.
+     */
+    public updateFilteringCell(columnId: string) {
         const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
         if (filterCell) {
             filterCell.updateFilterCellArea();
+        }
+    }
+
+    /**
+     * Focus a chip in a filterCell.
+     */
+    public focusFilterCellChip(columnId: string, focusFirst: boolean) {
+        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+        if (filterCell) {
+            filterCell.focusChip(focusFirst);
         }
     }
 

@@ -35,6 +35,7 @@ import {
     IExcelFolder
 } from './excel-interfaces';
 
+/** @hidden */
 export class ExcelElementsFactory {
 
     public static getExcelFolder(type: ExcelFolderTypes): IExcelFolder {
