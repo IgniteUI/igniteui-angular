@@ -21,7 +21,7 @@ import { IgxColumnComponent } from './column.component';
 import { Subject, animationFrameScheduler as rAF, fromEvent, combineLatest } from 'rxjs';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
-export interface CellID {
+export interface ICellID {
     rowID: any;
     columnID: number;
     rowIndex: number;
@@ -247,7 +247,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    public get cellID(): CellID {
+    public get cellID(): ICellID {
         const primaryKey = this.grid.primaryKey;
         this._cellID.rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
         this._cellID.columnID = this.columnIndex;
@@ -553,7 +553,7 @@ export class IgxGridCellComponent implements OnInit, OnDestroy, AfterViewInit {
             takeUntil(this.destroy$),
             sampleTime(0, rAF)
         );
-    private _cellID: CellID = { rowID: null, columnID: null, rowIndex: null };
+    private _cellID: ICellID = { rowID: null, columnID: null, rowIndex: null };
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
