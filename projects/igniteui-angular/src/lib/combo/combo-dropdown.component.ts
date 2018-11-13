@@ -286,6 +286,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
             const addedIndex = allData[targetDataIndex].isHeader ? this.findNextFocusableItem(targetDataIndex, Navigate.Up, allData) : 0;
             targetDataIndex -= addedIndex; // Add steps to targetDataIndex
             if (addedIndex === -1) { // If there is no non-header
+                vContainer.scrollTo(0);
                 this.focusComboSearch(); // Focus combo search;
             } else {
                 this.subscribeNext(vContainer, () => {
