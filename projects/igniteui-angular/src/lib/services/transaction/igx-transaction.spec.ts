@@ -571,7 +571,11 @@ describe('IgxTransaction', () => {
                 [
                     {
                         id: 'Key1',
-                        newValue: { key: 'Key1', value1: 10, value3: 30 },
+                        newValue: { key: 'Key1', value1: 10 },
+                        type: 'update'
+                    }, {
+                        id: 'Key1',
+                        newValue: { key: 'Key1', value3: 30 },
                         type: 'update'
                     }
                 ]);
