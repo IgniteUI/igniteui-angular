@@ -74,6 +74,11 @@ const MINIMUM_COLUMN_WIDTH = 136;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
+export interface ICellID {
+    rowID: any;
+    columnID: any;
+    rowIndex: number;
+}
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
@@ -81,11 +86,7 @@ export interface IGridCellEventArgs {
 
 export interface IGridEditEventArgs extends CancelableEventArgs {
     rowID: any;
-    cellID?: {
-        rowID: any,
-        columnID: any,
-        rowIndex: number
-    };
+    cellID?: ICellID;
     oldValue: any;
     newValue?: any;
     event?: Event;

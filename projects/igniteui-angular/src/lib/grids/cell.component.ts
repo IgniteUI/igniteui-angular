@@ -17,14 +17,8 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs, ICellID } from './grid-base.component';
 import { first } from 'rxjs/operators';
-
-export interface CellID {
-    rowID: any;
-    columnID: number;
-    rowIndex: number;
-}
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -248,7 +242,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * ```
      * @memberof IgxGridCellComponent
      */
-    public get cellID(): CellID {
+    public get cellID(): ICellID {
         const primaryKey = this.grid.primaryKey;
         this._cellID.rowID = primaryKey ? this.row.rowData[primaryKey] : this.row.rowData;
         this._cellID.columnID = this.columnIndex;
@@ -494,7 +488,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     public editValue;
     public focused = false;
     protected isSelected = false;
-    private _cellID: CellID = { rowID: null, columnID: null, rowIndex: null };
+    private _cellID: ICellID = { rowID: null, columnID: null, rowIndex: null };
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
