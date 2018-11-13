@@ -699,10 +699,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
 
         if (this.inEditMode && isNavigationKey(key)) {
-            let editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-            let column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
-            
-            if((column.dataType ===  DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE)) || column.dataType === DataType.Date) {
+            const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
+
+            if (column.inlineEditorTemplate === undefined && (
+                (column.dataType === DataType.Boolean &&  (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+                || column.dataType === DataType.Date)) {
                 event.preventDefault();
             }
             return;
