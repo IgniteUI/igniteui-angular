@@ -8,6 +8,13 @@ import { DataUtil } from 'igniteui-angular';
 export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction, S extends HierarchicalState>
     extends IgxTransactionService<T, S> {
 
+
+    public add(transaction: T, recordRef?: any, useInUndo = true): void {
+        const states = this._isPending ? this._pendingStates : this._states;
+        this.verifyAddedTransaction(states, transaction, recordRef);
+        super.addTransaction(transaction, states, recordRef, useInUndo);
+    }
+
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
