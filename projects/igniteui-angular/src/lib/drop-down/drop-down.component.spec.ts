@@ -35,7 +35,8 @@ describe('IgxDropDown ', () => {
                 IgxDropDownImageTestComponent,
                 IgxDropDownTabsTestComponent,
                 DropDownWithValuesComponent,
-                IgxDropDownSelectComponent
+                IgxDropDownSelectComponent,
+                DropDownWithMaxHeightComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -884,6 +885,19 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem).toEqual(dropdownItem);
             expect(dropdown.collapsed).toEqual(true);
         }));
+
+        it('Should properly define maxHeight option', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithMaxHeightComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            expect(dropdown.maxHeight).toBe('100px');
+            expect(ddList.style.maxHeight).toBe('100px');
+        }));
     });
 
     describe('igxDropDown Unit tests', () => {
@@ -1664,6 +1678,26 @@ class InputWithDropDownDirectiveComponent {
     </igx-drop-down>`
 })
 class DropDownWithValuesComponent {
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropdown: IgxDropDownComponent;
+
+    public items: any[] = [
+        { name: 'Product 1', id: 1 },
+        { name: 'Product 2', id: 2 },
+        { name: 'Product 3', id: 3 },
+        { name: 'Product 4', id: 3 },
+    ];
+}
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [maxHeight]="'100px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithMaxHeightComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
     public dropdown: IgxDropDownComponent;
 
