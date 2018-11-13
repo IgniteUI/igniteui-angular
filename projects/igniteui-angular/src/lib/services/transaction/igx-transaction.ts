@@ -98,7 +98,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             this._redoStack = [];
         }
         super.endPending(commit);
-        this._useInUndo = true;
     }
 
     public commit(data: any[]): void {
