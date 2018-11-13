@@ -173,4 +173,50 @@ export class CSVWrapper {
         `Leslie Hansen${this._delimiter}9${this._delimiter}Associate Software Developer${this._eor}` +
         `Eduardo Ramirez${this._delimiter}10${this._delimiter}Manager${this._eor}`;
     }
+
+    get treeGridData() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+`1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
+`2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
+`3${this._delimiter}2${this._delimiter}Tanya Bennett${this._delimiter}Director${this._delimiter}29${this._eor}` +
+`7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}` +
+`4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}Software Developer${this._delimiter}33${this._eor}` +
+`6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
+`10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
+`9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}`;
+    }
+
+    get treeGridDataSorted() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+`10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
+`9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}` +
+`6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
+`1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
+`4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}Software Developer${this._delimiter}33${this._eor}` +
+`2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
+`7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}` +
+`3${this._delimiter}2${this._delimiter}Tanya Bennett${this._delimiter}Director${this._delimiter}29${this._eor}`;
+    }
+
+    get treeGridDataFiltered() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+`1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
+`2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
+`7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}` +
+`4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}Software Developer${this._delimiter}33${this._eor}` +
+`6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
+`10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
+`9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}`;
+    }
+
+    get treeGridDataFilterSorted() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+`6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
+`10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
+`9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}` +
+`1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._delimiter}32${this._eor}` +
+`4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}Software Developer${this._delimiter}33${this._eor}` +
+`2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}Director${this._delimiter}41${this._eor}` +
+`7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}Associate Software Developer${this._delimiter}35${this._eor}`;
+    }
 }

@@ -56,10 +56,7 @@ describe('Excel Exporter', () => {
         it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
             TestMethods.testRawData(currentGrid, async (grid) => {
-                const wrapper = await getExportedData(grid, options);
-                wrapper.verifyStructure();
-                // wrapper.verifyTemplateFilesContent();
-                wrapper.verifyDataFilesContent(actualData.simpleGridData);
+                await exportAndVerify(grid, options, actualData.simpleGridData);
             });
         });
 
@@ -207,8 +204,8 @@ describe('Excel Exporter', () => {
             wrapper.verifyDataFilesContent(actualData.simpleGridSortByName);
 
             // XXX : ???? What's the point of this?
-            grid.clearSort();
-            fix.detectChanges();
+            // grid.clearSort();
+            // fix.detectChanges();
         });
 
         it('should honor changes in applied sorting.', async () => {
@@ -396,39 +393,38 @@ describe('Excel Exporter', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
-        it('should export tree grid as displayed.', async () => {
-            const wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.simpleGridData);
-        });
-
-        it('should create excel groups to reflect the hierarchy.', async () => {
-            const wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
+        it('should export tree grid as displayed with all groups expanded.', async () => {
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
         });
 
         it('should export sorted tree grid properly.', async () => {
             treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc});
+            options.ignoreSorting = true;
             fix.detectChanges();
 
-            let wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.simpleGridData);
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
+
+            options.ignoreSorting = false;
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataSorted);
 
             treeGrid.clearSort();
             fix.detectChanges();
-
-            wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.simpleGridData);
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
         });
 
         it('should export filtered tree grid properly.', async () => {
             treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            options.ignoreFiltering = true;
             fix.detectChanges();
-            const wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.simpleGridData);
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
+
+            options.ignoreFiltering = false;
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataFiltered);
+
+            treeGrid.clearFilter();
+            fix.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
         });
 
         it('should export filtered and sorted tree grid properly.', async () => {
@@ -437,9 +433,7 @@ describe('Excel Exporter', () => {
             treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
             fix.detectChanges();
 
-            const wrapper = await getExportedData(treeGrid, options);
-            await wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.simpleGridData);
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataFilteredSorted);
         });
     });
 
@@ -482,5 +476,11 @@ describe('Excel Exporter', () => {
         opts.columnWidth = columnWidth;
 
         return opts;
+    }
+
+    async function exportAndVerify(component, exportOptions, expectedData) {
+        const wrapper = await getExportedData(component, exportOptions);
+        await wrapper.verifyStructure();
+        await wrapper.verifyDataFilesContent(expectedData);
     }
 });

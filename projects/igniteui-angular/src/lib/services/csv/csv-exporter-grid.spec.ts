@@ -9,11 +9,12 @@ import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
-import { IgxStringFilteringOperand } from '../../../public_api';
+import { IgxStringFilteringOperand, IgxTreeGridComponent, IgxNumberFilteringOperand } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-
+import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridModule } from '../../grids/tree-grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('CSV Grid Exporter', () => {
@@ -27,9 +28,10 @@ describe('CSV Grid Exporter', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                IgxTreeGridPrimaryForeignKeyComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
         })
         .compileComponents();
     }));
@@ -302,6 +304,88 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData('');
     });
 
+    describe('', () => {
+        let fix;
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('should export tree grid as displayed.', async () => {
+            const wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export sorted tree grid properly.', async () => {
+            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc});
+            options.ignoreSorting = true;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+
+            options.ignoreSorting = false;
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataSorted);
+
+            treeGrid.clearSort();
+            fix.detectChanges();
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export filtered tree grid properly.', async () => {
+            treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            options.ignoreFiltering = true;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+
+            options.ignoreFiltering = false;
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFiltered);
+
+            treeGrid.clearFilter();
+            fix.detectChanges();
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export filtered and sorted tree grid properly.', async () => {
+            treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+            fix.detectChanges();
+
+            const wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFilterSorted);
+        });
+
+        it('should fire \'onRowExport\' for each tree grid row.', async () => {
+            const rows = [];
+
+            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+                rows.push({ data: value.rowData, index: value.rowIndex });
+            });
+
+            await getExportedData(treeGrid, options);
+
+            expect(rows.length).toBe(8);
+            for (let i = 0; i < rows.length; i++) {
+                expect(rows[i].index).toBe(i);
+                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.employeeTreeDataDisplayOrder()[i]));
+            }
+        });
+
+    });
+
     function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
@@ -311,5 +395,10 @@ describe('CSV Grid Exporter', () => {
             exporter.export(grid, csvOptions);
         });
         return result;
+    }
+
+    async function exportAndVerify(component, csvOptions, expectedData, errorMessage = '') {
+        const wrapper = await getExportedData(component, csvOptions);
+        wrapper.verifyData(expectedData, errorMessage);
     }
 });
