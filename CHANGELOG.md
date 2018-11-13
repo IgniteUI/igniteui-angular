@@ -21,6 +21,7 @@ All notable changes for each version of this project will be documented in this 
     <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
     ```
 - `igx-drop-down`:
+    - Added a new property `maxHeight`, defining the max height of the drop down.
     - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
