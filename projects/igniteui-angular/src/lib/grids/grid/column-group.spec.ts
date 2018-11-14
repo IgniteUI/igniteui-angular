@@ -67,7 +67,8 @@ describe('IgxGrid - multi-column headers', () => {
         addressGroup.hidden = true;
         tick();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
+        expect(document.querySelectorAll('igx-grid-header').length).toEqual(4);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(6);
     }));
 
     it('column hiding - child level', fakeAsync(() => {
@@ -80,7 +81,7 @@ describe('IgxGrid - multi-column headers', () => {
         addressGroup.children.first.hidden = true;
         tick();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(5);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
         expect(addressGroup.children.first.hidden).toBe(true);
         expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
     }));
@@ -101,7 +102,7 @@ describe('IgxGrid - multi-column headers', () => {
         // Hide column in goup
         grid.getColumnByName('CompanyName').hidden = true;
         tick();
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(16);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(16);
         expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(9);
 
         grid.getColumnByName('Address').hidden = true;
@@ -2069,7 +2070,7 @@ function testColumnsVisibleIndexes(columns: IgxColumnComponent[]) {
 }
 
 function testGroupsAndColumns(groups: number, columns: number) {
-    expect(document.querySelectorAll('igx-grid-header').length).toEqual(groups);
+    expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(groups);
     expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(columns);
 }
 
