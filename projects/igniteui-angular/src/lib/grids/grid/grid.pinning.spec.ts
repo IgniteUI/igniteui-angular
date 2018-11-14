@@ -457,43 +457,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
     }));
 
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', async () => {
-        const fix = TestBed.createComponent(GridPinningComponent);
-        fix.detectChanges();
-
-        await wait();
-        const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pinned = true;
-        grid.getColumnByName('ContactName').pinned = true;
-        fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.triggerEventHandler('focus', {});
-        await wait();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', ctrlKey: true }));
-        await wait(30);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('030-0076545');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        cell = cells[cells.length - 1];
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', ctrlKey: true }));
-        await wait(30);
-        fix.detectChanges();
-
-        // It won't scroll left since the next selected cell will be in the pinned area
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    });
-
-    it('should allow hiding/showing pinned column.', fakeAsync(() => {
+     it('should allow hiding/showing pinned column.', fakeAsync(() => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;

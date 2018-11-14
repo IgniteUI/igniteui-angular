@@ -124,60 +124,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(7);
     });
 
-    it('Should handle keydown events on cells properly even when primaryKey is specified', (async () => {
-        const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
-        expect(grid.primaryKey).toBeTruthy();
-        expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-        const targetCell = grid.getCellByKey(2, 'Name');
-        const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
-        spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
-        expect(targetCell.focused).toEqual(false);
-        targetCellElement.dispatchEvent(new FocusEvent('focus'));
-        await wait(30);
-        spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
-        fix.detectChanges();
-        expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
-        expect(targetCell.focused).toEqual(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
-        expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
-        expect(targetCell.focused).toEqual(false);
-        expect(grid.selectedCells.length).toEqual(1);
-        expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
-    }));
-
-    it('Should properly move focus when loading new row chunk', (async() => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection3;
-        const lastRowIndex = grid.rowList.length - 2;
-        let targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
-        const initialValue = targetCell.value;
-        const targetCellElement: HTMLElement = targetCell.nativeElement;
-        spyOn(targetCell, 'onFocus').and.callThrough();
-        expect(targetCell.focused).toEqual(false);
-        targetCellElement.focus();
-        spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
-        fix.detectChanges();
-        targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
-        expect(targetCell.focused).toEqual(true);
-        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
-        await wait(200);
-        fix.detectChanges();
-        const newLastRowIndex = lastRowIndex + 1;
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').value === initialValue).toBeFalsy();
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').focused).toEqual(true);
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').selected).toEqual(true);
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').nativeElement.classList).toContain('igx-grid__td--selected');
-        expect(grid.getCellByColumn(lastRowIndex, 'Column1').focused).toEqual(false);
-        expect(grid.selectedCells.length).toEqual(1);
-    }));
+  
 
     it('Should persist through paging', (async () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
