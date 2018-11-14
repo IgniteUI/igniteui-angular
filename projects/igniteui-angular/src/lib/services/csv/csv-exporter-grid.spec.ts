@@ -10,11 +10,14 @@ import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
 import { IgxStringFilteringOperand, IgxTreeGridComponent, IgxNumberFilteringOperand } from '../../../public_api';
+import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridModule } from '../../grids/tree-grid';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule } from '../../grids/tree-grid';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('CSV Grid Exporter', () => {
@@ -160,7 +163,7 @@ describe('CSV Grid Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fix.detectChanges();
 
         const wrapper = await getExportedData(grid, options);
@@ -172,18 +175,18 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fix.detectChanges();
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedSimpleGridData);
 
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedDescSimpleGridData);
 
         grid.clearSort();
-        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
+        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData);

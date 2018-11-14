@@ -4,7 +4,6 @@
     EventEmitter,
     HostBinding,
     HostListener,
-    Inject,
     Input,
     NgModule,
     NgZone,

@@ -8,14 +8,16 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { IgxStringFilteringOperand, SortingDirection, IgxTreeGridComponent } from '../../../public_api';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule } from '../../grids/tree-grid';
+import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('Excel Exporter', () => {
@@ -197,7 +199,7 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             const wrapper = await getExportedData(grid, options);
@@ -213,20 +215,20 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             let wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
 
-            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
-            grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
+            grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             // wrapper = await getExportedData(grid, options);
@@ -369,7 +371,7 @@ describe('Excel Exporter', () => {
         const grid = fix.componentInstance.grid;
         grid.columns[1].header = 'My header';
         grid.columns[1].sortable = true;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
         const sortField = grid.sortingExpressions[0].fieldName;
         fix.detectChanges();
 
