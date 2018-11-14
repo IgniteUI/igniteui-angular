@@ -526,26 +526,47 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         return this._valid === IgxComboState.INVALID;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('class.igx-combo')
     public cssClass = 'igx-combo'; // Independant of display density, at the time being
 
+    /**
+     * @hidden
+     */
     @HostBinding(`attr.role`)
     public role = 'combobox';
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-expanded')
     public get ariaExpanded() {
         return !this.dropdown.collapsed;
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-haspopup')
     public get hasPopUp() {
         return 'listbox';
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-owns')
     public get ariaOwns() {
         return this.dropdown.id;
     }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.display')
+    public displayStyle = 'block';
     /**
      * Controls whether custom values can be added to the collection
      *
