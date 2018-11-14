@@ -1,0 +1,33 @@
+$_light-switch: (
+    name: 'igx-switch',
+
+    thumb-on-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    track-on-color: (
+        igx-color: ('secondary', 500),
+        rgba: .5
+    ),
+
+    thumb-off-color: #fafafa,
+
+    track-off-color: rgba(0, 0, 0, .5),
+
+    label-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    label-disabled-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    track-disabled-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    thumb-disabled-color: (
+        igx-color: ('grays', 400),
+        hexrgba: ()
+    )
+);

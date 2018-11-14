@@ -16,7 +16,8 @@ import {
     Optional,
     HostListener,
     Directive,
-    Inject
+    Inject,
+    HostBinding
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -205,6 +206,25 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.toggleDirective.id = value;
     }
 
+    @HostBinding('class.igx-drop-down')
+    cssClass = 'igx-drop-down';
+
+    /**
+     * Gets/Sets the drop down's container max height.
+     *
+     * ```typescript
+     * // get
+     * let maxHeight = this.dropdown.maxHeight;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [maxHeight]='200px'></igx-drop-down>
+     * ```
+     */
+    @Input()
+    public maxHeight = null;
+
     /**
      * Gets if the dropdown is collapsed
      *
@@ -354,14 +374,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    public get focusedItem() {
+    public get focusedItem(): IgxDropDownItemBase {
         return this._focusedItem;
     }
 
     /**
      * @hidden
      */
-    public set focusedItem(item) {
+    public set focusedItem(item: IgxDropDownItemBase) {
         this._focusedItem = item;
     }
 
@@ -472,10 +492,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
-    /**
-     * @hidden
-     */
-    public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
+    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
         if (parentRect.top > elementRect.top) {

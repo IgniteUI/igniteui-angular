@@ -56,7 +56,7 @@
 ///   @include igx-button($my-button-theme);
 @function igx-button-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $button-roundness: null,
 
@@ -91,46 +91,7 @@
     $disabled-color: null,
     $disabled-background: null
 ) {
-    $default-theme: (
-        name: 'igx-button',
-        button-roundness: 4px,
-
-        flat-text-color: igx-color($palette, 'secondary', 500),
-        flat-background: transparent,
-
-        flat-hover-background: rgba(igx-color($palette, 'secondary'), .05),
-        flat-hover-text-color: igx-color($palette, 'secondary', 500),
-
-        flat-focus-background: rgba(igx-color($palette, 'secondary', 400), .12),
-        flat-focus-text-color: igx-color($palette, 'secondary', 500),
-        raised-background: igx-color($palette, 'secondary', 500),
-        raised-text-color: igx-contrast-color($palette, 'secondary', 500),
-        raised-hover-background: igx-color($palette, 'secondary', 300),
-        raised-hover-text-color: igx-contrast-color($palette, 'secondary', 300),
-        raised-focus-background: igx-color($palette, 'secondary', 300),
-        raised-focus-text-color: igx-contrast-color($palette, 'secondary', 300),
-
-        fab-text-color: igx-contrast-color($palette, 'secondary', 500),
-        fab-background: igx-color($palette, 'secondary', 500),
-        fab-hover-text-color: igx-contrast-color($palette, 'secondary', 300),
-        fab-hover-background: igx-color($palette, 'secondary', 300),
-        fab-focus-background: igx-color($palette, 'secondary', 300),
-        fab-focus-text-color: igx-contrast-color($palette, 'secondary', 300),
-
-        icon-color: igx-color($palette, 'grays', 800),
-        icon-background: transparent,
-        icon-hover-background: igx-color($palette, 'grays', 100),
-        icon-hover-color: igx-color($palette, 'grays', 800),
-        icon-focus-background: igx-color($palette, 'grays', 400),
-        icon-focus-color: igx-color($palette, 'grays', 800),
-
-        disabled-color: igx-color($palette, 'grays', 400),
-        disabled-background: igx-color($palette, 'grays', 100)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-button'), $palette);
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -212,7 +173,7 @@
         $icon-hover-color: text-contrast($icon-hover-background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         button-roundness: $button-roundness,
 

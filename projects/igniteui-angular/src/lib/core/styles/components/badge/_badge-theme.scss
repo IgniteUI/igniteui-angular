@@ -32,7 +32,7 @@
 ///   @include igx-css-vars($my-badge-theme);
 @function igx-badge-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $icon-color: null,
     $text-color: null,
@@ -42,19 +42,10 @@
     $disable-shadow: true,
     $disable-border: true
 ) {
-    $default-theme: (
-        name: 'igx-badge',
-        icon-color: #fff,
-        text-color: #fff,
-        border-color: #fff,
-        background-color: igx-color($palette, 'primary', 500),
-        badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1)),
-        border-width: if($disable-border == true, 0, rem(1px)),
-    );
+    $badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+    $border-width: if($disable-border == true, 0, rem(1px));
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-badge'), $palette);
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
@@ -64,12 +55,14 @@
         $text-color: text-contrast($background-color);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        background-color: $background-color
+        background-color: $background-color,
+        badge-shadow: $badge-shadow,
+        border-width: $border-width
     ));
 }
 
