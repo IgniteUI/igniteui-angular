@@ -753,7 +753,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        fit('Should calculate default column width when a column has width in %', () => {
+        it('Should calculate default column width when a column has width in %', () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
             fix.detectChanges();
