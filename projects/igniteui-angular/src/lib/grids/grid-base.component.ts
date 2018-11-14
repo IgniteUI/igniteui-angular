@@ -2938,10 +2938,6 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell && editableCell.cellID.rowID === rowSelector) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
             this.gridAPI.update_row(value, this.id, rowSelector);
             this.cdr.markForCheck();
             this.refreshSearch();
