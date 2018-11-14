@@ -17,6 +17,8 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxGridComponent } from './grid';
+
 
 /**
  * @hidden
