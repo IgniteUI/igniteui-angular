@@ -169,6 +169,9 @@ When you focus a specific cell and press one of the following key combinations, 
 
 ### General
 
+- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+- `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
+
 ### Bug fixes
 
 - Fix sorting and groupby expression not syncing when there are already sorted columns. #2786

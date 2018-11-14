@@ -1,10 +1,10 @@
 import { IGroupByExpandState } from './groupby-expand-state.interface';
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
-import { ISortingStrategy, SortingStrategy} from './sorting-strategy';
+import { ISortingExpression } from './sorting-expression.interface';
+import { ISortingStrategy} from './sorting-strategy';
+import { IGroupingExpression } from './grouping-expression.interface';
 
 export interface IGroupingState {
-    expressions: ISortingExpression[];
+    expressions: IGroupingExpression[];
     expansion: IGroupByExpandState[];
     defaultExpanded: boolean;
-    strategy?: ISortingStrategy;
 }
