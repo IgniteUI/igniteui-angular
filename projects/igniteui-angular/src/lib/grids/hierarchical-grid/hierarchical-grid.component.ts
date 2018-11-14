@@ -120,10 +120,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
     public getContext(rowData): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this._childGridTemplates.get(rowData.rowID);
-            if(cachedData) {
+            if (cachedData) {
                 const view = cachedData.view;
-                const tmlpOutlet = cachedData.owner;
-                // check if view is currently attached somewhere elese
+                const tmlpOutlet = view.context.owner;
                 return {
                     $implicit: rowData,
                     view: view,

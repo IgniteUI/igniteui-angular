@@ -18,7 +18,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
   @Input() public igxTemplateOutlet !: TemplateRef<any>;
 
   @Output()
-  public onViewCreated = new EventEmitter<any>(); 
+  public onViewCreated = new EventEmitter<any>();
 
 
   constructor(public _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
@@ -28,14 +28,16 @@ export class IgxTemplateOutletDirective implements OnChanges {
     const view  = this.igxTemplateOutletContext['view'];
     if (view) {
         // using external cached view.
+        const owner = this.igxTemplateOutletContext['owner'];
         if (this.igxTemplateOutletContext['view'] !== this._viewRef) {
-            const owner = this.igxTemplateOutletContext['owner'];
-            owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
+            if (owner._viewContainerRef.indexOf(view) !== -1) {
+                owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
+            }
             this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
             this._viewRef = view;
             this._viewContainerRef.insert(view, 0);
-            this._updateExistingContext(this.igxTemplateOutletContext);
-        }        
+            view.context.owner = this;
+        }
         return;
     }
     const recreateView = this._shouldRecreateView(changes);
@@ -76,6 +78,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
       if (this.igxTemplateOutlet) {
         this._viewRef = this._viewContainerRef.createEmbeddedView(
               this.igxTemplateOutlet, this.igxTemplateOutletContext);
+            this._viewRef.context.owner = this;
             this.onViewCreated.emit({owner: this, view: this._viewRef, context: this.igxTemplateOutletContext })
             const tmplId = this.igxTemplateOutletContext['templateID'];
             if (tmplId) {
