@@ -1,7 +1,7 @@
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from './transaction';
 import { Injectable } from '@angular/core';
 import { IgxTransactionService } from './igx-transaction';
-import { DataUtil } from 'igniteui-angular';
+import { DataUtil } from '../../data-operations/data-util';
 
 /** @experimental @hidden */
 @Injectable()
@@ -39,11 +39,6 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
                 }
             });
         }
-    }
-
-    public commit(data: any[], childDataKey?: any, primaryKey?: any): void {
-        DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, true);
-        this.clear();
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
