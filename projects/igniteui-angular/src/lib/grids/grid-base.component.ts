@@ -2797,7 +2797,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
         //  Otherwise just exit - there is nothing to delete
         if (index !== -1 || hasRowInNonDeletedState) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
             // Always exit edit when row is deleted
             this.endEdit(true);
         } else {
