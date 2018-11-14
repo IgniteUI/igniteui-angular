@@ -169,5 +169,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
         this.hGrid.level = this.level;
         this.hGrid.reflow();
+        this.grid.hgridAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
     }
 }

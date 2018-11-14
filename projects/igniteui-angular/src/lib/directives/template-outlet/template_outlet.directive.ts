@@ -20,6 +20,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
   @Output()
   public onViewCreated = new EventEmitter<any>();
 
+  @Output()
+  public onViewMoved = new EventEmitter<any>();
+
 
   constructor(public _viewContainerRef: ViewContainerRef,  private _zone: NgZone,  public cdr: ChangeDetectorRef) {
   }
@@ -36,7 +39,8 @@ export class IgxTemplateOutletDirective implements OnChanges {
             this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
             this._viewRef = view;
             this._viewContainerRef.insert(view, 0);
-            view.context.owner = this;
+            // view.context.owner = this;
+            this.onViewMoved.emit({owner: this, view: this._viewRef, context: this.igxTemplateOutletContext});
         }
         return;
     }
@@ -78,8 +82,8 @@ export class IgxTemplateOutletDirective implements OnChanges {
       if (this.igxTemplateOutlet) {
         this._viewRef = this._viewContainerRef.createEmbeddedView(
               this.igxTemplateOutlet, this.igxTemplateOutletContext);
-            this._viewRef.context.owner = this;
-            this.onViewCreated.emit({owner: this, view: this._viewRef, context: this.igxTemplateOutletContext })
+            // this._viewRef.context.owner = this;
+            this.onViewCreated.emit({owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
             const tmplId = this.igxTemplateOutletContext['templateID'];
             if (tmplId) {
                 // if context contains a template id, check if we have a view for that template already stored in the cache

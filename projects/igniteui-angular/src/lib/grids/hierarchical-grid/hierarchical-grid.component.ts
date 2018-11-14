@@ -15,7 +15,9 @@ import {
     IterableDiffers,
     ViewContainerRef,
     Inject,
-    ComponentFactoryResolver
+    ComponentFactoryResolver,
+    AfterViewInit,
+    DoCheck
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -46,11 +48,12 @@ let NEXT_ID = 0;
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) } ]
 })
-export class IgxHierarchicalGridComponent extends IgxGridComponent {
+export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
     public level = 0;
-    private _childGridTemplates : Map<any, any> = new Map();
+    private _childGridTemplates: Map<any, any> = new Map();
+    private _scrollTop = 0;
 
     /**
      * @hidden
@@ -122,7 +125,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
             const cachedData = this._childGridTemplates.get(rowData.rowID);
             if (cachedData) {
                 const view = cachedData.view;
-                const tmlpOutlet = view.context.owner;
+                const tmlpOutlet = cachedData.owner;
                 return {
                     $implicit: rowData,
                     view: view,
@@ -163,6 +166,34 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent {
         if (this.isChildGridRecord(args.context.$implicit)) {
             const key = args.context.$implicit.rowID;
             this._childGridTemplates.set(key, args);
+        }
+    }
+
+    public viewMovedHandler(args) {
+        if (this.isChildGridRecord(args.context.$implicit)) {
+            // view was moved, update owner in cache
+            const key = args.context.$implicit.rowID;
+            const cachedData = this._childGridTemplates.get(key);
+            cachedData.owner = args.owner;
+
+            const childGrid = this.hgridAPI.getChildGrid(key);
+            childGrid.updateScrollPosition();
+        }
+    }
+
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
+    }
+
+    private hg_verticalScrollHandler(event) {
+        this._scrollTop = event.target.scrollTop;
+    }
+
+    public updateScrollPosition() {
+        const scr = this.verticalScrollContainer.getVerticalScroll();
+        if (scr) {
+            scr.scrollTop = this._scrollTop;
         }
     }
 
