@@ -563,11 +563,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     }
 
     /**
-     * @hidden
-     */
-    @HostBinding('style.display')
-    public displayStyle = 'block';
-    /**
      * Controls whether custom values can be added to the collection
      *
      * ```typescript
