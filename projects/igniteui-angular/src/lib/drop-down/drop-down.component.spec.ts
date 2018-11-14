@@ -35,7 +35,9 @@ describe('IgxDropDown ', () => {
                 IgxDropDownImageTestComponent,
                 IgxDropDownTabsTestComponent,
                 DropDownWithValuesComponent,
-                IgxDropDownSelectComponent
+                IgxDropDownSelectComponent,
+                DropDownWithMaxHeightComponent,
+                DropDownWithUnusedMaxHeightComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -73,7 +75,7 @@ describe('IgxDropDown ', () => {
             expect(currentItem.componentInstance.index).toEqual(0);
             expect(list.collapsed).toEqual(false);
 
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             expect(targetElement).toBeDefined();
 
             mockObj.code = 'arrowdown';
@@ -97,7 +99,7 @@ describe('IgxDropDown ', () => {
             button.click(mockObj);
             tick();
             fixture.detectChanges();
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED))[0];
 
             mockObj.code = 'arrowdown';
@@ -105,7 +107,7 @@ describe('IgxDropDown ', () => {
             targetElement.triggerEventHandler('keydown', mockObj);
             tick();
             fixture.detectChanges();
-            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0].parent;
+            targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
 
             mockObj.code = 'enter';
@@ -152,7 +154,7 @@ describe('IgxDropDown ', () => {
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem.componentInstance.index).toEqual(0);
 
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             mockObj.code = 'arrowdown';
             mockObj.key = 'arrowdown';
             targetElement.triggerEventHandler('keydown', mockObj);
@@ -209,7 +211,7 @@ describe('IgxDropDown ', () => {
             tick();
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             mockObj.code = 'ArrowDown';
             mockObj.key = 'ArrowDown';
             targetElement.triggerEventHandler('keydown', mockObj);
@@ -544,7 +546,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
-            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE)).parent;
+            targetElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROP_DOWN_BASE));
             targetElement.triggerEventHandler('keydown', mockObj);
             tick();
 
@@ -883,6 +885,32 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, jasmine.any(Object));
             expect(dropdown.selectedItem).toEqual(dropdownItem);
             expect(dropdown.collapsed).toEqual(true);
+        }));
+
+        it('Should properly set maxHeight option', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithMaxHeightComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
+            expect(ddList.style.maxHeight).toBe('100px');
+        }));
+
+        it('Should properly set maxHeight option (maxHeight value larger than needed)', fakeAsync(() => {
+            const fixture = TestBed.createComponent(DropDownWithUnusedMaxHeightComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+
+            fixture.detectChanges();
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
+            expect(ddList.style.maxHeight).toBe('700px');
         }));
     });
 
@@ -1674,3 +1702,23 @@ class DropDownWithValuesComponent {
         { name: 'Product 4', id: 3 },
     ];
 }
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [maxHeight]="'100px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
+
+@Component({
+    template: `
+    <igx-drop-down #dropdownElement [maxHeight]="'700px'">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>`
+})
+class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {}
