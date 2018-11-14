@@ -13,7 +13,7 @@ export class ExcelStrings {
     }
 
     public static getCore(): string {
-        return ExcelStrings.XML_STRING + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:creator>Dimitar Davidkov</dc:creator><cp:lastModifiedBy></cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">2015-06-05T18:17:20Z</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">2015-06-05T18:17:26Z</dcterms:modified></cp:coreProperties>';
+        return ExcelStrings.XML_STRING + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:creator></dc:creator><cp:lastModifiedBy></cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">2015-06-05T18:17:20Z</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">2015-06-05T18:17:26Z</dcterms:modified></cp:coreProperties>';
     }
 
     public static getTheme(): string {
@@ -46,9 +46,24 @@ export class ExcelStrings {
         return retVal;
     }
 
-    public static getSheetXML(dimension: string, freezePane: string, cols: string, sheetData: string, hasTable: boolean): string {
+    public static getSheetXML(dimension: string, freezePane: string, cols: string, sheetData: string, hasTable: boolean, hasGroupedRows = false, outlineLevel = 0): string {
         const tableParts = hasTable ? '<tableParts count="1"><tablePart r:id="rId1"/></tableParts>' : '';
-        return ExcelStrings.XML_STRING + '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"><dimension ref="' + dimension + '"/><sheetViews><sheetView tabSelected="1" workbookViewId="0">' + freezePane + '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/>' + cols + sheetData + '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>' + tableParts + '</worksheet>';
+        const sheetOutlineProp = hasGroupedRows ? '<sheetPr><outlinePr summaryBelow="0"/></sheetPr>' : '';
+        const sOutlineLevel = outlineLevel > 0 ? `outlineLevelRow="${outlineLevel}"` : '';
+        // return ExcelStrings.XML_STRING +
+        //     '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"><dimension ref="' + dimension + '"/><sheetViews><sheetView tabSelected="1" workbookViewId="0">' + freezePane + '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/>' + cols + sheetData + '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>' + tableParts + '</worksheet>';
+
+        return `${ExcelStrings.XML_STRING}
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">
+${sheetOutlineProp}
+<dimension ref="${dimension}"/>
+<sheetViews><sheetView tabSelected="1" workbookViewId="0">${freezePane}</sheetView></sheetViews>
+<sheetFormatPr defaultRowHeight="15" ${sOutlineLevel} x14ac:dyDescent="0.25"/>
+${cols}
+${sheetData}
+<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>
+${tableParts}</worksheet>`;
+
     }
 
     public static getSharedStringXML(count: number, uniqueCount: number, table: string): string {

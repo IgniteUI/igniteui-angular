@@ -9,6 +9,7 @@ import { IGroupingState } from './groupby-state.interface';
 import { Transaction, TransactionType, HierarchicalTransaction, IgxHierarchicalTransactionService, HierarchicalState } from '../services';
 import { mergeObjects, cloneValue } from '../core/utils';
 import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { TreeGridFilteringStrategy } from '../grids/tree-grid/tree-grid.filtering.pipe';
 
 /**
  * @hidden
@@ -51,7 +52,6 @@ export class DataUtil {
     public static hierarchicalSort(hierarchicalData: ITreeGridRecord[], state: ISortingState, parent: ITreeGridRecord): ITreeGridRecord[] {
         state.strategy = new TreeGridSortingStrategy();
         let res: ITreeGridRecord[] = [];
-
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
@@ -175,6 +175,12 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
+
+    public static hierarchicalFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
+        DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
+        return state.strategy.filter(data, state.expressionsTree);
+    }
+
     public static process<T>(data: T[], state: IDataState): T[] {
         if (!state) {
             return data;

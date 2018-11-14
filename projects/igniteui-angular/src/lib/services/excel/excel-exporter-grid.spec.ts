@@ -435,6 +435,18 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFilteredSorted);
         });
+
+        it('should export tree grid with only first level expanded.', async () => {
+            treeGrid.expansionDepth = 1;
+            fix.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataExpDepth(1));
+        });
+
+        it('should export tree grid with collapsed first level.', async () => {
+            treeGrid.collapseAll();
+            fix.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataExpDepth(0));
+        });
     });
 
     function getExportedData(grid, exportOptions: IgxExcelExporterOptions) {

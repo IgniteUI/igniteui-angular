@@ -75,7 +75,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort);
+        const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
         this._xlsx = new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
