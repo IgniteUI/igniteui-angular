@@ -206,7 +206,8 @@ export class DataUtil {
         data: any[],
         transactions: HierarchicalTransaction[],
         childDataKey: any,
-        primaryKey?: any): any[] {
+        primaryKey?: any,
+        deleteRows: boolean = false): any[] {
 
         for (let i = 0; i < transactions.length; i++) {
             const transaction = transactions[i];
@@ -219,7 +220,7 @@ export class DataUtil {
                 if (path.find(id => id === transaction.id)) {
                     path.splice(-1, 1);
                 }
-                const dataRow = this.getDataRowFromPath(data, primaryKey, childDataKey, path);
+                const dataRow = this.findDataRowFromPath(data, primaryKey, childDataKey, path);
                 switch (transaction.type) {
                     case TransactionType.ADD:
                         //  if there is no dataRow, but there is a path this is ADD row added to
@@ -235,9 +236,16 @@ export class DataUtil {
                         }
                         break;
                     case TransactionType.UPDATE:
-                        const index = dataRow[childDataKey].findIndex(r => r[primaryKey] === transaction.id);
-                        const dataItem = dataRow[childDataKey][index];
-                        dataRow[childDataKey][index] = mergeObjects(cloneValue(dataItem), transaction.newValue);
+                        const collectionToUpdate: any[] = this.findCollectionToManipulate(childDataKey, dataRow, data);
+                        const updateIndex: number = collectionToUpdate.findIndex(r => r[primaryKey] === transaction.id);
+                        collectionToUpdate[updateIndex] = mergeObjects(cloneValue(collectionToUpdate[updateIndex]), transaction.newValue);
+                        break;
+                    case TransactionType.DELETE:
+                        if (deleteRows) {
+                            const collectionToDelete: any[] = this.findCollectionToManipulate(childDataKey, dataRow, data);
+                            const deleteIndex: number = collectionToDelete.findIndex(r => r[primaryKey] === transaction.id);
+                            collectionToDelete.splice(deleteIndex, 1);
+                        }
                         break;
                 }
             } else {
@@ -248,7 +256,7 @@ export class DataUtil {
         return data;
     }
 
-    private static getDataRowFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
+    private static findDataRowFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
         let collection: any[] = data;
         let result: any;
         for (let i = 0; i < path.length; i++) {
@@ -258,6 +266,17 @@ export class DataUtil {
                 break;
             }
             collection = result[childDataKey];
+        }
+
+        return result;
+    }
+
+    private static findCollectionToManipulate(childDataKey: any, dataRow: any, data: any[]): any[] {
+        let result: any[];
+        if (dataRow && dataRow[childDataKey]) {
+            result = dataRow[childDataKey];
+        } else {
+            result = data;
         }
 
         return result;

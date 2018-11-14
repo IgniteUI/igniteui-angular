@@ -370,7 +370,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
                     const path: any[] = [];
                     path.push(parentRowID);
-                    path.push(...this.getPath(parentRowID));
+                    path.push(...this.generateRowPath(parentRowID));
                     path.reverse();
                     this.transactions.add({
                         id: rowId,
@@ -440,7 +440,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             if (this.transactions.enabled) {
-                const path = this.getPath(rowID);
+                const path = this.generateRowPath(rowID);
                 this.transactions.add({
                     id: rowID,
                     type: TransactionType.DELETE,
@@ -454,7 +454,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
-    private getPath(rowId: any): any[] {
+    /** @hidden */
+    public generateRowPath(rowId: any): any[] {
         const path: any[] = [];
         let record = this.records.get(rowId);
 

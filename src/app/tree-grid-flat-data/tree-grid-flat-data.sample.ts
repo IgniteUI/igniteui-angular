@@ -1,9 +1,9 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent } from 'igniteui-angular';
+import { IgxTreeGridComponent, IgxHierarchicalTransactionService, IgxGridTransaction } from 'igniteui-angular';
 
 @Component({
-    providers: [],
+    providers: [{provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService}],
     selector: 'app-tree-grid-flat-data-sample',
     styleUrls: ['tree-grid-flat-data.sample.css'],
     templateUrl: 'tree-grid-flat-data.sample.html'
@@ -89,5 +89,17 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public undo() {
+        this.grid1.transactions.undo();
+    }
+
+    public redo() {
+        this.grid1.transactions.redo();
+    }
+
+    public commit() {
+        this.grid1.transactions.commit(this.data);
     }
 }

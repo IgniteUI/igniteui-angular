@@ -269,31 +269,33 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
-        if (collection && aggregatedChanges.length > 0) {
-            const primaryKey = grid.primaryKey;
-            if (!primaryKey) {
-                return collection;
-            }
+        if (collection && collection.length > 0 && grid.transactions.enabled) {
+            const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
+            if (aggregatedChanges.length > 0) {
+                const primaryKey = grid.primaryKey;
+                if (!primaryKey) {
+                    return collection;
+                }
 
-            const foreignKey = grid.foreignKey;
-            const childDataKey = grid.childDataKey;
+                const foreignKey = grid.foreignKey;
+                const childDataKey = grid.childDataKey;
 
-            if (foreignKey) {
-                return DataUtil.mergeTransactions(
-                    cloneArray(collection),
-                    grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey);
-            } else if (childDataKey) {
-                const clone = cloneHierarchicalArray(collection, childDataKey);
-                return DataUtil.mergeHierarchicalTransactions(
-                    clone,
-                    aggregatedChanges,
-                    childDataKey,
-                    grid.primaryKey
-                );
-            }
-        }
+                if (foreignKey) {
+                    return DataUtil.mergeTransactions(
+                        cloneArray(collection),
+                        grid.transactions.getAggregatedChanges(true),
+                        grid.primaryKey);
+                    } else if (childDataKey) {
+                        const clone = cloneHierarchicalArray(collection, childDataKey);
+                        return DataUtil.mergeHierarchicalTransactions(
+                            clone,
+                            aggregatedChanges,
+                            childDataKey,
+                            grid.primaryKey
+                            );
+                        }
+                    }
+                }
 
         return collection;
     }
