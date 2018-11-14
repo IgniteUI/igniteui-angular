@@ -18,6 +18,7 @@ import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS, cloneArray } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridGroupByRowComponent } from '../grid';
+import { IgxLocalizationService } from '../../services/i18n/localization.service';
 
 /**
  * @hidden
@@ -92,7 +93,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
+    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService, public localService: IgxLocalizationService) {
         this.filteringService.subscribeToEvents();
     }
 

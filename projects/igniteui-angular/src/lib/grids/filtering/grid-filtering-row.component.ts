@@ -27,6 +27,7 @@ import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.compone
 import { IgxFilteringService } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
+import { IgxLocalizationService } from '../../services/i18n/localization.service';
 
 /**
  * @hidden
@@ -141,7 +142,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef, public localService: IgxLocalizationService) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
