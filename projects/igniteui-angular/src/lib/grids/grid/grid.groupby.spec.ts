@@ -17,6 +17,7 @@ import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
+import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();
@@ -36,7 +37,8 @@ describe('IgxGrid - GroupBy', () => {
                 DefaultGridComponent,
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
-                GroupByDataMoreColumnsComponent
+                GroupByDataMoreColumnsComponent,
+                MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -2732,6 +2734,42 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.groupingExpressions).toEqual([{ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
             strategy: DefaultSortingStrategy.instance()}]);
     });
+
+    it('should not be able to group by ColumnGroup', (async () => {
+        const fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        // Try to group by a column group
+        const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-title'))[0].nativeElement;
+        UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
+        await wait(50);
+        UIInteractions.simulatePointerEvent('pointermove', header, 100, 30);
+        await wait(50);
+        UIInteractions.simulatePointerEvent('pointerup', header, 100, 30);
+        await wait(50);
+        fix.detectChanges();
+
+        // verify there is no grouping
+        const groupRows = grid.groupsRowList.toArray();
+        expect(groupRows.length).toBe(0);
+        expect(grid.groupingExpressions).toEqual([]);
+    }));
+
+    it('should not show the group area if only columnGroups has property groupable set to true', (async () => {
+        const fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName('ID').groupable = false;
+        await wait(30);
+        fix.detectChanges();
+
+        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
+        // verify group area is not rendered
+        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
+    }));
 
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
