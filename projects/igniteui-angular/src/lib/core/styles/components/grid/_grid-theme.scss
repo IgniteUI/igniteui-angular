@@ -66,7 +66,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $header-background: null,
     $header-text-color: null,
@@ -137,85 +137,10 @@
     $filtering-row-text-color: null,
     $tree-filtered-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid',
+    $theme: apply-palette(map-get($schema, 'igx-grid'), $palette);
 
-        header-background: hexrgba(igx-color($palette, 'grays', 100)),
-        header-text-color: igx-color($palette, 'grays', 600),
-        header-border-width: 1px,
-        header-border-style: solid,
-        header-border-color: igx-color($palette, 'grays', 200),
-
-        content-background: #fff,
-        content-text-color: igx-color($palette, 'grays', 800),
-
-        ghost-header-text-color: igx-color($palette, 'grays', 600),
-        ghost-header-icon-color: igx-color($palette, 'grays'),
-        ghost-header-background: #fff,
-
-        row-odd-background: #fff,
-        row-even-background: #fff,
-        row-odd-text-color: inherit,
-        row-even-text-color: inherit,
-        row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
-        row-selected-text-color: igx-contrast-color($palette, 'grays', 800),
-        row-hover-background: hexrgba(igx-color($palette, 'grays', 200)),
-        row-hover-text-color: igx-contrast-color($palette, 'grays', 200),
-        row-border-color: igx-color($palette, 'grays', 300),
-
-        pinned-border-width: 2px,
-        pinned-border-style: solid,
-        pinned-border-color: igx-color($palette, 'grays', 400),
-
-        cell-selected-background: igx-color($palette, 'primary'),
-        cell-selected-text-color: igx-contrast-color($palette, 'primary'),
-        cell-editing-background: #fff,
-
-        edit-mode-color: igx-color($palette, 'secondary'),
-        edited-row-indicator: igx-color($palette, 'grays', 400),
-        cell-edited-value-color: igx-color($palette, 'grays', 600),
-
-        resize-line-color: igx-color($palette, 'secondary'),
-
-        drop-indicator-color: igx-color($palette, 'secondary'),
-
-        grouparea-background: hexrgba(igx-color($palette, 'grays', 100)),
-
-        group-label-column-name-text: igx-color($palette, 'primary', 500),
-        group-label-icon: igx-color($palette, 'primary', 500),
-        group-label-text: igx-color($palette, 'grays', 800),
-        expand-all-icon-color: igx-color($palette, 'grays', 600),
-        expand-all-icon-hover-color: igx-color($palette, 'grays', 800),
-
-        expand-icon-color: igx-color($palette, 'grays', 600),
-        expand-icon-hover-color: igx-color($palette, 'primary'),
-        active-expand-icon-color: igx-color($palette, 'grays', 500),
-        active-expand-icon-hover-color: igx-color($palette, 'primary'),
-
-        group-count-background: igx-color($palette, 'grays', 200),
-        group-count-text-color: igx-color($palette, 'grays', 600),
-
-        drop-area-text-color: igx-color($palette, 'grays', 600),
-        drop-area-icon-color: igx-color($palette, 'grays'),
-        drop-area-background: igx-color($palette, grays, 100),
-        drop-area-on-drop-background: igx-color($palette, grays, 200),
-
-        group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
-        group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
-
-        filtering-header-background: #fff,
-        filtering-header-text-color: igx-color($palette, 'grays', 800),
-        filtering-row-background: #fff,
-        filtering-row-text-color: igx-color($palette, 'grays', 800),
-        tree-filtered-text-color: igx-color($palette, grays, 500)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($default-theme, 'row-selected-background')), .5);
-    $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($default-theme, 'cell-selected-background')), .5);
+    $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
+    $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -353,7 +278,7 @@
         $filtering-row-text-color: text-contrast(hexrgba($filtering-row-background));
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         header-background: $header-background,
@@ -387,6 +312,7 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
+        edit-mode-color: $edit-mode-color,
         edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
@@ -412,6 +338,7 @@
         group-count-text-color: $group-count-text-color,
 
         group-row-background: $group-row-background,
+        group-row-selected-background: $group-row-selected-background,
 
         drop-area-text-color: $drop-area-text-color,
         drop-area-icon-color: $drop-area-icon-color,
