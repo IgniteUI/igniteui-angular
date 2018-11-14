@@ -2800,9 +2800,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
             // Always exit edit when row is deleted
             this.endEdit(true);
-            if (editableCell && editableCell.cellID.rowID === rowId) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
         } else {
             return;
         }
