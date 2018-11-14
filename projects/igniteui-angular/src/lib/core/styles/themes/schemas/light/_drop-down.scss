@@ -1,0 +1,58 @@
+$_light-drop-down: (
+    name: 'igx-drop-down',
+
+    background-color: #fff,
+
+    header-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    item-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    hover-item-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    hover-item-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    focused-item-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    focused-item-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    selected-item-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    selected-item-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    selected-hover-item-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+    selected-hover-item-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    selected-focus-item-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+    selected-focus-item-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    disabled-item-background: transparent,
+    disabled-item-text-color: (
+        igx-color: ('grays', 500)
+    )
+);

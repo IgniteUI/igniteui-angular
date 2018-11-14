@@ -23,24 +23,15 @@
 ///   @include igx-grid-paginator($my-grid-paginator-theme);
 @function igx-grid-paginator-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $text-color: null,
     $background-color: null,
     $border-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid-paginator',
-        text-color: currentColor,
-        background-color: hexrgba(igx-color($palette, 'grays', 100)),
-        border-color: igx-color($palette, 'grays', 400)
-    );
+    $theme: apply-palette(map-get($schema, 'igx-grid-paginator'), $palette);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         text-color: $text-color,
         background-color: $background-color,
