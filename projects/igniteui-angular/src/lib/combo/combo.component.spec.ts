@@ -1581,13 +1581,10 @@ describe('igxCombo', () => {
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
-            const dropDownWrapper = comboWrapper.children[1];
-            expect(dropDownWrapper.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-            expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
-            expect(dropDownWrapper.childElementCount).toEqual(1);
-
-            const dropDownElement = dropDownWrapper.children[0];
+            const dropDownElement = comboWrapper.children[1];
+            expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
+            expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
