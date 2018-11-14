@@ -461,7 +461,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.grid.rowEditable) {
             const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
             if (rowCurrentState) {
-                return rowCurrentState && rowCurrentState[this.column.field];
+                return rowCurrentState[this.column.field] !== undefined && rowCurrentState[this.column.field] !== null;
             }
         } else {
             const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
