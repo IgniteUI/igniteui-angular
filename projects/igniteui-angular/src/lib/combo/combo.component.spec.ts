@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -14,6 +13,7 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -37,7 +37,6 @@ const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
-const CSS_CLASS_INPUTGROUP_BUNDLESUFFIX = 'igx-input-group__bundle-suffix';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
@@ -1584,13 +1583,10 @@ describe('igxCombo', () => {
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
-            const dropDownWrapper = comboElement.children[1];
-            expect(dropDownWrapper.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-            expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
-            expect(dropDownWrapper.childElementCount).toEqual(1);
-
-            const dropDownElement = dropDownWrapper.children[0];
+            const dropDownElement = comboElement.children[1];
+            expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
+            expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
@@ -2201,7 +2197,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
@@ -2222,7 +2219,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             combo.groupKey = '';
 
