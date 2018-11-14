@@ -29,8 +29,7 @@ export class HierarchicalGridSampleComponent {
         let children;
         for (let i = 0; i < count; i++) {
            if (level > 0 ) {
-               level--;
-               children = this.generateData(count, level);
+               children = this.generateData(count / 2 , currLevel - 1);
            }
            prods.push({
             ID: i, ProductName: 'Child Levels: ' + currLevel +  ', A' + i, childData: children });

@@ -178,6 +178,15 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 
             const childGrid = this.hgridAPI.getChildGrid(key);
             childGrid.updateScrollPosition();
+            let childGrids = childGrid.hgridAPI.getChildGrids();
+            while (childGrids.length > 0) {
+                let children = [];
+                childGrids.forEach((grid) => {
+                    children = children.concat(grid.hgridAPI.getChildGrids());
+                    grid.updateScrollPosition();
+                 });
+                 childGrids = children;
+            }
         }
     }
 
