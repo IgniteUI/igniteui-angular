@@ -1195,9 +1195,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             this._bScrollInternal = false;
         }
 
-        let scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
+        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
 
-        scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         requestAnimationFrame(() => {
             this.recalcUpdateSizes();
