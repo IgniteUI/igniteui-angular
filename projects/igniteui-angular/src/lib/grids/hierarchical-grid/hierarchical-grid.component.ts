@@ -129,7 +129,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 const tmlpOutlet = cachedData.owner;
                 return {
                     $implicit: rowData,
-                    view: view,
+                    moveView: view,
                     owner: tmlpOutlet
                 };
             }
