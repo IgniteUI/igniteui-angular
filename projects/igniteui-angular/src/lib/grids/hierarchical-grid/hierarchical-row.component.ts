@@ -1,7 +1,8 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    HostBinding
+    HostBinding,
+    forwardRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
@@ -10,7 +11,8 @@ import { IgxRowComponent } from '../grid';
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
-    templateUrl: './hierarchical-row.component.html'
+    templateUrl: './hierarchical-row.component.html',
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) } ]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
 

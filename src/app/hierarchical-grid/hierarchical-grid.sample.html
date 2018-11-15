@@ -1,5 +1,9 @@
-<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'700px'">
-    <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='true'>
+<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'700px'">
+        <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
+        <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
+    <igx-layout [key]="'childData'" [autoGenerate]="false" [rowSelectable]='true'>
+        <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
+        <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
         <igx-layout [key]="'childData'" [autoGenerate]="true">
                 <igx-layout [key]="'childData'" [autoGenerate]="true" >
                 </igx-layout>

@@ -82,6 +82,8 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
             this.initialChanges = changes;
         }
     }
+
+    reflow() {}
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,

@@ -54,6 +54,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public level = 0;
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
+    private _scrollLeft = 0;
 
     /**
      * @hidden
@@ -193,16 +194,24 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public ngAfterViewInit() {
         super.ngAfterViewInit();
         this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
+        this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
     }
 
     private hg_verticalScrollHandler(event) {
         this._scrollTop = event.target.scrollTop;
     }
+    private hg_horizontalScrollHandler(event) {
+        this._scrollLeft = event.target.scrollLeft;
+    }
 
     public updateScrollPosition() {
-        const scr = this.verticalScrollContainer.getVerticalScroll();
-        if (scr) {
-            scr.scrollTop = this._scrollTop;
+        const vScr = this.verticalScrollContainer.getVerticalScroll();
+        const hScr = this.parentVirtDir.getHorizontalScroll();
+        if (vScr) {
+            vScr.scrollTop = this._scrollTop;
+        }
+        if (hScr) {
+            hScr.scrollLeft = this._scrollLeft;
         }
     }
 

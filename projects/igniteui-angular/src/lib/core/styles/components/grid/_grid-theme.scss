@@ -1367,6 +1367,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background: inherit;
+        z-index: 1;
         cursor: pointer;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
         padding-right: $grouping-padding-right;
