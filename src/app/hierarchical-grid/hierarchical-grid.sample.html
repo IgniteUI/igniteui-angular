@@ -1,12 +1,14 @@
 <igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'700px'">
         <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
         <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
-    <igx-layout [key]="'childData'" [autoGenerate]="false" [rowSelectable]='true'>
+    <igx-layout [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1>
         <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
         <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
-        <igx-layout [key]="'childData'" [autoGenerate]="true">
-                <igx-layout [key]="'childData'" [autoGenerate]="true" >
+        <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
+                <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
                 </igx-layout>
         </igx-layout>
     </igx-layout>
 </igx-hierarchical-grid>
+<button (click)='setterChange()'>Toggle changes via setter for 1st layout</button>
+<button (click)='setterBindingChange()'>Toggle changes via binding</button>

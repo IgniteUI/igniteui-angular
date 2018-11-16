@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { IgxChildLayoutComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
@@ -7,6 +8,10 @@ import { Component } from "@angular/core";
 })
 export class HierarchicalGridSampleComponent {
     localData = [];
+    isRowSelectable = false;
+
+    @ViewChild('layout1')
+    layout1: IgxChildLayoutComponent;
 
     constructor() {
         // this.localData.push({ ID: -1, Name: ''});
@@ -35,5 +40,14 @@ export class HierarchicalGridSampleComponent {
             ID: i, ProductName: 'Child Levels: ' + currLevel +  ', A' + i, childData: children });
         }
         return prods;
+    }
+
+    setterChange() {
+       this.layout1.rowSelectable = !this.layout1.rowSelectable;
+       // this.layout1.height = '200px';
+    }
+
+    setterBindingChange() {
+        this.isRowSelectable = !this.isRowSelectable;
     }
 }

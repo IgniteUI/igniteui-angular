@@ -27,7 +27,9 @@ import {
     ViewChildren,
     AfterViewChecked,
     ViewContainerRef,
-    InjectionToken
+    InjectionToken,
+    SimpleChanges,
+    SimpleChange
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first } from 'rxjs/operators';
@@ -188,6 +190,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
 
+    @WatchChanges()
     @Input()
     public get filteringLogic() {
         return this._filteringExpressionsTree.operator;
@@ -212,6 +215,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     get filteringExpressionsTree() {
         return this._filteringExpressionsTree;
@@ -463,6 +467,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     get rowSelectable(): boolean {
         return this._rowSelection;
@@ -494,6 +499,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
  * ```
  * @memberof IgxGridBaseComponent
  */
+    @WatchChanges()
     @Input()
     get rowEditable(): boolean {
         return this._rowEditable;
@@ -517,6 +523,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @HostBinding('style.height')
     @Input()
     public get height() {
@@ -547,6 +554,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @HostBinding('style.width')
     @Input()
     public get width() {
@@ -610,6 +618,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get rowHeight() {
         return this._rowHeight ? this._rowHeight : this.defaultRowHeight;
@@ -633,6 +642,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get columnWidth(): string {
         return this._columnWidth;
@@ -649,6 +659,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public primaryKey;
 
@@ -689,6 +700,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     get columnPinning() {
         return this._columnPinning;
@@ -1386,6 +1398,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     get sortingExpressions() {
         return this._sortingExpressions;
@@ -1479,6 +1492,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * const hiddenColText = this.grid.hiddenColumnsText;
      * ``
      */
+    @WatchChanges()
     @Input()
     get hiddenColumnsText() {
         return this._hiddenColumnsText;
@@ -1505,6 +1519,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     get pinnedColumnsText() {
         return this._pinnedColumnsText;
@@ -1573,6 +1588,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get showToolbar(): boolean {
         return this._showToolbar;
@@ -1602,6 +1618,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get toolbarTitle(): string {
         return this._toolbarTitle;
@@ -1631,6 +1648,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get exportExcel(): boolean {
         return this.getExportExcel();
@@ -1660,6 +1678,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get exportCsv(): boolean {
         return this.getExportCsv();
@@ -1689,6 +1708,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get exportText(): string {
         return this._exportText;
@@ -1718,6 +1738,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get exportExcelText(): string {
         return this._exportExcelText;
@@ -1747,6 +1768,7 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     public get exportCsvText(): string {
         return this._exportCsvText;
@@ -4372,4 +4394,34 @@ export abstract class IgxGridBaseComponent implements OnInit, OnDestroy, AfterCo
     protected getExportCsv(): boolean {
         return this._exportCsv;
     }
+}
+
+/**
+* @hidden
+*/
+export function WatchChanges(): PropertyDecorator {
+    return (target: any, key: string | symbol, propDesc?: PropertyDescriptor) => {
+        const privateKey = '_' + key.toString();
+        propDesc = propDesc || {
+            configurable: true,
+            enumerable: true,
+        };
+        propDesc.get = propDesc.get || (function (this: any) { return this[privateKey]; });
+        const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
+
+        propDesc.set = function (this: any, val: any) {
+            const oldValue = this[key];
+            if (val !== oldValue) {
+                originalSetter.call(this, val);
+                if (this.ngOnChanges) {
+                    // in case wacthed prop changes trigger ngOnChanges manually
+                    const changes: SimpleChanges = {
+                        [key]: new SimpleChange(oldValue, val, false)
+                    };
+                    this.ngOnChanges(changes);
+               }
+            }
+        };
+        return propDesc;
+    };
 }
