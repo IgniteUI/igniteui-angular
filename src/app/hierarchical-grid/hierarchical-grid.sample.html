@@ -1,10 +1,18 @@
 <igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'700px'">
-        <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
-        <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
+        <igx-column-group header="General Information">
+            <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
+            <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
+        </igx-column-group>
     <igx-layout [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1>
-        <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
-        <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
-        <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
+        <igx-column-group header="General Information2">
+            <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
+            <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
+        </igx-column-group>
+        <igx-layout [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
+                <igx-column-group header="General Information3">
+                <igx-column [field]='"ID"' [width]='"500px"'></igx-column>
+                <igx-column [field]='"ProductName"' [width]='"500px"'></igx-column>
+            </igx-column-group>
                 <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
                 </igx-layout>
         </igx-layout>

@@ -40,7 +40,10 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
     private isInit = false;
     public initialChanges;
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
-    childColumns = new QueryList<IgxColumnComponent>();
+    public childColumns = new QueryList<IgxColumnComponent>();
+
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
+    public allColumns = new QueryList<IgxColumnComponent>();
 
     @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
     children = new QueryList<IgxChildLayoutComponent>();
@@ -69,7 +72,14 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
         this.children.forEach(child => {
             child.parent = this;
         });
-
+        const nestedColumns = this.children.map((layout) => layout.allColumns.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        const topCols = this.allColumns.filter((item) => {
+            return colsArray.indexOf(item) === -1;
+        });
+        this.childColumns.reset(topCols);
+        console.log('reset layout:');
+        console.log(topCols);
     }
     ngOnInit() {
     }

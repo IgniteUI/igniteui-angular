@@ -17,7 +17,8 @@ import {
     Inject,
     ComponentFactoryResolver,
     AfterViewInit,
-    DoCheck
+    DoCheck,
+    AfterContentInit
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -33,7 +34,7 @@ import {
     IgxGridPreGroupingPipe,
     IgxGridSortingPipe
 } from '.././grid/grid.pipes';
-import { IgxColumnComponent } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTransactionService, TransactionService } from '../../services';
 import { DOCUMENT } from '@angular/common';
@@ -48,7 +49,7 @@ let NEXT_ID = 0;
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) } ]
 })
-export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit {
+export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
     public level = 0;
@@ -59,7 +60,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     /**
      * @hidden
      */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
+    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChild('hierarchical_record_template', { read: TemplateRef })
@@ -89,6 +90,12 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
      */
     @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
     public childLayoutList: QueryList<IgxChildLayoutComponent>;
+
+    /**
+     * @hidden
+     */
+    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: true })
+    public allLayoutList: QueryList<IgxChildLayoutComponent>;
 
     public isChildGridRecord(record: any): boolean {
         return record.childGridData;
@@ -197,6 +204,19 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
     }
 
+    public ngAfterContentInit() {
+        const nestedColumns = this.allLayoutList.map((layout) => layout.allColumns.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        if (colsArray.length > 0) {
+            const topCols = this.columnList.filter((item) => {
+                return colsArray.indexOf(item) === -1;
+            });
+            console.log('reset hg:');
+            console.log(topCols);
+            this.columnList.reset(topCols);
+        }
+        super.ngAfterContentInit();
+    }
     private hg_verticalScrollHandler(event) {
         this._scrollTop = event.target.scrollTop;
     }
