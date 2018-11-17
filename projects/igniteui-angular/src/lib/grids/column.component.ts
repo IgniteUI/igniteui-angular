@@ -306,6 +306,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
+        /**
+     *@hidden
+     */
+    @Input()
+    public headerGroupClasses = '';
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,

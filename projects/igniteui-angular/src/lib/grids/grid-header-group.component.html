@@ -14,9 +14,9 @@
     <igx-grid-header [gridID]="column.gridID" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell [attr.draggable]="false" *ngIf="grid.allowFiltering" [column]="column"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="colReszingService.resizeCursor" #resizeArea
-            (mouseover)="onResizeAreaMouseOver()" (mousedown)="onResizeAreaMouseDown($event)" (dblclick)="colReszingService.autosizeColumnOnDblClick()"
+            (mouseover)="onResizeAreaMouseOver()" (mousedown)="onResizeAreaMouseDown($event)" (dblclick)="autosizeColumnOnDblClick($event)"
             class="igx-grid__th-resize-handle">
-        <div *ngIf="colReszingService.showResizer && colReszingService.column === column" igxResizer
+        <div *ngIf="colReszingService.showResizer" igxResizer
             class="igx-grid__th-resize-line"
             [style.height.px]="colReszingService.resizerHeight"
             [restrictHResizeMax]="colReszingService.restrictResizeMax"

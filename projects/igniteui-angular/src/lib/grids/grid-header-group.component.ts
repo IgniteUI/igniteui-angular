@@ -1,5 +1,4 @@
 import {
-    ChangeDetectorRef,
     Component,
     HostBinding,
     Input,
@@ -63,13 +62,15 @@ export class IgxGridHeaderGroupComponent {
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = [
-            'igx-grid__thead-item'
+            'igx-grid__thead-item',
+            this.column.headerGroupClasses
         ];
 
         const classList = {
             'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__drag-col-header': this.isHeaderDragged
+            'igx-grid__drag-col-header': this.isHeaderDragged,
+            'igx-grid__th--filtering': this.filteringService.filteredColumn === this.column
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -125,13 +126,13 @@ export class IgxGridHeaderGroupComponent {
 
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
-            this.colReszingService.column = this.column;
             this.colReszingService.resizeCursor = 'col-resize';
         }
     }
 
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
+            this.colReszingService.column = this.column;
             this.colReszingService.showResizer = true;
             this.colReszingService.isColumnResizing = true;
             this.colReszingService.resizerHeight = this.column.grid.calcResizerHeight;
@@ -139,5 +140,12 @@ export class IgxGridHeaderGroupComponent {
         } else {
             this.colReszingService.resizeCursor = null;
         }
+    }
+
+    public autosizeColumnOnDblClick(event) {
+        if (event.button === 0 && this.column.resizable) {
+            this.colReszingService.column = this.column;
+            this.colReszingService.autosizeColumnOnDblClick();
+         }
     }
 }

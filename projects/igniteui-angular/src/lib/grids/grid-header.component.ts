@@ -47,8 +47,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
             'asc': this.ascending,
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
-            'igx-grid__th--sorted': this.sorted,
-            'igx-grid__th--filtering': this.filteringService.filteredColumn === this.column
+            'igx-grid__th--sorted': this.sorted
         };
 
         Object.entries(classList).forEach(([klass, value]) => {

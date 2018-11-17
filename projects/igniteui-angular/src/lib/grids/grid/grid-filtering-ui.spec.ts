@@ -21,6 +21,7 @@ import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -2320,13 +2321,13 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(colIndicator.length).toEqual(0);
 
         // Make 'ProductName' column smaller
-        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
-        const headerResArea = headers[1].nativeElement.children[2];
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
         tick();
         fix.detectChanges();
 
-        const resizer = headers[1].nativeElement.children[2].children[0];
+        const resizer = headers[1].children[2].children[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
         tick();
@@ -2365,8 +2366,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         stringCellChip.click();
         fix.detectChanges();
 
-        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
-        const headerResArea = headers[1].nativeElement.children[2];
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[1].children[2].nativeElement;
         let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
         expect(filteringRow).toBeTruthy();
@@ -2376,7 +2377,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         tick();
         fix.detectChanges();
 
-        const resizer = headers[1].nativeElement.children[2].children[0];
+        const resizer = headers[1].children[2].children[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
         tick();
@@ -2425,13 +2426,13 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('2');
 
         // Make 'Downloads' column bigger
-        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
-        const headerResArea = headers[2].nativeElement.children[2];
+        const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+        const headerResArea = headers[2].children[2].nativeElement;
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
         tick();
         fix.detectChanges();
 
-        const resizer = headers[2].nativeElement.children[2].children[0];
+        const resizer = headers[2].children[2].children[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
         tick();
