@@ -5,7 +5,9 @@ import {
     ViewChild,
     QueryList,
     ViewChildren,
-    forwardRef
+    forwardRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -16,11 +18,11 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { isIE } from '../core/utils';
 
-
 /**
  * @hidden
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html'
@@ -120,7 +122,14 @@ export class IgxGridHeaderGroupComponent {
 
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+    public ngDoCheck() {
+        if (this.column.columnGroup) {
+            this.cdr.markForCheck();
+        }
+    }
+
+    constructor(private cdr: ChangeDetectorRef,
+                public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
                 public colReszingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 
