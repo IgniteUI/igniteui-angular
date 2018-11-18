@@ -452,7 +452,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(grid.columns[1].width).toEqual('100px');
         expect(grid.columns[2].width).toEqual('100px');
 
-        const resizeArea = headers[1].children[1].nativeElement
+        const resizeArea = headers[1].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('dblclick', resizeArea, 198, 5);
         tick();
         fixture.detectChanges();

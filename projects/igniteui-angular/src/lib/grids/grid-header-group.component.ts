@@ -7,7 +7,8 @@ import {
     ViewChildren,
     forwardRef,
     ChangeDetectionStrategy,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -16,7 +17,6 @@ import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { isIE } from '../core/utils';
 
 /**
  * @hidden
@@ -27,7 +27,7 @@ import { isIE } from '../core/utils';
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html'
 })
-export class IgxGridHeaderGroupComponent {
+export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @Input()
     public column: IgxColumnComponent;
@@ -47,18 +47,7 @@ export class IgxGridHeaderGroupComponent {
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
-        const colWidth = this.column.width;
-        const isNotPxInIE = isIE() && colWidth && typeof colWidth === 'string' && colWidth.indexOf('px') === -1;
-
-        // a hack for fixing issue #2917, to be revised if ussue #1951 is ever fixed
-        if (isNotPxInIE && this.grid.pinnedColumns.length > 0) {
-            const firstContentCell = this.column.cells[0];
-            if (firstContentCell) {
-                return firstContentCell.nativeElement.getBoundingClientRect().width + 'px';
-            }
-        }
-
-        return colWidth;
+        return this.column.width;
     }
 
     @HostBinding('class')
@@ -72,7 +61,7 @@ export class IgxGridHeaderGroupComponent {
             'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
             'igx-grid__drag-col-header': this.isHeaderDragged,
-            'igx-grid__th--filtering': this.filteringService.filteredColumn === this.column
+            'igx-grid__th--filtering': this.isFiltered
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -95,20 +84,25 @@ export class IgxGridHeaderGroupComponent {
         return this.gridAPI.get(this.gridID);
     }
 
-    get isLastPinned() {
-        const pinnedCols = this.grid.pinnedColumns;
-        if (pinnedCols.length === 0) {
-            return false;
-        } else {
-            return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
-        }
+    get isFiltered(): boolean {
+        return this.filteringService.filteredColumn === this.column;
     }
 
-    get isPinned() {
+    get isLastPinned(): boolean {
+        const pinnedCols = this.grid.pinnedColumns;
+
+        if (pinnedCols.length === 0) {
+            return false;
+        }
+
+        return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
+    }
+
+    get isPinned(): boolean {
         return this.column.pinned;
     }
 
-    get isHeaderDragged() {
+    get isHeaderDragged(): boolean {
         return this.grid.draggedColumn ===  this.column;
     }
 
@@ -119,7 +113,6 @@ export class IgxGridHeaderGroupComponent {
                 return pinnedCols.length > 0 && pinnedCols.indexOf(child) === pinnedCols.length - 1;
             });
         }
-
     }
 
     public ngDoCheck() {
