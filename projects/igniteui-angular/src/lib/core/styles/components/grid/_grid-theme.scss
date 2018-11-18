@@ -1172,12 +1172,12 @@
 
     %grid__drag-ghost-image {
         position: absolute;
-        // display: flex;
+        display: flex;
         align-items: center;
         background-color: --var($theme, 'ghost-header-background');
         color: --var($theme, 'ghost-header-text-color');
-        // height: map-get($grid-header-height, 'comfortable');
-        // min-height: map-get($grid-header-height, 'comfortable');
+        height: map-get($grid-header-height, 'comfortable');
+        min-height: map-get($grid-header-height, 'comfortable');
         top: -99999px;
         left: -99999px;
         border: none;
@@ -1211,14 +1211,13 @@
     %grid__drag-ghost-image-icon {
         color: --var($theme, 'ghost-header-icon-color');
         margin-right: rem(12px);
-        margin-bottom: rem(12px);
     }
 
     %grid__drag-ghost-image-icon-group {
         color: --var($theme, 'ghost-header-icon-color');
         padding: --var($grid-header-padding, 'comfortable');
         padding-right: 0;
-        // margin-right: rem(8);
+        margin-right: rem(8);
     }
 
     %igx-grid__drag-col-header {

@@ -323,7 +323,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     protected createDragGhost(event) {
-        super.createDragGhost(event);
+        const index = this.column.grid.hasMovableColumns ? 1 : 0;
+
+        super.createDragGhost(event, this.element.nativeElement.children[index]);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -334,8 +336,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             pageY = event.touches[0].pageY;
         }
 
+        this._dragGhost.style.height = null;
         this._dragGhost.style.minWidth = null;
         this._dragGhost.style.flexBasis = null;
+        this._dragGhost.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -344,21 +348,18 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         icon.classList.add('material-icons');
         this.cms.icon = icon;
 
-        const removeChildIndex = this.column.grid.hasMovableColumns ? 2 : 1;
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-            this._dragGhost.children[removeChildIndex].remove();
-            this._dragGhost.children[removeChildIndex - 1].insertBefore(icon, this._dragGhost.children[removeChildIndex - 1].children[0]);
+            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
-            this._dragGhost.children[removeChildIndex].remove();
-            this._dragGhost.insertBefore(icon, this._dragGhost.children[removeChildIndex - 1]);
-            this._dragGhost.style.display = 'flex';
+            this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
+            this._dragGhost.children[0].style.paddingLeft = '0px';
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
