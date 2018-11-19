@@ -36,6 +36,7 @@ The following inputs are available in the **igx-drop-down** component:
 | :--- | :--- | :--- |
 | `width` | string | Sets the tab width of the control. |
 | `height` | string | Sets the tab height of the control. |
+| `maxHeight` | string | defines drop down maximum height |
 | `allowItemsFocus` | boolean | Allows items to take focus. |
 | `id` | string | Sets the drop down's id. |
 
