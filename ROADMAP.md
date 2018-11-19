@@ -7,13 +7,11 @@
 ## Milestone 5 (14.12.2018)
 
 1. TreeGrid summaries
-2. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
-3. Grid GroupBy summaries
-4. Multi-cell selection
-5. Auto-complete (inline editable)
-6. Inline date and time pickers (with drop down/toggle)
-7. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
-8.Toolbar Templatable and NavBar Templatable 
+2. Grid GroupBy summaries
+3. Auto-complete (inline editable)
+4. Inline date and time pickers (with drop down/toggle)
+5. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+6. Toolbar Templatable and NavBar Templatable 
 
 ## Milestone 6 (28.02.2019)
 
