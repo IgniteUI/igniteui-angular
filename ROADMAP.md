@@ -2,23 +2,33 @@
 
 # Current Milestone
 
-## Milestone 5 (.......)
 
-1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)
-2. TreeGrid summaries
-3. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
-4. Advanced Filtering Dialog
-5. Grid GroupBy summaries
-6. Multi-cell selection
-7. Auto-complete (inline editable)
-8. Inline date and time pickers (with drop down/toggle)
-9. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+
+## Milestone 5 (14.12.2018)
+
+1. TreeGrid summaries
+2. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)
+3. Grid GroupBy summaries
+4. Multi-cell selection
+5. Auto-complete (inline editable)
+6. Inline date and time pickers (with drop down/toggle)
+7. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+8.Toolbar Templatable and NavBar Templatable 
+
+## Milestone 6 (28.02.2018)
+
+1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
+2. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
+3. Advanced Filtering  
+4. Multi-cell Selection 
+
 
 ## Futrher Down the line
 
-1.	Excel-style filter
-2.	Row-pinning
-3.	Column Groups expand/collapse, with column grouping templates
+1. Excel-style filter
+2. Row-pinning
+3. Column Groups expand/collapse, with column grouping templates
+4. Visual Cell merging 
 
 
 # Previous Milestones
