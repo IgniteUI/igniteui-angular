@@ -211,7 +211,7 @@ export abstract class IgxBaseExporter {
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                _rootRecords = DataUtil.hierarchicalFilter(_rootRecords, filteringState);
+                _rootRecords = DataUtil.treeGridFilter(_rootRecords, filteringState);
                 this.prepareHierarchicalData(_rootRecords);
                 data = this.flatRecords;
             } else {
@@ -230,11 +230,11 @@ export abstract class IgxBaseExporter {
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                _rootRecords = DataUtil.hierarchicalSort(_rootRecords, sortingState, undefined);
+                _rootRecords = DataUtil.treeGridSort(_rootRecords, grid.sortingExpressions);
                 this.prepareHierarchicalData(_rootRecords);
                 data = this.flatRecords;
             } else {
-                data = DataUtil.sort(data, sortingState);
+                data = DataUtil.sort(data, grid.sortingExpressions);
             }
         }
 
