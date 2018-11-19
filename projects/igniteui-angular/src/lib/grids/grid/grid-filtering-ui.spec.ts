@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, LOCALE_ID } from '@angular/core';
 import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,6 +22,7 @@ import { KEYCODES } from '../../core/utils';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxLocalizationService } from '../../services/i18n/localization.service';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -1512,8 +1513,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent
+                IgxGridFilteringMCHComponent,
+                IgxGridFilteringLocalizedComponent
             ],
+            providers: [ { provide: LOCALE_ID, useValue: 'de' } ],
             imports: [
                 BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
@@ -2473,6 +2476,27 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         expect(filteringRow).toBeNull();
     }));
+
+    it('Should translate Close button of FilterRow to German.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringLocalizedComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        const editingBtns = filteringRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingBtns.queryAll(By.css('button'))[0];
+        const close = editingBtns.queryAll(By.css('button'))[1];
+
+        expect(close.nativeElement.innerText).toBe('Schließen');
+        expect(reset.nativeElement.innerText).toBe('Reset');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -2621,6 +2645,27 @@ export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
     </igx-grid>`
 })
 export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringLocalizedComponent extends IgxGridFilteringComponent { 
+
+    private ResourceStrings = {
+        close : {
+            en : 'Close',
+            de : 'Schließen'
+        }
+    }
+    constructor(private localService: IgxLocalizationService) {
+        super();
+        this.localService.loadResourcesFromObject(this.ResourceStrings);
+    }
+}
 
 const expectedResults = [];
 

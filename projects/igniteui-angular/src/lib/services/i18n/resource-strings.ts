@@ -163,5 +163,30 @@ export const ResourceStrings = {
         en: 'False',
         jp: 'False',
         ko: 'False'
+    },
+    complexFilter: {
+        en: 'Complex Filter',
+        jp: 'Complex Filter',
+        ko: 'Complex Filter'
+    },
+    okButtonLabel: {
+        en: 'OK',
+        jp: 'OK',
+        ko: 'OK'
+    },
+    cancelButtonLabel: {
+        en: 'Cancel',
+        jp: 'Cancel',
+        ko: 'Cancel'
+    },
+    time: {
+        en: 'Time',
+        jp: 'Time',
+        ko: 'Time'
+    },
+    dropAreaMessage: {
+        en: 'Drag a column header and drop it here to group by that column.',
+        jp: 'Drag a column header and drop it here to group by that column.',
+        ko: 'Drag a column header and drop it here to group by that column.'
     }
 };

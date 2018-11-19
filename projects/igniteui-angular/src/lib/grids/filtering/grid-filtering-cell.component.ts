@@ -93,7 +93,8 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService, public localService: IgxLocalizationService) {
+    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService,
+                public localService: IgxLocalizationService) {
         this.filteringService.subscribeToEvents();
     }
 

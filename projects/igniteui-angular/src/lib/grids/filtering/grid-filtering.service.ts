@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, LOCALE_ID, Inject } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -36,7 +36,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(window.navigator.language);
+    private datePipe: DatePipe;
     private columnStartIndex = -1;
 
     public gridId: string;
@@ -47,7 +47,9 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService, @Inject(LOCALE_ID) private locale: string) {
+        this.datePipe = new DatePipe(this.locale);
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);

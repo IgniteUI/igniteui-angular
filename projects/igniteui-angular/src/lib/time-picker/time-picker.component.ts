@@ -33,6 +33,7 @@ import {
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxLocalizationService } from '../services/i18n/localization.service';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -71,6 +72,8 @@ export interface IgxTimePickerValidationFailedEventArgs {
 export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy, DoCheck, AfterViewInit {
 
     private _value: Date;
+    private _okButtonLabel: string;
+    private _cancelButtonLabel: string;
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -134,8 +137,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
+    public get okButtonLabel() : string {
+        if (this._okButtonLabel) {
+            return this._okButtonLabel;
+        } else {
+            return this.localService.translate("okButtonLabel");
+        }
+    }
+    
     @Input()
-    public okButtonLabel = 'OK';
+    public set okButtonLabel(value: string) {
+        this._okButtonLabel = value;
+    }
 
     /**
      * An @Input property that renders cancel button with custom text.
@@ -144,8 +157,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
+    public get cancelButtonLabel() : string {
+        if (this._cancelButtonLabel) {
+            return this._cancelButtonLabel;
+        } else {
+            return this.localService.translate("cancelButtonLabel");
+        }
+    }
+    
     @Input()
-    public cancelButtonLabel = 'Cancel';
+    public set cancelButtonLabel(value: string) {
+        this._cancelButtonLabel = value;
+    }
 
     /**
      * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
@@ -359,6 +382,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     private _prevSelectedAmPm: string;
 
     protected dialogClosed = new Subscription();
+
+    constructor(public localService: IgxLocalizationService) {}
 
     /**
      * Returns the current time formatted as string using the `format` option.

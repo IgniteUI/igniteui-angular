@@ -9,7 +9,7 @@ export class IgxLocalizationService {
 
     private externalResourcesCache = new Set<any>();
 
-    constructor(@Inject(LOCALE_ID) private locale: string, private http: HttpClient) {}
+    constructor(@Inject(LOCALE_ID) public locale: string, private http: HttpClient) {}
 
     public translate(key: string): string {
         let result;

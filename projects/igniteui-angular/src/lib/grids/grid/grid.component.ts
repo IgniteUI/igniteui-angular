@@ -24,6 +24,7 @@ import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IgxLocalizationService } from '../../services/i18n/localization.service';
 
 let NEXT_ID = 0;
 
@@ -65,6 +66,7 @@ export interface IGroupingDoneEventArgs {
 })
 export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
+    private _dropAreaMessage: string;
     /**
      * @hidden
      */
@@ -122,6 +124,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        private localService: IgxLocalizationService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                   filteringService, _displayDensityOptions);
@@ -316,8 +319,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * ```
 	 * @memberof IgxGridComponent
      */
+    public get dropAreaMessage() : string {
+        if (this._dropAreaMessage) {
+            return this._dropAreaMessage;
+        } else {
+            return this.localService.translate("dropAreaMessage");
+        }
+    }
+    
     @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+    public set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+    }
 
     /**
      * An @Input property that sets the template that will be rendered as a GroupBy drop area.

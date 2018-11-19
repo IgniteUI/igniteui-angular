@@ -105,10 +105,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.filter();
     }
 
-    get locale() {
-        return window.navigator.language;
-    }
-
     @ViewChild('defaultFilterUI', { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -142,7 +138,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef, public localService: IgxLocalizationService) {
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef,
+                public localService: IgxLocalizationService) {
         this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
         this.conditionChanged.subscribe(() => this.conditionChangedCallback());
     }
@@ -218,7 +215,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else {
-            return 'Add filter value';
+            return this.localService.translate('addFilter');
         }
     }
 

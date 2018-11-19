@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, LOCALE_ID } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -9,6 +9,7 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxLocalizationService } from '../services/i18n/localization.service';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -23,8 +24,10 @@ describe('IgxTimePicker', () => {
                 IgxTimePickerWithAMPMLeadingZerosTimeComponent,
                 IgxTimePickerWithSpinLoopFalseValueComponent,
                 IgxTimePickerWithItemsDeltaValueComponent,
-                IgxTimePickerRetemplatedComponent
+                IgxTimePickerRetemplatedComponent,
+                IgxTimePickerLocalizedComponent
             ],
+            providers: [ { provide: LOCALE_ID, useValue: 'de' } ],
             imports: [IgxTimePickerModule, FormsModule, BrowserAnimationsModule, IgxInputGroupModule]
         })
             .compileComponents();
@@ -942,6 +945,22 @@ describe('IgxTimePicker', () => {
         expect(selectAMPM.nativeElement.innerText).toBe('AM');
     }));
 
+    it('Should translate Cancel button to german', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxTimePickerLocalizedComponent);
+        tick();
+        fixture.detectChanges();
+
+        const dom = fixture.debugElement;
+
+        const timePickerTarget = dom.query(By.directive(IgxInputDirective));
+        UIInteractions.clickElement(timePickerTarget);
+        tick(100);
+        fixture.detectChanges();
+
+        const cancelButton = dom.queryAll(By.css('.igx-button--flat'))[0];
+        expect(cancelButton.nativeElement.innerText).toEqual('Stornieren');
+    }));
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
@@ -1061,6 +1080,25 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
     `
 })
 export class IgxTimePickerRetemplatedComponent {}
+
+@Component({
+    template: `
+        <igx-time-picker [vertical]="isVertical"></igx-time-picker>
+    `
+})
+export class IgxTimePickerLocalizedComponent {
+    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+
+    private ResourceStrings = {
+        cancelButtonLabel : {
+            en : 'Cancel',
+            de : 'Stornieren'
+        }
+    }
+    constructor(private localService: IgxLocalizationService) {
+        this.localService.loadResourcesFromObject(this.ResourceStrings);
+    }
+}
 
 // helper functions
 function findByInnerText(collection, searchText) {

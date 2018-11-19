@@ -36,7 +36,7 @@
 <ng-template #complexFilter>
     <igx-chip #complexChip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
         <igx-icon igxPrefix>filter_list</igx-icon>
-        <span>Complex Filter</span>
+        <span>{{localService.translate('complexFilter')}}</span>
     </igx-chip>
 </ng-template>
 
