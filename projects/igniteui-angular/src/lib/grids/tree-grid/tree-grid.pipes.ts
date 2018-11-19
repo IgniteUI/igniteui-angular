@@ -281,21 +281,21 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                 const childDataKey = grid.childDataKey;
 
                 if (foreignKey) {
+                    const flatDataClone = cloneArray(collection);
                     return DataUtil.mergeTransactions(
-                        cloneArray(collection),
-                        grid.transactions.getAggregatedChanges(true),
+                        flatDataClone,
+                        aggregatedChanges,
                         grid.primaryKey);
-                    } else if (childDataKey) {
-                        const clone = cloneHierarchicalArray(collection, childDataKey);
-                        return DataUtil.mergeHierarchicalTransactions(
-                            clone,
-                            aggregatedChanges,
-                            childDataKey,
-                            grid.primaryKey
-                            );
-                        }
-                    }
+                } else if (childDataKey) {
+                    const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
+                    return DataUtil.mergeHierarchicalTransactions(
+                        hierarchicalDataClone,
+                        aggregatedChanges,
+                        childDataKey,
+                        grid.primaryKey);
                 }
+            }
+        }
 
         return collection;
     }

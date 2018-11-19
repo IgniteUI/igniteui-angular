@@ -358,7 +358,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (emittedArgs.oldValue !== undefined
                 && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
             const rowValue = this.get_all_data(id)[rowIndex];
-            this.updateCellData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
+            this.updateData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, emittedArgs.newValue);
@@ -369,16 +369,24 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    protected updateCellData(grid, rowID, rowValue: any, rowData: any, newValue: {[x: string]: any}) {
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
         if (grid.transactions.enabled) {
             const transaction: Transaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
-                newValue
+                newValue: rowNewValue
             };
-            grid.transactions.add(transaction, rowData);
+            grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            mergeObjects(rowValue, newValue);
+            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 
@@ -412,11 +420,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (currentRowInEditMode) {
                 grid.transactions.endPending(false);
             }
-            if (grid.transactions.enabled && emitArgs.newValue !== null) {
-                grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
-            } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
-                Object.assign(data[index], emitArgs.newValue);
-            }
+            this.updateData(grid, rowID, data[index], emitArgs.oldValue, emitArgs.newValue);
+            // if (grid.transactions.enabled && emitArgs.newValue !== null) {
+            //     grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
+            // } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
+            //     Object.assign(data[index], emitArgs.newValue);
+            // }
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;

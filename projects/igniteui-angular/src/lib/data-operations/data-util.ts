@@ -28,13 +28,13 @@ export enum DataType {
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression [], sorting: IgxSorting = new IgxSorting()): T[] {
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IgxSorting = new IgxSorting()): T[] {
         return sorting.sort(data, expressions);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
-                               expressions: ISortingExpression [],
-                               parent?: ITreeGridRecord): ITreeGridRecord[] {
+        expressions: ISortingExpression[],
+        parent?: ITreeGridRecord): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
 
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
@@ -208,7 +208,7 @@ export class DataUtil {
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
 
-            return data;
+        return data;
     }
 
     /**
@@ -250,7 +250,6 @@ export class DataUtil {
                             if (!dataRow[childDataKey].find(r => r[primaryKey] === transaction.id)) {
                                 dataRow[childDataKey].push(transaction.newValue);
                             }
-                        } else {
                         }
                         break;
                     case TransactionType.UPDATE:

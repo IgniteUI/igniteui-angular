@@ -126,18 +126,31 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
-    protected updateCellData(grid: IgxTreeGridComponent, rowID: any, rowValue: any, rowData: any, newValue: {[x: string]: any}) {
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(
+        grid: IgxTreeGridComponent,
+        rowID: any,
+        rowValueInDataSource: any,
+        rowCurrentValue: any,
+        rowNewValue: {[x: string]: any}) {
         if (grid.transactions.enabled) {
             const path = grid.generateRowPath(rowID).reverse();
             const transaction: HierarchicalTransaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
-                newValue,
+                newValue: rowNewValue,
                 path: path
             };
-            grid.transactions.add(transaction, rowData);
+            grid.transactions.add(transaction, rowCurrentValue);
         } else {
-            mergeObjects(rowValue, newValue);
+            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 }
