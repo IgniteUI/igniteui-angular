@@ -34,7 +34,7 @@
 ///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
@@ -50,25 +50,7 @@
     $menu-button-text-color: null,
     $menu-button-disabled-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid-filtering',
-        toggle-background: transparent,
-        toggle-icon-color: inherit,
-        toggle-icon-hover-color: #fff,
-        toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
-        toggle-icon-filtered-color: igx-color($palette, 'secondary'),
-        toggle-hover-background: igx-color($palette, 'grays', 300),
-        toggle-active-background: igx-color($palette, 'secondary'),
-        toggle-filtered-background: transparent,
-        menu-background: #fff,
-        menu-text-color: igx-color($palette, 'grays', 900),
-        menu-button-text-color: igx-color($palette, 'secondary'),
-        menu-button-disabled-text-color: initial
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-grid-filtering'), $palette);
 
     @if not($menu-text-color) and $menu-background {
         $menu-text-color: text-contrast($menu-background);
@@ -90,7 +72,7 @@
         $toggle-icon-active-color: text-contrast($toggle-active-background)
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         toggle-icon-color: $toggle-icon-color,
