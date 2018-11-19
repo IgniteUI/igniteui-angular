@@ -23,7 +23,7 @@
 ///   @include igx-checkbox($my-checkbox-theme);
 @function igx-tooltip-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $text-color: null,
@@ -35,34 +35,26 @@
     $light-background: rgba(#fff, .94);
     $border-radius: rem(4px);
 
-    $dark-theme: (
-        background: rgba($dark-background, .9),
-        text-color: text-contrast($dark-background),
-        roundness: $border-radius
-    );
+    $dark-theme: apply-palette(map-get($schema, 'igx-tooltip'), $palette);
 
     $light-theme: (
+        name: $name,
         background: $light-background,
         text-color: text-contrast($light-background),
         roundness: $border-radius
     );
 
-    $default-theme: map-get((
+    $theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $default-palette,
-        name: $name,
         background: $background,
         text-color: $text-color,
         roundness: $roundness

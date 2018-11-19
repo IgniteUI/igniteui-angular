@@ -21,26 +21,18 @@
 ///   @include igx-toast($my-toast-theme);
 @function igx-toast-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-toast',
-        background: igx-color($palette, 'grays', 600),
-        text-color: #fff
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-toast'), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         text-color: $text-color
