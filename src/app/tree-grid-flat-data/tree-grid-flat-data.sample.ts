@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { IgxTreeGridComponent, IgxHierarchicalTransactionService, IgxGridTransaction } from 'igniteui-angular';
 
 @Component({
-    providers: [{provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService}],
+    providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
     selector: 'app-tree-grid-flat-data-sample',
     styleUrls: ['tree-grid-flat-data.sample.css'],
     templateUrl: 'tree-grid-flat-data.sample.html'
@@ -68,12 +68,18 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public addRow() {
-        this.grid1.addRow({ 'employeeID': 24, 'PID': -1, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+        this.grid1.addRow({
+            'employeeID': this.data.length + this.nextRow++,
+            'PID': -1,
+            'firstName': 'John',
+            'lastName': 'Doe',
+            'Title': 'Junior Sales Representative'
+        });
     }
 
     public addChildRow() {
         const selectedRowId = this.grid1.selectedRows()[0];
-        this.grid1.addRow (
+        this.grid1.addRow(
             {
                 'employeeID': this.data.length + this.nextRow++,
                 'firstName': `Added `,

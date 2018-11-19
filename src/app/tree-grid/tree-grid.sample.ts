@@ -409,7 +409,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     public addRow() {
         this.grid1.addRow({
-            'ID': 'ASDFG',
+            'ID': `ADD${this.nextRow++}`,
             'CompanyName': 'Around the Horn',
             'ContactName': 'Thomas Hardy',
             'ContactTitle': 'Sales Representative',
