@@ -123,31 +123,31 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     constructor(private cdr: ChangeDetectorRef,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-                public colReszingService: IgxColumnResizingService,
+                public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
-            this.colReszingService.resizeCursor = 'col-resize';
+            this.colResizingService.resizeCursor = 'col-resize';
         }
     }
 
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
-            this.colReszingService.column = this.column;
-            this.colReszingService.showResizer = true;
-            this.colReszingService.isColumnResizing = true;
-            this.colReszingService.resizerHeight = this.column.grid.calcResizerHeight;
-            this.colReszingService.startResizePos = event.clientX;
+            this.colResizingService.column = this.column;
+            this.colResizingService.showResizer = true;
+            this.colResizingService.isColumnResizing = true;
+            this.colResizingService.resizerHeight = this.column.grid.calcResizerHeight;
+            this.colResizingService.startResizePos = event.clientX;
         } else {
-            this.colReszingService.resizeCursor = null;
+            this.colResizingService.resizeCursor = null;
         }
     }
 
     public autosizeColumnOnDblClick(event) {
         if (event.button === 0 && this.column.resizable) {
-            this.colReszingService.column = this.column;
-            this.colReszingService.autosizeColumnOnDblClick();
+            this.colResizingService.column = this.column;
+            this.colResizingService.autosizeColumnOnDblClick();
          }
     }
 }

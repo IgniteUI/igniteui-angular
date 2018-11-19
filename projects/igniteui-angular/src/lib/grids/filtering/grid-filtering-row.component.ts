@@ -5,12 +5,12 @@ import {
     Input,
     TemplateRef,
     ViewChild,
-    OnDestroy,
     ViewChildren,
     QueryList,
     ElementRef,
     HostBinding,
-    HostListener
+    HostListener,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
@@ -20,7 +20,6 @@ import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
@@ -32,11 +31,12 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
  * @hidden
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
+export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -59,8 +59,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     private chipsAreaWidth: number;
     private chipAreaScrollOffset = 0;
-    private conditionChanged = new Subject();
-    private unaryConditionChanged = new Subject();
     private _column = null;
 
     public showArrows: boolean;
@@ -140,10 +138,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
-        this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
-        this.conditionChanged.subscribe(() => this.conditionChangedCallback());
-    }
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -155,11 +150,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
 
         this.input.nativeElement.focus();
-    }
-
-    ngOnDestroy() {
-        this.conditionChanged.unsubscribe();
-        this.unaryConditionChanged.unsubscribe();
     }
 
     @HostListener('keydown.shift.tab', ['$event'])
@@ -395,9 +385,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expression.condition = this.getCondition(value);
         if (this.expression.condition.isUnary) {
-            this.unaryConditionChanged.next(value);
+            // update grid's filtering on the next cycle to ensure the drop-down is closed
+            // if the drop-down is not closed this event handler will be invoked multiple times
+            requestAnimationFrame(() => this.unaryConditionChangedCallback());
         } else {
-            this.conditionChanged.next(value);
+            requestAnimationFrame(() => this.conditionChangedCallback());
         }
 
         if (this.input) {
@@ -464,7 +456,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.oldSelection) {
             expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
-            this.filter();
+
+            // update grid's filtering on the next cycle to ensure the drop-down is closed
+            // if the drop-down is not closed this event handler will be invoked multiple times
+            requestAnimationFrame(() => this.filter());
         }
     }
 

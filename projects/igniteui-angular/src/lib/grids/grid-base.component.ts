@@ -1165,7 +1165,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get headerGroupsList(): IgxGridHeaderGroupComponent[] {
-        return flatten(this.headerGroups.toArray());
+        return this.headerGroups ? flatten(this.headerGroups.toArray()) : [];
     }
 
     /**
@@ -2758,6 +2758,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.rowList) {
             this.rowList.forEach((row) => row.cdr.markForCheck());
         }
+
+        if (this.filterCellList) {
+            this.filterCellList.forEach((c) => c.cdr.markForCheck());
+        }
+
         this.cdr.detectChanges();
     }
 

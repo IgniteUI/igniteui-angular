@@ -8,7 +8,9 @@ import {
     AfterViewInit,
     ElementRef,
     HostListener,
-    OnInit
+    OnInit,
+    ChangeDetectionStrategy,
+    DoCheck
 } from '@angular/core';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -22,11 +24,12 @@ import { IgxGridGroupByRowComponent } from '../grid';
  * @hidden
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html'
 })
-export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
+export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
 
     private baseClass = 'igx-grid__filtering-cell-indicator';
     private currentTemplate = null;
@@ -70,6 +73,10 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit {
     }
 
     ngAfterViewInit(): void {
+        this.updateFilterCellArea();
+    }
+
+    public ngDoCheck() {
         this.updateFilterCellArea();
     }
 

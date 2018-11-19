@@ -106,7 +106,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-        public colReszingService: IgxColumnResizingService,
+        public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,
@@ -125,7 +125,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
 
     @HostListener('click', ['$event'])
     public onClick(event) {
-        if (!this.colReszingService.isColumnResizing) {
+        if (!this.colResizingService.isColumnResizing) {
             event.stopPropagation();
             if (this.grid.filteringService.isFilterRowVisible) {
                 if (this.column.filterable && !this.column.columnGroup &&
