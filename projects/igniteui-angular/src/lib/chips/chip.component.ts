@@ -52,7 +52,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent extends DisplayDensityBase {
+export class IgxChipComponent extends DisplayDensityBase implements AfterViewInit {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -72,7 +72,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @HostBinding('attr.title')
     @Input()
-    public title;
+    public title: string;
 
     /**
      * An @Input property that stores data related to the chip.
@@ -81,6 +81,8 @@ export class IgxChipComponent extends DisplayDensityBase {
      * ```
      */
     @Input()
+
+    @ViewChild('')
     public data: any;
 
     /**
@@ -334,6 +336,9 @@ export class IgxChipComponent extends DisplayDensityBase {
     @ViewChild('chipArea', { read: ElementRef })
     public chipArea: ElementRef;
 
+    @ViewChild('chipText', { read: ElementRef })
+    public chipText: ElementRef;
+
     /**
      * @hidden
      */
@@ -391,6 +396,13 @@ export class IgxChipComponent extends DisplayDensityBase {
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         }
+
+    ngAfterViewInit() {
+        if (!this.title) {
+            const chipInnerText = this.chipText.nativeElement.innerText;
+            this.title = chipInnerText;
+        }
+    }
 
     /**
      * @hidden
