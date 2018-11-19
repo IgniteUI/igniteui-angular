@@ -65,6 +65,16 @@ export class IgxChipComponent extends DisplayDensityBase {
     public id = `igx-chip-${CHIP_ID++}`;
 
     /**
+     * An @Input property that sets the value of `title` attribute. If not provided it will be automatically generated.
+     * ```html
+     * <igx-chip [title]="'chip-content'"></igx-chip>
+     * ```
+     */
+    @HostBinding('attr.title')
+    @Input()
+    public title;
+
+    /**
      * An @Input property that stores data related to the chip.
      * ```html
      * <igx-chip [data]="{ value: 'Country' }"></igx-chip>
