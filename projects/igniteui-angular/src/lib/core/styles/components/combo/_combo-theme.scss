@@ -14,25 +14,14 @@
 /// @requires igx-color
 @function igx-combo-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
     $empty-list-background: null
 ) {
+    $theme: apply-palette(map-get($schema, 'igx-combo'), $palette);
 
-    $default-theme: (
-        name: 'igx-combo',
-        search-separator-border-color: igx-color($palette, 'grays', 300),
-        empty-list-placeholder-color: igx-color($palette, 'grays', 400),
-        empty-list-background: #fff
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme,
-    (
+    @return extend($theme, (
         palette: $palette,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
@@ -49,6 +38,7 @@
 
     %igx-combo {
         position: relative;
+        display: block;
 
         %igx-button--icon {
             width: rem(24px);
