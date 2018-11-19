@@ -181,27 +181,45 @@ export class DataUtil {
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
+     * @param deleteRows Should delete rows with DELETE transaction type from data
+     * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
-            if (Array.isArray(item.children)) {
-                this.mergeTransactions(item.children, transactions, primaryKey);
-            }
             if (transaction && transaction.type === TransactionType.UPDATE) {
                 data[index] = transaction.newValue;
             }
         });
 
+        if (deleteRows) {
+            transactions
+                .filter(t => t.type === TransactionType.DELETE)
+                .forEach(t => {
+                    const index = primaryKey ? data.findIndex(d => d[primaryKey] === t.id) : data.findIndex(d => d === t.id);
+                    if (0 <= index && index < data.length) {
+                        data.splice(index, 1);
+                    }
+                });
+        }
+
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
-        return data;
+
+            return data;
     }
 
-    // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
-    /** @experimental @hidden */
+    /**
+     * Merges all changes from provided transactions into provided hierarchical data collection
+     * @param data Collection to merge
+     * @param transactions Transactions to merge into data
+     * @param childDataKey Data key of child collections
+     * @param primaryKey Primary key of the collection, if any
+     * @param deleteRows Should delete rows with DELETE transaction type from data
+     * @returns Provided data collections updated with all provided transactions
+     */
     public static mergeHierarchicalTransactions(
         data: any[],
         transactions: HierarchicalTransaction[],
