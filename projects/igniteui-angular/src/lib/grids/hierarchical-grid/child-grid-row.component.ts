@@ -33,6 +33,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      */
     public expanded = false;
 
+    @Input()
+    layout;
+
     /**
      * @hidden
      */
@@ -43,15 +46,15 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /**
      * @hidden
      */
-    public get layout() {
-        const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key + '-' + this.level);
-       return layout;
-    }
+    // public get layout() {
+    //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
+    //    return layout;
+    // }
      /**
      * @hidden
      */
     @Input()
-    public gridID: string;
+    public parentGridID: string;
 
     /**
      *  The data passed to the row component.
@@ -107,13 +110,13 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
-    get grid(): IgxHierarchicalGridComponent {
-        return this.gridAPI.get(this.gridID);
+    get parentGrid(): IgxHierarchicalGridComponent {
+        return this.gridAPI.get(this.parentGridID);
     }
 
 
     get level() {
-        return this.grid.level + 1;
+        return this.layout.level;
     }
 
     /**
@@ -167,8 +170,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         columns.forEach((c) => c.gridAPI = this.hGrid.hgridAPI);
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
-        this.hGrid.level = this.level;
         this.hGrid.reflow();
-        this.grid.hgridAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
+        this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
     }
 }

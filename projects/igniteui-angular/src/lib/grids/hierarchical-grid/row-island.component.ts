@@ -56,8 +56,14 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     public parent = null;
 
     get id() {
-        return this.layout_id + this.key + '-' + this.level;
+        const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
+        return this.layout_id + pId +  this.key;
     }
+
+    get parentId() {
+       return this.parent ? this.parent.id : null;
+    }
+
     get level() {
         let ptr = this.parent;
         let lvl = 0;
