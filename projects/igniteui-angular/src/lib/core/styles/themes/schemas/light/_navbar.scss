@@ -1,0 +1,13 @@
+$_light-navbar: (
+    name: 'igx-navbar',
+
+    text-color: #fff,
+
+    idle-icon-color: #fff,
+
+    hover-icon-color: #fff,
+
+    background: (
+        igx-color: ('primary', 500)
+    )
+);
