@@ -12,8 +12,7 @@
     // }
 
     function initNavigation() {
-        //  var navBaseUrl = $('body').data('nav-base-url');
-         var navBaseUrl = "https://dev.infragistics.local";
+         var navBaseUrl = $('body').data('base-url');
          var navUrl = navBaseUrl + '/navigation';
 
          var request = $.ajax({
@@ -45,7 +44,7 @@
              igNavigation.init();
          });
         window.igViewer.common.footer = $('#footer-container');
-р
+
         igNavigation.init();
     }
 
