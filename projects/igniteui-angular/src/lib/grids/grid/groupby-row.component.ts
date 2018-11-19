@@ -163,11 +163,17 @@ export class IgxGridGroupByRowComponent {
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle(key?) {
-        const shouldExpand = (!key && !this.expanded) || (key && !this.expanded && (key === 'arrowleft' || key === 'left'));
-        this.handleToggleScroll();
-        if (!shouldExpand) {
-            this.grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
+    public toggle() {
+        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const groupRowIndex = this.index;
+        this.grid.toggleGroup(this.groupRow);
+        if (isVirtualized) {
+            this.grid.verticalScrollContainer.onChunkLoad
+            .pipe(first())
+            .subscribe(() => {
+                const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
+                if (groupRow) { groupRow.focus(); }
+            });
         }
     }
 
@@ -185,7 +191,10 @@ export class IgxGridGroupByRowComponent {
 
         if (this.isToggleKey(key)) {
             if (!alt) { return; }
-            this.toggle(key);
+            if ((this.expanded && (key === 'left' || key === 'arrowleft')) ||
+            (!this.expanded && (key === 'right' || key === 'arrowright'))) {
+                this.toggle();
+            }
             return;
         }
         const args = { cell: null, groupRow: this, event: event, cancel: false };
@@ -252,16 +261,5 @@ export class IgxGridGroupByRowComponent {
     private isToggleKey(key) {
         return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
     }
-    private handleToggleScroll() {
-        if (this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
-            this.grid.verticalScrollContainer.igxForOf.length - 1) {
-            const groupRowIndex = this.index;
-            this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
-                });
-        }
-        this.grid.toggleGroup(this.groupRow);
-    }
+
 }
