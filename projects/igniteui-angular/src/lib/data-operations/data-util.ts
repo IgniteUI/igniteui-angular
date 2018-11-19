@@ -156,25 +156,11 @@ export class DataUtil {
         return state.strategy.filter(data, state.expressionsTree);
     }
 
-    public static hierarchicalFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
-        DataUtil.mergeDefaultProperties(state, { strategy: new TreeGridFilteringStrategy() });
+    public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
+        if (!state.strategy) {
+            state.strategy = new TreeGridFilteringStrategy();
+        }
         return state.strategy.filter(data, state.expressionsTree);
-    }
-
-    public static process<T>(data: T[], state: IDataState): T[] {
-        if (!state) {
-            return data;
-        }
-        if (state.filtering) {
-            data = DataUtil.filter(data, state.filtering);
-        }
-        if (state.sorting) {
-            data = DataUtil.sort(data, state.sorting);
-        }
-        if (state.paging) {
-            data = DataUtil.page(data, state.paging);
-        }
-        return data;
     }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
