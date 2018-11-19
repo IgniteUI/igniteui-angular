@@ -511,6 +511,38 @@ describe('IgxTreeGrid - Integration', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
+
+        it('Children are transformed into parent nodes after their parent is deleted', () => {
+            // TODO:
+            // 1. Set 'Cascade On Delete' to false on a grid with Flat DS
+            // 2. Delete a parent node
+            // 3. Verify the correct style is applied before committing
+            // 4. Commit changes
+            // 5. Verify the correct style is applied after committing
+            // 6. Verify its children are transformed into parent nodes
+            // and are placed at the correct place in the grid
+            // 7. Verify the undo stack is empty
+        });
+
+        it('Children are deleted along with their parent', () => {
+            // TODO:
+            // 1. Set 'Cascade On Delete' to true on a grid with Flat DS
+            // 2. Delete a parent node
+            // 3. Verify the correct style is applied before committing to all nodes
+            // 4. Commit changes
+            // 5. Verify the parent node and its children are deleted
+            // 6. Verify the undo stack is empty
+        });
+
+        it('Editing a cell is posible with Hierarchical DS', () => {
+            // TODO:
+            // 1. Enter row edit mode in a gridwith Hierarchical DS
+            // 2. Update a cell
+            // 3. Press ENTER or click Done
+            // 4. Verify the value is updated and the correct style is applied before committing
+            // 5. Commit
+            // 6. Verify the correct value is set
+        });
     });
 
     describe('Multi-column header', () => {
