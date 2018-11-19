@@ -26,12 +26,16 @@ export class IgxLocalizationService {
         }
 
         rs = ResourceStrings[key];
-        if (rs && this.locale.startsWith('jp')) {
-            return rs.jp;
-        } else if (rs && this.locale.startsWith('ko')) {
-            return rs.ko;
+        if (rs) {
+            if (this.locale.startsWith('jp')) {
+                return rs.jp;
+            } else if (this.locale.startsWith('ko')) {
+                return rs.ko;
+            } else {
+                return rs.en;
+            }
         } else {
-            return rs.en;
+            return key;
         }
     }
 

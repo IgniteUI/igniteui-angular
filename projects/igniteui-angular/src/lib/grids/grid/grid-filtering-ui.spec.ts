@@ -1510,10 +1510,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
-                IgxGridFilteringMCHComponent,
-                IgxGridFilteringLocalizedComponent
+                IgxGridFilteringMCHComponent
             ],
-            providers: [ { provide: LOCALE_ID, useValue: 'de' } ],
             imports: [
                 BrowserAnimationsModule,
                 IgxGridModule.forRoot()]
@@ -2473,6 +2471,26 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         expect(filteringRow).toBeNull();
     }));
+});
+
+describe('IgxGrid - Filtering translation', () => {
+    configureTestSuite();
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxGridFilteringLocalizedComponent
+            ],
+            providers: [ { provide: LOCALE_ID, useValue: 'de' } ],
+            imports: [
+                BrowserAnimationsModule,
+                IgxGridModule.forRoot()]
+        })
+            .compileComponents();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
 
     it('Should translate Close button of FilterRow to German.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringLocalizedComponent);
