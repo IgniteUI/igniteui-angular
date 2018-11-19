@@ -1,7 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit, Inject } from '@angular/core';
 
-import {DataType, IgxButtonDirective, IgxColumnComponent, IgxGridComponent,  SortingDirection, ISortingExpression } from 'igniteui-angular';
-import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/utils';
+import { IgxGridComponent,  SortingDirection, ISortingExpression, IGridFocusChangeEventArgs } from 'igniteui-angular';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
 import { DefaultSortingStrategy } from 'projects/igniteui-angular/src/public_api';
 
 @Component({
@@ -104,9 +104,9 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
-            {fieldName: "Country", dir: 2, ignoreCase: true}
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
         ];
         this.grid1.groupBy(expr);
     }
@@ -117,8 +117,8 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupUngroupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
         ];
         this.grid1.groupingExpressions = expr;
     }

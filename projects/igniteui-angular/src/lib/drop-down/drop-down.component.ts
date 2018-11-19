@@ -374,14 +374,14 @@ export class IgxDropDownBase implements OnInit, IToggleView {
     /**
      * @hidden
      */
-    public get focusedItem() {
+    public get focusedItem(): IgxDropDownItemBase {
         return this._focusedItem;
     }
 
     /**
      * @hidden
      */
-    public set focusedItem(item) {
+    public set focusedItem(item: IgxDropDownItemBase) {
         this._focusedItem = item;
     }
 
@@ -492,10 +492,7 @@ export class IgxDropDownBase implements OnInit, IToggleView {
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
-    /**
-     * @hidden
-     */
-    public scrollToHiddenItem(newItem: IgxDropDownItemBase) {
+    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
         if (parentRect.top > elementRect.top) {
