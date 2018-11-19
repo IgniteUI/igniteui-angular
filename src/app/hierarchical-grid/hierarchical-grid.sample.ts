@@ -37,14 +37,13 @@ export class HierarchicalGridSampleComponent {
                children = this.generateData(count / 2 , currLevel - 1);
            }
            prods.push({
-            ID: i, ProductName: 'Child Levels: ' + currLevel +  ', A' + i, childData: children });
+            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i, 'Col2': i, 'Col3': i, childData: children });
         }
         return prods;
     }
 
     setterChange() {
        this.layout1.rowSelectable = !this.layout1.rowSelectable;
-       // this.layout1.height = '200px';
     }
 
     setterBindingChange() {
