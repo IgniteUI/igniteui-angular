@@ -55,19 +55,13 @@ export class SimpleFilteringStrategy extends FilteringStrategy {
     pure: true
 })
 export class IgxComboSortingPipe implements PipeTransform {
-    constructor(
-        @Inject(forwardRef(() => IgxComboComponent))
-        public combo: IgxComboComponent
-    ) { }
+    constructor() { }
 
-    public transform(collection: any[], expression: ISortingExpression | ISortingExpression[]) {
-        const state = { expressions: [] };
-        state.expressions = this.combo.sortingExpressions;
-
-        if (!state.expressions.length) {
+    public transform(collection: any[], expressions: ISortingExpression []) {
+        if (!expressions.length) {
             return collection;
         }
-        const result = DataUtil.sort(cloneArray(collection), state);
+        const result = DataUtil.sort(cloneArray(collection), expressions);
         return result;
     }
 }

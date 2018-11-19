@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, isEqual, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
-import { IFilteringExpression, FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
-import { IGroupByRecord } from '../data-operations/groupby-record.interface';
+import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
@@ -14,7 +12,6 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
-import { SortingStateDefaults } from '../data-operations/sorting-state.interface';
 /**
  *@hidden
  */
@@ -428,13 +425,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         grid.data[index] = value;
     }
 
-    public sort(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
-        if (dir === SortingDirection.None) {
-            this.remove_grouping_expression(id, fieldName);
+    public sort(id: string, expression: ISortingExpression): void {
+        if (expression.dir === SortingDirection.None) {
+            this.remove_grouping_expression(id, expression.fieldName);
         }
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        strategy = strategy ? strategy : this.getSortStrategyPerColumn(id, fieldName);
-        this.prepare_sorting_expression([sortingState], { fieldName, dir, ignoreCase, strategy });
+        this.prepare_sorting_expression([sortingState], expression);
         this.get(id).sortingExpressions = sortingState;
     }
 
@@ -445,7 +441,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (each.dir === SortingDirection.None) {
                 this.remove_grouping_expression(id, each.fieldName);
             }
-            each.strategy = each.strategy ? each.strategy : this.getSortStrategyPerColumn(id, each.fieldName);
             this.prepare_sorting_expression([sortingState], each);
         }
 

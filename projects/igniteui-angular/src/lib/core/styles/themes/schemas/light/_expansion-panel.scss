@@ -1,0 +1,29 @@
+$_light-expansion-panel: (
+    name: 'igx-expansion-panel',
+    header-background: #fff,
+    body-background: #fff,
+
+    header-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    header-title-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    header-description-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    header-icon-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    body-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 500)
+    )
+);
