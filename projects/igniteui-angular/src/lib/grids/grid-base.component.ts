@@ -4507,6 +4507,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
         if (!commit) {
             this.onRowEditCancel.emit(emitArgs);
+            this.transactions.endPending(commit);
         } else {
             this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
         }
@@ -4514,7 +4515,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.transactions.startPending();
             return;
         }
-        this.transactions.endPending(commit);
         this.closeRowEditingOverlay();
     }
 
