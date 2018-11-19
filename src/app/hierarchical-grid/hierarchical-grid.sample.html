@@ -1,8 +1,8 @@
-<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'700px'">
-    <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' #layout1>
-        <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
-            <igx-layout [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
-            </igx-layout>
-        </igx-layout>
-    </igx-layout>
+<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'">
+    <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' #layout1>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-row-island>
 </igx-hierarchical-grid>

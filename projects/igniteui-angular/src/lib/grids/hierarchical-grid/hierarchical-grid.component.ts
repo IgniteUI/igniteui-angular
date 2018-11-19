@@ -23,7 +23,7 @@ import {
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 
@@ -88,14 +88,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     /**
      * @hidden
      */
-    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
-    public childLayoutList: QueryList<IgxChildLayoutComponent>;
+    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
+    public childLayoutList: QueryList<IgxRowIslandComponent>;
 
     /**
      * @hidden
      */
-    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: true })
-    public allLayoutList: QueryList<IgxChildLayoutComponent>;
+    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
+    public allLayoutList: QueryList<IgxRowIslandComponent>;
 
     public isChildGridRecord(record: any): boolean {
         return record.childGridData;

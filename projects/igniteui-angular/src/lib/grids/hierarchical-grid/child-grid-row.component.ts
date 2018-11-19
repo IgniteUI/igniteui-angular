@@ -13,7 +13,7 @@ import {
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 
 @Component({
@@ -44,7 +44,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     public get layout() {
-        const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-layout-` + this.rowData.key + '-' + this.level);
+        const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key + '-' + this.level);
        return layout;
     }
      /**

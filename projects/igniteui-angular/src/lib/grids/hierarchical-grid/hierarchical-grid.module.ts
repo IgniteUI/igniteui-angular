@@ -7,14 +7,14 @@ import { IgxGridModule } from '../grid/grid.module';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxGridHierarchicalPipe } from './hierarchical-grid.pipes';
-import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 @NgModule({
   declarations: [
     IgxHierarchicalGridComponent,
     IgxHierarchicalRowComponent,
-    IgxChildLayoutComponent,
+    IgxRowIslandComponent,
     IgxChildGridRowComponent,
     IgxGridHierarchicalPipe
   ],
@@ -22,7 +22,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
     IgxGridModule,
     IgxHierarchicalGridComponent,
     IgxHierarchicalRowComponent,
-    IgxChildLayoutComponent,
+    IgxRowIslandComponent,
     IgxChildGridRowComponent
   ],
   imports: [

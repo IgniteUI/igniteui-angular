@@ -1,11 +1,11 @@
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxChildLayoutComponent } from './igx-layout.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarchicalGridComponent> {
-    protected layouts: Map<string, IgxChildLayoutComponent> = new Map<string, IgxChildLayoutComponent>();
+    protected layouts: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected childGrids: Map<any, IgxHierarchicalGridComponent> = new Map<any, IgxHierarchicalGridComponent>();
-    registerLayout(layout: IgxChildLayoutComponent) {
+    registerLayout(layout: IgxRowIslandComponent) {
         this.layouts.set(layout.id, layout);
         this.destroyMap.set(layout.id, new Subject<boolean>());
     }

@@ -31,11 +31,11 @@ import { DOCUMENT } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'igx-layout',
+    selector: 'igx-row-island',
     template: ``
 })
-export class IgxChildLayoutComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit, OnChanges {
-    private layout_id = `igx-layout-`;
+export class IgxRowIslandComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit, OnChanges {
+    private layout_id = `igx-row-island-`;
     private hgridAPI;
     private isInit = false;
     public initialChanges;
@@ -45,8 +45,8 @@ export class IgxChildLayoutComponent extends IgxGridComponent implements AfterCo
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
     public allColumns = new QueryList<IgxColumnComponent>();
 
-    @ContentChildren(IgxChildLayoutComponent, { read: IgxChildLayoutComponent, descendants: false })
-    children = new QueryList<IgxChildLayoutComponent>();
+    @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
+    children = new QueryList<IgxRowIslandComponent>();
 
     @Output()
     public onLayoutChange = new EventEmitter<any>();

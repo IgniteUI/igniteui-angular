@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { IgxChildLayoutComponent } from 'igniteui-angular';
+import { IgxRowIslandComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
@@ -11,7 +11,7 @@ export class HierarchicalGridSampleComponent {
     isRowSelectable = false;
 
     @ViewChild('layout1')
-    layout1: IgxChildLayoutComponent;
+    layout1: IgxRowIslandComponent;
 
     constructor() {
         // this.localData.push({ ID: -1, Name: ''});
