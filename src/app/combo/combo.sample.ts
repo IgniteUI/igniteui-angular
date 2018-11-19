@@ -121,4 +121,8 @@ export class ComboSampleComponent implements OnInit {
         this.igxCombo.itemTemplate = this.initialItemTemplate ? this.initialItemTemplate : this.customItemTemplate ;
         this.initialItemTemplate = comboTemplate;
     }
+
+    setDensity(density: string) {
+        this.igxCombo.displayDensity = density;
+    }
 }
