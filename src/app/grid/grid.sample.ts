@@ -16,7 +16,8 @@ import {
     IgxExcelExporterOptions,
     IgxExporterOptionsBase,
     IgxExcelExporterService,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    DefaultSortingStrategy
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { LocalService } from '../shared/local.service';
@@ -96,7 +97,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         ];
 
         this.grid2.sortingExpressions = [];
-        this.grid3.sortingExpressions = [{ fieldName: 'ProductID', dir: SortingDirection.Desc }];
+        this.grid3.sortingExpressions = [{ fieldName: 'ProductID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }];
         this.grid3.paging = true;
 
 
