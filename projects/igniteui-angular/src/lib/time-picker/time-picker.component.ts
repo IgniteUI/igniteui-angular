@@ -137,14 +137,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
-    public get okButtonLabel() : string {
+    public get okButtonLabel(): string {
         if (this._okButtonLabel) {
             return this._okButtonLabel;
         } else {
-            return this.localService.translate("okButtonLabel");
+            return this.localService.translate('okButtonLabel');
         }
     }
-    
+
     @Input()
     public set okButtonLabel(value: string) {
         this._okButtonLabel = value;
@@ -157,14 +157,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * <igx-time-picker cancelButtonLabel='Exit' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
-    public get cancelButtonLabel() : string {
+    public get cancelButtonLabel(): string {
         if (this._cancelButtonLabel) {
             return this._cancelButtonLabel;
         } else {
-            return this.localService.translate("cancelButtonLabel");
+            return this.localService.translate('cancelButtonLabel');
         }
     }
-    
+
     @Input()
     public set cancelButtonLabel(value: string) {
         this._cancelButtonLabel = value;

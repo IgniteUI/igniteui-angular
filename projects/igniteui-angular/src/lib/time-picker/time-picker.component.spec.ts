@@ -1094,7 +1094,8 @@ export class IgxTimePickerLocalizedComponent {
             en : 'Cancel',
             de : 'Stornieren'
         }
-    }
+    };
+
     constructor(private localService: IgxLocalizationService) {
         this.localService.loadResourcesFromObject(this.ResourceStrings);
     }

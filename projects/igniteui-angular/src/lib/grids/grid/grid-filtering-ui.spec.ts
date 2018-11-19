@@ -2653,14 +2653,15 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
         <igx-column [field]="'Released'" dataType="boolean"></igx-column>
     </igx-grid>`
 })
-export class IgxGridFilteringLocalizedComponent extends IgxGridFilteringComponent { 
+export class IgxGridFilteringLocalizedComponent extends IgxGridFilteringComponent {
 
     private ResourceStrings = {
         close : {
             en : 'Close',
             de : 'Schließen'
         }
-    }
+    };
+
     constructor(private localService: IgxLocalizationService) {
         super();
         this.localService.loadResourcesFromObject(this.ResourceStrings);

@@ -3,7 +3,7 @@ export const ResourceStrings = {
         en : 'Filter',
         jp : 'Filter',
         ko : 'Filter'
-    }, 
+    },
     close : {
         en: 'Close',
         jp: 'Close',

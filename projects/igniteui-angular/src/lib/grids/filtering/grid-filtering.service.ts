@@ -47,7 +47,8 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService, @Inject(LOCALE_ID) private locale: string) {
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService,
+                @Inject(LOCALE_ID) private locale: string) {
         this.datePipe = new DatePipe(this.locale);
     }
 

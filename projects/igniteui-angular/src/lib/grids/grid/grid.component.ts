@@ -319,14 +319,14 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * ```
 	 * @memberof IgxGridComponent
      */
-    public get dropAreaMessage() : string {
+    public get dropAreaMessage(): string {
         if (this._dropAreaMessage) {
             return this._dropAreaMessage;
         } else {
-            return this.localService.translate("dropAreaMessage");
+            return this.localService.translate('dropAreaMessage');
         }
     }
-    
+
     @Input()
     public set dropAreaMessage(value: string) {
         this._dropAreaMessage = value;
