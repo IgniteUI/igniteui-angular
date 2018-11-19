@@ -26,7 +26,7 @@
 ///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $header-text-color: null,
@@ -34,18 +34,16 @@
     $content-text-color: null,
     $actions-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-card',
-        background: #fff,
-        header-text-color: igx-color($palette, grays, 800),
-        subtitle-text-color: igx-color($palette, grays, 600),
-        content-text-color: igx-color($palette, grays, 600),
-        actions-text-color: igx-color($palette, grays, 600)
-    );
+    // $default-theme: (
+    //     name: 'igx-card',
+    //     background: #fff,
+    //     header-text-color: igx-color($palette, grays, 800),
+    //     subtitle-text-color: igx-color($palette, grays, 600),
+    //     content-text-color: igx-color($palette, grays, 600),
+    //     actions-text-color: igx-color($palette, grays, 600)
+    // );
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-card'), $palette);
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -63,7 +61,7 @@
         $subtitle-text-color: rgba(text-contrast($background), .7);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         header-text-color: $header-text-color,
