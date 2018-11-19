@@ -15,7 +15,7 @@
 7. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
 8.Toolbar Templatable and NavBar Templatable 
 
-## Milestone 6 (28.02.2018)
+## Milestone 6 (28.02.2019)
 
 1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
 2. Implement number-of-records-based rendering for igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
