@@ -543,6 +543,103 @@ describe('IgxTreeGrid - Integration', () => {
             // 5. Commit
             // 6. Verify the correct value is set
         });
+
+        it('Undo/Redo keeps the correct number of steps with Hierarchical DS', () => {
+            // TODO:
+            // 1. Update a cell in three different rows
+            // 2. Execute "Undo" three times
+            // 3. Verify the initial state is shown
+            // 4. Execute "Redo" three times
+            // 5. Verify all the updates are shown with correct styles
+            // 6. Press "Commit"
+            // 7. Verify the changes are comitted
+        });
+
+        it('Add parent node to a Flat DS tree grid', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Verify the new row is pending with the correct styles
+            // 3. Commit
+            // 4. verify the row is committed, the styles are OK and the Undo stack is empty
+            // 5. Add another row at level 0
+            // 6. verify the pending styles is applied only to the newly added row
+            // and not to the previously added row
+        });
+
+        it('Add parent node to a Hierarchical DS tree grid', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Verify the new row is pending with the correct styles
+            // 3. Commit
+            // 4. Verify the row is committed, the styles are OK and the Undo stack is empty
+            // 5. Add another row at level 0
+            // 6. verify the pending styles is applied only to the newly added row
+            // and not to the previously added row
+        });
+
+        it('Add a child node to a previously added parent node - Flat DS', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Add a child row to that parent
+            // 3. Verify the new rows are pending with the correct styles
+            // 4. Commit
+            // 5. verify the rows are committed, the styles are OK
+            // 6. Add another child row at level 2 (grand-child of the first row)
+            // 7. verify the pending styles is applied only to the newly added row
+            // and not to the previously added rows
+        });
+
+        it('Add a child node to a previously added parent node - Hierarchical DS', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Add a child row to that parent
+            // 3. Verify the new rows are pending with the correct styles
+            // 4. Commit
+            // 5. verify the rows are committed, the styles are OK
+            // 6. Add another child row at level 2 (grand-child of the first row)
+            // 7. verify the pending styles is applied only to the newly added row
+            // and not to the previously added rows
+        });
+
+        it('Delete a pending parent node - Flat DS', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Select it
+            // 3. Delete the selected row
+            // 4. Verify the row is deleted
+            // 5. Undo
+            // 6. Verify the row is visible and pending again
+        });
+
+        it('Delete a pending parent node - Hierarchical DS', () => {
+            // TODO:
+            // 1. Add a row at level 0 to the grid
+            // 2. Select it
+            // 3. Delete the selected row
+            // 4. Verify the row is deleted
+            // 5. Undo
+            // 6. Verify the row is visible and pending again
+        });
+
+        it('Delete a pending child node - Flat DS', () => {
+            // TODO:
+            // 1. Add a row at level 1 to the grid
+            // 2. Select it
+            // 3. Delete the selected row
+            // 4. Verify the row is deleted
+            // 5. Undo
+            // 6. Verify the row is visible and pending again
+        });
+
+        it('Delete a pending child node - Hierarchical DS', () => {
+            // TODO:
+            // 1. Add a row at level 1 to the grid
+            // 2. Select it
+            // 3. Delete the selected row
+            // 4. Verify the row is deleted
+            // 5. Undo
+            // 6. Verify the row is visible and pending again
+        });
     });
 
     describe('Multi-column header', () => {
