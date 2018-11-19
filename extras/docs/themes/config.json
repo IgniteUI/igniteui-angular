@@ -1,7 +1,7 @@
 {
     "en": {
         "development": {
-            "url": "https://staging.infragistics.local"
+            "url": "https://dev.infragistics.local"
         },
         "staging": {
             "url": "https://staging.infragistics.local"
@@ -12,7 +12,7 @@
     },
     "jp": {
         "development": {
-            "url": "https://jp.staging.infragistics.local"
+            "url": "https://jp.dev.infragistics.local"
         },
         "staging": {
             "url": "https://jp.staging.infragistics.local"
