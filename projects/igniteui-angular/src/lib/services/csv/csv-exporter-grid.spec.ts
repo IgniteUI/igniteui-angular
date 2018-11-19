@@ -15,7 +15,6 @@ import { IgxTreeGridModule } from '../../grids/tree-grid';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -322,7 +321,7 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should export sorted tree grid properly.', async () => {
-            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc});
+            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             options.ignoreSorting = true;
             fix.detectChanges();
 
@@ -364,7 +363,7 @@ describe('CSV Grid Exporter', () => {
         it('should export filtered and sorted tree grid properly.', async () => {
             treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc});
+            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
             fix.detectChanges();
 
             const wrapper = await getExportedData(treeGrid, options);
