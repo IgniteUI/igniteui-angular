@@ -69,7 +69,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip [title]="'chip-content'"></igx-chip>
      * ```
      */
-    @HostBinding('attr.title')
     @Input()
     public get title(): string {
         if (!this._title) {

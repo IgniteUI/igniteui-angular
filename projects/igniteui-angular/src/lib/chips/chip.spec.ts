@@ -20,7 +20,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
+            [id]="chip.id" [title]="chip.title" [draggable]="chip.draggable"
+            [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
@@ -34,7 +35,8 @@ class TestChipComponent {
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' },
+        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy',
+            title: 'Title' },
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -451,5 +453,45 @@ describe('IgxChip', () => {
         fix.detectChanges();
 
         expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
+    });
+
+    it('should add title to the chip when no title is set', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chips = fix.componentInstance.chips.toArray();
+        expect(chips[0].title).toEqual('Country');
+        expect(chips[1].title).toEqual('City');
+        expect(chips[2].title).toEqual('Town');
+    });
+
+    it('should add title to the chip when it is set', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chips = fix.componentInstance.chips.toArray();
+        const lastChip = chips[3];
+        expect(lastChip.title).toEqual('Title');
+    });
+
+    it('should change title runtime', () => {
+        const fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+
+        const chips = fix.componentInstance.chips.toArray();
+        const firstChip = chips[0];
+        const lastChip = chips[3];
+        expect(firstChip.title).toEqual('Country');
+        expect(lastChip.title).toEqual('Title');
+
+        const firstChipNewTitle = 'New title for first chip';
+        const lastChipNewTitle = 'New title for last chip';
+        firstChip.title = firstChipNewTitle;
+        lastChip.title = lastChipNewTitle;
+
+        fix.detectChanges();
+
+        expect(firstChip.title).toEqual(firstChipNewTitle);
+        expect(lastChip.title).toEqual(lastChipNewTitle);
     });
 });
