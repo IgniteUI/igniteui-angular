@@ -5,7 +5,8 @@ import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
-    IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent
+    IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent,
+     IgxTreeGridRowEditingTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
@@ -34,7 +35,8 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridDateTreeColumnComponent,
                 IgxTreeGridBooleanTreeColumnComponent,
                 IgxTreeGridRowEditingComponent,
-                IgxTreeGridMultiColHeadersComponent
+                IgxTreeGridMultiColHeadersComponent,
+                IgxTreeGridRowEditingTransactionComponent
             ],
             imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule],
             providers: [

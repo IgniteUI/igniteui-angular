@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
+import { IgxTransactionService } from '../../public_api';
+import { IgxGridTransaction } from '../grids/grid-base.component';
 
 @Component({
     template: `
@@ -257,4 +259,20 @@ export class IgxTreeGridSelectionRowEditingComponent {
 export class IgxTreeGridMultiColHeadersComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+@Component({
+    template: `
+        <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>`
+    , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+})
+export class IgxTreeGridRowEditingTransactionComponent {
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
+    public paging = false;
 }
