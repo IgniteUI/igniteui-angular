@@ -2018,6 +2018,23 @@ describe('IgxGrid Component Tests', () => {
                 expect(overlayContent).toBeFalsy();
                 expect(rowEditingBannerElement).toBeTruthy(); // banner is still present in grid template, just not visible
             }));
+
+            it(`Should exit edit mode when edited row is being deleted`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const row = grid.getRowByKey(0);
+                const targetCell = grid.getCellByKey(0, 'Downloads');
+                spyOn(grid, 'endEdit').and.callThrough();
+                targetCell.inEditMode = true;
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
+                row.delete();
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
+                expect(grid.endEdit).toHaveBeenCalledTimes(1);
+                expect(grid.endEdit).toHaveBeenCalledWith(true);
+            });
         });
 
         describe('Row Editing - Filtering', () => {

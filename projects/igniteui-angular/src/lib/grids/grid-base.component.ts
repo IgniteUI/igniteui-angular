@@ -2074,7 +2074,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
@@ -2797,10 +2797,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
         //  Otherwise just exit - there is nothing to delete
         if (index !== -1 || hasRowInNonDeletedState) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell && editableCell.cellID.rowID === rowId) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
+            // Always exit edit when row is deleted
+            this.endEdit(true);
         } else {
             return;
         }
