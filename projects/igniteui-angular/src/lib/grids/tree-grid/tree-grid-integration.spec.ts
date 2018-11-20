@@ -20,6 +20,7 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.component';
+import { IgxGridCellComponent } from '../grid';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 
@@ -700,6 +701,61 @@ fdescribe('IgxTreeGrid - Integration', () => {
             // 5. Verify all the updates are shown with correct styles
             // 6. Press "Commit"
             // 7. Verify the changes are comitted
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            const trans = treeGrid.transactions;
+            const treeGridData = treeGrid.data;
+            // Get initial data
+            const rowData = {
+                147: Object.assign({}, treeGrid.getRowByKey(147).rowData),
+                475: Object.assign({}, treeGrid.getRowByKey(475).rowData),
+                19: Object.assign({}, treeGrid.getRowByKey(19).rowData)
+            };
+            const initialData = treeGrid.data.map(e => {
+                return Object.assign({}, e);
+            });
+            let targetCell: IgxGridCellComponent;
+            // Get 147 row
+            targetCell = treeGrid.getCellByKey(147, 'Name');
+            expect(targetCell.value).toEqual('John Winchester');
+            // Edit 'Name'
+            targetCell.update('Testy Testington');
+            // Get 475 row (1st child of 147)
+            targetCell = treeGrid.getCellByKey(475, 'Age');
+            expect(targetCell.value).toEqual(30);
+            // Edit Age
+            targetCell.update(42);
+            // Get 19 row
+            targetCell = treeGrid.getCellByKey(19, 'Name');
+            // Edit Name
+            expect(targetCell.value).toEqual('Yang Wang');
+            targetCell.update('Old Richard');
+            expect(rowData[147].Name).not.toEqual(treeGrid.getRowByKey(147).rowData.Name);
+            expect(rowData[475].Age).not.toEqual(treeGrid.getRowByKey(475).rowData.Age);
+            expect(rowData[19].Name).not.toEqual(treeGrid.getRowByKey(19).rowData.Name);
+            expect(treeGridData[0].Employees[475]).toEqual(initialData[0].Employees[475]);
+            expect(trans.canUndo).toBeTruthy();
+            expect(trans.canRedo).toBeFalsy();
+            trans.undo();
+            trans.undo();
+            trans.undo();
+            expect(rowData[147].Name).toEqual(treeGrid.getRowByKey(147).rowData.Name);
+            expect(rowData[475].Age).toEqual(treeGrid.getRowByKey(475).rowData.Age);
+            expect(rowData[19].Name).toEqual(treeGrid.getRowByKey(19).rowData.Name);
+            expect(trans.canUndo).toBeFalsy();
+            expect(trans.canRedo).toBeTruthy();
+            trans.redo();
+            trans.redo();
+            trans.redo();
+            expect(rowData[147].Name).not.toEqual(treeGrid.getRowByKey(147).rowData.Name);
+            expect(rowData[475].Age).not.toEqual(treeGrid.getRowByKey(475).rowData.Age);
+            expect(rowData[19].Name).not.toEqual(treeGrid.getRowByKey(19).rowData.Name);
+            expect(treeGridData[0].Employees[475]).toEqual(initialData[0].Employees[475]);
+            trans.commit(treeGridData, treeGrid.childDataKey, treeGrid.primaryKey);
+            expect(treeGridData[0].Name).toEqual('Testy Testington');
+            expect(treeGridData[0].Employees[0].Age).toEqual(42);
+            expect(treeGridData[1].Name).toEqual('Old Richard');
         });
 
         it('Add parent node to a Flat DS tree grid', fakeAsync(() => {
