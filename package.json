@@ -70,7 +70,6 @@
         "gulp-sass": "^4.0.1",
         "gulp-shell": "^0.6.5",
         "gulp-sourcemaps": "^2.6.4",
-        "gulp-typedoc": "^2.2.0",
         "gulp-uglify": "^3.0.1",
         "hammer-simulator": "git+https://github.com/hammerjs/simulator.git",
         "jasmine": "^3.1.0",
