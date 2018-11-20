@@ -1257,7 +1257,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 startIndex = this.state.startIndex;
                 endIndex = this.state.chunkSize + this.state.startIndex;
             }
-            
+
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embView = embeddedViewCopy.shift();
