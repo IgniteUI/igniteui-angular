@@ -21,7 +21,6 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.component';
 
-
 const CSS_CLASS_BANNER = 'igx-banner';
 
 fdescribe('IgxTreeGrid - Integration', () => {
@@ -646,15 +645,51 @@ fdescribe('IgxTreeGrid - Integration', () => {
             expect(trans.canUndo).toBe(false);
         }));
 
-        it('Editing a cell is posible with Hierarchical DS', () => {
-            // TODO:
-            // 1. Enter row edit mode in a gridwith Hierarchical DS
-            // 2. Update a cell
-            // 3. Press ENTER or click Done
-            // 4. Verify the value is updated and the correct style is applied before committing
-            // 5. Commit
-            // 6. Verify the correct value is set
-        });
+        fit('Editing a cell is possible with Hierarchical DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            const trans = treeGrid.transactions;
+
+            const targetCell = treeGrid.getCellByColumn(3, 'Age');
+            targetCell.inEditMode = true;
+            targetCell.update('333');
+            fix.detectChanges();
+            tick();
+
+            //  ged DONE button and click it
+            const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner'));
+            const buttonElements = rowEditingBannerElement.queryAll(By.css('.igx-button--flat'));
+            const doneButtonElement = buttonElements.find(el => el.nativeElement.innerText === 'Done');
+            doneButtonElement.nativeElement.click();
+            tick();
+
+            // Verify the value is updated and the correct style is applied before committing
+            expect(targetCell.inEditMode).toBeFalsy();
+            expect(targetCell.value).toBe('333');
+            expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
+
+            // Commit
+            trans.commit(treeGrid.data);
+            tick();
+
+            // Verify the correct value is set
+            expect(targetCell.value).toBe('333');
+
+            // Add new root lv row
+            treeGrid.addRow({ ID: 11, ParentID: -1, Name: 'Dan Kolov', JobTitle: 'wrestler', Age: 32, OnPTO: true });
+            tick();
+
+            // Edit a cell value and check it is correctly updated
+            const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
+            newTargetCell.inEditMode = true;
+            newTargetCell.update('666');
+            fix.detectChanges();
+            tick();
+
+            expect(newTargetCell.value).toBe('666');
+            expect(newTargetCell.nativeElement.classList).toContain('igx-grid__td--edited');
+        }));
 
         it('Undo/Redo keeps the correct number of steps with Hierarchical DS', () => {
             // TODO:
