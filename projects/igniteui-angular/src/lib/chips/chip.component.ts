@@ -1,5 +1,4 @@
 ﻿import {
-    AfterViewInit,
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -52,7 +51,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent extends DisplayDensityBase implements AfterViewInit {
+export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -72,7 +71,22 @@ export class IgxChipComponent extends DisplayDensityBase implements AfterViewIni
      */
     @HostBinding('attr.title')
     @Input()
-    public title: string;
+    public get title(): string {
+        if (!this._title) {
+            if (this.chipContent) {
+                this._title = this.chipContent.nativeElement.innerText;
+            } else {
+                this._title = '';
+            }
+        }
+
+        return this._title;
+    }
+    public set title(newTitle: string) {
+        this._title = newTitle;
+    }
+
+    protected _title: string;
 
     /**
      * An @Input property that stores data related to the chip.
@@ -396,13 +410,6 @@ export class IgxChipComponent extends DisplayDensityBase implements AfterViewIni
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
         }
-
-    ngAfterViewInit() {
-        if (!this.title) {
-            const chipInnerText = this.chipContent.nativeElement.innerText;
-            this.renderer.setAttribute(this.elementRef.nativeElement, 'title', chipInnerText);
-        }
-    }
 
     /**
      * @hidden
