@@ -241,8 +241,7 @@ export class DataUtil {
                 const dataRow = this.findDataRowFromPath(data, primaryKey, childDataKey, path);
                 switch (transaction.type) {
                     case TransactionType.ADD:
-                        //  if there is no dataRow, but there is a path this is ADD row added to
-                        //  DELETED ADD row - we just skip this
+                        //  if there is no dataRow this is ADD row at root level
                         if (dataRow) {
                             if (!dataRow[childDataKey]) {
                                 dataRow[childDataKey] = [];
@@ -250,6 +249,8 @@ export class DataUtil {
                             if (!dataRow[childDataKey].find(r => r[primaryKey] === transaction.id)) {
                                 dataRow[childDataKey].push(transaction.newValue);
                             }
+                        } else {
+                            data.push(transaction.newValue);
                         }
                         break;
                     case TransactionType.UPDATE:
