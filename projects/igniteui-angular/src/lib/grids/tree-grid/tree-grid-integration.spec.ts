@@ -669,6 +669,8 @@ describe('IgxTreeGrid - Integration', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
 
             const addedRowId = treeGrid.data.length;
@@ -686,9 +688,10 @@ describe('IgxTreeGrid - Integration', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
-            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
-            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
-            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            const transParams = {id: addedRowId, type: 'add', newValue: newRow};
+            expect(trans.add).toHaveBeenCalledWith(transParams);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
             fix.detectChanges();
@@ -702,25 +705,66 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
-            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
-            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
-            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(2);
+            expect(trans.add).toHaveBeenCalledWith(transParams);
         });
 
-        it('Delete a pending parent node - Hierarchical DS', () => {
-            // TODO:
-            // 1. Add a row at level 0 to the grid
-            // 2. Select it
-            // 3. Delete the selected row
-            // 4. Verify the row is deleted
-            // 5. Undo
-            // 6. Verify the row is visible and pending again
-        });
+        it('Delete a pending parent node - Hierarchical DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            const parentRow = treeGrid.getRowByIndex(0) as IgxTreeGridRowComponent;
+            const addedRowId = treeGrid.rowList.length;
+            const newRow = {
+                ID: addedRowId,
+                Name: 'John Dow',
+                HireDate: new Date(2018, 10, 20),
+                Age: 22,
+                OnPTO: false,
+                Employees: []
+            };
+
+            treeGrid.addRow(newRow, parentRow.rowID);
+            fix.detectChanges();
+
+            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            tick(20);
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            const transParams = {id: addedRowId, path: [parentRow.rowID], newValue: newRow, type: 'add'};
+            expect(trans.add).toHaveBeenCalledWith(transParams, null);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
+            expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
+            expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
+
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(2);
+            expect(trans.add).toHaveBeenCalledWith(transParams, null);
+        }));
 
         it('Delete a pending child node - Flat DS', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
 
             const addedRowId = treeGrid.data.length;
@@ -738,9 +782,10 @@ describe('IgxTreeGrid - Integration', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
-            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
-            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
-            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            const transParams = {id: addedRowId, type: 'add', newValue: newRow};
+            expect(trans.add).toHaveBeenCalledWith(transParams);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
             fix.detectChanges();
@@ -754,20 +799,64 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
-            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
-            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
-            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(2);
+            expect(trans.add).toHaveBeenCalledWith(transParams);
         });
 
-        it('Delete a pending child node - Hierarchical DS', () => {
-            // TODO:
-            // 1. Add a row at level 1 to the grid
-            // 2. Select it
-            // 3. Delete the selected row
-            // 4. Verify the row is deleted
-            // 5. Undo
-            // 6. Verify the row is visible and pending again
-        });
+        it('Delete a pending child node - Hierarchical DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            const parentRow = treeGrid.getRowByIndex(1) as IgxTreeGridRowComponent;
+            const addedRowId = treeGrid.rowList.length;
+            const newRow = {
+                ID: addedRowId,
+                Name: 'John Dow',
+                HireDate: new Date(2018, 10, 20),
+                Age: 22,
+                OnPTO: false,
+                Employees: []
+            };
+
+            treeGrid.addRow(newRow, parentRow.rowID);
+            fix.detectChanges();
+
+            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            tick(20);
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            const transPasrams = {
+                id: addedRowId,
+                path: [treeGrid.getRowByIndex(0).rowID, parentRow.rowID],
+                newValue: newRow,
+                type: 'add'};
+            expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
+            expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
+            expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
+
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(2);
+            expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
+
+        }));
     });
 
     describe('Multi-column header', () => {
