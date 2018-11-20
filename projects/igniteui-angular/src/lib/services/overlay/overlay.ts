@@ -399,7 +399,6 @@ export class IgxOverlayService implements OnDestroy {
         if (!info.openAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
             info.openAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
-            info.openAnimationPlayer.init();
 
             //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
             //  and then getting the positions from it.
@@ -435,7 +434,6 @@ export class IgxOverlayService implements OnDestroy {
         if (!info.closeAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
             info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
-            info.closeAnimationPlayer.init();
 
             //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
             //  and then getting the positions from it.
