@@ -17,16 +17,19 @@ import {
     AfterViewInit,
     OnChanges,
     Output,
-    EventEmitter
+    EventEmitter,
+    Optional
 } from '@angular/core';
 import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction } from '../grid';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxTransactionService, TransactionService } from '../../services';
+import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 
 
 @Component({
@@ -103,7 +106,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -111,8 +114,24 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(
+            gridAPI,
+            selection,
+            _transactions,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            _displayDensityOptions
+        );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 }

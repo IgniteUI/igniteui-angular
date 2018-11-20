@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { IGroupByResult } from '../../data-operations/sorting-strategy';
+import { IGroupByResult } from '../../data-operations/grouping-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 /**

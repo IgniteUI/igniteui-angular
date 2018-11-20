@@ -18,7 +18,8 @@ import {
     ComponentFactoryResolver,
     AfterViewInit,
     DoCheck,
-    AfterContentInit
+    AfterContentInit,
+    Optional
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -26,6 +27,9 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
+
 
 import {
     IgxGridFilteringPipe,
@@ -36,7 +40,7 @@ import {
 } from '.././grid/grid.pipes';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxTransactionService, TransactionService } from '../../services';
+import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 
@@ -47,7 +51,8 @@ let NEXT_ID = 0;
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) } ]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        IgxFilteringService ]
 })
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -241,7 +246,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService,
+        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -249,8 +254,23 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation);
+        navigation: IgxGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(
+                gridAPI,
+                selection,
+                _transactions,
+                elementRef,
+                zone,
+                document,
+                cdr,
+                resolver,
+                differs,
+                viewRef,
+                navigation,
+                filteringService,
+                _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 }
