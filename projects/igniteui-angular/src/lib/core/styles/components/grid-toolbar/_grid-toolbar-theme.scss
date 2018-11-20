@@ -31,7 +31,7 @@
 
 @function igx-grid-toolbar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background-color: null,
     $button-background: null,
@@ -50,29 +50,7 @@
     $item-focus-background: null,
     $item-focus-text-color: null
 ) {
-
-    $default-theme: (
-        background-color: rgba(0, 0, 0, .02),
-        button-background: #f0f0f0,
-        title-text-color : igx-color($palette, 'grays', 600),
-
-        button-text-color: igx-color($palette, 'grays', 600),
-        button-hover-background: igx-color($palette, 'grays', 100),
-        button-hover-text-color: igx-color($palette, 'grays', 600),
-        button-focus-background: igx-color($palette, 'grays', 100),
-        button-focus-text-color: igx-color($palette, 'grays', 600),
-
-        dropdown-background: #fff,
-        item-text-color: igx-color($palette, 'grays', 600),
-        item-hover-background: igx-color($palette, 'grays', 100),
-        item-hover-text-color: igx-color($palette, 'grays', 600),
-        item-focus-background: igx-color($palette, 'grays', 100),
-        item-focus-text-color: igx-color($palette, 'grays', 600)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-grid-toolbar'), $palette);
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -113,7 +91,7 @@
         $button-text-color: text-contrast($background-color);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         background-color: $background-color,
