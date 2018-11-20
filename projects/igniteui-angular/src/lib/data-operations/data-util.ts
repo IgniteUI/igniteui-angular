@@ -1,27 +1,22 @@
-import {
-    IgxFilteringOperand,
-    IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxStringFilteringOperand
-} from './filtering-condition';
-import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { filteringStateDefaults, IFilteringState } from './filtering-state.interface';
-import { FilteringStrategy, IFilteringStrategy } from './filtering-strategy';
+import { IFilteringState } from './filtering-state.interface';
 
-import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
-import { ISortingState, SortingStateDefaults } from './sorting-state.interface';
-import { ISortingStrategy, SortingStrategy, IGroupByResult, TreeGridSortingStrategy } from './sorting-strategy';
+import { IgxSorting, IgxDataRecordSorting } from './sorting-strategy';
+import { IGroupByResult, IgxGrouping } from './grouping-strategy';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
-import { IDataState } from './data-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { Transaction, TransactionType } from '../services';
-import { ITreeGridRecord } from '../grids/tree-grid/tree-grid.interfaces';
+import { ISortingExpression } from './sorting-expression.interface';
+import { FilteringStrategy } from './filtering-strategy';
+import { ITreeGridRecord } from '../grids/tree-grid';
+import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
+import { cloneValue, mergeObjects } from '../core/utils';
 
+/**
+ * @hidden
+ */
 export enum DataType {
     String = 'string',
     Number = 'number',
@@ -29,45 +24,29 @@ export enum DataType {
     Date = 'date'
 }
 
+/**
+ * @hidden
+ */
 export class DataUtil {
-    public static mergeDefaultProperties(target: object, defaults: object) {
-        if (!defaults) {
-            return target;
-        }
-        if (!target) {
-            target = Object.assign({}, defaults);
-            return target;
-        }
-        Object
-            .keys(defaults)
-            .forEach((key) => {
-                if (target[key] === undefined && defaults[key] !== undefined) {
-                    target[key] = defaults[key];
-                }
-            });
-        return target;
-    }
-    public static sort<T>(data: T[], state: ISortingState): T[] {
-        // set defaults
-        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
-        // apply default settings for each sorting expression(if not set)
-        return state.strategy.sort(data, state.expressions);
+    public static sort<T>(data: T[], expressions: ISortingExpression [], sorting: IgxSorting = new IgxSorting()): T[] {
+        return sorting.sort(data, expressions);
     }
 
-    public static hierarchicalSort(hierarchicalData: ITreeGridRecord[], state: ISortingState, parent: ITreeGridRecord): ITreeGridRecord[] {
-        state.strategy = new TreeGridSortingStrategy();
+    public static treeGridSort(hierarchicalData: ITreeGridRecord[],
+                               expressions: ISortingExpression [],
+                               parent?: ITreeGridRecord): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
 
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.hierarchicalSort(rec.children, state, rec);
+                rec.children = DataUtil.treeGridSort(rec.children, expressions, rec);
             }
             res.push(rec);
         });
 
-        res = DataUtil.sort(res, state);
+        res = DataUtil.sort(res, expressions, new IgxDataRecordSorting());
 
         return res;
     }
@@ -79,19 +58,17 @@ export class DataUtil {
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
             level: hierarchicalRecord.level,
-            expanded: hierarchicalRecord.expanded
+            expanded: hierarchicalRecord.expanded,
+            path: [...hierarchicalRecord.path]
         };
         return rec;
     }
 
     public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
-        // set defaults
-        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
-        // apply default settings for each grouping expression(if not set)
-        return state.strategy.groupBy(data, state.expressions);
+        const grouping = new IgxGrouping();
+        return grouping.groupBy(data, state.expressions);
     }
     public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
-        DataUtil.mergeDefaultProperties(state, SortingStateDefaults);
         if (state.expressions.length === 0) {
             return groupData.data;
         }
@@ -173,29 +150,11 @@ export class DataUtil {
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
     public static filter<T>(data: T[], state: IFilteringState): T[] {
-        // set defaults
-        DataUtil.mergeDefaultProperties(state, filteringStateDefaults);
         if (!state.strategy) {
-            return data;
+            state.strategy = new FilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
-    public static process<T>(data: T[], state: IDataState): T[] {
-        if (!state) {
-            return data;
-        }
-        if (state.filtering) {
-            data = DataUtil.filter(data, state.filtering);
-        }
-        if (state.sorting) {
-            data = DataUtil.sort(data, state.sorting);
-        }
-        if (state.paging) {
-            data = DataUtil.page(data, state.paging);
-        }
-        return data;
-    }
-
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];
         if (gRow !== undefined && gRow.expression) {
@@ -224,9 +183,12 @@ export class DataUtil {
      * @param primaryKey Primary key of the collection, if any
      */
     public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
-        data.forEach((value, index) => {
-            const rowId = primaryKey ? value[primaryKey] : value;
+        data.forEach((item: any, index: number) => {
+            const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
+            if (Array.isArray(item.children)) {
+                this.mergeTransactions(item.children, transactions, primaryKey);
+            }
             if (transaction && transaction.type === TransactionType.UPDATE) {
                 data[index] = transaction.newValue;
             }
@@ -235,6 +197,44 @@ export class DataUtil {
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
+        return data;
+    }
+
+    // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
+    /** @experimental @hidden */
+    public static mergeHierarchicalTransactions(
+        data: any[],
+        transactions: HierarchicalTransaction[],
+        childDataKey: any,
+        primaryKey?: any,
+        parentKey?: any): any[] {
+
+        for (let index = 0; index < data.length; index++) {
+            const dataItem = data[index];
+            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
+            const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
+            const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
+            if (updateTransaction || addedTransactions.length > 0) {
+                data[index] = mergeObjects(cloneValue(dataItem), updateTransaction && updateTransaction.newValue);
+            }
+            if (addedTransactions.length > 0) {
+                if (!data[index][childDataKey]) {
+                    data[index][childDataKey] = [];
+                }
+                for (const addedTransaction of addedTransactions) {
+                    data[index][childDataKey].push(addedTransaction.newValue);
+                }
+            }
+            if (data[index][childDataKey]) {
+                data[index][childDataKey] = this.mergeHierarchicalTransactions(
+                    data[index][childDataKey],
+                    transactions,
+                    childDataKey,
+                    primaryKey,
+                    rowId
+                );
+            }
+        }
         return data;
     }
 

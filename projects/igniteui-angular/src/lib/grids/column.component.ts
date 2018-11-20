@@ -8,30 +8,29 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
 import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxGridBaseComponent,
+    FilteringExpressionsTree
+} from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
-import {
-    IgxBooleanFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { SortingStrategy } from '../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -113,17 +112,17 @@ export class IgxColumnComponent implements AfterContentInit {
     public editable = null;
     /**
      * Sets/gets whether the column is filterable.
-     * Default value is `false`.
+     * Default value is `true`.
      * ```typescript
      * let isFilterable = this.column.filterable;
      * ```
      * ```html
-     * <igx-column [filterable] = "true"></igx-column>
+     * <igx-column [filterable] = "false"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = false;
+    public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -173,7 +172,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this._hidden !== value) {
             this._hidden = value;
             if (this.grid) {
-                this.grid.endRowEdit(true);
+                this.grid.endEdit(true);
             }
             const cellInEditMode = this.gridAPI.get_cell_inEditMode(this.gridID);
             if (cellInEditMode) {
@@ -202,6 +201,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 }
 
                 this.grid.reflow();
+                this.grid.filteringService.refreshExpressions();
             }
         }
     }
@@ -489,7 +489,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get sortStrategy(): any {
+    public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
     /**
@@ -503,11 +503,31 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public set sortStrategy(classRef: any) {
+    public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
-
-
+     /**
+     * Gets the function that compares values for grouping.
+     * ```typescript
+     * let groupingComparer = this.column.groupingComparer'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get groupingComparer(): (a: any, b: any) => number {
+        return this._groupingComparer;
+    }
+    /**
+     * Sets a custom function to compare values for grouping.
+     * Subsequent values in the sorted data that the function returns 0 for are grouped.
+     * ```typescript
+     * this.column.groupingComparer = (a: any, b: any) => { return a === b ? 0 : -1; }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set groupingComparer(funcRef: (a: any, b: any) => number) {
+        this._groupingComparer = funcRef;
+    }
     /**
      * Gets the default minimum `width` of the column.
      * ```typescript
@@ -625,8 +645,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
-            .map((row) => row.cells.filter((cell) => cell.columnIndex === this.index))
-            .reduce((a, b) => a.concat(b), []);
+            .map((row) => {
+                if (row.cells) {
+                    return row.cells.filter((cell) => cell.columnIndex === this.index);
+                }
+            }).reduce((a, b) => a.concat(b), []);
     }
     /**
      * Gets the column visible index.
@@ -705,6 +728,16 @@ export class IgxColumnComponent implements AfterContentInit {
     public widthSetByUser: boolean;
 
     /**
+     * Returns the filteringExpressionsTree of the column.
+     * ```typescript
+     * let tree =  this.column.filteringExpressionsTree;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get filteringExpressionsTree(): FilteringExpressionsTree {
+        return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
+    }
+    /**
      * Sets/gets the parent column.
      * ```typescript
      * let parentColumn = this.column.parent;
@@ -757,7 +790,11 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy = new SortingStrategy();
+    protected _sortStrategy: ISortingStrategy = DefaultSortingStrategy.instance();
+    /**
+     *@hidden
+     */
+    protected _groupingComparer: (a: any, b: any) => number;
     /**
      *@hidden
      */
@@ -777,7 +814,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '88';
+    protected _defaultMinWidth = '64';
     /**
      *@hidden
      */
@@ -835,6 +872,9 @@ export class IgxColumnComponent implements AfterContentInit {
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
                     break;
+                default:
+                    this.summaries = IgxSummaryOperand;
+                    break;
             }
         }
         if (!this.filters) {
@@ -887,9 +927,8 @@ export class IgxColumnComponent implements AfterContentInit {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         if (this.grid) {
-            this.grid.endRowEdit(true);
+            this.grid.endEdit(true);
         }
-        this.gridAPI.submit_value(this.gridID);
         if (this._pinned) {
             return false;
         }
@@ -936,6 +975,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -949,9 +989,8 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public unpin(index?) {
         if (this.grid) {
-            this.grid.endRowEdit();
+            this.grid.endEdit(true);
         }
-        this.gridAPI.submit_value(this.gridID);
         if (!this._pinned) {
             return false;
         }
@@ -988,6 +1027,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.reinitPinStates();
 
         grid.cdr.detectChanges();
+        this.grid.filteringService.refreshExpressions();
         const newIndex = this.visibleIndex;
         IgxColumnComponent.updateHighlights(oldIndex, newIndex, grid);
         return true;
@@ -1090,7 +1130,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
             }
 
-            if (this.sortable || this.filterable) {
+            if (this.sortable || (this.grid.allowFiltering && this.filterable)) {
                 headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
             }
 

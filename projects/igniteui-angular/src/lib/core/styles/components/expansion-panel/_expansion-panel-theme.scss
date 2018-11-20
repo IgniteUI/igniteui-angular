@@ -26,7 +26,7 @@
 
 @function igx-expansion-panel-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $header-background: null,
     $header-focus-background: null,
@@ -38,21 +38,7 @@
     $disabled-color: null
 
 ) {
-    $default-theme: (
-        name: 'igx-expansion-panel',
-        header-background: #fff,
-        header-focus-background: igx-color($palette, 'grays', 100),
-        header-title-color: igx-color($palette, 'grays', 800),
-        header-description-color: igx-color($palette, 'grays', 600),
-        header-icon-color: igx-color($palette, 'grays', 800),
-        body-color: igx-color($palette, 'grays', 800),
-        body-background: #fff,
-        disabled-color: igx-color($palette, 'grays', 500)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-expansion-panel'), $palette);
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);
@@ -71,7 +57,7 @@
     }
 
     // if statement place
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         header-background: $header-background,
         header-focus-background: $header-focus-background,

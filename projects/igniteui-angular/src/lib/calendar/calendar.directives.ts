@@ -212,6 +212,9 @@ export class IgxCalendarDateDirective {
     }
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCalendarHeader]'
 })
@@ -220,6 +223,9 @@ export class IgxCalendarHeaderTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
+/**
+ * @hidden
+ */
 @Directive({
     selector: '[igxCalendarSubheader]'
 })

@@ -4,26 +4,23 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray } from '../../core/utils';
-import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
-    public groupBy(id: string, fieldName: string, dir: SortingDirection, ignoreCase: boolean, strategy: ISortingStrategy): void {
+    public groupBy(id: string, expression: IGroupingExpression): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
-        strategy = strategy ? strategy : this.getSortStrategyPerColumn(id, fieldName);
-        this.prepare_sorting_expression([sortingState, groupingState], { fieldName, dir, ignoreCase, strategy });
+        this.prepare_sorting_expression([sortingState, groupingState], expression);
         this.get(id).groupingExpressions = groupingState;
         this.arrange_sorting_expressions(id);
     }
 
-    public groupBy_multiple(id: string, expressions: ISortingExpression[]): void {
+    public groupBy_multiple(id: string, expressions: IGroupingExpression[]): void {
         const groupingState = cloneArray(this.get(id).groupingExpressions);
         const sortingState = cloneArray(this.get(id).sortingExpressions);
 
         for (const each of expressions) {
-            each.strategy = each.strategy ? each.strategy : this.getSortStrategyPerColumn(id, each.fieldName);
             this.prepare_sorting_expression([sortingState, groupingState], each);
         }
 
@@ -111,15 +108,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
         this.get(id).groupingExpansionState = expansionState;
         if (grid.rowEditable) {
-            if (toggleRowEditingOverlay !== undefined) {
-                grid.toggleRowEditingOverlay(toggleRowEditingOverlay);
-            }
-
-            // If row overlay is opened in a group and another group is expanded/collapsed,
-            // then the row in edit will move down/up and therefore the row edit overlay should move down/up.
-            if (grid.rowInEditMode && !grid.rowEditingOverlay.collapsed) {
-                grid.repositionRowEditingOverlay(grid.rowInEditMode);
-            }
+            grid.repositionRowEditingOverlay(grid.rowInEditMode);
         }
     }
 

@@ -17,23 +17,14 @@
 ///   igx-ripple($my-ripple-theme);
 @function igx-ripple-theme(
     $palette: $default-palette,
-    $preset: null,
-
+    $schema: $light-schema,
     $color: null
 ) {
-    $default-theme: (
-        name: 'igx-ripple',
-        color: igx-color($palette, 'grays', 800)
-    );
+    $theme: apply-palette(map-get($schema, 'igx-ripple'), $palette);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
-        color: $color,
-        test: 'test'
+        color: $color
     ));
 }
 

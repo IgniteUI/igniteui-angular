@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { Calendar } from '../calendar/calendar';
 
 @Component({
     template: `
@@ -46,6 +45,38 @@ export class IgxTreeGridFilteringComponent {
 export class IgxTreeGridSimpleComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="300px" height="400px" columnWidth="100px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithScrollsComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="600px" height="600px" columnWidth="100px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridWithNoScrollsComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
 }
 
 @Component({
@@ -158,6 +189,53 @@ export class IgxTreeGridBooleanTreeColumnComponent {
     `
 })
 export class IgxTreeGridCrudComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}
+
+// Test Component for tree-grid row editing
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" [rowEditable]='true' childDataKey="Employees" width="900px" height="600px">
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridRowEditingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeSmallTreeData();
+}
+
+// Test Component for tree-grid filtering and row editing
+@Component({
+    template: `
+        <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [rowEditable]="true" width="900px" height="600px">
+            <igx-column [field]="'HireDate'" dataType="date" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'Name'" dataType="string" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'ID'" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
+            <igx-column [field]="'Age'" dataType="number" [sortable]="true" [filterable]="true"></igx-column>
+        </igx-tree-grid>
+    `
+})
+export class IgxTreeGridFilteringRowEditingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="900px" height="600px">
+        <igx-column [editable]="true" [field]="'ID'" dataTtype="number"></igx-column>
+        <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSelectionRowEditingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
 }

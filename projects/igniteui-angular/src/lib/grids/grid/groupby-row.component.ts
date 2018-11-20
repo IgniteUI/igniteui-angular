@@ -23,9 +23,9 @@ import { first } from 'rxjs/operators';
 export class IgxGridGroupByRowComponent {
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-                private selection: IgxSelectionAPIService,
-                public element: ElementRef,
-                public cdr: ChangeDetectorRef) { }
+        private selection: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -138,7 +138,7 @@ export class IgxGridGroupByRowComponent {
     @HostBinding('class')
     get styleClasses(): string {
         return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
-        (this.focused ? ` ${this.defaultCssClass}--active` : '');
+            (this.focused ? ` ${this.defaultCssClass}--active` : '');
     }
 
     /**
@@ -164,7 +164,17 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     public toggle() {
+        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
+        if (isVirtualized) {
+            this.grid.verticalScrollContainer.onChunkLoad
+            .pipe(first())
+            .subscribe(() => {
+                const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
+                if (groupRow) { groupRow.focus(); }
+            });
+        }
     }
 
     /**
@@ -181,32 +191,20 @@ export class IgxGridGroupByRowComponent {
 
         if (this.isToggleKey(key)) {
             if (!alt) { return; }
-            if (key === 'arrowleft' ||  key === 'left') {
-                if (this.expanded) {
-                    const groupRowIndex = this.index;
-                    if (this.grid.rowList.length > 0 && this.grid.rowList.last.index ===
-                        this.grid.verticalScrollContainer.igxForOf.length - 1) {
-                        this.grid.verticalScrollContainer.onChunkLoad
-                            .pipe(first())
-                            .subscribe(() => {
-                                this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`).focus();
-                            });
-                    }
-                    this.grid.toggleGroup(this.groupRow);
-                }
-            } else if (key === 'arrowright' || key === 'right') {
-                if (!this.expanded) { this.grid.toggleGroup(this.groupRow); }
+            if ((this.expanded && (key === 'left' || key === 'arrowleft')) ||
+            (!this.expanded && (key === 'right' || key === 'arrowright'))) {
+                this.toggle();
             }
             return;
         }
-        const args = {cell: null, groupRow: this, event: event, cancel: false };
+        const args = { cell: null, groupRow: this, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
             return;
         }
         const colIndex = this._getSelectedColIndex() || 0;
         const visibleColumnIndex = this.grid.columnList.toArray()[colIndex].visibleIndex !== -1 ?
-        this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
+            this.grid.columnList.toArray()[colIndex].visibleIndex : 0;
         switch (key) {
             case 'arrowdown':
             case 'down':
@@ -218,8 +216,12 @@ export class IgxGridGroupByRowComponent {
                 break;
             case 'tab':
                 if (event.shiftKey) {
-                    this.grid.navigation.navigateUp(this.nativeElement, this.index,
-                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                    if (this.index === 0) {
+                        this.grid.navigation.moveFocusToFilterCell();
+                    } else {
+                        this.grid.navigation.navigateUp(this.nativeElement, this.index,
+                            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                    }
                 } else {
                     this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
                 }
@@ -253,10 +255,11 @@ export class IgxGridGroupByRowComponent {
 
     private isKeySupportedInGroupRow(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'tab'].indexOf(key) !== -1;
+            'tab'].indexOf(key) !== -1;
     }
 
     private isToggleKey(key) {
         return ['left', 'right', 'arrowleft', 'arrowright'].indexOf(key) !== -1;
     }
+
 }

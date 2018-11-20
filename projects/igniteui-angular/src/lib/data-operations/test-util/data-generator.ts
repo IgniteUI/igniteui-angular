@@ -1,13 +1,26 @@
 import {DataType} from '../data-util';
 
+/**
+ * @hidden
+ */
 const COUNT_ROWS = 5;
+
+/**
+ * @hidden
+ */
 const COUNT_COLS = 4;
 
+/**
+ * @hidden
+ */
 export interface IDataColumn {
     fieldName: string;
     type: DataType;
 }
 
+/**
+ * @hidden
+ */
 export class DataGenerator {
     public columns: IDataColumn[] = [];
     public data: object[] = [];

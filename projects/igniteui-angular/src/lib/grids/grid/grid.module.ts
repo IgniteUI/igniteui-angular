@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IgxGridAPIService } from './grid-api.service';
 import {
     IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective
@@ -20,6 +19,9 @@ import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 
+/**
+ * @hidden
+ */
 @NgModule({
   declarations: [
     IgxGridComponent,
@@ -31,7 +33,7 @@ import { DeprecateMethod } from '../../core/deprecateDecorators';
     IgxGridPostGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
-    IgxGridFilteringPipe,
+    IgxGridFilteringPipe
   ],
   exports: [
     IgxGridComponent,

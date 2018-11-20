@@ -12,20 +12,37 @@ export interface Transaction {
     newValue: any;
 }
 
+/** @experimental @hidden */
+export interface HierarchicalTransaction extends Transaction {
+    parentId: any;
+}
+
 export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
 }
 
-export interface TransactionService {
+/** @experimental @hidden */
+export interface HierarchicalState extends State {
+    parentId: any;
+}
+
+/** @experimental @hidden */
+export interface HierarchicalTransactionNode {
+    id: any;
+    parentId?: any;
+    childNodes: HierarchicalTransactionNode[];
+}
+
+export interface TransactionService<T extends Transaction, S extends State> {
     /**
      * Returns whether transaction is enabled for this service
      */
     readonly enabled: boolean;
 
     /**
-     * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo.
+     * Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo
      */
     onStateUpdate?: EventEmitter<void>;
 
@@ -44,13 +61,14 @@ export interface TransactionService {
      * @param transaction Transaction to be added
      * @param recordRef Reference to the value of the record in the data source related to the changed item
      */
-    add(transaction: Transaction, recordRef?: any): void;
+    add(transaction: T, recordRef?: any): void;
 
     /**
-     * Returns an array of all transactions. If id is provided returns last transaction for provided id
-     * @returns All the transaction on last transaction for provided id
+     * Returns all recorded transactions in chronological order
+     * @param id Optional record id to get transactions for
+     * @returns All transaction in the service or for the specified record
      */
-    getTransactionLog(id?: any): Transaction[] | Transaction;
+    getTransactionLog(id?: any): Transaction[];
 
     /**
      * Remove the last transaction if any
@@ -68,14 +86,14 @@ export interface TransactionService {
      * and will record resulting value in the related transaction
      * @returns Collection of aggregated transactions for each changed record
      */
-    aggregatedState(mergeChanges: boolean): Transaction[];
+    getAggregatedChanges(mergeChanges: boolean): T[];
 
     /**
      * Returns the state of the record with provided id
      * @param id The id of the record
      * @returns State of the record if any
      */
-    getState(id: any): State;
+    getState(id: any): S;
 
     /**
      * Returns value of the required id including all uncommitted changes

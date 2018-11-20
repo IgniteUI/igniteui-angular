@@ -2,7 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 6.2.1
+- `igx-drop-down`:
+    - Added a new property `maxHeight`, defining the max height of the drop down.
+
 ## 6.2.0
+- Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
+  - **Breaking change:** Applications using Ignite UI for Angular now require the `igx-typography` class to be applied on wrapping element, like the body element for instance.
+
 - Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
     
     Setting display density on a component level:
@@ -32,6 +39,8 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
 - `igxGrid`:
     - **Breaking change** `onGroupingDone` - The array of `ISortingExpression` can now be accessed through the `expressions` event property. Two new properties have been added to the event arguments - `groupedColumns` and `ungroupedColumns`. They provide references to arrays of `IgxColumnComponent` that hold the columns which have changed their state because of the **last** grouping/ungrouping operation.
 
+    - **Breaking change** `onEditDone` event is renamed to `onCellEdit` and new cell editing events are introduced: `onCellEditEnter` and `onCellEditCancel`. When row editing is enabled, the corresponding events are emitted by the grid - `onRowEditEnter`, `onRowEdit`, `onRowEditCancel`. All these events have arguments that are using the `IGridEditEventArgs` interface.
+
     - Row editing - allows modification of several cells in the row, before submitting, at once, all those changes to the grid's data source. Leverages the pending changes functionality of the new transaction provider.
 
         ```html
@@ -55,6 +64,7 @@ For more detailed information, see the [README](https://github.com/IgniteUI/igni
     - **Breaking change** `cellClasses` input on `IgxColumnComponent` now accepts an object literal to allow conditional cell styling.
     - Exposing a mechanism for cells to grow according to their content.
     - `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+    - New quick filtering functionality is implemented. Filtering icon is removed from column header and a filtering row is introduced in the grid's header.
 - `igxFor`
     - Added support for variable heights.
 - `igx-datePicker` selector is deprecated. Use `igx-date-picker` selector instead.
@@ -162,6 +172,9 @@ When you focus a specific cell and press one of the following key combinations, 
 ## 6.1.8
 
 ### General
+
+- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+- `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
 
 ### Bug fixes
 

@@ -3,15 +3,14 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { take } from 'rxjs/operators';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule,  } from './index';
-import { IgxGridComponent } from './grid.component';
-import { IGridCellEventArgs } from '../grid-base.component';
-import { IgxStringFilteringOperand } from '../../../public_api';
+import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../../test-utils/helper-utils.spec';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -200,7 +199,7 @@ describe('IgxGrid - Cell component', () => {
         describe('Cell Editing - test edit templates, sorting and filtering', () => {
             configureTestSuite();
             let fixture;
-            let grid;
+            let grid: IgxGridComponent;
             beforeEach(() => {
                 fixture = TestBed.createComponent(CellEditingTestComponent);
                 fixture.detectChanges();
@@ -259,6 +258,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(87);
             }));
@@ -279,6 +279,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(0.3698);
                 expect(editTemplate.nativeElement.type).toBe('number');
@@ -300,6 +301,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
 
@@ -312,6 +314,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomNumber.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(parseFloat(cell.value)).toBe(expectedValue);
             }));
@@ -335,6 +338,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomBoolean.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
                 expect(cell.value).toBe(false);
             }));
@@ -358,8 +362,9 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.inEditMode).toBe(false);
-                expect(cell.value).toBe(selectedDate);
+                expect(cell.value.getTime()).toBe(selectedDate.getTime());
             }));
 
             it('should exit edit mode on filtering', (async () => {
@@ -416,14 +421,14 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
 
-                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc });
+                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
             }));
 
             it('should update correct cell when sorting is applied', (async () => {
-                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc});
+                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'fullName');
@@ -441,6 +446,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDom.nativeElement, true);
                 await wait(DEBOUNCETIME);
 
+                fixture.detectChanges();
                 expect(cell.value).toBe('Rick Gilmore');
                 expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
             }));

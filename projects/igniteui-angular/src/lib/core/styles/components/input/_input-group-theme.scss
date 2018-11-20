@@ -47,7 +47,7 @@
 ///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -87,43 +87,43 @@
 ) {
     $name: 'igx-input-group';
 
-    $dark-theme: (
-        name: $name,
+    // $dark-theme: (
+    //     name: $name,
 
-        idle-text-color: igx-color($palette, 'grays', 600),
-        filled-text-color: igx-color($palette, 'grays', 900),
-        focused-text-color: igx-color($palette, 'grays', 900),
-        disabled-text-color: igx-color($palette, 'grays', 500),
+    //     idle-text-color: igx-color($palette, 'grays', 600),
+    //     filled-text-color: igx-color($palette, 'grays', 900),
+    //     focused-text-color: igx-color($palette, 'grays', 900),
+    //     disabled-text-color: igx-color($palette, 'grays', 500),
 
-        idle-secondary-color: igx-color($palette, 'grays', 600),
-        filled-secondary-color: igx-color($palette, 'grays', 600),
-        focused-secondary-color: igx-color($palette, 'primary'),
+    //     idle-secondary-color: igx-color($palette, 'grays', 600),
+    //     filled-secondary-color: igx-color($palette, 'grays', 600),
+    //     focused-secondary-color: igx-color($palette, 'primary'),
 
-        idle-bottom-line-color: igx-color($palette, 'grays', 600),
-        hover-bottom-line-color: igx-color($palette, 'grays', 900),
-        filled-bottom-line-color: igx-color($palette, 'grays', 600),
-        focused-bottom-line-color: igx-color($palette, 'primary'),
-        interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
-        disabled-bottom-line-color: rgba(0, 0, 0, .42),
-        disabled-border-color: rgba(igx-color($palette, 'grays', 500), .06),
+    //     idle-bottom-line-color: igx-color($palette, 'grays', 600),
+    //     hover-bottom-line-color: igx-color($palette, 'grays', 900),
+    //     filled-bottom-line-color: igx-color($palette, 'grays', 600),
+    //     focused-bottom-line-color: igx-color($palette, 'primary'),
+    //     interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
+    //     disabled-bottom-line-color: rgba(0, 0, 0, .42),
+    //     disabled-border-color: rgba(igx-color($palette, 'grays', 500), .06),
 
-        box-background: rgba(0, 0, 0, .06),
-        box-disabled-background: rgba(0, 0, 0, .03),
+    //     box-background: rgba(0, 0, 0, .06),
+    //     box-disabled-background: rgba(0, 0, 0, .03),
 
-        border-background: transparent,
-        border-disabled-background: rgba(0, 0, 0, .03),
+    //     border-background: transparent,
+    //     border-disabled-background: rgba(0, 0, 0, .03),
 
-        search-background: white,
-        search-disabled-background: white,
-        search-shadow-color: igx-color($palette, 'grays', 600),
-        search-disabled-shadow-color: igx-color($palette, 'grays', 300),
+    //     search-background: white,
+    //     search-disabled-background: white,
+    //     search-shadow-color: igx-color($palette, 'grays', 600),
+    //     search-disabled-shadow-color: igx-color($palette, 'grays', 300),
 
-        success-secondary-color: igx-color($palette, 'success'),
-        warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error'),
-        placeholder-color: igx-color($palette, 'grays', 500),
-        disabled-placeholder-color: igx-color($palette, 'grays', 400)
-    );
+    //     success-secondary-color: igx-color($palette, 'success'),
+    //     warning-secondary-color: igx-color($palette, 'warn'),
+    //     error-secondary-color: igx-color($palette, 'error'),
+    //     placeholder-color: igx-color($palette, 'grays', 500),
+    //     disabled-placeholder-color: igx-color($palette, 'grays', 400)
+    // );
 
     $light-theme: (
         name: $name,
@@ -161,20 +161,14 @@
         error-secondary-color: igx-color($palette, 'error'),
         placeholder-color: #999,
         disabled-placeholder-color: #777
-
-
     );
 
-    $default-theme: map-get((
-        dark: $dark-theme,
+    $theme: map-get((
+        dark: apply-palette(map-get($schema, 'igx-input-group'), $palette),
         light: $light-theme
     ), $variant);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
 
         idle-text-color: $idle-text-color,
@@ -270,11 +264,13 @@
         igx-prefix,
         [igxPrefix] {
             @extend %form-group-prefix;
+            outline-style: none;
         }
 
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix;
+            outline-style: none;
         }
     }
 

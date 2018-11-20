@@ -1,3 +1,6 @@
+/**
+ * @hidden
+ */
 export enum ExcelFolderTypes {
     RootExcelFolder,
     RootRelsExcelFolder,
@@ -9,7 +12,9 @@ export enum ExcelFolderTypes {
     WorksheetsRelsExcelFolder,
     TablesExcelFolder
 }
-
+/**
+ * @hidden
+ */
 export enum ExcelFileTypes {
     RootRelsFile,
     AppFile,

@@ -9,6 +9,7 @@ import { IgxGridModule } from './index';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand, FilteringExpressionsTree } from '../../../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxChipComponent } from '../../chips';
 
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
@@ -408,22 +409,31 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(1);
     });
 
-    it('Should highlight the filtering icon when filtering using the API.', () => {
+    it('Should render chip when filtering using the API.', () => {
         const fixture = TestBed.createComponent(IgxGridFilteringComponent);
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.grid;
 
         const firstHeaderCell = fixture.debugElement.query(By.css('.header-release-date'));
-        const filteringIconWrapper = firstHeaderCell.query(By.css('.' + FILTERING_TOGGLE_CLASS));
+        let filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
+        expect(filteringChips.length).toEqual(1);
+        let chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
+        expect(chipContent).toEqual('Filter');
 
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('today'));
         fixture.detectChanges();
-        expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_FILTERED_CLASS)).toBe(true);
+        filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
+        expect(filteringChips.length).toEqual(1);
+        chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
+        expect(chipContent).not.toEqual('Filter');
 
         grid.clearFilter('ReleaseDate');
         fixture.detectChanges();
-        expect(filteringIconWrapper.nativeElement.classList.contains(FILTERING_TOGGLE_CLASS)).toBe(true);
+        filteringChips = firstHeaderCell.parent.queryAll(By.directive(IgxChipComponent));
+        expect(filteringChips.length).toEqual(1);
+        chipContent = filteringChips[0].query(By.css('.igx-chip__content')).nativeElement.innerText;
+        expect(chipContent).toEqual('Filter');
     });
 
     it('Should correctly apply two conditions to two columns at once.', () => {
@@ -581,7 +591,8 @@ export class CustomFilter extends IgxFilteringOperand {
             isUnary: false,
             logic: (target: string): boolean => {
                 return target === 'custom';
-            }
+            },
+            iconName: 'custom'
         }];
     }
 
@@ -591,7 +602,7 @@ export class CustomFilter extends IgxFilteringOperand {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px">
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
         <igx-column [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
         <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
         <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>

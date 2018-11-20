@@ -9,8 +9,8 @@
 /// @param {Color} $header-background [#fefefe] - The table header background color.
 /// @param {Color} $header-text-color [rgba(0, 0, 0, .54)] - The table header text color.
 /// @param {String} $header-border-width [1px] - The border width used for header borders.
-/// @param {String} $header-border-style [dotted] - The border style used for header borders.
-/// @param {Color} $header-border-color [rgba(0, 0, 0, .24)] - The color used for header borders.
+/// @param {String} $header-border-style [solid] - The border style used for header borders.
+/// @param {Color} $header-border-color [rgba(0, 0, 0, .08)] - The color used for header borders.
 /// @param {Color} $ghost-header-text-color [rgba(0, 0, 0, .54)] - The dragged header text color.
 /// @param {Color} $ghost-header-icon-color [rgba(0, 0, 0, .38)] - The dragged header icon color.
 /// @param {Color} $ghost-header-background [#fff] - The dragged header background color.
@@ -52,7 +52,12 @@
 /// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
 /// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
-/// @param {Color} $treegrid-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+/// @param {Color} $tree-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+///
+/// @param {Color} $filtering-header-background [#fff] - The background color of the filtered column header.
+/// @param {Color} $filtering-header-text-color [rgba(0, 0, 0, .74)] - The text color color of the filtered column header.
+/// @param {Color} $filtering-row-background [#fff] - The background color of the filtering row.
+/// @param {Color} $filtering-row-text-color [rgba(0, 0, 0, .74)] - The text-color color of the filtering row.
 ///
 /// @requires igx-color
 /// @requires igx-contrast-color
@@ -61,7 +66,7 @@
 /// @requires extend
 @function igx-grid-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $header-background: null,
     $header-text-color: null,
@@ -126,79 +131,16 @@
     $drop-area-background: null,
     $drop-area-on-drop-background: null,
 
-    $treegrid-filtered-text-color: null
+    $filtering-header-background: null,
+    $filtering-header-text-color: null,
+    $filtering-row-background: null,
+    $filtering-row-text-color: null,
+    $tree-filtered-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid',
+    $theme: apply-palette(map-get($schema, 'igx-grid'), $palette);
 
-        header-background: hexrgba(igx-color($palette, 'grays', 100)),
-        header-text-color: igx-color($palette, 'grays', 600),
-        header-border-width: 1px,
-        header-border-style: dotted,
-        header-border-color: igx-color($palette, 'grays', 400),
-
-        content-background: #fff,
-        content-text-color: igx-color($palette, 'grays', 800),
-
-        ghost-header-text-color: igx-color($palette, 'grays', 600),
-        ghost-header-icon-color: igx-color($palette, 'grays'),
-        ghost-header-background: #fff,
-
-        row-odd-background: #fff,
-        row-even-background: #fff,
-        row-odd-text-color: inherit,
-        row-even-text-color: inherit,
-        row-selected-background: hexrgba(igx-color($palette, 'grays', 800)),
-        row-selected-text-color: igx-contrast-color($palette, 'grays', 800),
-        row-hover-background: hexrgba(igx-color($palette, 'grays', 200)),
-        row-hover-text-color: igx-contrast-color($palette, 'grays', 200),
-        row-border-color: igx-color($palette, 'grays', 300),
-
-        pinned-border-width: 2px,
-        pinned-border-style: solid,
-        pinned-border-color: igx-color($palette, 'grays', 400),
-
-        cell-selected-background: igx-color($palette, 'primary'),
-        cell-selected-text-color: igx-contrast-color($palette, 'primary'),
-        cell-editing-background: #fff,
-
-        edit-mode-color: igx-color($palette, 'secondary'),
-        edited-row-indicator: igx-color($palette, 'grays', 400),
-        cell-edited-value-color: igx-color($palette, 'grays', 600),
-
-        resize-line-color: igx-color($palette, 'secondary'),
-
-        drop-indicator-color: igx-color($palette, 'secondary'),
-
-        grouparea-background: hexrgba(igx-color($palette, 'grays', 100)),
-
-        group-label-column-name-text: igx-color($palette, 'primary', 500),
-        group-label-icon: igx-color($palette, 'primary', 500),
-        group-label-text: igx-color($palette, 'grays', 800),
-        expand-all-icon-color: igx-color($palette, 'grays', 600),
-        expand-all-icon-hover-color: igx-color($palette, 'grays', 800),
-
-        expand-icon-color: igx-color($palette, 'grays', 600),
-        expand-icon-hover-color: igx-color($palette, 'primary'),
-        active-expand-icon-color: igx-color($palette, 'grays', 500),
-        active-expand-icon-hover-color: igx-color($palette, 'primary'),
-
-        group-count-background: igx-color($palette, 'grays', 200),
-        group-count-text-color: igx-color($palette, 'grays', 600),
-
-        drop-area-text-color: igx-color($palette, 'grays', 600),
-        drop-area-icon-color: igx-color($palette, 'grays'),
-        drop-area-background: igx-color($palette, grays, 100),
-        drop-area-on-drop-background: igx-color($palette, grays, 200),
-
-        group-row-background: hexrgba(igx-color($palette, 'grays', 100)),
-        group-row-selected-background: hexrgba(igx-color($palette, 'grays', 200)),
-        treegrid-filtered-text-color: igx-color($palette, grays, 500)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
+    $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -264,7 +206,6 @@
         $group-row-background: $header-background
     }
 
-    ///////
     @if not($expand-icon-color) and $group-row-background {
         $expand-icon-color: text-contrast($group-row-background)
     }
@@ -280,8 +221,6 @@
     @if not($group-count-background) and $group-row-selected-background {
         $group-count-background: text-contrast($group-row-selected-background);
     }
-    ////////
-
 
     @if not($expand-all-icon-color) and $header-background {
         $expand-all-icon-color: rgba(text-contrast($header-background), .87);
@@ -319,7 +258,27 @@
         $drop-area-text-color: text-contrast($drop-area-background)
     }
 
-    @return extend($default-theme, (
+    @if not($filtering-header-background) and $header-background {
+        @if luminance($header-background) < .5 {
+            $filtering-header-background: lighten($header-background, 25%);
+        }
+    }
+
+    @if not($filtering-header-text-color) and $filtering-header-background {
+        $filtering-header-text-color: text-contrast(hexrgba($filtering-header-background));
+    }
+
+    @if not($filtering-row-background) and $header-background {
+        @if luminance($header-background) < .5 {
+            $filtering-row-background: lighten($header-background, 25%);
+        }
+    }
+
+    @if not($filtering-row-text-color) and $filtering-row-background {
+        $filtering-row-text-color: text-contrast(hexrgba($filtering-row-background));
+    }
+
+    @return extend($theme, (
         palette: $palette,
 
         header-background: $header-background,
@@ -353,6 +312,7 @@
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
 
+        edit-mode-color: $edit-mode-color,
         edit-mode-row-border-color: $edit-mode-color,
         edited-row-indicator: $edited-row-indicator,
         cell-edited-value-color: $cell-edited-value-color,
@@ -378,12 +338,21 @@
         group-count-text-color: $group-count-text-color,
 
         group-row-background: $group-row-background,
+        group-row-selected-background: $group-row-selected-background,
 
         drop-area-text-color: $drop-area-text-color,
         drop-area-icon-color: $drop-area-icon-color,
         drop-area-on-drop-background: $drop-area-on-drop-background,
         drop-area-background: $drop-area-background,
-        treegrid-filtered-text-color: $treegrid-filtered-text-color
+
+        filtering-header-background: $filtering-header-background,
+        filtering-header-text-color: $filtering-header-text-color,
+        filtering-row-background: $filtering-row-background,
+        filtering-row-text-color: $filtering-row-text-color,
+
+        tree-filtered-text-color: $tree-filtered-text-color,
+        tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
     ));
 }
 
@@ -414,8 +383,6 @@
     $transition: all 120ms $ease-in-out-cubic;
 
     // Cell
-    // $grid-cell-padding: 0 rem(24px);
-    // $grid-cell-padding--e: 0 rem(24px);
     $grid-cell-align-num: right;
     $grid-cell-fs: rem(13px);
     $grid-cell-lh: rem(16px);
@@ -513,8 +480,10 @@
         color: --var($theme, 'header-text-color');
 
         %grid-row {
+            position: relative;
             background: inherit;
             color: inherit;
+            z-index: 2;
 
             &:hover {
                 background: inherit;
@@ -524,7 +493,6 @@
     }
 
     %grid-thead {
-        position: relative;
         grid-row: 3;
         border-bottom: $grid-header-border;
         z-index: 2;
@@ -533,6 +501,29 @@
             &::after {
                 display: none;
             }
+        }
+
+        %grid__cbx-selection {
+            align-items: flex-start;
+            padding-top: (map-get($grid-header-height, 'comfortable') - rem(20px)) / 2;
+        }
+
+        %grid-row:last-of-type {
+            border-bottom: none;
+        }
+    }
+
+    %grid-thead--cosy {
+        %grid__cbx-selection {
+            align-items: flex-start;
+            padding-top: (map-get($grid-header-height, 'cosy') - rem(20px)) / 2;
+        }
+    }
+
+    %grid-thead--compact {
+        %grid__cbx-selection {
+            align-items: flex-start;
+            padding-top: (map-get($grid-header-height, 'compact') - rem(20px)) / 2;
         }
     }
 
@@ -560,6 +551,18 @@
     %grid-thead-group {
         display: flex;
         flex-flow: row nowrap;
+    }
+
+    /* We set those with position relative
+    so that the drop indicators be scoped
+    to their respective group. The item
+    being the topmost element, while the
+    subgroup encapsulates children of each
+    thead item and group.
+    */
+    %grid-thead-item,
+    %grid-thead-subgroup {
+        position: relative;
     }
 
     %grid-tfoot {
@@ -625,10 +628,6 @@
         outline-style: none;
         position: relative;
 
-        &:last-of-type {
-            border-bottom: 0;
-        }
-
         &:hover {
             background-color: --var($theme, 'row-hover-background');
             color: --var($theme, 'row-hover-text-color');
@@ -655,10 +654,10 @@
         }
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'row-selected-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'row-selected-background'));
+                color: --var($theme, 'row-selected-text-color');
             }
         }
     }
@@ -708,29 +707,55 @@
 
     %igx-grid-row--filtered {
         %grid-cell-text {
-            color: --var($theme, 'treegrid-filtered-text-color');
+            color: --var($theme, 'tree-filtered-text-color');
+        }
+
+        %igx-grid__tree-grouping-indicator {
+            color: --var($theme, 'tree-filtered-text-color');
+
+            &:hover {
+                color: --var($theme, 'tree-filtered-text-color');
+            }
+        }
+
+        %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
+            %igx-grid__tree-grouping-indicator {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+
+                &:hover {
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
+                }
+            }
         }
     }
 
     %grid-row--selected--filtered {
         %grid-cell-text {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
         }
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'row-selected-background')), .5);
+            color: --var($theme, 'tree-selected-filtered-row-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'row-selected-background'));
+                color: --var($theme, 'tree-selected-filtered-row-text-color');
             }
         }
 
         %grid-cell--selected {
+            %grid-cell-text {
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
+            }
+
             %igx-grid__tree-grouping-indicator {
-                color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+                color: --var($theme, 'tree-selected-filtered-cell-text-color');
 
                 &:hover {
-                    color: text-contrast(--var($theme, 'cell-selected-background'));
+                    color: --var($theme, 'tree-selected-filtered-cell-text-color');
                 }
             }
         }
@@ -740,6 +765,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        user-select: none;
+        outline-style: none;
         margin-right: rem(8);
         cursor: pointer;
 
@@ -780,7 +807,7 @@
     }
 
     %grid-cell--fixed-width {
-        position: relative;
+        // position: relative;
         flex-grow: 0;
         outline-style: none;
     }
@@ -791,21 +818,27 @@
         border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
-            color: rgba(text-contrast(--var($theme, 'cell-selected-background')), .5);
+            color: --var($theme, 'cell-selected-text-color');
 
             &:hover {
-                color: text-contrast(--var($theme, 'cell-selected-background'));
+                color: --var($theme, 'cell-selected-text-color');
             }
         }
     }
 
     %igx-grid__td--edited {
-        font-style: italic;
-        color: --var($theme, 'cell-edited-value-color');
+        %grid-cell-text {
+            font-style: italic;
+            color: --var($theme, 'cell-edited-value-color');
+        }
     }
 
     %igx-grid__tr--deleted {
-        text-decoration-line: line-through;
+        %grid-cell-text {
+            font-style: italic;
+            color: igx-color(map-get($theme, 'palette'), 'error');
+            text-decoration-line: line-through;
+        }
     }
 
     %igx-grid__td--editing {
@@ -839,7 +872,6 @@
     }
 
     %grid-cell-header {
-        position: relative;
         flex-flow: row nowrap;
         justify-content: space-between;
         align-items: flex-end;
@@ -849,6 +881,12 @@
         padding: map-get($grid-header-padding, 'comfortable');
         border-right: $grid-header-border;
         outline-style: none;
+    }
+
+    %grid-cell-header--filtering {
+        background: --var($theme, 'filtering-header-background');
+        color: --var($theme, 'filtering-header-text-color');
+        z-index: 3;
     }
 
     %grid-cell-header--cosy {
@@ -884,7 +922,7 @@
         align-items: center;
         justify-content: flex-end;
         user-select: none;
-        min-width: 39px; /* sort-icon width + filtering toggle icon width */
+        min-width: 15px; /* sort-icon width */
         height: map-get($grid-header-height, 'comfortable');
         align-self: flex-end;
 
@@ -928,6 +966,9 @@
         justify-content: center;
         align-items: center;
         padding: map-get($grid-header-padding, 'comfortable');
+        border-right: --var($theme, 'header-border-width')
+            --var($theme, 'header-border-style')
+            --var($theme, 'header-border-color');
         background: inherit;
         z-index: 1;
     }
@@ -991,6 +1032,7 @@
         width: 1px;
         height: 100%;
         top: 0;
+        z-index: 1;
     }
 
     %igx-grid__th-drop-indicator-left {
@@ -1004,7 +1046,7 @@
     %igx-grid__th-drop-indicator--active {
         &%igx-grid__th-drop-indicator-left,
         &%igx-grid__th-drop-indicator-right {
-            border-right: 1px dotted --var($theme, 'drop-indicator-color');
+            border-right: 1px solid --var($theme, 'drop-indicator-color');
         }
 
         &::after,
@@ -1365,6 +1407,7 @@
     %igx-grid__grouping-indicator {
         position: relative;
         display: flex;
+        user-select: none;
         justify-content: center;
         align-items: center;
         background: inherit;
@@ -1408,29 +1451,30 @@
 
     %igx-grid__group-expand-btn {
         position: absolute;
-        top: calc(50% - 18px);
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'comfortable')} - 6px);
+        cursor: pointer;
+        user-select: none;
+        top: (map-get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'comfortable');
 
-        &%igx-button--icon {
-            color: --var($theme, 'expand-all-icon-color');
-
-            &:hover {
-                color: --var($theme, 'expand-all-icon-hover-color');
-            }
+        &:hover {
+            color: --var($theme, 'expand-icon-hover-color');
         }
     }
 
     %igx-grid__group-expand-btn--cosy {
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'cosy')} - 6px);
+        top: (map-get($grid-header-height, 'cosy') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'cosy');
     }
 
     %igx-grid__group-expand-btn--compact {
-        left: calc(#{map-get($grid-grouping-indicator-padding, 'compact')} - 6px);
+        top: (map-get($grid-header-height, 'compact') - rem(24px)) / 2;
+        left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
     @for $i from 1 through 10 {
         // COMFORTABLE
         %igx-grid__row-indentation--level-#{$i} {
+            background: inherit;
             padding-left: calc(#{$i*map-get($grid-grouping-indicator-padding, 'comfortable')} + #{$indicator-icon-width});
         }
 
@@ -1477,5 +1521,175 @@
     %igx-grid__row-editing-outlet {
         z-index: 10000;
         position: absolute;
+    }
+
+    %igx-grid__filtering-cell {
+        display: flex;
+        align-items: center;
+        border-right: $grid-header-border;
+        border-top: $grid-header-border;
+        height: map-get($grid-header-height, 'comfortable');
+        padding: map-get($grid-header-padding, 'comfortable');
+        overflow: hidden;
+
+        igx-chips-area {
+            transition: transform .25s $ease-out-back;
+            flex-wrap: nowrap;
+
+            .igx-filtering-chips__connector {
+                font-size: rem(12px);
+                text-transform: uppercase;
+                font-weight: 600;
+                margin: 0 rem(8px);
+            }
+        }
+    }
+
+    %igx-grid__filtering-cell-indicator {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-right: 8px;
+        margin-left: 8px;
+        cursor: pointer;
+        visibility: visible;
+
+        igx-icon {
+            width: 18px;
+            height: 18px;
+            font-size: 18px;
+        }
+
+        %igx-badge-display {
+            /* start of IE vertical alignment fix */
+            top: 50%;
+            transform: translateY(-50%);
+            /* end of IE vertical alignment fix */
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            min-width: 14px;
+            font-size: 12px;
+            text-align: center;
+            right: 0;
+        }
+    }
+
+    %igx-grid__filtering-cell-indicator--hidden {
+        visibility: hidden;
+    }
+
+    %igx-grid__filtering-cell--cosy {
+        height: map-get($grid-header-height, 'cosy');
+        padding: map-get($grid-header-padding, 'comfortable');
+    }
+
+    %igx-grid__filtering-cell--compact {
+        height: map-get($grid-header-height, 'compact');
+        padding: map-get($grid-header-padding, 'comfortable');
+    }
+
+    %igx-grid__filtering-row {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 50px;
+        padding: map-get($grid-cell-padding, 'cosy');
+        align-items: center;
+        justify-content: space-between;
+        background: --var($theme, 'filtering-row-background');
+        color: --var($theme, 'filtering-row-text-color');
+        bottom: 0;
+        z-index: 3;
+
+        &::after {
+            display: block;
+            position: absolute;
+            content: '';
+            background: inherit;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            box-shadow: 0 1px 0 --var($theme, 'filtering-row-background'),
+                0 4px 10px rgba(0, 0, 0, .12);
+            z-index: -1;
+        }
+
+        igx-input-group {
+            flex: 0 0 200px;
+        }
+
+        igx-prefix:focus {
+            color: igx-color(map-get($theme, 'palette'), 'secondary');
+        }
+    }
+
+    %igx-grid__filtering-row-main {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        max-width: calc(100% - 176px);
+
+        igx-chips-area {
+            transition: transform .25s $ease-out-back;
+            flex-wrap: nowrap;
+            margin: 0 rem(8px);
+        }
+
+        igx-chip {
+            margin: 0 rem(4px);
+        }
+
+        [igxButton] {
+            igx-icon {
+                position: absolute;
+                left: rem(12px);
+                /* IE fix for vertical alignment*/
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            span {
+                margin-left: rem(16px);
+            }
+        }
+    }
+
+    %igx-grid__filtering-scroll-start {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        overflow: visible;
+        margin: 0 8px;
+        z-index: 1;
+
+        &::after {
+            position: absolute;
+            content: '';
+            left: calc(100% + 8px);
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to right, white, transparent);
+        }
+    }
+
+    %igx-grid__filtering-scroll-end {
+        width: 24px;
+        height: 24px;
+        position: relative;
+        overflow: visible;
+        margin: 0 8px;
+        z-index: 1;
+
+        &::before {
+            position: absolute;
+            content: '';
+            right: calc(100% + 8px);
+            width: 10px;
+            height: 100%;
+            background: linear-gradient(to left, white, transparent);
+        }
     }
 }

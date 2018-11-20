@@ -5,7 +5,6 @@ import {
     Component,
     DoCheck,
     ElementRef,
-    EventEmitter,
     HostBinding,
     HostListener,
     Input,
@@ -24,6 +23,8 @@ import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
 import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridComponent } from './grid';
 
 /**
  * @hidden
@@ -56,8 +57,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sorted': this.sorted,
             'igx-grid__drag-col-header': this.dragged,
-            'igx-grid__th--pinned': this.isPinned,
             'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__th--filtering': this.filteringService.filteredColumn === this.column
         };
 
         Object.entries(classList).forEach(([klass, value]) => {
@@ -68,10 +69,23 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
         return defaultClasses.join(' ');
     }
 
+
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.column.width;
+        // HACK - think of a better solution
+        const colWidth = this.column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (isPercentageWidth) {
+            const firstContentCell = this.column.cells[0];
+            if (firstContentCell) {
+                return firstContentCell.nativeElement.getBoundingClientRect().width + 'px';
+            }
+        } else {
+            return this.column.width;
+        }
     }
 
     @HostBinding('style.height.px')
@@ -119,7 +133,7 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
     public hostRole = 'columnheader';
 
     @HostBinding('attr.tabindex')
-    public tabindex = 0;
+    public tabindex = -1;
 
     @HostBinding('attr.id')
     get headerID() {
@@ -148,7 +162,8 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
         public zone: NgZone,
-        private cms: IgxColumnMovingService
+        private cms: IgxColumnMovingService,
+        public filteringService: IgxFilteringService
     ) { }
 
     public ngOnInit() {
@@ -185,7 +200,12 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck, AfterViewInit, O
     public onClick(event) {
         if (!this.column.grid.isColumnResizing) {
             event.stopPropagation();
-            if (this.column.sortable) {
+            if (this.grid.filteringService.isFilterRowVisible) {
+                if (this.column.filterable && !this.column.columnGroup &&
+                    !this.grid.filteringService.isFilterComplex(this.column.field)) {
+                    this.grid.filteringService.filteredColumn = this.column;
+                }
+            } else if (this.column.sortable) {
                 const groupingExpr = this.grid.groupingExpressions ?
                     this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) : null;
                 const sortDir = groupingExpr ?

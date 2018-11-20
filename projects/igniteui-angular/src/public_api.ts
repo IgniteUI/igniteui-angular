@@ -37,14 +37,12 @@ export * from './lib/data-operations/filtering-strategy';
 export * from './lib/data-operations/groupby-expand-state.interface';
 export * from './lib/data-operations/groupby-record.interface';
 export * from './lib/data-operations/groupby-state.interface';
+export * from './lib/data-operations/grouping-expression.interface';
+export * from './lib/data-operations/grouping-strategy';
 export * from './lib/data-operations/sorting-expression.interface';
-export * from './lib/data-operations/sorting-state.interface';
 export * from './lib/data-operations/sorting-strategy';
-export * from './lib/data-operations/stable-sorting-strategy';
 export * from './lib/data-operations/paging-state.interface';
-export * from './lib/data-operations/data-state.interface';
 export * from './lib/data-operations/data-util';
-export * from './lib/data-operations/data-container';
 
 /**
  * Components
@@ -61,6 +59,7 @@ export * from './lib/combo/combo.component';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/drop-down.component';
+export * from './lib/drop-down/drop-down-item.component';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/grids/hierarchical-grid/index';
@@ -86,3 +85,4 @@ export * from './lib/toast/toast.component';
 export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
+export { CancelableEventArgs } from './lib/core/utils';

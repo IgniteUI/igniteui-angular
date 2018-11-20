@@ -440,7 +440,7 @@ export class DefaultCRUDGridComponent extends BasicGridComponent {
 
     public editDone(event: IGridEditEventArgs) {
         if (event.newValue === 'change') {
-            event.newValue = event.cell ? 200 : { index: 200, value: 200 };
+            event.newValue = event.cellID ? 200 : { index: 200, value: 200 };
         }
     }
 }
@@ -691,6 +691,16 @@ export class MultiColumnHeadersComponent extends BasicGridComponent {
     data = SampleTestData.contactInfoDataFull();
     isPinned = false;
 }
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="800px"  width="500px"`, '',
+        ColumnDefinitions.multiColHeadersWithGroupingColumns)}`
+})
+export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent {
+    data = SampleTestData.contactInfoDataFull();
+    isPinned = false;
+}
+
 
 @Component({
     template: `${GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar)}`
