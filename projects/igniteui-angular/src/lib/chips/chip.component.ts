@@ -336,8 +336,8 @@ export class IgxChipComponent extends DisplayDensityBase implements AfterViewIni
     @ViewChild('chipArea', { read: ElementRef })
     public chipArea: ElementRef;
 
-    @ViewChild('chipText', { read: ElementRef })
-    public chipText: ElementRef;
+    @ViewChild('chipContent', { read: ElementRef })
+    public chipContent: ElementRef;
 
     /**
      * @hidden
@@ -399,8 +399,8 @@ export class IgxChipComponent extends DisplayDensityBase implements AfterViewIni
 
     ngAfterViewInit() {
         if (!this.title) {
-            const chipInnerText = this.chipText.nativeElement.innerText;
-            this.title = chipInnerText;
+            const chipInnerText = this.chipContent.nativeElement.innerText;
+            this.renderer.setAttribute(this.elementRef.nativeElement, 'title', chipInnerText);
         }
     }
 
