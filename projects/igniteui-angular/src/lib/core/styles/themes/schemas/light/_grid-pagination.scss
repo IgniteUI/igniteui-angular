@@ -1,0 +1,14 @@
+$_light-grid-pagination: (
+    name: 'igx-grid-paginator',
+
+    text-color: currentColor,
+
+    background-color: (
+        igx-color: ('grays', 100),
+        hexrgba: ()
+    ),
+
+    border-color: (
+        igx-color: ('grays', 400)
+    )
+);

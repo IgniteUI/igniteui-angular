@@ -21,22 +21,13 @@
 ///   @include igx-dialog($my-dialog-theme);
 @function igx-dialog-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $title-color: null,
     $message-color: null
 ) {
-    $default-theme: (
-        name: 'igx-dialog',
-        background: #fff,
-        title-color: igx-color($palette, grays, 800),
-        message-color: igx-color($palette, grays, 600)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-dialog'), $palette);
 
     @if not($title-color) and $background{
         $title-color: text-contrast($background);
@@ -46,7 +37,7 @@
         $message-color: rgba(text-contrast($background), .8);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         title-color: $title-color,

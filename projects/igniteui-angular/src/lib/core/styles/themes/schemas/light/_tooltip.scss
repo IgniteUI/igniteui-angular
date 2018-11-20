@@ -1,0 +1,18 @@
+$_light-tooltip: (
+    name: 'igx-tooltip',
+
+    background: (
+        igx-color: ('grays', 700),
+        hexrgba: (),
+        rgba: .9
+    ),
+
+    text-color: (
+        igx-color: ('grays', 700),
+        hexrgba: (),
+        rgba: .9,
+        text-contrast: ()
+    ),
+
+    roundness: rem(4px)
+);

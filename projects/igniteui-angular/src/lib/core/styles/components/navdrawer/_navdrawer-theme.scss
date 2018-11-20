@@ -32,7 +32,7 @@
 ///   @include igx-navdrawer($navdrawer-theme);
 @function igx-navdrawer-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $border-color: null,
@@ -49,24 +49,7 @@
     $item-hover-text-color: null,
     $item-hover-icon-color: null
 ) {
-    $default-theme: (
-        name: 'igx-navdrawer',
-        background: #fff,
-        border-color: rgba(0, 0, 0, .14),
-        item-text-color: igx-color($palette, grays, 700),
-        item-active-text-color: igx-color($palette, primary, 500),
-        item-active-background: igx-color($palette, grays, 100),
-        item-hover-background: igx-color($palette, grays, 200),
-        item-hover-text-color: igx-color($palette, grays, 800),
-        item-header-text-color: igx-color($palette, grays, 600),
-        item-icon-color: igx-color($palette, grays, 700),
-        item-active-icon-color: igx-color($palette, primary, 500),
-        item-hover-icon-color: igx-color($palette, grays, 800)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-navdrawer'), $palette);
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -100,7 +83,7 @@
         $item-hover-text-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background: $background,
         border-color: $border-color,

@@ -17,21 +17,12 @@
 ///
 @function igx-overlay-theme(
     $palette: $default-palette,
-    $preset: null,
-
-    $background-color: $overlay-color
+    $schema: $light-schema,
+    $background-color: null
 ) {
+    $theme: apply-palette(map-get($schema, 'igx-overlay'), $palette);
 
-    $default-theme: (
-        name: 'igx-overlay',
-        background-color: $background-color
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         background-color: $background-color
     ));
