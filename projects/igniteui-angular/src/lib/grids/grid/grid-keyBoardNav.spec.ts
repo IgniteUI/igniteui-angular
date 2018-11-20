@@ -7,12 +7,13 @@ import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule, IgxGridRowComp
 import { IgxGridComponent } from './grid.component';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { IGridCellEventArgs } from '../grid-base.component';
-import { IgxStringFilteringOperand } from '../../../public_api';
+
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils} from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { PinOnInitAndSelectionComponent, PinningComponent } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
@@ -117,7 +118,9 @@ describe('IgxGrid - Keyboard navigation', () => {
                 ConditionalCellStyleTestComponent,
                 ColumnEditablePropertyTestComponent,
                 GridWithScrollsComponent,
-                GridWithSelectionComponent
+                GridWithSelectionComponent,
+                PinOnInitAndSelectionComponent,
+                PinningComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -1676,6 +1679,98 @@ describe('IgxGrid - Keyboard navigation', () => {
         expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
     });
+
+    
+    it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync (() => {
+        const fix = TestBed.createComponent(PinningComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+
+        fix.detectChanges();
+        tick();
+
+        grid.getColumnByName('CompanyName').pinned = true;
+        grid.getColumnByName('ContactName').pinned = true;
+
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        let cell = cells[0];
+
+        cell.triggerEventHandler('focus', {});
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        tick();
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+        cell = cells[1];
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        tick();
+
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+        cell = cells[2];
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
+        tick();
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+        cell.triggerEventHandler('blur', {});
+        tick();
+        cell = cells[0];
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        tick();
+        fix.detectChanges();
+        cell = cells[1];
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
+        tick();
+        fix.detectChanges();
+        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
+    }));
+
+    it('should allow vertical keyboard navigation in pinned area.', fakeAsync (() => {
+        const fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+        let cell = cells[0];
+
+        cell.triggerEventHandler('focus', {});
+
+        tick();
+        fix.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
+
+        tick();
+        grid.cdr.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+        cell = cells[6];
+
+        UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
+
+        tick();
+        grid.cdr.detectChanges();
+
+        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
+        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
+    }));
 });
 
 
