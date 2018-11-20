@@ -601,16 +601,32 @@ describe('IgxTreeGrid - Integration', () => {
             // 7. Verify the changes are comitted
         });
 
-        it('Add parent node to a Flat DS tree grid', () => {
-            // TODO:
-            // 1. Add a row at level 0 to the grid
-            // 2. Verify the new row is pending with the correct styles
-            // 3. Commit
-            // 4. verify the row is committed, the styles are OK and the Undo stack is empty
-            // 5. Add another row at level 0
-            // 6. verify the pending styles is applied only to the newly added row
-            // and not to the previously added row
-        });
+        it('Add parent node to a Flat DS tree grid', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            const trans = treeGrid.transactions;
+
+            treeGrid.addRow({ ID: 11, ParentID: -1, Name: 'Dan Kolov', JobTitle: 'wrestler', Age: 32 });
+            fix.detectChanges();
+            tick();
+
+            expect(trans.canUndo).toBe(true);
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain('igx-grid__tr--edited');
+
+            trans.commit(treeGrid.data);
+            tick();
+
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(trans.canUndo).toBe(false);
+
+            treeGrid.addRow({ ID: 12, ParentID: -1, Name: 'Kubrat Pulev', JobTitle: 'Boxer', Age: 33 });
+            fix.detectChanges();
+            tick();
+
+            expect(trans.canUndo).toBe(true);
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain('igx-grid__tr--edited');
+        }));
 
         it('Add parent node to a Hierarchical DS tree grid', () => {
             // TODO:
