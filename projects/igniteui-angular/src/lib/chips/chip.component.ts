@@ -65,12 +65,27 @@ export class IgxChipComponent extends DisplayDensityBase {
     public id = `igx-chip-${CHIP_ID++}`;
 
     /**
-     * An @Input property that sets the value of `title` attribute. If not provided it will be automatically generated.
+     * An @Input property that sets the `IgxChipComponent` title attribute.
+     * By default it is set to the text in the chip's content.
      * ```html
      * <igx-chip [title]="'chip-content'"></igx-chip>
      * ```
      */
     @Input()
+    public set title(newTitle: string) {
+        this._title = newTitle;
+    }
+
+    /**
+     * Returns the title attribute of the `IgxChipComponent`.
+     * ```typescript
+     * @ViewChild('myChip')
+     * public chip: IgxChipComponent;
+     * ngAfterViewInit(){
+     *     let chipColor = this.chip.title;
+     * }
+     * ```
+     */
     public get title(): string {
         if (!this._title) {
             if (this.chipContent) {
@@ -79,11 +94,9 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this._title = '';
             }
         }
-         return this._title;
+        return this._title;
     }
-    public set title(newTitle: string) {
-        this._title = newTitle;
-    }
+
     protected _title: string;
 
     /**
