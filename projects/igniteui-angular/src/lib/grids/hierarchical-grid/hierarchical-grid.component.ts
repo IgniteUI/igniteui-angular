@@ -108,6 +108,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return record.records && record.records.length;
     }
 
+    get maxLevelHeaderDepth() {
+        this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        return this._maxLevelHeaderDepth;
+    }
 
     /**
  * @hidden
