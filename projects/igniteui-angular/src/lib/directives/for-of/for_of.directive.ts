@@ -1240,12 +1240,24 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this._recalcScrollBarSize();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
-            let startIndex = this.state.startIndex;
-            let endIndex = this.state.chunkSize + this.state.startIndex;
+            let startIndex;
+            let endIndex;
             if (this.isRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
+            } else {
+                const inScrollTop = this.igxForScrollOrientation === 'horizontal' ?
+                    this.hScroll.scrollLeft :
+                    this.vh.instance.elementRef.nativeElement.scrollTop;
+                this.state.startIndex = this.getIndexAt(
+                    inScrollTop,
+                    this.sizesCache,
+                    0
+                );
+                startIndex = this.state.startIndex;
+                endIndex = this.state.chunkSize + this.state.startIndex;
             }
+            
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embView = embeddedViewCopy.shift();
