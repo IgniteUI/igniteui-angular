@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, discardPeriodicTasks, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
@@ -33,7 +33,6 @@ describe('IgxGrid - Filtering actions', () => {
                 IgxGridFilteringComponent
             ],
             imports: [
-                BrowserAnimationsModule,
                 NoopAnimationsModule,
                 IgxGridModule.forRoot()]
         })
@@ -1113,27 +1112,27 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
-        tick();
         fix.detectChanges();
+
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
-        tick();
         fix.detectChanges();
 
         verifyFilterUIPosition(filterIcon, grid);
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         GridFunctions.selectFilteringCondition('Equals', ddList);
+
         input.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
         const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
         currentDay.nativeElement.click();
-        tick();
+        flush();
         fix.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('change'));
@@ -1150,8 +1149,8 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
-        tick();
         fix.detectChanges();
+
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
@@ -1163,14 +1162,15 @@ describe('IgxGrid - Filtering actions', () => {
         verifyFilterUIPosition(filterIcon, grid);
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         GridFunctions.selectFilteringCondition('Does Not Equal', ddList);
+
         input.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
         const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
         currentDay.nativeElement.click();
-        tick();
+        flush();
         fix.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('change'));
@@ -1187,8 +1187,8 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
-        tick();
         fix.detectChanges();
+
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
@@ -1201,6 +1201,7 @@ describe('IgxGrid - Filtering actions', () => {
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         GridFunctions.selectFilteringCondition('After', ddList);
+
         input.nativeElement.click();
         tick(100);
         fix.detectChanges();
@@ -1208,7 +1209,7 @@ describe('IgxGrid - Filtering actions', () => {
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
         const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
         currentDay.nativeElement.click();
-        tick();
+        flush();
         fix.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('change'));
@@ -1225,8 +1226,8 @@ describe('IgxGrid - Filtering actions', () => {
         const grid = fix.componentInstance.grid;
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         filteringCells[4].query(By.css('igx-chip')).nativeElement.click();
-        tick();
         fix.detectChanges();
+
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const filterIcon = filterUIRow.query(By.css('igx-icon'));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
@@ -1238,14 +1239,15 @@ describe('IgxGrid - Filtering actions', () => {
         verifyFilterUIPosition(filterIcon, grid);
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         GridFunctions.selectFilteringCondition('Before', ddList);
+
         input.nativeElement.click();
-        tick(100);
+        tick();
         fix.detectChanges();
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
         const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
         currentDay.nativeElement.click();
-        tick();
+        flush();
         fix.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('change'));
