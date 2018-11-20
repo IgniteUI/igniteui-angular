@@ -16,7 +16,7 @@
     <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="colResizingService.resizeCursor" #resizeArea
             (mouseover)="onResizeAreaMouseOver()" (mousedown)="onResizeAreaMouseDown($event)" (dblclick)="autosizeColumnOnDblClick($event)"
             class="igx-grid__th-resize-handle">
-        <div *ngIf="colResizingService.showResizer" igxResizer
+        <div *ngIf="colResizingService.showResizer && colResizingService.column === column" igxResizer
             class="igx-grid__th-resize-line"
             [style.height.px]="colResizingService.resizerHeight"
             [restrictHResizeMax]="colResizingService.restrictResizeMax"
