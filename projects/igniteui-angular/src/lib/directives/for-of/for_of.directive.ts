@@ -361,7 +361,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 if (!this.igxForOf) {
                     return;
                 }
-                this.initSizesCache(this.igxForOf);
+                this._updateSizeCache();
                 this._zone.run(() => {
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
@@ -667,9 +667,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.vh.instance.cdr.detectChanges();
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
-                    const containerSize = parseInt(this.igxForContainerSize, 10);
-                    const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
-                    this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
                     return;
                 }
                 if (this._adjustToIndex) {
@@ -697,6 +694,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.sizesCache,
             0
         );
+        console.log('str indx:' + ind);
         // floating point number calculations are flawed so we need to handle rounding errors.
         let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
         const endingIndex = this.state.chunkSize + currIndex;
@@ -911,6 +909,24 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return totalSize;
     }
 
+    protected _updateSizeCache() {
+        const scr = this.igxForScrollOrientation === 'horizontal' ?
+        this.hScroll : this.vh.instance.elementRef.nativeElement;
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'scrollLeft' : 'scrollTop';
+
+        const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
+        const newHeight =  this.initSizesCache(this.igxForOf);
+
+        const diff = oldHeight - newHeight;
+
+        // if data has been changed while container is scrolled
+        // should update scroll top/left according to change so that same startIndex is in view
+        if (Math.abs(diff) > 0 && scr[dir] > 0) {
+            this.recalcUpdateSizes();
+            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            scr[dir] = this.sizesCache[this.state.startIndex] - offset;
+        }
+    }
     /**
      * @hidden
      */
@@ -1005,8 +1021,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
     }
 
-    private _calcHeight(): number {
-        let height = this.initSizesCache(this.igxForOf);
+    protected _calcHeight(): number {
+        let height;
+        if (this.heightCache) {
+            height = this.heightCache.reduce((acc, val) => acc + val);
+        } else {
+            height = this.initSizesCache(this.igxForOf);
+        }
         this._virtHeight = height;
         if (height > this._maxHeight) {
             this._virtHeightRatio = height / this._maxHeight;
@@ -1172,7 +1193,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                this.initSizesCache(this.igxForOf);
+                this._updateSizeCache();
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
@@ -1245,14 +1266,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             } else {
-                const inScrollTop = this.igxForScrollOrientation === 'horizontal' ?
-                    this.hScroll.scrollLeft :
-                    this.vh.instance.elementRef.nativeElement.scrollTop;
-                this.state.startIndex = this.getIndexAt(
-                    inScrollTop,
-                    this.sizesCache,
-                    0
-                );
                 startIndex = this.state.startIndex;
                 endIndex = this.state.chunkSize + this.state.startIndex;
             }
