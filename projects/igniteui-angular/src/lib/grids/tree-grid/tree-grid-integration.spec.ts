@@ -545,15 +545,40 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.canUndo).toBe(false);
         }));
 
-        it('Children are deleted along with their parent', () => {
-            // TODO:
-            // 1. Set 'Cascade On Delete' to true on a grid with Flat DS
-            // 2. Delete a parent node
-            // 3. Verify the correct style is applied before committing to all nodes
-            // 4. Commit changes
-            // 5. Verify the parent node and its children are deleted
-            // 6. Verify the undo stack is empty
-        });
+        it('Children are deleted along with their parent', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            treeGrid.cascadeOnDelete = true;
+            const trans = treeGrid.transactions;
+
+            treeGrid.deleteRowById(1);
+            fix.detectChanges();
+            tick();
+
+            for (let i = 0; i < 5; i++) {
+                const curRow: HTMLElement = treeGrid.getRowByIndex(i).nativeElement;
+                expect(curRow.classList).toContain('igx-grid__tr--deleted');
+            }
+            expect(treeGrid.getRowByKey(1).index).toBe(0);
+            expect(treeGrid.getRowByKey(2).index).toBe(1);
+            expect(treeGrid.getRowByKey(3).index).toBe(2);
+            expect(treeGrid.getRowByKey(7).index).toBe(3);
+            expect(treeGrid.getRowByKey(4).index).toBe(4);
+
+            trans.commit(treeGrid.data);
+            tick();
+
+            expect(treeGrid.getRowByKey(1)).toBeUndefined();
+            expect(treeGrid.getRowByKey(2)).toBeUndefined();
+            expect(treeGrid.getRowByKey(3)).toBeUndefined();
+            expect(treeGrid.getRowByKey(7)).toBeUndefined();
+            expect(treeGrid.getRowByKey(4)).toBeUndefined();
+
+            expect(treeGrid.getRowByKey(6).index).toBe(0);
+            expect(treeGrid.getRowByKey(10).index).toBe(1);
+            expect(trans.canUndo).toBe(false);
+        }));
 
         it('Editing a cell is posible with Hierarchical DS', () => {
             // TODO:
