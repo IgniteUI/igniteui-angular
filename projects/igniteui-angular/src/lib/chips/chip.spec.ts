@@ -36,7 +36,7 @@ class TestChipComponent {
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
         { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy',
-            title: 'Title' },
+            title: 'Title' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
