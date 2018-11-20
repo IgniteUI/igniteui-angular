@@ -116,9 +116,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     public ngDoCheck() {
-        if (this.column.columnGroup) {
-            this.cdr.markForCheck();
-        }
+        this.cdr.markForCheck();
     }
 
     constructor(private cdr: ChangeDetectorRef,
