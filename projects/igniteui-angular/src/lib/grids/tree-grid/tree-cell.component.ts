@@ -3,7 +3,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { valToPxlsUsingRange } from '../../core/utils';
+import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent } from '../grid';
 
@@ -86,7 +86,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
             leftPadding = parseFloat(indentationStyle.paddingLeft);
         }
         const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child) => valToPxlsUsingRange(range, child)));
+            .map((child) => getNodeSizeViaRange(range, child)));
         return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
     }
 }

@@ -23,7 +23,7 @@ import {
 } from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
-import { valToPxlsUsingRange, flatten } from '../core/utils';
+import { getNodeSizeViaRange, flatten } from '../core/utils';
 import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
@@ -1126,7 +1126,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.cells[0].nativeElement.children.length > 0) {
                 this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
-                cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+                cellsContentWidths = this.cells.map((cell) => getNodeSizeViaRange(range, cell.nativeElement));
             }
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
@@ -1141,9 +1141,9 @@ export class IgxColumnComponent implements AfterContentInit {
             let headerCell;
             if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
                 headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
-                    .map((child) => valToPxlsUsingRange(range, child)));
+                    .map((child) => getNodeSizeViaRange(range, child)));
             } else {
-                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+                headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
             if (this.sortable) {
