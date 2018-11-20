@@ -22,6 +22,7 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const sassPlug = require('sassdoc-plugin-localization');
+const path = require('path');
 
 
 themeleon.use({
@@ -52,7 +53,7 @@ const theme = themeleon(__dirname, function (t) {
      * If only json conversion is needed the whole process of documentation rendering has to be stopped. 
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, './extras/sassdoc/en'); 
+        return t.convert(t.ctx._data, path.normalize('.\\extras\\sassdoc\\en')); 
     }
   /**
    * Copy the assets folder from the theme's directory in the
@@ -117,8 +118,8 @@ const theme = themeleon(__dirname, function (t) {
    * Applies the translations from the json files.
    */
   if (t.ctx.render) {
-      const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
-      t.render(t.ctx._data, jsonDir);
+      const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : '.\\extras\\sassdoc\\en';
+      t.render(t.ctx._data, path.normalize(jsonDir));
   }
 });
 /**
