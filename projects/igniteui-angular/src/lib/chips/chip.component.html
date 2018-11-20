@@ -1,5 +1,6 @@
 ﻿<div #chipArea class="igx-chip__item"
     [attr.tabindex]="chipTabindex"
+    [attr.title]="title"
     (keydown)="onChipKeyDown($event)"
     [igxDrag]="{chip: this}"
     [hideBaseOnDrag]="true"
@@ -19,7 +20,7 @@
 
     <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
-    <div class="igx-chip__content">
+    <div #chipContent class="igx-chip__content">
         <ng-content></ng-content>
     </div>
 
