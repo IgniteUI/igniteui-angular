@@ -85,8 +85,18 @@ export class IgxGridRowComponent implements DoCheck {
         return this.grid.unpinnedColumns;
     }
 
-    public get rowSelectable() {
+    /**
+     * @hidden
+    */
+    public get rowSelectable(): boolean {
         return this.grid.rowSelectable;
+    }
+
+    /**
+     * @hidden
+    */
+    public get showRowCheckboxes(): boolean {
+        return this.grid.showRowCheckboxes;
     }
 
     @HostBinding('attr.aria-selected')
