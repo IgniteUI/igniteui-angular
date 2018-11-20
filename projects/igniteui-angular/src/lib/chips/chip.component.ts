@@ -94,8 +94,6 @@ export class IgxChipComponent extends DisplayDensityBase {
      * ```
      */
     @Input()
-
-    @ViewChild('')
     public data: any;
 
     /**
