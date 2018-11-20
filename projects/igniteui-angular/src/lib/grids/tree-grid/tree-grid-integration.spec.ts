@@ -519,17 +519,31 @@ describe('IgxTreeGrid - Integration', () => {
             expect(editedParentCell.value).toEqual(80);
         });
 
-        it('Children are transformed into parent nodes after their parent is deleted', () => {
-            // TODO:
-            // 1. Set 'Cascade On Delete' to false on a grid with Flat DS
-            // 2. Delete a parent node
-            // 3. Verify the correct style is applied before committing
-            // 4. Commit changes
-            // 5. Verify the correct style is applied after committing
-            // 6. Verify its children are transformed into parent nodes
-            // and are placed at the correct place in the grid
-            // 7. Verify the undo stack is empty
-        });
+        it('Children are transformed into parent nodes after their parent is deleted', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+
+            const row: HTMLElement = treeGrid.getRowByIndex(0).nativeElement;
+            treeGrid.cascadeOnDelete = false;
+            const trans = treeGrid.transactions;
+
+            treeGrid.deleteRowById(1);
+            fix.detectChanges();
+            tick();
+
+            expect(row.classList).toContain('igx-grid__tr--deleted');
+            expect(treeGrid.getRowByKey(1).index).toBe(0);
+            expect(treeGrid.getRowByKey(2).index).toBe(1);
+            expect(treeGrid.getRowByKey(3).index).toBe(2);
+            trans.commit(treeGrid.data);
+            tick();
+
+            expect(row.classList).not.toContain('igx-grid__tr--deleted');
+            expect(treeGrid.getRowByKey(2).index).toBe(0);
+            expect(treeGrid.getRowByKey(3).index).toBe(1);
+            expect(trans.canUndo).toBe(false);
+        }));
 
         it('Children are deleted along with their parent', () => {
             // TODO:

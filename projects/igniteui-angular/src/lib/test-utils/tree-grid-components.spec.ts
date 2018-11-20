@@ -265,9 +265,9 @@ export class IgxTreeGridMultiColHeadersComponent {
         <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'ParentID'" dataType="number"></igx-column>
-        <igx-column [field]="'Name'" dataType="string"></igx-column>
-        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
-        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>`
     , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
 })
