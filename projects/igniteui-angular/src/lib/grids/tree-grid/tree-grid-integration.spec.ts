@@ -15,6 +15,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
+import { IgxGridTransaction } from '../grid-base.component';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 
@@ -34,7 +36,10 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridRowEditingComponent,
                 IgxTreeGridMultiColHeadersComponent
             ],
-            imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule]
+            imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule],
+            providers: [
+                { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
+            ]
         })
             .compileComponents();
     }));
@@ -602,13 +607,45 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('Delete a pending parent node - Flat DS', () => {
-            // TODO:
-            // 1. Add a row at level 0 to the grid
-            // 2. Select it
-            // 3. Delete the selected row
-            // 4. Verify the row is deleted
-            // 5. Undo
-            // 6. Verify the row is visible and pending again
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.foreignKey = 'ParentID';
+
+            const addedRowId = treeGrid.data.length;
+            const newRow = {
+                ID: addedRowId,
+                ParentID: 1,
+                Name: 'John Dow',
+                JobTitle: 'Copywriter',
+                Age: 22
+            };
+            treeGrid.addRow(newRow, 0);
+            fix.detectChanges();
+
+            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
+            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
+            expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
+            expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
+
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
+            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
         });
 
         it('Delete a pending parent node - Hierarchical DS', () => {
@@ -622,13 +659,45 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('Delete a pending child node - Flat DS', () => {
-            // TODO:
-            // 1. Add a row at level 1 to the grid
-            // 2. Select it
-            // 3. Delete the selected row
-            // 4. Verify the row is deleted
-            // 5. Undo
-            // 6. Verify the row is visible and pending again
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.foreignKey = 'ParentID';
+
+            const addedRowId = treeGrid.data.length;
+            const newRow = {
+                ID: addedRowId,
+                ParentID: 1,
+                Name: 'John Dow',
+                JobTitle: 'Copywriter',
+                Age: 22
+            };
+            treeGrid.addRow(newRow, 1);
+            fix.detectChanges();
+
+            const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            fix.detectChanges();
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
+            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
+            expect(treeGrid.transactions.getTransactionLog()[1].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[1].type).toEqual('delete');
+            expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
+
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+            expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
+            expect(treeGrid.transactions.getTransactionLog()[0].id).toEqual(addedRowId);
+            expect(treeGrid.transactions.getTransactionLog()[0].type).toEqual('add');
+            expect(treeGrid.transactions.getTransactionLog()[0].newValue).toEqual(newRow);
         });
 
         it('Delete a pending child node - Hierarchical DS', () => {
