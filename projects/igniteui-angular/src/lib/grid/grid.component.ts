@@ -2437,6 +2437,10 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         return totalWidth;
     }
 
+    get showRowCheckboxes(): boolean {
+        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+    }
+
     /**
      * @hidden
      */
@@ -3310,7 +3314,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
@@ -3374,7 +3378,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
         this.cdr.detectChanges();
@@ -3396,7 +3400,7 @@ export class IgxGridComponent implements OnInit, OnDestroy, AfterContentInit, Af
                 sum += parseInt(col.width, 10);
             }
         }
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             sum += this.calcRowCheckboxWidth;
         }
 
