@@ -331,17 +331,17 @@ export class TreeGridFunctions {
             firstColumnName: string,
             nextColumnName: string,
             moveRight: boolean = true) => new Promise(async (resolve, reject) => {
-                const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
+                let cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
 
                 UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-
-                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
+                cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 if (cell !== undefined && cell !== null) {
                     TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 }
+                const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
 
@@ -361,13 +361,14 @@ export class TreeGridFunctions {
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (cell !== undefined && cell !== null) {
+                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
+                }
+
                 if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
-                }
-                if (cell !== undefined && cell !== null) {
-                    TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 }
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
@@ -415,14 +416,13 @@ export class TreeGridFunctions {
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (cell !== undefined && cell !== null) {
+                    expect(cell.inEditMode).toBe(false);
+                }
                 if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
-                }
-
-                if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
                 }
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
@@ -441,14 +441,13 @@ export class TreeGridFunctions {
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
+                if (cell !== undefined && cell !== null) {
+                    expect(cell.inEditMode).toBe(false);
+                }
                 if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
-                }
-
-                if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
                 }
                 expect(newCell.inEditMode).toBe(true);
                 resolve();

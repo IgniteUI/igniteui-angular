@@ -163,12 +163,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.unaryConditionChanged.unsubscribe();
     }
 
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
             event.preventDefault();
         }
+    }
+
+    @HostListener('keydown.esc', ['$event'])
+    public onEscKeydown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
     }
 
     get disabled(): boolean {
@@ -253,6 +261,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
+            event.preventDefault();
+            this.close();
         }
         event.stopPropagation();
     }
@@ -299,6 +310,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public clearFiltering() {
         this.filteringService.clearFilter(this.column.field);
         this.resetExpression();
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
         this.cdr.detectChanges();
 
         this.chipAreaScrollOffset = 0;
@@ -338,6 +352,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             });
         }
 
+        this.filteringService.updateFilteringCell(this.column.field);
+        this.filteringService.focusFilterCellChip(this.column.field, true);
+
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
@@ -345,6 +362,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);
+    }
+
+    /*
+    * Opens date-picker if condition is not unary
+    */
+    public openDatePicker(openDialog: Function) {
+        if (!this.expression.condition.isUnary) {
+            openDialog();
+        }
     }
 
     /**

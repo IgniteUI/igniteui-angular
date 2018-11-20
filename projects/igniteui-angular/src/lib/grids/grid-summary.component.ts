@@ -2,7 +2,6 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
     Component, DoCheck, HostBinding, Input
 } from '@angular/core';
-import { DisplayDensity } from '../core/displayDensity';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
@@ -59,17 +58,17 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-summary--compact')
     get compactCSS() {
-        return this.displayDensity === DisplayDensity.compact;
+        return this.gridAPI.get(this.gridID).isCompact();
     }
 
     @HostBinding('class.igx-grid-summary--cosy')
     get cosyCSS() {
-        return this.displayDensity === DisplayDensity.cosy;
+        return this.gridAPI.get(this.gridID).isCosy();
     }
 
     @HostBinding('class.igx-grid-summary')
     get defaultCSS() {
-        return this.displayDensity === DisplayDensity.comfortable;
+        return this.gridAPI.get(this.gridID).isComfortable();
     }
 
     get dataType(): DataType {
@@ -77,12 +76,10 @@ export class IgxGridSummaryComponent implements DoCheck {
     }
     public summaryItemHeight;
     public itemClass = 'igx-grid-summary__item';
-    private displayDensity: DisplayDensity | string;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
 
     ngDoCheck() {
-        this.displayDensity = this.gridAPI.get(this.gridID).displayDensity;
         this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
         this.cdr.detectChanges();
     }
