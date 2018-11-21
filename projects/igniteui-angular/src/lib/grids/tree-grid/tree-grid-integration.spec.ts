@@ -797,15 +797,36 @@ fdescribe('IgxTreeGrid - Integration', () => {
         });
 
         it('Add a child node to a previously added parent node - Flat DS', () => {
-            // TODO:
-            // 1. Add a row at level 0 to the grid
-            // 2. Add a child row to that parent
-            // 3. Verify the new rows are pending with the correct styles
-            // 4. Commit
-            // 5. verify the rows are committed, the styles are OK
-            // 6. Add another child row at level 2 (grand-child of the first row)
-            // 7. verify the pending styles is applied only to the newly added row
-            // and not to the previously added rows
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
+            const rootRow = { ID: 11, ParentID: -1, Name: 'Kubrat Pulev', JobTitle: 'wrestler', Age: 32 };
+            const childRow = { ID: 12, ParentID: 11, Name: 'Tervel Pulev', JobTitle: 'wrestler', Age: 30 };
+            const grandChildRow = { ID: 13, ParentID: 12, Name: 'Asparuh Pulev', JobTitle: 'wrestler', Age: 14 };
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            treeGrid.addRow(rootRow, 0);
+            fix.detectChanges();
+
+            const parentRow = treeGrid.getRowByIndex(10) as IgxTreeGridRowComponent;
+            treeGrid.addRow(childRow, 11);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain('igx-grid__tr--edited');
+
+            trans.commit(treeGrid.data);
+
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+
+            treeGrid.addRow(grandChildRow, 12);
+            fix.detectChanges();
+
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(13).nativeElement.classList).toContain('igx-grid__tr--edited');
         });
 
         it('Add a child node to a previously added parent node - Hierarchical DS', () => {
