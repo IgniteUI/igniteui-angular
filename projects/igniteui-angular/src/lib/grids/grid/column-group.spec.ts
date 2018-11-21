@@ -1380,7 +1380,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
     });
 
-    fit('Should not throw exception if multi-column header columns width is set as number', () => {
+    it('Should not throw exception if multi-column header columns width is set as number', () => {
         expect(() => {
             const fixture = TestBed.createComponent(NumberColWidthGridComponent);
             fixture.detectChanges();
