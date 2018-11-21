@@ -549,11 +549,11 @@ describe('IgxGrid - Keyboard navigation', () => {
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(50);
             fix.detectChanges();
-            // navigate down to 100th row.
-            await HelperUtils.navigateVerticallyToIndex(grid, 4, 100);
+            // navigate down to 20th row.
+            await HelperUtils.navigateVerticallyToIndex(grid, 4, 20);
             await wait(50);
             fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(20);
         });
 
         it('should scroll into view the not fully visible cells when navigating down', async () => {
