@@ -341,7 +341,6 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(isFirstHalfOdd).toEqual(true);
         expect(isSecondHalfEven).toEqual(true);
     });
-   
 });
 
 @Component({
