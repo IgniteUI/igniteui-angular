@@ -326,12 +326,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      */
-    @ViewChild('chipContent', { read: ElementRef })
-    public chipContent: ElementRef;
-
-    /**
-     * @hidden
-     */
     @ViewChild('chipArea', { read: IgxDragDirective })
     public dragDir: IgxDragDirective;
 
