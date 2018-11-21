@@ -579,6 +579,38 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(count).toBe('1');
     }));
+
+    it('Should not be able to filter if allowFiltering is false.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.allowFiltering = false;
+
+        const gridExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, 'ReleaseDate');
+        const expression = {
+            fieldName: 'ReleaseDate',
+            searchVal: null,
+            condition: IgxDateFilteringOperand.instance().condition('yesterday')
+        };
+        filteringExpressionsTree.filteringOperands.push(expression);
+        gridExpressionsTree.filteringOperands.push(filteringExpressionsTree);
+
+        grid.filteringExpressionsTree = gridExpressionsTree;
+
+        fix.detectChanges();
+        tick(100);
+
+        expect(grid.rowList.length).toEqual(8);
+
+        grid.filter('ReleaseDate', null, filteringExpressionsTree);
+
+        fix.detectChanges();
+        tick(100);
+
+        expect(grid.rowList.length).toEqual(8);
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {

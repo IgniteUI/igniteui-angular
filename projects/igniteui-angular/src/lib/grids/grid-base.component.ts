@@ -225,7 +225,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     set filteringExpressionsTree(value) {
-        if (value && value instanceof FilteringExpressionsTree) {
+        if (this.allowFiltering && value && value instanceof FilteringExpressionsTree) {
             const val = (value as FilteringExpressionsTree);
             for (let index = 0; index < val.filteringOperands.length; index++) {
                 if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {

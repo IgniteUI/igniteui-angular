@@ -2119,6 +2119,9 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     it('should position filter row and chips correctly when grid has column groups and one is hidden.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
         const grid = fix.componentInstance.grid;
+
+        fix.detectChanges();
+
         const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
         const expression = {
             fieldName: 'ProductName',
@@ -2294,6 +2297,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
         grid.columnWidth = '250px';
+
+        fix.detectChanges();
 
         // Add initial filtering conditions
         const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
