@@ -60,7 +60,7 @@
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $content-background: null,
     $content-text-color: null,
@@ -94,45 +94,7 @@
 
     $date-disabled-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-calendar',
-
-        content-background: #fff,
-        content-text-color: igx-color($palette, 'grays', 900),
-
-        header-background: igx-color($palette, 'secondary', 500),
-        header-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        picker-arrow-color: igx-color($palette, 'grays', 800),
-        picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
-
-        picker-text-color: igx-color($palette, 'grays', 800),
-        picker-text-hover-color: igx-color($palette, 'secondary', 500),
-
-        inactive-text-color: igx-color($palette, 'grays', 400),
-        weekend-text-color: igx-color($palette, 'grays', 500),
-
-        year-current-text-color: igx-color($palette, 'secondary', 500),
-        month-current-text-color: igx-color($palette, 'secondary', 500),
-
-        year-hover-text-color: igx-color($palette, 'secondary', 500),
-        month-hover-text-color: igx-color($palette, 'secondary', 500),
-
-        date-selected-background: igx-color($palette, 'secondary', 500),
-        date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        date-current-text-color: igx-color($palette, 'secondary', 500),
-        date-hover-background: igx-color($palette, 'grays', 200),
-
-        date-special-background: igx-color($palette, 'grays', 100),
-        date-special-text-color: igx-color($palette, 'grays', 900),
-
-        date-disabled-text-color: rgba(hexrgba(igx-color($palette, 'grays', 500)), .6)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, 'igx-calendar'), $palette);
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
@@ -206,7 +168,7 @@
         $month-current-text-color: $header-background;
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,

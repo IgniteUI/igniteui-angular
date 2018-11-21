@@ -20,24 +20,15 @@
 ///   @include igx-icon($my-icon-theme);
 @function igx-icon-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $color: null,
     $size: null,
     $disabled-color: null
 ) {
-    $default-theme: (
-        name: 'igx-icon',
-        color: currentColor,
-        size: rem(24px),
-        disabled-color: currentColor
-    );
+    $theme: apply-palette(map-get($schema, 'igx-icon'), $palette);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         color: $color,
         size: $size,
