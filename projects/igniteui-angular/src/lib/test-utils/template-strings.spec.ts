@@ -361,6 +361,19 @@ export class ColumnDefinitions {
         </igx-column-group>
   `;
 
+  public static multiColHeadersWithGroupingColumns = `
+  <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="false"
+              [sortable]="true" [filterable]="true" field="Missing"></igx-column>
+  <igx-column-group [movable]="true" header="General Information" [groupable]='true'>
+      <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
+      <igx-column-group [movable]="true" header="Person Details">
+          <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
+          <igx-column [movable]="true" [width]="'100px'"[filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
+      </igx-column-group>
+  </igx-column-group>
+  <igx-column [movable]="true" [resizable]="true" field="ID" [width]="'100px'" [groupable]='true'></igx-column>
+`;
+
     public static contactInfoGroupableColumns = `
     <igx-column [movable]="true" [hasSummary]="true" [resizable]="true"
                 [pinned]="true" field="Missing"></igx-column>

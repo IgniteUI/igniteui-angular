@@ -2094,7 +2094,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
         this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
@@ -2540,6 +2540,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return totalWidth;
     }
 
+    get showRowCheckboxes(): boolean {
+        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+    }
+
     /**
      * @hidden
      */
@@ -2826,10 +2830,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
         //  Otherwise just exit - there is nothing to delete
         if (index !== -1 || hasRowInNonDeletedState) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.id);
-            if (editableCell && editableCell.cellID.rowID === rowId) {
-                this.gridAPI.escape_editMode(this.id, editableCell.cellID);
-            }
+            // Always exit edit mode
+            this.endEdit(true);
         } else {
             return;
         }
@@ -3453,7 +3455,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
@@ -3517,7 +3519,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
         }
         if (this.rowEditable) {
@@ -3542,7 +3544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 sum += parseInt(col.width, 10);
             }
         }
-        if (this.rowSelectable) {
+        if (this.showRowCheckboxes) {
             sum += this.calcRowCheckboxWidth;
         }
 

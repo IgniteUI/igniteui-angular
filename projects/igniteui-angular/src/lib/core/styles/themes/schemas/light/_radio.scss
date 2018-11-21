@@ -1,0 +1,19 @@
+$_light-radio: (
+    name: 'igx-radio',
+
+    label-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    empty-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    fill-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 400)
+    )
+);

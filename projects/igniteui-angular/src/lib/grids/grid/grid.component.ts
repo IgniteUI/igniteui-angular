@@ -190,6 +190,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             ungroupedColsArr.forEach((elem) => {
                 ungroupedCols.push(this.getColumnByName(elem.fieldName));
             }, this);
+            this.cdr.detectChanges();
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: newExpressions,
                 groupedColumns: groupedCols,
@@ -568,7 +569,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable);
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
     private _setGroupColsVisibility(value) {
