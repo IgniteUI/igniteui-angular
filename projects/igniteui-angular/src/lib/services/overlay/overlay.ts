@@ -423,6 +423,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.closeAnimationInnerPlayer.getPosition();
             info.closeAnimationPlayer.reset();
+            info.openAnimationPlayer.init();
             info.openAnimationPlayer.setPosition(position);
         }
 
@@ -459,6 +460,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
+            info.closeAnimationPlayer.init();
             info.closeAnimationPlayer.setPosition(position);
         }
 
