@@ -34,7 +34,10 @@ describe('Update 6.2.1', () => {
 `$dark-chip-theme: igx-chip-theme(
     $roundness: 4px,
     $chip-background: #180505,
-    $chip-hover-background: white
+    $chip-hover-background: white,
+    $remove-icon-color: red,
+    $dir-icon-color: yellow,
+    $selected-chip-hover-background: gray
 );`
         );
         const tree = schematicRunner.runSchematic('migration-06', {}, appTree);
@@ -43,7 +46,8 @@ describe('Update 6.2.1', () => {
 `$dark-chip-theme: igx-chip-theme(
     $roundness: 4px,
     $background: #180505,
-    $hover-background: white
+    $hover-background: white,
+    $hover-selected-background: gray
 );`
             );
         done();
