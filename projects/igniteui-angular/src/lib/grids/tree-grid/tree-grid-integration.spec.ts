@@ -23,6 +23,7 @@ import { IgxGridTransaction } from '../grid-base.component';
 import { IgxGridCellComponent } from '../grid';
 
 const CSS_CLASS_BANNER = 'igx-banner';
+const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 
 fdescribe('IgxTreeGrid - Integration', () => {
     configureTestSuite();
@@ -305,11 +306,6 @@ fdescribe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
         });
-
-        it('banner has no indentation when editing a parent node.', fakeAsync(() => {
-            // TODO
-            // Verify the overlay has the same width as the row that is edited
-        }));
 
         it('should show the banner below the edited parent node', () => {
             // Collapsed state
@@ -770,12 +766,12 @@ fdescribe('IgxTreeGrid - Integration', () => {
             tick();
 
             expect(trans.canUndo).toBe(true);
-            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
 
             trans.commit(treeGrid.data);
             tick();
 
-            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
             expect(trans.canUndo).toBe(false);
 
             treeGrid.addRow({ ID: 12, ParentID: -1, Name: 'Kubrat Pulev', JobTitle: 'Boxer', Age: 33 });
@@ -783,18 +779,64 @@ fdescribe('IgxTreeGrid - Integration', () => {
             tick();
 
             expect(trans.canUndo).toBe(true);
-            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
         }));
 
         it('Add parent node to a Hierarchical DS tree grid', () => {
-            // TODO:
-            // 1. Add a row at level 0 to the grid
-            // 2. Verify the new row is pending with the correct styles
-            // 3. Commit
-            // 4. Verify the row is committed, the styles are OK and the Undo stack is empty
-            // 5. Add another row at level 0
-            // 6. verify the pending styles is applied only to the newly added row
-            // and not to the previously added row
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            const initialDataLength = treeGrid.data.length;
+            const trans = treeGrid.transactions;
+            spyOn(trans, 'add').and.callThrough();
+
+            const addedRowId_1 = treeGrid.rowList.length;
+            const newRow = {
+                ID: addedRowId_1,
+                Name: 'John Dow',
+                HireDate: new Date(2018, 10, 20),
+                Age: 22,
+                OnPTO: false,
+                Employees: []
+            };
+
+            treeGrid.addRow(newRow);
+            fix.detectChanges();
+
+            expect(trans.getTransactionLog().length).toEqual(1);
+            expect(trans.add).toHaveBeenCalled();
+            expect(trans.add).toHaveBeenCalledTimes(1);
+            const transParams = {id: addedRowId_1, type: 'add', newValue: newRow};
+            expect(trans.add).toHaveBeenCalledWith(transParams);
+
+            expect(treeGrid.records.get(addedRowId_1).level).toBe(0);
+            expect(treeGrid.getRowByKey(addedRowId_1).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
+
+            trans.commit(treeGrid.data);
+            fix.detectChanges();
+
+            expect(treeGrid.data.length).toEqual(initialDataLength + 1);
+            expect(treeGrid.data[initialDataLength]).toEqual(newRow);
+            expect(treeGrid.records.get(addedRowId_1).level).toBe(0);
+            expect(treeGrid.getRowByKey(addedRowId_1).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
+            expect(trans.getTransactionLog().length).toEqual(0);
+            expect(trans.canUndo).toBeFalsy();
+
+            const addedRowId_2 = treeGrid.rowList.length;
+            const newParentRow = {
+                ID: addedRowId_2,
+                Name: 'Brad Pitt',
+                HireDate: new Date(2016, 8, 14),
+                Age: 54,
+                OnPTO: false
+            };
+
+            treeGrid.addRow(newParentRow);
+            fix.detectChanges();
+
+            expect(treeGrid.records.get(addedRowId_2).level).toBe(0);
+            expect(treeGrid.getRowByKey(addedRowId_2).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
+            expect(treeGrid.getRowByKey(addedRowId_1).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
         });
 
         it('Add a child node to a previously added parent node - Flat DS', () => {
@@ -812,20 +854,20 @@ fdescribe('IgxTreeGrid - Integration', () => {
             treeGrid.addRow(childRow, 11);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain('igx-grid__tr--edited');
-            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
 
             trans.commit(treeGrid.data);
 
-            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
-            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
 
             treeGrid.addRow(grandChildRow, 12);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
-            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain('igx-grid__tr--edited');
-            expect(treeGrid.getRowByKey(13).nativeElement.classList).toContain('igx-grid__tr--edited');
+            expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
+            expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
+            expect(treeGrid.getRowByKey(13).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
         });
 
         it('Add a child node to a previously added parent node - Hierarchical DS - empty ChildDataKey -commit', () => {
