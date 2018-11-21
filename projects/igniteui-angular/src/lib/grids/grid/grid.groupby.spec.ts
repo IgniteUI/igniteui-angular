@@ -44,8 +44,6 @@ describe('IgxGrid - GroupBy', () => {
         }).compileComponents();
     }));
 
-  
-
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.
         let count = 0;

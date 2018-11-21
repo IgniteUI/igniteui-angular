@@ -1092,7 +1092,7 @@ describe('IgxGrid Component Tests', () => {
 
             }));
         });
-        
+
         describe('Row Editing - Exit row editing', () => {
             it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
@@ -1432,6 +1432,369 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
                 expect(targetCell.focused).toBeTruthy();
                 expect(firstCell.focused).toBeFalsy();
+            }));
+        });
+
+        describe('Row Editing - Navigation - Keyboard', () => {
+            it(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                const firstCellElement = targetCell.nativeElement;
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                // TO button
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                expect(document.activeElement.outerHTML).toContain('igxrowedittabstop=');
+                expect(document.activeElement.textContent).toContain('Done');
+                // FROM button to first
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: 'tab',
+                    code: 'tab',
+                    shiftKey: false
+                }));
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.getCurrentEditCell().column.field).toEqual('Downloads');
+                expect(document.activeElement).toEqual(firstCellElement);
+            }));
+
+            it(`Should jump from last editable columns to overlay buttons`, (async () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                await wait(DEBOUNCETIME);
+                const targetCell = fixture.componentInstance.getCell(0, 'Test');
+                const lastCellElement = targetCell.nativeElement;
+                targetCell.nativeElement.focus();
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                // TO button
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                expect(document.activeElement.outerHTML).toContain('igxrowedittabstop=');
+                expect(document.activeElement.textContent).toContain('Cancel');
+                // FROM button to first
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', {
+                    key: 'tab',
+                    code: 'tab',
+                    shiftKey: true
+                }));
+                fixture.detectChanges();
+                expect(fixture.componentInstance.getCurrentEditCell().column.field).toEqual('Test');
+                expect(document.activeElement).toEqual(lastCellElement);
+            }));
+
+            it(`Should scroll editable column into view when navigating from buttons`, (async () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                let currentEditCell: IgxGridCellComponent;
+                const grid = fixture.componentInstance.grid;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                fixture.detectChanges();
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                await wait(500);
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // go to 'Cancel'
+                (<HTMLElement>document.activeElement.previousElementSibling).focus();
+                fixture.detectChanges();
+                // go to LAST editable cell
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: true }));
+                fixture.detectChanges();
+                await wait(500);
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(currentEditCell.column.field).toEqual('Test');
+                // move to Cancel
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // move to DONE
+                (<HTMLElement>document.activeElement.nextElementSibling).focus();
+                fixture.detectChanges();
+                // move to FIRST editable cell
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'tab', code: 'tab', shiftKey: false }));
+                fixture.detectChanges();
+                await wait(500);
+                currentEditCell = fixture.componentInstance.getCurrentEditCell();
+                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toEqual(0);
+                expect(currentEditCell.column.field).toEqual('Downloads');
+            }));
+
+            it(`Should skip non-editable columns`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode({});
+                tick();
+                fixture.detectChanges();
+                const navSpyR = spyOn((<any>grid).navigation, 'moveNextEditable').and.callThrough();
+                const navSpyL = spyOn((<any>grid).navigation, 'movePreviousEditable').and.callThrough();
+                // Move forwards
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                expect(navSpyR).toHaveBeenCalledTimes(1);
+                const newCell = (<any>grid).gridAPI.get_cell_inEditMode(grid.id);
+                expect(newCell.cellID.columnID).toEqual(targetCell.columnIndex + 3);
+                expect(newCell.cell.column.editable).toEqual(true);
+                // Move backwards
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                expect(navSpyL).toHaveBeenCalledTimes(1);
+                expect((<any>grid).gridAPI.get_cell_inEditMode(grid.id).cellID.columnID).toEqual(targetCell.columnIndex);
+                expect((<any>grid).gridAPI.get_cell_inEditMode(grid.id).cell.column.editable).toEqual(true);
+            }));
+
+            it(`Should skip non-editable columns when column pinning is enabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                // from pinned to pinned
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // from pinned to unpinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'ReleaseDate'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('ReleaseDate');
+                expect(editedCell.inEditMode).toEqual(true);
+                // from unpinned to pinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should skip non-editable columns when column hiding is enabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.hiddenFlag = true;
+                fixture.detectChanges();
+                // jump over 3 hidden, both editable and not
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump over 1 hidden, editable
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump over 1 hidden, editable
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump over 3 hidden, both editable and not
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Downloads'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Downloads');
+                expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should skip non-editable columns when column pinning & hiding is enabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.hiddenFlag = true;
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.detectChanges();
+                // jump over 1 hidden, pinned
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump from pinned to unpinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump back to pinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // jump over 1 hidden, pinned
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // EXPECT edited cell to be 'Downloads'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Downloads');
+                expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should skip non-editable columns when column grouping is enabled`, (async () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.columnGroupingFlag = true;
+                fixture.detectChanges();
+                targetCell = fixture.componentInstance.focusGridCell(0, 'ReleaseDate');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                fixture.detectChanges();
+                // Should disregards the Igx-Column-Group component
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                // Go forwards, jump over Category and group end
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                await wait(DEBOUNCETIME);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                // Go backwards, jump over group end and return to 'Released'
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                // EXPECT focused cell to be 'Released'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                await wait(DEBOUNCETIME);
+                // Go to release date
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                fixture.detectChanges();
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('ReleaseDate');
+                expect(editedCell.inEditMode).toEqual(true);
+            }));
+
+            it(`Should skip non-editable columns when column when all column features are enabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                let targetCell: IgxGridCellComponent;
+                let editedCell: IgxGridCellComponent;
+                fixture.componentInstance.hiddenFlag = true;
+                fixture.componentInstance.pinnedFlag = true;
+                fixture.componentInstance.columnGroupingFlag = true;
+                fixture.detectChanges();
+                targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
+                targetCell.onKeydownEnterEditMode({});
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // Move from Downloads over hidden to Released in Column Group
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(false);
+                tick();
+                fixture.detectChanges();
+                // Move from pinned 'Released' (in Column Group) to unpinned 'Items'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Items');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // Move back to pinned 'Released' (in Column Group)
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Released');
+                expect(editedCell.inEditMode).toEqual(true);
+                editedCell.nativeElement.focus();
+                fixture.detectChanges();
+                fixture.componentInstance.moveNext(true);
+                tick();
+                fixture.detectChanges();
+                // Move back to pinned 'Downloads'
+                editedCell = fixture.componentInstance.getCurrentEditCell();
+                expect(editedCell.column.field).toEqual('Downloads');
+                expect(editedCell.inEditMode).toEqual(true);
             }));
         });
 
