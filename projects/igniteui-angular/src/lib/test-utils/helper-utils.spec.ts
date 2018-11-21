@@ -69,7 +69,7 @@ export class HelperUtils {
             UIInteractions.triggerKeyDownEvtUponElem(dir,  elem.nativeElement, true);
 
             if (nextRow) {
-                await wait(10);
+                await wait(20);
                 HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
                     .then(() => { resolve(); });
             } else {
@@ -82,7 +82,6 @@ export class HelperUtils {
                     }
                 });
             }
-
         })
 
     public static navigateHorizontallyToIndex = (
