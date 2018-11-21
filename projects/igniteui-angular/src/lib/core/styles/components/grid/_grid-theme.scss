@@ -1150,10 +1150,6 @@
     %igx-grid__drag-col-header {
         background-color: --var($theme, 'header-background');
 
-        %grid-thead-title {
-            opacity: .4;
-        }
-
         %grid-cell-header-title,
         %grid-cell-header-icons {
             opacity: .4;
