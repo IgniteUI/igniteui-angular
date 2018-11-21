@@ -22,6 +22,7 @@ describe('IgxGrid - Grid Sorting', () => {
         TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
+                SortByParityComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -314,16 +315,8 @@ describe('IgxGrid - Grid Sorting', () => {
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
     });
-});
 
-describe('IgxGrid - Grid Custom Sorting', () => {
-    let fixture;
-    let grid: IgxGridComponent;
     it(`Should allow sorting using a custom Sorting Strategy.`, () => {
-        TestBed.configureTestingModule({
-            declarations: [SortByParityComponent],
-            imports: [IgxGridModule.forRoot()]
-        }).compileComponents();
         fixture = TestBed.createComponent(SortByParityComponent);
         grid = fixture.componentInstance.grid;
         fixture.componentInstance.data.push(
