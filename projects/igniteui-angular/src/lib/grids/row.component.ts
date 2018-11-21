@@ -131,8 +131,15 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     /**
      * @hidden
      */
-    public get rowSelectable() {
+    public get rowSelectable(): boolean {
         return this.grid.rowSelectable;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showRowCheckboxes(): boolean {
+        return this.grid.showRowCheckboxes;
     }
 
     /**
