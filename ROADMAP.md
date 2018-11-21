@@ -19,7 +19,7 @@
 5. Multi-cell Selection 
 
 
-## Futrher Down the line
+## Further Down the line
 
 1. Excel-style filter
 2. Row-pinning
@@ -44,9 +44,9 @@
 ## Milestone 2 (due April 25th, 2018)
 
 1. **[DONE]** Expanding Ignite UI CLI views and templates with Ignite UI for Angular 
-    1. [DONE] Adding component views like App Host, Tabbar, List
-    2. [DONE] Updating the default project look
-    3. [DONE] Move the project navigation inside an App Host   
+    1. **[DONE]** Adding component views like App Host, Tabbar, List
+    2. **[DONE]** Updating the default project look
+    3. **[DONE]** Move the project navigation inside an App Host   
 2. **[DONE]** Product Theming 
 3. **[DONE]** Column Resizing 
 4. **[DONE]** Column pinning
@@ -77,17 +77,13 @@
 
 ## Milestone 4 (November 30th, 2018)
 
-1. **[Done]**Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
-2. **[Done]**Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
-3. **[Done]**Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
-4. **[Done]**Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
-5. **[Done]**Typography Updates 
-6. **[Done]**Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
+1. **[Done]** Tree Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/2530)
+2. **[Done]** Quick Per-column Search in the igxGrid [issue](https://github.com/IgniteUI/igniteui-angular/issues/542)
+3. **[Done]** Expandable Panel [issue](https://github.com/IgniteUI/igniteui-angular/issues/307)
+4. **[Done]** Conditional Cell Styling capability [issue](https://github.com/IgniteUI/igniteui-angular/issues/1079)
+5. **[Done]** igxTypography for theming
+6. **[Done]** Tooltip [issue](https://github.com/IgniteUI/igniteui-angular/issues/1710)
 7. **[Removed]** Vertical Tabs - material doesn't define vertical tabs 
 8. **[Done]** Row Editing with transactions (Batch editing) [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
 9. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
 10. **[Done]** Drag and Drop Directive
-
-
-# Postponed
-1. Collapsible Column Groups with state templating (collapsed state column can be templated)
