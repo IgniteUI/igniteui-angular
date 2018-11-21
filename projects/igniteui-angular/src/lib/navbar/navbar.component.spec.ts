@@ -7,7 +7,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
-fdescribe('IgxNavbar', () => {
+describe('IgxNavbar', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
