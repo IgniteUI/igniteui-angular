@@ -51,4 +51,4 @@ The navbar component provides us with the ability to use a template for the acti
 </igx-navbar>
 ```
 
-If a custom `igx-action-icon` is provided, the default action icon will not be used.
+If a custom `igx-action-icon` is provided, the default action icon will not be used. 
