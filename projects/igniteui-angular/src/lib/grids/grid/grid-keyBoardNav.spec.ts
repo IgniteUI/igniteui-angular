@@ -401,10 +401,10 @@ describe('IgxGrid - Keyboard navigation', () => {
             await wait(50);
             fix.detectChanges();
             // navigate down to 100th row.
-            await HelperUtils.navigateVerticallyToIndex(grid, 4, 100);
-            await wait(50);
+            await HelperUtils.navigateVerticallyToIndex(grid, 4, 50);
+            await wait(100);
             fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(50);
         });
 
         it('should allow navigating up', async () => {
@@ -483,10 +483,10 @@ describe('IgxGrid - Keyboard navigation', () => {
             await wait(50);
             fix.detectChanges();
             // navigate down to 100th row.
-            await HelperUtils.navigateVerticallyToIndex(grid, 4, 100);
+            await HelperUtils.navigateVerticallyToIndex(grid, 4, 60);
             await wait(50);
             fix.detectChanges();
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(60);
         });
 
         it('should scroll into view the not fully visible cells when navigating down', async () => {
