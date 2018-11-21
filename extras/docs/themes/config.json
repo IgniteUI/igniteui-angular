@@ -1,0 +1,24 @@
+{
+    "en": {
+        "development": {
+            "url": "https://dev.infragistics.local"
+        },
+        "staging": {
+            "url": "https://staging.infragistics.local"
+        },
+        "production": {
+            "url": "https://www.infragistics.com"
+        }
+    },
+    "jp": {
+        "development": {
+            "url": "https://jp.dev.infragistics.local"
+        },
+        "staging": {
+            "url": "https://jp.staging.infragistics.local"
+        },
+        "production": {
+            "url": "https://jp.infragistics.com"
+        }
+    }   
+}
