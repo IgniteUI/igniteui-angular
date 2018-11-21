@@ -583,7 +583,9 @@ fdescribe('IgxTreeGrid - Integration', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
+    });
 
+    describe('Batch Editing', () => {
         it('Children are transformed into parent nodes after their parent is deleted', fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
             fix.detectChanges();
@@ -1070,7 +1072,6 @@ fdescribe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalled();
             expect(trans.add).toHaveBeenCalledTimes(2);
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
-
         }));
     });
 
