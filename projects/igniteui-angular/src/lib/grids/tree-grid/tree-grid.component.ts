@@ -436,7 +436,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             }
         } else {
             const record = this.records.get(rowID);
-            const childData = record.parent ? record.parent.data[this.childDataKey] : this._gridAPI.get_all_data(this.id);
+            const childData = record.parent ? record.parent.data[this.childDataKey] :
+                this.transactions.enabled ? this._gridAPI.get_all_data(this.id, true) : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
             if (this.transactions.enabled) {
