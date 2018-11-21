@@ -4,7 +4,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges } from './schema';
 import { UpdateChanges } from './UpdateChanges';
 
 describe('UpdateChanges', () => {
@@ -15,6 +15,7 @@ describe('UpdateChanges', () => {
         public getClassChanges() { return this.classChanges; }
         public getOutputChanges() { return this.outputChanges; }
         public getInputChanges() { return this.inputChanges; }
+        public getThemePropChanges() { return this.themePropsChanges; }
     }
 
     beforeEach(() => {
@@ -356,7 +357,7 @@ describe('UpdateChanges', () => {
         appTree.create('test1.component.html', fileContent1);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
-        update.addCondition('igxIcon_is_material_name', () => { return true; });
+        update.addCondition('igxIcon_is_material_name', () => true);
 
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
         expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
@@ -372,6 +373,78 @@ describe('UpdateChanges', () => {
 `<igx-icon fontSet="material">{{'phone'}}</igx-icon>
 <igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
 
+        done();
+    });
+
+    it('should replace/remove inputs', done => {
+        const themePropsJson: ThemePropertyChanges = {
+            changes: [
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func'
+                },
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func'
+                },
+                {
+                    name: '$old-prop', remove: true,
+                    owner: 'igx-comp-theme'
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(themePropsJson));
+
+        const fileContent =
+`$var: igx-theme-func(
+    $prop1: red,
+    $replace-me: 3,
+    $remove-me: 0px,
+    $prop2: 2
+);
+$var2: igx-comp-theme(
+    $replace-me: not,
+    $old-prop: func(val)
+);
+
+$var3: igx-comp-theme(
+    $replace-me: not,
+    $old-prop: func(val, 3, 4),
+    $prop3: 1
+);`;
+        appTree.create('styles.scss', fileContent);
+        appTree.create('src/app/app.component.sass', `igx-comp-theme($replace-me: not, $old-prop: 3, $prop3: 2);`);
+        appTree.create('test.component.sass', `igx-theme-func($replace-me: 10px, $old-prop: 3, $prop3: 2);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getThemePropChanges()).toEqual(themePropsJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var: igx-theme-func(
+    $prop1: red,
+    $replaced: 3,
+    $prop2: 2
+);
+$var2: igx-comp-theme(
+    $replace-me: not
+);
+
+$var3: igx-comp-theme(
+    $replace-me: not,
+    $prop3: 1
+);`);
+        expect(appTree.readContent('src/app/app.component.sass')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
+        expect(appTree.readContent('test.component.sass')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
         done();
     });
 });
