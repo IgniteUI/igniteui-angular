@@ -187,7 +187,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -276,7 +276,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     } {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -337,7 +337,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        // const data = this.get_all_data(id, grid.transactions.enabled);
         const currentGridEditState = gridEditState || this.create_grid_edit_args(id, rowID, columnID, editValue);
         const emittedArgs = currentGridEditState.args;
         const column = grid.columnList.toArray()[columnID];
@@ -357,7 +357,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             //  if edit (new) value is same as old value do nothing here
             if (emittedArgs.oldValue !== undefined
                 && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
-            const rowValue = this.get_all_data(id)[rowIndex];
+            const rowValue = this.get_all_data(id, grid.transactions.enabled)[rowIndex];
             this.updateData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
@@ -396,7 +396,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         const currentGridState = gridState ? gridState : this.create_grid_edit_args(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
