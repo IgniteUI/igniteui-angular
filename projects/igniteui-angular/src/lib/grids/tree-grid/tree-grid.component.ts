@@ -28,6 +28,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IgxSummaryResult } from '../grid-summary';
 
 let NEXT_ID = 0;
 
@@ -503,11 +504,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
    public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: 'dataRow'
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
+    }
+
+    /**
+    * @hidden
+    */
+    public isSummaryRow(rowData): boolean {
+        return rowData instanceof Map;
     }
 }

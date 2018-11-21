@@ -6,7 +6,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISortingExpression } from '../../../public_api';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent } from '../grid';
+import { IgxGridBaseComponent, IgxSummaryResult } from '../grid';
 
 /**
  *@hidden
@@ -148,7 +148,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const data: ITreeGridRecord[] = [];
+        const data: any[] = [];
 
         grid.processedRootRecords = collection;
         grid.processedRecords = new Map<any, ITreeGridRecord>();
@@ -158,7 +158,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         return data;
     }
 
-    private getFlatDataRecursive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
+    private getFlatDataRecursive(collection: ITreeGridRecord[], data: any[],
         expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
         parentExpanded: boolean) {
         if (!collection || !collection.length) {
@@ -170,6 +170,15 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
             if (parentExpanded) {
                 data.push(hierarchicalRecord);
+
+                // if (hierarchicalRecord.expanded && hierarchicalRecord.children && hierarchicalRecord.children.length > 0) {
+                //     const summaries = new Map<string, IgxSummaryResult[]>();
+                //     const results: IgxSummaryResult[] = [];
+                //     results.push({key: 'count', label: 'Count', summaryResult: 20 });
+                //     results.push({key: 'min', label: 'Minimum', summaryResult: 0 });
+                //     summaries.set('ID', results);
+                //     data.push(summaries);
+                // }
             }
 
             const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);

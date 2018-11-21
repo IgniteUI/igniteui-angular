@@ -70,8 +70,12 @@
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
             </igx-tree-grid-row>
         </ng-template>
+        <ng-template #summary_template>
+            <igx-grid-summary-row [summaries]="rowData">
+            </igx-grid-summary-row>
+        </ng-template>
      
-        <ng-container *igxTemplateOutlet="record_template; context: getContext(rowData) "></ng-container>
+        <ng-container *igxTemplateOutlet="isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
