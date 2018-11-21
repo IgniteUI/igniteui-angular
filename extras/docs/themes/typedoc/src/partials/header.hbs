@@ -1,5 +1,5 @@
 <header class="tsd-header">
-    {{> infranav}}
+    {{#ifCond project.localization '==' 'jp'}}{{> infranav.ja }}{{else}}{{> infranav }}{{/ifCond}}
     <div class="tsd-header-content">
         <div class="tsd-header-group">
             <h1 class="tsd-header-logo">
