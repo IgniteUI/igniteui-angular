@@ -879,6 +879,7 @@ fdescribe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.records.get(11).level).toBe(0);
             expect(treeGrid.records.get(12).level).toBe(1);
             expect(treeGrid.records.get(13).level).toBe(2);
+        });
 
         });
 
@@ -1178,5 +1179,13 @@ fdescribe('IgxTreeGrid - Integration', () => {
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
         }));
+
+        it('Add row to empty grid - Hierarchical DS', () => {
+            // TODO
+        });
+
+        it('Add row to empty grid - Flat DS', () => {
+            // TODO
+        });
     });
 });
