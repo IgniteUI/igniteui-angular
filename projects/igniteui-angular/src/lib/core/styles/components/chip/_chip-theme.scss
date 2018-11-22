@@ -6,33 +6,34 @@
 
 /// Chip Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $roundness [32px] - The chip roundness.
+/// @param {Color} $roundness [null] - The chip roundness.
 ///
-/// @param {Color} $text-color [rgba(0, 0, 0, .74)] - The chip text color.
-/// @param {Color} $background [rgba(0, 0, 0, .04)] - The chip background color.
-/// @param {Color} $border-color [transparent] - The chip border color.
+/// @param {Color} $text-color [null] - The chip text color.
+/// @param {Color} $background [null] - The chip background color.
+/// @param {Color} $border-color [null] - The chip border color.
 ///
-/// @param {Color} $hover-text-color [rgba(0, 0, 0, .74)] - The chip text hover color.
-/// @param {Color} $hover-background [rgba(0, 0, 0, .08)] - The chip hover background color.
-/// @param {Color} $hover-border-color [transparent] - The chip hover border color.
+/// @param {Color} $hover-text-color [null] - The chip text hover color.
+/// @param {Color} $hover-background [null] - The chip hover background color.
+/// @param {Color} $hover-border-color [null] - The chip hover border color.
 ///
-/// @param {color} $selected-text-color [igx-contrast-color of secondary 500] - The selected chip text color.
-/// @param {color} $selected-background [secondary 500] - The selected chip background color.
-/// @param {color} $selected-border-color [primary 300] The selected chip border color.
+/// @param {color} $selected-text-color [null] - The selected chip text color.
+/// @param {color} $selected-background [null] - The selected chip background color.
+/// @param {color} $selected-border-color [null] The selected chip border color.
 ///
-/// @param {color} $hover-selected-text-color [igx-contrast-color of secondary 300] - The selected chip hover text color.
-/// @param {color} $hover-selected-background [secondary 300] - The selected chip hover background color.
-/// @param {color} $hover-selected-border-color [secondary 900] - The selected chip hover border color.
+/// @param {color} $hover-selected-text-color [null] - The selected chip hover text color.
+/// @param {color} $hover-selected-background [null] - The selected chip hover background color.
+/// @param {color} $hover-selected-border-color [null] - The selected chip hover border color.
 ///
-/// @param {color} $focus-selected-text-color [igx-contrast-color of secondary 300] - The selected chip text focus color.
-/// @param {color} $focus-selected-background [secondary 300] - The selected chip focus background color.
-/// @param {color} $focus-selected-border-color [secondary 900] - The selected chip focus border color.
+/// @param {color} $focus-selected-text-color [null] - The selected chip text focus color.
+/// @param {color} $focus-selected-background [null] - The selected chip focus background color.
+/// @param {color} $focus-selected-border-color [null] - The selected chip focus border color.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-color
 /// @requires luminance
-/// @requires hexrgba
 ///
 /// @example scss Change the background color
 ///   $my-chip-theme: igx-chip-theme($background: black);
@@ -46,6 +47,7 @@
     $text-color: null,
     $background: null,
     $border-color: null,
+    $ghost-background: null,
 
     $hover-text-color: null,
     $hover-background: null,
@@ -67,7 +69,8 @@
     $focus-selected-background: null,
     $focus-selected-border-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-chip'), $palette);
+    $name: 'igx-chip';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -158,12 +161,14 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         roundness: $roundness,
 
         text-color: $text-color,
         background: $background,
         border-color: $border-color,
+        ghost-background: $ghost-background,
 
         hover-text-color: $hover-text-color,
         hover-background: $hover-background,
@@ -477,7 +482,12 @@
         z-index: 10;
         box-shadow: igx-elevation($elevations, 8);
         overflow: hidden;
-        background: hexrgba(--var($theme, 'focus-background')) !important;
+        background: --var($theme, 'ghost-background');
+
+        &:hover,
+        &:focus {
+            background: --var($theme, 'ghost-background');
+        }
     }
 
     %igx-chip__ghost--cosy {
