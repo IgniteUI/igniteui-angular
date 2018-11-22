@@ -219,6 +219,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
 |  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
 |  `width `                | defines combo width                               | string                      |
+| `displayDensity` | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
 |  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
 |  `itemsWidth `           | defines drop down width                           | string                      |
 |  `itemHeight `           | defines drop down item height                     | number                      |

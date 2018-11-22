@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 - `igx-navbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
+- `igx-combo`:
+    - Added a new input property - `displayDensity`. It allows configuring the `displayDensity` of the combo's `value` and `search` inputs.
 
 ## 6.2.0
 - Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
