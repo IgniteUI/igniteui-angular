@@ -1,0 +1,18 @@
+@import '../light/carousel';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark carousel schema.
+/// @type {Map}
+/// @prop {Color} button-background [#222] - The previous/next buttons idle background color.
+/// @prop {Color} button-hover-background [#222] - The previous/next buttons hover background color.
+/// @requires extend
+/// @requires $_light-carousel
+/// @see $default-palette
+$_dark-carousel: extend($_light-carousel, (
+    button-background: #222,
+    button-hover-background: #222,
+));

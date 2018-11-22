@@ -264,6 +264,34 @@
     }
 }
 
-@mixin igx-green-theme() {
-    @include igx-theme($palette: $dark-green-palette, $schema: $dark-green-theme);
+@mixin igx-light-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+
+    @include igx-theme(
+        $palette: igx-palette($primary, $secondary, $grays: #000),
+        $schema: $light-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
+}
+
+@mixin igx-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+
+    @include igx-theme(
+        $palette: igx-palette($primary, $secondary, $grays: #fff),
+        $schema: $dark-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
 }
