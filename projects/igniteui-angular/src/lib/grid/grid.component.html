@@ -53,7 +53,7 @@
                 </button>
             </div>
         </ng-container>
-        <ng-container *ngIf="rowSelectable">
+        <ng-container *ngIf="showRowCheckboxes">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
             </div>
