@@ -24,6 +24,7 @@ import {
 } from './calendar.directives';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { isDate } from 'util';
+import { IResourceStrings, DefaultResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -199,7 +200,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
                 this.selectedDates = [];
                 break;
             default:
-                throw new Error('Invalid selection value');
+                throw new Error(this.resourceStrings.igx_calendar_invalid_selection);
         }
         this._onChangeCallback(this.selectedDates);
         this.rangeStarted = false;
@@ -368,6 +369,9 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
     }
+
+    @Input()
+    public resourceStrings: IResourceStrings = DefaultResourceStrings.strings;
 
     /**
      * Emits an event when a selection is made in the calendar.
@@ -838,7 +842,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      */
     public selectDate(value: Date | Date[]) {
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            throw new Error('Date or array should be set for the selectDate method.');
+            throw new Error(this.resourceStrings.igx_calendar_select_date);
         }
 
         switch (this.selection) {

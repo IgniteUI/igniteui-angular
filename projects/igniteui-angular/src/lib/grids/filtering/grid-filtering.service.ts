@@ -256,7 +256,11 @@ export class IgxFilteringService implements OnDestroy {
      * Returns the string representation of the FilteringLogic operator.
      */
     public getOperatorAsString(operator: FilteringLogic): any {
-        return FilteringLogic[operator];
+        if (operator === 0) {
+            return this.grid.resourceStrings.igx_grid_filter_operator_and;
+        } else {
+            return this.grid.resourceStrings.igx_grid_filter_operator_or;
+        }
     }
 
     /**
