@@ -1,0 +1,16 @@
+@import '../light/card';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark card schema.
+/// @type {Map}
+/// @prop {Color} background [#222]- The card background color.
+/// @requires extend
+/// @requires $_light-card
+/// @see $default-palette
+$_dark-card: extend($_light-card, (
+    background: #222
+));

@@ -1,5 +1,20 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light carousel schema.
+/// @type {Map}
+/// @prop {Color} button-background [#fff] - The previous/next buttons idle background color.
+/// @prop {Color} button-hover-background [#fff] - The previous/next buttons hover background color.
+/// @prop {Map} button-arrow-color [igx-color: ('grays', 700)] - The previous/next buttons idle arrow color.
+/// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 900)] - The previous/next buttons hover arrow color.
+/// @prop {Color} indicator-dot-color [#fff] - The active indicator dot color.
+/// @prop {Color} indicator-border-color [#fff] - The idle indicator border color.
+/// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
+/// @see $default-palette
 $_light-carousel: (
-    name: 'igx-carousel',
     button-background: #fff,
     button-hover-background: #fff,
 
