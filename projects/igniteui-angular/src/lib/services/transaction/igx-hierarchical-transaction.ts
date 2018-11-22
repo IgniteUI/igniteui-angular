@@ -25,6 +25,38 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         if (!transaction.path) {
             return;
         }
+
+        const currentState = states.get(transaction.id);
+        if (currentState) {
+            currentState.path = transaction.path;
+        }
+
+        //  if transaction has path, Hierarchical data source, and it is DELETE
+        //  type transaction for all child rows remove ADD states and update
+        //  transaction type and value of UPDATE states
+        if (transaction.type === TransactionType.DELETE) {
+            states.forEach((v: S, k: any) => {
+                if (v.path.indexOf(transaction.id) !== -1) {
+                    switch (v.type) {
+                        case TransactionType.ADD:
+                            states.delete(k);
+                            break;
+                        case TransactionType.UPDATE:
+                            states.get(k).type = TransactionType.DELETE;
+                            states.get(k).value = null;
+                    }
+                }
+            });
+        }
+    }
+
+    public commit(data: any[], childDataKey?: any, primaryKey?: any): void {
+        if (childDataKey) {
+            DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, true);
+        } else {
+            super.commit(data);
+        }
+        this.clear();
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
