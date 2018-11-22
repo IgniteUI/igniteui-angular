@@ -240,8 +240,8 @@ gulp.task('typedoc-build', [
 ]);
 
 const TRANSLATIONS_REPO = {
-    NAME: 'igniteui-angular-api-ja',
-    LINK:  `https://github.com/IgniteUI/igniteui-angular-api-ja`
+    NAME: 'igniteui-angular-api-i18n',
+    LINK:  `https://github.com/IgniteUI/igniteui-angular-api-i18n`
 };
 
 const DOCS_OUTPUT_PATH = 'dist\\igniteui-angular\\docs' 
