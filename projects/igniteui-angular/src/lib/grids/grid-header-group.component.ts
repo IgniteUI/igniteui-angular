@@ -18,6 +18,8 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 
+const Z_INDEX = 9999;
+
 /**
  * @hidden
  */
@@ -29,27 +31,52 @@ import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.c
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
+    /**
+     * Gets the column of the header group.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     @Input()
     public column: IgxColumnComponent;
 
+    /**
+     * Gets the `id` of the grid in which the header group is stored.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     @Input()
     public gridID: string;
 
+    /**
+     * @hidden
+     */
     @ViewChild(IgxGridHeaderComponent)
     public headerCell: IgxGridHeaderComponent;
 
+    /**
+     * @hidden
+     */
     @ViewChild(IgxGridFilteringCellComponent)
     public filterCell: IgxGridFilteringCellComponent;
 
+    /**
+     * @hidden
+     */
     @ViewChildren(forwardRef(() => IgxGridHeaderGroupComponent), { read: IgxGridHeaderGroupComponent })
     public children: QueryList<IgxGridHeaderGroupComponent>;
 
+    /**
+     * Gets the width of the header group.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
         return this.column.width;
     }
 
+    /**
+     * Gets the style classes of the header group.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = [
@@ -64,30 +91,45 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             'igx-grid__th--filtering': this.isFiltered
         };
 
-        Object.entries(classList).forEach(([klass, value]) => {
+        Object.entries(classList).forEach(([className, value]) => {
             if (value) {
-                defaultClasses.push(klass);
+                defaultClasses.push(className);
             }
         });
         return defaultClasses.join(' ');
     }
 
+    /**
+     * @hidden
+     */
     @HostBinding('style.z-index')
     get zIndex() {
         if (!this.column.pinned) {
             return null;
         }
-        return 9999 - this.grid.pinnedColumns.indexOf(this.column);
+        return Z_INDEX - this.grid.pinnedColumns.indexOf(this.column);
     }
 
+    /**
+     * Gets the grid of the header group.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     get grid(): any {
         return this.gridAPI.get(this.gridID);
     }
 
+    /**
+     * Gets whether the header group belongs to a column that is filtered.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     get isFiltered(): boolean {
         return this.filteringService.filteredColumn === this.column;
     }
 
+    /**
+     * Gets whether the header group is stored in the last column in the pinned area.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     get isLastPinned(): boolean {
         const pinnedCols = this.grid.pinnedColumns;
 
@@ -98,14 +140,25 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return pinnedCols.indexOf(this.column) === pinnedCols.length - 1;
     }
 
+    /**
+     * Gets whether the header group is stored in a pinned column.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     get isPinned(): boolean {
         return this.column.pinned;
     }
 
+    /**
+     * Gets whether the header group belongs to a column that is moved.
+     * @memberof IgxGridHeaderGroupComponent
+     */
     get isHeaderDragged(): boolean {
         return this.grid.draggedColumn ===  this.column;
     }
 
+    /**
+     * @hidden
+     */
     get hasLastPinnedChildColumn(): boolean {
         const pinnedCols = this.grid.pinnedColumns;
         if (this.column.allChildren) {
@@ -124,12 +177,18 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 
+    /**
+     * @hidden
+     */
     public onResizeAreaMouseOver() {
         if (this.column.resizable) {
             this.colResizingService.resizeCursor = 'col-resize';
         }
     }
 
+    /**
+     * @hidden
+     */
     public onResizeAreaMouseDown(event) {
         if (event.button === 0 && this.column.resizable) {
             this.colResizingService.column = this.column;
@@ -142,6 +201,9 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         }
     }
 
+    /**
+     * @hidden
+     */
     public autosizeColumnOnDblClick(event) {
         if (event.button === 0 && this.column.resizable) {
             this.colResizingService.column = this.column;

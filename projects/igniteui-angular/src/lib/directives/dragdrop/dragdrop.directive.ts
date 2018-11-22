@@ -572,10 +572,13 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     /**
      * @hidden
-     * Create dragGhost element - copy of the base element. Bind all needed events.
+     * Create dragGhost element - if a Node object is provided it creates a clone of that node,
+     * otherwise it clones the host element.
+     * Bind all needed events.
      * @param event Pointer event required when the dragGhost is being initialized.
+     * @param node The Node object to be cloned.
      */
-    protected createDragGhost(event, node = null) {
+    protected createDragGhost(event, node: any = null) {
         this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';

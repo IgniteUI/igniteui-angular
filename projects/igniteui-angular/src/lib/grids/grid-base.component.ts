@@ -2291,6 +2291,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.headerCheckboxContainer) {
             return this.headerCheckboxContainer.nativeElement.clientWidth;
         }
+
+        return 0;
     }
 
     /**

@@ -6,16 +6,41 @@ import { IgxColumnComponent } from './column.component';
 @Injectable()
 export class IgxColumnResizingService {
 
+    private pinnedMaxWidth: string;
+
+    /**
+     *@hidden
+     */
     public startResizePos: number;
+    /**
+     * Indicates that a column is currently being resized.
+     */
     public isColumnResizing: boolean;
-    public resizeCursor: any = null;
+    /**
+     *@hidden
+     */
+    public resizeCursor: string = null;
+    /**
+     *@hidden
+     */
     public showResizer = false;
+    /**
+     *@hidden
+     */
     public resizerHeight: number;
+    /**
+     *@hidden
+     */
     public resizeEndTimeout = isFirefox() ? 200 : 0;
+    /**
+     * The column being resized.
+     */
     public column: IgxColumnComponent;
 
-    private pinnedMaxWidth;
 
+    /**
+     * Returns the minimal possible width to which the column can be resized.
+     */
     get restrictResizeMin(): number {
         const actualMinWidth = parseFloat(this.column.minWidth);
         const defaultMinWidth = parseFloat(this.column.defaultMinWidth);
@@ -26,6 +51,9 @@ export class IgxColumnResizingService {
         return minWidth - this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
     }
 
+    /**
+     * Returns the maximal possible width to which the column can be resized.
+     */
     get restrictResizeMax(): number {
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
 
@@ -49,6 +77,13 @@ export class IgxColumnResizingService {
         }
     }
 
+    /**
+     * Autosizes the column to the longest currently visible cell value, including the header cell.
+     * If the column has a predifined maxWidth and the autosized column width will become bigger than it,
+     * then the column is sized to its maxWidth.
+     * If the column is pinned and the autosized column width will cause the pinned area to become bigger
+     * than the maximum allowed pinned area width (80% of the total grid width), autosizing will be deismissed.
+     */
     public autosizeColumnOnDblClick() {
         if (this.column.resizable) {
             const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
@@ -79,8 +114,10 @@ export class IgxColumnResizingService {
         }
     }
 
-    public resizeColumn(event) {
-
+    /**
+     * Resizes the column regaridng to the column minWidth and maxWidth.
+     */
+    public resizeColumn(event: MouseEvent) {
         this.isColumnResizing = false;
 
         this.showResizer = false;
