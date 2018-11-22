@@ -23,8 +23,6 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    SimpleChanges,
-    SimpleChange,
     Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -63,6 +61,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { WatchChanges } from './watch-changes';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -4507,32 +4506,4 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 }
 
-/**
-* @hidden
-*/
-export function WatchChanges(): PropertyDecorator {
-    return (target: any, key: string | symbol, propDesc?: PropertyDescriptor) => {
-        const privateKey = '_' + key.toString();
-        propDesc = propDesc || {
-            configurable: true,
-            enumerable: true,
-        };
-        propDesc.get = propDesc.get || (function (this: any) { return this[privateKey]; });
-        const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
 
-        propDesc.set = function (this: any, val: any) {
-            const oldValue = this[key];
-            if (val !== oldValue) {
-                originalSetter.call(this, val);
-                if (this.ngOnChanges) {
-                    // in case wacthed prop changes trigger ngOnChanges manually
-                    const changes: SimpleChanges = {
-                        [key]: new SimpleChange(oldValue, val, false)
-                    };
-                    this.ngOnChanges(changes);
-               }
-            }
-        };
-        return propDesc;
-    };
-}
