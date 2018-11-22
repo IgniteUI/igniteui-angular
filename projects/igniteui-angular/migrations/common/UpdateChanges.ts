@@ -1,19 +1,21 @@
-// tslint:disable-next-line:no-implicit-dependencies
 import { FileEntry, SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges } from './schema';
 import { getIdentifierPositions } from './tsUtils';
-import { getProjectPaths, getWorkspace } from './util';
+import { getProjectPaths, getWorkspace, getProjects } from './util';
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
+    protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
     protected classChanges: ClassChanges;
     protected outputChanges: BindingChanges;
     protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
+    protected themePropsChanges: ThemePropertyChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
 
     private _templateFiles: string[] = [];
@@ -41,29 +43,35 @@ export class UpdateChanges {
         return this._tsFiles;
     }
 
+    private _sassFiles: string[] = [];
+    /** Sass (both .scss and .sass) files in the project being updagraded. */
+    public get sassFiles(): string[] {
+        if (!this._sassFiles.length) {
+            // files can be outside the app prefix, so start from sourceRoot
+            // also ignore schematics `styleext` as Sass can be used regardless
+            const sourceDirs = getProjects(this.workspace).map(x => x.sourceRoot).filter(x => x);
+            this.sourceDirsVisitor((fulPath, entry) => {
+                if (fulPath.endsWith('.scss') || fulPath.endsWith('.sass')) {
+                    this._sassFiles.push(entry.path);
+                }
+            }, sourceDirs);
+        }
+        return this._sassFiles;
+    }
+
     /**
      * Create a new base schematic to apply changes
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
     constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
-        this.sourcePaths = getProjectPaths(getWorkspace(host));
+        this.workspace = getWorkspace(host);
+        this.sourcePaths = getProjectPaths(this.workspace);
 
-        const selectorJson = path.join(this.rootPath, 'changes', 'selectors.json');
-        if (fs.existsSync(selectorJson)) {
-            this.selectorChanges = JSON.parse(fs.readFileSync(selectorJson, 'utf-8'));
-        }
-        const classJson = path.join(this.rootPath, 'changes', 'classes.json');
-        if (fs.existsSync(classJson)) {
-            this.classChanges = JSON.parse(fs.readFileSync(classJson, 'utf-8'));
-        }
-        const outputsJson = path.join(this.rootPath, 'changes', 'outputs.json');
-        if (fs.existsSync(outputsJson)) {
-            this.outputChanges = JSON.parse(fs.readFileSync(outputsJson, 'utf-8'));
-        }
-        const inputsJson = path.join(this.rootPath, 'changes', 'inputs.json');
-        if (fs.existsSync(inputsJson)) {
-            this.inputChanges = JSON.parse(fs.readFileSync(inputsJson, 'utf-8'));
-        }
+        this.selectorChanges = this.loadConfig('selectors.json');
+        this.classChanges = this.loadConfig('classes.json');
+        this.outputChanges = this.loadConfig('outputs.json');
+        this.inputChanges = this.loadConfig('inputs.json');
+        this.themePropsChanges = this.loadConfig('theme-props.json');
     }
 
     /** Apply configured changes to the Host Tree */
@@ -89,6 +97,13 @@ export class UpdateChanges {
         if (this.classChanges && this.classChanges.changes.length) {
             for (const entryPath of this.tsFiles) {
                 this.updateClasses(entryPath);
+            }
+        }
+
+        /** Sass files */
+        if (this.themePropsChanges && this.themePropsChanges.changes.length) {
+            for (const entryPath of this.sassFiles) {
+                this.updateThemeProps(entryPath);
             }
         }
     }
@@ -225,6 +240,58 @@ export class UpdateChanges {
         }
     }
 
+    protected updateThemeProps(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        let overwrite = false;
+        for (const change of this.themePropsChanges.changes) {
+            if (fileContent.indexOf(change.owner) !== -1) {
+                /** owner-func:( * ); */
+                const searchPattern = String.raw`${change.owner}\([\s\S]+?\);`;
+                const matches = fileContent.match(new RegExp(searchPattern, 'g'));
+                if (!matches) {
+                    continue;
+                }
+                for (const match of matches) {
+                    if (match.indexOf(change.name)) {
+                        const name = change.name.replace('$', '\\$');
+                        const reg = new RegExp(String.raw`^\s*${name}:`);
+                        const opening = `${change.owner}(`;
+                        const closing = /\s*\);$/.exec(match).pop();
+                        const body = match.substr(opening.length, match.length - opening.length - closing.length);
+
+                        let params = this.splitFunctionProps(body);
+                        params = params.reduce((arr, param) => {
+                            if (reg.test(param)) {
+                                if (!change.remove) {
+                                    arr.push(param.replace(change.name, change.replaceWith));
+                                }
+                            } else {
+                                arr.push(param);
+                            }
+                            return arr;
+                        }, []);
+
+                        fileContent = fileContent.replace(
+                            match,
+                            opening + params.join(',') + closing
+                        );
+                        overwrite = true;
+                    }
+                }
+            }
+        }
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
+    }
+
+    private loadConfig(configJson: string) {
+        const filePath = path.join(this.rootPath, 'changes', configJson);
+        if (fs.existsSync(filePath)) {
+            return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        }
+    }
+
     private areConditionsFulfiled(match: string, conditions: string[]): boolean {
         if (conditions) {
             for (const condition of conditions) {
@@ -245,7 +312,7 @@ export class UpdateChanges {
             const propMatch = propertyMatchArray[0].trim();
             const propValueMatch = propMatch.match(new RegExp(`=(["'])(.+?)${'\\1'}`));
             if (propValueMatch && propValueMatch.length > 0) {
-                const propValue = propValueMatch[propValueMatch.length-1];
+                const propValue = propValueMatch[propValueMatch.length - 1];
 
                 if (propMatch.startsWith('[')) {
                     return fileContent.replace(ownerMatch, ownerMatch + `{{${propValue}}}`);
@@ -258,11 +325,42 @@ export class UpdateChanges {
         return fileContent;
     }
 
-    private sourceDirsVisitor(visitor: FileVisitor) {
-        for (const sourcePath of this.sourcePaths) {
+    private sourceDirsVisitor(visitor: FileVisitor, dirs = this.sourcePaths) {
+        for (const sourcePath of dirs) {
             const srcDir = this.host.getDir(sourcePath);
             srcDir.visit(visitor);
         }
+    }
+
+   /**
+    * Safe split by `','`, considering possible inner function calls. E.g.:
+    * ```
+    * prop: inner-func(),
+    * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
+    * ```
+    */
+    private splitFunctionProps(body: string): string[] {
+        const parts = [];
+        let lastIndex = 0;
+        let level = 0;
+
+        for (let i = 0; i < body.length; i++) {
+            const char = body[i];
+            switch (char) {
+            case '(': level++; break;
+            case ')': level--; break;
+            case ',':
+                if (!level) {
+                    parts.push(body.substring(lastIndex, i));
+                    lastIndex = i + 1;
+                }
+                break;
+            default:
+                break;
+            }
+        }
+        parts.push(body.substring(lastIndex));
+        return parts;
     }
 }
 
