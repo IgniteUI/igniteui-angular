@@ -1,11 +1,40 @@
-$_light-navdrawer: (
-    name: 'igx-navdrawer',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light navdrawer schema.
+/// @type {Map}
+///
+/// @property {Color} background [#fff] - The navigation drawer background color.
+/// @property {Color} border-color [rgba(0, 0, 0, .14)] - The navigation drawer right border color.
+/// @property {map} item-header-text-color [igx-color: ('grays', 600)] - The header's idle text color.
+/// @property {map} item-text-color [igx-color: ('grays', 700)] - The item's idle text color.
+/// @property {map} item-icon-color [igx-color: ('grays', 700)] - The item's icon color.
+/// @property {map} item-active-text-color [igx-color: ('primary', 500)] - The item's active text color.
+/// @property {map} item-active-background [igx-color: ('grays', 100)] - The item's active background color.
+/// @property {map} item-active-icon-color [igx-color: ('primary', 500)] - The item's icon active color.
+/// @property {map} item-hover-background [igx-color: ('grays', 200)] - The item's hover background color.
+/// @property {map} item-hover-text-color [igx-color: ('grays', 800)] - The item's hover text color.
+/// @property {map} item-hover-icon-color [igx-color: ('primary', 500)] - The item's hover icon color.
+///
+/// @see $default-palette
+
+$_light-navdrawer: (
     background: #fff,
 
     border-color: rgba(0, 0, 0, .14),
 
+    item-header-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
     item-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-icon-color: (
         igx-color: ('grays', 700)
     ),
 
@@ -23,14 +52,6 @@ $_light-navdrawer: (
 
     item-hover-text-color: (
         igx-color: ('grays', 800)
-    ),
-
-    item-header-text-color: (
-        igx-color: ('grays', 600)
-    ),
-
-    item-icon-color: (
-        igx-color: ('grays', 700)
     ),
 
     item-active-icon-color: (
