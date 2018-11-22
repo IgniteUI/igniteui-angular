@@ -221,14 +221,14 @@
 /// Add theme colors to the global root scope
 /// Ensures the operation is done only once.
 /// @access private
-/// @param {map} $theme - The component theme to get the
+/// @param {map} $theme - The component theme to register as css vars.
 /// @requires {mixin} css-vars-from-theme
 @mixin igx-root-css-vars($theme) {
-    $name: map-get($theme, 'name');
+    $scope: &;
 
-    @if map-get($themes, $name) == null {
+    @if map-get($themes, $scope) == null {
         $id: unique-id();
-        $themes: map-merge($themes, (#{$name}: $id)) !global;
+        $themes: map-merge($themes, (#{$scope}: $id)) !global;
         @include igx-css-vars($theme);
     }
 }

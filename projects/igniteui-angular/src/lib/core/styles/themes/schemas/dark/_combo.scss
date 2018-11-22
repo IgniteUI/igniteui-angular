@@ -1,0 +1,17 @@
+@import '../light/combo';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark combo schema.
+/// @type {Map}
+/// @prop {Color} empty-list-background [#222] - The combo list background color.
+/// @requires extend
+/// @requires $_light-combo
+/// @see $default-palette
+$_dark-combo: extend($_light-combo, (
+    empty-list-background: #222,
+));

@@ -1,6 +1,19 @@
-$_light-tooltip: (
-    name: 'igx-tooltip',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light tooltip schema.
+/// @type {Map}
+///
+/// @property {map} background [igx-color: ('grays', 700), hexrgba: (), rgba: .9] - The background color of the tooltip.
+/// @property {map} text-color [igx-color: ('grays', 700), hexrgba: (), rgba: .9, text-contrast: ()] - The text color of the tooltip.
+/// @property {Number} roundness [rem(4px)] - The border roundness of the tooltip. Smaller values mean less roundness.
+///
+/// @see $default-palette
+
+$_light-tooltip: (
     background: (
         igx-color: ('grays', 700),
         hexrgba: (),

@@ -1,13 +1,33 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light navbar schema.
+/// @type {Map}
+///
+/// @property {map} $background [igx-color: ('primary', 500)] - The navbar background color.
+/// @property {map} $text-color [igx-contrast-color: ('primary', 500)] - The navbar text color.
+/// @property {map} $idle-icon-color [igx-contrast-color: ('primary', 500)] - The navbar idle icon color.
+/// @property {map} $hover-icon-color [igx-contrast-color: ('primary', 500)] - The navbar hover icon color.
+///
+/// @see $default-palette
+
 $_light-navbar: (
-    name: 'igx-navbar',
-
-    text-color: #fff,
-
-    idle-icon-color: #fff,
-
-    hover-icon-color: #fff,
-
     background: (
         igx-color: ('primary', 500)
+    ),
+
+    text-color: (
+        igx-contrast-color: ('primary', 500)
+    ),
+
+    idle-icon-color: (
+        igx-contrast-color: ('primary', 500)
+    ),
+
+    hover-icon-color: (
+        igx-contrast-color: ('primary', 500)
     )
 );

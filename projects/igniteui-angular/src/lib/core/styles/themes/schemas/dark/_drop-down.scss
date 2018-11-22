@@ -1,0 +1,17 @@
+@import '../light/drop-down';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark drop-down schema.
+/// @type {Map}
+/// @requires extend
+/// @prop {Color} background-color [#222] - The drop-down background color.
+/// @requires $_light-drop-down
+/// @requires extend
+/// @see $default-palette
+$_dark-drop-down: extend($_light-drop-down, (
+    background-color: #222
+));

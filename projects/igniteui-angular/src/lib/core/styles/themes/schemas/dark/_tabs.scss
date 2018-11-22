@@ -1,0 +1,20 @@
+@import '../light/badge';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark tabs schema.
+/// @type {Map}
+/// @prop {Color} item-background [#222] - The background color used for the tabs header.
+/// @prop {Color} button-background [#222] - The color used for the button background.
+/// @requires {function} extend
+/// @requires $_light-tabs
+/// @see $default-palette
+
+$_dark-tabs: extend($_light-tabs, (
+    item-background: #222,
+    button-background: #222
+));

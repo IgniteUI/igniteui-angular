@@ -1,6 +1,18 @@
-$_light-toast: (
-    name: 'igx-toast',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light toast schema.
+/// @type {Map}
+///
+/// @property {map} background [igx-color: ('grays', 600)] - The background color used for the toast.
+/// @property {map} text-color [igx-contrast-color: ('grays', 600)] - The text-color used for the toast.
+///
+/// @see $default-palette
+
+$_light-toast: (
     background: (
         igx-color: ('grays', 600)
     ),

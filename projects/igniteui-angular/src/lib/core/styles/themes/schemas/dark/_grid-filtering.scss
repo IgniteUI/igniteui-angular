@@ -1,0 +1,13 @@
+@import '../light/grid-filtering';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark grid-filtering schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-grid-filtering
+/// @see $default-palette
+$_dark-grid-filtering: extend($_light-grid-filtering, ());

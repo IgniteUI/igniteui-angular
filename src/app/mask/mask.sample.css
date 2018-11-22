@@ -3,7 +3,6 @@
     position: relative;
     height: 100%;
     margin: 0 auto;
-    background: #fff;
 }
 
 .sample-content {
@@ -25,24 +24,6 @@
     min-width: 280px;
 }
 
-@-webkit-keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes fade-in {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
 .input-sample {
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 2px 1px -1px rgba(0, 0, 0, 0.12);
     padding: 24px 16px;
@@ -54,7 +35,6 @@
     margin-bottom: 48px;
 }
 
-.igx-form-group + .igx-form-group {
+.igx-form-group+.igx-form-group {
     margin-top: 42px;
 }
-

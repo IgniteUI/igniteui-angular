@@ -8,22 +8,25 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $item-text-color [rgba(0, 0, 0, .62)]- The text color for button group items.
-/// @param {Color} $item-background [#fff] - The background color for button group items .
-/// @param {Color} $item-border-color [transparent] - The border color between button group items.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $item-text-color [null]- The text color for button group items.
+/// @param {Color} $item-background [null] - The background color for button group items .
+/// @param {Color} $item-border-color [null] - The border color between button group items.
 ///
-/// @param {Color} $item-hover-text-color [rgba(0, 0, 0, .74)] - The hover text color for button group items.
-/// @param {Color} $item-hover-background [rgba(0, 0, 0, .26)] - The hover background color for button group items.
+/// @param {Color} $item-hover-text-color [null] - The hover text color for button group items.
+/// @param {Color} $item-hover-background [null] - The hover background color for button group items.
 ///
-/// @param {Color} $disabled-text-color [rgba(0, 0, 0, .26)]- The text/icon color for a disabled item in the button group.
-/// @param {Color} $disabled-background-color [rgba(0, 0, 0, .04)] - The background color for a disabled item in the button group.
+/// @param {Color} $disabled-text-color [null]- The text/icon color for a disabled item in the button group.
+/// @param {Color} $disabled-background-color [null] - The background color for a disabled item in the button group.
 ///
-/// @param {Color} $item-selected-text-color [rgba(0, 0, 0, .74)]- The text color for a selected item in the button group.
-/// @param {Color} $item-selected-background [rgba(0, 0, 0, .26)] - The background color for a selected item in the button group.
-/// @param {Color} $item-selected-border-color [rgba(0, 0, 0, .06)] - The border color for a selected item from the button group.
+/// @param {Color} $item-selected-text-color [null]- The text color for a selected item in the button group.
+/// @param {Color} $item-selected-background [null] - The background color for a selected item in the button group.
+/// @param {Color} $item-selected-border-color [null] - The border color for a selected item from the button group.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Change the background, text, and border colors
@@ -52,7 +55,8 @@
     $item-selected-background: null,
     $item-selected-border-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-button-group'), $palette);
+    $name: 'igx-button-group';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($item-text-color) and $item-background  {
         $item-text-color: text-contrast($item-background);
@@ -87,6 +91,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,

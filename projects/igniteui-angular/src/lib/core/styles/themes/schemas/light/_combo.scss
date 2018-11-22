@@ -1,5 +1,16 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light combo schema.
+/// @type {Map}
+/// @prop {Color} empty-list-background [#fff] - The combo list background color.
+/// @prop {Color} search-separator-border-color [igx-color: ('grays', 300)] - The combo search box separator color.
+/// @prop {Color} empty-list-placeholder-color [igx-color: ('grays', 400)] - The combo placeholder text color.
+/// @see $default-palette
 $_light-combo: (
-    name: 'igx-combo',
     empty-list-background: #fff,
 
     search-separator-border-color: (

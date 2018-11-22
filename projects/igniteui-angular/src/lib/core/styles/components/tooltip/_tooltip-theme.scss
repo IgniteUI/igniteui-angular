@@ -7,53 +7,40 @@
 
 /// Returns a map containing all style properties related to the theming the tooltip directive.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [] - The background color of the tooltip.
-/// @param {Color} $text-color [] - The text color of the tooltip.
-/// @param {Number} $roundness [] - The border roundness of the tooltip. Smaller values mean less roundness.
-/// @param {String} $variant ['dark'] - Determines the default color scheme - could be either 'dark' or 'light'.
-/// Set to light when the surrounding area is dark.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $background [null] - The background color of the tooltip.
+/// @param {Color} $text-color [null] - The text color of the tooltip.
+/// @param {Number} $roundness [null] - The border roundness of the tooltip. Smaller values mean less roundness.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
-/// @example scss Change the checked fill color
-///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
-///   // Pass the theme to the igx-checkbox component mixin
-///   @include igx-checkbox($my-checkbox-theme);
+/// @example scss Change the tooltip background
+///   $my-tooltip-theme: igx-tooltip-theme($background: magenta);
+///   // Pass the theme to the igx-tooltip component mixin
+///   @include igx-tooltip($my-checkbox-theme);
 @function igx-tooltip-theme(
     $palette: $default-palette,
     $schema: $light-schema,
 
     $background: null,
     $text-color: null,
-    $roundness: null,
-    $variant: 'dark'
+    $roundness: null
 ) {
-    $name: 'igx-tooltip';
-    $dark-background: hexrgba(igx-color($palette, 'grays', 700));
-    $light-background: rgba(#fff, .94);
     $border-radius: rem(4px);
-
-    $dark-theme: apply-palette(map-get($schema, 'igx-tooltip'), $palette);
-
-    $light-theme: (
-        name: $name,
-        background: $light-background,
-        text-color: text-contrast($light-background),
-        roundness: $border-radius
-    );
-
-    $theme: map-get((
-        dark: $dark-theme,
-        light: $light-theme
-    ), $variant);
+    $name: 'igx-tooltip';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $default-palette,
         background: $background,
         text-color: $text-color,

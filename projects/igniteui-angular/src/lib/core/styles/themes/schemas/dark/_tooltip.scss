@@ -1,0 +1,14 @@
+@import '../light/tooltip';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light tooltip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tooltip
+/// @see $default-palette
+
+$_dark-tooltip: extend($_light-tooltip, ());

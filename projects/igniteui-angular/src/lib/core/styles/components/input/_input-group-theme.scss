@@ -5,41 +5,44 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $idle-text-color [rgba(0, 0, 0, .54)] - The input text color in the idle state.
-/// @param {Color} $filled-text-color [rgba(0, 0, 0, .87)] - The input text color in the filled state.
-/// @param {Color} $focused-text-color [rgba(0, 0, 0, .87)] - The input text color in the focused state.
-/// @param {Color} $disabled-text-color [rgba(0, 0, 0, .38)] - The input text color in the disabled state.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $idle-secondary-color [rgba(0, 0, 0, .54)] - The label color in the idle state.
-/// @param {Color} $filled-secondary-color [rgba(0, 0, 0, .54] - The label color in the filled state.
-/// @param {Color} $focused-secondary-color [primary 500] - The label color in the focused state.
+/// @param {Color} $idle-text-color [null] - The input text color in the idle state.
+/// @param {Color} $filled-text-color [null] - The input text color in the filled state.
+/// @param {Color} $focused-text-color [null] - The input text color in the focused state.
+/// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
 ///
-/// @param {Color} $idle-bottom-line-color [rgba(0, 0, 0, .54)] - The bottom line and border colors in the idle state.
-/// @param {Color} $hover-bottom-line-color [rgba(0, 0, 0, .87)] - The bottom line and border colors in the hover state.
-/// @param {Color} $focused-bottom-line-color [primary 500] - The bottom line and border colors in the focused state.
-/// @param {Color} $interim-bottom-line-color [12% of primary 500] - The bottom line and border colors during the to-focused transition.
-/// @param {Color} $disabled-bottom-line-color [rgba(0, 0, 0, .42)] - The bottom line and border colors in the disabled state.
-/// @param {Color} $disabled-border-color [6% of rgba(0, 0, 0, .38)] - The disabled border color for input groups of type border.
+/// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
+/// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
+/// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
 ///
-/// @param {Color} $box-background [rgba(0, 0, 0, .06)] - The background color of an input group of type box.
-/// @param {Color} $box-disabled-background [rgba(0, 0, 0, .03)] - The background color of an input group of type box in the disabled state.
+/// @param {Color} $idle-bottom-line-color [null] - The bottom line and border colors in the idle state.
+/// @param {Color} $hover-bottom-line-color [null] - The bottom line and border colors in the hover state.
+/// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
+/// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
+/// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
+/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border.
 ///
-/// @param {Color} $border-background [transparent] - The background color of an input group of type border.
-/// @param {Color} $border-disabled-background [rgba(0, 0, 0, .03)] - The background color of an input group of type border in the disabled state.
+/// @param {Color} $box-background [null] - The background color of an input group of type box.
+/// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
 ///
-/// @param {Color} $search-background [white] - The background color of an input group of type search.
-/// @param {Color} $search-disabled-background [white] - The background color of an input group of type search in the disabled state.
-/// @param {Color} $search-shadow-color [rgba(0, 0, 0, .54)] - The shadow color of an input group of type search.
-/// @param {Color} $search-disabled-shadow-color [rgba(0, 0, 0, .12)] - The shadow color of an input group of type search in the disabled state.
+/// @param {Color} $border-background [null] - The background color of an input group of type border.
+/// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
 ///
-/// @param {Color} $success-secondary-color [igx-color($palette, 'success')] - The success color used in the valid state.
-/// @param {Color} $warning-secondary-color [igx-color($palette, 'warn')] - The warning color used in the warning state.
-/// @param {Color} $error-secondary-color [igx-color($palette, 'error)] - The error color used in the error state.
+/// @param {Color} $search-background [null] - The background color of an input group of type search.
+/// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
+/// @param {Color} $search-shadow-color [null] - The shadow color of an input group of type search.
+/// @param {Color} $search-disabled-shadow-color [null] - The shadow color of an input group of type search in the disabled state.
 ///
-/// @param {String} $variant ['dark'] - Can be either 'dark' or 'light'. Use 'light' when the input is used on dark backgrounds.
+/// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
+/// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
+/// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
+/// @requires text-contrast
 ///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -60,7 +63,6 @@
 
     $idle-bottom-line-color: null,
     $hover-bottom-line-color: null,
-    $filled-bottom-line-color: null,
     $focused-bottom-line-color: null,
     $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
@@ -81,95 +83,14 @@
     $error-secondary-color: null,
 
     $placeholder-color: null,
-    $disabled-placeholder-color: null,
-
-    $variant: 'dark'
+    $disabled-placeholder-color: null
 ) {
     $name: 'igx-input-group';
-
-    // $dark-theme: (
-    //     name: $name,
-
-    //     idle-text-color: igx-color($palette, 'grays', 600),
-    //     filled-text-color: igx-color($palette, 'grays', 900),
-    //     focused-text-color: igx-color($palette, 'grays', 900),
-    //     disabled-text-color: igx-color($palette, 'grays', 500),
-
-    //     idle-secondary-color: igx-color($palette, 'grays', 600),
-    //     filled-secondary-color: igx-color($palette, 'grays', 600),
-    //     focused-secondary-color: igx-color($palette, 'primary'),
-
-    //     idle-bottom-line-color: igx-color($palette, 'grays', 600),
-    //     hover-bottom-line-color: igx-color($palette, 'grays', 900),
-    //     filled-bottom-line-color: igx-color($palette, 'grays', 600),
-    //     focused-bottom-line-color: igx-color($palette, 'primary'),
-    //     interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
-    //     disabled-bottom-line-color: rgba(0, 0, 0, .42),
-    //     disabled-border-color: rgba(igx-color($palette, 'grays', 500), .06),
-
-    //     box-background: rgba(0, 0, 0, .06),
-    //     box-disabled-background: rgba(0, 0, 0, .03),
-
-    //     border-background: transparent,
-    //     border-disabled-background: rgba(0, 0, 0, .03),
-
-    //     search-background: white,
-    //     search-disabled-background: white,
-    //     search-shadow-color: igx-color($palette, 'grays', 600),
-    //     search-disabled-shadow-color: igx-color($palette, 'grays', 300),
-
-    //     success-secondary-color: igx-color($palette, 'success'),
-    //     warning-secondary-color: igx-color($palette, 'warn'),
-    //     error-secondary-color: igx-color($palette, 'error'),
-    //     placeholder-color: igx-color($palette, 'grays', 500),
-    //     disabled-placeholder-color: igx-color($palette, 'grays', 400)
-    // );
-
-    $light-theme: (
-        name: $name,
-
-        idle-text-color: white,
-        filled-text-color: white,
-        focused-text-color: white,
-        disabled-text-color: rgba(255, 255, 255, .5),
-
-        idle-secondary-color: rgba(255, 255, 255, .7),
-        filled-secondary-color: rgba(255, 255, 255, .7),
-        focused-secondary-color: igx-color($palette, 'primary'),
-
-        idle-bottom-line-color: rgba(255, 255, 255, .7),
-        hover-bottom-line-color: white,
-        filled-bottom-line-color: rgba(255, 255, 255, .7),
-        focused-bottom-line-color: igx-color($palette, 'primary'),
-        interim-bottom-line-color: rgba(igx-color($palette, 'primary'), .12),
-        disabled-bottom-line-color: rgba(255, 255, 255, .7),
-        disabled-border-color: rgba(rgba(255, 255, 255, .5), .06),
-
-        box-background: rgba(255, 255, 255, .1),
-        box-disabled-background: rgba(255, 255, 255, .06),
-
-        border-background: transparent,
-        border-disabled-background: rgba(255, 255, 255, .06),
-
-        search-background: rgba(255, 255, 255, .1),
-        search-disabled-background: rgba(255, 255, 255, .06),
-        search-shadow-color: igx-color($palette, 'grays', 600),
-        search-disabled-shadow-color: igx-color($palette, 'grays', 300),
-
-        success-secondary-color: igx-color($palette, 'success'),
-        warning-secondary-color: igx-color($palette, 'warn'),
-        error-secondary-color: igx-color($palette, 'error'),
-        placeholder-color: #999,
-        disabled-placeholder-color: #777
-    );
-
-    $theme: map-get((
-        dark: apply-palette(map-get($schema, 'igx-input-group'), $palette),
-        light: $light-theme
-    ), $variant);
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
         palette: $palette,
+        name: $name,
 
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
@@ -182,7 +103,6 @@
 
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
-        filled-bottom-line-color: $filled-bottom-line-color,
         focused-bottom-line-color: $focused-bottom-line-color,
         interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
@@ -204,8 +124,6 @@
         error-secondary-color: $error-secondary-color,
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
-
-        variant: $variant
     ));
 
     @if not($placeholder-color) and $box-background {
@@ -221,10 +139,9 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
-/// @requires em
+/// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires --var
 @mixin igx-input-group($theme) {

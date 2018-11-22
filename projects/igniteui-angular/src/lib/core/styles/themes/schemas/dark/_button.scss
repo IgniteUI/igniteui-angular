@@ -1,0 +1,36 @@
+@import '../light/button';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark button schema.
+/// @type {Map}
+/// @prop {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .12 ] - The hover background color of a flat button.
+/// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .24] - The focus background color of a flat button.
+/// @prop {Map} icon-hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
+/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of raised, fab, or icon buttons.
+/// @requires extend
+/// @requires $_light-button
+/// @see $default-palette
+
+$_dark-button: extend($_light-button, (
+    flat-hover-background: (
+        igx-color: ('secondary', 500),
+        rgba: .12
+    ),
+
+    flat-focus-background: (
+        igx-color: ('secondary', 400),
+        rgba: .24
+    ),
+
+    icon-hover-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    disabled-background: (
+        igx-color: ('grays', 200)
+    )
+));

@@ -1,3 +1,9 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
 @import './avatar';
 @import './badge';
 @import './banner';
@@ -36,6 +42,48 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+
+/// The default light schema for all components.
+/// @type {Map}
+/// @property {Map} igx-avatar [$_light-avatar]
+/// @property {Map} igx-badge [$_light-badge]
+/// @property {Map} igx-banner [$_light-banner]
+/// @property {Map} igx-bottom-nav [$_light-bottom-nav]
+/// @property {Map} igx-button [$_light-button]
+/// @property {Map} igx-button-group [$_light-button-group]
+/// @property {Map} igx-calendar [$_light-calendar]
+/// @property {Map} igx-card [$_light-card]
+/// @property {Map} igx-carousel [$_light-carousel]
+/// @property {Map} igx-checkbox [$_light-checkbox]
+/// @property {Map} igx-chip [$_light-chip]
+/// @property {Map} igx-column-hiding [$_light-column-hiding]
+/// @property {Map} igx-combo [$_light-combo]
+/// @property {Map} igx-date-picker [$_light-date-picker]
+/// @property {Map} igx-dialog [$_light-dialog]
+/// @property {Map} igx-drop-down [$_light-drop-down]
+/// @property {Map} igx-expansion-panel [$_light-expansion-panel]
+/// @property {Map} igx-grid [$_light-grid]
+/// @property {Map} igx-grid-filtering [$_light-grid-filtering]
+/// @property {Map} igx-grid-paginator [$_light-grid-pagination]
+/// @property {Map} igx-grid-summary [$_light-grid-summary]
+/// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
+/// @property {Map} igx-icon [$_light-icon]
+/// @property {Map} igx-input-group [$_light-input-group]
+/// @property {Map} igx-list [$_light-list]
+/// @property {Map} igx-navbar [$_light-navbar]
+/// @property {Map} igx-navdrawer [$_light-navdrawer]
+/// @property {Map} igx-overlay [$_light-overlay]
+/// @property {Map} igx-progress-linear [$_light-progress-linear]
+/// @property {Map} igx-progress-circular [$_light-progress-circular]
+/// @property {Map} igx-radio [$_light-radio]
+/// @property {Map} igx-ripple [$_light-ripple]
+/// @property {Map} igx-slider [$_light-slider]
+/// @property {Map} igx-snackbar [$_light-snackbar]
+/// @property {Map} igx-switch [$_light-switch]
+/// @property {Map} igx-tabs [$_light-tabs]
+/// @property {Map} igx-time-picker [$_light-time-picker]
+/// @property {Map} igx-toast [$_light-toast]
+/// @property {Map} igx-tooltip [$_light-tooltip]
 
 $light-schema: (
     igx-avatar: $_light-avatar,

@@ -1,0 +1,17 @@
+@import '../light/button-group';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark button group schema.
+/// @type {Map}
+/// @prop {Color} item-background [#222] - The background color for button group items .
+/// @requires {function} extend
+/// @requires $_light-button-group
+/// @see $default-palette
+
+$_dark-button-group: extend($_light-button-group, (
+    item-background: #222
+));
