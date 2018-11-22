@@ -291,7 +291,7 @@ gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-
 const SASSDOC = {
     PROJECT_PATH: "projects\\igniteui-angular\\src\\lib\\core\\styles",
     DEST: "dist\\igniteui-angular\\docs\\sass",
-    OPTIONS: JSON.parse(fs.readFileSync('.\\.sassdocrc', 'utf8')),
+    OPTIONS: JSON.parse(fs.readFileSync('./.sassdocrc', 'utf8')),
 }
 
 gulp.task('sassdoc:clean-docs-dir', () => {
