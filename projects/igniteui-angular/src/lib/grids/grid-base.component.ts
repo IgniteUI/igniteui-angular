@@ -1234,7 +1234,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
-     * Returns the template which will be used by the tollbar to show custom content.
+     * Returns the template which will be used by the toolbar to show custom content.
      * ```typescript
      * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
      * ```
