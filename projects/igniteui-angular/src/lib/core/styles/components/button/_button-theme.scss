@@ -9,42 +9,44 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
-/// @param {String} $button-roundness [2px]- The edge roundness (border-radius) for flat and raised buttons.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {String} $button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
 ///
-/// @param {Color} $flat-background [transparent] - The background color of a flat button.
-/// @param {Color} $flat-text-color [secondary 500] - The idle text color of a flat button.
-/// @param {Color} $flat-hover-background [5% of secondary 500] - The hover background color of a flat button.
-/// @param {Color} $flat-hover-text-color [secondary 500] - The hover text color of a flat button.
-/// @param {Color} $flat-focus-background [12% of secondary 400] - The focus background color of a flat button.
-/// @param {Color} $flat-focus-text-color [secondary 500] - The focus text color of a flat button.
+/// @param {Color} $flat-background [null] - The background color of a flat button.
+/// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
+/// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
+/// @param {Color} $flat-hover-text-color [null] - The hover text color of a flat button.
+/// @param {Color} $flat-focus-background [null] - The focus background color of a flat button.
+/// @param {Color} $flat-focus-text-color [null] - The focus text color of a flat button.
 ///
-/// @param {Color} $raised-background [secondary 500] - The background color of a raised button.
-/// @param {Color} $raised-text-color [igx-contrast-color of secondary 500] - The idle text color of a raised button.
-/// @param {Color} $raised-hover-background [secondary 300] - The hover background of a raised button.
-/// @param {Color} $raised-hover-text-color [igx-contrast-color of secondary 300] - The hover text color of a raised button.
-/// @param {Color} $raised-focus-background [secondary 300] - The focus background color of a raised button.
-/// @param {Color} $raised-focus-text-color [igx-contrast-color of secondary 300] - The focus text color of a raised button.
+/// @param {Color} $raised-background [null] - The background color of a raised button.
+/// @param {Color} $raised-text-color [null] - The idle text color of a raised button.
+/// @param {Color} $raised-hover-background [null] - The hover background of a raised button.
+/// @param {Color} $raised-hover-text-color [null] - The hover text color of a raised button.
+/// @param {Color} $raised-focus-background [null] - The focus background color of a raised button.
+/// @param {Color} $raised-focus-text-color [null] - The focus text color of a raised button.
 ///
-/// @param {Color} $fab-background [secondary 500] - The background color of a floating action button.
-/// @param {Color} $fab-text-color [igx-contrast-color of secondary 500] - The text color of a floating action button.
-/// @param {Color} $fab-hover-background [secondary 300] - The hover background color of a floating action button.
-/// @param {Color} $fab-hover-text-color [igx-contrast color of secondary 300] - The hover text color of a floating action button.
-/// @param {Color} $fab-focus-background [secondary 300] - The focus background color of floating action button.
-/// @param {Color} $fab-focus-text-color [igx-contrast color of secondary 300] - The focus text color of a floating action button.
+/// @param {Color} $fab-background [null] - The background color of a floating action button.
+/// @param {Color} $fab-text-color [null] - The text color of a floating action button.
+/// @param {Color} $fab-hover-background [null] - The hover background color of a floating action button.
+/// @param {Color} $fab-hover-text-color [null] - The hover text color of a floating action button.
+/// @param {Color} $fab-focus-background [null] - The focus background color of floating action button.
+/// @param {Color} $fab-focus-text-color [null] - The focus text color of a floating action button.
 ///
-/// @param {Color} $icon-color [rgba(0, 0, 0, .74)] - The icon color of an icon button.
-/// @param {Color} $icon-hover-color [rgba(0, 0, 0, .74)] - The hover icon color of an icon button.
-/// @param {Color} $icon-background [transparent] - The background color of the an icon button.
-/// @param {Color} $icon-hover-background [rgba(0, 0, 0, .04)] - The hover background color of an icon button.
-/// @param {Color} $icon-focus-color [rgba(0, 0, 0, .74)] - The focus icon color of an icon button.
-/// @param {Color} $icon-focus-background [rgba(0, 0, 0, .26)] - The focus background color an icon button.
+/// @param {Color} $icon-color [null] - The icon color of an icon button.
+/// @param {Color} $icon-hover-color [null] - The hover icon color of an icon button.
+/// @param {Color} $icon-background [null] - The background color of the an icon button.
+/// @param {Color} $icon-hover-background [null] - The hover background color of an icon button.
+/// @param {Color} $icon-focus-color [null] - The focus icon color of an icon button.
+/// @param {Color} $icon-focus-background [null] - The focus background color an icon button.
 ///
-/// @param {Color} $disabled-color [rgba(0, 0, 0, .26)] - The disabled text/icon color of a button.
-/// @param {Color} $disabled-background [rgba(0, 0, 0, .04)] - The disabled background color of raised, fab, or icon buttons.
+/// @param {Color} $disabled-color [null] - The disabled text/icon color of a button.
+/// @param {Color} $disabled-background [null] - The disabled background color of raised, fab, or icon buttons.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
-/// @requires igx-contrast-color
 /// @requires text-contrast
 ///
 /// @example scss Change the background and text colors in raised buttons
@@ -91,7 +93,8 @@
     $disabled-color: null,
     $disabled-background: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-button'), $palette);
+    $name: 'igx-button';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -174,6 +177,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         button-roundness: $button-roundness,
 

@@ -1,6 +1,24 @@
-$_light-time-picker: (
-    name: 'igx-time-picker',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light time-picker schema.
+/// @type {Map}
+///
+/// @property {map} text-color [igx-color: ('grays', 500)] - The text color of a open time picker.
+/// @property {map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
+/// @property {map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
+/// @property {map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
+/// @property {map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
+/// @property {map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
+/// @property {map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
+/// @property {Color} background-color [#fff] - The time-picker panel background color.
+///
+/// @see $default-palette
+
+$_light-time-picker: (
     text-color: (
         igx-color: ('grays', 500)
     ),
@@ -29,5 +47,5 @@ $_light-time-picker: (
         rgba: .8
     ),
 
-    background-color: white
+    background-color: #fff
 );

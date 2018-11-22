@@ -801,12 +801,19 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
     * @hidden
     */
-   public get dropAreaTemplateResolved(): TemplateRef<any> {
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getGroupByChipTitle(expression: IGroupingExpression): string {
+        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
     }
 
     /**

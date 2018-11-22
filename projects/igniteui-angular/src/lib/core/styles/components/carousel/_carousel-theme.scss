@@ -6,17 +6,20 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $button-background [#fff] - The previous/next buttons idle background color.
-/// @param {Color} $button-hover-background [#fff] - The previous/next buttons hover background color.
-/// @param {Color} $button-arrow-color [rgba(0, 0, 0, .62)] - The previous/next buttons idle arrow color.
-/// @param {Color} $button-hover-arrow-color [rgba(0, 0, 0, .87)] - The previous/next buttons hover arrow color.
-/// @param {Color} $indicator-dot-color [#fff] - The active indicator dot color.
-/// @param {Color} $indicator-border-color [#fff] - The idle indicator border color.
-/// @param {Color} $indicator-active-border-color [#fff] - The active indicator border color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $button-background [null] - The previous/next buttons idle background color.
+/// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
+/// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
+/// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
+/// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
+/// @param {Color} $indicator-border-color [null] - The idle indicator border color.
+/// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
 /// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires igx-elevation
 /// @requires text-contrast
 /// @requires $elevations
@@ -43,7 +46,8 @@
 
     $disable-button-shadow: true
 ){
-    $theme: apply-palette(map-get($schema, 'igx-carousel'), $palette);
+    $name: 'igx-carousel';
+    $theme: apply-palette(map-get($schema, $name), $palette);
     $button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1));
 
     @if not($button-arrow-color) and $button-background {
@@ -55,6 +59,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         button-background: $button-background,
         button-hover-background: $button-hover-background,

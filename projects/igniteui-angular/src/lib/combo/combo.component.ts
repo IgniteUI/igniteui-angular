@@ -36,6 +36,7 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -97,7 +98,7 @@ const noop = () => { };
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
      * @hidden
      */
@@ -169,7 +170,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Self() @Optional() public ngControl: NgControl) {
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -521,6 +524,42 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @HostBinding('class.igx-input-group--invalid')
     public get invalidClass(): boolean {
         return this._valid === IgxComboState.INVALID;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-combo')
+    public cssClass = 'igx-combo'; // Independant of display density, at the time being
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.role`)
+    public role = 'combobox';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-expanded')
+    public get ariaExpanded() {
+        return !this.dropdown.collapsed;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-haspopup')
+    public get hasPopUp() {
+        return 'listbox';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-owns')
+    public get ariaOwns() {
+        return this.dropdown.id;
     }
 
     /**
