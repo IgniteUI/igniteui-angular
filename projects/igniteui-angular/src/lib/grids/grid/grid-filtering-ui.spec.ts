@@ -1180,7 +1180,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(grid.rowList.length).toEqual(7);
     }));
 
-    it('UI - should correctly filter date column by \'after\' filtering conditions', fakeAsync(() => {
+    it('UI - should correctly filter date column by \'after\' filtering conditions', async() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1194,30 +1194,38 @@ describe('IgxGrid - Filtering actions', () => {
         const input = filterUIRow.query(By.directive(IgxInputDirective));
 
         filterIcon.nativeElement.click();
-        tick();
         fix.detectChanges();
+        await wait();
 
         verifyFilterUIPosition(filterIcon, grid);
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
-        GridFunctions.selectFilteringCondition('After', ddList);
+        const ddItems = ddList.nativeElement.children;
+        let i;
+        for (i = 0; i < ddItems.length; i++) {
+            if (ddItems[i].textContent === 'After') {
+                ddItems[i].click();
+                await wait(100);
+                return;
+            }
+        }
 
         input.nativeElement.click();
-        tick(100);
         fix.detectChanges();
+        await wait(100);
 
         const calendar = fix.debugElement.query(By.css('igx-calendar'));
         const currentDay = calendar.query(By.css('span.igx-calendar__date--current'));
         currentDay.nativeElement.click();
-        flush();
         fix.detectChanges();
+        await wait();
 
         input.nativeElement.dispatchEvent(new Event('change'));
-        tick();
         fix.detectChanges();
+        await wait();
 
         expect(grid.rowList.length).toEqual(3);
-    }));
+    });
 
     it('UI - should correctly filter date column by \'before\' filtering conditions', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
