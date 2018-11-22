@@ -14,6 +14,8 @@ const process = require('process');
 const fs = require('fs');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
+const ts = require('gulp-typescript');
+const path = require('path');
 const {
     spawnSync
 } = require('child_process');
@@ -139,12 +141,15 @@ gulp.task('typedoc-ts',
     shell.task('tsc --project ./extras/docs/themes/typedoc/tsconfig.json')
 );
 
-gulp.task('typedoc-js', ['typedoc-ts'], () => {
-    return gulp.src([
+gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
+    gulp.src([
             `${TYPEDOC_THEME.SRC}/assets/js/lib/jquery-2.1.1.min.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/main.js`
         ])
         .pipe(concat('main.js'))
@@ -152,6 +157,24 @@ gulp.task('typedoc-js', ['typedoc-ts'], () => {
         //     mangle: false
         // }))
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/js/`));
+});
+
+gulp.task('typedoc-theme-ts', () => {
+    gulp.src([
+        `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
+    ])
+    .pipe(ts({
+        target: "es5",
+        moduleResolution: 'node',
+        module: 'commonjs'
+    }))
+    .pipe(gulp.dest(TYPEDOC_THEME.DIST));
+});
+
+gulp.task('typedoc-copy-config',() => {
+    const themePath = path.normalize("./extras/docs/themes/config.json");
+    gulp.src([themePath])
+        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
 });
 
 gulp.task('typedoc-images', ['typedoc:clean-images'], () => {
@@ -170,7 +193,11 @@ gulp.task('typedoc-hbs', ['typedoc:clean-hbs'], () => {
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
 });
 
-gulp.task('typedoc:clean-js', () => {
+gulp.task('typedoc:clean-theme-js', () => {
+    del.sync(`${TYPEDOC_THEME.DIST}/theme.js`)
+})
+
+gulp.task('typedoc:clean-js', ['typedoc:clean-theme-js'], () => {
     del.sync(`${TYPEDOC_THEME.DIST}/assets/js`);
 });
 
@@ -178,11 +205,15 @@ gulp.task('typedoc:clean-styles', () => {
     del.sync(`${TYPEDOC_THEME.DIST}/assets/css`);
 });
 
+gulp.task('typedoc:clean-config', () => {
+    del.sync(`${TYPEDOC_THEME.DIST}/config.json`)
+})
+
 gulp.task('typedoc:clean-images', () => {
     del.sync(`${TYPEDOC_THEME.DIST}/assets/images`);
 });
 
-gulp.task('typedoc:clean-hbs', () => {
+gulp.task('typedoc:clean-hbs', ['typedoc:clean-config'], () => {
     del.sync([
         `${TYPEDOC_THEME.DIST}/layouts`,
         `${TYPEDOC_THEME.DIST}/partials`,
@@ -203,7 +234,9 @@ gulp.task('typedoc-build', [
     'typedoc-images',
     'typedoc-hbs',
     'typedoc-styles',
-    'typedoc-js'
+    'typedoc-js',
+    'typedoc-theme-ts',
+    'typedoc-copy-config'
 ]);
 
 const TRANSLATIONS_REPO = {
@@ -216,7 +249,7 @@ const DOCS_OUTPUT_PATH = './dist/igniteui-angular/docs/'
 const TYPEDOC = {
     EXPORT_JSON_PATH: 'dist/igniteui-angular/docs/typescript-exported',
     PROJECT_PATH: 'projects/igniteui-angular/src',
-    TEMPLATE_STRINGS_PATH: 'extras/template/strings/shell-strings.json',
+    TEMPLATE_STRINGS_PATH: 'extras/template/strings/shell-strings.json'
 }
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],
@@ -252,7 +285,7 @@ gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'typedoc:clean-
 );
 
 gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'copy-translations:localization:repo'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}/en/`)
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}/en/ --localize en`)
 );
 
 const SASSDOC = {
