@@ -11,7 +11,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-fdescribe('IgxGrid - Grid Toolbar', () => {
+describe('IgxGrid - Grid Toolbar', () => {
     configureTestSuite();
     let fixture;
     let grid;
