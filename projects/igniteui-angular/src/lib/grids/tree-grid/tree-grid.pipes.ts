@@ -55,16 +55,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, row),
                 data: row,
-                children: [],
-                path: []
+                children: []
             };
             const parent = map.get(row[foreignKey]);
             if (parent) {
                 record.parent = parent;
-                if (parent) {
-                    record.path.push(...parent.path);
-                    record.path.push(parent.rowID);
-                }
                 parent.children.push(record);
             } else {
                 missingParentRecords.push(record);
@@ -110,13 +105,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
                 parent: parent,
-                level: indentationLevel,
-                path: []
+                level: indentationLevel
             };
-            if (parent) {
-                record.path.push(...parent.path);
-                record.path.push(parent.rowID);
-            }
             record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.level);
             flatData.push(item);
             map.set(record.rowID, record);
