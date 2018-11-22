@@ -651,13 +651,13 @@ describe('IgxTransaction', () => {
             expect(transaction.getState(2).path.length).toBe(1);
             expect(transaction.getState(2).path).toEqual(path);
 
-            const deleteTransaction: HierarchicalTransaction = {id: 1, type: TransactionType.DELETE, newValue: null, path: []};
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
             transaction.add(deleteTransaction);
             expect(transaction.getState(1)).toBeUndefined();
             expect(transaction.getState(2)).toBeUndefined();
         });
 
-        it('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () =>{
+        it('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
 
@@ -675,7 +675,7 @@ describe('IgxTransaction', () => {
             expect(transaction.getState(2).path.length).toBe(1);
             expect(transaction.getState(2).path).toEqual(path);
 
-            const deleteTransaction: HierarchicalTransaction = {id: 1, type: TransactionType.DELETE, newValue: null, path: []};
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
             transaction.add(deleteTransaction);
             expect(transaction.getState(1)).toBeDefined();
             expect(transaction.getState(1).type).toBe(TransactionType.DELETE);
