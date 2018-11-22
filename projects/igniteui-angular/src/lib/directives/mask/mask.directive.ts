@@ -7,7 +7,8 @@ import {
     Input,
     NgModule,
     OnInit,
-    Output
+    Output,
+    PipeTransform
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KEYS, MaskHelper } from './mask-helper';
@@ -47,6 +48,14 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Input()
     public includeLiterals: boolean;
+
+    @Input()
+    public placeholder: string;
+    @Input()
+    public displayValuePipe: PipeTransform;
+    @Input()
+    public inputValuePipe: PipeTransform;
+
     /**
      *@hidden
      */
@@ -152,7 +161,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
         this._maskOptions.format = this.mask ? this.mask : 'CCCCCCCCCC';
         this._maskOptions.promptChar = this.promptChar ? this.promptChar : '_';
-        this.nativeElement.setAttribute('placeholder', this.mask);
+        this.nativeElement.setAttribute('placeholder', this.placeholder ? this.placeholder : this.mask);
     }
     /**
      *@hidden
@@ -228,9 +237,22 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     /**
      *@hidden
      */
-    @HostListener('focus', ['$event'])
-    public onFocus(event) {
-        this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
+    @HostListener('focus', ['$event.target.value'])
+    public onFocus(value) {
+        if (this.inputValuePipe) {
+            this.value = this.inputValuePipe.transform(value);
+        } else {
+            this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
+        }
+    }
+    /**
+     *@hidden
+     */
+    @HostListener('blur', ['$event.target.value'])
+    public onBlur(value) {
+        if (this.displayValuePipe) {
+            this.value = this.displayValuePipe.transform(value);
+        }
     }
     /**
      *@hidden

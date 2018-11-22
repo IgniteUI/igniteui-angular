@@ -1,3 +1,25 @@
+<ng-template #dropdownInputTemplate>
+    <igx-input-group #group>
+        <label igxLabel>Time</label>
+        <input #input type="text" [igxMask]="mask" igxInput
+                                  [includeLiterals]="false"
+                                  [placeholder]="format"
+                                  [displayValuePipe]="displayFormat"
+                                  [inputValuePipe]="inputFormat"
+                                  [promptChar]="promptChar"
+                                  [value]="displayValue"
+                                  (keydown)="onKeydown($event)"
+                                  (blur)="onBlur($event)"
+                                  (wheel)="spinOnEdit($event)"
+                                  [disabled]="disabled"/>
+        <igx-suffix *ngIf="displayValue.length" igxRipple (click)="clear()">
+            <igx-icon fontSet="material">clear</igx-icon>
+        </igx-suffix>
+        <igx-suffix igxButton="icon" igxRipple (click)="openDialog()">
+            <igx-icon>access_time</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+</ng-template>
 <ng-template #defaultTimePickerTemplate>
     <igx-input-group (click)="openDialog()">
         <igx-prefix>
@@ -8,30 +30,32 @@
     </igx-input-group>
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-<ng-container *ngTemplateOutlet="scroll"></ng-container>
-<ng-template #scroll>
-    <igx-dialog class="igx-time-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="cancelButtonClick()"
-        [rightButtonLabel]="okButtonLabel" (onRightButtonSelect)="okButtonClick()">
-        <ng-container #container>
-            <div class="igx-time-picker__wrapper">
-                <div class="igx-time-picker__header">
-                    <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
-                    <h2 class="igx-time-picker__header-hour">
-                        <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
-                    </h2>
-                </div>
-                <div class="igx-time-picker__body">
-                    <div #hourList [igxItemList]="'hourList'">
-                        <span [igxHourItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
-                    </div>
-                    <div #minuteList [igxItemList]="'minuteList'">
-                        <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
-                    </div>
-                    <div #ampmList [igxItemList]="'ampmList'">
-                        <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-    </igx-dialog>
-</ng-template>
+
+
+<div *ngIf="showContainer" class="igx-time-picker__wrapper" style="width: 320px;" #container>
+    <div *ngIf="isModal" class="igx-time-picker__header">
+        <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
+        <h2 class="igx-time-picker__header-hour">
+            <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
+        </h2>
+    </div>
+    <div class="igx-time-picker__body">
+        <div #hourList [igxItemList]="'hourList'">
+            <span [igxHourItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
+        </div>
+        <div #minuteList [igxItemList]="'minuteList'">
+            <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
+        </div>
+        <div #ampmList [igxItemList]="'ampmList'">
+            <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
+        </div>
+    </div>
+    <div *ngIf="isModal" style="background: #222; height: 50px; display: flex; justify-content: flex-end; padding: .5rem">
+        <button igxButton="{{buttonType}}" (click)="cancelButtonClick()">
+            {{cancelButtonLabel}}
+        </button>
+        <button type="button" igxButton="{{buttonType}}" (click)="okButtonClick()">
+            {{okButtonLabel}}
+        </button>
+    </div>
+</div>

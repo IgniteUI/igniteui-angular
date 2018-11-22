@@ -20,6 +20,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
+import { DebugRenderer2 } from '@angular/core/src/view/services';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -119,6 +120,7 @@ export class IgxOverlayService implements OnDestroy {
     show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
+        debugger;
         if (typeof compOrId === 'string') {
             id = compOrId;
             info = this.getOverlayById(compOrId);
