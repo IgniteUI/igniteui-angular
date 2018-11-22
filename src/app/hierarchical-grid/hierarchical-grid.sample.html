@@ -3,12 +3,12 @@
                 <igx-column field="ChildLevels"></igx-column>
                 <igx-column field="ProductName"></igx-column>
         </igx-column-group>
-    <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1>
+    <igx-row-island #layout1 [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' [childrenExpanded]="true">
             <igx-column-group header="Information2">
                     <igx-column field="ChildLevels"></igx-column>
                     <igx-column field="ProductName"></igx-column>
             </igx-column-group>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'  [childrenExpanded]="true">
                 <igx-column-group header="Information3">
                         <igx-column field="ChildLevels"></igx-column>
                         <igx-column field="ProductName"></igx-column>

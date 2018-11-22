@@ -56,6 +56,8 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
 
     @Input() public key: string;
 
+    @Input() public childrenExpanded = false;
+
     public parent = null;
 
     get id() {

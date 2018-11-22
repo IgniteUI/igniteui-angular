@@ -57,6 +57,7 @@ let NEXT_ID = 0;
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
+    public dataInitialized = false;
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
     private _scrollLeft = 0;
