@@ -217,7 +217,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else {
-            return 'Add filter value';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
         }
     }
 
@@ -280,6 +280,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      */
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.instance().condition(value);
+    }
+
+    /**
+     * Returns the translated condition name for a given value.
+     */
+    public translateCondition(value: string): string {
+        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`];
     }
 
     /**

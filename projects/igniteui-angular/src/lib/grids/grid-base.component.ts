@@ -61,6 +61,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { DefaultResourceStrings, IResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -711,6 +712,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
     }
+
+    @Input()
+    public resourceStrings: IResourceStrings = DefaultResourceStrings.strings;
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.

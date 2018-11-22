@@ -5,7 +5,7 @@
         [value]="condition"
         [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-        <span style="margin-left: 16px">{{ condition | filterCondition | titlecase }}</span>
+        <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
@@ -94,8 +94,8 @@
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)">
-                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
-                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
+                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">{{filteringService.grid.resourceStrings.igx_grid_filter_operator_and}}</igx-drop-down-item>
+                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">{{filteringService.grid.resourceStrings.igx_grid_filter_operator_or}}</igx-drop-down-item>
                     </igx-drop-down>
                 </span>
             </ng-container>
@@ -108,6 +108,6 @@
 </button>
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
-    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">Reset</button>
-    <button #closeButton igxButton igxRipple (click)="close()">Close</button>
+    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">{{filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</button>
+    <button #closeButton igxButton igxRipple (click)="close()">{{filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</button>
 </div>
