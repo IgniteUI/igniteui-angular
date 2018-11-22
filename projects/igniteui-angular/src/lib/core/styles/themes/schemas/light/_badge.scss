@@ -1,8 +1,27 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light badge schema.
+/// @type {Map}
+/// @property {Map} icon-color [igx-contrast-color: ('primary', 500)] - The icon color used.
+/// @property {Map} text-color [igx-contrast-color: ('primary', 500)] - The text color used.
+/// @property {Color} border-color [#fff] - The border color used.
+/// @property {Map} background-color [igx-color: ('primary', 500)] - The background color used.
+/// @see $default-palette
 $_light-badge: (
-    name: 'igx-badge',
-    icon-color: #fff,
-    text-color: #fff,
+    icon-color: (
+        igx-contrast-color: ('primary', 500)
+    ),
+
+    text-color: (
+        igx-contrast-color: ('primary', 500)
+    ),
+
     border-color: #fff,
+
     background-color: (
         igx-color: ('primary', 500)
     )
