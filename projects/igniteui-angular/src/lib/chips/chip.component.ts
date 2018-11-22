@@ -1,5 +1,4 @@
 ﻿import {
-    AfterViewInit,
     Component,
     ChangeDetectorRef,
     EventEmitter,
