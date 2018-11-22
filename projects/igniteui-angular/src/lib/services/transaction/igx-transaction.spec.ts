@@ -657,7 +657,7 @@ describe('IgxTransaction', () => {
             expect(transaction.getState(2)).toBeUndefined();
         });
 
-        fit('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () =>{
+        it('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () =>{
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
 
