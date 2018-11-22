@@ -2054,7 +2054,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
-        private summaryService: IgxGridSummaryService,
+        public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
             this.resizeHandler = () => {

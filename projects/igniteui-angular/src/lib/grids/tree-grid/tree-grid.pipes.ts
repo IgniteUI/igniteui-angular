@@ -164,27 +164,20 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         if (!collection || !collection.length) {
             return;
         }
+        const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
         for (let i = 0; i < collection.length; i++) {
             const hierarchicalRecord = collection[i];
+            hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
+                hierarchicalRecord.rowID, hierarchicalRecord.level);
 
             if (parentExpanded) {
                 data.push(hierarchicalRecord);
-
-                // if (hierarchicalRecord.expanded && hierarchicalRecord.children && hierarchicalRecord.children.length > 0) {
-                //     const summaries = new Map<string, IgxSummaryResult[]>();
-                //     const results: IgxSummaryResult[] = [];
-                //     results.push({key: 'count', label: 'Count', summaryResult: 20 });
-                //     results.push({key: 'min', label: 'Minimum', summaryResult: 0 });
-                //     summaries.set('ID', results);
-                //     data.push(summaries);
-                // }
             }
-
-            const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
             hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
                 hierarchicalRecord.rowID, hierarchicalRecord.level);
+
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 
             grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
@@ -243,8 +236,9 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     }
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
-        if (!this.gridAPI.get(id).paging) {
-            return collection;
+        const grid = this.gridAPI.get(id);
+        if (!grid.paging) {
+            return this.populateRecordsWithSummaries(grid, collection);
         }
 
         const state = {
@@ -253,9 +247,42 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         };
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state);
+        const recordsWithSummary = this.populateRecordsWithSummaries(grid, result);
 
-        this.gridAPI.get(id).pagingState = state;
-        return result;
+        grid.pagingState = state;
+        return recordsWithSummary;
+    }
+
+    private populateRecordsWithSummaries(grid: IgxTreeGridComponent, collection: ITreeGridRecord[]): any[] {
+        const recordsWithSummary = [];
+        // const summariesMap = new Map<any, Map<string, IgxSummaryResult[]>>();
+
+        for (let i = 0; i < collection.length; i++) {
+            const record = collection[i];
+            recordsWithSummary.push(record);
+
+            if (record.children && record.children.length > 0 && record.expanded) {
+                // TODO Call the SummaryService to get the summaries
+                // const childData = record.children.map(r => r.data);
+                // const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
+                const summaries = new Map<string, IgxSummaryResult[]>();
+                const summaryResults: IgxSummaryResult[] = [];
+                summaryResults.push({key: 'count', label: 'Count', summaryResult: 20 });
+                summaries.set('CompanyName', summaryResults);
+
+                if (summaries) {
+                    recordsWithSummary.push(summaries);
+                    // summariesMap.set(record.children[record.children.length - 1].rowID, summaries);
+                }
+            }
+
+            // if (summariesMap.has(record.rowID)) {
+            //     const summaries = summariesMap.get(record.rowID);
+            //     recordsWithSummary.push(summaries);
+            // }
+        }
+
+        return recordsWithSummary;
     }
 }
 /** @hidden */
