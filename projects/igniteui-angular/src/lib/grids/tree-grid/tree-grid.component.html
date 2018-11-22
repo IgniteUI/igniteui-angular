@@ -56,10 +56,10 @@
 <div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-template igxGridFor let-rowData [igxGridForOf]="data 
-	| treeGridTransaction:id:pipeTrigger	
+    <ng-template igxGridFor let-rowData [igxGridForOf]="data
+	| treeGridTransaction:id:pipeTrigger
 	| treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
-    | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger 
+    | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
     | treeGridSorting:sortingExpressions:id:pipeTrigger
     | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
     | treeGridPaging:page:perPage:id:pipeTrigger
@@ -72,10 +72,10 @@
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template>
-            <igx-grid-summary-row [gridID]="id" [summaries]="rowData">
+            <igx-grid-summary-row [gridID]="id" [summaries]="rowData" [index]="rowIndex" class="igx-grid__summaries" #row>
             </igx-grid-summary-row>
         </ng-template>
-     
+
         <ng-container *igxTemplateOutlet="isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -124,7 +124,7 @@
 </ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
-    <div [className]="bannerClass"> 
+    <div [className]="bannerClass">
         <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
     </div>
 </div>

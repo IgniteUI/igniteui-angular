@@ -62,6 +62,7 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
+import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -1231,6 +1232,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChildren('row')
     private _rowList: QueryList<IgxGridRowComponent>;
 
+    @ViewChildren('summaryRow', {read: IgxSummaryRowComponent})
+    protected summaryRowList: QueryList<IgxSummaryRowComponent>;
+
     /**
      * A list of `IgxGridRowComponent`.
      * ```typescript
@@ -2257,7 +2261,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._horizontalForOfs = list.toArray()
                 .filter(item => item.element.nativeElement.parentElement !== null)
                 .map(row => row.virtDirRow)
-        );
+            );
 
         this.zone.runOutsideAngular(() =>
             this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))

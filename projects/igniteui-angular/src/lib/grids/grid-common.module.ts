@@ -54,6 +54,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
+import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 
@@ -163,6 +164,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
     providers: [
         IgxSelectionAPIService,
         IgxColumnMovingService,
+        IgxGridNavigationService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })
