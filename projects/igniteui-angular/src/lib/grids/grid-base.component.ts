@@ -41,7 +41,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent } from './column.component';
-import { ISummaryExpression } from './grid-summary';
+import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, ContainerPositioningStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
@@ -61,6 +61,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridSummaryService } from './summaries/grid-summary.service';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -2053,6 +2054,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         private viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
+        private summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
             this.resizeHandler = () => {
@@ -2068,6 +2070,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.gridAPI.register(this);
         this.navigation.grid = this;
         this.filteringService.gridId = this.id;
+        this.summaryService.grid = this;
         this.columnListDiffer = this.differs.find([]).create(null);
         this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
         this.calcHeight = 0;
