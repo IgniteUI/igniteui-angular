@@ -2933,6 +2933,23 @@ describe('IgxGrid - GroupBy', () => {
         expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
     }));
 
+    it('should add title attribute to chips when column is grouped', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const exprs: ISortingExpression[] = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
+        const grid = fix.componentInstance.instance;
+        grid.groupBy(exprs);
+        fix.detectChanges();
+
+        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        expect(chips[0].getAttribute('title')).toEqual('ProductName');
+        expect(chips[1].getAttribute('title')).toEqual('Released');
+    });
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
