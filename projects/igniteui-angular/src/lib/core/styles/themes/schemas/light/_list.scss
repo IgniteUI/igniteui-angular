@@ -1,6 +1,23 @@
-$_light-list: (
-    name: 'igx-list',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light list schema.
+/// @type {Map}
+///
+/// @property {Color} background [#fff] - The list background color.
+/// @property {Color} header-background [#fff] - The list header background color.
+/// @property {map} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
+/// @property {Color} item-background [#fff] - The list item background color.
+/// @property {map} item-text-color [igx-color: ('grays', 800)] - The list item text color.
+/// @property {map} item-background-active [igx-color: ('grays', 100), hexrgba: ()] - The active list item background color.
+/// @property {map} item-text-color-active [igx-color: ('grays', 800)] - The active list item text color.
+///
+/// @see $default-palette
+
+$_light-list: (
     background: #fff,
 
     header-background: #fff,
