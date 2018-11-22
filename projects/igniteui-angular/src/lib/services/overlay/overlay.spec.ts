@@ -874,9 +874,9 @@ describe('igxOverlay', () => {
             const content = overlayWrapper.firstChild;
             const componentEl = content.lastChild;
 
-            expect(overlayWrapper.localName).toEqual('div');
-            expect(overlayWrapper.firstChild.localName).toEqual('div');
-            expect(componentEl.localName === 'div').toBeTruthy();
+            expect(overlayWrapper.nodeName).toEqual('DIV');
+            expect(overlayWrapper.firstChild.nodeName).toEqual('DIV');
+            expect(componentEl.nodeName).toEqual('DIV');
         }));
 
         it('Should apply the corresponding inline css to the overlay wrapper div element for each alignment.', fakeAsync(() => {
@@ -1078,9 +1078,9 @@ describe('igxOverlay', () => {
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             const content = overlayWrapper.firstChild;
             const componentEl = content.lastChild;
-            expect(overlayWrapper.localName).toEqual('div');
-            expect(overlayWrapper.firstChild.localName).toEqual('div');
-            expect(componentEl.localName === 'div').toBeTruthy();
+            expect(overlayWrapper.nodeName).toEqual('DIV');
+            expect(overlayWrapper.firstChild.nodeName).toEqual('DIV');
+            expect(componentEl.nodeName).toEqual('DIV');
         }));
 
         it(`Should use StartPoint:Left/Bottom, Direction Right/Bottom and openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop
