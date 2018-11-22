@@ -44,7 +44,8 @@ $_dark-grid: extend($_light-grid, (
     row-hover-text-color: #fff,
 
     row-selected-background: (
-        igx-color: ('grays', 400),
+        igx-color: ('secondary', 500),
+        rgba: .24,
         hexrgba: #222
     ),
 
@@ -72,4 +73,6 @@ $_dark-grid: extend($_light-grid, (
     filtering-header-background: #222,
 
     filtering-row-background: #222,
+
+    cell-selected-text-color: #fff
 ));

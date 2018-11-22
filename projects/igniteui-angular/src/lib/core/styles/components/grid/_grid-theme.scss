@@ -849,7 +849,7 @@
 
     %igx-grid__td--editing {
         background-color: --var($theme, 'cell-editing-background') !important;
-        border: rem(2px) solid --var($theme, 'cell-selected-background');
+        border: rem(2px) solid --var($theme, 'edit-mode-color');
 
         igx-input-group {
             width: 100%;
@@ -887,6 +887,7 @@
         padding: map-get($grid-header-padding, 'comfortable');
         border-right: $grid-header-border;
         outline-style: none;
+        overflow: hidden;
     }
 
     %grid-cell-header--filtering {
