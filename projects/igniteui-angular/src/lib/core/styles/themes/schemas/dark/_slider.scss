@@ -1,0 +1,15 @@
+@import '../light/slider';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark slider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-slider
+/// @see $default-palette
+
+$_dark-slider: extend($_light-slider, ());

@@ -1347,7 +1347,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
 
-            if (val.width && val.width.indexOf('%') !== -1) {
+            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                 isChildrenWidthInPercent = true;
             }
 
