@@ -1,0 +1,19 @@
+@import '../light/badge';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark time-picker schema.
+/// @type {Map}
+/// @property {Color} background-color [#222] - The time-picker panel background color.
+/// @requires {function} extend
+/// @requires $_light-time-picker
+/// @see $default-palette
+
+
+$_dark-time-picker: extend($_light-time-picker, (
+    background-color: #222
+));

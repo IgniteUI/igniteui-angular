@@ -1,0 +1,18 @@
+@import '../light/expansion-panel';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark expansion panel schema.
+/// @type {Map}
+/// @prop {Color} header-background [#222] - The panel header background color.
+/// @prop {Color} body-background [#222] - The panel body background color.
+/// @requires extend
+/// @requires $_light-expansion-panel
+/// @see $default-palette
+$_dark-expansion-panel: extend($_light-expansion-panel, (
+    header-background: #222,
+    body-background: #222,
+));

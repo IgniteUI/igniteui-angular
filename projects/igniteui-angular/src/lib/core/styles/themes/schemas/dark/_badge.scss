@@ -1,0 +1,14 @@
+@import '../light/badge';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark badge schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-badge
+/// @see $default-palette
+$_dark-badge: extend($_light-badge, ());
