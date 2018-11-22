@@ -982,6 +982,21 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
+     *@hidden
+     */
+    public focusActiveDate() {
+        let date = this.dates.find((d) => d.selected);
+
+        if (!date) {
+            date = this.dates.find((d) => d.isToday);
+        }
+
+        if (date) {
+            date.nativeElement.focus();
+        }
+    }
+
+    /**
      * @hidden
      */
     @HostListener('keydown.pageup', ['$event'])

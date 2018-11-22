@@ -1,0 +1,165 @@
+{
+    "$schema": "../../common/schema/theme-props.schema.json",
+    "changes": [{
+            "name": "$chip-background",
+            "replaceWith": "$background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$chip-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$text-hover-color",
+            "replaceWith": "$hover-text-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$order-icon-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$order-icon-hover-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$dir-icon-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$remove-icon-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$remove-icon-hover-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$chip-focus-border-color",
+            "replaceWith": "$focus-border-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-background",
+            "replaceWith": "$selected-background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-text-color",
+            "replaceWith": "$selected-text-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-icon-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-hover-background",
+            "replaceWith": "$hover-selected-background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-focus-background",
+            "replaceWith": "$focus-selected-background",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-text-hover-color",
+            "replaceWith": "$hover-selected-text-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-icon-hover-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-remove-icon-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-icon-focus-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-remove-icon-hover-color",
+            "remove": true,
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-text-focus-color",
+            "replaceWith": "$focus-selected-text-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-focus-border-color",
+            "replaceWith": "$focus-selected-border-color",
+            "owner": "igx-chip-theme"
+        },
+        {
+            "name": "$selected-chip-hover-border-color",
+            "replaceWith": "$hover-selected-border-color",
+            "owner": "igx-chip-theme"
+        },
+
+        {
+            "name": "$row-content-focus-background",
+            "remove": true,
+            "owner": "igx-grid-theme"
+        },
+        {
+            "name": "$row-indentation-background",
+            "remove": true,
+            "owner": "igx-grid-theme"
+        },
+        {
+            "name": "$grouping-indicator-hover-background",
+            "remove": true,
+            "owner": "igx-grid-theme"
+        },
+        {
+            "name": "$grouping-indicator-focus-background",
+            "remove": true,
+            "owner": "igx-grid-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-checkbox-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-input-group-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-radio-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-slider-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-switch-theme"
+        },
+        {
+            "name": "$variant",
+            "remove": true,
+            "owner": "igx-tooltip-theme"
+        }
+    ]
+}
