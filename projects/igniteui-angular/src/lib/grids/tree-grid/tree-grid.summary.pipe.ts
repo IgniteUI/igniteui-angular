@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, GridSummaryPosition } from '../grid-base.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxSummaryResult } from '../summaries/grid-summary';
@@ -18,14 +18,14 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
      }
 
-    public transform(flatData: ITreeGridRecord[],
+    public transform(flatData: ITreeGridRecord[], summaryPosition: GridSummaryPosition,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
 
-        return this.addSummaryRows(grid, flatData);
+        return this.addSummaryRows(grid, flatData, summaryPosition);
     }
 
-    private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[]): any[] {
+    private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[], summaryPosition: GridSummaryPosition): any[] {
         const recordsWithSummary = [];
         const summariesMap = new Map<any, Map<string, IgxSummaryResult[]>[]>();
 
@@ -43,24 +43,26 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 summaries.set('ID', summaryResults);
 
                 if (summaries) {
-                    // recordsWithSummary.push(summaries);
+                    if (summaryPosition === GridSummaryPosition.top) {
+                        recordsWithSummary.push(summaries);
+                    } else if (summaryPosition === GridSummaryPosition.bottom) {
+                        let lastChild = record;
+                        do {
+                            lastChild = lastChild.children[lastChild.children.length - 1];
+                        }
+                        while (lastChild.children && lastChild.children.length > 0 && lastChild.expanded);
 
-                    let lastChild = record;
-                    do {
-                        lastChild = lastChild.children[lastChild.children.length - 1];
+                        let summaryRows = summariesMap.get(lastChild.rowID);
+                        if (!summaryRows) {
+                            summaryRows = [];
+                            summariesMap.set(lastChild.rowID, summaryRows);
+                        }
+                        summaryRows.push(summaries);
                     }
-                    while (lastChild.children && lastChild.children.length > 0 && lastChild.expanded);
-
-                    let summaryRows = summariesMap.get(lastChild.rowID);
-                    if (!summaryRows) {
-                        summaryRows = [];
-                        summariesMap.set(lastChild.rowID, summaryRows);
-                    }
-                    summaryRows.push(summaries);
                 }
             }
 
-            if (summariesMap.has(record.rowID)) {
+            if (summaryPosition === GridSummaryPosition.bottom && summariesMap.has(record.rowID)) {
                 const summaryRows = summariesMap.get(record.rowID);
 
                 for (let j = 0; j < summaryRows.length; j++) {

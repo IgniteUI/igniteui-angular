@@ -146,6 +146,11 @@ export interface IFocusChangeEventArgs {
     cancel: boolean;
 }
 
+export enum GridSummaryPosition {
+    top = 'top',
+    bottom = 'bottom'
+}
+
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
@@ -710,6 +715,33 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
             }
+        }
+    }
+
+    /**
+     * Returns the summary position.
+     * ```typescript
+     *  let summaryPosition = this.grid.summaryPosition;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get summaryPosition() {
+        return this._summaryPosition;
+    }
+
+    /**
+     * Sets summary position.
+     * By default it is bottom.
+     * ```html
+     * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    set summaryPosition(value) {
+        this._summaryPosition = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
         }
     }
 
@@ -1985,6 +2017,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidthSetByUser = false;
 
     private _defaultTargetRecordNumber = 10;
+
+    private _summaryPosition = GridSummaryPosition.bottom;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
         horizontalDirection: HorizontalAlignment.Left,
