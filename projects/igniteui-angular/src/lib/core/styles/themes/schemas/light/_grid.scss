@@ -93,12 +93,12 @@ $_light-grid: (
     row-even-text-color: inherit,
 
     row-selected-background: (
-        igx-color: ('grays', 800),
+        igx-color: ('secondary', 50),
         hexrgba: #fff
     ),
 
     row-selected-text-color: (
-        igx-contrast-color: ('grays', 800)
+        igx-contrast-color: ('secondary', 50)
     ),
 
     row-hover-background: (
@@ -121,11 +121,11 @@ $_light-grid: (
     ),
 
     cell-selected-background: (
-        igx-color: ('primary', 500)
+        igx-color: ('grays', 200),
     ),
 
     cell-selected-text-color: (
-        igx-contrast-color: ('primary', 500)
+        igx-contrast-color: ('grays', 200)
     ),
 
     cell-editing-background: #fff,
