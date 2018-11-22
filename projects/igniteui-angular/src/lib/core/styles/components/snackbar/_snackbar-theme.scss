@@ -7,16 +7,19 @@
 
 /// If you specify a background color, but do not specify colors for either the
 /// button or the text, their colors will be set automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [#323232] - The background color used in the snackbar.
-/// @param {Color} $text-color [#fff] - The text color used in the snackbar.
-/// @param {Color} $button-color [secondary 500] - The button color used in the snackbar.
 ///
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The background color used in the snackbar.
+/// @param {Color} $text-color [null] - The text color used in the snackbar.
+/// @param {Color} $button-color [null] - The button color used in the snackbar.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-color
-///
-/// @todo Add light option
 ///
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: igx-snackbar-theme($background: white);
@@ -30,7 +33,8 @@
     $text-color: null,
     $button-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-snackbar'), $palette);
+    $name: 'igx-snackbar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -41,6 +45,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         text-color: $text-color,

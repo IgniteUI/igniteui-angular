@@ -1,6 +1,28 @@
-$_light-drop-down: (
-    name: 'igx-drop-down',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
 
+/// Generates a light drop-down schema.
+/// @type {Map}
+/// @prop {Color} background-color [#fff] - The drop-down background color.
+/// @prop {Map} header-text-color [igx-color: ('secondary', 500)] - The drop-down header text color.
+/// @prop {Map} item-text-color [igx-color: ('grays', 800)] - The drop-down text color.
+/// @prop {Map} hover-item-text-color [igx-color: ('grays', 800)] - The drop-down hover text color.
+/// @prop {Map} hover-item-background [igx-color: ('grays', 100)] - The drop-down hover item background color.
+/// @prop {Map} focused-item-background [igx-color: ('grays', 100)] - The drop-down focused item background color.
+/// @prop {Map} focused-item-text-color [igx-color: ('grays', 800)] - The drop-down focused item text color.
+/// @prop {Map} selected-item-background [igx-color: ('secondary', 500)] - The drop-down selected item background color.
+/// @prop {Map} selected-item-text-color [igx-contrast-color: ('secondary', 500)] - The drop-down selected item text color.
+/// @prop {Map} selected-hover-item-background [igx-color: ('secondary', 300)] - The drop-down selected item hover background color.
+/// @prop {Map} selected-hover-item-text-color [igx-contrast-color: ('secondary', 300)] - The drop-down selected item hover text color.
+/// @prop {Map} selected-focus-item-background [igx-color: ('secondary', 300)] - The drop-down selected item focus background color.
+/// @prop {Map} selected-focus-item-text-color [igx-contrast-color: ('secondary', 300)] - The drop-down selected item focus text color.
+/// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
+/// @prop {Map} disabled-item-text-color [igx-color: ('grays', 500)] - The drop-down disabled item text color.
+/// @see $default-palette
+$_light-drop-down: (
     background-color: #fff,
 
     header-text-color: (

@@ -7,13 +7,18 @@
 
 /// If only background color is specified,
 /// the text-color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [rgba(0, 0, 0, .54)] - The background color used for the toast.
-/// @param {Color} $text-color [#fff] - The text-color used for the toast.
 ///
-/// @requires extend
-/// @requires igx-color
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The background color used for the toast.
+/// @param {Color} $text-color [null] - The text-color used for the toast.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
+/// @requires extend
 ///
 /// @example scss Set a custom background color
 ///   $my-toast-theme: igx-toast-theme($background: green);
@@ -26,13 +31,15 @@
     $background: null,
     $text-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-toast'), $palette);
+    $name: 'igx-toast';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         text-color: $text-color
