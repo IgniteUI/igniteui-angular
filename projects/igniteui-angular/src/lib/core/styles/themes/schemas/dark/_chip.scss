@@ -1,0 +1,19 @@
+@import '../light/chip';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark chip schema.
+/// @type {Map}
+/// @prop {Map} ghost-background [igx-color: ('grays', 400), hexrgba: #000] - The chip ghost background color.
+/// @requires extend
+/// @requires $_light-chip
+/// @see $default-palette
+$_dark-chip: extend($_light-chip, (
+    ghost-background: (
+        igx-color: ('grays', 400),
+        hexrgba: #000
+    )
+));

@@ -6,13 +6,16 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $color [currentColor] - The icon color.
-/// @param {String} $size [24px] - The icon size.
-/// @param {Color} $disabled-color [rgba(0, 0, 0, .38)] - The disabled icon color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @requires igx-color
+/// @param {Color} $color [null] - The icon color.
+/// @param {String} $size [null] - The icon size.
+/// @param {Color} $disabled-color [null] - The disabled icon color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires rem
 ///
 /// @example scss Change the icon color
 ///   $my-icon-theme: igx-icon-theme($color: orange);
@@ -26,9 +29,11 @@
     $size: null,
     $disabled-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-icon'), $palette);
+    $name: 'igx-icon';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         color: $color,
         size: $size,
@@ -38,7 +43,6 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires rem
 /// @requires --var
 @mixin igx-icon($theme) {
     @include igx-root-css-vars($theme);

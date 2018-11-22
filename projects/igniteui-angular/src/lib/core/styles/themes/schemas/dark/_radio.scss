@@ -1,0 +1,15 @@
+@import '../light/radio';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark radio schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-ripple
+/// @see $default-palette
+
+$_dark-radio: extend($_light-radio, ());

@@ -9,19 +9,22 @@
 /// Does ___not___ apply for disabled state colors.
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $text-color [rgba(0, 0, 0, .38)] - The text color of a open time picker.
-/// @param {Color} $hover-text-color [secondary 500] - The hover text color of a open time picker.
-/// @param {Color} $selected-text-color [secondary 500] -  The text color of a selected item in time picker.
-/// @param {Color} $active-item-background [rgba(0, 0, 0, .04)] - The background color for current item in focused column inside the time picker.
-/// @param {Color} $header-background [secondary 500] - The header background color of a time picker.
-/// @param {Color} $header-hour-text-color [igx-contrast-color of secondary 500] - The header hour text color of a time picker.
-/// @param {Color} $header-time-period-color [80% of igx-contrast-color of secondary 500] - The header AM/PM text color of a time picker.
-/// @param {Color} $background-color [white] - The time-picker panel background color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @requires extend
+/// @param {Color} $text-color [null] - The text color of a open time picker.
+/// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
+/// @param {Color} $selected-text-color [null] -  The text color of a selected item in time picker.
+/// @param {Color} $active-item-background [null] - The background color for current item in focused column inside the time picker.
+/// @param {Color} $header-background [null] - The header background color of a time picker.
+/// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
+/// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
+/// @param {Color} $background-color [null] - The time-picker panel background color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires extend
 ///
 /// @example scss Change the background and text colors in  time picker
 ///   $my-time-picker-theme: igx-time-picker-theme(
@@ -29,7 +32,7 @@
 ///     $background-color: black
 ///   );
 ///   // Pass the theme to the igx-time-picker component mixin
-///   @include igx-time-picker($my-button-theme);
+///   @include igx-time-picker($my-time-picker-theme);
 @function igx-time-picker-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -43,7 +46,8 @@
     $header-time-period-color: null,
     $background-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-time-picker'), $palette);
+    $name: 'igx-time-picker';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -65,11 +69,8 @@
         $active-item-background: rgba(text-contrast($background-color), .12);
     }
 
-    //@if not($active-item-background) and $background-color {
-    //    $active-item-background: lighten($background-color, 5%);
-    //}
-
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         text-color: $text-color,
         hover-text-color: $hover-text-color,
