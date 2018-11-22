@@ -130,9 +130,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @HostListener('window:resize', ['$event'])
     public onResize(event) {
         if (this.isSelected) {
-            const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-            this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0s`;
-            this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+            this.transformContentAnimation(0);
         }
     }
 
@@ -151,11 +149,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
+
+        if (this.isSelected) {
+            this.transformContentAnimation(0);
+        }
     }
 
     /**
      * A method that sets the focus on a tab.
-     * @memberOf {@link IgxTabGroupComponent}
+     * @memberof {@link IgxTabsGroupComponent}
      *```typescript
      *@ViewChild("MyChild")
      *public tab : IgxTabsGroupComponent;
@@ -192,11 +194,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
             this._tabs.scrollElement(tabElement, true);
         }
 
-        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0.2s`;
-        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+        this.transformContentAnimation(0.2);
 
         this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
         this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
+    }
+
+    private transformContentAnimation(duration: number) {
+        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
+        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
+        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
     }
 }

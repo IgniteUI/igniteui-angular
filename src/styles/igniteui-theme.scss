@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
-
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/schemas/dark-green/index';
 
 @import 'mixins';
 @import 'app-palettes';
@@ -18,19 +16,18 @@
     color: $igx-foreground-color;
 
     @include scrollbar-love();
-    @include igx-theme($default-palette, $legacy-support: true);
+    @include igx-theme($default-palette);
 }
 
-
-.dark-green-theme {
-    $igx-background-color: #484848;
+.dark-theme {
+    $igx-background-color: #333;
     $igx-foreground-color: text-contrast($igx-background-color);
 
     background: $igx-background-color;
     color: $igx-foreground-color;
 
-    @include scrollbar-love($igx-background-color);
-    @include igx-green-theme();
+    @include scrollbar-love(lighten($igx-background-color, 15%));
+    @include igx-dark-theme($green-palette);
 
     .igniteui-logo__text {
         fill: #fff;
