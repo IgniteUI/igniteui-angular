@@ -1,11 +1,13 @@
 import {
     ChangeDetectorRef,
     Component,
+    Directive,
     HostBinding,
     Input,
     Optional,
     ViewChild,
-    Inject
+    Inject,
+    TemplateRef
 } from '@angular/core';
 
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
@@ -350,4 +352,35 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this._overlaySettings.outlet = this.grid.outletDirective;
         this.columnPinningDropdown.toggle(this._overlaySettings);
     }
+
+    /**
+     * Returns the `context` object which represents the `template context` binding into the
+     * `toolbar custom container` by providing references to the parent IgxGird and the toolbar itself.
+     * ```typescript
+     * let context =  this.igxGrid.toolbar.context;
+     * ```
+     */
+    public get context(): any {
+        return {
+            // $implicit: this
+            grid: this.grid,
+            toolbar: this
+        };
+    }
+
+    /** @hidden */
+    public get customContentTemplate(): TemplateRef<any> {
+        if (this.grid != null && this.grid.toolbarCustomContentTemplate != null) {
+            return this.grid.toolbarCustomContentTemplate.template;
+        } else {
+            return null;
+        }
+    }
+}
+
+@Directive({
+    selector: '[igxToolbarCustomContent]'
+})
+export class IgxGridToolbarCustomContentDirective {
+    constructor(public template: TemplateRef<any>) { }
 }

@@ -55,6 +55,7 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 
 @NgModule({
     declarations: [
@@ -64,6 +65,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxGridHeaderComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -95,6 +97,7 @@ import { IgxGridNavigationService } from './grid-navigation.service';
         IgxGridHeaderComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
