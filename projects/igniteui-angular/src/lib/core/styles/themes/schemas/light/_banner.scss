@@ -1,0 +1,34 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light banner schema.
+/// @type {Map}
+/// @property {Color} banner-background [#fff]- The background color used banner background.
+/// @property {Color} banner-message-color [igx-color: ('grays', 900)]- The color used for banner label.
+/// @property {Color} banner-border-color [igx-color: ('grays', 400)] - The border color used banner border.
+/// @property {Color} banner-illustration-background [igx-color: ('grays', 100)] - The background color used for banner illustration.
+/// @property {Color} banner-illustration-color [igx-color: ('grays', 900)] - The color used banner illustration.
+/// @see $default-palette
+
+$_light-banner: (
+    banner-background: #fff,
+
+    banner-message-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    banner-border-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    banner-illustration-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    banner-illustration-color: (
+        igx-color: ('grays', 900)
+    )
+);

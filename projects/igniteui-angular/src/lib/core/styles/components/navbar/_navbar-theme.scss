@@ -5,14 +5,18 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Navbar Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [primary 500] - The navbar background color.
-/// @param {Color} $text-color [#fff] - The navbar text color.
-/// @param {Color} $idle-icon-color [#fff] - The navbar idle icon color.
-/// @param {Color} $hover-icon-color [#fff] - The navbar hover icon color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The navbar background color.
+/// @param {Color} $text-color [null] - The navbar text color.
+/// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
+/// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevations
@@ -24,7 +28,7 @@
 ///   @include igx-navbar($my-navbar-theme);
 @function igx-navbar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $text-color: null,
@@ -32,18 +36,10 @@
     $hover-icon-color: null,
     $disable-shadow: false
 ) {
-    $default-theme: (
-        name: 'igx-navbar',
-        background: igx-color($palette, 'primary'),
-        text-color: #fff,
-        idle-icon-color: #fff,
-        hover-icon-color: #fff,
-        nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none)
-    );
+    $nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-navbar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -57,12 +53,14 @@
         $hover-icon-color: text-contrast($background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
-        hover-icon-color: $hover-icon-color
+        hover-icon-color: $hover-icon-color,
+        nav-shadow: $nav-shadow
     ));
 }
 

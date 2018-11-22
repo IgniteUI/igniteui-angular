@@ -1,0 +1,33 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#fff] - The checked mark color.
+/// @prop {Map} label-color [igx-color: ('grays', 900)]- The text color used for the label text.
+/// @prop {Map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
+/// @prop {Map} fill-color [igx-color: ('secondary', 500)] - The checked border and fill colors.
+/// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
+/// @see $default-palette
+$_light-checkbox: (
+    tick-color: #fff,
+
+    label-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    empty-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    fill-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 400)
+    )
+);

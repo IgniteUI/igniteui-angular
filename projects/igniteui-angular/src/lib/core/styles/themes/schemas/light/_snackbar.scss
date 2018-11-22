@@ -1,0 +1,28 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light snackbar schema.
+/// @type {Map}
+///
+/// @property {map} background [igx-color: ('grays', 900)] - The background color used in the snackbar.
+/// @property {map} text-color [igx-contrast-color: ('grays', 900)] - The text color used in the snackbar.
+/// @property {map} button-color [igx-color: ('secondary', 500)] - The button color used in the snackbar.
+///
+/// @see $default-palette
+
+$_light-snackbar: (
+    background: (
+        igx-color: ('grays', 900)
+    ),
+
+    text-color: (
+        igx-contrast-color: ('grays', 900)
+    ),
+
+    button-color: (
+        igx-color: ('secondary', 500)
+    )
+);

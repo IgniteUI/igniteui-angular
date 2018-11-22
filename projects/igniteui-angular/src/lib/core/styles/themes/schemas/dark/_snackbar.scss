@@ -1,0 +1,15 @@
+@import '../light/snackbar';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark snackbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-snackbar
+/// @see $default-palette
+
+$_dark-snackbar: extend($_light-snackbar, ());

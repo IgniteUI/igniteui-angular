@@ -1,0 +1,15 @@
+@import '../light/toast';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark toast schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-toast
+/// @see $default-palette
+
+$_dark-toast: extend($_light-toast, ());

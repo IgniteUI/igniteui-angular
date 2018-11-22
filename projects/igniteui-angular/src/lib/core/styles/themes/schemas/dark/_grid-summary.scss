@@ -1,0 +1,15 @@
+@import '../light/grid-summary';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark grid-summary schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-grid-summary
+/// @see $default-palette
+
+$_dark-grid-summary: extend($_light-grid-summary, ());

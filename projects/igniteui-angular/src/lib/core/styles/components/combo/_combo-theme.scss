@@ -5,34 +5,28 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $search-separator-border-color [null] - The combo search box separator color.
+/// @param {Color} $empty-list-placeholder-color [null] - The combo placeholder text color.
+/// @param {Color} $empty-list-background [null] - The combo list background color.
 ///
-/// @param {Color} $search-separator-border-color [rgba(0, 0, 0, .12)] - The combo search box separator color.
-/// @param {Color} $empty-list-placeholder-color [rgba(0, 0, 0, .26)] - The combo placeholder text color.
-/// @param {Color} $empty-list-background [#fff] - The combo list background color.
-///
-/// @requires text-contrast
-/// @requires igx-color
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
 @function igx-combo-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
     $search-separator-border-color: null,
     $empty-list-placeholder-color: null,
     $empty-list-background: null
 ) {
+    $name: 'igx-combo';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
-    $default-theme: (
-        name: 'igx-combo',
-        search-separator-border-color: igx-color($palette, 'grays', 300),
-        empty-list-placeholder-color: igx-color($palette, 'grays', 400),
-        empty-list-background: #fff
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme,
-    (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         search-separator-border-color: $search-separator-border-color,
         empty-list-placeholder-color: $empty-list-placeholder-color,
@@ -49,6 +43,7 @@
 
     %igx-combo {
         position: relative;
+        display: block;
 
         %igx-button--icon {
             width: rem(24px);

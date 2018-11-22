@@ -1,0 +1,35 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light radio schema.
+/// @type {Map}
+///
+/// @property {map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
+/// @property {map} fill-color [igx-color: ('secondary', 500)] - The checked border and dot colors.
+/// @property {map} disabled-color [igx-color: ('grays', 400)] - The disabled border and dot colors.
+///
+/// @see $default-palette
+
+$_light-radio: (
+    name: 'igx-radio',
+
+    label-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    empty-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    fill-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 400)
+    )
+);

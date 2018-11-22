@@ -1,0 +1,16 @@
+@import '../light/icon';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark icon schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-icon
+/// @see $default-palette
+
+
+$_dark-icon: extend($_light-icon, ());

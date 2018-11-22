@@ -1,0 +1,13 @@
+@import '../light/avatar';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-avatar
+/// @see $default-palette
+$_dark-avatar: extend($_light-avatar, ());

@@ -1,0 +1,142 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light button schema.
+/// @type {Map}
+/// @property {String} button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
+/// @property {Color} flat-background [transparent] - The background color of a flat button.
+/// @property {Map} flat-text-color [igx-color: ('secondary', 500)] - The idle text color of a flat button.
+/// @property {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .05 ] - The hover background color of a flat button.
+/// @property {Map} flat-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a flat button.
+/// @property {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
+/// @property {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
+/// @property {Map} raised-background [igx-color: ('secondary', 500)] - The background color of a raised button.
+/// @property {Map} raised-text-color [igx-contrast-color: ('secondary', 500)] - The idle text color of a raised button.
+/// @property {Map} raised-hover-background [igx-color: ('secondary', 300)] - The hover background of a raised button.
+/// @property {Map} raised-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a raised button.
+/// @property {Map} raised-focus-background [igx-color: ('secondary', 300)] - The focus background color of a raised button.
+/// @property {Map} raised-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a raised button.
+/// @property {Map} fab-background [igx-color: ('secondary', 500)] - The background color of a floating action button.
+/// @property {Map} fab-text-color [igx-contrast-color: ('secondary', 500)] - The text color of a floating action button.
+/// @property {Map} fab-hover-background [igx-color: ('secondary', 300)] - The hover background color of a floating action button.
+/// @property {Map} fab-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a floating action button.
+/// @property {Map} fab-focus-background [igx-color: ('secondary', 300)] - The focus background color of floating action button.
+/// @property {Map} fab-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a floating action button.
+/// @property {Map} icon-color [igx-color: ('grays', 800)] - The icon color of an icon button.
+/// @property {Map} icon-hover-color [igx-color: ('grays', 800)] - The hover icon color of an icon button.
+/// @property {Color} icon-background [transparent] - The background color of the an icon button.
+/// @property {Map} icon-hover-background [igx-color: ('grays', 100)] - The hover background color of an icon button.
+/// @property {Map} icon-focus-color [igx-color: ('grays', 800)] - The focus icon color of an icon button.
+/// @property {Map} icon-focus-background [igx-color: ('grays', 400] - The focus background color an icon button.
+/// @property {Color} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
+/// @property {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
+/// @see $default-palette
+$_light-button: (
+    button-roundness: 4px,
+
+    flat-background: transparent,
+
+    flat-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    flat-hover-background: (
+        igx-color: ('secondary', 500),
+        rgba: .05
+    ),
+
+    flat-hover-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    flat-focus-background: (
+        igx-color: ('secondary', 400),
+        rgba: .12
+    ),
+
+    flat-focus-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    raised-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    raised-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    raised-hover-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+
+    raised-hover-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    raised-focus-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+    raised-focus-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    fab-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    fab-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    fab-hover-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+    fab-hover-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    fab-focus-background: (
+        igx-color: ('secondary', 300)
+    ),
+
+    fab-focus-text-color: (
+        igx-contrast-color: ('secondary', 300)
+    ),
+
+    icon-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    icon-background: transparent,
+
+    icon-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    icon-hover-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    icon-focus-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    icon-focus-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    disabled-background: (
+        igx-color: ('grays', 100)
+    )
+);

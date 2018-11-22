@@ -1,0 +1,45 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light expansion panel schema.
+/// @type {Map}
+/// @prop {Color} header-background [#fff] - The panel header background color.
+/// @prop {Color} body-background [#fff] - The panel body background color.
+/// @prop {Map} header-focus-background [igx-color: ('grays', 100)] - The panel header focus background color.
+/// @prop {Map} header-title-color [igx-color: ('grays', 800)] - The panel header title text color.
+/// @prop {Map} header-description-color [igx-color: ('grays', 600)] - The panel header description text color.
+/// @prop {Map} header-icon-color [igx-color: ('grays', 800)] - The panel header icon color.
+/// @prop {Map} body-color [igx-color: ('grays', 800)] - The panel body text color.
+/// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
+/// @see $default-palette
+$_light-expansion-panel: (
+    header-background: #fff,
+    body-background: #fff,
+
+    header-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    header-title-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    header-description-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    header-icon-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    body-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 500)
+    )
+);

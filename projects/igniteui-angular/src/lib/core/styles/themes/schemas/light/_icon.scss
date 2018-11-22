@@ -1,0 +1,22 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light icon schema.
+/// @type {Map}
+///
+/// @property {Color} color [currentColor] - The icon color.
+/// @property {String} size [rem(24px)] - The icon size.
+/// @property {Color} disabled-color [currentColor] - The disabled icon color.
+///
+/// @see $default-palette
+
+$_light-icon: (
+    color: currentColor,
+
+    size: rem(24px),
+
+    disabled-color: currentColor
+);

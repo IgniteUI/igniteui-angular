@@ -1,0 +1,13 @@
+@import '../light/column-hiding';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark column hiding schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-column-hiding
+/// @see $default-palette
+$_dark-column-hiding: extend($_light-column-hiding, ());

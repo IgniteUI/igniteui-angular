@@ -1,0 +1,23 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light dialog schema.
+/// @type {Map}
+/// @prop {Color} background [#fff] - The dialog background color.
+/// @prop {Map} title-color [igx-color: ('grays', 800)] - The dialog title text color.
+/// @prop {Map} message-color [igx-color: ('grays', 600)] - The dialog message text color.
+/// @see $default-palette
+$_light-dialog: (
+    background: #fff,
+
+    title-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    message-color: (
+        igx-color: ('grays', 600)
+    )
+);

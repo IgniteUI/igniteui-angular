@@ -1,0 +1,115 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light calendar schema.
+/// @type {Map}
+/// @prop {Color} content-background [#fff] - The main content background color.
+/// @prop {Map} content-text-color [igx-color: ('grays', 900)] - The main content text color.
+/// @prop {Map} header-background [igx-color: ('secondary', 500)] - The header background color.
+/// @prop {Map} header-text-color [igx-contrast-color: ('secondary', 500)] - The header text color.
+/// @prop {Map} picker-arrow-color [igx-color: ('grays', 800)] - The idle picker arrow color.
+/// @prop {Map} picker-arrow-hover-color [igx-color: ('secondary', 500)] - The picker hover arrow color.
+/// @prop {Map} picker-text-color [igx-color: ('grays', 800)]- The idle picker month/year color.
+/// @prop {Map} picker-text-hover-color [igx-color: ('secondary', 500)]-  The hover picker month/year color.
+/// @prop {Map} inactive-text-color [igx-color: ('grays', 400)] - The text color for weekday labels and other month dates.
+/// @prop {Map} weekend-text-color [igx-color: ('grays', 500)] - The text color for weekend days.
+/// @prop {Map} year-current-text-color [igx-color: ('secondary', 500)] - The text color for the current/selected year.
+/// @prop {Map} month-current-text-color [igx-color: ('secondary', 500)]- The text color for the current/selected month.
+/// @prop {Map} year-hover-text-color [igx-color: ('secondary', 500)] - The year hover text color.
+/// @prop {Map} month-hover-text-color [igx-color: ('secondary', 500)] - The month hover text color.
+/// @prop {Map} date-selected-background [igx-color: ('secondary', 500)] - The background color for the selected date.
+/// @prop {Map} date-selected-text-color [igx-contrast-color: ('secondary', 500)] - The text color for the selected date.
+/// @prop {Map} date-current-text-color [igx-color: ('secondary', 500)] - The text color for the current date.
+/// @prop {Map} date-hover-background [igx-color: ('grays', 200)] - The hover date background color.
+/// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
+/// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
+/// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
+/// @see $default-palette
+$_light-calendar: (
+    content-background: #fff,
+
+    content-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    header-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    header-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    picker-arrow-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    picker-arrow-hover-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    picker-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    picker-text-hover-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    inactive-text-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    weekend-text-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    year-current-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    month-current-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    year-hover-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    month-hover-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    date-selected-background: (
+        igx-color: ('secondary', 500)
+    ),
+
+    date-selected-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    date-current-text-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    date-hover-background: (
+        igx-color: ('grays', 200)
+    ),
+
+    date-special-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    date-special-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    date-disabled-text-color: (
+        igx-color: ('grays', 500),
+        hexrgba: (),
+        rgba: .6
+    )
+);

@@ -1,0 +1,24 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light bottom navigation scheme.
+/// @type {Map}
+/// @property {Color} background [#fff] - The background color used for the toast.
+/// @property {Color} idle-item-color [igx-color: ('grays', 700)] - The text-color used for the idle color.
+/// @property {Color} active-item-color [igx-color: ('primary', 500)] - The text-color used for the active color.
+/// @see $default-palette
+
+$_light-bottom-nav: (
+    background: #fff,
+
+    idle-item-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    active-item-color: (
+        igx-color: ('primary', 500)
+    )
+);

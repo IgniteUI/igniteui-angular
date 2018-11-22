@@ -1,0 +1,33 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light avatar schema.
+/// @type {Map}
+/// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for avatars of type icon.
+/// @property {Map} icon-color [igx-color: ('grays', 800)] - The icon color used for avatars of type icon.
+/// @property {Map} initials-background [igx-color: ('grays', 400)] - The background color used for avatars of type initials.
+/// @property {Map} initials-color [igx-color: ('grays', 800)] - The text color used for avatars of type initials.
+/// @property {Color} image-background [transparent] - The background color used for avatars of type image.
+/// @see $default-palette
+$_light-avatar: (
+    icon-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    icon-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    initials-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    initials-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    image-background: transparent
+);

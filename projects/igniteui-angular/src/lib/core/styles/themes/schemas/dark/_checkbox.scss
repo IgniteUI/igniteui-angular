@@ -1,0 +1,16 @@
+@import '../light/checkbox';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#222] - The checked mark color.
+/// @requires extend
+/// @requires $_light-checkbox
+/// @see $default-palette
+$_dark-checkbox: extend($_light-checkbox, (
+    tick-color: #222
+));

@@ -5,10 +5,11 @@ import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand } from '../../../public_api';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderComponent } from '../grid-header.component';
 
@@ -36,7 +37,8 @@ describe('IgxGrid - multi-column headers', () => {
                 EmptyColGridComponent,
                 OneColPerGroupGridComponent,
                 NestedColumnGroupsGridComponent,
-                DynamicGridComponent
+                DynamicGridComponent,
+                NumberColWidthGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1073,8 +1075,7 @@ describe('IgxGrid - multi-column headers', () => {
         tick();
         fixture.detectChanges();
         // Sort column
-        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc});
-        tick();
+        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1102,8 +1103,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc});
-        tick();
+        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1249,7 +1249,8 @@ describe('IgxGrid - multi-column headers', () => {
         grid.getColumnByName('Country').groupable = true;
         grid.getColumnByName('Phone').groupable = true;
 
-        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance() });
 
         // verify grouping expressions
         const grExprs = grid.groupingExpressions;
@@ -1377,6 +1378,13 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
         const colsCount = 2; // 1 col group and 1 col
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
+    });
+
+    it('Should not throw exception if multi-column header columns width is set as number', () => {
+        expect(() => {
+            const fixture = TestBed.createComponent(NumberColWidthGridComponent);
+            fixture.detectChanges();
+        }).not.toThrow();
     });
 });
 
@@ -2004,6 +2012,32 @@ export class DynamicGridComponent {
     mchCount = new Array(1);
 
     data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" height="500px">
+            <igx-column-group header="MCH">
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [width]="c.width"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class NumberColWidthGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = SampleTestData.contactInfoDataFull();
+
+    columns = [
+        { field: 'ID', width: 100 },
+        { field: 'CompanyName', width: 200 },
+        { field: 'ContactName', width: 150 },
+        { field: 'City', width: 100 },
+    ];
 }
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {

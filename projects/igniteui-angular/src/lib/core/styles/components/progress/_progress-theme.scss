@@ -6,17 +6,21 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $track-color [rgba(0, 0, 0, .12)] - The main track color.
-/// @param {Color} $fill-color-default [primary 500] - The track default fill color.
-/// @param {Color} $fill-color-danger [error 500] - The track danger fill color.
-/// @param {Color} $fill-color-warning [warn 500] - The track warning fill color.
-/// @param {Color} $fill-color-info [info 500] - The track info fill color.
-/// @param {Color} $fill-color-success [success 500] - The track success fill color.
-/// @param {Color} $stripes-color [rgba(255, 255, 255, .7)] - The track stripes color.
-/// @param {Color} $text-color [rgba(0, 0, 0, .62)] - The track value text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $track-color [null] - The main track color.
+/// @param {Color} $fill-color-default [null] - The track default fill color.
+/// @param {Color} $fill-color-danger [null] - The track danger fill color.
+/// @param {Color} $fill-color-warning [null] - The track warning fill color.
+/// @param {Color} $fill-color-info [null] - The track info fill color.
+/// @param {Color} $fill-color-success [null] - The track success fill color.
+/// @param {Color} $stripes-color [null] - The track stripes color.
+/// @param {Color} $text-color [null] - The track value text color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 ///
 /// @example scss Change the stripes color
 ///   $my-progress-linear-theme: igx-progress-linear-theme(
@@ -26,7 +30,7 @@
 ///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $track-color: null,
     $fill-color-default: null,
@@ -37,23 +41,11 @@
     $stripes-color: null,
     $text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-progress-linear',
-        track-color: igx-color($palette, 'grays', 300),
-        fill-color-default: igx-color($palette, 'primary'),
-        fill-color-danger: igx-color($palette, 'error'),
-        fill-color-warning: igx-color($palette, 'warn'),
-        fill-color-info: igx-color($palette, 'info'),
-        fill-color-success: igx-color($palette, 'success'),
-        stripes-color: rgba(#fff, .7),
-        text-color: igx-color($palette, 'grays', 700)
-    );
+    $name: 'igx-progress-linear';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         track-color: $track-color,
         fill-color-default: $fill-color-default,
@@ -174,12 +166,16 @@
 }
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $base-circle-color [rgba(0, 0, 0, .12)] - The base circle fill color.
-/// @param {Color} $progress-circle-color [primary 500] - The progress circle fill color.
-/// @param {Color} $text-color [rgba(0, 0, 0, .62)] - The value text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $base-circle-color [null] - The base circle fill color.
+/// @param {Color} $progress-circle-color [null] - The progress circle fill color.
+/// @param {Color} $text-color [null] - The value text color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 ///
 /// @example scss Change the circle progress color
 ///   $my-progress-circular-theme: igx-progress-circular-theme(
@@ -189,19 +185,17 @@
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function igx-progress-circular-theme(
     $palette: $default-palette,
+    $schema: $light-schema,
 
     $base-circle-color: null,
     $progress-circle-color: null,
     $text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-progress-circular',
-        base-circle-color: igx-color($palette, 'grays', 300),
-        progress-circle-color: igx-color($palette, 'primary'),
-        text-color: igx-color($palette, 'grays', 700)
-    );
+    $name: 'igx-progress-circular';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         base-circle-color: $base-circle-color,
         progress-circle-color: $progress-circle-color,

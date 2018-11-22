@@ -7,14 +7,17 @@
 
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [#fff]- The card background color.
-/// @param {Color} $header-text-color [rgba(0, 0, 0, .74)] - The text color of the card title.
-/// @param {Color} $subtitle-text-color [rgba(0, 0, 0, .54)] - The text color of the card subtitle.
-/// @param {Color} $content-text-color [rgba(0, 0, 0, .54)] - The text color of the card content.
-/// @param {Color} $actions-text-color [rgba(0, 0, 0, .54)] - The text color of the card buttons.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $background [null]- The card background color.
+/// @param {Color} $header-text-color [null] - The text color of the card title.
+/// @param {Color} $subtitle-text-color [null] - The text color of the card subtitle.
+/// @param {Color} $content-text-color [null] - The text color of the card content.
+/// @param {Color} $actions-text-color [null] - The text color of the card buttons.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Change the background and content text colors in card
@@ -26,7 +29,7 @@
 ///   @include igx-calendar($my-card-theme);
 @function igx-card-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $header-text-color: null,
@@ -34,18 +37,8 @@
     $content-text-color: null,
     $actions-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-card',
-        background: #fff,
-        header-text-color: igx-color($palette, grays, 800),
-        subtitle-text-color: igx-color($palette, grays, 600),
-        content-text-color: igx-color($palette, grays, 600),
-        actions-text-color: igx-color($palette, grays, 600)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-card';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -63,7 +56,8 @@
         $subtitle-text-color: rgba(text-contrast($background), .7);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         header-text-color: $header-text-color,

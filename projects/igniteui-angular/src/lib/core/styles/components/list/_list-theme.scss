@@ -6,13 +6,20 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [#fff] - The list background color.
-/// @param {Color} $header-background [#fff] - The list header background color.
-/// @param {Color} $header-text-color [secondary 500] - The list header text color.
-/// @param {Color} $item-background [#fff] - The list item background color.
-/// @param {Color} $item-text-color [rgba(0, 0, 0, .74)] - The list item text color.
-/// @param {Color} $item-background-active [rgba(0, 0, 0, .04)] - The active list item background color.
-/// @param {Color} $item-text-color-active [rgba(0, 0, 0, .74)] - The active list item text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The list background color.
+/// @param {Color} $header-background [null] - The list header background color.
+/// @param {Color} $header-text-color [null] - The list header text color.
+/// @param {Color} $item-background [null] - The list item background color.
+/// @param {Color} $item-text-color [null] - The list item text color.
+/// @param {Color} $item-background-active [null] - The active list item background color.
+/// @param {Color} $item-text-color-active [null] - The active list item text color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
 /// @requires text-contrast
 ///
 /// @example scss Change the list background color
@@ -21,7 +28,7 @@
 ///   @include igx-avatar($my-list-theme);
 @function igx-list-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $header-background: null,
@@ -31,20 +38,8 @@
     $item-background-active: null,
     $item-text-color-active: null
 ) {
-    $default-theme: (
-        name: 'igx-list',
-        background: #fff,
-        header-background: #fff,
-        header-text-color: igx-color($palette, 'secondary'),
-        item-background: #fff,
-        item-text-color: igx-color($palette, 'grays', 800),
-        item-background-active: hexrgba(igx-color($palette, 'grays', 100)),
-        item-text-color-active: igx-color($palette, 'grays', 800)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-list';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -74,7 +69,8 @@
         $item-text-color-active: $item-text-color;
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         header-background: $header-background,

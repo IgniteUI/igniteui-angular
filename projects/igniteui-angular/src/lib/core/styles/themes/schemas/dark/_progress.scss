@@ -1,0 +1,23 @@
+@import '../light/progress';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-linear
+/// @see $default-palette
+
+$_dark-progress-linear: extend($_light-progress-linear, ());
+
+/// Generates a dark progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-circular
+/// @see $default-palette
+
+$_dark-progress-circular: extend($_light-progress-circular, ());

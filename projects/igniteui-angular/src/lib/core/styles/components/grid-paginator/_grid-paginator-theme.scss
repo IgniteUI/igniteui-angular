@@ -11,9 +11,10 @@
 /// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
 /// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
-/// @requires hexrgba
 ///
 /// @example scss Change the stripes color
 ///   $my-grid-paginator-theme: igx-grid-paginator-theme(
@@ -23,24 +24,17 @@
 ///   @include igx-grid-paginator($my-grid-paginator-theme);
 @function igx-grid-paginator-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $text-color: null,
     $background-color: null,
     $border-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid-paginator',
-        text-color: currentColor,
-        background-color: hexrgba(igx-color($palette, 'grays', 100)),
-        border-color: igx-color($palette, 'grays', 400)
-    );
+    $name: 'igx-grid-paginator';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         text-color: $text-color,
         background-color: $background-color,
@@ -64,7 +58,7 @@
         grid-row: 7;
         padding: rem(5px) 0;
         font-size: 12px;
-        border-top: 1px dotted --var($theme, 'border-color');
+        border-top: 1px solid --var($theme, 'border-color');
         z-index: 1;
 
         &:empty {

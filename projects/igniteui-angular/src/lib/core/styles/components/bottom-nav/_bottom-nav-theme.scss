@@ -8,12 +8,15 @@
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background [#fff] - The background color used for the toast.
-/// @param {Color} $idle-item-color [rgba(0, 0, 0, .62)] - The text-color used for the idle color.
-/// @param {Color} $active-item-color [primary 500] - The text-color used for the active color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $background [null] - The background color used for the toast.
+/// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
+/// @param {Color} $active-item-color [null] - The text-color used for the active color.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Set a custom background color
@@ -22,28 +25,21 @@
 ///   @include igx-bottom-nav($my-tabbar-theme);
 @function igx-bottom-nav-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background: null,
     $idle-item-color: null,
     $active-item-color: null
 ) {
-    $default-theme: (
-        name: 'igx-bottom-nav',
-        background: #fff,
-        idle-item-color: igx-color($palette, 'grays', 700),
-        active-item-color: igx-color($palette, 'primary')
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-bottom-nav';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($idle-item-color) and $background {
         $idle-item-color: rgba(text-contrast($background), .7);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background: $background,
         idle-item-color: $idle-item-color,
@@ -71,9 +67,9 @@
 
     $menu-height: 56px;
     $top-menu-shadow: igx-elevation($elevations, 8);
-    $bottom-menu-shadow: 0 -2px 4px -1px igx-color($palette, 'grays', 400),
-        0 -4px 5px 0 igx-color($palette, 'grays', 300),
-        0 -1px 10px 0 igx-color($palette, 'grays', 200);
+    $bottom-menu-shadow: 0 -2px 4px -1px rgba(0, 0, 0, .26),
+        0 -4px 5px 0 rgba(0, 0, 0, .12),
+        0 -1px 10px 0 rgba(0, 0, 0, .08);
 
     $item-min-width: 80px;
     $item-max-width: 168px;
