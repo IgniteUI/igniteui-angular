@@ -693,6 +693,16 @@ export class MultiColumnHeadersComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `${GridTemplateStrings.declareGrid(`height="800px"  width="500px"`, '',
+        ColumnDefinitions.multiColHeadersWithGroupingColumns)}`
+})
+export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent {
+    data = SampleTestData.contactInfoDataFull();
+    isPinned = false;
+}
+
+
+@Component({
     template: `${GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.nameAvatar)}`
 })
 export class GridWithAvatarComponent extends GridWithSizeComponent {

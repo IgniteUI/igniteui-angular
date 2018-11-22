@@ -24,7 +24,7 @@
 ///   @include igx-switch($my-switch-theme);
 @function igx-slider-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $track-color: null,
     $thumb-color: null,
@@ -36,19 +36,7 @@
 ) {
     $name: 'igx-slider';
 
-    $dark-theme: (
-        name: $name,
-        track-color: igx-color($palette, 'secondary'),
-
-        thumb-color: igx-color($palette, 'secondary'),
-        disabled-thumb-color: hexrgba(igx-color($palette, 'grays', 400)),
-
-        label-background-color: igx-color($palette, 'secondary'),
-        label-text-color: igx-contrast-color($palette, 'secondary'),
-
-        base-track-color: igx-color($palette, 'grays'),
-        disabled-base-track-color: igx-color($palette, 'grays', 400)
-    );
+    $dark-theme: apply-palette(map-get($schema, 'igx-slider'), $palette);
 
     $light-theme: (
         name: $name,
@@ -63,20 +51,16 @@
         disabled-base-track-color: rgba(#fff, .3)
     );
 
-    $default-theme: map-get((
+    $theme: map-get((
         dark: $dark-theme,
         light: $light-theme
     ), $variant);
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
         palette: $palette,
         track-color: $track-color,
         thumb-color: $thumb-color,
