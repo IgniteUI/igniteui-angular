@@ -5,6 +5,8 @@ All notable changes for each version of this project will be documented in this 
 ## 6.2.1
 - `igx-drop-down`:
     - Added a new property `maxHeight`, defining the max height of the drop down.
+- `igx-combo`:
+    - Added a new input property - `displayDensity`. It allows configuring the `displayDensity` of the combo's `value` and `search` inputs.
 
 ## 6.2.0
 - Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
