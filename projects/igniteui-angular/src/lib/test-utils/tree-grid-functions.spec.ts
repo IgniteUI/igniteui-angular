@@ -64,6 +64,12 @@ export class TreeGridFunctions {
         return headerCell;
     }
 
+    public static getHeaderCellMultiColHeaders(fix, columnKey) {
+        const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));
+        const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1).pop();
+        return headerCell;
+    }
+
     public static getRowCheckbox(rowDOM) {
         const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
         return checkboxDiv.query(By.css(CHECKBOX_INPUT_CSS_CLASS));
@@ -165,6 +171,26 @@ export class TreeGridFunctions {
         treeCells.forEach(treeCell => {
             const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
             expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not on top of a treeCell');
+            expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
+            expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
+        });
+    }
+
+    /**
+     * Verifies that the specified column is the tree column, that contains the tree cells, when there are multi column headers.
+    */
+    public static verifyTreeColumnInMultiColHeaders(fix, expectedTreeColumnKey, expectedColumnsCount) {
+        const headerCell = TreeGridFunctions.getHeaderCellMultiColHeaders(fix, expectedTreeColumnKey);
+        const treeCells = TreeGridFunctions.getTreeCells(fix);
+        const rows = TreeGridFunctions.getAllRows(fix);
+
+        // Verify the tree cells are first (on the left) in comparison to the rest of the cells.
+        TreeGridFunctions.verifyCellsPosition(rows, expectedColumnsCount);
+        // Verify the tree cells are exactly under the respective header cell.
+        const headerCellRect = (<HTMLElement>headerCell.nativeElement).getBoundingClientRect();
+        treeCells.forEach(treeCell => {
+            const treeCellRect = (<HTMLElement>treeCell.nativeElement).getBoundingClientRect();
+            expect(headerCellRect.bottom <= treeCellRect.top).toBe(true, 'headerCell is not above a treeCell');
             expect(headerCellRect.left).toBe(treeCellRect.left, 'headerCell and treeCell are not left-aligned');
             expect(headerCellRect.right).toBe(treeCellRect.right, 'headerCell and treeCell are not right-aligned');
         });
