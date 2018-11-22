@@ -23,9 +23,9 @@
 <div [style.width.px]='calcWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                    <span>{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
+                    <span>{{ getGroupByChipTitle(expr) }}</span>
                     <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
@@ -47,7 +47,7 @@
                 <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">reorder</igx-icon>
             </div>
         </ng-container>
-        <ng-container *ngIf="rowSelectable">
+        <ng-container *ngIf="showRowCheckboxes">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
             </div>

@@ -1545,18 +1545,16 @@ describe('igxCombo', () => {
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Items');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-data').nodeValue).toEqual('Item 1,Item 2,Item 3');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
-            expect(comboWrapper.childElementCount).toEqual(1);
+            expect(comboWrapper.childElementCount).toEqual(2); // Input Group + Dropdown
+            expect(comboWrapper.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
+            expect(comboWrapper.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
+            expect(comboWrapper.style.width).toEqual(defaultComboWidth);
+            expect(comboWrapper.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
+            expect(comboWrapper.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
+            expect(comboWrapper.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
+            expect(comboWrapper.childElementCount).toEqual(2);
 
-            const comboElement = comboWrapper.children[0];
-            expect(comboElement.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
-            expect(comboElement.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
-            expect(comboElement.style.width).toEqual(defaultComboWidth);
-            expect(comboElement.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
-            expect(comboElement.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
-            expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
-            expect(comboElement.childElementCount).toEqual(2);
-
-            const inputGroupElement = comboElement.children[0];
+            const inputGroupElement = comboWrapper.children[0];
             expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
@@ -1590,7 +1588,7 @@ describe('igxCombo', () => {
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
-            const dropDownElement = comboElement.children[1];
+            const dropDownElement = comboWrapper.children[1];
             expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
@@ -1837,6 +1835,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
+
         it('Should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
@@ -1853,7 +1852,7 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-
+            tick();
             const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
             const dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             containerElementWidth = containerElement.getBoundingClientRect().width;
@@ -1864,6 +1863,7 @@ describe('igxCombo', () => {
             expect(dropDownWidth).toEqual(containerElementWidth);
             expect(inputWidth).toEqual(containerElementWidth);
         }));
+
         it('Should render combo width properly when placed in container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerFixedWidthComponent);
             fixture.detectChanges();

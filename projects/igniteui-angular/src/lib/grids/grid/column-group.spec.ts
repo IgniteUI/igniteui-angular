@@ -37,7 +37,8 @@ describe('IgxGrid - multi-column headers', () => {
                 EmptyColGridComponent,
                 OneColPerGroupGridComponent,
                 NestedColumnGroupsGridComponent,
-                DynamicGridComponent
+                DynamicGridComponent,
+                NumberColWidthGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1378,6 +1379,13 @@ describe('IgxGrid - multi-column headers', () => {
         const colsCount = 2; // 1 col group and 1 col
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
     });
+
+    it('Should not throw exception if multi-column header columns width is set as number', () => {
+        expect(() => {
+            const fixture = TestBed.createComponent(NumberColWidthGridComponent);
+            fixture.detectChanges();
+        }).not.toThrow();
+    });
 });
 
 @Component({
@@ -2004,6 +2012,32 @@ export class DynamicGridComponent {
     mchCount = new Array(1);
 
     data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" height="500px">
+            <igx-column-group header="MCH">
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [width]="c.width"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class NumberColWidthGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = SampleTestData.contactInfoDataFull();
+
+    columns = [
+        { field: 'ID', width: 100 },
+        { field: 'CompanyName', width: 200 },
+        { field: 'ContactName', width: 150 },
+        { field: 'City', width: 100 },
+    ];
 }
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
