@@ -419,17 +419,18 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.onBlur();
         }));
-        it('IgxComboDropDown focusedItem getter/setter', () => {
+        it('IgxComboDropDown focusedItem getter/setter', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const dropdown = fix.componentInstance.combo.dropdown;
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.toggle();
             fix.detectChanges();
+            tick();
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.onFocus();
             expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
-        });
+        }));
         it('Should properly handle dropdown.focusItem', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();

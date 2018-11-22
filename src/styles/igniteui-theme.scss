@@ -22,6 +22,7 @@
 .dark-theme {
     $igx-background-color: #333;
     $igx-foreground-color: text-contrast($igx-background-color);
+
     background: $igx-background-color;
     color: $igx-foreground-color;
 
