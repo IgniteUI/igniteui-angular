@@ -286,8 +286,10 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
-            expect(cell.inEditMode).toBe(true);
+            fix.detectChanges();
 
+            cell = treeGrid.getCellByColumn(5, 'OnPTO');
+            expect(cell.inEditMode).toBe(true);
             // Press tab key and verify the correct cell is opened
             await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 5, 4, treeColumns);
         });
@@ -310,7 +312,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             await testNavigationTab(fix, treeGrid, ['HireDate', 'ID', 'Name', 'Age', 'OnPTO']);
         });
 
-        it('should change correct selected cell when there are pinned columns and press tab', async () => {
+        it('should change correct selected cell when there are pinned columns and press shift + tab', async () => {
             treeGrid.getColumnByName('HireDate').pinned = true;
             fix.detectChanges();
 
@@ -338,7 +340,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             UIInteractions.triggerKeyDownEvtUponElem('Space', cell.nativeElement, true);
-            await wait(30);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0], true);
@@ -620,7 +622,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(1);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fixture.detectChanges();
 
             cell = treegrid.getCellByColumn(9, columns[columns.length - 1]);
@@ -629,7 +631,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(2);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', ctrlKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fixture.detectChanges();
 
             cell = treegrid.getCellByColumn(0, columns[0]);
@@ -638,7 +640,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             expect(treegrid.onSelection.emit).toHaveBeenCalledTimes(3);
 
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
-            await wait(DEBOUNCETIME);
+            await wait(100);
             fixture.detectChanges();
 
             cell = treegrid.getCellByColumn(9, columns[columns.length - 1]);
@@ -735,7 +737,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         (fixture, treegrid: IgxTreeGridComponent, cellRowIndex, cellColumn, rowsCount, rowsCountAfterCollapse) =>
             new Promise(async (resolve, reject) => {
                 spyOn(treegrid.onRowToggle, 'emit').and.callThrough();
-                const cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
+                let cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
                 let rows = TreeGridFunctions.getAllRows(fixture);
                 expect(rows.length).toBe(rowsCount);
 
@@ -750,6 +752,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
+                cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
                 rows = TreeGridFunctions.getAllRows(fixture);
                 expect(rows.length).toBe(rowsCountAfterCollapse);
                 TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
@@ -761,6 +764,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
+                cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
                 rows = TreeGridFunctions.getAllRows(fixture);
                 expect(rows.length).toBe(rowsCountAfterCollapse);
                 TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[cellRowIndex]);
@@ -772,6 +776,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
+                cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
                 rows = TreeGridFunctions.getAllRows(fixture);
                 expect(rows.length).toBe(rowsCount);
                 TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
@@ -783,6 +788,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
                 await wait(DEBOUNCETIME);
                 fixture.detectChanges();
 
+                cell = treegrid.getCellByColumn(cellRowIndex, cellColumn);
                 rows = TreeGridFunctions.getAllRows(fixture);
                 expect(rows.length).toBe(rowsCount);
                 TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[cellRowIndex]);
@@ -794,7 +800,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
     const testEditingNavigationTab =
         (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            const cell = treegrid.getCellByColumn(2, columns[2]);
+            let cell = treegrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
@@ -805,6 +811,8 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
+
+            cell = treeGrid.getCellByColumn(2, columns[2]);
             expect(cell.inEditMode).toBe(true);
 
             // Test tab on child row
@@ -822,7 +830,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
     const testEditingNavigationShiftTab =
         (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            const cell = treeGrid.getCellByColumn(2, columns[2]);
+            let cell = treeGrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
@@ -833,6 +841,8 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
+
+            cell = treeGrid.getCellByColumn(2, columns[2]);
             expect(cell.inEditMode).toBe(true);
 
             // Test on parent row

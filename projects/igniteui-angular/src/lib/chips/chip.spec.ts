@@ -20,7 +20,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
     template: `
         <igx-chips-area #chipsArea>
             <igx-chip #chipElem *ngFor="let chip of chipList"
-            [id]="chip.id" [draggable]="chip.draggable" [removable]="chip.removable" [selectable]="chip.selectable"
+            [id]="chip.id" [draggable]="chip.draggable"
+            [removable]="chip.removable" [selectable]="chip.selectable"
             [displayDensity]="chip.density" (onRemove)="chipRemoved($event)">
                 <span #label [class]="'igx-chip__text'">{{chip.text}}</span>
                 <igx-icon igxPrefix fontSet="material">drag_indicator</igx-icon>
@@ -34,7 +35,7 @@ class TestChipComponent {
         { id: 'Country', text: 'Country', removable: false, selectable: false, draggable: true },
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true, density: 'comfortable' },
         { id: 'Town', text: 'Town', removable: true, selectable: true, draggable: true, density: 'compact' },
-        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' },
+        { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true, density: 'cosy' }
     ];
 
     constructor(public cdr: ChangeDetectorRef) { }
@@ -227,14 +228,15 @@ describe('IgxChip', () => {
         expect(firstChipSuffixText).toEqual('suf');
     });
 
-    it('should make chip comfortable when density is not set', () => {
+   it('should make chip comfortable when density is not set', () => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
         const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const firstComponent = components[0];
 
-        expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
+        const isFirstChipComfortable = firstComponent.componentInstance.isComfortable();
+        expect(isFirstChipComfortable).toEqual(true);
 
         // Assert default css class is applied
         const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));

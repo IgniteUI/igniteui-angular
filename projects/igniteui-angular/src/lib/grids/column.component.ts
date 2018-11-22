@@ -8,31 +8,29 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
 import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
+import {
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand,
+    IgxGridBaseComponent,
+    FilteringExpressionsTree
+} from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
-import {
-    IgxBooleanFilteringOperand,
-    IgxNumberFilteringOperand,
-    IgxDateFilteringOperand,
-    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { SortingStrategy } from '../data-operations/sorting-strategy';
-import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -491,7 +489,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get sortStrategy(): any {
+    public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
     /**
@@ -505,11 +503,31 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public set sortStrategy(classRef: any) {
+    public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
-
-
+     /**
+     * Gets the function that compares values for grouping.
+     * ```typescript
+     * let groupingComparer = this.column.groupingComparer'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get groupingComparer(): (a: any, b: any) => number {
+        return this._groupingComparer;
+    }
+    /**
+     * Sets a custom function to compare values for grouping.
+     * Subsequent values in the sorted data that the function returns 0 for are grouped.
+     * ```typescript
+     * this.column.groupingComparer = (a: any, b: any) => { return a === b ? 0 : -1; }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set groupingComparer(funcRef: (a: any, b: any) => number) {
+        this._groupingComparer = funcRef;
+    }
     /**
      * Gets the default minimum `width` of the column.
      * ```typescript
@@ -772,7 +790,11 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy = new SortingStrategy();
+    protected _sortStrategy: ISortingStrategy = DefaultSortingStrategy.instance();
+    /**
+     *@hidden
+     */
+    protected _groupingComparer: (a: any, b: any) => number;
     /**
      *@hidden
      */
@@ -1325,7 +1347,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
 
-            if (val.width && val.width.indexOf('%') !== -1) {
+            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                 isChildrenWidthInPercent = true;
             }
 

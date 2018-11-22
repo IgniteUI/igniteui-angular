@@ -17,7 +17,7 @@ import { IgxInputDirective, IgxInputState } from '../directives/input/input.dire
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
-import { DisplayDensity, IDisplayDensity, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 
 let NEXT_ID = 0;
 
@@ -254,7 +254,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase {
         return this._type.toString();
     }
 
-    constructor(private _element: ElementRef, @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensity) {
+    constructor(private _element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
         this.element = _element;
     }

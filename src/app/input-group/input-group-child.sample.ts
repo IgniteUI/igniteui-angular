@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { DisplayDensityToken, DisplayDensity, IDisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensityToken, DisplayDensity, IDisplayDensityOptions } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -14,7 +14,7 @@ export class InputGroupChildSampleComponent {
         lastName: 'Duduka'
     };
 
-    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensity) {}
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
 
     changeDisplayDensity() {
         switch (this.displayDensityOptions.displayDensity) {

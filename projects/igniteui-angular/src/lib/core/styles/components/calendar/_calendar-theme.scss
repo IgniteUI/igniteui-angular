@@ -14,40 +14,42 @@
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $content-background [#fff] - The main content background color.
-/// @param {Color} $content-text-color [rgba(0, 0, 0, .87)] - The main content text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $content-background [null] - The main content background color.
+/// @param {Color} $content-text-color [null] - The main content text color.
 ///
-/// @param {Color} $header-background [secondary 500] - The header background color.
-/// @param {Color} $header-text-color [igx-contrast-color of secondary 500] - The header text color.
+/// @param {Color} $header-background [null] - The header background color.
+/// @param {Color} $header-text-color [null] - The header text color.
 ///
-/// @param {Color} $picker-arrow-color [rgba(0, 0, 0, .74)] - The idle picker arrow color.
-/// @param {Color} $picker-arrow-hover-color [secondary 500] - The picker hover arrow color.
+/// @param {Color} $picker-arrow-color [null] - The idle picker arrow color.
+/// @param {Color} $picker-arrow-hover-color [null] - The picker hover arrow color.
 ///
-/// @param {Color} $picker-text-color [rgba(0, 0, 0, .74)]- The idle picker month/year color.
-/// @param {Color} $picker-text-hover-color [secondary 500]-  The hover picker month/year color.
+/// @param {Color} $picker-text-color [null]- The idle picker month/year color.
+/// @param {Color} $picker-text-hover-color [null]-  The hover picker month/year color.
 ///
-/// @param {Color} $inactive-text-color [rgba(0, 0, 0, .24)] - The text color for weekday labels and other month dates.
-/// @param {Color} $weekend-text-color [rgba(0, 0, 0, .24)] - The text color for weekend days.
+/// @param {Color} $inactive-text-color [null] - The text color for weekday labels and other month dates.
+/// @param {Color} $weekend-text-color [null] - The text color for weekend days.
 ///
-/// @param {Color} $year-current-text-color [secondary 500] - The text color for the current/selected year.
-/// @param {Color} $month-current-text-color [secondary 500]- The text color for the current/selected month.
+/// @param {Color} $year-current-text-color [null] - The text color for the current/selected year.
+/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
 ///
-/// @param {Color} $year-hover-text-color [secondary 500] - The year hover text color.
-/// @param {Color} $month-hover-text-color [secondary 500] - The month hover text color.
+/// @param {Color} $year-hover-text-color [null] - The year hover text color.
+/// @param {Color} $month-hover-text-color [null] - The month hover text color.
 ///
-/// @param {Color} $date-selected-background [secondary 500] - The background color for the selected date.
-/// @param {Color} $date-selected-text-color [igx-contrast-color of secondary 500] - The text color for the selected date.
+/// @param {Color} $date-selected-background [null] - The background color for the selected date.
+/// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
 ///
-/// @param {Color} $date-current-text-color [secondary 500] - The text color for the current date.
-/// @param {Color} $date-hover-background [rgba(0, 0, 0, .08)] - The hover date background color.
+/// @param {Color} $date-current-text-color [null] - The text color for the current date.
+/// @param {Color} $date-hover-background [null] - The hover date background color.
 ///
-/// @param {Color} $date-special-background [rgba(0, 0, 0, .87)] - The background color used for special dates.
-/// @param {Color} $date-special-text-color [rgba(0, 0, 0, .04] - The text color used for special dates.
+/// @param {Color} $date-special-background [null] - The background color used for special dates.
+/// @param {Color} $date-special-text-color [null] - The text color used for special dates.
 ///
-/// @param {Color} $date-disabled-text-color [rgba(0, 0, 0, .23)] - The text color for disabled dates.
+/// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
 ///
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -60,7 +62,7 @@
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $content-background: null,
     $content-text-color: null,
@@ -94,45 +96,8 @@
 
     $date-disabled-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-calendar',
-
-        content-background: #fff,
-        content-text-color: igx-color($palette, 'grays', 900),
-
-        header-background: igx-color($palette, 'secondary', 500),
-        header-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        picker-arrow-color: igx-color($palette, 'grays', 800),
-        picker-arrow-hover-color: igx-color($palette, 'secondary', 500),
-
-        picker-text-color: igx-color($palette, 'grays', 800),
-        picker-text-hover-color: igx-color($palette, 'secondary', 500),
-
-        inactive-text-color: igx-color($palette, 'grays', 400),
-        weekend-text-color: igx-color($palette, 'grays', 500),
-
-        year-current-text-color: igx-color($palette, 'secondary', 500),
-        month-current-text-color: igx-color($palette, 'secondary', 500),
-
-        year-hover-text-color: igx-color($palette, 'secondary', 500),
-        month-hover-text-color: igx-color($palette, 'secondary', 500),
-
-        date-selected-background: igx-color($palette, 'secondary', 500),
-        date-selected-text-color: igx-contrast-color($palette, 'secondary', 500),
-
-        date-current-text-color: igx-color($palette, 'secondary', 500),
-        date-hover-background: igx-color($palette, 'grays', 200),
-
-        date-special-background: igx-color($palette, 'grays', 100),
-        date-special-text-color: igx-color($palette, 'grays', 900),
-
-        date-disabled-text-color: rgba(hexrgba(igx-color($palette, 'grays', 500)), .6)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-calendar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
@@ -206,7 +171,8 @@
         $month-current-text-color: $header-background;
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,

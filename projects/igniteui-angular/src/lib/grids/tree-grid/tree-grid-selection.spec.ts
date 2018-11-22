@@ -20,6 +20,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { transpileModule } from 'typescript';
 import { TestabilityRegistry } from '@angular/core';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid - Selection', () => {
     configureTestSuite();
@@ -125,7 +126,7 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(4).rowID], true);
             fix.detectChanges();
 
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -287,7 +288,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -532,7 +533,7 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(147);
 
-            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);

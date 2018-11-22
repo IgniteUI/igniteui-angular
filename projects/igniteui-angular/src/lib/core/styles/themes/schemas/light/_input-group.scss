@@ -1,0 +1,143 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light input-group schema.
+/// @type {Map}
+///
+/// @property {map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
+/// @property {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
+/// @property {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
+/// @property {map} disabled-text-color [igx-color: ('grays', 500)] - The input text color in the disabled state.
+///
+/// @property {map} idle-secondary-color [igx-color: ('grays', 600)] - The label color in the idle state.
+/// @property {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
+/// @property {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
+///
+/// @property {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
+/// @property {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
+/// @property {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
+/// @property {map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
+/// @property {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
+/// @property {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border.
+///
+/// @property {map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
+/// @property {map} box-disabled-background [igx-color: ('grays', 50)] - The background color of an input group of type box in the disabled state.
+///
+/// @property {Color} border-background [transparent] - The background color of an input group of type border.
+/// @property {map} border-disabled-background [igx-color: ('grays', 50)] - The background color of an input group of type border in the disabled state.
+///
+/// @property {Color} search-background [#fff] - The background color of an input group of type search.
+/// @property {Color} search-disabled-background [#fff] - The background color of an input group of type search in the disabled state.
+/// @property {map} search-shadow-color [igx-color: ('grays', 600)] - The shadow color of an input group of type search.
+/// @property {map} search-disabled-shadow-color [igx-color: ('grays', 300)] - The shadow color of an input group of type search in the disabled state.
+///
+/// @property {map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
+/// @property {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
+/// @property {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
+///
+/// @see $default-palette
+
+
+$_light-input-group: (
+    idle-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    filled-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    focused-text-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    disabled-text-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    idle-secondary-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    filled-secondary-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    focused-secondary-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    idle-bottom-line-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    hover-bottom-line-color: (
+        igx-color: ('grays', 900)
+    ),
+
+    focused-bottom-line-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    interim-bottom-line-color: (
+        igx-color: ('primary', 500),
+        rgba: .12
+    ),
+
+    disabled-bottom-line-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    disabled-border-color: (
+        igx-color: ('grays', 500),
+        rgba: .06
+    ),
+
+    box-background: (
+        igx-color: ('grays', 200)
+    ),
+
+    box-disabled-background: (
+        igx-color: ('grays', 50)
+    ),
+
+    border-background: transparent,
+
+    border-disabled-background: (
+        igx-color: ('grays', 50)
+    ),
+
+    search-background: #fff,
+    search-disabled-background: #fff,
+
+    search-shadow-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    search-disabled-shadow-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    success-secondary-color: (
+        igx-color: ('success')
+    ),
+
+    warning-secondary-color: (
+        igx-color: ('warn')
+    ),
+
+    error-secondary-color: (
+        igx-color: ('error')
+    ),
+
+    placeholder-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    disabled-placeholder-color: (
+        igx-color: ('grays', 400)
+    )
+);

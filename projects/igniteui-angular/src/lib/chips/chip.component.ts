@@ -1,5 +1,4 @@
 ﻿import {
-    AfterViewInit,
     Component,
     ChangeDetectorRef,
     EventEmitter,
@@ -9,9 +8,11 @@
     Output,
     ViewChild,
     Renderer2,
-    TemplateRef
+    TemplateRef,
+    Inject,
+    Optional
 } from '@angular/core';
-import { DisplayDensity } from '../core/displayDensity';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,
@@ -50,7 +51,7 @@ let CHIP_ID = 0;
     selector: 'igx-chip',
     templateUrl: 'chip.component.html'
 })
-export class IgxChipComponent {
+export class IgxChipComponent extends DisplayDensityBase {
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -161,43 +162,6 @@ export class IgxChipComponent {
      */
     public get selected() {
         return this._selected;
-    }
-
-    /**
-     * Returns the `IgxChipComponent` theme.
-     * ```typescript
-     * @ViewChild('myChip')
-     * public chip: IgxChipComponent;
-     *     ngAfterViewInit(){
-     *     let chipTheme = this.chip.displayDensity;
-     * }
-     * ```
-     */
-    @Input()
-    public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
-    }
-
-    /**
-     * An @Input property that sets the `IgxChipComponent` theme.
-     * Available options are `compact`, `cosy`, `comfortable`.
-     * The default theme is `comfortable`.
-     * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [displayDensity]="'compact'"></igx-chip>
-     * ```
-     */
-    public set displayDensity(val: DisplayDensity | string) {
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-            default:
-                this._displayDensity = DisplayDensity.comfortable;
-        }
     }
 
     /**
@@ -340,15 +304,12 @@ export class IgxChipComponent {
     @HostBinding('attr.class')
     get hostClass(): string {
         const classes = [];
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
-                classes.push('igx-chip--cosy');
-                break;
-            case DisplayDensity.compact:
-                classes.push('igx-chip--compact');
-                break;
-            default:
-                classes.push('igx-chip');
+        if (this.isCosy()) {
+            classes.push('igx-chip--cosy');
+        } else if (this.isCompact()) {
+            classes.push('igx-chip--compact');
+        } else {
+            classes.push('igx-chip');
         }
         classes.push(this.disabled ? 'igx-chip--disabled' : '');
         // The custom classes should be at the end.
@@ -398,26 +359,27 @@ export class IgxChipComponent {
      * @hidden
      */
     public get ghostClass(): string {
-        switch (this._displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-chip__ghost--cosy';
-            case DisplayDensity.compact:
-                return 'igx-chip__ghost--compact';
-            default:
-                return 'igx-chip__ghost';
-        }
+       if (this.isCosy()) {
+            return 'igx-chip__ghost--cosy';
+       } else if (this.isCompact()) {
+            return 'igx-chip__ghost--compact';
+       } else {
+            return 'igx-chip__ghost';
+       }
     }
 
     public get chipTabindex() {
         return !this.disabled ? 0 : '';
     }
 
-    protected _displayDensity = DisplayDensity.comfortable;
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2) { }
+    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
+        }
 
     /**
      * @hidden

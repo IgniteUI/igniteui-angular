@@ -34,7 +34,7 @@
                 <div class="igx-grid__thead-item igx-grid__th--pinned">
                     <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header>
-                    <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col"
+                    <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup"
                         [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
                 </div>
             </ng-template>
@@ -44,7 +44,7 @@
             <div class="igx-grid__thead-item">
                 <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
                     [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-header>
-                <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col"
+                <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup"
                     [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
             </div>
         </ng-template>

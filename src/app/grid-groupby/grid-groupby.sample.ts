@@ -1,24 +1,23 @@
-import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
+import { Component, Injectable, ViewChild, OnInit, Inject } from '@angular/core';
 
 import { IgxGridComponent,  SortingDirection, ISortingExpression, IGridFocusChangeEventArgs } from 'igniteui-angular';
-import { DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
-import { detectChanges } from '@angular/core/src/render3';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
+import { DefaultSortingStrategy } from 'projects/igniteui-angular/src/public_api';
 
 @Component({
-    providers: [],
+    providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
     selector: 'app-grid-sample',
     styleUrls: ['grid-groupby.sample.css'],
     templateUrl: 'grid-groupby.sample.html'
 })
-
 export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1') public grid1: IgxGridComponent;
     public data: Array<any>;
     public hideGroupedColumns = false;
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
+    constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
-
         this.columns = [
             { field: 'ID', width: 100, hidden: true },
             { field: 'CompanyName', width: 300, groupable: true  },
@@ -31,12 +30,6 @@ export class GridGroupBySampleComponent implements OnInit {
             { field: 'PostalCode', width: 150, groupable: true  },
             { field: 'Phone', width: 150, groupable: true  },
             { field: 'Fax', width: 150, groupable: true  }
-        ];
-        this.groupingExpressions =  [
-            {
-                fieldName: 'CompanyName',
-                dir: SortingDirection.Asc
-            }
         ];
         this.hideGroupedColumns = true;
 
@@ -88,16 +81,16 @@ export class GridGroupBySampleComponent implements OnInit {
                 return;
             }
         }
-        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
     }
     toggleGroupedVisibility(event){
         this.grid1.hideGroupedColumns = !event.checked;
     }
     toggleDensity() {
-        switch (this._density) {
-            case DisplayDensity.comfortable: this.density = DisplayDensity.cosy; break;
-            case DisplayDensity.cosy: this.density = DisplayDensity.compact; break;
-            case DisplayDensity.compact: this.density = DisplayDensity.comfortable; break;
+        switch (this.displayDensityOptions.displayDensity ) {
+            case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
+            case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
+            case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
         }
     }
     getRowsList() {
@@ -111,9 +104,9 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
-            {fieldName: "Country", dir: 2, ignoreCase: true}
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
         ];
         this.grid1.groupBy(expr);
     }
@@ -124,8 +117,8 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupUngroupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
         ];
         this.grid1.groupingExpressions = expr;
     }

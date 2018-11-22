@@ -1,36 +1,34 @@
-import { Component, ViewChild } from '@angular/core';
-import {
-    async,
-    TestBed
-} from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
 import { DataGenerator } from './test-util/data-generator';
-
-import { IGroupByRecord, SortingDirection, SortingStrategy } from '../../public_api';
+import { IgxSorting, DefaultSortingStrategy } from './sorting-strategy';
+import { SortingDirection } from './sorting-expression.interface';
+import { IGroupByRecord } from './groupby-record.interface';
 
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
     let data: object[];
-    let strategy: SortingStrategy;
+    const sorting = new IgxSorting();
     beforeEach(() => {
         dataGenerator = new DataGenerator();
         data = dataGenerator.data;
-        strategy = new SortingStrategy();
     });
     it('tests `sort`', () => {
-        const res = strategy.sort(data, [
+        const res = sorting.sort(data, [
             {
                 dir: SortingDirection.Asc,
-                fieldName: 'boolean'
+                fieldName: 'boolean',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
             }, {
                 dir: SortingDirection.Desc,
-                fieldName: 'number'
+                fieldName: 'number',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
             }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([4, 2, 0, 3, 1]);
     });
     it('tests `compareObjects`', () => {
+        const strategy = DefaultSortingStrategy.instance();
         expect(strategy.compareValues(1, 0) === 1 &&
                 strategy.compareValues(true, false) === 1 &&
                 strategy.compareValues('bc', 'adfc') === 1)
@@ -46,35 +44,15 @@ describe('Unit testing SortingStrategy', () => {
             .toBeTruthy('Comare equal variables');
     });
     it('tests default settings', () => {
-        strategy = new SortingStrategy();
         (data[4] as { string: string }).string = 'ROW';
-        const res = strategy.sort(data, [{
+        const res = sorting.sort(data, [{
                 dir: SortingDirection.Asc,
-                fieldName: 'string'
+                fieldName: 'string',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
                     .toEqual([4, 0, 1, 2, 3]);
     });
-    it('tests `groupBy`', () => {
-        strategy = new SortingStrategy();
-        const expr = [{
-            dir: SortingDirection.Asc,
-            fieldName: 'boolean'
-        }];
-        const res = strategy.sort(data, expr);
-        const gres = strategy.groupBy(res, expr);
-        expect(dataGenerator.getValuesForColumn(gres.data, 'boolean'))
-                    .toEqual([false, false, false, true, true]);
-        const group1: IGroupByRecord = gres.metadata[0];
-        const group2: IGroupByRecord = gres.metadata[3];
-        expect(gres.metadata[1]).toEqual(group1);
-        expect(gres.metadata[2]).toEqual(group1);
-        expect(gres.metadata[4]).toEqual(group2);
-        expect(group1.level).toEqual(0);
-        expect(group2.level).toEqual(0);
-        expect(group1.records).toEqual(gres.data.slice(0, 3));
-        expect(group2.records).toEqual(gres.data.slice(3, 5));
-        expect(group1.value).toEqual(false);
-        expect(group2.value).toEqual(true);
-    });
+
 });

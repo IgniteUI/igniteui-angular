@@ -1,0 +1,18 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light ripple schema.
+/// @type {Map}
+///
+/// @property {map} color [igx-color: ('grays', 800)] - The color of the ripple.
+///
+/// @see $default-palette
+
+$_light-ripple: (
+    color: (
+        igx-color: ('grays', 800)
+    )
+);

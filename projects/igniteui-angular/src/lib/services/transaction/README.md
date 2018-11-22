@@ -18,7 +18,7 @@ A walk through of how to get started can be found [here](https://www.infragistic
 To use the `TransactionService` import the TransactionService:
 
 ```typescript
-import { TransactionService } from "igniteui-angular";
+import { IgxGridTransaction, IgxTransactionService } from "igniteui-angular";
 ```
 and then inject it in the component's constructor:
 
@@ -33,11 +33,14 @@ and then inject it in the component's constructor:
    | Name                  | Description                                                   | Parameters                |
    |-----------------------|---------------------------------------------------------------|---------------------------|
    |enabled                | Returns whether transaction is enabled for this service       | -                         |
+   |onStateUpdate          | Event fired when transaction state has changed - add transaction, commit all transactions, undo and redo| - |
+   |canUndo                | Returns if there are any transactions in the Undo stack       | -                         |
+   |canRedo                | Returns if there are any transactions in the Redo stack       | -                         |
    |add                    | Adds provided  transaction with recordRef if any              | transaction, recordRef?   |
-   |getTransactionLog      | Returns an array of all transactions. If id is provided returns last transaction for provided id | id? |
+   |getTransactionLog      | Returns all recorded transactions in chronological order      | id?                       |
    |undo                   | Remove the last transaction if any                            | -                         |
    |redo                   | Applies the last undone transaction if any                    | -                         |
-   |getAggregatedChanges   | Returns aggregated state of all transactions including pending ones| mergeChanges         |
+   |getAggregatedChanges   | Returns aggregated changes from all transactions              | mergeChanges              |
    |getState               | Returns the state of the record with provided id              | id                        |
    |getAggregatedValue     | Returns value of the required id including all uncommitted changes| id, mergeChanges      |
    |commit                 | Applies all transactions over the provided data               | data                      |

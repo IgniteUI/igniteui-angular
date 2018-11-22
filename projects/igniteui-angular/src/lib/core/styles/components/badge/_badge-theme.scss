@@ -9,15 +9,18 @@
 /// will be assigned automatically to a contrasting color.
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $icon-color [#fff] - The icon color used.
-/// @param {Color} $text-color [#fff] - The text color used.
-/// @param {Color} $border-color [#fff] - The border color used.
-/// @param {Color} $background-color [primary 500] - The background color used.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $icon-color [null] - The icon color used.
+/// @param {Color} $text-color [null] - The text color used.
+/// @param {Color} $border-color [null] - The border color used.
+/// @param {Color} $background-color [null] - The background color used.
 /// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
 /// @param {Bool} $disable-border [true] - Sets the badge border visibility.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires igx-elevation
 /// @requires text-contrast
 /// @requires rem
@@ -32,7 +35,7 @@
 ///   @include igx-css-vars($my-badge-theme);
 @function igx-badge-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $icon-color: null,
     $text-color: null,
@@ -42,19 +45,11 @@
     $disable-shadow: true,
     $disable-border: true
 ) {
-    $default-theme: (
-        name: 'igx-badge',
-        icon-color: #fff,
-        text-color: #fff,
-        border-color: #fff,
-        background-color: igx-color($palette, 'primary', 500),
-        badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1)),
-        border-width: if($disable-border == true, 0, rem(1px)),
-    );
+    $name: 'igx-badge';
+    $badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+    $border-width: if($disable-border == true, 0, rem(1px));
 
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);
@@ -64,12 +59,15 @@
         $text-color: text-contrast($background-color);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         icon-color: $icon-color,
         text-color: $text-color,
         border-color: $border-color,
-        background-color: $background-color
+        background-color: $background-color,
+        badge-shadow: $badge-shadow,
+        border-width: $border-width
     ));
 }
 

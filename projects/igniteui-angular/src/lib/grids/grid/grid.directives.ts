@@ -38,7 +38,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         const column: IgxColumnComponent = drag.column;
         const grid = <IgxGridComponent>column.grid;
         const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
-        if (column.groupable && !isGrouped) {
+        if (column.groupable && !isGrouped && !column.columnGroup) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
         } else {
@@ -58,7 +58,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             const column: IgxColumnComponent = drag.column;
             const grid = <IgxGridComponent>column.grid;
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
-            if (column.groupable && !isGrouped) {
+            if (column.groupable && !isGrouped && !column.columnGroup) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy });
             }

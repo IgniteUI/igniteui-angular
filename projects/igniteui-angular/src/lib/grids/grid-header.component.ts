@@ -5,7 +5,6 @@ import {
     Component,
     DoCheck,
     ElementRef,
-    EventEmitter,
     HostBinding,
     HostListener,
     Input,
@@ -20,11 +19,12 @@ import { DataType } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { RestrictDrag } from '../directives/dragdrop/dragdrop.directive';
 import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnComponent } from './column.component';
 import { IgxColumnMovingService } from './grid.common';
 import { isFirefox } from '../core/utils';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { IgxGridComponent } from './grid';
 
 /**
  * @hidden
