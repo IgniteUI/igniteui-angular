@@ -174,6 +174,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Toolbar'
         },
         {
+            link: '/gridToolbarCustom',
+            icon: 'view_column',
+            name: 'Grid Toolbar Custom Content'
+        },
+        {
             link: '/treeGrid',
             icon: 'view_column',
             name: 'Tree Grid'

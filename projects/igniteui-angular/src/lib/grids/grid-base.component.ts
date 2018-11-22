@@ -61,6 +61,7 @@ import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from 
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -1231,6 +1232,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
     public parentVirtDir: IgxGridForOfDirective<any>;
+
+    /**
+     * Returns the template which will be used by the tollbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
 
     /**
      * @hidden
