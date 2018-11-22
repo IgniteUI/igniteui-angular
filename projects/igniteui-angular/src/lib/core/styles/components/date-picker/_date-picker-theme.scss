@@ -11,15 +11,10 @@
 /// @requires extend
 @function igx-date-picker-theme(
     $palette: $default-palette,
-    $preset: null
+    $schema: $light-schema
 ) {
-    $default-theme: (name: 'igx-date-picker');
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, ($palette: $palette));
+    $theme: apply-palette(map-get($schema, 'igx-date-picker'), $palette);
+    @return extend($theme, (palette: $palette));
 }
 
 /// @param {Map} $theme - The theme used to style the component.

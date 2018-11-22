@@ -106,3 +106,7 @@
 .input-container + .input-container {
     margin-left: 24px;
 }
+
+.sample-content {
+    margin-top: -88px;
+}

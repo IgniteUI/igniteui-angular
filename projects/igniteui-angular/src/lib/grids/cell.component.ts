@@ -15,10 +15,11 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
+import { isNavigationKey, valToPxlsUsingRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { first } from 'rxjs/operators';
+import { DataType } from '../data-operations/data-util';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -461,7 +462,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.grid.rowEditable) {
             const rowCurrentState = this.grid.transactions.getAggregatedValue(this.row.rowID, false);
             if (rowCurrentState) {
-                return rowCurrentState && rowCurrentState[this.column.field];
+                return rowCurrentState[this.column.field] !== undefined && rowCurrentState[this.column.field] !== null;
             }
         } else {
             const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
@@ -698,6 +699,14 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
 
         if (this.inEditMode && isNavigationKey(key)) {
+            const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
+
+            if (column.inlineEditorTemplate === undefined && (
+                (column.dataType === DataType.Boolean &&  (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+                || column.dataType === DataType.Date)) {
+                event.preventDefault();
+            }
             return;
         }
 
