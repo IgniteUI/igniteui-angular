@@ -1,6 +1,24 @@
-$_light-switch: (
-    name: 'igx-switch',
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
 
+/// Generates a light switch schema.
+/// @type {Map}
+///
+/// @property {map} thumb-on-color [igx-color: ('secondary', 500)] - The color of the thumb when the switch is on.
+/// @property {map} track-on-color [igx-color: ('secondary', 500), rgba: .5] - The color of the track when the switch is on.
+/// @property {map} thumb-off-color [igx-color: ('grays', 200), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {map} track-off-color [igx-color: ('grays', 600)] - The color of the track when the switch is off.
+/// @property {map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #fff] - The color of the thumb when the switch is disabled.
+/// @property {map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
+/// @property {map} label-color [gx-color: ('grays', 900)] - The color of the switch label
+/// @property {map} label-disabled-color [gx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
+///
+/// @see $default-palette
+
+$_light-switch: (
     thumb-on-color: (
         igx-color: ('secondary', 500)
     ),
@@ -10,9 +28,23 @@ $_light-switch: (
         rgba: .5
     ),
 
-    thumb-off-color: #fafafa,
+    thumb-off-color: (
+        igx-color: ('grays', 200),
+        hexrgba: #fff
+    ),
 
-    track-off-color: rgba(0, 0, 0, .5),
+    track-disabled-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    track-off-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    thumb-disabled-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
 
     label-color: (
         igx-color: ('grays', 900)
@@ -21,13 +53,4 @@ $_light-switch: (
     label-disabled-color: (
         igx-color: ('grays', 400)
     ),
-
-    track-disabled-color: (
-        igx-color: ('grays', 300)
-    ),
-
-    thumb-disabled-color: (
-        igx-color: ('grays', 400),
-        hexrgba: ()
-    )
 );

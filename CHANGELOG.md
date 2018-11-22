@@ -8,6 +8,9 @@ All notable changes for each version of this project will be documented in this 
 - `igx-navbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
+- Themes 
+    - Introducing schemas for easier bootstrapping of component themes.
+    - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
 - `igx-combo`:
     - Added a new input property - `displayDensity`. It allows configuring the `displayDensity` of the combo's `value` and `search` inputs.
 
@@ -173,13 +176,16 @@ When you focus a specific cell and press one of the following key combinations, 
     - **Breaking change** cell selection is preserved when the focus is moved to group row.
     - Introduced `onFocusChange` event. The event is cancelable and output argument from type `IFocusChangeEventArgs`;
     - For more detailed information see the [official keyboard navigation specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
-    
-## 6.1.8
+
+## 6.1.9
 
 ### General
 
-- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `DefaultSortingStrategy` class and override all or some of its public/protected members.
+- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.  
 - `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
+    
+## 6.1.8
 
 ### Bug fixes
 
