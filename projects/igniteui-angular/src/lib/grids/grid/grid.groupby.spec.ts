@@ -645,7 +645,12 @@ describe('IgxGrid - GroupBy', () => {
 
             // verify group order
             checkGroups(groupRows, ['NetAdvantage', 'Ignite UI for JavaScript', 'Ignite UI for Angular', '', null]);
-            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.sort({
+                fieldName: 'ProductName',
+                dir: SortingDirection.Asc,
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
             fix.detectChanges();
 
             groupRows = grid.groupsRowList.toArray();
@@ -2104,7 +2109,12 @@ describe('IgxGrid - GroupBy', () => {
             tick();
             fix.detectChanges();
 
-            grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.groupBy({
+                fieldName: 'Released',
+                dir: SortingDirection.Asc,
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
@@ -2696,7 +2706,12 @@ describe('IgxGrid - GroupBy', () => {
             const hScrBar = grid.scr.nativeElement;
             expect(hScrBar.hidden).toBe(true);
 
-            grid.groupBy({ fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.groupBy({
+                fieldName: 'Downloads',
+                dir: SortingDirection.Asc,
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            });
             fix.detectChanges();
             expect(hScrBar.hidden).toBe(false);
         }));
