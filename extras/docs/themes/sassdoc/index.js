@@ -22,6 +22,9 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const sassPlug = require('sassdoc-plugin-localization');
+const process = require('process');
+const fs = require('fs');
+const path = require('path');
 
 
 themeleon.use({
@@ -79,7 +82,9 @@ const theme = themeleon(__dirname, function (t) {
             properties: 'partials/properties',
             example: 'partials/example',
             infraHead: 'partials/infragistics/header',
-            infraFoot: 'partials/infragistics/footer'
+            infraFoot: 'partials/infragistics/footer',
+            infraHeadJA: 'partials/infragistics/infranav.ja',
+            infraFooJA: 'partials/infragistics/infrafoot.ja'
         },
         helpers: {
             debug: function (content) {
@@ -105,6 +110,36 @@ const theme = themeleon(__dirname, function (t) {
             },
             trimType: (value) => {
                 return value.substring(0, 3);
+            },
+            retrieveEnvLink: () => {
+                const lang = t.ctx.lang;
+                const env = process.env.NODE_ENV;
+                const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
+                const config = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                return config[lang][env.trim()] ? config[lang][env.trim()].url: '';
+            },
+            ifCond: (v1, operator, v2, options) => {
+                switch (operator) {
+                    case '==':
+                        // tslint:disable-next-line:triple-equals
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
             }
         }
     };
