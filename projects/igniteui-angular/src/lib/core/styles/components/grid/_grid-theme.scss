@@ -843,7 +843,7 @@
         %grid-cell-text {
             font-style: italic;
             color: igx-color(map-get($theme, 'palette'), 'error');
-            text-decoration-line: line-through;
+            text-decoration: line-through;
         }
     }
 
