@@ -271,7 +271,7 @@ export class IgxOverlayService implements OnDestroy {
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
-            const element = dynamicComponent.location.nativeElement.lastElementChild;
+            const element = dynamicComponent.location.nativeElement;
             info.elementRef = <ElementRef>{ nativeElement: element };
             info.componentRef = dynamicComponent;
         }
