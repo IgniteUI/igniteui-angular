@@ -606,8 +606,8 @@ describe('IgxTreeGrid - Integration', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
             UIInteractions.simulatePointerEvent('pointermove', header, 106, 46);
             await wait();
-            UIInteractions.simulatePointerEvent('pointermove', header, 800, 40);
-            UIInteractions.simulatePointerEvent('pointerup', header, 800, 40);
+            UIInteractions.simulatePointerEvent('pointermove', header, 700, 40);
+            UIInteractions.simulatePointerEvent('pointerup', header, 700, 40);
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);

@@ -180,7 +180,11 @@ export class TreeGridFunctions {
      * Verifies that the specified column is the tree column, that contains the tree cells, when there are multi column headers.
     */
     public static verifyTreeColumnInMultiColHeaders(fix, expectedTreeColumnKey, expectedColumnsCount) {
-        const headerCell = TreeGridFunctions.getHeaderCellMultiColHeaders(fix, expectedTreeColumnKey);
+        const headersDOM = TreeGridFunctions.sortElementsHorizontally(fix.debugElement.queryAll(By.css('igx-grid-header')));
+        const leftMostHeaders = headersDOM.filter(x =>
+            x.nativeElement.getBoundingClientRect().left === headersDOM[0].nativeElement.getBoundingClientRect().left);
+        const headerCell = TreeGridFunctions.getElementWithMinHeight(leftMostHeaders);
+
         const treeCells = TreeGridFunctions.getTreeCells(fix);
         const rows = TreeGridFunctions.getAllRows(fix);
 
@@ -196,9 +200,19 @@ export class TreeGridFunctions {
         });
     }
 
+    public static getElementWithMinHeight (arr) {
+        return arr.reduce((a, b) =>
+            (a.nativeElement.getBoundingClientRect().height < b.nativeElement.getBoundingClientRect().height) ? a : b );
+    }
+
     public static sortElementsVertically(arr) {
         return arr.sort((a, b) =>
             (<HTMLElement>a.nativeElement).getBoundingClientRect().top - (<HTMLElement>b.nativeElement).getBoundingClientRect().top);
+    }
+
+    public static sortElementsHorizontally(arr) {
+        return arr.sort((a, b) =>
+            a.nativeElement.getBoundingClientRect().left - b.nativeElement.getBoundingClientRect().left);
     }
 
     public static verifyTreeRowHasCollapsedIcon(treeRowDOM) {
