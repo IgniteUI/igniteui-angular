@@ -1703,7 +1703,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         stringCellChip.nativeElement.click();
         fix.detectChanges();
 
-
         GridFunctions.filterBy('Starts With', 'I', fix);
         expect(grid.rowList.length).toEqual(2);
         GridFunctions.filterBy('Ends With', 'r', fix);
@@ -1712,7 +1711,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         // Reset and Close
         GridFunctions.resetFilterRow(fix);
         GridFunctions.closeFilterRow(fix);
-
 
         // open for number
         numberCellChip.nativeElement.click();
@@ -1727,7 +1725,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         GridFunctions.resetFilterRow(fix);
         GridFunctions.closeFilterRow(fix);
 
-
         // open for bool
         boolCellChip.nativeElement.click();
         fix.detectChanges();
@@ -1735,7 +1732,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         GridFunctions.filterBy('False', '', fix);
         expect(grid.rowList.length).toEqual(2);
         GridFunctions.filterBy('Empty', '', fix);
-        expect(grid.rowList.length).toEqual(0);
+        expect(grid.rowList.length).toEqual(3);
 
         // Reset and Close
         GridFunctions.resetFilterRow(fix);
