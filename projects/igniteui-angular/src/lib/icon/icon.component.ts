@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { IgxIconService } from './icon.service';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+
 /**
  * **Ignite UI for Angular Icon** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/icon.html)
@@ -27,10 +27,6 @@ export class IgxIconComponent implements OnInit {
 
     @ViewChild('explicitLigature', { read: TemplateRef })
     private explicitLigature: TemplateRef<HTMLElement>;
-
-    // TODO: remove this after glyphName property is deprecated.
-    @ViewChild('implicitLigature', { read: TemplateRef })
-    private implicitLigature: TemplateRef<HTMLElement>;
 
     @ViewChild('svgImage', { read: TemplateRef })
     private svgImage: TemplateRef<HTMLElement>;
@@ -109,19 +105,6 @@ export class IgxIconComponent implements OnInit {
     */
     @Input('name')
     public iconName: string;
-
-    /**
-    *    An @Input property that allows you to change the `glyphName` of the icon.
-    *    The `glyphName` can be set using `iconName`.
-    *    You can provide either ligature `name` or glyph `iconName`, but not both at the same time.
-    *```html
-    *<igx-icon iconName="question_answer" color="blue" [isActive]="true" fontSet="material"></igx-icon>
-    *```
-    */
-    @DeprecateProperty(`'iconName' property is deprecated. To set the icon name for 'material' icons place the name of the icon between ` +
-        `the opening and closing tags. For 'Font Awesome' and SVG icons use 'name' property.`)
-    @Input('iconName')
-    public glyphName: string;
 
     /**
      * An ElementRef property of the `igx-icon` component.
@@ -246,14 +229,6 @@ export class IgxIconComponent implements OnInit {
         if (this.iconName) {
             if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
                 return this.svgImage;
-            }
-
-            // TODO: remove this after glyphName property is deprecated.
-            const materialFS = 'material-icons';
-            const materialFSAlias = 'material';
-            if (this.font === materialFS || this.font === materialFSAlias ||
-                (!this.font && (this.iconService.defaultFontSet === materialFS || this.iconService.defaultFontSet === materialFSAlias))) {
-                return this.implicitLigature;
             }
 
             return this.noLigature;

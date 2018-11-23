@@ -120,6 +120,10 @@ const appRoutes = [
         component: IconSampleComponent
     },
     {
+        path: 'lazyIconModule',
+        loadChildren: './icon/LazyModule/lazyIcon.module#LazyIconModule'
+    },
+    {
         path: 'inputs',
         component: InputSampleComponent
     },
