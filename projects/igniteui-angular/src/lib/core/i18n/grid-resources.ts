@@ -1,4 +1,7 @@
 export interface IGridResourceStrings {
+    igx_grid_groupByArea_message?: string;
+    igx_grid_emptyFilteredGrid_message?: string;
+    igx_grid_emptyGrid_message?: string;
     igx_grid_filter?: string;
     igx_grid_filter_row_close?: string;
     igx_grid_filter_row_reset?: string;
@@ -33,9 +36,17 @@ export interface IGridResourceStrings {
     igx_grid_filter_true?: string;
     igx_grid_filter_false?: string;
     igx_grid_filter_all?: string;
+    igx_grid_summary_count?: string;
+    igx_grid_summary_min?: string;
+    igx_grid_summary_max?: string;
+    igx_grid_summary_sum?: string;
+    igx_grid_summary_average?: string;
 }
 
-export const GridResourcesStringsEN: IGridResourceStrings = {
+export const GridResourceStringsEN: IGridResourceStrings = {
+    igx_grid_groupByArea_message: 'Drag a column header and drop it here to group by that column.',
+    igx_grid_emptyFilteredGrid_message: 'No records found.',
+    igx_grid_emptyGrid_message: 'Grid has no data.',
     igx_grid_filter: 'Filter',
     igx_grid_filter_row_close: 'Close',
     igx_grid_filter_row_reset: 'Reset',
@@ -70,4 +81,9 @@ export const GridResourcesStringsEN: IGridResourceStrings = {
     igx_grid_filter_true: 'True',
     igx_grid_filter_false: 'False',
     igx_grid_filter_all: 'All',
+    igx_grid_summary_count: 'Count',
+    igx_grid_summary_min: 'Min',
+    igx_grid_summary_max: 'Max',
+    igx_grid_summary_sum: 'Sum',
+    igx_grid_summary_average: 'Avg',
 };
