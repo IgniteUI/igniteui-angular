@@ -1968,6 +1968,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected __keydownListener = null;
+    /**
+     * @hidden
+     */
+    protected __vScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected __hScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected _wheelListener = null;
     protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
@@ -2143,7 +2159,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
-            this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
+            this.__keydownListener = this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2189,11 +2205,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         );
 
         this.zone.runOutsideAngular(() =>
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
+            this.__vScrollListener = this.verticalScrollContainer
+                .getVerticalScroll()
+                .addEventListener('scroll', this.verticalScrollHandler.bind(this))
         );
 
         this.zone.runOutsideAngular(() =>
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
+            this.__hScrollListener = this.parentVirtDir
+                .getHorizontalScroll()
+                .addEventListener('scroll', this.horizontalScrollHandler.bind(this))
         );
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
@@ -2206,9 +2226,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            this.nativeElement.removeEventListener('keydown', this.__keydownListener);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.__vScrollListener);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.__hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         });
@@ -4305,7 +4325,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this._wheelListener = this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
     }
 
     /**
@@ -4313,7 +4333,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public closeRowEditingOverlay() {
         this.gridAPI.set_edit_row_state(this.id, null);
-        this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
+        this.rowEditingOverlay.element.removeEventListener('wheel', this._wheelListener);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
         this.rowEditingOverlay.element.parentElement.style.display = '';
