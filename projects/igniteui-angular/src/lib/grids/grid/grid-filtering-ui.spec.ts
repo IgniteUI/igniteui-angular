@@ -2351,7 +2351,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const grid = fix.componentInstance.grid;
 
         grid.getColumnByName('ProductName').groupable = true;
-        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+        grid.groupBy({
+            fieldName: 'ProductName',
+            dir: SortingDirection.Asc,
+            ignoreCase: false,
+            strategy: DefaultSortingStrategy.instance()
+        });
         fix.detectChanges();
 
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
