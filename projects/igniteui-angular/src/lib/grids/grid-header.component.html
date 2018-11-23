@@ -2,49 +2,11 @@
     {{ column.header || column.field }}
 </ng-template>
 
-<ng-container *ngIf="column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <div class="igx-grid__thead-title" [style.width.px]="column.width">{{ column.header }}</div>
-    <div class="igx-grid__thead-group">
-        <ng-container *ngFor="let child of column.children">
-            <div class="igx-grid__thead-subgroup">
-                <igx-grid-header [igxColumnMovingDrag]="child" [attr.droppable]="true" [igxColumnMovingDrop]="child" *ngIf="!child.hidden" [gridID]="column.gridID" [column]="child"
-                    [style.min-width.px]="child.width" [style.flex-basis.px]='child.width' [style.max-width.px]='child.width'></igx-grid-header>
-                <igx-grid-filtering-cell [attr.draggable]="false" *ngIf="grid.allowFiltering && !child.children && !child.hidden" [column]="child"
-                    [style.min-width.px]="child.width" [style.flex-basis.px]='child.width' [style.max-width.px]='child.width'></igx-grid-filtering-cell>
-            </div>
-        </ng-container>
-    </div>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
-</ng-container>
-
-<ng-container *ngIf="!column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left">
-    </span>
-    <span class="igx-grid__th-title">
-        <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
-        </ng-container>
-    </span>
-    <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
-        <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
-        <!-- <igx-grid-filter [column]="column" *ngIf="column.filterable"></igx-grid-filter> -->
-    </div>
-
-    <span *ngIf="!column.columnGroup" [attr.draggable]="false" [style.cursor]="resizeCursor" #resizeArea
-        class="igx-grid__th-resize-handle">
-
-        <div *ngIf="showResizer" igxResizer
-            class="igx-grid__th-resize-line"
-            [style.height.px]="resizerHeight"
-            [restrictHResizeMax]="restrictResizeMax"
-            [restrictHResizeMin]="restrictResizeMin"
-            [resizeEndTimeout]="resizeEndTimeout"
-            (resizeEnd)="onResize($event)">
-        </div>
-
-    </span>
-
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right">
-    </span>
-</ng-container>
+<span class="igx-grid__th-title">
+    <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column }">
+    </ng-container>
+</span>
+<div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
+    <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
+</div>
 
