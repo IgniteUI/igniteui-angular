@@ -56,7 +56,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                             summaryRows = [];
                             summariesMap.set(lastChild.rowID, summaryRows);
                         }
-                        summaryRows.push(summaries);
+                        summaryRows.unshift(summaries);
                     }
                 }
             }
