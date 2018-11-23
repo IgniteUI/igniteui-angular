@@ -265,6 +265,19 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     @HostBinding('class.igx-checkbox--disabled')
     @Input() public disabled = false;
     /**
+     * Sets/gets whether the checkbox should disable all css transitions.
+     * Default value is `false`.
+     * ```html
+     * <igx-checkbox [disableTransitions]="true"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let disableTransitions = this.checkbox.disableTransitions;
+     * ```
+     * @memberof IgxCheckboxComponent
+     */
+    @HostBinding('class.igx-checkbox--plain')
+    @Input() public disableTransitions = false;
+    /**
      *@hidden
      */
     public inputId = `${this.id}-input`;
