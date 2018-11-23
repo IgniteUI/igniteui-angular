@@ -247,14 +247,16 @@ export class DataUtil {
         }
         return false;
     }
-    public static addHierarchy<T>(data: T[], state, primaryKey, childKey): T[] {
+    public static addHierarchy<T>(data: T[], state, primaryKey, childKeys: string[]): T[] {
         const result = [];
 
         data.forEach((v) => {
             result.push(v);
-            if (v[childKey] && DataUtil.isExpanded(state, v, primaryKey)) {
-                result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey], key: childKey });
-            }
+            childKeys.forEach((childKey) => {
+                if (v[childKey] && DataUtil.isExpanded(state, v, primaryKey)) {
+                    result.push({rowID: primaryKey ? v[primaryKey] : v,  childGridData: v[childKey], key: childKey });
+                }
+            });
         });
         return result;
     }

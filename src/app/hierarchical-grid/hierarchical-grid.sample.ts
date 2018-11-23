@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { IgxRowIslandComponent } from 'igniteui-angular';
+import { IgxRowIslandComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
@@ -12,6 +12,10 @@ export class HierarchicalGridSampleComponent {
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
+
+    @ViewChild('hGrid')
+    hGrid: IgxHierarchicalGridComponent;
+
 
     constructor() {
         // this.localData.push({ ID: -1, Name: ''});
@@ -37,7 +41,8 @@ export class HierarchicalGridSampleComponent {
                children = this.generateData(count / 2 , currLevel - 1);
            }
            prods.push({
-            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i, 'Col2': i, 'Col3': i, childData: children });
+            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+            'Col2': i, 'Col3': i, childData: children, childData2: children });
         }
         return prods;
     }
@@ -48,5 +53,15 @@ export class HierarchicalGridSampleComponent {
 
     setterBindingChange() {
         this.isRowSelectable = !this.isRowSelectable;
+    }
+
+    testApis() {
+        console.log(this.hGrid.getChild(this.localData[0], 'childData'));
+        console.log(this.hGrid.getChildren());
+        console.log(this.hGrid.getRowIsland('childData', 1));
+        console.log(this.hGrid.getRowIslands());
+
+        console.log(this.layout1.getGrids());
+
     }
 }

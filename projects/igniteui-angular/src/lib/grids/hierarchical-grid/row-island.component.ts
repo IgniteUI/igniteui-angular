@@ -87,12 +87,11 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
             return colsArray.indexOf(item) === -1;
         });
         this.childColumns.reset(topCols);
-        console.log('reset layout:');
-        console.log(topCols);
     }
     ngOnInit() {
     }
     ngAfterViewInit() {
+        console.log('rowIsland width ID: ' + this.id + ' registered');
         this.hgridAPI.registerLayout(this);
     }
     ngOnChanges(changes) {
@@ -103,6 +102,11 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     }
 
     reflow() {}
+
+    getGrids() {
+        return this.hgridAPI.getChildGridsForRowIsland(this.id);
+    }
+
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,

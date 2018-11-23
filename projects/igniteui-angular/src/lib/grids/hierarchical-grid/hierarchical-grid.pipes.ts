@@ -20,15 +20,15 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         state = [],
         id: string,
         primaryKey: any,
-        childKey: string,
+        childKeys: string[],
         pipeTrigger: number
         ): IGroupByResult {
-        if (!childKey) {
+        if (childKeys.length === 0) {
             return collection;
         }
         const result: IGroupByResult = {
-            data: DataUtil.addHierarchy(cloneArray(collection.data), state, primaryKey, childKey),
-            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state, primaryKey, childKey)
+            data: DataUtil.addHierarchy(cloneArray(collection.data), state, primaryKey, childKeys),
+            metadata: DataUtil.addHierarchy(cloneArray(collection.metadata), state, primaryKey, childKeys)
         };
         return result;
     }

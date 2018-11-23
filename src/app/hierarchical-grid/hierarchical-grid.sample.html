@@ -1,8 +1,10 @@
-<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'">
+<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
         <igx-column-group header="Information">
                 <igx-column field="ChildLevels"></igx-column>
                 <igx-column field="ProductName"></igx-column>
         </igx-column-group>
+    <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
+    </igx-row-island>
     <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1>
             <igx-column-group header="Information2">
                     <igx-column field="ChildLevels"></igx-column>
@@ -24,3 +26,4 @@
 </igx-hierarchical-grid>
 <button (click)='setterBindingChange()'>Set rowSelectable via binding</button>
 <button (click)='setterChange()'>Set rowSelectable via setter on 1st layout</button>
+<button (click)='testApis()'>Test APis</button>

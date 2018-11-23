@@ -155,8 +155,30 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         };
     }
 
-    public get childLayoutKey() {
-        return this.childLayoutList.length > 0 ? this.childLayoutList.first.key : null;
+    public get childLayoutKeys() {
+        const keys = this.childLayoutList.map((item) => item.key);
+        return keys;
+    }
+
+    public getRowIsland(key: string, level?: number) {
+        const rowIsland = this.allLayoutList.find((ri) => {
+            return ri.key === key && (level === null || level === undefined || ri.level === level);
+        });
+        return rowIsland;
+    }
+
+
+    public getRowIslands() {
+        return this.allLayoutList.toArray();
+    }
+
+    getChild(rowID: string|object, layoutKey: string) {
+        const layoutID = this.childLayoutList.find(x => x.key === layoutKey).id;
+        return this.hgridAPI.getChildGrid(rowID, layoutID);
+    }
+
+    getChildren() {
+        return this.hgridAPI.getChildGrids();
     }
 
     /**
@@ -192,9 +214,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const cachedData = this._childGridTemplates.get(key);
             cachedData.owner = args.owner;
 
-            const childGrid = this.hgridAPI.getChildGrid(key);
-            childGrid.updateScrollPosition();
-            let childGrids = childGrid.hgridAPI.getChildGrids();
+            let childGrids = this.hgridAPI.getChildGrids();
             while (childGrids.length > 0) {
                 let children = [];
                 childGrids.forEach((grid) => {
