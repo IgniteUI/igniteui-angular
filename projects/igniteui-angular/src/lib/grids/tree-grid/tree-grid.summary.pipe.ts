@@ -38,13 +38,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             recordsWithSummary.push(record);
 
             if (record.children && record.children.length > 0 && record.expanded) {
-                // TODO Call the SummaryService to get the summaries
-                // const childData = record.children.map(r => r.data);
-                // const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
-                const summaries = new Map<string, IgxSummaryResult[]>();
-                const summaryResults: IgxSummaryResult[] = [];
-                summaryResults.push({key: 'count', label: 'Count', summaryResult: 20 });
-                summaries.set('ID', summaryResults);
+                const childData = record.children.map(r => r.data);
+                const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
 
                 if (summaries) {
                     if (summaryPosition === GridSummaryPosition.top) {
