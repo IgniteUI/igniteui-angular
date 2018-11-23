@@ -964,12 +964,8 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             let hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
             expect(hasScrollbar).toBeFalsy();
-            fixture.componentInstance.overlay.onOpening.subscribe(e => {
-                fixture.detectChanges();
-            });
             fixture.componentInstance.overlay.show(SimpleBigSizeComponent);
             tick();
-            fixture.componentInstance.overlay.onOpening.unsubscribe();
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             const overlayWrapper = overlayDiv.children[0];
             const componentEl = overlayWrapper.children[0].children[0].lastElementChild; // Wrapped in 'NG-COMPONENT'
@@ -1718,8 +1714,10 @@ describe('igxOverlay', () => {
                     closeOnOutsideClick: false
                 };
                 fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.detectChanges();
                 tick();
                 fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                fix.detectChanges();
                 tick();
                 const buttonRect = button.getBoundingClientRect();
                 const overlayWrapper_1 = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
@@ -2012,9 +2010,6 @@ describe('igxOverlay', () => {
                 declarations: DIRECTIVE_COMPONENTS
             });
         }));
-        afterAll(async(() => {
-            TestBed.resetTestingModule();
-        }));
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
         it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync( async () => {
@@ -2240,9 +2235,9 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1].lastElementChild as HTMLElement; // wrapped in NG-COMPONENT
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
@@ -2557,6 +2552,9 @@ describe('igxOverlay', () => {
 
     });
     describe('Integration tests p3 (IgniteUI components): ', () => {
+        beforeAll(() => {
+            TestBed.resetTestingModule();
+        });
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
@@ -2602,11 +2600,18 @@ describe('igxOverlay', () => {
     });
 });
 @Component({
+    // tslint:disable-next-line:component-selector
+    selector: `simple-dynamic-component`,
     template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
 })
 export class SimpleDynamicComponent {
     @HostBinding('style.display')
     public hostDisplay = 'block';
+    @HostBinding('style.position')
+    public hostPosition = 'absolute';
+    @HostBinding('style.width')
+    @HostBinding('style.height')
+    public hostDimenstions = '100px';
 }
 
 @Component({
@@ -2625,6 +2630,12 @@ export class SimpleRefComponent {
 export class SimpleBigSizeComponent {
     @HostBinding('style.display')
     public hostDisplay = 'block';
+    @HostBinding('style.position')
+    public hostPosition = 'absolute';
+    @HostBinding('style.height')
+    public hostHeight = '1000px';
+    @HostBinding('style.width')
+    public hostWidth = '3000px';
 }
 
 @Component({

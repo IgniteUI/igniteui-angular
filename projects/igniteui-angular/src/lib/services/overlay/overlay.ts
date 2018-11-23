@@ -159,6 +159,9 @@ export class IgxOverlayService implements OnDestroy {
             info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
             this.moveElementToOverlay(info);
+            if (info.componentRef) {
+                info.componentRef.changeDetectorRef.detectChanges();
+            }
             this.updateSize(info);
             this._overlayInfos.push(info);
 
