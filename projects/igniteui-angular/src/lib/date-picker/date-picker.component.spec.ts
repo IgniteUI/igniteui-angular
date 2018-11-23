@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -62,7 +62,7 @@ describe('IgxDatePicker', () => {
             expect(domDatePicker.id).toBe('customDatePicker');
         });
 
-        it('Datepicker open/close event', fakeAsync(() => {
+        it('Datepicker open/close event', async() => {
             const dom = fixture.debugElement;
 
             const target = dom.query(By.css('.igx-date-picker__input-date'));
@@ -71,17 +71,18 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onClose, 'emit');
 
             target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-            tick();
+            fixture.detectChanges();
+            await wait();
 
             expect(datePicker.onOpen.emit).toHaveBeenCalled();
             expect(datePicker.onOpen.emit).toHaveBeenCalledWith(datePicker);
 
             const overlay = dom.query(By.css('.igx-dialog'));
             overlay.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-            tick(350); // destroy timeout...
+            await wait(350); // destroy timeout...
             expect(datePicker.onClose.emit).toHaveBeenCalled();
             expect(datePicker.onClose.emit).toHaveBeenCalledWith(datePicker);
-        }));
+        });
 
         it('Datepicker onSelection event and selectDate method propagation', () => {
             spyOn(datePicker.onSelection, 'emit');
@@ -330,6 +331,22 @@ describe('IgxDatePicker', () => {
         expect(datePicker.value.getMinutes()).toBe(date.getMinutes());
         expect(datePicker.value.getSeconds()).toBe(date.getSeconds());
         expect(datePicker.value.getMilliseconds()).toBe(date.getMilliseconds());
+    });
+
+    it('Should focus the today date', async() => {
+        const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+        const datePicker = fixture.componentInstance.datePicker;
+        fixture.detectChanges();
+        const dom = fixture.debugElement;
+
+        const target = dom.query(By.css('.igx-date-picker__input-date'));
+
+        target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        fixture.detectChanges();
+        await wait();
+
+        const todayDate = datePicker.calendar.dates.find(d => d.isToday);
+        expect(document.activeElement).toEqual(todayDate.nativeElement);
     });
 
     describe('EditorProvider', () => {
