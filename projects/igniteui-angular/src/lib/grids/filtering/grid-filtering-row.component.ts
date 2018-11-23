@@ -286,7 +286,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Returns the translated condition name for a given value.
      */
     public translateCondition(value: string): string {
-        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`];
+        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     /**

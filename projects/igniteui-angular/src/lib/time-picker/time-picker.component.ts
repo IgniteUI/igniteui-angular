@@ -33,6 +33,7 @@ import {
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
+import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -129,13 +130,20 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     public disabled = false;
 
     /**
+     * An @Input property that sets the resource strings.
+     * By default it uses EN resources.
+    */
+    @Input()
+    public resourceStrings: ITimePickerResourceStrings = TimePickerResourceStringsEN;
+
+    /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
      * ```html
      * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
-    public okButtonLabel = 'OK';
+    public okButtonLabel = this.resourceStrings.igx_time_picker_ok;
 
     /**
      * An @Input property that renders cancel button with custom text.
@@ -145,7 +153,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * ```
      */
     @Input()
-    public cancelButtonLabel = 'Cancel';
+    public cancelButtonLabel = this.resourceStrings.igx_time_picker_cancel;
 
     /**
      * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>

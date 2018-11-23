@@ -1,10 +1,14 @@
-import { IGridResourceStrings, GridResourcesStringsEN } from './grid-resources';
-import { ITimePickerResourceStrings, TimePickerResourcesStringsEN } from './time-picker-resources';
-import { ICalendarResourceStrings, CalendarResourcesStringsEN } from './calendar-resources';
+import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
+import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
 
-export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings {}
+export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings {}
 
 
-export const DefaultResourceStrings = {
-    strings: Object.assign({}, GridResourcesStringsEN, TimePickerResourcesStringsEN, CalendarResourcesStringsEN)
+const CurrentResourceStrings = {
+    ...GridResourceStringsEN,
+    ...TimePickerResourceStringsEN
 };
+
+export function Changei18n(resourceStrings: IResourceStrings) {
+    Object.assign(CurrentResourceStrings, resourceStrings);
+}

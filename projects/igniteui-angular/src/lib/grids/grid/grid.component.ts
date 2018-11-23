@@ -318,7 +318,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+    public dropAreaMessage = this.resourceStrings.igx_grid_groupByArea_message;
 
     /**
      * An @Input property that sets the template that will be rendered as a GroupBy drop area.
