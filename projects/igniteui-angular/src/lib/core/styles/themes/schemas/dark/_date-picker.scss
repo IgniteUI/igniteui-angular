@@ -1,0 +1,14 @@
+@import '../light/date-picker';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark date picker schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-date-picker
+/// @see $default-palette
+$_dark-date-picker: extend($_light-date-picker, ());

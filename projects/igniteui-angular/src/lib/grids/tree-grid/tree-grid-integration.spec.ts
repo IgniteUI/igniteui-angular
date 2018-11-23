@@ -161,7 +161,7 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('(UI) should autosize tree-column', () => {
-            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
 
@@ -272,7 +272,7 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('(UI) should autosize tree-column', () => {
-            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
 

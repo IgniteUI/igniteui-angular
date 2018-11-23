@@ -158,7 +158,8 @@ export class TreeGridFunctions {
      * Verifies that the specified column is the tree column, that contains the tree cells.
     */
     public static verifyTreeColumn(fix, expectedTreeColumnKey, expectedColumnsCount) {
-        const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey);
+        const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey).parent;
+
         const treeCells = TreeGridFunctions.getTreeCells(fix);
         const rows = TreeGridFunctions.getAllRows(fix);
 
