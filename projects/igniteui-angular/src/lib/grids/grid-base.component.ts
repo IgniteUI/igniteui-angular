@@ -151,6 +151,12 @@ export enum GridSummaryPosition {
     bottom = 'bottom'
 }
 
+export enum GridSummaryCalculationMode {
+    rootLevelOnly = 'rootLevelOnly',
+    childLevelsOnly = 'childLevelsOnly',
+    rootAndChildLevels = 'rootAndChildLevels'
+}
+
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 
     /**
@@ -693,7 +699,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```typescript
      *  let filtering = this.grid.allowFiltering;
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     @Input()
     get allowFiltering() {
@@ -706,7 +712,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
@@ -736,10 +742,37 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="localData" summaryPosition="top" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
+	 * @memberof IgxGridBaseComponent
      */
     set summaryPosition(value) {
         this._summaryPosition = value;
+        if (this.gridAPI.get(this.id)) {
+            this.markForCheck();
+        }
+    }
+
+    /**
+     * Returns the summary calculation mode.
+     * ```typescript
+     *  let summaryCalculationMode = this.grid.summaryCalculationMode;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get summaryCalculationMode() {
+        return this._summaryCalculationMode;
+    }
+
+    /**
+     * Sets summary calculation mode.
+     * By default it is rootAndChildLevels which means the summaries are calculated for the root level and each child level.
+     * ```html
+     * <igx-grid #grid [data]="localData" summaryCalculationMode="rootLevelOnly" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set summaryCalculationMode(value) {
+        this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
             this.markForCheck();
         }
@@ -2019,6 +2052,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _defaultTargetRecordNumber = 10;
 
     private _summaryPosition = GridSummaryPosition.bottom;
+    private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
         horizontalDirection: HorizontalAlignment.Left,
