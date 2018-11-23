@@ -27,6 +27,7 @@
             [(ngModel)]="value"
             [type]="type"
             [readonly]="isUnaryCondition"
+            (click)="onInputClick()"
             (keydown)="onInputKeyDown($event)"/>
             <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
