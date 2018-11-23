@@ -78,7 +78,8 @@ describe('IgxGrid - Cell component', () => {
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
                 ConditionalCellStyleTestComponent,
-                ColumnEditablePropertyTestComponent
+                ColumnEditablePropertyTestComponent,
+                GridColumnWidthsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -851,6 +852,33 @@ describe('IgxGrid - Cell component', () => {
         });
     }));
 
+    it('should not make last column smaller when vertical scrollbar is on the right of last cell', () => {
+        GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
+        const fix = TestBed.createComponent(GridColumnWidthsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+         const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+        lastColumnCells.forEach(function (item) {
+            expect(item.width).toEqual('30px');
+        });
+    });
+
+    it('should make last column smaller when vertical scrollbar is on the left of last cell', async () => {
+        GridColumnWidthsComponent.COLUMN_WIDTH = '500px';
+        const fix = TestBed.createComponent(GridColumnWidthsComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.instance;
+         const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+        scrollbar.scrollLeft = 10000;
+        fix.detectChanges();
+         await wait(100);
+         const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+        fix.detectChanges();
+        lastColumnCells.forEach(function (item) {
+            expect(item.width).toEqual('482px');
+        });
+    });
+
     xit('keyboard navigation - should allow navigating down in virtualized grid.', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
@@ -966,7 +994,7 @@ describe('IgxGrid - Cell component', () => {
         expect(displayContainer.parentElement.scrollTop).toEqual(0);
         expect(fix.componentInstance.selectedCell.value).toEqual(40);
         expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
-        });
+    });
 
     it('keyboard navigation - should scroll into view the not fully visible cells when navigating up', async() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
@@ -1272,7 +1300,7 @@ export class VirtualGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    public gridWidth = '800px';
+    public gridWidth = '700px';
     public gridHeight = '300px';
     public data = [];
     public cols = [
@@ -1502,4 +1530,42 @@ export class ColumnEditablePropertyTestComponent {
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
         { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid #grid
+            [data]="data"
+            [primaryKey]="'0'"
+            [height]="'300px'">
+            <igx-column *ngFor="let column of columns;"
+                        [field]="column.field"
+                        [width]="column.width">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GridColumnWidthsComponent {
+    public static COLUMN_WIDTH;
+     @ViewChild('grid', { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+     public data;
+     public columns;
+     private columnsLenght: Number = 4;
+     constructor() {
+        const mydata = [];
+        const mycolumns = [];
+        for (let i = 0; i < 10; i++) {
+            const record = {};
+            for (let j = 0; j < this.columnsLenght; j++) {
+                record['' + j] = j + i;
+            }
+            mydata.push(record);
+            this.data = mydata;
+        }
+         for (let i = 0; i < this.columnsLenght; i++) {
+            mycolumns.push({ field: '' + i, width: GridColumnWidthsComponent.COLUMN_WIDTH });
+        }
+         this.columns = mycolumns;
+    }
 }
