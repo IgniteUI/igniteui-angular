@@ -2258,10 +2258,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
-            this._horizontalForOfs = list.toArray()
-                .filter(item => item.element.nativeElement.parentElement !== null)
-                .map(row => row.virtDirRow)
+            this._horizontalForOfs = this.combineForOfCollections(list.toArray()
+                .filter(item => item.element.nativeElement.parentElement !== null), this.summaryRowList)
             );
+        this.summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
+            this._horizontalForOfs - this.combineForOfCollections (this._dataRowList, summaryList.toArray()
+            .filter(item => item.element.nativeElement.parentElement !== null)));
 
         this.zone.runOutsideAngular(() =>
             this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
@@ -2270,9 +2272,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() =>
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
         );
-        this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
+        this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this.summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+    }
+
+    private combineForOfCollections(dataList, summaryList) {
+        return dataList.map(row => row.virtDirRow).concat(summaryList.map(row => row.virtDirRow));
+
     }
 
     /**

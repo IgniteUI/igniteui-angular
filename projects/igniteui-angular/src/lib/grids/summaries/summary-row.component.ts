@@ -1,9 +1,11 @@
-import { Component, Input, ViewChild, ElementRef, HostBinding } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
+import { Component, Input, ViewChildren, QueryList, HostBinding, ViewChild, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
+import { IgxSummaryCellComponent } from './summary-cell.component';
+import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
-import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
+
 
 @Component({
     selector: 'igx-grid-summary-row',
@@ -24,6 +26,9 @@ export class IgxSummaryRowComponent {
     get dataRowIndex() {
         return this.index;
     }
+
+    @ViewChildren(IgxSummaryCellComponent, { read: IgxSummaryCellComponent })
+    public summaryCells: QueryList<IgxSummaryCellComponent>;
 
     /**
      * @hidden

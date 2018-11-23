@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostBinding } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 
 @Component({
@@ -12,4 +12,7 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public columnDatatype = 'string';
+
+    @HostBinding('style.min-height.px')
+    h = 32;
 }
