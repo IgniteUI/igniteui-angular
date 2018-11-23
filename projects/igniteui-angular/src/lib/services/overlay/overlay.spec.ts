@@ -4,7 +4,8 @@ import {
     Inject,
     NgModule,
     ViewChild,
-    ComponentRef
+    ComponentRef,
+    HostBinding
 } from '@angular/core';
 import { async as asyncWrapper, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,6 +33,9 @@ import { scaleInVerTop, scaleOutVerTop } from 'projects/igniteui-angular/src/lib
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/index';
+import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -872,7 +876,7 @@ describe('igxOverlay', () => {
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             const overlayWrapper = overlayDiv.children[0];
             const content = overlayWrapper.firstChild;
-            const componentEl = content.lastChild;
+            const componentEl = content.lastChild.lastChild; // wrapped in 'NG-COMPONENT'
 
             expect(overlayWrapper.nodeName).toEqual('DIV');
             expect(overlayWrapper.firstChild.nodeName).toEqual('DIV');
@@ -960,11 +964,15 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             let hasScrollbar = document.body.scrollHeight > document.body.clientHeight;
             expect(hasScrollbar).toBeFalsy();
+            fixture.componentInstance.overlay.onOpening.subscribe(e => {
+                fixture.detectChanges();
+            });
             fixture.componentInstance.overlay.show(SimpleBigSizeComponent);
             tick();
+            fixture.componentInstance.overlay.onOpening.unsubscribe();
             const overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
             const overlayWrapper = overlayDiv.children[0];
-            const componentEl = overlayWrapper.children[0].children[0];
+            const componentEl = overlayWrapper.children[0].children[0].lastElementChild; // Wrapped in 'NG-COMPONENT'
             const wrapperRect = overlayWrapper.getBoundingClientRect();
             const componentRect = componentEl.getBoundingClientRect();
 
@@ -1077,7 +1085,7 @@ describe('igxOverlay', () => {
             tick();
             const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER)[0];
             const content = overlayWrapper.firstChild;
-            const componentEl = content.lastChild;
+            const componentEl = content.lastChild.lastChild; // wrapped in 'NG-COMPONENT'
             expect(overlayWrapper.nodeName).toEqual('DIV');
             expect(overlayWrapper.firstChild.nodeName).toEqual('DIV');
             expect(componentEl.nodeName).toEqual('DIV');
@@ -1449,7 +1457,7 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1];
+            const wrapperContent = wrappers[wrappers.length - 1].lastElementChild; // wrapped in NG-COMPONENT
             expect(wrapperContent.children.length).toEqual(1);
             expect(wrapperContent.lastElementChild.getAttribute('style'))
                 .toEqual('position: absolute; width:100px; height: 100px; background-color: red');
@@ -1472,13 +1480,13 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapped in NG-COMPONENT
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.clientWidth;
-            const expectedTop = buttonTop - wrapperContent.lastElementChild.clientHeight;
+            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth;
+            const expectedTop = buttonTop - wrapperContent.lastElementChild.lastElementChild.clientHeight;
             const wrapperLeft = wrapperContent.offsetLeft;
             const wrapperTop = wrapperContent.offsetTop;
             expect(wrapperTop).toEqual(expectedTop);
@@ -2004,6 +2012,9 @@ describe('igxOverlay', () => {
                 declarations: DIRECTIVE_COMPONENTS
             });
         }));
+        afterAll(async(() => {
+            TestBed.resetTestingModule();
+        }));
         // If adding a component near the visible window borders(left,right,up,down)
         // it should be partially hidden and based on scroll strategy:
         it('Should not allow scrolling with scroll strategy is not passed.', fakeAsync( async () => {
@@ -2135,7 +2146,7 @@ describe('igxOverlay', () => {
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
             const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
@@ -2181,12 +2192,12 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement; // wrapper in NG-COMPONENT
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
-            expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+            expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
             const buttonTop = buttonElement.offsetTop;
-            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.clientWidth; // To the left of the button
+            const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth; // To the left of the button
             const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
             const wrapperLeft = wrapperContent.offsetLeft;
             const wrapperTop = wrapperContent.offsetTop;
@@ -2229,7 +2240,7 @@ describe('igxOverlay', () => {
 
             fix.detectChanges();
             const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
-            const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+            const wrapperContent = wrappers[wrappers.length - 1].lastElementChild as HTMLElement; // wrapped in NG-COMPONENT
             const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
             expect(wrapperContent.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
             const buttonLeft = buttonElement.offsetLeft;
@@ -2543,12 +2554,60 @@ describe('igxOverlay', () => {
             tick();
             expect(overlay.hide).toHaveBeenCalledTimes(1);
         }));
+
+    });
+    describe('Integration tests p3 (IgniteUI components): ', () => {
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
+                declarations: DIRECTIVE_COMPONENTS
+            }).compileComponents();
+        }));
+        it(`Should properly be able to render components that have no initial content (IgxCalendar, IgxAvatar)`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(SimpleRefComponent);
+            fixture.detectChanges();
+            const IGX_CALENDAR_CLASS = `.igx-calendar`;
+            const IGX_AVATAR_CLASS = `.igx-avatar`;
+            const IGX_DATEPICKER_CLASS = `.igx-date-picker`;
+            const overlay = fixture.componentInstance.overlay;
+            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(0);
+            expect(document.querySelectorAll((IGX_AVATAR_CLASS)).length).toEqual(0);
+            expect(document.querySelectorAll((IGX_DATEPICKER_CLASS)).length).toEqual(0);
+            overlay.show(IgxCalendarComponent);
+            // EXPECT
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(1);
+            overlay.hideAll();
+            tick();
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_CALENDAR_CLASS)).length).toEqual(0);
+            // Expect
+            overlay.show(IgxAvatarComponent);
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_AVATAR_CLASS)).length).toEqual(1);
+            // Expect
+            overlay.hideAll();
+            tick();
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_AVATAR_CLASS)).length).toEqual(0);
+            overlay.show(IgxDatePickerComponent);
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_DATEPICKER_CLASS)).length).toEqual(1);
+            overlay.hideAll();
+            tick();
+            fixture.detectChanges();
+            expect(document.querySelectorAll((IGX_DATEPICKER_CLASS)).length).toEqual(0);
+            // Expect
+        }));
     });
 });
 @Component({
     template: '<div style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
 })
-export class SimpleDynamicComponent { }
+export class SimpleDynamicComponent {
+    @HostBinding('style.display')
+    public hostDisplay = 'block';
+}
 
 @Component({
     template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
@@ -2563,7 +2622,10 @@ export class SimpleRefComponent {
 @Component({
     template: '<div style=\'position: absolute; width:3000px; height: 1000px; background-color: red\'></div>'
 })
-export class SimpleBigSizeComponent { }
+export class SimpleBigSizeComponent {
+    @HostBinding('style.display')
+    public hostDisplay = 'block';
+}
 
 @Component({
     template: `
@@ -2808,6 +2870,12 @@ const DYNAMIC_COMPONENTS = [
     FlexContainerComponent
 ];
 
+const IgniteUIComponents = [
+    IgxCalendarComponent,
+    IgxAvatarComponent,
+    IgxDatePickerComponent
+];
+
 const DIRECTIVE_COMPONENTS = [
     SimpleDynamicWithDirectiveComponent
 ];
@@ -2819,3 +2887,10 @@ const DIRECTIVE_COMPONENTS = [
     entryComponents: [DYNAMIC_COMPONENTS]
 })
 export class DynamicModule { }
+
+@NgModule({
+    imports: [IgxCalendarModule, IgxAvatarModule, IgxDatePickerModule],
+    entryComponents: IgniteUIComponents
+})
+export class IgxComponentsModule {
+}
