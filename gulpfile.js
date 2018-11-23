@@ -344,7 +344,7 @@ gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'ja');
     const options = SASSDOC.OPTIONS;
     
-    options.lang = 'ja';
+    options.lang = 'jp';
     options.render = argv.render;
     options.jsonDir = pathTranslations;
 
