@@ -1,0 +1,23 @@
+@import '../light/list';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark list schema.
+/// @type {Map}
+/// @property {Color} background [#222] - The list background color.
+/// @property {Color} header-background [#222] - The list header background color.
+/// @property {Color} item-background [#222] - The list item background color.
+/// @property {Color} item-background-active [lighten(#222, 10%)] - The active list item background color.
+/// @requires {function} extend
+/// @requires $_light-list
+/// @see $default-palette
+$_dark-list: extend($_light-list, (
+    background: #222,
+    header-background: #222,
+    item-background: #222,
+    item-background-active: lighten(#222, 10%)
+));

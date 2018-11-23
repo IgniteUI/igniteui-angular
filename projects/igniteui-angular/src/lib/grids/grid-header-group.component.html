@@ -1,0 +1,42 @@
+<ng-container *ngIf="column.columnGroup">
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <div class="igx-grid__thead-title"
+        [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}">{{ column.header }}</div>
+    <div class="igx-grid__thead-group">
+        <ng-container *ngFor="let child of column.children">
+            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
+                                [column]="child"
+                                [gridID]="child.gridID"
+                                [igxColumnMovingDrag]="child"
+                                [attr.droppable]="true"
+                                [igxColumnMovingDrop]="child"
+                                [style.min-width.px]="child.width"
+                                [style.flex-basis.px]="child.width">
+            </igx-grid-header-group>
+        </ng-container>
+    </div>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+</ng-container>
+
+<ng-container *ngIf="!column.columnGroup">
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <igx-grid-header [gridID]="column.gridID" [column]="column"></igx-grid-header>
+    <igx-grid-filtering-cell *ngIf="grid.allowFiltering" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
+    <span *ngIf="!column.columnGroup" class="igx-grid__th-resize-handle"
+            [attr.draggable]="false"
+            [style.cursor]="colResizingService.resizeCursor"
+            (mouseover)="onResizeAreaMouseOver()"
+            (mousedown)="onResizeAreaMouseDown($event)"
+            (dblclick)="autosizeColumnOnDblClick($event)">
+        <div *ngIf="colResizingService.showResizer && colResizingService.column === column"
+            class="igx-grid__th-resize-line"
+            [style.height.px]="colResizingService.resizerHeight"
+            igxResizer
+            [restrictHResizeMax]="colResizingService.restrictResizeMax"
+            [restrictHResizeMin]="colResizingService.restrictResizeMin"
+            [resizeEndTimeout]="colResizingService.resizeEndTimeout"
+            (resizeEnd)="colResizingService.resizeColumn($event)">
+        </div>
+    </span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+</ng-container>
