@@ -6,6 +6,8 @@ export interface IGridResourceStrings {
     igx_grid_filter_row_close?: string;
     igx_grid_filter_row_reset?: string;
     igx_grid_filter_row_placeholder?: string;
+    igx_grid_filter_row_boolean_placeholder?: string;
+    igx_grid_filter_row_date_placeholder?: string;
     igx_grid_filter_operator_and?: string;
     igx_grid_complex_filter?: string;
     igx_grid_filter_operator_or?: string;
@@ -51,6 +53,8 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_row_close: 'Close',
     igx_grid_filter_row_reset: 'Reset',
     igx_grid_filter_row_placeholder: 'Add filter value',
+    igx_grid_filter_row_boolean_placeholder: 'All',
+    igx_grid_filter_row_date_placeholder: 'Pick up date',
     igx_grid_filter_operator_and: 'And',
     igx_grid_filter_operator_or: 'Or',
     igx_grid_complex_filter: 'Complex Filter',
@@ -63,7 +67,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_empty: 'Empty',
     igx_grid_filter_notEmpty: 'Not Empty',
     igx_grid_filter_null: 'Null',
-    igx_grid_filter_notNull: 'NotNull',
+    igx_grid_filter_notNull: 'Not Null',
     igx_grid_filter_before: 'Before',
     igx_grid_filter_after: 'After',
     igx_grid_filter_today: 'Today',
