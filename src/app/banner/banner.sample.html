@@ -1,9 +1,9 @@
 <div class="sample-wrapper">
-    <igx-banner #bannerNoSafeConnection (onOpen)="onOpen($event)" (onClose)="onClose($event)">
+    <igx-banner #bannerNoSafeConnection (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
             Your connections is not private! 
         <igx-icon>lock</igx-icon>
     </igx-banner>
-    <igx-banner #bannerCookies (onOpen)="onOpen($event)" (onClose)="onClose($event)">
+    <igx-banner #bannerCookies (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
         <igx-icon>settings</igx-icon>
         <h5 style="text-align: center">YOUR COOKIES SETTINGS</h5>
         <hr>
