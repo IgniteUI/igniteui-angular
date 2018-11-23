@@ -1,13 +1,13 @@
 <ng-template let-result #defaultHeader>
-    <span class="date-text">{{ getFormattedDate().weekday }},&nbsp;</span>
-    <span class="date-text">{{ getFormattedDate().monthday }}</span>
+    <span>{{ getFormattedDate().weekday }},&nbsp;</span>
+    <span>{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
 <ng-template let-result #defaultMonth>
-    <span (click)="activeViewYear()" class="date__el">
+    <span (click)="activeViewYear()" class="igx-calendar-picker__date">
         {{ formattedMonth(viewDate) }}
     </span>
-    <span (click)="activeViewDecade()" class="date__el">
+    <span (click)="activeViewDecade()" class="igx-calendar-picker__date">
         {{ formattedYear(viewDate) }}
     </span>
 </ng-template>
@@ -21,15 +21,15 @@
 </div>
 
 <div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()" (swipeleft)="nextMonth()">
-    <div class="igx-calendar__body-picker">
-        <div class="prev" (click)="previousMonth()">
+    <div class="igx-calendar-picker">
+        <div class="igx-calendar-picker__prev" (click)="previousMonth()">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div class="date">
+        <div>
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
-        <div class="next" (click)="nextMonth()">
+        <div class="igx-calendar-picker__next" (click)="nextMonth()">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
