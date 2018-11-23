@@ -1971,15 +1971,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected __keydownListener = null;
+    protected _keydownListener = null;
     /**
      * @hidden
      */
-    protected __vScrollListener = null;
+    protected _vScrollListener = null;
     /**
      * @hidden
      */
-    protected __hScrollListener = null;
+    protected _hScrollListener = null;
     /**
      * @hidden
      */
@@ -2159,7 +2159,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
-            this.__keydownListener = this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
+            this._keydownListener = this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2205,13 +2205,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         );
 
         this.zone.runOutsideAngular(() =>
-            this.__vScrollListener = this.verticalScrollContainer
+            this._vScrollListener = this.verticalScrollContainer
                 .getVerticalScroll()
                 .addEventListener('scroll', this.verticalScrollHandler.bind(this))
         );
 
         this.zone.runOutsideAngular(() =>
-            this.__hScrollListener = this.parentVirtDir
+            this._hScrollListener = this.parentVirtDir
                 .getHorizontalScroll()
                 .addEventListener('scroll', this.horizontalScrollHandler.bind(this))
         );
@@ -2226,9 +2226,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
-            this.nativeElement.removeEventListener('keydown', this.__keydownListener);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.__vScrollListener);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.__hScrollListener);
+            this.nativeElement.removeEventListener('keydown', this._keydownListener);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this._hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         });
