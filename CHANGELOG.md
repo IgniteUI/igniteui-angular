@@ -3,8 +3,12 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.1.0
+### Features
 - **New component** `IgxBannerComponent`:
     - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+- `IgxIconModule`:
+    - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
+    - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))

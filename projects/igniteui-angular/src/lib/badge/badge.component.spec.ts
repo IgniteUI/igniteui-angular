@@ -20,7 +20,7 @@ describe('Badge', () => {
                 IgxBadgeComponent,
                 InitBadgeWithIconARIAComponent
             ],
-            imports: [IgxIconModule.forRoot()]
+            imports: [IgxIconModule]
         }).compileComponents();
     }));
 

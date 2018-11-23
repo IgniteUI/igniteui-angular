@@ -21,7 +21,7 @@ describe('Avatar', () => {
                 InitImageAvatarComponent,
                 InitAvatarWithAriaComponent
             ],
-            imports: [IgxIconModule.forRoot()]
+            imports: [IgxIconModule]
         })
             .compileComponents();
     }));

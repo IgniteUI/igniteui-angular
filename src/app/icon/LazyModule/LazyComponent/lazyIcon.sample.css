@@ -1,0 +1,9 @@
+.sample-icons {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.sample-icons igx-icon {
+    flex: 1 0 20%;
+    margin-bottom: 72px;
+}
