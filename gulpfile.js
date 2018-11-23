@@ -9,16 +9,13 @@ const sass = require('gulp-sass');
 const shell = require('gulp-shell');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
-const uglify = require('gulp-uglify');
 const process = require('process');
 const fs = require('fs');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
 const ts = require('gulp-typescript');
 const path = require('path');
-const {
-    spawnSync
-} = require('child_process');
+const EventEmitter = require('events').EventEmitter;
 
 const STYLES = {
     SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
@@ -56,9 +53,14 @@ gulp.task('build-style', () => {
     gulp.src(STYLES.THEMING.SRC)
         .pipe(gulp.dest(STYLES.THEMING.DIST));
 
+    const myEventEmitter = new EventEmitter();
+
     return gulp.src(STYLES.SRC)
         .pipe(sourcemaps.init())
-        .pipe(sass.sync(STYLES.CONFIG).on('error', sass.logError))
+        .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
+            sass.logError.bind(myEventEmitter)(err);
+            myEventEmitter.emit('end');
+        }))
         .pipe(prefixer)
         .pipe(sourcemaps.write(STYLES.MAPS))
         .pipe(gulp.dest(STYLES.DIST))
@@ -153,25 +155,22 @@ gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
             `${TYPEDOC_THEME.SRC}/assets/js/main.js`
         ])
         .pipe(concat('main.js'))
-        // .pipe(uglify({
-        //     mangle: false
-        // }))
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/js/`));
 });
 
 gulp.task('typedoc-theme-ts', () => {
     gulp.src([
-        `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
-    ])
-    .pipe(ts({
-        target: "es5",
-        moduleResolution: 'node',
-        module: 'commonjs'
-    }))
-    .pipe(gulp.dest(TYPEDOC_THEME.DIST));
+            `${TYPEDOC_THEME.SRC}\\assets\\js\\src\\theme.ts`
+        ])
+        .pipe(ts({
+            target: "es5",
+            moduleResolution: 'node',
+            module: 'commonjs'
+        }))
+        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
 });
 
-gulp.task('typedoc-copy-config',() => {
+gulp.task('typedoc-copy-config', () => {
     const themePath = path.normalize("./extras/docs/themes/config.json");
     gulp.src([themePath])
         .pipe(gulp.dest(TYPEDOC_THEME.DIST));
@@ -241,10 +240,10 @@ gulp.task('typedoc-build', [
 
 const TRANSLATIONS_REPO = {
     NAME: 'igniteui-angular-api-i18n',
-    LINK:  `https://github.com/IgniteUI/igniteui-angular-api-i18n`
+    LINK: `https://github.com/IgniteUI/igniteui-angular-api-i18n`
 };
 
-const DOCS_OUTPUT_PATH = 'dist\\igniteui-angular\\docs' 
+const DOCS_OUTPUT_PATH = 'dist\\igniteui-angular\\docs'
 
 const TYPEDOC = {
     EXPORT_JSON_PATH: 'dist\\igniteui-angular\\docs\\typescript-exported',
@@ -264,15 +263,15 @@ gulp.task('typedoc-build:import', ['typedoc-build'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.EXPORT_JSON_PATH}`)
 );
 
-gulp.task('clean-translations:localization:repo', () => { 
-        del.sync(`${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}`)
+gulp.task('clean-translations:localization:repo', () => {
+    del.sync(`${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}`)
 });
 
 gulp.task('create:docs-output-path', () => {
     !fs.existsSync(DOCS_OUTPUT_PATH) && fs.mkdirSync(DOCS_OUTPUT_PATH);
 });
 
-gulp.task('copy-translations:localization:repo', ['clean-translations:localization:repo', 'create:docs-output-path'], 
+gulp.task('copy-translations:localization:repo', ['clean-translations:localization:repo', 'create:docs-output-path'],
     shell.task(`git -C ${DOCS_OUTPUT_PATH} clone ${TRANSLATIONS_REPO.LINK}`)
 );
 
@@ -317,7 +316,7 @@ gulp.task('sassdoc-build:import', () => {
 gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'ja');
     const options = SASSDOC.OPTIONS;
-    
+
     options.lang = 'ja';
     options.render = argv.render;
     options.jsonDir = pathTranslations;
@@ -329,7 +328,7 @@ gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc:clean-docs-dir', 'copy-
 gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'en');
     const options = SASSDOC.OPTIONS;
-    
+
     options.lang = 'en';
     options.render = argv.render;
     options.jsonDir = pathTranslations;
