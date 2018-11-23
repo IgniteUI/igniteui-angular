@@ -32,6 +32,7 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CLASS = '.igx-grid__td';
     const ROW_CLASS = '.igx-grid__tr';
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
@@ -2295,13 +2296,13 @@ describe('IgxGrid Component Tests', () => {
                 column.resizable = true;
                 fix.detectChanges();
 
-                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                const headerResArea = headers[2].nativeElement.children[2];
+                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
+                const headerResArea = headers[2].children[1].nativeElement;
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
                 tick();
                 fix.detectChanges();
 
-                const resizer = headers[2].nativeElement.children[2].children[0];
+                const resizer = headers[2].children[1].children[0].nativeElement;
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
                 tick();
