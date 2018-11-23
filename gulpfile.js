@@ -60,6 +60,7 @@ gulp.task('build-style', () => {
         .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
             sass.logError.bind(myEventEmitter)(err);
             myEventEmitter.emit('end');
+            process.exit(1);
         }))
         .pipe(prefixer)
         .pipe(sourcemaps.write(STYLES.MAPS))
