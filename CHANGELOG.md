@@ -5,6 +5,9 @@ All notable changes for each version of this project will be documented in this 
 ## 6.2.1
 - `igx-drop-down`:
     - Added a new property `maxHeight`, defining the max height of the drop down.
+- `igx-grid`:
+    - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar.
+      The template's context provides two properties: `grid` and `toolbar` referencing respectively the `IgxGridBaseComponent` and the `IgxGridToolbarComponent`.
 - Themes 
     - Introducing schemas for easier bootstrapping of component themes.
     - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
