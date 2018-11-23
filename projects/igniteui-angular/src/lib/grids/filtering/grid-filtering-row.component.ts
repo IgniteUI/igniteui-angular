@@ -206,9 +206,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else if (this.column.dataType === DataType.Date) {
-            return 'Pick up date';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_date_placeholder;
         } else if (this.column.dataType === DataType.Boolean) {
-            return 'All';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_boolean_placeholder;
         } else {
             return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
         }
