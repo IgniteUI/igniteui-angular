@@ -120,7 +120,6 @@ export class IgxOverlayService implements OnDestroy {
     show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
-        debugger;
         if (typeof compOrId === 'string') {
             id = compOrId;
             info = this.getOverlayById(compOrId);

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { InteractionMode } from 'igniteui-angular';
+import { Component, ViewChild } from '@angular/core';
+import { InteractionMode, IgxTimePickerComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -8,12 +8,18 @@ import { InteractionMode } from 'igniteui-angular';
 })
 export class TimePickerSampleComponent {
     max = "19:00";
-    min = "09:00";
+    min = "10:00";
     itemsDelta = { hours: 1, minutes: 15 };
-    format="hh:mm tt";
+    format="H:mm";
     isSpinLoop = true;
     isVertical = false;
     mode = InteractionMode.dropdown;
 
     date = new Date();
+    date1 = new Date();
+
+    @ViewChild('tp', { read: IgxTimePickerComponent })
+    public tp: IgxTimePickerComponent;
+
+
 }

@@ -9,10 +9,11 @@
                                   [promptChar]="promptChar"
                                   [value]="displayValue"
                                   (keydown)="onKeydown($event)"
+                                  (keyup)="onKeyup($event)"
                                   (blur)="onBlur($event)"
                                   (wheel)="spinOnEdit($event)"
                                   [disabled]="disabled"/>
-        <igx-suffix *ngIf="displayValue.length" igxRipple (click)="clear()">
+        <igx-suffix *ngIf="value || isNotEmpty" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
         <igx-suffix igxButton="icon" igxRipple (click)="openDialog()">
@@ -32,7 +33,9 @@
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
 
-<div *ngIf="showContainer" class="igx-time-picker__wrapper" style="width: 320px;" #container>
+<div *ngIf="showContainer" #container
+     [ngStyle]="{'width': isModal ? '320px' : dropdownWidth }"
+     class="igx-time-picker__wrapper">
     <div *ngIf="isModal" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
