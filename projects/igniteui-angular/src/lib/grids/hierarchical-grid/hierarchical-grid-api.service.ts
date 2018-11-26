@@ -31,15 +31,6 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarc
         return allChildren;
     }
 
-    registerChildGridForLayout(layoutID: string, grid: IgxHierarchicalGridComponent) {
-        const grids = this.gridsPerLayout.get(layoutID);
-        if (!grids) {
-            this.gridsPerLayout.set(layoutID, [grid]);
-        } else {
-            grids.push(grid);
-        }
-    }
-
     registerChildGrid(parentRowID: string|object, layoutID: string, grid: IgxHierarchicalGridComponent) {
         let childrenForLayout = this.layoutChildGrids.get(layoutID);
         if (!childrenForLayout) {
@@ -54,6 +45,13 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarc
     }
 
     getChildGridsForRowIsland(id) {
-        return this.gridsPerLayout.get(id);
+        const childrenForLayout = this.layoutChildGrids.get(id);
+        const children = [];
+        if (childrenForLayout) {
+            childrenForLayout.forEach((child) => {
+                children.push(child);
+            });
+        }
+        return children;
     }
 }
