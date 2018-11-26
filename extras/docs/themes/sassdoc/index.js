@@ -26,7 +26,6 @@ const process = require('process');
 const fs = require('fs');
 const path = require('path');
 
-
 themeleon.use({
 
     /**
@@ -55,7 +54,7 @@ const theme = themeleon(__dirname, function (t) {
      * If only json conversion is needed the whole process of documentation rendering has to be stopped.
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, path.join('extras', 'sassdoc')); 
+        return t.convert(t.ctx._data, path.join('extras', 'sassdoc'));
     }
     /**
      * Copy the assets folder from the theme's directory in the
@@ -112,11 +111,19 @@ const theme = themeleon(__dirname, function (t) {
                 return value.substring(0, 3);
             },
             retrieveEnvLink: () => {
-                const lang = t.ctx.lang;
-                const env = process.env.NODE_ENV;
+                let {
+                    NODE_ENV: node,
+                    SASSDOC_LANG: lang
+                } = process.env;
+
+                if (!node || !lang) {
+                    return;
+                }
+
                 const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
-                const config = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
-                return config[lang][env.trim()] ? config[lang][env.trim()].url: '';
+                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                const config = config_file[lang.trim()][node.trim()];
+                return config ? config.url: '';
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {

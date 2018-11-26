@@ -343,8 +343,7 @@ gulp.task('sassdoc-build:import', () => {
 gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'ja');
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
-    
-    options.lang = 'jp';
+
     options.render = argv.render;
     options.json_dir = pathTranslations;
 
@@ -356,7 +355,6 @@ gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc-build', 'sassdoc:clean-
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'en');
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
-    options.lang = 'en';
     options.render = argv.render;
     options.json_dir = pathTranslations;
 

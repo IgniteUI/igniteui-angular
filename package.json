@@ -28,7 +28,7 @@
     "build:typedoc:en:staging": "set NODE_ENV=staging && gulp typedoc-build:doc:en:localization && gulp clean-translations:localization:repo",
     "build:sassdoc:en:production": "set NODE_ENV=production && set SASSDOC_LANG=en && gulp sassdoc-build:doc:en:localizaiton --render true && gulp clean-translations:localization:repo",
     "build:sassdoc:en:staging": "set NODE_ENV=staging && set SASSDOC_LANG=en && gulp sassdoc-build:doc:en:localizaiton --render true && gulp clean-translations:localization:repo",
-    "build:sassdoc:ja:production": "set NODE_ENV=production && set SASSDOC_LANG=jp &&  gulp sassdoc-build:doc:ja:localizaiton --render true && gulp clean-translations:localization:repo",
+    "build:sassdoc:ja:production": "set NODE_ENV=production && set SASSDOC_LANG=jp && gulp sassdoc-build:doc:ja:localizaiton --render true && gulp clean-translations:localization:repo",
     "build:sassdoc:ja:staging": "set NODE_ENV=staging && set SASSDOC_LANG=jp && gulp sassdoc-build:doc:ja:localizaiton --render true && gulp clean-translations:localization:repo",
     "postinstall": "gulp copy-git-hooks"
   },
