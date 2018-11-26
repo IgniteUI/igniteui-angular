@@ -1,12 +1,12 @@
-import { forwardRef, Inject, Pipe, PipeTransform } from '@angular/core';
+import { Inject, Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxComboComponent } from './combo.component';
 import { IFilteringState } from '../data-operations/filtering-state.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 
 
 /**
@@ -17,10 +17,7 @@ import { FilteringExpressionsTree } from '../data-operations/filtering-expressio
 })
 export class IgxComboFilteringPipe implements PipeTransform {
 
-    constructor(
-        @Inject(forwardRef(() => IgxComboComponent))
-        public combo: IgxComboComponent
-    ) { }
+    constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], expressions: IFilteringExpression[],
                      logic: FilteringLogic) {
@@ -74,10 +71,7 @@ export class IgxComboSortingPipe implements PipeTransform {
 })
 export class IgxComboGroupingPipe implements PipeTransform {
 
-    constructor(
-        @Inject(forwardRef(() => IgxComboComponent))
-        public combo: IgxComboComponent
-    ) { }
+    constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
     public transform(collection: any[], groupKey: any) {
         this.combo.filteredData = collection;
