@@ -15,44 +15,9 @@ export class IgxGridSummaryService {
     public removeSummaries(rowID, columnName?) {
         if (this.isTreeGrid) {
             if (this.grid.summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
-                this.removeRootSummaryForColumn(rowID, columnName);
+                this.removeTreeGridRootSummary(rowID, columnName);
             } else {
-                this.removeAllSummariesForColumn(rowID, columnName);
-            }
-        }
-    }
-
-    public removeRootSummaryForColumn(rowID, columnName?) {
-        let row = this.grid.records.get(rowID);
-        while (row.level !== 0) {
-            row = row.parent;
-        }
-        rowID = row.rowID;
-        if (columnName) {
-            if (this.summaryCacheMap.get(rowID)) {
-                this.summaryCacheMap.get(rowID).delete(columnName);
-            }
-        } else {
-            this.summaryCacheMap.delete(rowID);
-        }
-    }
-
-    public removeAllSummariesForColumn(rowID, columnName?) {
-        if (this.isTreeGrid && (this.grid.summaryCalculationMode === GridSummaryCalculationMode.childLevelsOnly
-            || this.grid.summaryCalculationMode === GridSummaryCalculationMode.rootAndChildLevels)) {
-            let row = this.grid.records.get(rowID);
-            row = row.children ? row : row.parent;
-            while (row) {
-                rowID = row.rowID;
-                if (columnName) {
-                    if (this.summaryCacheMap.get(rowID)) {
-                        this.summaryCacheMap.get(rowID).delete(columnName);
-                    }
-                } else {
-                    console.log(rowID);
-                    this.summaryCacheMap.delete(rowID);
-                }
-                row = row.parent;
+                this.removeAllTreeGridSummaries(rowID, columnName);
             }
         }
     }
@@ -72,16 +37,56 @@ export class IgxGridSummaryService {
     }
 
     public calculateSummaries(rowID, data) {
+        if (!this.hasSummarizedColumns) {
+            return;
+        }
         if (!this.summaryCacheMap.get(rowID)) {
             this.summaryCacheMap.set(rowID, new Map<string, IgxSummaryResult[]>());
             this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
                 if (!this.summaryCacheMap.get(rowID).get(column.field)) {
-                        this.summaryCacheMap.get(rowID).set(column.field,
-                            column.summaries.operate(data));
+                    const records = this.isTreeGrid ? data.map(record => record[column.field]) : data;
+                    this.summaryCacheMap.get(rowID).set(column.field,
+                        column.summaries.operate(records));
                 }
             });
         }
         return this.summaryCacheMap.get(rowID);
+    }
+
+    public get hasSummarizedColumns() {
+        const summarizedColumns = this.grid.columnList.filter(col => col.hasSummary);
+        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
+    }
+
+    private removeTreeGridRootSummary(rowID, columnName?) {
+        let row = this.grid.records.get(rowID);
+        while (row) {
+            row = row.parent;
+        }
+        rowID = row.rowID;
+        if (this.summaryCacheMap.get(rowID)) {
+            if (columnName) {
+                this.summaryCacheMap.get(rowID).delete(columnName);
+            } else {
+                this.summaryCacheMap.delete(rowID);
+            }
+        }
+    }
+
+    private removeAllTreeGridSummaries(rowID, columnName?) {
+        let row = this.grid.records.get(rowID);
+        row = row.children ? row : row.parent;
+        while (row) {
+            rowID = row.rowID;
+            if (this.summaryCacheMap.get(rowID)) {
+                if (columnName) {
+                    this.summaryCacheMap.get(rowID).delete(columnName);
+                } else {
+                    this.summaryCacheMap.delete(rowID);
+                }
+            }
+            row = row.parent;
+        }
     }
 
     private get isTreeGrid() {

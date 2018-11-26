@@ -23,10 +23,15 @@ export class IgxSummaryCellComponent {
         return this.column.visibleIndex;
     }
 
+    @HostBinding('style.min-height.px')
+    get minHeight() {
+        return this.column.grid.summaryService.calculateMaxSummaryHeight();
+    }
+
+    @HostBinding('attr.tabindex')
+    public tabindex = 0;
+
     get columnDatatype() {
         return this.column.dataType;
     }
-
-    @HostBinding('style.min-height.px')
-    h = 32;
 }
