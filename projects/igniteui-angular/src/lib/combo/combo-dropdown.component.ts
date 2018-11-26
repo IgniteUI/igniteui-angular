@@ -3,19 +3,20 @@ import {
     ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
-import { IgxComboComponent } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
+import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
+import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { Navigate } from '../drop-down/drop-down.common';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
-    templateUrl: '../drop-down/drop-down.component.html'
+    templateUrl: '../drop-down/drop-down.component.html',
+    providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDestroy {
     private _children: QueryList<IgxDropDownItemBase>;
@@ -25,8 +26,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Inject(forwardRef(() => IgxComboComponent))
-        public combo: IgxComboComponent) {
+        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
         super(elementRef, cdr, selection);
     }
 
