@@ -55,6 +55,7 @@ import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-st
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 
 const appRoutes = [
@@ -291,6 +292,10 @@ const appRoutes = [
     {
         path: 'tooltip',
         component: TooltipSampleComponent
+    },
+    {
+        path: 'gridPercentage',
+        component: GridColumnPercentageWidthsSampleComponent
     }
 ];
 
