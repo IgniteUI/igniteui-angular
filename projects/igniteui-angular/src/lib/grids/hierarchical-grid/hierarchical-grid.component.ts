@@ -161,25 +161,15 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return keys;
     }
 
-    public getRowIsland(key: string, level?: number) {
-        const rowIsland = this.allLayoutList.find((ri) => {
-            return ri.key === key && (level === null || level === undefined || ri.level === level);
-        });
-        return rowIsland;
+    getChildGrid(path: Array<IPathSegment>) {
+        if (!path) {
+            return;
+        }
+        return this.hgridAPI.getChildGrid(path);
     }
 
-
-    public getRowIslands() {
-        return this.allLayoutList.toArray();
-    }
-
-    getChild(rowID: string|object, layoutKey: string) {
-        const layoutID = this.childLayoutList.find(x => x.key === layoutKey).id;
-        return this.hgridAPI.getChildGrid(rowID, layoutID);
-    }
-
-    getChildren() {
-        return this.hgridAPI.getChildGrids();
+    getChildGrids(inDeph?: boolean) {
+        return  this.hgridAPI.getChildGrids(inDeph);
     }
 
     /**
@@ -214,16 +204,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const key = args.context.$implicit.rowID;
             const cachedData = this._childGridTemplates.get(key);
             cachedData.owner = args.owner;
-
-            let childGrids = this.hgridAPI.getChildGrids();
-            while (childGrids.length > 0) {
-                let children = [];
-                childGrids.forEach((grid) => {
-                    children = children.concat(grid.hgridAPI.getChildGrids());
-                    grid.updateScrollPosition();
-                 });
-                 childGrids = children;
-            }
+            const childGrids = this.getChildGrids(true);
+            childGrids.forEach((grid) => grid.updateScrollPosition());
         }
     }
 
@@ -240,8 +222,6 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const topCols = this.columnList.filter((item) => {
                 return colsArray.indexOf(item) === -1;
             });
-            console.log('reset hg:');
-            console.log(topCols);
             this.columnList.reset(topCols);
         }
         super.ngAfterContentInit();
@@ -294,4 +274,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
+}
+export interface IPathSegment {
+    rowID: string | object;
+    rowIslandKey: string;
 }

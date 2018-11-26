@@ -32,7 +32,6 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
             metadata: this.addHierarchy(grid, cloneArray(collection.metadata), state, primaryKey, childKeys)
         };
 
-        console.log(grid.dataInitialized);
         grid.dataInitialized = true;
         return result;
     }

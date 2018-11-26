@@ -1,7 +1,8 @@
 import { GridBaseAPIService } from '../api.service';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxHierarchicalGridComponent, IPathSegment } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
+import { debug } from 'util';
 export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarchicalGridComponent> {
     protected layouts: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected layoutChildGrids:  Map<string, Map<any, IgxHierarchicalGridComponent>> =
@@ -12,30 +13,43 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarc
         this.destroyMap.set(layout.id, new Subject<boolean>());
     }
 
-    getChildGrid(parentRowID: string|object, layoutID: string) {
-        const childrenForLayout = this.layoutChildGrids.get(layoutID);
-        let res;
+    getChildGrid(path: Array<IPathSegment>) {
+        const currPath = path;
+        let grid;
+        const pathElem = currPath.shift();
+        const childrenForLayout = this.layoutChildGrids.get(pathElem.rowIslandKey);
         if (childrenForLayout) {
-            res = childrenForLayout.get(parentRowID);
+            const childGrid = childrenForLayout.get(pathElem.rowID);
+            if (currPath.length === 0) {
+                grid = childGrid;
+            } else {
+                grid = childGrid.hgridAPI.getChildGrid(currPath);
+            }
         }
-        return res;
+        return grid;
     }
 
-    getChildGrids() {
+    getChildGrids(inDepth?: boolean) {
         const allChildren = [];
         this.layoutChildGrids.forEach((layoutMap) => {
             layoutMap.forEach((grid) => {
                 allChildren.push(grid);
+                if (inDepth) {
+                    const children = grid.hgridAPI.getChildGrids(inDepth);
+                    children.forEach((item) => {
+                        allChildren.push(item);
+                    });
+                }
             });
         });
         return allChildren;
     }
 
-    registerChildGrid(parentRowID: string|object, layoutID: string, grid: IgxHierarchicalGridComponent) {
-        let childrenForLayout = this.layoutChildGrids.get(layoutID);
+    registerChildGrid(parentRowID: string|object, layoutKey: string, grid: IgxHierarchicalGridComponent) {
+        let childrenForLayout = this.layoutChildGrids.get(layoutKey);
         if (!childrenForLayout) {
-            this.layoutChildGrids.set(layoutID, new Map<any, IgxHierarchicalGridComponent>());
-            childrenForLayout = this.layoutChildGrids.get(layoutID);
+            this.layoutChildGrids.set(layoutKey, new Map<any, IgxHierarchicalGridComponent>());
+            childrenForLayout = this.layoutChildGrids.get(layoutKey);
         }
         childrenForLayout.set(parentRowID, grid);
     }
@@ -44,8 +58,8 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarc
       return this.layouts.get(id);
     }
 
-    getChildGridsForRowIsland(id) {
-        const childrenForLayout = this.layoutChildGrids.get(id);
+    getChildGridsForRowIsland(layoutKey) {
+        const childrenForLayout = this.layoutChildGrids.get(layoutKey);
         const children = [];
         if (childrenForLayout) {
             childrenForLayout.forEach((child) => {

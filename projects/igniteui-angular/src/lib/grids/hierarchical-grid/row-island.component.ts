@@ -106,7 +106,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     reflow() {}
 
     getGrids() {
-        return this.hgridAPI.getChildGridsForRowIsland(this.id);
+        return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 
     constructor(

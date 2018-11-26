@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { IgxRowIslandComponent, IgxHierarchicalGridComponent } from 'igniteui-angular';
+import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
@@ -56,11 +56,17 @@ export class HierarchicalGridSampleComponent {
     }
 
     testApis() {
-        console.log(this.hGrid.getChild(this.localData[0], 'childData'));
-        console.log(this.hGrid.getChildren());
-        console.log(this.hGrid.getRowIsland('childData', 1));
-        console.log(this.hGrid.getRowIslands());
-
+        const path  = new Array<IPathSegment>();
+        path.push(
+            {rowID: this.localData[0], rowIslandKey: 'childData'},
+            {rowID: this.localData[0].childData[0], rowIslandKey: 'childData'});
+        console.log('Child by path:');
+        console.log(this.hGrid.getChildGrid(path));
+        console.log('All children in depth:');
+        console.log(this.hGrid.getChildGrids(true));
+        console.log('Direct Children of hgrid:');
+        console.log(this.hGrid.getChildGrids());
+        console.log('Children of row island 1:');
         console.log(this.layout1.getGrids());
 
     }
