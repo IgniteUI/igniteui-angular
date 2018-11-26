@@ -2179,7 +2179,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
-            this._keydownListener = this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
+            this._keydownListener = this.keydownHandler.bind(this);
+            this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2224,17 +2225,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 .map(row => row.virtDirRow)
         );
 
-        this.zone.runOutsideAngular(() =>
-            this._vScrollListener = this.verticalScrollContainer
-                .getVerticalScroll()
-                .addEventListener('scroll', this.verticalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._vScrollListener = this.verticalScrollHandler.bind(this);
+            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+        });
 
-        this.zone.runOutsideAngular(() =>
-            this._hScrollListener = this.parentVirtDir
-                .getHorizontalScroll()
-                .addEventListener('scroll', this.horizontalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._hScrollListener = this.horizontalScrollHandler.bind(this);
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
+        });
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
