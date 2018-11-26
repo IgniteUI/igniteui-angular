@@ -36,6 +36,7 @@ import { Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 @Injectable()
@@ -148,7 +149,7 @@ export class IgxTimePickerComponent implements
      * By default it uses EN resources.
     */
     @Input()
-    public resourceStrings: ITimePickerResourceStrings = TimePickerResourceStringsEN;
+    public resourceStrings: ITimePickerResourceStrings = CurrentResourceStrings.TimePickerResStrings;
 
     /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.

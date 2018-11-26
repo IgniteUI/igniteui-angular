@@ -62,7 +62,8 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
-import { IGridResourceStrings, GridResourceStringsEN } from '../core/i18n/grid-resources';
+import { IGridResourceStrings } from '../core/i18n/grid-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -164,7 +165,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * By default it uses EN resources.
     */
     @Input()
-    public resourceStrings: IGridResourceStrings = GridResourceStringsEN;
+    public resourceStrings: IGridResourceStrings = CurrentResourceStrings.GridResStrings;
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
