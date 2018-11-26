@@ -19,6 +19,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 import { IgxListItemComponent } from './list-item.component';
 import {
+    IgxListBase,
     IgxDataLoadingTemplateDirective,
     IgxEmptyListTemplateDirective,
     IgxListPanState,
@@ -63,9 +64,10 @@ export interface IListItemPanningEventArgs {
  */
 @Component({
     selector: 'igx-list',
-    templateUrl: 'list.component.html'
+    templateUrl: 'list.component.html',
+    providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
 })
-export class IgxListComponent {
+export class IgxListComponent implements IgxListBase {
 
     constructor(public element: ElementRef) {
     }

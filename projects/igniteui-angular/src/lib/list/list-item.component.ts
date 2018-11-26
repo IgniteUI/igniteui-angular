@@ -3,10 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
-    Inject,
     Input,
     Renderer2,
     ViewChild
@@ -14,11 +12,11 @@ import {
 
 import {
     IgxListPanState,
-    IListChild
+    IListChild,
+    IgxListBase
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
-import { IgxListComponent } from './list.component';
 
 // ====================== ITEM ================================
 // The `<igx-item>` component is a container intended for row items in
@@ -60,8 +58,7 @@ export class IgxListItemComponent implements IListChild {
     public rightPanningTemplateElement;
 
     constructor(
-        @Inject(forwardRef(() => IgxListComponent))
-        public list: IgxListComponent,
+        public list: IgxListBase,
         private elementRef: ElementRef,
         private _renderer: Renderer2) {
     }
