@@ -160,6 +160,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public data: any[];
 
     /**
+     * An @Input property that sets the resource strings.
+     * By default it uses EN resources.
+    */
+    @Input()
+    public resourceStrings: IGridResourceStrings = GridResourceStringsEN;
+
+    /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
      * The default value is false.
      * ```html
@@ -620,7 +627,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyGridMessage = 'Grid has no data.';
+    public emptyGridMessage = this.resourceStrings.igx_grid_emptyGrid_message;
 
     /**
      * An @Input property that sets the message displayed when there are no records and the grid is filtered.
@@ -630,7 +637,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyFilteredGridMessage = 'No records found.';
+    public emptyFilteredGridMessage = this.resourceStrings.igx_grid_emptyFilteredGrid_message;
 
     /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
@@ -713,13 +720,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
     }
-
-    /**
-     * An @Input property that sets the resource strings.
-     * By default it uses EN resources.
-    */
-    @Input()
-    public resourceStrings: IGridResourceStrings = GridResourceStringsEN;
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
