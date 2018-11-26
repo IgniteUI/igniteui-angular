@@ -234,18 +234,27 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     }
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
-        if (!this.gridAPI.get(id).paging) {
+        const grid: IgxTreeGridComponent = this.gridAPI.get(id) as IgxTreeGridComponent;
+        if (!grid.paging) {
             return collection;
         }
 
+        const len = collection.length;
+        let totalPages = 1;
+
+        if (collection.length >= 0) {
+            totalPages = Math.ceil(len / perPage);
+        }
+
         const state = {
-            index: page,
+            index: (page >= totalPages - 1) ? totalPages - 1 : page,
             recordsPerPage: perPage
         };
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state);
+        grid.pagingState = state;
+        (grid as any)._page = state.index;
 
-        this.gridAPI.get(id).pagingState = state;
         return result;
     }
 }
