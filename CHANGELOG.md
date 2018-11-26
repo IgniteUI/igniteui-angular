@@ -4,6 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
+- Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
 ## 6.2.1
 ### Features
