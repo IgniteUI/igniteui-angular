@@ -26,6 +26,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { HammerGestureConfig } from '@angular/platform-browser';
 
 /**
  * @hidden
@@ -615,4 +616,41 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
         contentElement.style.width = target.clientWidth + 'px';
     }
+}
+
+/**
+ *@hidden
+ */
+export class GridHammerConfig extends HammerGestureConfig {
+    constructor() {
+        super();
+
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window['MSStream']) {
+            this.events = ['tap', 'doubletap'];
+        }
+    }
+
+    events = [];
+    options: HammerOptions = {
+        recognizers: [
+            [ Hammer.Tap ],
+            [ Hammer.Tap, { event: 'doubletap', taps: 2, interval: 450 } ]
+        ],
+        inputClass: Hammer.TouchInput
+    };
+
+    buildHammer(element: HTMLElement) {
+        const mc = new Hammer(element, this.options);
+
+
+        Object.keys(this.overrides).forEach(eventName => {
+            mc.get(eventName).set(this.overrides[eventName]);
+        });
+
+        mc.get('doubletap').recognizeWith('tap');
+        mc.get('tap').requireFailure('doubletap');
+        mc.get('doubletap').dropRequireFailure('tap');
+
+        return mc;
+      }
 }
