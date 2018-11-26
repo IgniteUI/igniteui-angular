@@ -1621,7 +1621,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const grid = fix.componentInstance.grid;
             grid.width = '1500px';
             fix.detectChanges();
-            
+
             const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
             const filteringChips = fix.debugElement.queryAll(By.css('.igx-filtering-chips'));
             expect(filteringCells.length).toBe(6);
