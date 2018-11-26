@@ -172,6 +172,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    @HostListener('keydown.esc', ['$event'])
+    public onEscKeydown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
+    }
+
     get disabled(): boolean {
         return !(this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0);
     }
@@ -209,6 +216,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     get placeholder(): string {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
+        } else if (this.column.dataType === DataType.Date) {
+            return 'Pick up date';
+        } else if (this.column.dataType === DataType.Boolean) {
+            return 'All';
         } else {
             return 'Add filter value';
         }
@@ -233,6 +244,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Event handler for keydown on the input.
      */
     public onInputKeyDown(event: KeyboardEvent) {
+        if (this.column.dataType === DataType.Boolean) {
+            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
+            this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+                event.stopPropagation();
+                return;
+            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+                event.stopPropagation();
+                return;
+            }
+        }
+
         if (event.key === KEYS.ENTER) {
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
@@ -254,8 +278,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
+            event.preventDefault();
+            this.close();
         }
         event.stopPropagation();
+    }
+
+    /**
+     * Event handler for input click event.
+     */
+    public onInputClick() {
+        if (this.column.dataType === DataType.Boolean) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        }
     }
 
     /**

@@ -1,0 +1,50 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light slider schema.
+/// @type {Map}
+///
+/// @property {map} track-color [igx-color: ('secondary', 500)] - The color of the track.
+/// @property {map} thumb-color [igx-color: ('secondary', 500)] - The color of the thumb.
+/// @property {map} label-background-color [igx-color: ('secondary', 500)] - The background color of the bubble label.
+/// @property {map} label-text-color [igx-contrast-color: ('secondary', 500)] - The text color of the bubble label.
+/// @property {map} disabled-thumb-color [igx-color: ('grays', 400), hexrgba: ()] - The thumb color when its disabled.
+/// @property {map} base-track-color [igx-color: ('grays', 500)] - The base background color of the track.
+/// @property {map} disabled-base-track-color [igx-color: ('grays', 400)] - The base background color of the track when is disabled.
+///
+/// @see $default-palette
+
+$_light-slider: (
+    track-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    thumb-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+
+    label-background-color: (
+        igx-color: ('secondary', 500)
+    ),
+
+    label-text-color: (
+        igx-contrast-color: ('secondary', 500)
+    ),
+
+    disabled-thumb-color: (
+        igx-color: ('grays', 400),
+        hexrgba: ()
+    ),
+
+    base-track-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    disabled-base-track-color: (
+        igx-color: ('grays', 400)
+    )
+);

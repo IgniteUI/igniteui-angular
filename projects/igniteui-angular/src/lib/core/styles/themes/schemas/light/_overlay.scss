@@ -1,0 +1,17 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light overlay schema.
+/// @type {Map}
+///
+/// @property {map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
+///
+/// @see $default-palette
+$_light-overlay: (
+    background-color: (
+        igx-color: ('grays', 500)
+    )
+);

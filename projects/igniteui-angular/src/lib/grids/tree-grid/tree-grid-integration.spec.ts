@@ -5,17 +5,16 @@ import { IgxTreeGridModule, IgxTreeGridRowComponent } from './index';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridStringTreeColumnComponent, IgxTreeGridDateTreeColumnComponent, IgxTreeGridBooleanTreeColumnComponent,
-    IgxTreeGridRowEditingComponent
+    IgxTreeGridRowEditingComponent, IgxTreeGridMultiColHeadersComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand } from '../../../public_api';
-import { IgxGridCellComponent } from '../grid';
-import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
+import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 
@@ -32,7 +31,8 @@ describe('IgxTreeGrid - Integration', () => {
                 IgxTreeGridStringTreeColumnComponent,
                 IgxTreeGridDateTreeColumnComponent,
                 IgxTreeGridBooleanTreeColumnComponent,
-                IgxTreeGridRowEditingComponent
+                IgxTreeGridRowEditingComponent,
+                IgxTreeGridMultiColHeadersComponent
             ],
             imports: [NoopAnimationsModule, IgxToggleModule, IgxTreeGridModule]
         })
@@ -488,7 +488,7 @@ describe('IgxTreeGrid - Integration', () => {
 
         it('should preserve updates after removing Sorting', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc });
+            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const childCell = grid.getCellByColumn(0, 'Age');
@@ -511,5 +511,106 @@ describe('IgxTreeGrid - Integration', () => {
             const editedParentCell = parentRow.cells.filter(c => c.column.field === 'Age')[0];
             expect(editedParentCell.value).toEqual(80);
         });
+    });
+
+    describe('Multi-column header', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('Should transform a hidden column to a tree column when it becomes visible and it is part of a column group', () => {
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+
+            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            column.hidden = true;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'Name', 3);
+
+            column.hidden = false;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+        });
+
+        it('Should transform a hidden column to a tree column when all columns from left-most group are hidden', () => {
+            // hide Name column so that the tested columns (ID and HireDate) are not part of the same group
+            const columnName = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            columnName.hidden = true;
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 3);
+
+            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            column.hidden = true;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 2);
+
+            column.hidden = false;
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 3);
+        });
+
+        it('(API) Should transform a non-tree column into a tree column when moving it first and both are part of the same group', () => {
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+
+            // Move tree-column
+            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'Name', 4);
+        });
+
+        it('(UI) Should transform a non-tree column into a tree column when moving it first within a group', (async () => {
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+
+            const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
+            column.movable = true;
+
+            const header = TreeGridFunctions.getHeaderCellMultiColHeaders(fix, 'ID').nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 100, 90);
+            UIInteractions.simulatePointerEvent('pointermove', header, 106, 96);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 420, 90);
+            UIInteractions.simulatePointerEvent('pointerup', header, 420, 90);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'Name', 4);
+        }));
+
+        it('(API) Should transform a non-tree column of a column group to a tree column when its group is moved first', () => {
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+
+            // Move group-column
+            const sourceColumn = treeGrid.columns.filter(c => c.header === 'General Information')[0];
+            const targetColumn = treeGrid.columns.filter(c => c.header === 'Additional Information')[0];
+            treeGrid.moveColumn(sourceColumn, targetColumn);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
+        });
+
+        it('(UI) Should transform a non-tree column of a column group to a tree column when its group is moved first', (async () => {
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
+
+            const column = treeGrid.columnList.filter(c => c.header === 'General Information')[0];
+            column.movable = true;
+            fix.detectChanges();
+
+            const header = TreeGridFunctions.getHeaderCell(fix, 'General Information').nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
+            UIInteractions.simulatePointerEvent('pointermove', header, 106, 46);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 700, 40);
+            UIInteractions.simulatePointerEvent('pointerup', header, 700, 40);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'HireDate', 4);
+        }));
     });
 });

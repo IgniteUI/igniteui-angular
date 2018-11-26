@@ -5,6 +5,7 @@ import { IgxTreeGridModule } from './index';
 import { IgxTreeGridSortingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid - Sorting', () => {
     configureTestSuite();
@@ -29,7 +30,8 @@ describe('IgxTreeGrid - Sorting', () => {
 
     describe('API sorting', () => {
         it('should sort descending all treeGrid levels by column name through API', () => {
-            treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false });
+            treeGrid.sort({ fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verify first level records are desc sorted
@@ -49,7 +51,7 @@ describe('IgxTreeGrid - Sorting', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through API', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verify first level records are asc sorted
@@ -69,7 +71,8 @@ describe('IgxTreeGrid - Sorting', () => {
         });
 
         it('should not sort treeGrid when trying to sort by invalid column through API', () => {
-            treeGrid.sort({ fieldName: 'TEST', dir: SortingDirection.Desc, ignoreCase: false });
+            treeGrid.sort({ fieldName: 'TEST', dir: SortingDirection.Desc, ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verify first level records with default order
@@ -94,7 +97,7 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(1, 'Age').value).toEqual(30);
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
 
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             // Verify first record of all 3 levels (sorted layout)
@@ -119,8 +122,8 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             const exprs = [
-                { fieldName: 'Name', dir: SortingDirection.Asc },
-                { fieldName: 'Age', dir: SortingDirection.Desc }
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
             ];
 
             treeGrid.sort(exprs);
@@ -167,8 +170,8 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             const exprs = [
-                { fieldName: 'Name', dir: SortingDirection.Asc },
-                { fieldName: 'Age', dir: SortingDirection.Desc }
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
             ];
 
             treeGrid.sort(exprs);

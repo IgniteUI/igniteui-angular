@@ -1,10 +1,10 @@
 <header class="tsd-header">
-    {{> infranav}}
+    {{#ifCond project.localization '==' 'jp'}}{{> infranav.ja }}{{else}}{{> infranav }}{{/ifCond}}
     <div class="tsd-header-content">
         <div class="tsd-header-group">
             <h1 class="tsd-header-logo">
                 <a href="{{relativeURL "index.html"}}" class="title">{{project.name}}</a>
-                <span class="version">API ver. <strong>6.2.1</strong></span>
+                <span class="version">API ver. <strong>6.2.x</strong></span>
             </h1>
             <div class="tsd-nav-toggle">
                 <input id="tsd-toggle-cbx" type="checkbox">

@@ -261,8 +261,8 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean)`|Highlights all occurrences of the specified text and marks the previous occurrence as active.|
 |`clearSearch(text: string, caseSensitive?: boolean)`|Removes all search highlights from the grid.|
 |`refreshSearch()`|Refreshes the current search.|
-|`groupBy(expression: ISortingExpression)`| Groups by a new column based on the provided expression or modifies an existing one.
-|`groupBy(expressions: Array)`| Groups columns based on the provided array of sorting expressions.
+|`groupBy(expression: IGroupingExpression)`| Groups by a new column based on the provided expression or modifies an existing one.
+|`groupBy(expressions: Array<IGroupingExpression>)`| Groups columns based on the provided array of grouping expressions.
 |`clearGrouping()`| Clears all grouping in the grid.
 |`clearGrouping(fieldName: string)`| Clear grouping from a particular column.
 |`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.

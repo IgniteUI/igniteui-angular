@@ -1,7 +1,4 @@
-import { DataUtil } from './data-util';
-import { IFilteringOperation } from './filtering-condition';
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
-import { IFilteringState } from './filtering-state.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export interface IFilteringStrategy {

@@ -1,0 +1,81 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light grid-toolbar schema.
+/// @type {Map}
+///
+/// @property {map} background-color [igx-color: ('grays', 50)] - The toolbar background color.
+/// @property {map} title-text-color [igx-color: ('grays', 600)] - The toolbar title text color.
+/// @property {map} button-background [igx-color: ('grays', 100)] - The toolbar button background color.
+/// @property {map} button-text-color [igx-color: ('grays', 600)] - The toolbar button text color.
+/// @property {map} button-hover-background [igx-color: ('grays', 100)] - The toolbar button hover background color.
+/// @property {map} button-hover-text-color [igx-color: ('grays', 600)] - The toolbar button hover text color.
+/// @property {map} button-focus-background [igx-color: ('grays', 100)] - The toolbar button focus background color.
+/// @property {map} button-focus-text-color [igx-color: ('grays', 600)] - The toolbar button focus text color.
+/// @property {Color} dropdown-background [#fff] - The toolbar drop-down background color.
+/// @property {map} item-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item text color.
+/// @property {map} item-hover-background [igx-color: ('grays', 100)] - The toolbar drop-down item hover background color.
+/// @property {map} item-hover-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item hover text color.
+/// @property {map} item-focus-background [igx-color: ('grays', 100)] - The toolbar drop-down item focus background color.
+/// @property {map} item-focus-text-color [igx-color: ('grays', 600)] - The toolbar drop-down item focus text color.
+///
+/// @see $default-palette
+
+$_light-grid-toolbar: (
+    background-color: (
+        igx-color: ('grays', 50)
+    ),
+
+    title-text-color : (
+        igx-color: ('grays', 600)
+    ),
+
+    button-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    button-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-hover-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    button-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-focus-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    dropdown-background: #fff,
+
+    item-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    item-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    item-hover-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    item-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    item-focus-text-color: (
+        igx-color: ('grays', 600)
+    )
+);

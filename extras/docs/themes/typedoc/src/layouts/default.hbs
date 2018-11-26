@@ -7,13 +7,18 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/layout.css">
+    <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/animate-custom.css">
+    <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/fontello.css">
+    <link rel="stylesheet" href="https://infragistics.com/css/navigation.css">
+    <link rel="stylesheet" href="https://infragistics.com/css/footer.css">
     <link rel="stylesheet" href="https://infragistics.com/css/navigation.css">
     <link rel="stylesheet" href="https://infragistics.com/css/footer.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://use.typekit.net/zhy2hpz.css">
     <link rel="stylesheet" href="{{relativeURL "assets/css/main.css"}}">
 </head>
-<body>
+<body id="body" data-base-url="{{envUrl}}">
 
 {{> header}}
 
@@ -106,11 +111,13 @@
 {{> footer}}
 
 <div class="overlay"></div>
-<script src="{{relativeURL "assets/js/main.js"}}"></script>
 <script>if (location.protocol == 'file:') document.write('<script src="{{relativeURL "assets/js/search.js"}}"><' + '/script>');</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js" integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/jquery-migrate.min.js"></script>
 <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/plugins.nav.js"></script>
 <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/navigation.js"></script>
+<script src="{{relativeURL "assets/js/main.js"}}"></script>
 {{> analytics}}
 
 </body>

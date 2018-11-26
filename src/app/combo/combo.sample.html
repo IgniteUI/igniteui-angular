@@ -20,6 +20,7 @@
                             (onAddition)="handleAddition($event)"
                             [data]="items"
                             [allowCustomValues]="true"
+                            [displayDensity]="'comfortable'"
                             [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                                 [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
@@ -60,6 +61,12 @@
                     <div class="display-value--sub">In Region {{display.region}}</div>
                 </div>
             </ng-template>
+        </div>
+        <div>
+            <h4>Display Density</h4>
+            <button igxButton="raised" [disabled]="igxCombo.isCompact()" (click)="setDensity('compact')">Compact</button>
+            <button igxButton="raised" [disabled]="igxCombo.isCosy()" (click)="setDensity('cosy')">Cosy</button>
+            <button igxButton="raised" [disabled]="!igxCombo.isCosy() && !igxCombo.isCompact()" (click)="setDensity('comfortable')">Comfortable</button>
         </div>
     </section>
     </div>

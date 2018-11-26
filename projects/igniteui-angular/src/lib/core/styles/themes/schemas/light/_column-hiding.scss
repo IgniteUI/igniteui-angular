@@ -1,0 +1,17 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light column hiding schema.
+/// @type {Map}
+/// @prop {Map} title-color [igx-color: ('primary', 500)]- The text color used for the title of the list.
+/// @prop {Color} background-color [transparent] - The background color of the panel.
+/// @see $default-palette
+$_light-column-hiding: (
+    background-color: transparent,
+    title-color: (
+        igx-color: ('primary', 500)
+    )
+);

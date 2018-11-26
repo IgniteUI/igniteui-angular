@@ -17,6 +17,8 @@ import {
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxGridComponent } from './grid.component';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column Moving', () => {
     configureTestSuite();
@@ -24,7 +26,7 @@ describe('IgxGrid - Column Moving', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__th--fw';
 
-    let fixture, grid;
+    let fixture, grid: IgxGridComponent;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -459,7 +461,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             // step 1 - group a column
-            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fixture.detectChanges();
 
             // step 2 - move a column

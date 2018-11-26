@@ -1,9 +1,8 @@
 import { Component, Injectable, ViewChild, OnInit, Inject } from '@angular/core';
 
-import { IgxGridComponent,  SortingDirection, ISortingExpression, IgxInputGroupComponent } from 'igniteui-angular';
-import { IGridFocusChangeEventArgs } from 'projects/igniteui-angular/src/lib/grids/grid/grid.component';
-import { DisplayDensityToken, DisplayDensity, IDisplayDensityOptions } from 'projects/igniteui-angular/src/lib/core/displayDensity';
-import { detectChanges } from '@angular/core/src/render3';
+import { IgxGridComponent,  SortingDirection, ISortingExpression, IGridFocusChangeEventArgs } from 'igniteui-angular';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
+import { DefaultSortingStrategy } from 'projects/igniteui-angular/src/public_api';
 
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
@@ -82,7 +81,7 @@ export class GridGroupBySampleComponent implements OnInit {
                 return;
             }
         }
-        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
     }
     toggleGroupedVisibility(event){
         this.grid1.hideGroupedColumns = !event.checked;
@@ -105,9 +104,9 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
-            {fieldName: "Country", dir: 2, ignoreCase: true}
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
         ];
         this.grid1.groupBy(expr);
     }
@@ -118,8 +117,8 @@ export class GridGroupBySampleComponent implements OnInit {
   
     groupUngroupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
-            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
         ];
         this.grid1.groupingExpressions = expr;
     }

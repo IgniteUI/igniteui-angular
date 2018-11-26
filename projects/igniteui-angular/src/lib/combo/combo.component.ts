@@ -19,8 +19,8 @@ import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.co
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic } from '../data-operations/filtering-expression.interface';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -35,6 +35,8 @@ import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPip
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -96,7 +98,7 @@ const noop = () => { };
     selector: 'igx-combo',
     templateUrl: 'combo.component.html'
 })
-export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
      * @hidden
      */
@@ -120,23 +122,23 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    protected _filteringExpressions = [];
+    protected _filteringExpressions: IFilteringExpression [] = [];
     /**
      * @hidden
      */
-    protected _sortingExpressions = [];
+    protected _sortingExpressions: ISortingExpression [] = [];
     /**
      * @hidden
      */
-    protected _groupKey: string | number = '';
+    protected _groupKey = '';
     /**
      * @hidden
      */
-    protected _valueKey: string | number = '';
+    protected _valueKey = '';
     /**
      * @hidden
      */
-    protected _displayKey: string | number = '';
+    protected _displayKey: string;
     private _addItemTemplate: TemplateRef<any>;
     private _emptyTemplate: TemplateRef<any>;
     private _footerTemplate: TemplateRef<any>;
@@ -168,7 +170,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Self() @Optional() public ngControl: NgControl) {
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -523,6 +527,42 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     /**
+     * @hidden
+     */
+    @HostBinding('class.igx-combo')
+    public cssClass = 'igx-combo'; // Independant of display density, at the time being
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.role`)
+    public role = 'combobox';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-expanded')
+    public get ariaExpanded() {
+        return !this.dropdown.collapsed;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-haspopup')
+    public get hasPopUp() {
+        return 'listbox';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-owns')
+    public get ariaOwns() {
+        return this.dropdown.id;
+    }
+
+    /**
      * Controls whether custom values can be added to the collection
      *
      * ```typescript
@@ -656,12 +696,12 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     get valueKey() {
         return this._valueKey;
     }
-    set valueKey(val: string | number) {
+    set valueKey(val: string) {
         this._valueKey = val;
     }
 
     @Input()
-    set displayKey(val: string | number) {
+    set displayKey(val: string) {
         this._displayKey = val;
     }
 
@@ -695,7 +735,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * ```
      */
     @Input()
-    public set groupKey(val: string | number) {
+    public set groupKey(val: string) {
         this.clearSorting(this._groupKey);
         this._groupKey = val;
         this.sort(this._groupKey);
@@ -709,7 +749,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      * let currentGroupKey = this.combo.groupKey;
      * ```
      */
-    public get groupKey(): string | number {
+    public get groupKey(): string {
         return this._groupKey;
     }
 
@@ -889,30 +929,30 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public get filteringExpressions() {
+    public get filteringExpressions(): IFilteringExpression [] {
         return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
      * @hidden
      */
-    public set filteringExpressions(value) {
-        this._filteringExpressions = cloneArray(value);
+    public set filteringExpressions(value: IFilteringExpression []) {
+        this._filteringExpressions = value;
         this.cdr.markForCheck();
     }
 
     /**
      * @hidden
      */
-    public get sortingExpressions() {
+    public get sortingExpressions(): ISortingExpression [] {
         return this._sortingExpressions;
     }
 
     /**
      * @hidden
      */
-    public set sortingExpressions(value) {
-        this._sortingExpressions = cloneArray(value);
+    public set sortingExpressions(value: ISortingExpression []) {
+        this._sortingExpressions = value;
         this.cdr.markForCheck();
     }
 
@@ -1007,7 +1047,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     }
 
     private checkMatch() {
-        this.customValueFlag = this.displayKey || this.displayKey === 0 ?
+        this.customValueFlag = this.displayKey ?
             !this.filteredData
                 .some((e) => (e[this.displayKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
             this.allowCustomValues :
@@ -1033,13 +1073,14 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    public sort(fieldName: string | number, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true): void {
-        if (!fieldName && fieldName !== 0) {
+    public sort(fieldName: string, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true,
+                strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
+        if (!fieldName) {
             return;
         }
         const sortingState = cloneArray(this.sortingExpressions, true);
 
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase);
+        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase, strategy);
         this.sortingExpressions = sortingState;
     }
 
@@ -1050,7 +1091,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         if (!val && val !== 0) {
             return undefined;
         }
-        return this.valueKey === 0 || this.valueKey ?
+        return this.valueKey ?
             this.data.filter((e) => e[this.valueKey] === val)[0] :
             this.data.filter((e) => e === val);
     }
@@ -1058,7 +1099,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     /**
      * @hidden
      */
-    protected prepare_sorting_expression(state, fieldName, dir, ignoreCase) {
+    protected prepare_sorting_expression(state: ISortingExpression [], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
+                                         strategy: ISortingStrategy) {
 
         if (dir === SortingDirection.None) {
             state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
@@ -1068,7 +1110,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         const expression = state.find((expr) => expr.fieldName === fieldName);
 
         if (!expression) {
-            state.push({ fieldName, dir, ignoreCase });
+            state.push({ fieldName, dir, ignoreCase, strategy });
         } else {
             Object.assign(expression, { fieldName, dir, ignoreCase });
         }
@@ -1203,8 +1245,8 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
             [this.valueKey]: newValue,
             [this.displayKey]: newValue
         } : newValue;
-        if (this.groupKey || this.groupKey === 0) {
-            Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
+        if (this.groupKey) {
+            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
         }
         const oldCollection = this.data;
         const newCollection = [...this.data];

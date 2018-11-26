@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -14,6 +13,7 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -37,7 +37,6 @@ const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
-const CSS_CLASS_INPUTGROUP_BUNDLESUFFIX = 'igx-input-group__bundle-suffix';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
@@ -291,6 +290,7 @@ describe('igxCombo', () => {
             expect(dropdown.verticalScrollContainer.state.startIndex).toEqual(0);
             expect(IgxDropDownBase.prototype.navigatePrev).toHaveBeenCalledTimes(1);
         }));
+
         it('Should properly call dropdown navigateNext with virutal items', ( async () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -301,7 +301,8 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toBeFalsy();
             expect(dropdown.verticalScrollContainer).toBeDefined();
             const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
-            const virtualMock = spyOn<any>(dropdown, 'navigateVirtualItem').and.callThrough();
+            const virtualMockUP = spyOn<any>(dropdown, 'navigateUp').and.callThrough();
+            const virtualMockDOWN = spyOn<any>(dropdown, 'navigateDown').and.callThrough();
             // expect(mockFn).toThrow();
             expect(dropdown.focusedItem).toEqual(null);
             expect(combo.collapsed).toBeTruthy();
@@ -322,7 +323,7 @@ describe('igxCombo', () => {
             dropdown.navigateItem(-1);
             await wait(30);
             fix.detectChanges();
-            expect(virtualMock).toHaveBeenCalledTimes(1);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(0);
             lastItem.clicked(mockClick);
             await wait(30);
             fix.detectChanges();
@@ -330,7 +331,7 @@ describe('igxCombo', () => {
             dropdown.navigateItem(-1, Navigate.Down);
             await wait(30);
             fix.detectChanges();
-            expect(virtualMock).toHaveBeenCalledTimes(2);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
             combo.searchValue = 'New';
             await wait(30);
             lastItem.clicked(mockClick);
@@ -340,14 +341,14 @@ describe('igxCombo', () => {
             expect(combo.customValueFlag && combo.searchValue !== '').toBeTruthy();
             dropdown.navigateItem(-1, Navigate.Down);
             await wait(30);
-            expect(virtualMock).toHaveBeenCalledTimes(2);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(2);
             lastItem.value = dropdown.verticalScrollContainer.igxForOf[dropdown.verticalScrollContainer.igxForOf.length - 1];
             lastItem.clicked(mockClick);
             await wait(30);
             fix.detectChanges();
             expect(dropdown.focusedItem).toEqual(lastItem);
             dropdown.navigateItem(-1, Navigate.Down);
-            expect(virtualMock).toHaveBeenCalledTimes(2);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
 
             // TEST move from first item
             dropdown.verticalScrollContainer.scrollTo(0);
@@ -363,12 +364,13 @@ describe('igxCombo', () => {
             dropdown.navigateItem(-1);
             await wait(30);
             fix.detectChanges();
-            expect(virtualMock).toHaveBeenCalledTimes(3);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
             spyOn(dropdown, 'onBlur').and.callThrough();
             dropdown.navigateItem(-1, Navigate.Up);
             await wait(30);
             fix.detectChanges();
-            expect(virtualMock).toHaveBeenCalledTimes(4);
+            expect(virtualMockUP).toHaveBeenCalledTimes(1);
+            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
         }));
         it('Should call toggle properly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
@@ -417,17 +419,18 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.onBlur();
         }));
-        it('IgxComboDropDown focusedItem getter/setter', () => {
+        it('IgxComboDropDown focusedItem getter/setter', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const dropdown = fix.componentInstance.combo.dropdown;
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.toggle();
             fix.detectChanges();
+            tick();
             expect(dropdown.focusedItem).toEqual(null);
             dropdown.onFocus();
             expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
-        });
+        }));
         it('Should properly handle dropdown.focusItem', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -436,14 +439,18 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fix.detectChanges();
-            const virtualSpy = spyOn<any>(dropdown, 'navigateVirtualItem');
+            const virtualSpyUP = spyOn<any>(dropdown, 'navigateUp');
+            const virtualSpyDOWN = spyOn<any>(dropdown, 'navigateDown');
             spyOn(IgxComboDropDownComponent.prototype, 'navigateItem').and.callThrough();
             dropdown.navigateItem(0);
             fix.detectChanges();
             expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(1);
-            dropdown.navigateItem(-1);
+            dropdown.navigateItem(-1, Navigate.Up);
             expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(2);
-            expect(virtualSpy).toHaveBeenCalled();
+            dropdown.navigateItem(-1, Navigate.Down);
+            expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(3);
+            expect(virtualSpyDOWN).toHaveBeenCalled();
+            expect(virtualSpyUP).toHaveBeenCalled();
         }));
         it('Should handle handleKeyDown calls', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
@@ -1539,18 +1546,16 @@ describe('igxCombo', () => {
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Items');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-data').nodeValue).toEqual('Item 1,Item 2,Item 3');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
-            expect(comboWrapper.childElementCount).toEqual(1);
+            expect(comboWrapper.childElementCount).toEqual(2); // Input Group + Dropdown
+            expect(comboWrapper.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
+            expect(comboWrapper.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
+            expect(comboWrapper.style.width).toEqual(defaultComboWidth);
+            expect(comboWrapper.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
+            expect(comboWrapper.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
+            expect(comboWrapper.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
+            expect(comboWrapper.childElementCount).toEqual(2);
 
-            const comboElement = comboWrapper.children[0];
-            expect(comboElement.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
-            expect(comboElement.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
-            expect(comboElement.style.width).toEqual(defaultComboWidth);
-            expect(comboElement.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
-            expect(comboElement.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
-            expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
-            expect(comboElement.childElementCount).toEqual(2);
-
-            const inputGroupElement = comboElement.children[0];
+            const inputGroupElement = comboWrapper.children[0];
             expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
@@ -1584,13 +1589,10 @@ describe('igxCombo', () => {
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
-            const dropDownWrapper = comboElement.children[1];
-            expect(dropDownWrapper.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
-            expect(dropDownWrapper.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
-            expect(dropDownWrapper.childElementCount).toEqual(1);
-
-            const dropDownElement = dropDownWrapper.children[0];
+            const dropDownElement = comboWrapper.children[1];
+            expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
+            expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
@@ -1785,6 +1787,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(selectedItem.classList.contains(CSS_CLASS_SELECTED)).toBeTruthy();
         }));
+
         it('Should render focused items properly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -1808,6 +1811,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
+
         it('Should render properly focused items when grouped', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -1832,6 +1836,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
+
         it('Should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
@@ -1848,7 +1853,7 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-
+            tick();
             const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
             const dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             containerElementWidth = containerElement.getBoundingClientRect().width;
@@ -1859,6 +1864,7 @@ describe('igxCombo', () => {
             expect(dropDownWidth).toEqual(containerElementWidth);
             expect(inputWidth).toEqual(containerElementWidth);
         }));
+
         it('Should render combo width properly when placed in container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerFixedWidthComponent);
             fixture.detectChanges();
@@ -2201,7 +2207,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
@@ -2222,7 +2229,8 @@ describe('igxCombo', () => {
             expect(combo.sortingExpressions[0]).toEqual({
                 fieldName: 'region',
                 dir: SortingDirection.Asc,
-                ignoreCase: true
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             combo.groupKey = '';
 

@@ -27,26 +27,6 @@
         @extend %cal-body-display !optional;
     }
 
-    @include e(body-picker) {
-        @extend %cal-picker-display !optional;
-
-        @include b(date) {
-            @extend %cal-picker-date !optional;
-
-            @include e(el) {
-                @extend %cal-header-date-el--hover !optional;
-            }
-        }
-
-        @include b(prev) {
-            @extend %cal-picker-arrow !optional;
-        }
-
-        @include b(next) {
-            @extend %cal-picker-arrow !optional;
-        }
-    }
-
     @include e(body-row) {
         @extend %cal-row-display !optional;
     }
@@ -164,5 +144,21 @@
             @extend %cal-header-date !optional;
             @extend %cal-header-date--vertical !optional;
         }
+    }
+}
+
+@include b(igx-calendar-picker) {
+    @extend %cal-picker-display !optional;
+
+    @include e(date) {
+        @extend %cal-picker-date !optional;
+    }
+
+    @include e(prev) {
+        @extend %cal-picker-arrow !optional;
+    }
+
+    @include e(next) {
+        @extend %cal-picker-arrow !optional;
     }
 }
