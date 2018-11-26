@@ -1,0 +1,83 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light tabs schema.
+/// @type {Map}
+///
+/// @property {map} item-text-color [igx-color: ('grays', 700)] - The color used for the tab text color.
+/// @property {map} item-background [#fff] - The background color used for the tabs header.
+/// @property {map} item-hover-background [igx-color: ('grays', 200)] - The background used for the tabs on hover.
+/// @property {map} item-hover-color [igx-color: ('grays', 700)] - The text color used for the tabs on hover.
+///
+/// @property {map} item-active-color [igx-color: ('primary', 500)] - The color used for the active tabs text.
+/// @property {map} item-active-icon-color [igx-color: ('primary', 500)] - The color used for the active tabs icon.
+/// @property {map} item-active-background [igx-color: ('grays', 200)] - The color used for the active/focused tab background.
+///
+/// @property {map} indicator-color [igx-color: ('primary', 500)] - The color used for the active tab indicator.
+/// @property {map} button-color [igx-color: ('grays', 500)] - The color used for the button icon/text color.
+/// @property {map} button-hover-color [igx-color: ('grays', 600)] - The color used for the button icon/text color on hover.
+/// @property {Color} button-background [#fff] - The color used for the button background.
+/// @property {map} button-hover-background [igx-color: ('grays', 100)] - The color used for the button background on hover.
+///
+/// @property {map} tab-ripple-color [igx-color: ('grays', 100)] - The color used for the button background.
+/// @property {map} button-ripple-color [igx-color: ('grays', 100)] - The color used for the button background on hover.
+///
+/// @see $default-palette
+
+
+$_light-tabs: (
+    item-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-background: #fff,
+
+    item-hover-background: (
+        igx-color: ('grays', 200)
+    ),
+
+    item-hover-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    item-active-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    item-active-icon-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    item-active-background: (
+        igx-color: ('grays', 200)
+    ),
+
+    indicator-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    button-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    button-background: #fff,
+
+    button-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-hover-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    tab-ripple-color: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-ripple-color: (
+        igx-color: ('grays', 100)
+    )
+);

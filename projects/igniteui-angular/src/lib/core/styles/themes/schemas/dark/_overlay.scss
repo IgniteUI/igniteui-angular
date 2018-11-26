@@ -1,0 +1,15 @@
+@import '../light/overlay';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark overlay schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-overlay
+/// @see $default-palette
+
+$_dark-overlay: extend($_light-overlay, ());

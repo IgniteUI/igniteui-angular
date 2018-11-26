@@ -5,20 +5,24 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Grid Summary Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $background-color [#f4f4f4] - The summaries background color is inherited form igx-grid__tfoot
-/// @param {Color} $label-color [primary 500] - The summaries label color.
-/// @param {Color} $result-color [rgba(0, 0, 0, .74)] - The summaries value/result color.
-/// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The summaries border color.
-/// @param {Color} $pinned-border-width [2px] - The border width of the summary panel.
-/// @param {Color} $pinned-border-style [solid] - The border style of the summary panel.
-/// @param {Color} $pinned-border-color [rgba(0, 0, 0, .26)] - The border color of the summary panel.
-/// @param {Color} $inactive-color [rgba(0, 0, 0, .26)] - The summaries inactive label color.
-/// @param {Color} $label-hover-color [primary 700] - The summaries hover label color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
+/// @param {Color} $label-color [null] - The summaries label color.
+/// @param {Color} $result-color [null] - The summaries value/result color.
+/// @param {Color} $border-color [null] - The summaries border color.
+/// @param {Color} $pinned-border-width [null] - The border width of the summary panel.
+/// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
+/// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
+/// @param {Color} $inactive-color [null] - The summaries inactive label color.
+/// @param {Color} $label-hover-color [null] - The summaries hover label color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
+/// @requires text-contrast
 ///
 /// @example scss Change the summaries background nad labels color
 ///   $my-summary-theme: igx-grid-summary-theme(
@@ -29,7 +33,7 @@
 ///   @include igx-grid-summary($my-summary-theme);
 @function igx-grid-summary-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $background-color: null,
     $label-color: null,
@@ -41,22 +45,8 @@
     $inactive-color: null,
     $label-hover-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid-summary',
-        background-color: inherit,
-        label-color: igx-color($palette, 'primary', 500),
-        label-hover-color: igx-color($palette, 'primary', 700),
-        result-color: currentColor,
-        border-color: igx-color($palette, 'grays', 400),
-        pinned-border-width: 2px,
-        pinned-border-style: solid,
-        pinned-border-color: igx-color($palette, 'grays', 400),
-        inactive-color: igx-color($palette, 'grays', 400)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-grid-summary';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
@@ -70,7 +60,8 @@
         $pinned-border-color: rgba(text-contrast($background-color), .26);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background-color: $background-color,
         label-color: $label-color,
@@ -86,7 +77,6 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-color
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires --var
@@ -114,7 +104,7 @@
         display: flex;
         flex-direction: column;
         flex: 1 1 0%;
-        border-left: 1px dotted --var($theme, 'border-color');
+        border-left: 1px solid --var($theme, 'border-color');
         padding: map-get($summary-padding, 'comfortable');
         background: --var($theme, 'background-color');
         overflow: hidden;
@@ -146,7 +136,7 @@
     }
 
     %igx-grid-summary--empty {
-        border-left: 1px dotted --var($theme, 'border-color');
+        border-left: 1px solid --var($theme, 'border-color');
     }
 
     %igx-grid-summary__item {

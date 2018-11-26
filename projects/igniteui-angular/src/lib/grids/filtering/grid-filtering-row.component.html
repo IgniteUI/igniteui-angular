@@ -27,6 +27,7 @@
             [(ngModel)]="value"
             [type]="type"
             [readonly]="isUnaryCondition"
+            (click)="onInputClick()"
             (keydown)="onInputKeyDown($event)"/>
             <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
@@ -108,6 +109,6 @@
 </button>
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
-    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled">Reset</button>
+    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">Reset</button>
     <button #closeButton igxButton igxRipple (click)="close()">Close</button>
 </div>

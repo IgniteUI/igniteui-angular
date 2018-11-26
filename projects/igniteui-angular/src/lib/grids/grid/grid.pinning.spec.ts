@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/index';
@@ -9,12 +9,12 @@ import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';
-import { IgxStringFilteringOperand } from '../../../public_api';
-import { first } from 'rxjs/operators';
 import { IgxGridRowComponent } from './grid-row.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 
 describe('IgxGrid - Column Pinning ', () => {
     configureTestSuite();
@@ -232,7 +232,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc });
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
 
         fix.detectChanges();
 
@@ -580,7 +580,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-        let headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        let headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
 
         // First two headers are pinned
         expect(headers[0].componentInstance.zIndex).toEqual(9999);
@@ -591,7 +591,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
 
         // First three headers are pinned
-        headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
+        headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
         expect(headers[2].componentInstance.zIndex).toEqual(9997);
     }));
 

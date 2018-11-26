@@ -9,14 +9,17 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $label-color [rgba(0, 0, 0, .87)]- The text color used for the label text.
-/// @param {Color} $empty-color [rgba(0, 0, 0, .62)] - The unchecked border color.
-/// @param {Color} $fill-color [secondary 500] - The checked border and dot colors.
-/// @param {Color} $disabled-color [rgba(0, 0, 0, .26)] - The disabled border and dot colors.
-/// @param {String} $variant ['dark'] - Determines the default color scheme - could be 'light' or 'dark'.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $empty-color [null] - The unchecked border color.
+/// @param {Color} $fill-color [null] - The checked border and dot colors.
+/// @param {Color} $disabled-color [null] - The disabled border and dot colors.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 ///
 /// Set light to true when the surrounding area is dark.
 /// @example scss Change the checked dot and border colors
@@ -25,49 +28,24 @@
 ///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
-    $disabled-color: null,
+    $disabled-color: null
 
-    $variant: 'dark'
 ) {
     $name: 'igx-radio';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
-    $dark-theme: (
+    @return extend($theme, (
         name: $name,
-        label-color: igx-color($palette, 'grays', 900),
-        empty-color: igx-color($palette, 'grays', 600),
-        fill-color: igx-color($palette, 'secondary', 500),
-        disabled-color: igx-color($palette, 'grays', 400)
-    );
-
-    $light-theme: (
-        name: $name,
-        label-color: #fff,
-        empty-color: rgba(255, 255, 255, .7),
-        fill-color: igx-color($palette, 'secondary', 500),
-        disabled-color: rgba(255, 255, 255, .3)
-    );
-
-    $default-theme: map-get((
-        dark: $dark-theme,
-        light: $light-theme
-    ), $variant);
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
-
-    @return extend($default-theme, (
         palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
         disabled-color: $disabled-color,
-        variant: $variant
     ));
 }
 

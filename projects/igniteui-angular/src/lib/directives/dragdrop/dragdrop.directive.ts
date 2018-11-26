@@ -4,7 +4,6 @@
     EventEmitter,
     HostBinding,
     HostListener,
-    Inject,
     Input,
     NgModule,
     NgZone,
@@ -573,11 +572,14 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     /**
      * @hidden
-     * Create dragGhost element - copy of the base element. Bind all needed events.
+     * Create dragGhost element - if a Node object is provided it creates a clone of that node,
+     * otherwise it clones the host element.
+     * Bind all needed events.
      * @param event Pointer event required when the dragGhost is being initialized.
+     * @param node The Node object to be cloned.
      */
-    protected createDragGhost(event) {
-        this._dragGhost = this.element.nativeElement.cloneNode(true);
+    protected createDragGhost(event, node: any = null) {
+        this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';
         this._dragGhost.style.top = this._dragStartY + 'px';

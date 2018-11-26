@@ -23,9 +23,9 @@
 <div [style.width.px]='calcWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                    <span>{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
+                    <span>{{ getGroupByChipTitle(expr) }}</span>
                     <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
@@ -40,36 +40,26 @@
 
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-container *ngIf="groupingExpressions.length > 0">
             <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
                 <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">reorder</igx-icon>
             </div>
         </ng-container>
-        <ng-container *ngIf="rowSelectable">
+        <ng-container *ngIf="showRowCheckboxes">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
             </div>
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
-                <div class="igx-grid__thead-item igx-grid__th--pinned">
-                    <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width" [style.max-width.px]='col.width'></igx-grid-header>
-                    <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col"
-                        [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
-                </div>
+                <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header-group>
             </ng-template>
         </ng-container>
         <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
-            <div class="igx-grid__thead-item">
-                <igx-grid-header [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [gridID]="id" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-header>
-                <igx-grid-filtering-cell *ngIf="allowFiltering && !col.columnGroup && filteringService.filteredColumn !== col" [column]="col"
-                    [style.min-width.px]="col.width" [style.flex-basis.px]='col.width' [style.max-width.px]='col.width'></igx-grid-filtering-cell>
-            </div>
+            <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header-group>
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     </div>
@@ -81,7 +71,7 @@
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxGridFor let-rowData [igxGridForOf]="data | gridTransaction:id:pipeTrigger
     | gridFiltering:filteringExpressionsTree:id:pipeTrigger
-    | gridSort:sortingExpressions:id:pipeTrigger
+    | gridSort:sortingExpressions:pipeTrigger
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger"

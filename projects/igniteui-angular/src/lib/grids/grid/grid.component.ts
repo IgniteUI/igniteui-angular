@@ -19,11 +19,12 @@ import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridCellComponent } from '../cell.component';
 import { IgxGridSortingPipe } from './grid.pipes';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -58,7 +59,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService
+        IgxFilteringService, IgxColumnResizingService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -68,7 +69,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
      * @hidden
      */
-    protected _groupingExpressions = [];
+    protected _groupingExpressions: IGroupingExpression [] = [];
     /**
      * @hidden
      */
@@ -136,7 +137,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     @Input()
-    get groupingExpressions(): ISortingExpression[] {
+    get groupingExpressions(): IGroupingExpression[] {
         return this._groupingExpressions;
     }
 
@@ -152,12 +153,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * ```
 	 * @memberof IgxGridComponent
      */
-    set groupingExpressions(value: ISortingExpression[]) {
+    set groupingExpressions(value: IGroupingExpression[]) {
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
-        const oldExpressions: Array<ISortingExpression> = this.groupingExpressions;
-        const newExpressions: Array<ISortingExpression> = value;
+        const oldExpressions: IGroupingExpression[] = this.groupingExpressions;
+        const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.get(this.id)) {
@@ -171,8 +172,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
         }
         if (JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
-            const groupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
-            const ungroupedCols: Array<IgxColumnComponent> | IgxColumnComponent = [];
+            const groupedCols: IgxColumnComponent[] = [];
+            const ungroupedCols: IgxColumnComponent[] = [];
             const groupedColsArr = newExpressions.filter((obj) => {
                 return !oldExpressions.some((obj2) => {
                     return obj.fieldName === obj2.fieldName;
@@ -189,13 +190,14 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             ungroupedColsArr.forEach((elem) => {
                 ungroupedCols.push(this.getColumnByName(elem.fieldName));
             }, this);
+            this.cdr.detectChanges();
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: newExpressions,
                 groupedColumns: groupedCols,
                 ungroupedColumns: ungroupedCols
             };
             this.onGroupingDone.emit(groupingDoneArgs);
-    }
+        }
     }
 
     /**
@@ -484,14 +486,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * ```
 	 * @memberof IgxGridComponent
      */
-    public groupBy(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public groupBy(...rest): void {
+    public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.endEdit(true);
         this._gridAPI.submit_value(this.id);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._groupByMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this._gridAPI.groupBy_multiple(this.id, expression);
         } else {
-            this._groupBy(rest[0]);
+            this._gridAPI.groupBy(this.id, expression);
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
@@ -568,7 +569,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     get hasGroupableColumns(): boolean {
-        return this.columnList.some((col) => col.groupable);
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
     private _setGroupColsVisibility(value) {
@@ -588,20 +589,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     public get dropAreaVisible(): boolean {
         return (this.draggedColumn && this.draggedColumn.groupable) ||
             !this.chipsGoupingExpressions.length;
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupBy(expression: ISortingExpression) {
-        this._gridAPI.groupBy(this.id, expression.fieldName, expression.dir, expression.ignoreCase, expression.strategy);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _groupByMultiple(expressions: ISortingExpression[]) {
-        this._gridAPI.groupBy_multiple(this.id, expressions);
     }
 
     /**
@@ -806,8 +793,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         if (this.sortingExpressions &&
             this.sortingExpressions.length > 0) {
 
-            const sortingPipe = new IgxGridSortingPipe(this._gridAPI);
-            data = sortingPipe.transform(data, this.sortingExpressions, this.id, -1);
+            const sortingPipe = new IgxGridSortingPipe();
+            data = sortingPipe.transform(data, this.sortingExpressions, -1);
         }
         return data;
     }
@@ -815,12 +802,19 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
     * @hidden
     */
-   public get dropAreaTemplateResolved(): TemplateRef<any> {
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getGroupByChipTitle(expression: IGroupingExpression): string {
+        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
     }
 
     /**

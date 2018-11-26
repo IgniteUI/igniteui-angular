@@ -152,7 +152,8 @@ export class TreeGridFunctions {
      * Verifies that the specified column is the tree column, that contains the tree cells.
     */
     public static verifyTreeColumn(fix, expectedTreeColumnKey, expectedColumnsCount) {
-        const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey);
+        const headerCell = TreeGridFunctions.getHeaderCell(fix, expectedTreeColumnKey).parent;
+
         const treeCells = TreeGridFunctions.getTreeCells(fix);
         const rows = TreeGridFunctions.getAllRows(fix);
 
@@ -337,7 +338,6 @@ export class TreeGridFunctions {
                 UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-
                 cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 if (cell !== undefined && cell !== null) {
                     TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
@@ -371,7 +371,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
 
@@ -426,7 +425,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })
@@ -452,7 +450,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
-
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })

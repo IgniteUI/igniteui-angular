@@ -1,0 +1,24 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light avatar schema.
+/// @type {Map}
+/// @prop {Color} text-color [currentColor] - The text color.
+/// @prop {Map} background-color [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the paging panel.
+/// @prop {Map} border-color [igx-color: ('grays', 400)] - The border color of the paging panel.
+/// @see $default-palette
+$_light-grid-pagination: (
+    text-color: currentColor,
+
+    background-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff
+    ),
+
+    border-color: (
+        igx-color: ('grays', 400)
+    )
+);

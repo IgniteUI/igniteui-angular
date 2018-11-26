@@ -830,7 +830,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
     const testEditingNavigationShiftTab =
         (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            const cell = treeGrid.getCellByColumn(2, columns[2]);
+            let cell = treeGrid.getCellByColumn(2, columns[2]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
@@ -841,6 +841,8 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Enter', cell.nativeElement, true);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
+
+            cell = treeGrid.getCellByColumn(2, columns[2]);
             expect(cell.inEditMode).toBe(true);
 
             // Test on parent row

@@ -1,0 +1,94 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light chip schema.
+/// @type {Map}
+/// @prop {Number} roundness [32px] - The chip roundness.
+/// @prop {Map} text-color [igx-color: ('grays', 700)] - The chip text color.
+/// @prop {Map} background [igx-color: ('grays', 200)] - The chip background color.
+/// @prop {Color} border-color [transparent] - The chip border color.
+/// @prop {Map} ghost-background [igx-color: ('grays', 400), hexrgba: #fff)] - The chip ghost background color.
+/// @prop {Map} hover-text-color [igx-color: ('grays', 700)] - The chip text hover color.
+/// @prop {Map} hover-background [igx-color: ('grays', 300)] - The chip hover background color.
+/// @prop {Color} hover-border-color [transparent] - The chip hover border color.
+/// @prop {Map} selected-text-color [igx-color: ('grays', 700)] - The selected chip text color.
+/// @prop {Map} selected-background [igx-color: ('grays', 300)] - The selected chip background color.
+/// @prop {Color} selected-border-color [transparent] The selected chip border color.
+/// @prop {Map} hover-selected-text-color [igx-color: ('grays', 700)] - The selected chip hover text color.
+/// @prop {Map} hover-selected-background [igx-color: ('grays', 400)] - The selected chip hover background color.
+/// @prop {Map} hover-selected-border-color [transparent] - The selected chip hover border color.
+/// @prop {Map} focus-selected-text-color [igx-color: ('grays', 700)] - The selected chip text focus color.
+/// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
+/// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
+/// @see $default-palette
+$_light-chip: (
+    roundness: rem(32px),
+
+    text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    background: (
+        igx-color: ('grays', 200)
+    ),
+
+    border-color: transparent,
+
+    ghost-background: (
+        igx-color: ('grays', 400),
+        hexrgba: #fff
+    ),
+
+    hover-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    hover-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    hover-border-color: transparent,
+
+    focus-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    focus-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    focus-border-color: transparent,
+
+    selected-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    selected-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    selected-border-color: transparent,
+
+    hover-selected-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    hover-selected-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    hover-selected-border-color: transparent,
+
+    focus-selected-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    focus-selected-background: (
+        igx-color: ('grays', 400)
+    ),
+
+    focus-selected-border-color: transparent
+);

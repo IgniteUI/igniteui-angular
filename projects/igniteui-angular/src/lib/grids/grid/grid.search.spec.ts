@@ -1,20 +1,20 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxGridComponent } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxStringFilteringOperand } from '../../../public_api';
 import { BasicGridSearchComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridWithAvatarComponent, GroupableGridSearchComponent, ScrollableGridSearchComponent } from '../../test-utils/grid-samples.spec';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { wait } from '../../test-utils/ui-interactions.spec';
-
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - search API', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
-    let fix, component, grid, fixNativeElement;
+    let fix, component, grid: IgxGridComponent, fixNativeElement;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -311,7 +311,7 @@ describe('IgxGrid - search API', () => {
             grid.findNext(searchString);
 
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc});
+            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             activeHighlight = rv.querySelector('.' + component.activeClass);
@@ -319,7 +319,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc});
+            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
             const scrolledCell = grid.getCellByColumn(grid.data.length - 1, 'JobTitle').nativeElement;
 
@@ -844,7 +844,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to navigate through highlights with grouping enabled', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             grid.findNext('Software');
             await wait();
@@ -888,7 +890,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to react to changes in grouping', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
 
             let cell = grid.getCellByColumn(1, 'JobTitle');
@@ -908,10 +912,14 @@ describe('IgxGrid - search API', () => {
 
             grid.groupBy([{
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             }, {
                 fieldName: 'Company',
-                dir: SortingDirection.Desc
+                dir: SortingDirection.Desc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             }]);
 
             fix.detectChanges();
@@ -922,7 +930,9 @@ describe('IgxGrid - search API', () => {
 
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Desc
+                dir: SortingDirection.Desc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
 
             grid.findNext('software');
@@ -936,7 +946,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to navigate through highlights with grouping and paging enabled', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             grid.paging = true;
             grid.perPage = 6;
@@ -979,7 +991,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to properly handle perPage changes with gouping and paging', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
             grid.paging = true;
             grid.perPage = 10;
@@ -1022,7 +1036,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to properly handle navigating through collapsed rows', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
 
             grid.findNext('software');
@@ -1056,7 +1072,9 @@ describe('IgxGrid - search API', () => {
         it('Should be able to properly handle navigating through collapsed rows with paging', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
-                dir: SortingDirection.Asc
+                dir: SortingDirection.Asc,
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
             });
 
             grid.perPage = 5;
@@ -1106,73 +1124,18 @@ describe('IgxGrid - search API', () => {
         expect(matches).toBe(0);
     });
 
-    // function findNext(currentGrid: IgxGridComponent, text: string) {
-    //     const promise = new Promise((resolve) => {
-    //         currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-    //             resolve(state);
-    //         });
+    function findNext(currentGrid: IgxGridComponent, text: string) {
+        const promise = new Promise((resolve) => {
+            currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
+                resolve(state);
+            });
 
-    //         currentGrid.findNext(text);
-    //     });
-    //     return promise;
-    // }
-
-    // function findPrev(currentGrid: IgxGridComponent, text: string) {
-    //     const promise = new Promise((resolve) => {
-    //         currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-    //             resolve(state);
-    //         });
-
-    //         currentGrid.findPrev(text);
-    //     });
-    //     return promise;
-    // }
-
-    // function find(currentGrid: IgxGridComponent, text: string, findFunc: Function) {
-    //     const promise = new Promise((resolve) => {
-    //         let horizontalSubscription, verticalSubsription = null;
-
-    //         verticalSubsription = currentGrid.verticalScrollContainer.onChunkLoad.subscribe((state) => {
-    //             horizontalSubscription.unsubscribe();
-    //             verticalSubsription.unsubscribe();
-    //             resolve(state);
-    //         });
-
-    //         horizontalSubscription = currentGrid.rowList.first.virtDirRow.onChunkLoad.subscribe((state) => {
-    //             horizontalSubscription.unsubscribe();
-    //             verticalSubsription.unsubscribe();
-    //             resolve(state);
-    //         });
-
-    //         findFunc.call(currentGrid, text);
-    //     });
-
-    //     return promise;
-    // }
+            currentGrid.findNext(text);
+        });
+        return promise;
+    }
 
     function isInView(index, state: IForOfState): boolean {
         return index > state.startIndex && index <= state.startIndex + state.chunkSize;
     }
-
-    // function findNextWithPaging(currentGrid: IgxGridComponent, searchString) {
-    //     const result = new Promise((resolve) => {
-    //         currentGrid.onPagingDone.subscribe((value) => {
-    //             const pageNumber = value.current;
-    //             resolve(pageNumber);
-    //         });
-    //         currentGrid.findNext(searchString);
-    //     });
-    //     return result;
-    // }
-
-    // function findPreviousWithPaging(currentGrid: IgxGridComponent, searchString) {
-    //     const result = new Promise<number>((resolve) => {
-    //         currentGrid.onPagingDone.subscribe((value) => {
-    //             const pageNumber = value.current;
-    //             resolve(pageNumber);
-    //         });
-    //         currentGrid.findPrev(searchString);
-    //     });
-    //     return result;
-    // }
 });

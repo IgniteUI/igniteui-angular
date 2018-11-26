@@ -5,12 +5,12 @@ import {
     Input,
     TemplateRef,
     ViewChild,
-    OnDestroy,
     ViewChildren,
     QueryList,
     ElementRef,
     HostBinding,
-    HostListener
+    HostListener,
+    ChangeDetectionStrategy
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
@@ -20,7 +20,6 @@ import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
-import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
@@ -32,11 +31,12 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
  * @hidden
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
+export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -57,11 +57,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
     };
 
-    private rootExpressionsTree: FilteringExpressionsTree;
     private chipsAreaWidth: number;
     private chipAreaScrollOffset = 0;
-    private conditionChanged = new Subject();
-    private unaryConditionChanged = new Subject();
     private _column = null;
 
     public showArrows: boolean;
@@ -141,10 +138,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @HostBinding('class.igx-grid__filtering-row')
     public cssClass = 'igx-grid__filtering-row';
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {
-        this.unaryConditionChanged.subscribe(() => this.unaryConditionChangedCallback());
-        this.conditionChanged.subscribe(() => this.conditionChangedCallback());
-    }
+    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) {}
 
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
@@ -158,17 +152,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         this.input.nativeElement.focus();
     }
 
-    ngOnDestroy() {
-        this.conditionChanged.unsubscribe();
-        this.unaryConditionChanged.unsubscribe();
-    }
-
+    @HostListener('keydown.shift.tab', ['$event'])
     @HostListener('keydown.tab', ['$event'])
     public onTabKeydown(event) {
         event.stopPropagation();
         if (document.activeElement === this.closeButton.nativeElement && !event.shiftKey) {
             event.preventDefault();
         }
+    }
+
+    @HostListener('keydown.esc', ['$event'])
+    public onEscKeydown(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.close();
     }
 
     get disabled(): boolean {
@@ -208,6 +205,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     get placeholder(): string {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
+        } else if (this.column.dataType === DataType.Date) {
+            return 'Pick up date';
+        } else if (this.column.dataType === DataType.Boolean) {
+            return 'All';
         } else {
             return 'Add filter value';
         }
@@ -232,6 +233,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
      * Event handler for keydown on the input.
      */
     public onInputKeyDown(event: KeyboardEvent) {
+        if (this.column.dataType === DataType.Boolean) {
+            if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
+            this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+                event.stopPropagation();
+                return;
+            } else if ((event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) && !this.dropDownConditions.collapsed) {
+                this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+                event.stopPropagation();
+                return;
+            }
+        }
+
         if (event.key === KEYS.ENTER) {
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
@@ -253,8 +267,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE) {
+            event.preventDefault();
+            this.close();
         }
         event.stopPropagation();
+    }
+
+    /**
+     * Event handler for input click event.
+     */
+    public onInputClick() {
+        if (this.column.dataType === DataType.Boolean) {
+            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+        }
     }
 
     /**
@@ -299,6 +325,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     public clearFiltering() {
         this.filteringService.clearFilter(this.column.field);
         this.resetExpression();
+        if (this.input) {
+            this.input.nativeElement.focus();
+        }
         this.cdr.detectChanges();
 
         this.chipAreaScrollOffset = 0;
@@ -337,6 +366,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
                 }
             });
         }
+
+        this.filteringService.updateFilteringCell(this.column);
+        this.filteringService.focusFilterCellChip(this.column, true);
 
         this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
@@ -379,9 +411,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         const value = (eventArgs.newSelection as IgxDropDownItemComponent).value;
         this.expression.condition = this.getCondition(value);
         if (this.expression.condition.isUnary) {
-            this.unaryConditionChanged.next(value);
+            // update grid's filtering on the next cycle to ensure the drop-down is closed
+            // if the drop-down is not closed this event handler will be invoked multiple times
+            requestAnimationFrame(() => this.unaryConditionChangedCallback());
         } else {
-            this.conditionChanged.next(value);
+            requestAnimationFrame(() => this.conditionChangedCallback());
         }
 
         if (this.input) {
@@ -448,7 +482,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         if (eventArgs.oldSelection) {
             expression.afterOperator = (eventArgs.newSelection as IgxDropDownItemComponent).value;
             this.expressionsList[this.expressionsList.indexOf(expression) + 1].beforeOperator = expression.afterOperator;
-            this.filter();
+
+            // update grid's filtering on the next cycle to ensure the drop-down is closed
+            // if the drop-down is not closed this event handler will be invoked multiple times
+            requestAnimationFrame(() => this.filter());
         }
     }
 
@@ -624,8 +661,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     private filter() {
-        this.rootExpressionsTree = this.filteringService.createSimpleFilteringTree(this.column.field);
-
-        this.filteringService.filter(this.column.field, this.rootExpressionsTree);
+        this.filteringService.filter(this.column.field);
     }
 }

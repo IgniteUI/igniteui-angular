@@ -7,22 +7,24 @@
 
 /// Grid Filtering Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $toggle-icon-color [inherit] - The idle toggle icon color.
-/// @param {Color} $toggle-icon-hover-color [#fff] - The hover toggle icon color.
-/// @param {Color} $toggle-icon-active-color [igx-contrast color of secondary 500] - The active toggle icon color.
-/// @param {Color} $toggle-icon-filtered-color [secondary 500] - The filtered toggle icon color.
-/// @param {Color} $toggle-background [transparent] - The idle toggle background color.
-/// @param {Color} $toggle-hover-background [rgba(0, 0, 0, .12)] - The hover toggle background color.
-/// @param {Color} $toggle-active-background [secondary 500] - The active toggle background color.
-/// @param {Color} $toggle-filtered-background [transparent] - The filtered toggle background color.
-/// @param {Color} $menu-background [#fff] - The idle menu background color.
-/// @param {Color} $menu-text-color [rgba(0, 0, 0, .87)] - The idle menu text color.
-/// @param {Color} $menu-button-text-color [secondary 500] - The menu button text color.
-/// @param {Color} $menu-button-disabled-text-color [inherit] - The menu disabled button text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $toggle-icon-color [null] - The idle toggle icon color.
+/// @param {Color} $toggle-icon-hover-color [null] - The hover toggle icon color.
+/// @param {Color} $toggle-icon-active-color [null] - The active toggle icon color.
+/// @param {Color} $toggle-icon-filtered-color [null] - The filtered toggle icon color.
+/// @param {Color} $toggle-background [null] - The idle toggle background color.
+/// @param {Color} $toggle-hover-background [null] - The hover toggle background color.
+/// @param {Color} $toggle-active-background [null] - The active toggle background color.
+/// @param {Color} $toggle-filtered-background [null] - The filtered toggle background color.
+/// @param {Color} $menu-background [null] - The idle menu background color.
+/// @param {Color} $menu-text-color [null] - The idle menu text color.
+/// @param {Color} $menu-button-text-color [null] - The menu button text color.
+/// @param {Color} $menu-button-disabled-text-color [null] - The menu disabled button text color.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
-/// @requires igx-contrast-color
 /// @requires text-contrast
 ///
 /// @example scss Change the menu background color
@@ -34,7 +36,7 @@
 ///   @include igx-grid-filtering($my-filtering-theme);
 @function igx-grid-filtering-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $toggle-icon-color: null,
     $toggle-icon-hover-color: null,
@@ -50,25 +52,8 @@
     $menu-button-text-color: null,
     $menu-button-disabled-text-color: null
 ) {
-    $default-theme: (
-        name: 'igx-grid-filtering',
-        toggle-background: transparent,
-        toggle-icon-color: inherit,
-        toggle-icon-hover-color: #fff,
-        toggle-icon-active-color: igx-contrast-color($palette, 'secondary'),
-        toggle-icon-filtered-color: igx-color($palette, 'secondary'),
-        toggle-hover-background: igx-color($palette, 'grays', 300),
-        toggle-active-background: igx-color($palette, 'secondary'),
-        toggle-filtered-background: transparent,
-        menu-background: #fff,
-        menu-text-color: igx-color($palette, 'grays', 900),
-        menu-button-text-color: igx-color($palette, 'secondary'),
-        menu-button-disabled-text-color: initial
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-grid-filtering';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($menu-text-color) and $menu-background {
         $menu-text-color: text-contrast($menu-background);
@@ -90,7 +75,8 @@
         $toggle-icon-active-color: text-contrast($toggle-active-background)
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
 
         toggle-icon-color: $toggle-icon-color,

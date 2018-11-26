@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxTreeGrid - Indentation', () => {
     configureTestSuite();
@@ -58,7 +59,7 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -130,7 +131,7 @@ describe('IgxTreeGrid - Indentation', () => {
             fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
 
             // Verify before resizing width
             expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(225);
@@ -213,7 +214,7 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -283,7 +284,7 @@ describe('IgxTreeGrid - Indentation', () => {
             fix.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
 
             // Verify before resizing width
             expect((<HTMLElement>header.nativeElement).getBoundingClientRect().width).toBe(180);

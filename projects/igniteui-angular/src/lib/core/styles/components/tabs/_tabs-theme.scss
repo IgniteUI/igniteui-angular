@@ -6,27 +6,32 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
+///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $item-text-color [rgba(0, 0, 0, .62)] - The color used for the tab text color.
-/// @param {Color} $item-background [#fff] - The background color used for the tabs header.
-/// @param {Color} $item-hover-background [rgba(0, 0, 0, .08)] - The background used for the tabs on hover.
-/// @param {Color} $item-hover-color [rgba(0, 0, 0, .62)] - The text color used for the tabs on hover.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $item-active-color [rgba(0, 0, 0, .74)] - The color used for the active tabs text.
-/// @param {Color} $item-active-icon-color [rgba(0, 0, 0, .38)] - The color used for the active tabs icon.
-/// @param {Color} $item-active-background [rgba(0, 0, 0, .08)] - The color used for the active/focused tab background.
+/// @param {Color} $item-text-color [null] - The color used for the tab text color.
+/// @param {Color} $item-background [null] - The background color used for the tabs header.
+/// @param {Color} $item-hover-background [null] - The background used for the tabs on hover.
+/// @param {Color} $item-hover-color [null] - The text color used for the tabs on hover.
 ///
-/// @param {Color} $indicator-color [primary 500] - The color used for the active tab indicator.
-/// @param {Color} $button-color [rgba(0, 0, 0, .38)] - The color used for the button icon/text color.
-/// @param {Color} $button-hover-color [rgba(0, 0, 0, .54)] - The color used for the button icon/text color on hover.
-/// @param {Color} $button-background [#fff] - The color used for the button background.
-/// @param {Color} $button-hover-background [rgba(0, 0, 0, .04)] - The color used for the button background on hover.
+/// @param {Color} $item-active-color [null] - The color used for the active tabs text.
+/// @param {Color} $item-active-icon-color [null] - The color used for the active tabs icon.
+/// @param {Color} $item-active-background [null] - The color used for the active/focused tab background.
 ///
-/// @param {Color} $tab-ripple-color [rgba(0, 0, 0, .04)] - The color used for the button background.
-/// @param {Color} $button-ripple-color [rgba(0, 0, 0, 0.04)] - The color used for the button background on hover.
+/// @param {Color} $indicator-color [null] - The color used for the active tab indicator.
+/// @param {Color} $button-color [null] - The color used for the button icon/text color.
+/// @param {Color} $button-hover-color [null] - The color used for the button icon/text color on hover.
+/// @param {Color} $button-background [null] - The color used for the button background.
+/// @param {Color} $button-hover-background [null] - The color used for the button background on hover.
 ///
+/// @param {Color} $tab-ripple-color [null] - The color used for the button background.
+/// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Set a custom background color
@@ -38,7 +43,7 @@
 
 @function igx-tabs-theme(
     $palette: $default-palette,
-    $preset: null,
+    $schema: $light-schema,
 
     $item-text-color: null,
     $item-background: null,
@@ -59,33 +64,8 @@
     $tab-ripple-color: null,
     $button-ripple-color: null
 ) {
-    $default-theme: (
-        name: 'igx-tabs',
-
-        item-text-color: igx-color($palette, 'grays', 700),
-        item-background: #fff,
-
-        item-hover-color: igx-color($palette, 'grays', 700),
-        item-hover-background: igx-color($palette, 'grays', 200),
-
-        item-active-icon-color: igx-color($palette, 'primary', 500),
-        item-active-color: igx-color($palette, 'primary', 500),
-        item-active-background: igx-color($palette, 'grays', 200),
-
-        indicator-color: igx-color($palette, 'primary', 500),
-
-        button-color: igx-color($palette, 'grays', 500),
-        button-background: #fff,
-        button-hover-background: igx-color($palette, 'grays', 100),
-        button-hover-color: igx-color($palette, 'grays', 600),
-
-        tab-ripple-color: igx-color($palette, 'grays', 100),
-        button-ripple-color: igx-color($palette, 'grays', 100)
-    );
-
-    @if $preset {
-        $default-theme: map-get($preset, map-get($default-theme, 'name'));
-    }
+    $name: 'igx-tabs';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($item-text-color) and $item-background {
         $item-text-color: text-contrast($item-background);
@@ -127,7 +107,8 @@
         $button-ripple-color: text-contrast($button-background);
     }
 
-    @return extend($default-theme, (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
@@ -152,7 +133,6 @@
 /// @requires {mixin} ellipsis
 /// @requires igx-ripple-theme
 /// @requires {mixin} igx-ripple
-/// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires rem

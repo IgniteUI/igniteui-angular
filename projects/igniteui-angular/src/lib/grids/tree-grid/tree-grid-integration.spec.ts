@@ -12,10 +12,9 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxNumberFilteringOperand } from '../../../public_api';
-import { IgxGridCellComponent } from '../grid';
-import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
+import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 
@@ -161,7 +160,7 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('(UI) should autosize tree-column', () => {
-            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
 
@@ -272,7 +271,7 @@ describe('IgxTreeGrid - Integration', () => {
         });
 
         it('(UI) should autosize tree-column', () => {
-            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID');
+            const headerCell = TreeGridFunctions.getHeaderCell(fix, 'ID').parent;
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
             column.resizable = true;
 
@@ -488,7 +487,7 @@ describe('IgxTreeGrid - Integration', () => {
 
         it('should preserve updates after removing Sorting', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc });
+            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
             fix.detectChanges();
 
             const childCell = grid.getCellByColumn(0, 'Age');

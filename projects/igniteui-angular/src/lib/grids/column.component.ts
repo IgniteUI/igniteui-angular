@@ -8,31 +8,31 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand, IgxSummaryResult } from './grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
 import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective
 } from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { valToPxlsUsingRange } from '../core/utils';
+import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { getNodeSizeViaRange, flatten } from '../core/utils';
 import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { SortingStrategy } from '../data-operations/sorting-strategy';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+
 /**
  * **Ignite UI for Angular Column** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html#columns-configuration)
@@ -306,6 +306,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
+        /**
+     *@hidden
+     */
+    @Input()
+    public headerGroupClasses = '';
     /**
      * Sets a conditional class selector of the column cells.
      * Accepts an object literal, containing key-value pairs,
@@ -491,7 +496,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get sortStrategy(): any {
+    public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
     /**
@@ -505,11 +510,31 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public set sortStrategy(classRef: any) {
+    public set sortStrategy(classRef: ISortingStrategy) {
         this._sortStrategy = classRef;
     }
-
-
+     /**
+     * Gets the function that compares values for grouping.
+     * ```typescript
+     * let groupingComparer = this.column.groupingComparer'
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public get groupingComparer(): (a: any, b: any) => number {
+        return this._groupingComparer;
+    }
+    /**
+     * Sets a custom function to compare values for grouping.
+     * Subsequent values in the sorted data that the function returns 0 for are grouped.
+     * ```typescript
+     * this.column.groupingComparer = (a: any, b: any) => { return a === b ? 0 : -1; }
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    public set groupingComparer(funcRef: (a: any, b: any) => number) {
+        this._groupingComparer = funcRef;
+    }
     /**
      * Gets the default minimum `width` of the column.
      * ```typescript
@@ -772,7 +797,11 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _sortStrategy = new SortingStrategy();
+    protected _sortStrategy: ISortingStrategy = DefaultSortingStrategy.instance();
+    /**
+     *@hidden
+     */
+    protected _groupingComparer: (a: any, b: any) => number;
     /**
      *@hidden
      */
@@ -1042,9 +1071,19 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get headerCell(): IgxGridHeaderComponent {
-        if (this.grid.headerList.length > 0) {
-            return flatten(this.grid.headerList.toArray()).find((h) => h.column === this);
-        }
+        return this.grid.headerCellList.find((header) => header.column === this);
+    }
+
+    /**
+     * Returns a reference to the filter cell of the column.
+     * ```typescript
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     * let filterell = column.filterell;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get filterCell(): IgxGridFilteringCellComponent {
+        return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
     /**
@@ -1087,7 +1126,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.cells[0].nativeElement.children.length > 0) {
                 this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
-                cellsContentWidths = this.cells.map((cell) => valToPxlsUsingRange(range, cell.nativeElement));
+                cellsContentWidths = this.cells.map((cell) => getNodeSizeViaRange(range, cell.nativeElement));
             }
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
@@ -1100,16 +1139,15 @@ export class IgxColumnComponent implements AfterContentInit {
 
         if (this.headerCell) {
             let headerCell;
-            const titleIndex = this.grid.hasMovableColumns ? 1 : 0;
-            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[titleIndex].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[titleIndex].children)
-                    .map((child) => valToPxlsUsingRange(range, child)));
+            if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
+                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+                    .map((child) => getNodeSizeViaRange(range, child)));
             } else {
-                headerCell = valToPxlsUsingRange(range, this.headerCell.elementRef.nativeElement.children[titleIndex]);
+                headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
             }
 
-            if (this.sortable || (this.grid.allowFiltering && this.filterable)) {
-                headerCell += this.headerCell.elementRef.nativeElement.children[titleIndex + 1].getBoundingClientRect().width;
+            if (this.sortable) {
+                headerCell += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
             }
 
             const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
@@ -1325,28 +1363,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
 
-            if (val.width && val.width.indexOf('%') !== -1) {
+            if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                 isChildrenWidthInPercent = true;
             }
-
             return acc + parseInt(val.width, 10);
         }, 0)}`;
         return isChildrenWidthInPercent ? width + '%' : width;
     }
 
     set width(val) { }
-}
-
-
-
-function flatten(arr: any[]) {
-    let result = [];
-
-    arr.forEach(el => {
-        result.push(el);
-        if (el.children) {
-            result = result.concat(flatten(el.children.toArray()));
-        }
-    });
-    return result;
 }

@@ -9,8 +9,9 @@
 
 <ng-template #defaultFilter>
     <igx-chips-area #chipsArea class="igx-filtering-chips">
-        <ng-container *ngFor="let item of visibleExpressionsList; let last = last;" >
+        <ng-container *ngFor="let item of expressionsList; let last = last; let index = index;" >
             <igx-chip
+                *ngIf="isChipVisible(index)"
                 [removable]="true"
                 [displayDensity]="'cosy'"
                 (click)="onChipClicked(item.expression)"
@@ -24,9 +25,9 @@
                     {{filteringService.getChipLabel(item.expression)}}
                 </span>
             </igx-chip>
-            <span class="igx-filtering-chips__connector" *ngIf="!last">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
+            <span class="igx-filtering-chips__connector" *ngIf="!last && isChipVisible(index + 1)">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
         </ng-container>
-        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" tabindex="0">
+        <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" tabindex="0">
             <igx-icon>filter_list</igx-icon>
             <igx-badge [value]="moreFiltersCount"></igx-badge>
         </div>
