@@ -4,7 +4,8 @@
 
 # Usage
 ```html
-<igx-banner #banner message="This is default template's message!" icon="star" [dismissButtonText]="'Dismiss!!'" [confirmButtonText]="'Confirm'">
+<igx-banner #banner>
+    This is default template's message!
 </igx-banner>
 ```
 
@@ -16,20 +17,19 @@ Inputs available on the **IgxBanner**:
 
 | Name                |      Type     |  Description                                             |
 |---------------------|:-------------:|----------------------------------------------------------|
-| `message`           | string        | Sets the message to show in the banner.                  |
-| `confirmButtonText` | string        | Sets the description of confirming button.               |
-| `dismissButtonText` | string        | Set the description of the dismissive button.            |
-| `icon`              | string        | Set name of the icon from material design icons.         |
+| `animationSettings`           | `{ openAnimation: AnimationRefMetadata, closeAnimation: AnimationRefMetadata }`     | Sets the open / close animations for the banner.                  |
+
 
 ### Outputs
 
 A list of the events emitted by the **IgxBanner**:
 
-| Name                | Description                                                              |
-|---------------------|--------------------------------------------------------------------------|
-| `onOpen`            | Fires after the banner shows up                                          |
-| `onClose`           | Fires after the banner hides                                             |
-| `onButtonClick`     | Fires when one clicks either confirming or dismissive button             |
+| Name                | Description                                                              | Cancelable |
+|---------------------|--------------------------------------------------------------------------|------------|
+| `onOpening`            | Fires before the banner is opened                                         | `true` |
+| `onOpened`            | Fires after the banner is opened                                          | `false` |
+| `onClosing`            | Fire before the banner is closed                                          | `true` |
+| `onClosed`            | Fires after the banner is closed                                          | `false`|
 
 ### Getters
 

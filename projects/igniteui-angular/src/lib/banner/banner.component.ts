@@ -61,12 +61,6 @@ export class IgxBannerComponent implements IToggleView {
     @Output()
     public onClosing = new EventEmitter<BannerCancelEventArgs>();
 
-    /**
-     * Fires when one clicks either confirming or dismissive button
-     */
-    @Output()
-    public onButtonClick = new EventEmitter<BannerEventArgs>();
-
     /** @hidden */
     public get useDefaultTemplate(): boolean {
         return !this._bannerActionTemplate;
