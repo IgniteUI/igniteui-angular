@@ -1,5 +1,5 @@
-<header class="header header--sticky">
-    {{> infraHead}}
+<header class="header header--sticky tsd-header">
+    {{#ifCond lang '==' 'jp'}}{{> infraHeadJA }}{{else}}{{> infraHead }}{{/ifCond}}
     <div class="header__secondary">
         <div class="header__logo">
             <span class="header__logo-name">{{package.name}}</span>
