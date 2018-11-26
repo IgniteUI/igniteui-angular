@@ -15,7 +15,8 @@ import {
     Pipe,
     PipeTransform,
     Renderer2,
-    TemplateRef
+    TemplateRef,
+    LOCALE_ID
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
@@ -222,11 +223,11 @@ export enum DropPosition {
 export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     @Input('igxColumnMovingDrag')
-    set data(val: IgxColumnComponent) {
+    set data(val) {
         this._column = val;
     }
 
-    get column(): IgxColumnComponent {
+    get column() {
         return this._column;
     }
 
@@ -557,6 +558,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     name: 'igxdate'
 })
 export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any): string {
         if (value && value instanceof Date) {
             return super.transform(value);
@@ -572,6 +577,10 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
     name: 'igxdecimal'
 })
 export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any): string {
         if (value && typeof value === 'number') {
             return super.transform(value);
