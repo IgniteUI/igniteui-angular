@@ -1,19 +1,60 @@
 import { Injectable } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { GridSummaryCalculationMode } from '../grid-base.component';
 
 /** @hidden */
 @Injectable()
 export class IgxGridSummaryService {
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
-    public grid: IgxGridBaseComponent;
+    public grid;
 
-    public removeSummariesForRow(rowID) {
-
+    public deleteSummaryCache() {
+        this.summaryCacheMap.clear();
     }
 
-    public removeSummaryForColumn(rowID, columnName) {
+    public removeSummaries(rowID, columnName?) {
+        if (this.isTreeGrid) {
+            if (this.grid.summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
+                this.removeRootSummaryForColumn(rowID, columnName);
+            } else {
+                this.removeAllSummariesForColumn(rowID, columnName);
+            }
+        }
+    }
 
+    public removeRootSummaryForColumn(rowID, columnName?) {
+        let row = this.grid.records.get(rowID);
+        while (row.level !== 0) {
+            row = row.parent;
+        }
+        rowID = row.rowID;
+        if (columnName) {
+            if (this.summaryCacheMap.get(rowID)) {
+                this.summaryCacheMap.get(rowID).delete(columnName);
+            }
+        } else {
+            this.summaryCacheMap.delete(rowID);
+        }
+    }
+
+    public removeAllSummariesForColumn(rowID, columnName?) {
+        if (this.isTreeGrid && (this.grid.summaryCalculationMode === GridSummaryCalculationMode.childLevelsOnly
+            || this.grid.summaryCalculationMode === GridSummaryCalculationMode.rootAndChildLevels)) {
+            let row = this.grid.records.get(rowID);
+            row = row.children ? row : row.parent;
+            while (row) {
+                rowID = row.rowID;
+                if (columnName) {
+                    if (this.summaryCacheMap.get(rowID)) {
+                        this.summaryCacheMap.get(rowID).delete(columnName);
+                    }
+                } else {
+                    console.log(rowID);
+                    this.summaryCacheMap.delete(rowID);
+                }
+                row = row.parent;
+            }
+        }
     }
 
     public calculateMaxSummaryHeight() {
@@ -30,10 +71,6 @@ export class IgxGridSummaryService {
         return maxSummaryLength * this.grid.defaultRowHeight;
     }
 
-    public getSummariesPerRow(rowID) {
-        return this.summaryCacheMap.get(rowID);
-    }
-
     public calculateSummaries(rowID, data) {
         if (!this.summaryCacheMap.get(rowID)) {
             this.summaryCacheMap.set(rowID, new Map<string, IgxSummaryResult[]>());
@@ -45,6 +82,10 @@ export class IgxGridSummaryService {
             });
         }
         return this.summaryCacheMap.get(rowID);
+    }
+
+    private get isTreeGrid() {
+        return this.grid.nativeElement.tagName.toLowerCase() === 'igx-tree-grid';
     }
 
 }

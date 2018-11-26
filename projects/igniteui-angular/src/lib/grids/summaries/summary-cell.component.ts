@@ -1,5 +1,6 @@
 import { Component, Input, HostBinding } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
+import { IgxColumnComponent } from '../grid';
 
 @Component({
     selector: 'igx-grid-summary-cell',
@@ -11,7 +12,20 @@ export class IgxSummaryCellComponent {
     public summaryResults: IgxSummaryResult[];
 
     @Input()
-    public columnDatatype = 'string';
+    public column: IgxColumnComponent;
+
+    @Input()
+    @HostBinding('attr.data-rowIndex')
+    public rowIndex: number;
+
+    @HostBinding('attr.data-visibleIndex')
+    get visibleColumnIndex(): number {
+        return this.column.visibleIndex;
+    }
+
+    get columnDatatype() {
+        return this.column.dataType;
+    }
 
     @HostBinding('style.min-height.px')
     h = 32;

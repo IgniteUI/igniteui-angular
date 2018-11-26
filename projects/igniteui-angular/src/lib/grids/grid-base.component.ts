@@ -2149,10 +2149,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
-        this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((editCell) => this.clearSummaryCache(editCell));
-        this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe(() => this.clearSummaryCache());
+        this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
+        this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
         });
@@ -3140,11 +3140,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public clearSummaryCache(editCell?) {
-        if (editCell && editCell.cell) {
-            this.gridAPI.remove_summary(this.id, editCell.cell.column.filed);
-        } else {
+    public clearSummaryCache(args?) {
+        if (!args) {
+            this.summaryService.deleteSummaryCache();
             this.gridAPI.remove_summary(this.id);
+            return;
+        }
+        if (args.data) {
+            let rowID = args.rowID;
+            if (!args.rowID) {
+                rowID = this.primaryKey ? args.data[this.primaryKey] : args.data;
+            }
+            this.summaryService.removeSummaries(rowID);
+            this.gridAPI.remove_summary(this.id);
+            return;
+        }
+        if (args.cellID) {
+            const columnName = this.columnList.find(col => col.index === args.cellID.columnID).field;
+            this.summaryService.removeSummaries(args.cellID.rowID, columnName);
+            this.gridAPI.remove_summary(this.id, columnName);
         }
     }
 
