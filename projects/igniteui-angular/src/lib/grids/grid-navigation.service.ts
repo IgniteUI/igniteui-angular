@@ -419,7 +419,8 @@ export class IgxGridNavigationService {
         this.grid.rowList.find(row => row instanceof  IgxGridRowComponent).cells.first._clearCellSelection();
         const visColLength = this.grid.unpinnedColumns.length;
         if (this.isColumnFullyVisible(visColLength - 1)) {
-            this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList.last.column.field, false);
+            const lastFilterCellIndex = this.grid.filterCellList.length - 1;
+            this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList[lastFilterCellIndex].column, false);
         } else {
             this.grid.filteringService.columnToFocus = this.grid.unpinnedColumns[visColLength - 1];
             this.grid.filteringService.shouldFocusNext = false;
