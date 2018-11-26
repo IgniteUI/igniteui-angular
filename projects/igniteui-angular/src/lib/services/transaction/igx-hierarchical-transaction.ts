@@ -1,6 +1,6 @@
 import { HierarchicalTransaction, HierarchicalState, TransactionType, HierarchicalTransactionNode } from './transaction';
 import { Injectable } from '@angular/core';
-import { IgxTransactionService } from '..';
+import { IgxTransactionService } from './igx-transaction';
 
 /** @experimental @hidden */
 @Injectable()
