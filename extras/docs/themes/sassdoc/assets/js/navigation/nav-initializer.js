@@ -13,6 +13,10 @@
 
     function initNavigation() {
          var navBaseUrl = $('body').data('base-url');
+         if (!navBaseUrl.length) {
+             return;
+         }
+
          var navUrl = navBaseUrl + '/navigation';
 
          var request = $.ajax({
