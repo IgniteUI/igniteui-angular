@@ -16,7 +16,8 @@ import {
     ViewChild,
     AfterViewInit,
     DoCheck,
-    ContentChild
+    ContentChild,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -36,6 +37,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 let NEXT_ID = 0;
+@Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }

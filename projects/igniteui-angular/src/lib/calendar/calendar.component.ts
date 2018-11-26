@@ -10,7 +10,8 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewChildren
+    ViewChildren,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -38,6 +39,7 @@ export enum CalendarSelection {
     RANGE = 'range'
 }
 
+@Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
