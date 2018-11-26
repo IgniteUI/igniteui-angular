@@ -59,5 +59,7 @@
             </ul>
         </div>
     </div>
-    {{> infrafoot}}
+    <div id="footer-container">
+        {{#ifCond project.localization '==' 'jp'}}{{> infrafoot.ja }}{{else}}{{> infrafoot }}{{/ifCond}}
+    </div>
 </footer>
