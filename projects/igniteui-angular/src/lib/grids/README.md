@@ -164,6 +164,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |--- |--- |--- |
 |`id`|string|Unique identifier of the Grid. If not provided it will be automatically generated.|
 |`data`|Array|The data source for the grid.|
+|`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|
 |`perPage`|number|Visible items per page, default is 15|

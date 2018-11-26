@@ -32,9 +32,6 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
             { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
         ];
-
-        //this.grid1.resourceStrings = Object.assign({}, this.grid1.resourceStrings, {igx_grid_filter:'kor'});
-        this.grid1.resourceStrings.igx_grid_filter= 'kor';
         this.data = [
             {
                 'ID': 'ALFKI',
