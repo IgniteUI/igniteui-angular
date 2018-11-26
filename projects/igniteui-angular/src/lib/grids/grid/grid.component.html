@@ -84,7 +84,8 @@
     | gridSort:sortingExpressions:pipeTrigger
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
-    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger"
+    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
+    | gridSummary:summaryCalculationMode:summaryPosition:id:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>
@@ -95,7 +96,11 @@
             <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
-        <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : record_template; context: getContext(rowData) "></ng-container>
+        <ng-template #summary_template>
+            <igx-grid-summary-row [gridID]="id" [summaries]="rowData" [index]="rowIndex" class="igx-grid__summaries" #summaryRow>
+            </igx-grid-summary-row>
+        </ng-template>
+        <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>

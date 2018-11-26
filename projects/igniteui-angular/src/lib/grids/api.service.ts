@@ -604,4 +604,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return this.get_column_by_name(this.get(id).id, fieldName) ?
             this.get_column_by_name(id, fieldName).sortStrategy : undefined;
     }
+
+    public get_row_id(id: string, rowData) {
+        const grid = this.get(id);
+        return grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+    }
 }

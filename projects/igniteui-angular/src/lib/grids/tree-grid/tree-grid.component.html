@@ -63,7 +63,7 @@
     | treeGridSorting:sortingExpressions:id:pipeTrigger
     | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
     | treeGridPaging:page:perPage:id:pipeTrigger
-    | treeGridSummary:summaryPosition:id:pipeTrigger"
+    | treeGridSummary:summaryCalculationMode:summaryPosition:id:pipeTrigger"
 
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">

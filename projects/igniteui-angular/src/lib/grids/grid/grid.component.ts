@@ -619,7 +619,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
    public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 

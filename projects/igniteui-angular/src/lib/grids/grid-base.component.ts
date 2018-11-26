@@ -4581,4 +4581,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getExportCsv(): boolean {
         return this._exportCsv;
     }
+
+    /**
+    * @hidden
+    */
+    public isSummaryRow(rowData): boolean {
+        return rowData instanceof Map;
+    }
+
 }

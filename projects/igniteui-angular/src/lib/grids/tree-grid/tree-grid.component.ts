@@ -513,11 +513,4 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
     }
-
-    /**
-    * @hidden
-    */
-    public isSummaryRow(rowData): boolean {
-        return rowData instanceof Map;
-    }
 }
