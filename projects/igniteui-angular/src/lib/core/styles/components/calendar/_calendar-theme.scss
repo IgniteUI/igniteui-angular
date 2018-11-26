@@ -242,13 +242,6 @@
         background: --var($theme, 'content-background');
         overflow: hidden;
         outline: none;
-
-        &[dir='rtl'] {
-            .prev,
-            .next {
-                @extend %cal-picker-arrow--rtl;
-            }
-        }
     }
 
     %cal-display--vertical {
@@ -275,21 +268,13 @@
         display: flex;
         margin: $cal-header-date-margin;
 
-        .date-text {
+        > span {
             @include ellipsis();
         }
     }
 
     %cal-header-date--vertical {
         flex-flow: column nowrap;
-    }
-
-    %cal-header-date-el--hover {
-        &:hover,
-        &:focus {
-            color: --var($theme, 'picker-text-hover-color');
-            cursor: pointer;
-        }
     }
 
     %cal-picker-display {
@@ -311,15 +296,21 @@
         &:hover {
             color: --var($theme, 'picker-arrow-hover-color');
         }
-    }
 
-    %cal-picker-arrow--rtl {
-        transform: scaleX(-1);
+        [dir='rtl'] & {
+            transform: scaleX(-1);
+        }
     }
 
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;
+
+        &:hover,
+        &:focus {
+            color: --var($theme, 'picker-text-hover-color');
+            cursor: pointer;
+        }
     }
 
     %cal-body-display {
