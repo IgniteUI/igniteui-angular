@@ -3,6 +3,21 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 6.2.1
+- Localization
+    - Added an util function `Changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
+    in the application.
+    - `resourceStrings` property added to `igx-grid` and `igx-time-picker`, which allows changing/localizing strings for component. If a new istnace is set, 
+    the changes will be applied to the particular instance of the component:
+    ```typescript
+        this.grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
+            igx_grid_filter: 'My filter',
+            igx_grid_filter_row_close: 'My close'
+        });
+    ```
+    If only a value is updated, all component instances will be updated:
+    ```typescript
+        this.grid.resourceStrings.igx_grid_filter = 'My filter';
+    ```
 - `igx-drop-down`:
     - Added a new property `maxHeight`, defining the max height of the drop down.
 - Themes 
