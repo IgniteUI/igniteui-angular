@@ -273,7 +273,7 @@ const TRANSLATIONS_REPO = {
 const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
 
 const TYPEDOC = {
-    EXPORT_JSON_PATH: path.join('dist', 'igniteui-angular', 'docs', 'typescript-exported'),
+    EXPORT_JSON_PATH: path.join(__dirname, 'dist', 'igniteui-angular', 'docs', 'typescript-exported'),
     PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src'),
     TEMPLATE_STRINGS_PATH: path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json')
 }
