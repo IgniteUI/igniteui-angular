@@ -33,7 +33,8 @@ import {
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
+import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -134,7 +135,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * By default it uses EN resources.
     */
     @Input()
-    public resourceStrings: ITimePickerResourceStrings = TimePickerResourceStringsEN;
+    public resourceStrings: ITimePickerResourceStrings = CurrentResourceStrings.TimePickerResStrings;
 
     /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
