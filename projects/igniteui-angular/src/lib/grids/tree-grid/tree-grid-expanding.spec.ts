@@ -286,7 +286,6 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         it('should update current page when \'collapseAll\' ', () => {
-            pending('Tree Grid issue: curent page is not updated when collapseAll');
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 4;
@@ -573,7 +572,6 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         it('should update current page when \'collapseAll\' ', () => {
-            pending('Tree Grid issue: curent page is not updated when collapseAll');
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 2;
