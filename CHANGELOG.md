@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.0
+- Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
+
 ## 6.2.1
 - `igx-drop-down`:
     - Added a new property `maxHeight`, defining the max height of the drop down.
@@ -10,6 +13,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
 - `igx-combo`:
     - Added a new input property - `displayDensity`. It allows configuring the `displayDensity` of the combo's `value` and `search` inputs.
+- Fixed runtime errors when using the package in applications targeting es2015(es6) and newer ([#3011](https://github.com/IgniteUI/igniteui-angular/pull/3011))
 
 ## 6.2.0
 - Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
