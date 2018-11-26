@@ -189,6 +189,11 @@
             @extend %form-group-suffix;
             outline-style: none;
         }
+
+        // Don't show the number spinner
+        input[type='number']::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
     }
 
     %form-group-display--cosy {
