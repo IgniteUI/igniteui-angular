@@ -85,7 +85,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
+    @ViewChildren(forwardRef(() => IgxGridCellComponent))
     public cells: QueryList<IgxGridCellComponent>;
 
     /**
