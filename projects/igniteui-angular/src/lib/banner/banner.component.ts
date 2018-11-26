@@ -1,13 +1,13 @@
 import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef, ContentChild } from '@angular/core';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { AnimationSettings } from '../expansion-panel/expansion-panel.component';
-import { BrowserModule } from '@angular/platform-browser';
 import { IgxExpansionPanelComponent } from '../expansion-panel';
 import { IgxIconModule, IgxIconComponent } from '../icon/index';
 import { IToggleView } from '../core/navigation';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
+import { CommonModule } from '@angular/common';
 import { CancelableEventArgs } from '../core/utils';
 
 export interface BannerEventArgs {
@@ -160,6 +160,6 @@ export class IgxBannerComponent implements IToggleView {
 @NgModule({
     declarations: [IgxBannerComponent, IgxBannerActionsDirective],
     exports: [IgxBannerComponent, IgxBannerActionsDirective],
-    imports: [IgxExpansionPanelModule, IgxIconModule, BrowserModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxExpansionPanelModule, IgxIconModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxBannerModule { }
