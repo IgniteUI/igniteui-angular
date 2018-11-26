@@ -163,10 +163,10 @@ export const enum KEYS {
 * let range = document.createRange();
 * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
 *
-* let size = valToPxlsUsingRange(range, column.cells[0].nativeElement);
+* let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
 * ```
  */
-export function valToPxlsUsingRange(range: Range, node: any): number {
+export function getNodeSizeViaRange(range: Range, node: any): number {
     let overflow = null;
     if (isIE() || isEdge()) {
         overflow = node.style.overflow;
@@ -194,7 +194,7 @@ export function valToPxlsUsingRange(range: Range, node: any): number {
 * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
 * ```
  */
-export function valToPxlsUsingCanvas(canvas2dCtx: any, node: any): number {
+export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
     const s = this.grid.document.defaultView.getComputedStyle(node);
 
     // need to set the font to get correct width
@@ -228,6 +228,22 @@ export function isFirefox(): boolean {
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
+}
+
+/**
+ *@hidden
+ */
+export function flatten(arr: any[]) {
+    let result = [];
+
+    arr.forEach(el => {
+        result.push(el);
+        if (el.children) {
+            const children = Array.isArray(el.children) ? el.children : el.children.toArray();
+            result = result.concat(flatten(children));
+        }
+    });
+    return result;
 }
 
 export interface CancelableEventArgs {

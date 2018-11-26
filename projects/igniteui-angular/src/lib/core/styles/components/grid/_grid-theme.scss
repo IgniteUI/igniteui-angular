@@ -6,61 +6,65 @@
 ////
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $header-background [#fefefe] - The table header background color.
-/// @param {Color} $header-text-color [rgba(0, 0, 0, .54)] - The table header text color.
-/// @param {String} $header-border-width [1px] - The border width used for header borders.
-/// @param {String} $header-border-style [solid] - The border style used for header borders.
-/// @param {Color} $header-border-color [rgba(0, 0, 0, .08)] - The color used for header borders.
-/// @param {Color} $ghost-header-text-color [rgba(0, 0, 0, .54)] - The dragged header text color.
-/// @param {Color} $ghost-header-icon-color [rgba(0, 0, 0, .38)] - The dragged header icon color.
-/// @param {Color} $ghost-header-background [#fff] - The dragged header background color.
-/// @param {Color} $content-background [#fff] - The table body background color.
-/// @param {Color} $content-text-color [rgba(0, 0, 0, .74)] - The table body text color.
-/// @param {Color} $row-odd-background [#fff] - The background color of odd rows.
-/// @param {Color} $row-even-background [#fff] - The background color of even rows.
-/// @param {Color} $row-odd-text-color [rgba(0, 0, 0, .74)] - The text color of odd rows.
-/// @param {Color} $row-even-text-color [rgba(0, 0, 0, .74)] - The text color of even rows.
-/// @param {Color} $row-selected-background [rgba(0, 0, 0, .74)] - The selected row background color.
-/// @param {Color} $row-selected-text-color [igx-contrast-color of rgba(0, 0, 0, .74)] - The selected row text color.
-/// @param {Color} $row-hover-background [#eaeaea] - The hover row background color.
-/// @param {Color} $row-hover-text-color [igx-contrast-color of rgba(0, 0, 0, .08)] - The hover row text color.
-/// @param {Color} $row-border-color [rgba(0, 0, 0, .12)] - The row bottom border color.
-/// @param {String} $pinned-border-width [2px] - The border width of the pinned border.
-/// @param {String} $pinned-border-style [solid] - The CSS border style of the pinned border.
-/// @param {Color} $pinned-border-color [rgba(0, 0, 0, .24)] - The color of the pinned border.
-/// @param {Color} $cell-selected-background [primary 500] - The selected cell background color.
-/// @param {Color} $cell-selected-text-color [igx-contrast-color of primary 500] - The selected cell text color.
-/// @param {Color} $resize-line-color [secondary 500] - The table header resize line color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $grouparea-background [#f4f4f4] - The grid group area background color.
+/// @param {Color} $header-background [null] - The table header background color.
+/// @param {Color} $header-text-color [null] - The table header text color.
+/// @param {String} $header-border-width [null] - The border width used for header borders.
+/// @param {String} $header-border-style [null] - The border style used for header borders.
+/// @param {Color} $header-border-color [null] - The color used for header borders.
+/// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
+/// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
+/// @param {Color} $ghost-header-background [null] - The dragged header background color.
+/// @param {Color} $content-background [null] - The table body background color.
+/// @param {Color} $content-text-color [null] - The table body text color.
+/// @param {Color} $row-odd-background [null] - The background color of odd rows.
+/// @param {Color} $row-even-background [null] - The background color of even rows.
+/// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
+/// @param {Color} $row-even-text-color [null] - The text color of even rows.
+/// @param {Color} $row-selected-background [null] - The selected row background color.
+/// @param {Color} $row-selected-text-color [null] - The selected row text color.
+/// @param {Color} $row-hover-background [null] - The hover row background color.
+/// @param {Color} $row-hover-text-color [null] - The hover row text color.
+/// @param {Color} $row-border-color [null] - The row bottom border color.
+/// @param {String} $pinned-border-width [null] - The border width of the pinned border.
+/// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
+/// @param {Color} $pinned-border-color [null] - The color of the pinned border.
+/// @param {Color} $cell-selected-background [null] - The selected cell background color.
+/// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
+/// @param {Color} $resize-line-color [null] - The table header resize line color.
 ///
-/// @param {Color} $group-row-background [#f4f4f4] - The grid group row background color.
-/// @param {Color} $group-row-selected-background [rgb(234, 234, 234)] - The drop area background on drop color.
-/// @param {Color} $active-expand-icon-color [rgba(0, 0, 0, .54)] - The drop area background on drop color.
-/// @param {Color} $active-expand-icon-hover-color [#09f] - The drop area background on drop color.
-/// @param {Color} $group-label-column-name-text [primary 500] - The grid group row column name text color.
-/// @param {Color} $group-label-icon [primary 500] - The grid group row icon color.
-/// @param {Color} $group-label-text [rgba(0, 0, 0, .74)] - The grid group row text color.
+/// @param {Color} $grouparea-background [null] - The grid group area background color.
 ///
-/// @param {Color} $expand-all-icon-color [rgba(0, 0, 0, .54)] - The grid header expand all group rows icon color.
-/// @param {Color} $expand-all-icon-hover-color [rgba(0, 0, 0, .74)] - The grid header expand all group rows icon hover color.
-/// @param {Color} $expand-icon-color [rgba(0, 0, 0, .54)] - The grid row expand icon color.
-/// @param {Color} $expand-icon-hover-color [primary 500] - The grid row expand icon hover color.
-/// @param {Color} $group-count-background [rgba(0, 0, 0, .08)] - The grid group row cont badge background color.
-/// @param {Color} $group-count-text-color [rgba(0, 0, 0, .54)] - The grid group row cont badge text color.
-/// @param {Color} $drop-area-text-color [rgba(0, 0, 0, .54)] - The drop area text color.
-/// @param {Color} $drop-area-icon-color [rgba(0, 0, 0, .38)] - The drop area icon color.
-/// @param {Color} $drop-area-background [rgba(0, 0, 0, .04)] - The drop area background color.
-/// @param {Color} $drop-area-on-drop-background [rgba(0, 0, 0, .08)] - The drop area background on drop color.
-/// @param {Color} $tree-filtered-text-color [rgba(0, 0, 0, .04)] - grouping row background color on focus.
+/// @param {Color} $group-row-background [null] - The grid group row background color.
+/// @param {Color} $group-row-selected-background [null] - The drop area background on drop color.
+/// @param {Color} $active-expand-icon-color [null] - The drop area background on drop color.
+/// @param {Color} $active-expand-icon-hover-color [null] - The drop area background on drop color.
+/// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
+/// @param {Color} $group-label-icon [null] - The grid group row icon color.
+/// @param {Color} $group-label-text [null] - The grid group row text color.
 ///
-/// @param {Color} $filtering-header-background [#fff] - The background color of the filtered column header.
-/// @param {Color} $filtering-header-text-color [rgba(0, 0, 0, .74)] - The text color color of the filtered column header.
-/// @param {Color} $filtering-row-background [#fff] - The background color of the filtering row.
-/// @param {Color} $filtering-row-text-color [rgba(0, 0, 0, .74)] - The text-color color of the filtering row.
+/// @param {Color} $expand-all-icon-color [null] - The grid header expand all group rows icon color.
+/// @param {Color} $expand-all-icon-hover-color [null] - The grid header expand all group rows icon hover color.
+/// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
+/// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
+/// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
+/// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
+/// @param {Color} $drop-area-text-color [null] - The drop area text color.
+/// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
+/// @param {Color} $drop-area-background [null] - The drop area background color.
+/// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
+/// @param {Color} $tree-filtered-text-color [null] - grouping row background color on focus.
 ///
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
+/// @param {Color} $filtering-header-text-color [null] - The text color color of the filtered column header.
+/// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
+/// @param {Color} $filtering-row-text-color [null] - The text-color color of the filtering row.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires luminance
 /// @requires text-contrast
 /// @requires hexrgba
 /// @requires extend
@@ -137,7 +141,8 @@
     $filtering-row-text-color: null,
     $tree-filtered-text-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-grid'), $palette);
+    $name: 'igx-grid';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
@@ -279,6 +284,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
 
         header-background: $header-background,
@@ -1512,7 +1518,7 @@
     }
 
     %igx-grid__outlet {
-        z-index: 2;
+        z-index: 10002;
         position: fixed;
     }
 
