@@ -246,9 +246,9 @@ describe('IgxCalendar', () => {
                 year: 'numeric'
             };
             const defaultViews = { day: false, month: true, year: false };
-            const bodyMonth = dom.query(By.css('.date .date__el'));
+            const bodyMonth = dom.query(By.css('.igx-calendar-picker__date'));
             const headerYear = dom.query(By.css('.igx-calendar__header-year'));
-            const bodyYear = dom.queryAll(By.css('.date .date__el'))[1];
+            const bodyYear = dom.queryAll(By.css('.igx-calendar-picker__date'))[1];
             const headerWeekday = dom.queryAll(By.css('.igx-calendar__header-date span'))[0];
             const headerDate = dom.queryAll(By.css('.igx-calendar__header-date span'))[1];
 
@@ -300,9 +300,9 @@ describe('IgxCalendar', () => {
             fixture.componentInstance.model = new Date();
             fixture.detectChanges();
 
-            const bodyMonth = dom.query(By.css('.date .date__el'));
+            const bodyMonth = dom.query(By.css('.igx-calendar-picker__date'));
             const headerYear = dom.query(By.css('.igx-calendar__header-year'));
-            const bodyYear = dom.queryAll(By.css('.date .date__el'))[1];
+            const bodyYear = dom.queryAll(By.css('.igx-calendar-picker__date'))[1];
             const headerWeekday = dom.queryAll(By.css('.igx-calendar__header-date span'))[0];
             const headerDate = dom.queryAll(By.css('.igx-calendar__header-date span'))[1];
             let bodyWeekday = dom.query(By.css('.igx-calendar__label'));
@@ -362,7 +362,7 @@ describe('IgxCalendar', () => {
         });
 
         it('Calendar DOM structure - year view | month view', () => {
-            const collection = dom.queryAll(By.css('.date__el'));
+            const collection = dom.queryAll(By.css('.igx-calendar-picker__date'));
             const monthButton = collection[0];
             const yearButton = collection[1];
 

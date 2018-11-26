@@ -18,7 +18,7 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxGridGroupByRowComponent } from '../grid';
+import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
 
 /**
  * @hidden
