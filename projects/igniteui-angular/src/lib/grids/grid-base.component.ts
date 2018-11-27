@@ -4363,7 +4363,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
-        this._wheelListener = this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this._wheelListener = this.rowEditingWheelHandler.bind(this);
+        this.rowEditingOverlay.element.addEventListener('wheel', this._wheelListener);
     }
 
     /**
