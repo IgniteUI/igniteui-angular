@@ -271,6 +271,15 @@
             opacity: .12;
         }
     }
+
+    %cbx-display--plain {
+        %cbx-composite,
+        %cbx-composite::after,
+        %cbx-composite-mark,
+        %cbx-composite-mark--x {
+            transition: none;
+        }
+    }
 }
 
 /// Adds typography styles for the igx-checkbox component.
