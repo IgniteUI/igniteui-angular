@@ -22,7 +22,9 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const sassPlug = require('sassdoc-plugin-localization');
-
+const process = require('process');
+const fs = require('fs');
+const path = require('path');
 
 themeleon.use({
 
@@ -52,7 +54,7 @@ const theme = themeleon(__dirname, function (t) {
      * If only json conversion is needed the whole process of documentation rendering has to be stopped.
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, './extras/sassdoc/en');
+        return t.convert(t.ctx._data, path.join('extras', 'sassdoc'));
     }
     /**
      * Copy the assets folder from the theme's directory in the
@@ -79,7 +81,9 @@ const theme = themeleon(__dirname, function (t) {
             properties: 'partials/properties',
             example: 'partials/example',
             infraHead: 'partials/infragistics/header',
-            infraFoot: 'partials/infragistics/footer'
+            infraFoot: 'partials/infragistics/footer',
+            infraHeadJA: 'partials/infragistics/infranav.ja',
+            infraFooJA: 'partials/infragistics/infrafoot.ja'
         },
         helpers: {
             debug: function (content) {
@@ -105,23 +109,61 @@ const theme = themeleon(__dirname, function (t) {
             },
             trimType: (value) => {
                 return value.substring(0, 3);
+            },
+            retrieveEnvLink: () => {
+                let {
+                    NODE_ENV: node,
+                    SASSDOC_LANG: lang
+                } = process.env;
+
+                if (!node || !lang) {
+                    return;
+                }
+
+                const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
+                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                const config = config_file[lang.trim()][node.trim()];
+                return config ? config.url: '';
+            },
+            ifCond: (v1, operator, v2, options) => {
+                switch (operator) {
+                    case '==':
+                        // tslint:disable-next-line:triple-equals
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
             }
         }
     };
+    
+  /**
+   * Render `views/index.handlebars` with the theme's context (`ctx` below)
+   * as `index.html` in the destination directory.
+   */
+  t.handlebars('views/index.hbs', 'index.html', options);
 
-    /**
-     * Render `views/index.handlebars` with the theme's context (`ctx` below)
-     * as `index.html` in the destination directory.
-     */
-    t.handlebars('views/index.hbs', 'index.html', options);
-
-    /**
-     * Applies the translations from the json files.
-     */
-    if (t.ctx.render) {
-        const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
-        t.render(t.ctx._data, jsonDir);
-    }
+  /**
+   * Applies the translations from the json files.
+   */
+  if (t.ctx.render) {
+      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+      t.render(t.ctx._data, json_dir);
+  }
 });
 /**
  * Actual theme function. It takes the destination directory `dest`

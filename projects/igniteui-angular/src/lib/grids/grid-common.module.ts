@@ -55,6 +55,8 @@ import {
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 
@@ -84,6 +86,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxRowComponent,
+        IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent
     ],
@@ -135,6 +138,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxColumnPinningModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent
     ],
@@ -165,6 +169,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxSelectionAPIService,
         IgxColumnMovingService,
         IgxGridNavigationService,
+        IgxColumnResizingService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })

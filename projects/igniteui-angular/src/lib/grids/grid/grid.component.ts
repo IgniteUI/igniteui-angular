@@ -24,6 +24,7 @@ import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
@@ -59,7 +60,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService
+        IgxFilteringService, IgxColumnResizingService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
