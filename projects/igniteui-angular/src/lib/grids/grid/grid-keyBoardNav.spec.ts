@@ -20,7 +20,7 @@ import {
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
-fdescribe('IgxGrid - Keyboard navigation', () => {
+describe('IgxGrid - Keyboard navigation', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
