@@ -10,12 +10,13 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewChildren
+    ViewChildren,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
-import { Calendar, ICalendarDate, range, WEEKDAYS } from './calendar';
+import { Calendar, ICalendarDate, range, WEEKDAYS, IGX_CALENDAR_COMPONENT } from './calendar';
 import {
     IgxCalendarDateDirective,
     IgxCalendarHeaderTemplateDirective,
@@ -38,6 +39,7 @@ export enum CalendarSelection {
     RANGE = 'range'
 }
 
+@Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -89,6 +91,10 @@ export class CalendarHammerConfig extends HammerGestureConfig {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: CalendarHammerConfig
+        },
+        {
+            provide: IGX_CALENDAR_COMPONENT,
+            useExisting: IgxCalendarComponent
         }
     ],
     selector: 'igx-calendar',

@@ -4,24 +4,22 @@ import {
     Component,
     ContentChild,
     ElementRef,
-    forwardRef,
     HostBinding,
-    Inject,
     Input,
     TemplateRef,
     HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
-import { IgxTabsComponent } from './tabs.component';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
+import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 
 @Component({
     selector: 'igx-tabs-group',
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
+export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit, AfterViewChecked {
     public isSelected = false;
 
     /**
@@ -78,7 +76,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      */
     get relatedTab(): IgxTabItemComponent {
         if (this._tabs.tabs) {
-            return this._tabs.tabs.toArray()[this.index];
+            return this._tabs.tabs.toArray()[this.index] as IgxTabItemComponent;
         }
     }
 
@@ -120,10 +118,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
-    constructor(
-        @Inject(forwardRef(() => IgxTabsComponent))
-        private _tabs: IgxTabsComponent,
-        private _element: ElementRef) {
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
     }
 
 

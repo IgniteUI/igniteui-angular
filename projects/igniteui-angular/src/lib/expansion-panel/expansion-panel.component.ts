@@ -13,7 +13,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@ang
 import { growVerOut, growVerIn } from '../animations/main';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IToggleView } from '../core/navigation';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
 
 let NEXT_ID = 0;
 
@@ -23,9 +23,11 @@ export interface AnimationSettings {
 }
 @Component({
     selector: 'igx-expansion-panel',
-    templateUrl: 'expansion-panel.component.html'
+    templateUrl: 'expansion-panel.component.html',
+    providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }]
 })
-export class IgxExpansionPanelComponent implements IToggleView {
+export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
+
     @Input()
     public animationSettings: AnimationSettings = {
         openAnimation: growVerIn,
@@ -62,23 +64,12 @@ export class IgxExpansionPanelComponent implements IToggleView {
     public get headerId() {
         return this.header ? `${this.id}-header` : '';
     }
+    constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }
 
-    /**
-     * @hidden
-     */
-    public get element() {
-        return this.elementRef.nativeElement;
-    }
-
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef,
-        private builder: AnimationBuilder) { }
-
-    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: IgxExpansionPanelBodyComponent })
+    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: forwardRef(() => IgxExpansionPanelBodyComponent) })
     public body: IgxExpansionPanelBodyComponent;
 
-    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), { read: IgxExpansionPanelHeaderComponent })
+    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), { read: forwardRef(() => IgxExpansionPanelHeaderComponent) })
     public header: IgxExpansionPanelHeaderComponent;
 
 

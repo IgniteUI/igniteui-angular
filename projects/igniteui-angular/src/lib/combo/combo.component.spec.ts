@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -15,6 +14,8 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxDropDownBase } from '../drop-down/drop-down.base';
+import { Navigate } from '../drop-down/drop-down.common';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -382,7 +383,6 @@ describe('igxCombo', () => {
             spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
-            spyOn<any>(combo, 'cdr').and.callThrough();
             expect(combo.dropdown.collapsed).toEqual(true);
             combo.dropdown.toggle();
             tick();

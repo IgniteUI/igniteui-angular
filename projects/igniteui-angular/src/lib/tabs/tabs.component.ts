@@ -23,6 +23,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
+import { IgxTabsBase } from './tabs.common';
 
 export enum TabsType {
     FIXED = 'fixed',
@@ -31,10 +32,11 @@ export enum TabsType {
 
 @Component({
     selector: 'igx-tabs',
-    templateUrl: 'tabs.component.html'
+    templateUrl: 'tabs.component.html',
+    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
 })
 
-export class IgxTabsComponent implements AfterViewInit, OnDestroy {
+export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     /**
      * Provides an observable collection of all `IgxTabItemComponent`s.

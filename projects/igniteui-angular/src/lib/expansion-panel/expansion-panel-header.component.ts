@@ -5,21 +5,14 @@ import {
     HostBinding,
     HostListener,
     Input,
-    Renderer2,
     Host,
     EventEmitter,
     Output,
     ContentChild,
-    Inject,
-    forwardRef
+    Inject
 } from '@angular/core';
-import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { IgxExpansionPanelIconDirective, IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
-
-export interface IExpansionPanelEventArgs {
-    event: Event;
-    panel: IgxExpansionPanelComponent;
-}
+import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
+import { IExpansionPanelEventArgs, IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
 
 /**
  * @hidden
@@ -80,8 +73,7 @@ export class IgxExpansionPanelHeaderComponent {
     @HostBinding('class.igx-expansion-panel--disabled')
     public disabled = false;
 
-    constructor(@Inject(forwardRef(() => IgxExpansionPanelComponent)) public panel: IgxExpansionPanelComponent,
-     public cdr: ChangeDetectorRef,
+    constructor(@Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef) {
          this.id = `${this.panel.id}-header`;
      }
