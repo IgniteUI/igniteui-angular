@@ -601,7 +601,7 @@ describe('IgxTreeGrid - Integration', () => {
             const column = treeGrid.columnList.filter(c => c.header === 'General Information')[0];
             column.movable = true;
             fix.detectChanges();
-            
+
             const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-item'))[0].nativeElement;
 
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
