@@ -9,7 +9,7 @@ export interface IResourceStrings extends IGridResourceStrings, ITimePickerResou
  */
 export const CurrentResourceStrings = {
     GridResStrings: cloneValue(GridResourceStringsEN),
-    TimePickerResStrings: cloneValue(GridResourceStringsEN)
+    TimePickerResStrings: cloneValue(TimePickerResourceStringsEN)
 };
 
 function updateResourceStrings(currentStrings: IResourceStrings, newStrings: IResourceStrings ) {
@@ -25,12 +25,15 @@ function updateResourceStrings(currentStrings: IResourceStrings, newStrings: IRe
  * ```
  * @param resourceStrings to be applied
  */
-export function Changei18n(resourceStrings: IResourceStrings) {
+export function changei18n(resourceStrings: IResourceStrings) {
     for (const key of Object.keys(CurrentResourceStrings)) {
         updateResourceStrings(CurrentResourceStrings[key], resourceStrings);
     }
 }
 
+/**
+ * Returns current resource strings for all components
+ */
 export function getCurrentResourceStrings() {
     return {
             ...CurrentResourceStrings.GridResStrings,
