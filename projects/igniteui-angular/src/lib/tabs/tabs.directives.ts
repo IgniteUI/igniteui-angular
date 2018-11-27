@@ -1,12 +1,10 @@
 import {
     Directive,
-    forwardRef,
     Host,
     HostBinding,
-    Inject,
     TemplateRef
 } from '@angular/core';
-import { IgxTabsComponent } from './tabs.component';
+import { IgxTabsBase } from './tabs.common';
 
 enum ButtonStyle {
     VISIBLE = 'visible',
@@ -19,8 +17,7 @@ enum ButtonStyle {
 })
 
 export class IgxRightButtonStyleDirective {
-    constructor(@Host() @Inject(forwardRef(() => IgxTabsComponent))
-    public tabs: IgxTabsComponent) {
+    constructor(public tabs: IgxTabsBase) {
     }
 
     private getRightButtonStyle() {
@@ -62,8 +59,7 @@ export class IgxRightButtonStyleDirective {
 })
 
 export class IgxLeftButtonStyleDirective {
-    constructor(@Host() @Inject(forwardRef(() => IgxTabsComponent))
-    public tabs: IgxTabsComponent) {
+    constructor(public tabs: IgxTabsBase) {
     }
 
     private getLeftButtonStyle() {

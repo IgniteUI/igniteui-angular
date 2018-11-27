@@ -13,14 +13,16 @@ import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@ang
 import { growVerOut, growVerIn } from '../animations/main';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansion-panel.common';
 
 let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-expansion-panel',
-    templateUrl: 'expansion-panel.component.html'
+    templateUrl: 'expansion-panel.component.html',
+    providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }]
 })
-export class IgxExpansionPanelComponent {
+export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
 
     @Input()
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
@@ -58,15 +60,12 @@ export class IgxExpansionPanelComponent {
     public get headerId() {
         return this.header ? `${this.id}-header` : '';
     }
-    constructor(
-        public cdr: ChangeDetectorRef,
-        public elementRef: ElementRef,
-        private builder: AnimationBuilder) { }
+    constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }
 
-    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: IgxExpansionPanelBodyComponent })
+    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent), { read: forwardRef(() => IgxExpansionPanelBodyComponent) })
     public body: IgxExpansionPanelBodyComponent;
 
-    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), { read: IgxExpansionPanelHeaderComponent })
+    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent), { read: forwardRef(() => IgxExpansionPanelHeaderComponent) })
     public header: IgxExpansionPanelHeaderComponent;
 
 
