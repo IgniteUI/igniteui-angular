@@ -11,8 +11,8 @@ import { IGroupingState } from './groupby-state.interface';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
 import { ITreeGridRecord } from '../grids/tree-grid';
-import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
 import { cloneValue, mergeObjects } from '../core/utils';
+import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
 
 /**
  * @hidden

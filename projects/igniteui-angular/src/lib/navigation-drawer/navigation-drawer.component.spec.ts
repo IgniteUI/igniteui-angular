@@ -17,6 +17,7 @@ declare var Simulator: any;
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
+    let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -34,7 +35,7 @@ describe('Navigation Drawer', () => {
 
         // Using Window through DI causes AOT error (https://github.com/angular/angular/issues/15640)
         // so for tests just force override the the `getWindowWidth`
-        this.widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
+        widthSpyOverride = spyOn(Infragistics.IgxNavigationDrawerComponent.prototype as any, 'getWindowWidth')
             .and.returnValue(915 /* chosen at random by fair dice roll*/);
     }));
 
@@ -521,7 +522,7 @@ describe('Navigation Drawer', () => {
         fixture.componentInstance.pin = true;
         fixture.detectChanges();
 
-        this.widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
+        widthSpyOverride.and.returnValue(fixture.componentInstance.pinThreshold);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
@@ -529,7 +530,7 @@ describe('Navigation Drawer', () => {
         expect(fixture.componentInstance.viewChild.pin).toBe(true, 'Should pin on window resize over threshold');
         expect(fixture.componentInstance.pin).toBe(true, 'Parent pin update on window resize over threshold');
 
-        this.widthSpyOverride.and.returnValue(768);
+        widthSpyOverride.and.returnValue(768);
         window.dispatchEvent(new Event('resize'));
 
         // wait for debounce
@@ -548,7 +549,7 @@ describe('Navigation Drawer', () => {
         const originalWidth = window.innerWidth;
 
         // re-enable `getWindowWidth`
-        const widthSpy = (this.widthSpyOverride as jasmine.Spy).and.callThrough();
+        const widthSpy = (widthSpyOverride as jasmine.Spy).and.callThrough();
         expect(widthSpy.call(null)).toEqual(originalWidth);
         (window as any).innerWidth = 0; // not that readonly in Chrome
         expect(widthSpy.call(null)).toEqual(screen.width);
