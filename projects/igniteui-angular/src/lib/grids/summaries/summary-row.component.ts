@@ -27,6 +27,11 @@ export class IgxSummaryRowComponent {
         return this.index;
     }
 
+    @HostBinding('style.min-height.px')
+    get minHeight() {
+        return this.grid.summaryService.calcMaxSummaryHeight();
+    }
+
     @ViewChildren(IgxSummaryCellComponent, { read: IgxSummaryCellComponent })
     public summaryCells: QueryList<IgxSummaryCellComponent>;
 

@@ -22,7 +22,7 @@ export class IgxGridSummaryService {
         }
     }
 
-    public calculateMaxSummaryHeight() {
+    public calcMaxSummaryHeight() {
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             (this.grid as any).gridAPI.set_summary_by_column_name(this.grid.id, column.field);
@@ -53,9 +53,9 @@ export class IgxGridSummaryService {
         return this.summaryCacheMap.get(rowID);
     }
 
-    public get hasSummarizedColumns() {
-        const summarizedColumns = this.grid.columnList.filter(col => col.hasSummary);
-        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
+    public get hasSummarizedColumns(): boolean {
+        const summarizedColumns = this.grid.columnList.filter(col => col.hasSummary && !col.hidden);
+        return summarizedColumns.length > 0;
     }
 
     private removeTreeGridRootSummary(rowID, columnName?) {

@@ -27,10 +27,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
         ];
 
         this.columns = [
-            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number' },
-            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string' },
-            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string' },
-            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string' }
+            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: true },
+            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string', hasSummary: false },
+            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string', hasSummary: false },
+            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true }
         ];
         this.data = [
             { 'employeeID': 0, 'PID': -1, 'firstName': 'Andrew', 'lastName': 'Fuller', 'Title': 'Vice President, Sales' },
@@ -89,5 +89,14 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public disableSummary() {
+        const name = 'employeeID';
+        if (this.grid1.getColumnByName(name).hasSummary) {
+            this.grid1.disableSummaries(name);
+        } else {
+            this.grid1.enableSummaries(name);
+        }
     }
 }

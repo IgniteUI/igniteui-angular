@@ -2178,7 +2178,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
-        this.summariesHeight = this.calcMaxSummaryHeight();
+        this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         this._derivePossibleHeight();
         this.markForCheck();
 
@@ -3352,8 +3352,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get hasSummarizedColumns(): boolean {
-        const summarizedColumns = this.columnList.filter(col => col.hasSummary);
-        return summarizedColumns.length > 0 && summarizedColumns.some(col => !col.hidden);
+        return this.summaryService.hasSummarizedColumns;
     }
 
     /**
@@ -3456,7 +3455,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcHeight = null;
             if (this.hasSummarizedColumns && !this.summariesHeight) {
                 this.summariesHeight = this.summaries ?
-                    this.calcMaxSummaryHeight() : 0;
+                    this.summaryService.calcMaxSummaryHeight() : 0;
             }
             return;
         }
@@ -3475,7 +3474,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
-                this.calcMaxSummaryHeight() : 0;
+                this.summaryService.calcMaxSummaryHeight() : 0;
         }
 
         const groupAreaHeight = this.getGroupAreaHeight();
@@ -3560,23 +3559,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this._derivePossibleWidth();
-    }
-
-    /**
-     * @hidden
-     */
-    protected calcMaxSummaryHeight() {
-        let maxSummaryLength = 0;
-        this.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
-            this.gridAPI.set_summary_by_column_name(this.id, column.field);
-            const getCurrentSummaryColumn = this.gridAPI.get_summaries(this.id).get(column.field);
-            if (getCurrentSummaryColumn) {
-                if (maxSummaryLength < getCurrentSummaryColumn.length) {
-                    maxSummaryLength = getCurrentSummaryColumn.length;
-                }
-            }
-        });
-        return maxSummaryLength * this.defaultRowHeight;
     }
 
     /**

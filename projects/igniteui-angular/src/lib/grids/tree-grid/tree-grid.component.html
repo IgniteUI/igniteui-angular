@@ -83,9 +83,8 @@
     <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <!-- Hiding until summaries are implemented for TreeGrid -->
-    <!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
+<div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' [style.height.px]="summaryService.calcMaxSummaryHeight()" #tfoot>
+    <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" role="row" #summaries>
         <ng-container *ngIf="summariesMargin">
             <div
             class="igx-grid__summaries-patch"
@@ -93,13 +92,9 @@
             [style.flex-basis.px]="summariesMargin"
             ></div>
         </ng-container>
-        <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
-        </ng-container>
-        <ng-template igxGridFor let-col [igxGridForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
-            <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
-        </ng-template>
-    </div> -->
+        <igx-grid-summary-row [gridID]="id" [summaries]="summaryService.calculateSummaries('root', data)" [index]="0" class="igx-grid__summaries" #summaryRow>
+            </igx-grid-summary-row>
+    </div>
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
