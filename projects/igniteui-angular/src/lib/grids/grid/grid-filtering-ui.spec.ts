@@ -24,7 +24,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
-import { Changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
+import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -2643,7 +2643,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         const strings = getCurrentResourceStrings();
         strings.igx_grid_filter = 'My filter';
         strings.igx_grid_filter_row_close = 'My close';
-        Changei18n(strings);
+        changei18n(strings);
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -2665,7 +2665,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(close.nativeElement.innerText).toBe('My close');
         expect(reset.nativeElement.innerText).toBe('Reset');
 
-        Changei18n({
+        changei18n({
             igx_grid_filter: 'Filter',
             igx_grid_filter_row_close: 'Close'
         });

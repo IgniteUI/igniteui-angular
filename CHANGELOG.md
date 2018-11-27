@@ -19,9 +19,10 @@ All notable changes for each version of this project will be documented in this 
     - Added a new property `maxHeight`, defining the max height of the drop down. ([#3001](https://github.com/IgniteUI/igniteui-angular/issues/3001))
 - Added migrations for Sass theme properties changes in 6.2.0 ([#2994](https://github.com/IgniteUI/igniteui-angular/issues/2994))
 - Localization
-    - Added an util function `Changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
+    - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
     in the application.
-    - `resourceStrings` property added to `igx-grid` and `igx-time-picker`, which allows changing/localizing strings for component. If a new istnace is set, 
+    - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
+    - `resourceStrings` property added to `igx-grid` and `igx-time-picker`, which allows changing/localizing strings for component. If a new instance is set, 
     the changes will be applied to the particular instance of the component:
     ```typescript
         this.grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
