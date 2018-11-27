@@ -65,7 +65,11 @@
                         <igx-avatar src="assets/images/avatar/22.jpg" roundShape="true"></igx-avatar>
                         <span class="name">Alicia Keys</span>
                     </div>
-                    <igx-checkbox [(ngModel)]="user.registered">Value</igx-checkbox>
+                    <igx-checkbox
+                        [(ngModel)]="user.registered"
+                        [disableTransitions]="true">
+                        Value
+                    </igx-checkbox>
                 </div>
 
                 <div class="checkbox-sample">
