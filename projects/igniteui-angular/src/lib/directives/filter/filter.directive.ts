@@ -13,6 +13,70 @@ import {
     SimpleChanges
 } from '@angular/core';
 
+export class IgxFilterOptions {
+    // Input text value that will be used as a filtering pattern (matching condition is based on it)
+    public inputValue = '';
+
+    // Item property, which value should be used for filtering
+    public key: string;
+
+    // Represent items of the list. It should be used to handle decalaratevely defined widgets
+    public items: any[];
+
+    // Function - get value to be tested from the item
+    // item - single item of the list to be filtered
+    // key - property name of item, which value should be tested
+    // Default behavior - returns "key"- named property value of item if key si provided,
+    // otherwise textContent of the item's html element
+    public get_value(item: any, key: string): string {
+        let result = '';
+
+        if (key) {
+            result = item[key].toString();
+        } else if (item.element) {
+            if (item.element.nativeElement) {
+                result = item.element.nativeElement.textContent.trim();
+            // Check if element doesn't return the DOM element directly
+            } else if (item.element.textContent) {
+                result = item.element.textContent.trim();
+            }
+        }
+
+        return result;
+    }
+
+    // Function - formats the original text before matching process
+    // Default behavior - returns text to lower case
+    public formatter(valueToTest: string): string {
+        return valueToTest.toLowerCase();
+    }
+
+    // Function - determines whether the item met the condition
+    // valueToTest - text value that should be tested
+    // inputValue - text value from input that condition is based on
+    // Default behavior - "contains"
+    public matchFn(valueToTest: string, inputValue: string): boolean {
+        return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || '') > -1;
+    }
+
+    // Function - executed after matching test for every matched item
+    // Default behavior - shows the item
+    public metConditionFn(item: any) {
+        if (item.hasOwnProperty('hidden')) {
+            item.hidden = false;
+        }
+    }
+
+    // Function - executed for every NOT matched item after matching test
+    // Default behavior - hides the item
+    public overdueConditionFn(item: any) {
+        if (item.hasOwnProperty('hidden')) {
+            item.hidden = true;
+        }
+    }
+}
+
+
 @Directive({
     selector: '[igxFilter]'
 })
@@ -95,68 +159,6 @@ export class IgxFilterPipe implements PipeTransform {
     }
 }
 
-export class IgxFilterOptions {
-    // Input text value that will be used as a filtering pattern (matching condition is based on it)
-    public inputValue = '';
-
-    // Item property, which value should be used for filtering
-    public key: string;
-
-    // Represent items of the list. It should be used to handle decalaratevely defined widgets
-    public items: any[];
-
-    // Function - get value to be tested from the item
-    // item - single item of the list to be filtered
-    // key - property name of item, which value should be tested
-    // Default behavior - returns "key"- named property value of item if key si provided,
-    // otherwise textContent of the item's html element
-    public get_value(item: any, key: string): string {
-        let result = '';
-
-        if (key) {
-            result = item[key].toString();
-        } else if (item.element) {
-            if (item.element.nativeElement) {
-                result = item.element.nativeElement.textContent.trim();
-            // Check if element doesn't return the DOM element directly
-            } else if (item.element.textContent) {
-                result = item.element.textContent.trim();
-            }
-        }
-
-        return result;
-    }
-
-    // Function - formats the original text before matching process
-    // Default behavior - returns text to lower case
-    public formatter(valueToTest: string): string {
-        return valueToTest.toLowerCase();
-    }
-
-    // Function - determines whether the item met the condition
-    // valueToTest - text value that should be tested
-    // inputValue - text value from input that condition is based on
-    // Default behavior - "contains"
-    public matchFn(valueToTest: string, inputValue: string): boolean {
-        return valueToTest.indexOf(inputValue && inputValue.toLowerCase() || '') > -1;
-    }
-
-    // Function - executed after matching test for every matched item
-    // Default behavior - shows the item
-    public metConditionFn(item: any) {
-        if (item.hasOwnProperty('hidden')) {
-            item.hidden = false;
-        }
-    }
-
-    // Function - executed for every NOT matched item after matching test
-    // Default behavior - hides the item
-    public overdueConditionFn(item: any) {
-        if (item.hasOwnProperty('hidden')) {
-            item.hidden = true;
-        }
-    }
-}
 
 @NgModule({
     declarations: [IgxFilterDirective, IgxFilterPipe],

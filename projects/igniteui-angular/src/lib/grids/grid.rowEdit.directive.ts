@@ -29,10 +29,17 @@ export class IgxRowEditTabStopDirective {
     private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
+
+    private grid: IgxGridBaseComponent;
+    private navigationService: IgxGridNavigationService;
+
     constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) public grid: IgxGridBaseComponent,
+        @Inject(forwardRef(() => IgxGridBaseComponent)) grid,
         public element: ElementRef,
-        @Inject(forwardRef(() => IgxGridNavigationService)) public navigationService: IgxGridNavigationService) {}
+        @Inject(forwardRef(() => IgxGridNavigationService)) navigationService) {
+            this.grid = grid;
+            this.navigationService = navigationService;
+        }
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {

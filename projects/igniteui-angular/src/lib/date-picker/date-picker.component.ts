@@ -349,7 +349,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @Output()
     public onSelection = new EventEmitter<Date>();
 
-    /*
+    /**
      * @hidden
      */
     @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
@@ -599,7 +599,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      * @hidden
      */
     public handleSelection(date: Date) {
-        if (this.value !== null && this.value !== undefined) {
+        if (this.value) {
             date.setHours(this.value.getHours());
             date.setMinutes(this.value.getMinutes());
             date.setSeconds(this.value.getSeconds());
