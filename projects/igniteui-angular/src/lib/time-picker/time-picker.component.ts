@@ -18,8 +18,7 @@ import {
     ContentChild,
     Inject,
     Pipe,
-    PipeTransform,
-    ChangeDetectorRef
+    PipeTransform
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -38,11 +37,12 @@ import { Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
-import { ConnectedPositioningStrategy, GlobalPositionStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy } from '../services/overlay/position';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
 import { takeUntil, filter } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 
 
 let NEXT_ID = 0;
@@ -443,7 +443,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         this.showContainer = true;
         requestAnimationFrame(()=> {
             if (this.mode === InteractionMode.dialog) {
-                this._overlayId = this.overlayService.show(this.container);
+                this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
             } else if (this._collapsed) {
                 this._overlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
                 this._overlayId = this.overlayService.show(this.container, this._overlaySettings);
@@ -518,8 +518,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
          this._overlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
+            outlet: this.outlet,
             scrollStrategy: new NoOpScrollStrategy(),
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings)
+        };
+        this._dialogOverlaySettings = {
+            outlet: this.outlet
         };
     }
 
@@ -839,8 +843,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         return date;
     }
 
-    private _convertMinMaxValue(value: string, dateVal = null): Date {
-        const date = dateVal ? new Date(dateVal) : this.value ? new Date(this.value) : new Date();
+    private _convertMinMaxValue(value: string): Date {
+        const date = this.value ? new Date(this.value) : new Date();
         const sections = value.split(/[\s:]+/);
 
         date.setHours(parseInt(sections[0], 10));
@@ -849,7 +853,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         if (sections[2] && sections[2] === 'PM' && sections[0] !== '12') {
             date.setHours(date.getHours() + 12);
         }
-        if (sections[2] && sections[2] && sections[0] === '12') {
+        if (sections[0] === '12' && sections[2] && sections[2] === 'AM') {
             date.setHours(0);
         }
 
@@ -860,9 +864,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         if (!value && this.mode === InteractionMode.dropdown) {
             return true;
         }
-        if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
+
+        if (this.value && this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
             return false;
-        } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
+        } else if (this.value && this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
         } else {
             return true;
@@ -1119,8 +1124,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
 
 
-    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService,
-                private cdr: ChangeDetectorRef) {
+    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
 
         this.overlayService.onClosed.pipe(
             filter(event => event.id === this._overlayId),
@@ -1158,6 +1162,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     @ViewChild('dropdownInputTemplate', { read: TemplateRef })
     private dropdownInputTemplate: TemplateRef<any>;
 
+    @ViewChild('outlet', { read: IgxOverlayOutletDirective })
+    private outlet: IgxOverlayOutletDirective;
+
 
     public showContainer = false;
     public buttonType = 'flat';
@@ -1174,9 +1181,9 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     private _overlayId: string;
     private _destroy$ = new Subject<boolean>();
     private _collapsed = true;
-    private _currentVal = new Date();
     private _positionSettings: PositionSettings;
     private _overlaySettings: OverlaySettings;
+    private _dialogOverlaySettings: OverlaySettings;
 
     get isModal(): boolean {
         return this.mode === InteractionMode.dialog;
@@ -1185,19 +1192,21 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     private getCursorPosition(): number {
         return this.input.nativeElement.selectionStart;
     }
-     private setCursorPosition(start: number, end: number = start): void {
+
+    private setCursorPosition(start: number, end: number = start): void {
         this.input.nativeElement.setSelectionRange(start, end);
     }
 
     public parseMask(preserveAmPm = true): string {
         const prompts = this.promptChar + this.promptChar;
-        let amPm = preserveAmPm ? (new Date(Date.now())).getHours() > 11 ? 'PM' : 'AM' : prompts;
+        let amPm = preserveAmPm ? 'AM' : prompts;
 
         return this.format.indexOf('tt') !== -1 ? `${prompts}:${prompts} ${amPm}` : `${prompts}:${prompts}`;
     }
 
     public clear() {
         this.cleared = true;
+        this.isNotEmpty = false;
 
         this.displayValue = '';
         this.value = null;
@@ -1223,12 +1232,17 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
     public onKeyup(event) {
         const val = event.target.value;
+        const key = event.key.toLowerCase();
+
+        this.isNotEmpty = val !== this.parseMask(false);
+
+        if (key === 'arrowdown' || key === 'arrowup') {
+            return;
+        }
 
         if (val.indexOf(this.promptChar) === -1) {
             this.value = this._convertMinMaxValue(val);
         }
-
-        this.isNotEmpty = val !== this.parseMask(false);
     }
 
     public updateValueOnDelete(event) {
@@ -1240,93 +1254,100 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         });
     }
 
+    public onFocus(event) {
+        this.isNotEmpty = event.target.value !== this.parseMask(false);
+    }
+
     public onBlur(event) {
         const value = event.target.value;
+
         this.displayValue = value;
         this.value = value && value !== this.parseMask() ? this._convertMinMaxValue(value) : null;
+
+        this.isNotEmpty = value === this.format;
     }
+
 
     public spinOnEdit(event) {
         event.preventDefault();
+
+        let sign: number;
+        let displayVal: string;
+        let min = this.minValue ? this._convertMinMaxValue(this.minValue): this._convertMinMaxValue('00:00');
+        let max = this.maxValue ? this._convertMinMaxValue(this.maxValue) : this._convertMinMaxValue('24:00');
+
         const cursor = this.getCursorPosition();
 
-        let sign = -1;
-        if (event.key.toLowerCase() === 'arrowup' || (event.wheelDelta && event.wheelDelta === 120)) {
-            sign = 1;
+        if (event.key) {
+            const key = event.key.toLowerCase();
+            sign = key === 'arrowdown' || key === 'down' ? -1 : 1;
         }
 
-        let min = this.minValue ? this._convertMinMaxValue(this.minValue): this._convertMinMaxValue('00:00', this._currentVal);
-        let max = this.maxValue ? this._convertMinMaxValue(this.maxValue) : this._convertMinMaxValue('24:00',this._currentVal);
+        if (event.wheelDelta) {
+            sign = event.wheelDelta === 120 ? 1 : -1;
+        }
 
-        let displayVal;
         if (!this.value) {
             this.value = sign > 0 ? min : max;
             displayVal = this._formatTime(this.value, this.format);
         } else {
-            this._currentVal = Object.assign(this._currentVal, this.value);
+            let currentVal = new Date(this.value);
 
             const hDelta = this.itemsDelta.hours * 60 + (sign * this.value.getMinutes());
             const mDelta = this.itemsDelta.minutes;
+            const sections = this.displayValue.split(/[\s:]+/);
 
             if (HOURS_POS.indexOf(cursor) !== -1) {
-                this.value.setMinutes(sign * hDelta);
+                let val = new Date(this.value);
+
+                val.setMinutes(sign * hDelta);
+                if (this.format.indexOf('tt') !== -1 && sections[2] && sections[2] === 'PM' && val.getHours() < 11) {
+                    val.setHours(val.getHours() + 12);
+                }
+
+                this.value = val;
             }
 
             if (MINUTES_POS.indexOf(cursor) !== -1) {
-                this.value.setMinutes(this.value.getMinutes() + (sign * mDelta));
+                let val = new Date(this.value);
+                val.setMinutes(this.value.getMinutes() + (sign * mDelta));
+
+                this.value = val;
             }
 
-            displayVal = this.displayValue = this._formatTime(this.value, this.format);
             if (this.value.getTime() > max.getTime()) {
-                if (this.isSpinLoop && this.maxValue) {
+                if (this.isSpinLoop) {
+                    min.setMinutes(0);
+                    min.setMinutes(this.value.getMinutes());
                     this.value = min;
-                    this.value.setHours(this.value.getHours() + 24);
-                    displayVal = this._formatTime(this.value, this.format);
-                }
-
-                if (!this.isSpinLoop) {
-                    this.value = max;
-                    displayVal = this._formatTime(this.value, this.format);
+                } else {
+                    this.value = currentVal;
                 }
             }
 
             if (this.value.getTime() < min.getTime()) {
-                if (this.isSpinLoop && this.minValue) {
+                if (this.isSpinLoop) {
+                    max.setMinutes(0);
+                    max.setMinutes(-60 + this.value.getMinutes());
                     this.value = max;
-                    this.value.setHours(this.value.getHours() - 24);
-                    displayVal = this._formatTime(this.value, this.format);
-                }
-
-                if (!this.isSpinLoop) {
-                    this.value = min;
-                    displayVal = this._formatTime(this.value, this.format);
+                } else {
+                    this.value = currentVal;
                 }
             }
 
             if (AMPM_POS.indexOf(cursor) !== -1 && this.format.indexOf('tt') !== -1) {
-                const sections = this.displayValue.split(/[\s:]+/);
+                let val = new Date(this.value);
 
-                const hour = sections[0];
-                const minutes = sections[1];
-                let amPM = sections[2];
+                sign = sections[2] && sections[2] === 'AM' ? 1 : -1;
+                val.setHours(val.getHours() + (sign * 12));
 
-                amPM = amPM === 'AM' ? 'PM' :'AM';
-
-                displayVal = `${hour}:${minutes} ${amPM}`;
+                this.value = val;
             }
 
-            if ((this.format.indexOf('hh') !== -1 || this.format.indexOf('h') !== -1) && this.format.indexOf('tt') !== -1) {
-
-                if (displayVal.split(/[\s:]+/)[2] === 'PM' && this.value.getHours() < 11) {
-                    this.value.setHours(this.value.getHours() + 12);
-                }
-
-                displayVal = this._formatTime(this.value, this.format);
-            }
+            displayVal = this._formatTime(this.value, this.format);
         }
 
         this.displayValue = this.inputFormat.transform(displayVal);
-        this.value = this._convertMinMaxValue(this.displayValue);
 
         requestAnimationFrame(() => {
             this.setCursorPosition(cursor);

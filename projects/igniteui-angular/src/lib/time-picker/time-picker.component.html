@@ -11,9 +11,10 @@
                                   (keydown)="onKeydown($event)"
                                   (keyup)="onKeyup($event)"
                                   (blur)="onBlur($event)"
+                                  (focus)="onFocus($event)"
                                   (wheel)="spinOnEdit($event)"
                                   [disabled]="disabled"/>
-        <igx-suffix *ngIf="value || isNotEmpty" igxRipple (click)="clear()">
+        <igx-suffix *ngIf="displayValue || isNotEmpty" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
         <igx-suffix igxButton="icon" igxRipple (click)="openDialog()">
@@ -62,3 +63,4 @@
         </button>
     </div>
 </div>
+<div #outlet igxOverlayOutlet></div>

@@ -20,7 +20,6 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
-import { DebugRenderer2 } from '@angular/core/src/view/services';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
