@@ -26,7 +26,6 @@ const process = require('process');
 const fs = require('fs');
 const path = require('path');
 
-
 themeleon.use({
 
     /**
@@ -55,7 +54,7 @@ const theme = themeleon(__dirname, function (t) {
      * If only json conversion is needed the whole process of documentation rendering has to be stopped.
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, './extras/sassdoc/en');
+        return t.convert(t.ctx._data, path.join('extras', 'sassdoc'));
     }
     /**
      * Copy the assets folder from the theme's directory in the
@@ -112,11 +111,19 @@ const theme = themeleon(__dirname, function (t) {
                 return value.substring(0, 3);
             },
             retrieveEnvLink: () => {
-                const lang = t.ctx.lang;
-                const env = process.env.NODE_ENV;
+                let {
+                    NODE_ENV: node,
+                    SASSDOC_LANG: lang
+                } = process.env;
+
+                if (!node || !lang) {
+                    return;
+                }
+
                 const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
-                const config = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
-                return config[lang][env.trim()] ? config[lang][env.trim()].url: '';
+                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                const config = config_file[lang.trim()][node.trim()];
+                return config ? config.url: '';
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
@@ -143,20 +150,20 @@ const theme = themeleon(__dirname, function (t) {
             }
         }
     };
+    
+  /**
+   * Render `views/index.handlebars` with the theme's context (`ctx` below)
+   * as `index.html` in the destination directory.
+   */
+  t.handlebars('views/index.hbs', 'index.html', options);
 
-    /**
-     * Render `views/index.handlebars` with the theme's context (`ctx` below)
-     * as `index.html` in the destination directory.
-     */
-    t.handlebars('views/index.hbs', 'index.html', options);
-
-    /**
-     * Applies the translations from the json files.
-     */
-    if (t.ctx.render) {
-        const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
-        t.render(t.ctx._data, jsonDir);
-    }
+  /**
+   * Applies the translations from the json files.
+   */
+  if (t.ctx.render) {
+      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+      t.render(t.ctx._data, json_dir);
+  }
 });
 /**
  * Actual theme function. It takes the destination directory `dest`
