@@ -247,7 +247,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         }
 
         const state = {
-            index: (page >= totalPages - 1) ? totalPages - 1 : page,
+            index: (totalPages > 0 && page >= totalPages) ? totalPages - 1 : page,
             recordsPerPage: perPage
         };
 
