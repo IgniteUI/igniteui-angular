@@ -16,21 +16,18 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
 
     public transform(
-        collection: IGroupByResult,
+        collection: any,
         state = [],
         id: string,
         primaryKey: any,
         childKeys: string[],
         pipeTrigger: number
-        ): IGroupByResult {
+        ): any[] {
         if (childKeys.length === 0) {
             return collection;
         }
         const grid: IgxHierarchicalGridComponent = this.gridAPI.get(id);
-        const result: IGroupByResult = {
-            data: this.addHierarchy(grid, cloneArray(collection.data), state, primaryKey, childKeys),
-            metadata: this.addHierarchy(grid, cloneArray(collection.metadata), state, primaryKey, childKeys)
-        };
+        const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys);
 
         grid.dataInitialized = true;
         return result;

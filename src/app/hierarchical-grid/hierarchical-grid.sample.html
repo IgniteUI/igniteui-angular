@@ -1,14 +1,14 @@
 <igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels"></igx-column>
-                <igx-column field="ProductName"></igx-column>
+                <igx-column field="ChildLevels" [groupable]='true'></igx-column>
+                <igx-column field="ProductName" [groupable]='true'></igx-column>
         </igx-column-group>
     <igx-row-island [key]="'childData2'" [autoGenerate]="true" [rowSelectable]='isRowSelectable'>
     </igx-row-island>
     <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1>
             <igx-column-group header="Information2">
-                    <igx-column field="ChildLevels"></igx-column>
-                    <igx-column field="ProductName"></igx-column>
+                    <igx-column field="ChildLevels"  [groupable]='true'></igx-column>
+                    <igx-column field="ProductName"  [groupable]='true'></igx-column>
             </igx-column-group>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
                 <igx-column-group header="Information3">

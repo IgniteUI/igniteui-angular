@@ -152,7 +152,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         }
         return {
             $implicit: rowData,
-            templateID: this.isChildGridRecord(rowData) ? 'childRow' : 'dataRow'
+            templateID: this.isChildGridRecord(rowData) ?
+            'childRow' :
+            this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
         };
     }
 

@@ -2,8 +2,8 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent, IPathSegment } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
-import { debug } from 'util';
-export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxHierarchicalGridComponent> {
+import { IgxGridAPIService } from '../grid/grid-api.service';
+export class IgxHierarchicalGridAPIService extends IgxGridAPIService {
     protected layouts: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected layoutChildGrids:  Map<string, Map<any, IgxHierarchicalGridComponent>> =
     new Map<string, Map<any, IgxHierarchicalGridComponent>>();

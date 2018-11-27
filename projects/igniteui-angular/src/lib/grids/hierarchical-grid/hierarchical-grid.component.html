@@ -75,8 +75,8 @@
     | gridSort:sortingExpressions:pipeTrigger
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
-    | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger
-    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger"
+    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
+    | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #hierarchical_record_template>
