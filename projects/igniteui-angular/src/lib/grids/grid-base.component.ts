@@ -161,11 +161,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public data: any[];
 
     /**
-     * An @Input property that sets the resource strings.
+     * An accessor that sets the resource strings.
      * By default it uses EN resources.
     */
-    @Input()
-    public resourceStrings: IGridResourceStrings = CurrentResourceStrings.GridResStrings;
+   @Input()
+   set resourceStrings(value: IGridResourceStrings) {
+       Object.assign({}, this._resourceStrings, value);
+   }
+
+   /**
+    * An accessor that returns the resource strings.
+   */
+   get resourceStrings(): IGridResourceStrings {
+       return this._resourceStrings;
+   }
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -2029,6 +2038,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         outlet: this.rowEditingOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
+
+    private _resourceStrings = CurrentResourceStrings.GridResStrings;
 
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);

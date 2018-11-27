@@ -87,6 +87,7 @@ export class IgxTimePickerComponent implements
     AfterViewInit {
 
     private _value: Date;
+    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -145,11 +146,20 @@ export class IgxTimePickerComponent implements
     public disabled = false;
 
     /**
-     * An @Input property that sets the resource strings.
+     * An accessor that sets the resource strings.
      * By default it uses EN resources.
     */
     @Input()
-    public resourceStrings: ITimePickerResourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    set resourceStrings(value: ITimePickerResourceStrings) {
+        Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+    */
+    get resourceStrings(): ITimePickerResourceStrings {
+        return this._resourceStrings;
+    }
 
     /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
