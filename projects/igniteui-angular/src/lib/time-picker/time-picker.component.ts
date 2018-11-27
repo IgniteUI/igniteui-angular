@@ -151,7 +151,7 @@ export class IgxTimePickerComponent implements
     */
     @Input()
     set resourceStrings(value: ITimePickerResourceStrings) {
-        Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**

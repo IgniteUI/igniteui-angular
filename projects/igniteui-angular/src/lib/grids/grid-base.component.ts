@@ -165,10 +165,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
     */
-   @Input()
-   set resourceStrings(value: IGridResourceStrings) {
-       Object.assign({}, this._resourceStrings, value);
-   }
+    @Input()
+    set resourceStrings(value: IGridResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
    /**
     * An accessor that returns the resource strings.
