@@ -240,11 +240,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
         }
 
         const len = collection.length;
-        let totalPages = 1;
-
-        if (collection.length >= 0) {
-            totalPages = Math.ceil(len / perPage);
-        }
+        const totalPages = Math.ceil(len / perPage);
 
         const state = {
             index: (totalPages > 0 && page >= totalPages) ? totalPages - 1 : page,
