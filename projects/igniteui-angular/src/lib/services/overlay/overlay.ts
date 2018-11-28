@@ -159,6 +159,9 @@ export class IgxOverlayService implements OnDestroy {
             info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
             this.moveElementToOverlay(info);
+            if (info.componentRef) {
+                info.componentRef.changeDetectorRef.detectChanges();
+            }
             this.updateSize(info);
             this._overlayInfos.push(info);
 
@@ -271,7 +274,7 @@ export class IgxOverlayService implements OnDestroy {
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
-            const element = dynamicComponent.location.nativeElement.lastElementChild;
+            const element = dynamicComponent.location.nativeElement;
             info.elementRef = <ElementRef>{ nativeElement: element };
             info.componentRef = dynamicComponent;
         }

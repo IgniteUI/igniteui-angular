@@ -22,12 +22,15 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const sassPlug = require('sassdoc-plugin-localization');
-
+const process = require('process');
+const fs = require('fs');
+const path = require('path');
+const shell = JSON.parse(fs.readFileSync('./extras/template/strings/shell-strings.json'));
 
 themeleon.use({
 
     /**
-     * Builds a structure of json files which represents the retrieved comments per every sass declaration.  
+     * Builds a structure of json files which represents the retrieved comments per every sass declaration.
      */
     convert: (data, dir) => sassPlug.convert(data, dir),
     /**
@@ -49,63 +52,114 @@ themeleon.use({
  */
 const theme = themeleon(__dirname, function (t) {
     /**
-     * If only json conversion is needed the whole process of documentation rendering has to be stopped. 
+     * If only json conversion is needed the whole process of documentation rendering has to be stopped.
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, './extras/sassdoc/en'); 
+        return t.convert(t.ctx._data, path.join('extras', 'sassdoc'));
     }
-  /**
-   * Copy the assets folder from the theme's directory in the
-   * destination directory.
-   */
-  t.copy('assets');
+    /**
+     * Copy the assets folder from the theme's directory in the
+     * destination directory.
+     */
+    t.copy('assets');
 
-  const options = {
-    partials: {
-      authors: 'partials/authors',
-      description: 'partials/description',
-      example: 'partials/example',
-      footer: 'partials/footer',
-      header: 'partials/header',
-      github: 'partials/github',
-      definitionHeader: 'partials/definitionHeader',
-      require: 'partials/require',
-      search: 'partials/search',
-      sidenav: 'partials/sidenav',
-      source: 'partials/source',
-      usedBy: 'partials/usedby',
-      parameters: 'partials/parameters',
-      example: 'partials/example',
-      infraHead: 'partials/infragistics/header',
-      infraFoot: 'partials/infragistics/footer'
-    },
-    helpers: {
-      debug: function (content) {
-        console.log("----VALUE-----");
-        console.log(content);
-      },
-      json: function (context) {
-        return JSON.stringify(context);
-      },
-      github: function (file, line) {
-        const url = 'https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/core/styles/';
-        return `${url}${file}#L${line}`;
-      },
-      typeClass: function (context) {
-        switch (context) {
-          case "mixin":
-            return "--mixin";
-          case "function":
-            return "--function";
-          default:
-            return "";
+    const options = {
+        partials: {
+            authors: 'partials/authors',
+            description: 'partials/description',
+            example: 'partials/example',
+            footer: 'partials/footer',
+            header: 'partials/header',
+            github: 'partials/github',
+            definitionHeader: 'partials/definitionHeader',
+            require: 'partials/require',
+            search: 'partials/search',
+            see: 'partials/see',
+            sidenav: 'partials/sidenav',
+            source: 'partials/source',
+            usedBy: 'partials/usedby',
+            parameters: 'partials/parameters',
+            properties: 'partials/properties',
+            example: 'partials/example',
+            infraHead: 'partials/infragistics/header',
+            infraFoot: 'partials/infragistics/footer',
+            infraHeadJA: 'partials/infragistics/infranav.ja',
+            infraFootJA: 'partials/infragistics/infrafoot.ja'
+        },
+        helpers: {
+            debug: function (content) {
+                console.log("----VALUE-----");
+                console.log(content);
+            },
+            json: function (context) {
+                return JSON.stringify(context);
+            },
+            github: function (file, line) {
+                const url = 'https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/core/styles/';
+                return `${url}${file}#L${line}`;
+            },
+            typeClass: function (context) {
+                switch (context) {
+                    case "mixin":
+                        return "--mixin";
+                    case "function":
+                        return "--function";
+                    default:
+                        return "";
+                }
+            },
+            trimType: (value) => {
+                return value.substring(0, 3);
+            },
+            retrieveEnvLink: () => {
+                let {
+                    NODE_ENV: node,
+                    SASSDOC_LANG: lang
+                } = process.env;
+
+                if (!node || !lang) {
+                    return;
+                }
+
+                const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
+                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                const config = config_file[lang.trim()][node.trim()];
+                return config ? config.url: '';
+            },
+            ifCond: (v1, operator, v2, options) => {
+                switch (operator) {
+                    case '==':
+                        // tslint:disable-next-line:triple-equals
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
+            },
+            localize: (options) => {
+                const value = options.fn(this).trim();
+                const lang = process.env.SASSDOC_LANG;
+                if (lang && shell[lang.trim()]) {
+                    return shell[lang.trim()][value];
+                }
+
+                return value;
+            }
         }
-      },
-      trimType: (value) => {
-        return value.substring(0, 3);
-      }
-    }
-  };
+    };
 
   /**
    * Render `views/index.handlebars` with the theme's context (`ctx` below)
@@ -117,8 +171,8 @@ const theme = themeleon(__dirname, function (t) {
    * Applies the translations from the json files.
    */
   if (t.ctx.render) {
-      const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
-      t.render(t.ctx._data, jsonDir);
+      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+      t.render(t.ctx._data, json_dir);
   }
 });
 /**

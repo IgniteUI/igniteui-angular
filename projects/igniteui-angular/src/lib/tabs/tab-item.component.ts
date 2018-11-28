@@ -1,23 +1,21 @@
 import {
     Component,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
-    Inject,
     Input
 } from '@angular/core';
 
 import { IgxTabsGroupComponent } from './tabs-group.component';
-import { IgxTabsComponent } from './tabs.component';
+import { IgxTabItemBase, IgxTabsBase } from './tabs.common';
 
 @Component({
     selector: 'igx-tab-item',
     templateUrl: 'tab-item.component.html'
 })
 
-export class IgxTabItemComponent {
-    private _nativeTabItem;
+export class IgxTabItemComponent implements IgxTabItemBase {
+    private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
 
     /**
@@ -157,7 +155,7 @@ export class IgxTabItemComponent {
         return this._tabs.tabs.toArray().indexOf(this);
     }
 
-    constructor(@Inject(forwardRef(() => IgxTabsComponent)) private _tabs: IgxTabsComponent, private _element: ElementRef) {
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
         this._nativeTabItem = _element;
     }
 

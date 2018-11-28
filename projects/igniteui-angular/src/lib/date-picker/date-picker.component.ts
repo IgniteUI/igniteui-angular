@@ -349,7 +349,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @Output()
     public onSelection = new EventEmitter<Date>();
 
-    /*
+    /**
      * @hidden
      */
     @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
@@ -484,7 +484,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *@hidden
      */
     public ngOnInit(): void {
-        this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusTheDialog());
+        this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
         this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
     }
 
@@ -599,7 +599,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      * @hidden
      */
     public handleSelection(date: Date) {
-        if (this.value !== null && this.value !== undefined) {
+        if (this.value) {
             date.setHours(this.value.getHours());
             date.setMinutes(this.value.getMinutes());
             date.setSeconds(this.value.getSeconds());
@@ -670,9 +670,11 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         this.calendar.onSelection.pipe(takeUntil(this.destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
     }
 
-    // Focus the dialog element, after its appearence into DOM.
-    private _focusTheDialog() {
-        requestAnimationFrame(() => this.alert.toggleRef.element.focus());
+    // Focus a date, after the celendar appearence into DOM.
+    private _focusCalendarDate() {
+        requestAnimationFrame(() => {
+            this.calendar.focusActiveDate();
+        });
     }
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
