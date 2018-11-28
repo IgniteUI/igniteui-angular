@@ -152,6 +152,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
+    constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }
 
@@ -188,5 +189,6 @@ export class ColumnPinningTestComponent extends GridWithSizeComponent implements
     </div>`
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {
+    constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }

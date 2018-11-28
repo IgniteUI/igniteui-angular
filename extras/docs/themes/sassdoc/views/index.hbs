@@ -6,14 +6,19 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Ignite UI for Angular | Sass Documentation</title>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="shortcut icon" href="https://www.infragistics.com/assets/images/favicon.ico">
+        <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/layout.css">
+        <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/animate-custom.css">
+        <link rel="stylesheet" href="https://infragistics.com/assets/modern/css/fontello.css">
         <link rel="stylesheet" href="https://infragistics.com/css/navigation.css">
         <link rel="stylesheet" href="https://infragistics.com/css/footer.css">
+        <link rel="stylesheet" href="https://infragistics.com/css/navigation.css">
+        <link rel="stylesheet" href="https://infragistics.com/css/footer.css">
+        <link rel="shortcut icon" href="https://www.infragistics.com/assets/images/favicon.ico">
         <link rel="stylesheet" href="https://use.typekit.net/zhy2hpz.css">
         <link rel="stylesheet" href="assets/css/main.css" />
     </head>
 
-    <body>
+    <body data-base-url="{{retrieveEnvLink}}">
         {{> header}}
     {{!
      ! You can access any variable you set in your configuration file from the `view` object.
@@ -58,7 +63,6 @@
      ! 2. Loop over types mapped to each group
      ! 3. Loop over items mapped to each type
      }}
-
     <main class="main-content" role="main">
         <div class="nav-wrapper">
             <div class="search-form">
@@ -133,7 +137,9 @@
 
     </main>
 
-    {{> infraFoot}}
+    <div id="footer-container">
+        {{#ifCond lang '==' 'jp'}}{{> infraFootJA }}{{else}}{{> infraFoot }}{{/ifCond}}
+    </div>
     {{!
      ! If your theme needs some JavaScript, feel free to create a JS file in `assets/js/` folder
      ! and include it as follow:
@@ -143,10 +149,11 @@
     <script src="assets/js/vendor/highlight.pack.js"></script>
     <script src="https://unpkg.com/lunr/lunr.js"></script>
     <script>window.sassdocIndex = {{{json idx}}}</script>
-    <script src="assets/js/main.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js" integrity="sha256-8WqyJLuWKRBVhxXIL1jBDD7SDxU936oZkCnxQbWwJVw=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/jquery-migrate.min.js"></script>
     <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/plugins.nav.js"></script>
     <script type="text/javascript" src="https://infragistics.com/assets/modern/scripts/navigation.js"></script>
+    <script src="assets/js/main.js"></script>
     </body>
 </html>

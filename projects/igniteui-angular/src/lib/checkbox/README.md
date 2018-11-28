@@ -75,7 +75,8 @@ To disable the ripple effect, do:
 | `@Input()` indeterminate | boolean | Specifies the indeterminate state of the checkbox. |
 | `@Input()` required | boolean | Specifies the required state of the checkbox. |
 | `@Input()` disabled | boolean | Specifies the disabled state of the checkbox. |
-| `@Input()` disableRipple | boolean | Specifies the whether the ripple effect should be disabled for the checkbox. |
+| `@Input()` disableRipple | boolean | Specifies whether the ripple effect should be disabled for the checkbox. |
+| `@Input()` disableTransitions | boolean | Specifies whether CSS transitions should be disabled for the checkbox. |
 | `@Input()` labelPosition | string `|` enum LabelPosition | Specifies the position of the text label relative to the checkbox element. |
 | `@Input("aria-labelledby")` ariaLabelledBy | string | Specify an external element by id to be used as label for the checkbox. |
 | `@Output()` change | EventEmitter<IChangeCheckboxEventArgs> | Emitted when the checkbox checked value changes. |

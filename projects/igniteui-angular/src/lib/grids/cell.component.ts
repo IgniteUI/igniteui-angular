@@ -15,7 +15,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey, valToPxlsUsingRange, KEYS } from '../core/utils';
+import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { first } from 'rxjs/operators';
@@ -380,6 +380,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
@@ -626,6 +627,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     @HostListener('dblclick', ['$event'])
+    @HostListener('doubletap', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
             this.inEditMode = true;
@@ -809,6 +811,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
+                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -902,7 +905,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
-                   .map((child) => valToPxlsUsingRange(range, child)));
+                   .map((child) => getNodeSizeViaRange(range, child)));
     }
 
     private isToggleKey(key) {

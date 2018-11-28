@@ -21,6 +21,8 @@
         "Class": "クラス",
         "Interface": "インターフェイス",
         "Enumeration": "列挙",
-        "Static": "スタティック"
+        "Static": "スタティック",
+        "Components": "コンポーネント",
+        "Get Started": "はじめに"
     }
-}   
+}
