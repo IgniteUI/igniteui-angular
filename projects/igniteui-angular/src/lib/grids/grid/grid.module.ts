@@ -18,8 +18,6 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
-import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { GridHammerConfig } from '../grid.common';
 
 /**
  * @hidden
@@ -50,11 +48,7 @@ import { GridHammerConfig } from '../grid.common';
     FormsModule,
     IgxChipsModule,
     IgxGridCommonModule
-  ],
-  providers: [{
-    provide: HAMMER_GESTURE_CONFIG,
-    useClass: GridHammerConfig
-  }]
+  ]
 })
 export class IgxGridModule {
   @DeprecateMethod('IgxGridModule.forRoot method is deprecated. Use IgxGridModule instead.')
