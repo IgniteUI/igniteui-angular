@@ -12,5 +12,6 @@
 /// @requires $_light-grid-toolbar
 /// @see $default-palette
 $_dark-grid-toolbar: extend($_light-grid-toolbar, (
-    background-color: #222
+    background-color: #222,
+    dropdown-background: #222
 ));
