@@ -268,7 +268,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+            return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
             return this.datePipe.transform(expression.searchVal);
         } else {

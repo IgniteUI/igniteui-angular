@@ -88,6 +88,8 @@ export class IgxTimePickerComponent implements
 
     private _value: Date;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    private _okButtonLabel = null;
+    private _cancelButtonLabel = null;
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -168,7 +170,16 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    public okButtonLabel = this.resourceStrings.igx_time_picker_ok;
+    set okButtonLabel(value: string) {
+        this._okButtonLabel = value;
+    } 
+
+    /**
+     * An accessor that returns the label of ok button.
+    */
+    get okButtonLabel(): string {
+        return this._okButtonLabel || this.resourceStrings.igx_time_picker_ok;
+    }
 
     /**
      * An @Input property that renders cancel button with custom text.
@@ -178,7 +189,16 @@ export class IgxTimePickerComponent implements
      * ```
      */
     @Input()
-    public cancelButtonLabel = this.resourceStrings.igx_time_picker_cancel;
+    set cancelButtonLabel(value: string) {
+         this._cancelButtonLabel = value;
+    }
+
+     /**
+     * An accessor that returns the label of cancel button.
+    */
+    get cancelButtonLabel(): string {
+        return this._cancelButtonLabel || this.resourceStrings.igx_time_picker_cancel;
+    }
 
     /**
      * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
