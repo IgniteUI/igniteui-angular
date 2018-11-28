@@ -161,6 +161,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public data: any[];
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
+    private _emptyGridMessage = null;
+    private _emptyFilteredGridMessage = null;
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -638,7 +640,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyGridMessage = this.resourceStrings.igx_grid_emptyGrid_message;
+    set emptyGridMessage(value: string) {
+        this._emptyGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records.
+    */
+    get emptyGridMessage(): string {
+        return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
+    }
 
     /**
      * An @Input property that sets the message displayed when there are no records and the grid is filtered.
@@ -648,7 +659,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyFilteredGridMessage = this.resourceStrings.igx_grid_emptyFilteredGrid_message;
+    set emptyFilteredGridMessage(value: string) {
+        this._emptyFilteredGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records and the grid is filtered.
+    */
+    get emptyFilteredGridMessage(): string {
+        return this._emptyFilteredGridMessage || this.resourceStrings.igx_grid_emptyFilteredGrid_message;
+    }
 
     /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
