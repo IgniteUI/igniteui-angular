@@ -25,7 +25,7 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     describe('Child Collection', () => {
@@ -286,7 +286,6 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         it('should update current page when \'collapseAll\' ', () => {
-            pending('Tree Grid issue: curent page is not updated when collapseAll');
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 4;
@@ -573,7 +572,6 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
         });
 
         it('should update current page when \'collapseAll\' ', () => {
-            pending('Tree Grid issue: curent page is not updated when collapseAll');
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 2;
@@ -596,8 +594,8 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             treeGrid.collapseAll();
             fix.detectChanges();
 
-            // Verify current page is the first one and only root rows are visible.
-            verifyGridPager(fix, 2, '1', '1 of 2', [true, true, false, false]);
+            // Verify current page is the last one and only root rows are visible.
+            verifyGridPager(fix, 1, '10', '2 of 2', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
         });
     });
@@ -618,7 +616,7 @@ describe('Row editing expanding/collapsing', () => {
                 NoopAnimationsModule,
                 IgxTreeGridModule]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     beforeEach(() => {
