@@ -11,7 +11,7 @@
         "Implementation of": "次の実装:",
         "Inherited from": "継承元",
         "Overrides": "オーバーライド",
-        "Defined in": "次で定義:",
+        "Defined in": "次で定義",
         "Properties": "プロパティ",
         "Methods": "メソッド",
         "Accessors": "アクセサー",
@@ -21,6 +21,15 @@
         "Class": "クラス",
         "Interface": "インターフェイス",
         "Enumeration": "列挙",
-        "Static": "スタティック"
+        "Static": "スタティック",
+        "Components": "コンポーネント",
+        "Get Started": "はじめに",
+        "Name": "Name",
+        "Description": "Description",
+        "Type": "Type",
+        "Default Value": "Default Value",
+        "Authors": "Authors",
+        "Example": "Example",
+        "Used by": "Used by"
     }
-}   
+}
