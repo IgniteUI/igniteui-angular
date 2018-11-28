@@ -34,7 +34,7 @@ export function changei18n(resourceStrings: IResourceStrings) {
 /**
  * Returns current resource strings for all components
  */
-export function getCurrentResourceStrings() {
+export function getCurrentResourceStrings(): IResourceStrings {
     return {
             ...CurrentResourceStrings.GridResStrings,
             ...CurrentResourceStrings.TimePickerResStrings
