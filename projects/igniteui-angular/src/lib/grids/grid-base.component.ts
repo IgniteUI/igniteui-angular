@@ -3500,7 +3500,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
-            const width = parseInt(computed.getPropertyValue('width'), 10);
+            const width = computed.getPropertyValue('width').indexOf('%') === -1 ?
+                parseInt(computed.getPropertyValue('width'), 10) :
+                this.document.getElementById(this.nativeElement.id).offsetWidth;
+
             if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
