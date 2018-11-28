@@ -270,3 +270,14 @@ export class Calendar {
         return date.getFullYear() > year;
     }
 }
+
+export const IGX_CALENDAR_COMPONENT = 'IgxCalendarComponentToken';
+
+export interface IgxCalendarBase {
+    value: Date | Date[];
+    selection: string;
+    isCurrentYear(value: Date): boolean;
+    isCurrentMonth(value: Date): boolean;
+    isDateDisabled(value: Date): boolean;
+    isDateSpecial(value: Date): boolean;
+}

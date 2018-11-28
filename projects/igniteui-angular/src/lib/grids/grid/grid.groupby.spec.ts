@@ -22,6 +22,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -1480,8 +1481,8 @@ describe('IgxGrid - GroupBy', () => {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
 
-        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const headerResArea = headers[0].nativeElement.children[2];
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
+        const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mouseup', headerResArea, 200, 5);
@@ -1491,7 +1492,7 @@ describe('IgxGrid - GroupBy', () => {
         tick(100);
         fix.detectChanges();
 
-        const resizer = headers[0].nativeElement.children[2].children[0];
+        const resizer = headers[0].children[1].children[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
         tick(100);
