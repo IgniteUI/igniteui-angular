@@ -85,18 +85,8 @@ export class GridRowEditSampleComponent {
 
     public deleteRow(event, gridID, rowID) {
         event.stopPropagation();
-        switch (gridID) {
-            case 'gridRowEdit':
-            case 'grid':
-                this.grid.deleteRow(rowID);
-                break;
-            case 'gridRowEditTransaction':
-                this.gridRowEditTransaction.deleteRow(rowID);
-                break;
-            case 'gridTransaction':
-                this.gridTransaction.deleteRow(rowID);
-                break;
-        }
+        this.getGridById(gridID).deleteRow(rowID);
+        this.refreshAll();
     }
 
     public undo(gridID) {

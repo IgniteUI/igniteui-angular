@@ -32,6 +32,7 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CLASS = '.igx-grid__td';
     const ROW_CLASS = '.igx-grid__tr';
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
@@ -2029,6 +2030,23 @@ describe('IgxGrid Component Tests', () => {
                 expect(overlayContent).toBeFalsy();
                 expect(rowEditingBannerElement).toBeTruthy(); // banner is still present in grid template, just not visible
             }));
+
+            it(`Should exit edit mode when edited row is being deleted`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const row = grid.getRowByKey(0);
+                const targetCell = grid.getCellByKey(0, 'Downloads');
+                spyOn(grid, 'endEdit').and.callThrough();
+                targetCell.inEditMode = true;
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
+                row.delete();
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
+                expect(grid.endEdit).toHaveBeenCalledTimes(1);
+                expect(grid.endEdit).toHaveBeenCalledWith(true);
+            });
         });
 
         describe('Row Editing - Filtering', () => {
@@ -2339,13 +2357,13 @@ describe('IgxGrid Component Tests', () => {
                 column.resizable = true;
                 fix.detectChanges();
 
-                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                const headerResArea = headers[2].nativeElement.children[2];
+                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
+                const headerResArea = headers[2].children[1].nativeElement;
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
                 tick();
                 fix.detectChanges();
 
-                const resizer = headers[2].nativeElement.children[2].children[0];
+                const resizer = headers[2].children[1].children[0].nativeElement;
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
                 tick();

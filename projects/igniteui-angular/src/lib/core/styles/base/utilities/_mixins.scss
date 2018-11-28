@@ -221,29 +221,28 @@
 /// Add theme colors to the global root scope
 /// Ensures the operation is done only once.
 /// @access private
-/// @param {map} $theme - The component theme to get the
-/// @example scss Convert theme colors to css variables.
+/// @param {map} $theme - The component theme to register as css vars.
 /// @requires {mixin} css-vars-from-theme
 @mixin igx-root-css-vars($theme) {
-    $name: map-get($theme, 'name');
+    $scope: &;
 
-    @if map-get($themes, $name) == null {
+    @if map-get($themes, $scope) == null {
         $id: unique-id();
-        $themes: map-merge($themes, (#{$name}: $id)) !global;
-
-        :root {
-            @include css-vars-from-theme($theme);
-        }
+        $themes: map-merge($themes, (#{$scope}: $id)) !global;
+        @include igx-css-vars($theme);
     }
 }
 
-/// Add theme colors scoped to a specific element
+/// Add theme colors to a scope.
 /// @access public
 /// @param {map} $theme - The component theme to get the
-/// @example scss Convert theme colors to css variables.
 /// @requires {mixin} css-vars-from-theme
 @mixin igx-css-vars($theme) {
-    @include css-vars-from-theme($theme);
+    $scope: if(is-root(), ':root', '&');
+
+    #{$scope} {
+        @include css-vars-from-theme($theme);
+    }
 }
 
 /// Scopes CSS rules to a predefined top-level parent selector.

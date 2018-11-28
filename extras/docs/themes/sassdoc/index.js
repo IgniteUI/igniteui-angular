@@ -22,12 +22,14 @@ const extras = require('sassdoc-extras');
 
 const lunr = require('lunr');
 const sassPlug = require('sassdoc-plugin-localization');
-
+const process = require('process');
+const fs = require('fs');
+const path = require('path');
 
 themeleon.use({
 
     /**
-     * Builds a structure of json files which represents the retrieved comments per every sass declaration.  
+     * Builds a structure of json files which represents the retrieved comments per every sass declaration.
      */
     convert: (data, dir) => sassPlug.convert(data, dir),
     /**
@@ -49,64 +51,106 @@ themeleon.use({
  */
 const theme = themeleon(__dirname, function (t) {
     /**
-     * If only json conversion is needed the whole process of documentation rendering has to be stopped. 
+     * If only json conversion is needed the whole process of documentation rendering has to be stopped.
      */
     if (t.ctx.convert) {
-        return t.convert(t.ctx._data, './extras/sassdoc/en'); 
+        return t.convert(t.ctx._data, path.join('extras', 'sassdoc'));
     }
-  /**
-   * Copy the assets folder from the theme's directory in the
-   * destination directory.
-   */
-  t.copy('assets');
+    /**
+     * Copy the assets folder from the theme's directory in the
+     * destination directory.
+     */
+    t.copy('assets');
 
-  const options = {
-    partials: {
-      authors: 'partials/authors',
-      description: 'partials/description',
-      example: 'partials/example',
-      footer: 'partials/footer',
-      header: 'partials/header',
-      github: 'partials/github',
-      definitionHeader: 'partials/definitionHeader',
-      require: 'partials/require',
-      search: 'partials/search',
-      sidenav: 'partials/sidenav',
-      source: 'partials/source',
-      usedBy: 'partials/usedby',
-      parameters: 'partials/parameters',
-      example: 'partials/example',
-      infraHead: 'partials/infragistics/header',
-      infraFoot: 'partials/infragistics/footer'
-    },
-    helpers: {
-      debug: function (content) {
-        console.log("----VALUE-----");
-        console.log(content);
-      },
-      json: function (context) {
-        return JSON.stringify(context);
-      },
-      github: function (file, line) {
-        const url = 'https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/core/styles/';
-        return `${url}${file}#L${line}`;
-      },
-      typeClass: function (context) {
-        switch (context) {
-          case "mixin":
-            return "--mixin";
-          case "function":
-            return "--function";
-          default:
-            return "";
+    const options = {
+        partials: {
+            authors: 'partials/authors',
+            description: 'partials/description',
+            example: 'partials/example',
+            footer: 'partials/footer',
+            header: 'partials/header',
+            github: 'partials/github',
+            definitionHeader: 'partials/definitionHeader',
+            require: 'partials/require',
+            search: 'partials/search',
+            see: 'partials/see',
+            sidenav: 'partials/sidenav',
+            source: 'partials/source',
+            usedBy: 'partials/usedby',
+            parameters: 'partials/parameters',
+            properties: 'partials/properties',
+            example: 'partials/example',
+            infraHead: 'partials/infragistics/header',
+            infraFoot: 'partials/infragistics/footer',
+            infraHeadJA: 'partials/infragistics/infranav.ja',
+            infraFooJA: 'partials/infragistics/infrafoot.ja'
+        },
+        helpers: {
+            debug: function (content) {
+                console.log("----VALUE-----");
+                console.log(content);
+            },
+            json: function (context) {
+                return JSON.stringify(context);
+            },
+            github: function (file, line) {
+                const url = 'https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/core/styles/';
+                return `${url}${file}#L${line}`;
+            },
+            typeClass: function (context) {
+                switch (context) {
+                    case "mixin":
+                        return "--mixin";
+                    case "function":
+                        return "--function";
+                    default:
+                        return "";
+                }
+            },
+            trimType: (value) => {
+                return value.substring(0, 3);
+            },
+            retrieveEnvLink: () => {
+                let {
+                    NODE_ENV: node,
+                    SASSDOC_LANG: lang
+                } = process.env;
+
+                if (!node || !lang) {
+                    return;
+                }
+
+                const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
+                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+                const config = config_file[lang.trim()][node.trim()];
+                return config ? config.url: '';
+            },
+            ifCond: (v1, operator, v2, options) => {
+                switch (operator) {
+                    case '==':
+                        // tslint:disable-next-line:triple-equals
+                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                    case '===':
+                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                    case '<':
+                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                    case '<=':
+                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                    case '>':
+                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                    case '>=':
+                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                    case '&&':
+                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                    case '||':
+                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                    default:
+                        return options.inverse(this);
+                }
+            }
         }
-      },
-      trimType: (value) => {
-        return value.substring(0, 3);
-      }
-    }
-  };
-
+    };
+    
   /**
    * Render `views/index.handlebars` with the theme's context (`ctx` below)
    * as `index.html` in the destination directory.
@@ -117,8 +161,8 @@ const theme = themeleon(__dirname, function (t) {
    * Applies the translations from the json files.
    */
   if (t.ctx.render) {
-      const jsonDir = t.ctx.jsonDir ? t.ctx.jsonDir : './extras/sassdoc/en';
-      t.render(t.ctx._data, jsonDir);
+      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+      t.render(t.ctx._data, json_dir);
   }
 });
 /**
@@ -130,109 +174,109 @@ const theme = themeleon(__dirname, function (t) {
  * configuration.
  */
 module.exports = function (dest, ctx) {
-  var def = {
-    display: {
-      access: ['public', 'private'],
-      alias: true,
-      watermark: false,
-    },
-    groups: {
-      'undefined': 'General',
-    },
-    'shortcutIcon': 'http://sass-lang.com/favicon.ico'
-  };
+    var def = {
+        display: {
+            access: ['public', 'private'],
+            alias: true,
+            watermark: false,
+        },
+        groups: {
+            'undefined': 'General',
+        },
+        'shortcutIcon': 'http://sass-lang.com/favicon.ico'
+    };
 
-  // Apply default values for groups and display.
-  ctx.groups = extend(def.groups, ctx.groups);
-  ctx.display = extend(def.display, ctx.display);
+    // Apply default values for groups and display.
+    ctx.groups = extend(def.groups, ctx.groups);
+    ctx.display = extend(def.display, ctx.display);
 
-  // Extend top-level context keys.
-  ctx = extend({}, def, ctx);
+    // Extend top-level context keys.
+    ctx = extend({}, def, ctx);
 
-  /**
-   * Parse text data (like descriptions) as Markdown, and put the
-   * rendered HTML in `html*` variables.
-   *
-   * For example, `ctx.package.description` will be parsed as Markdown
-   * in `ctx.package.htmlDescription`.
-   *
-   * See <http://sassdoc.com/extra-tools/#markdown>.
-   */
-  extras.markdown(ctx);
+    /**
+     * Parse text data (like descriptions) as Markdown, and put the
+     * rendered HTML in `html*` variables.
+     *
+     * For example, `ctx.package.description` will be parsed as Markdown
+     * in `ctx.package.htmlDescription`.
+     *
+     * See <http://sassdoc.com/extra-tools/#markdown>.
+     */
+    extras.markdown(ctx);
 
-  /**
-   * Add a `display` property for each data item regarding of display
-   * configuration (hide private items and aliases for example).
-   *
-   * You'll need to add default values in your `.sassdocrc` before
-   * using this filter:
-   *
-   *     {
-   *       "display": {
-   *         "access": ["public", "private"],
-   *         "alias": false
-   *       }
-   *     }
-   *
-   * See <http://sassdoc.com/extra-tools/#display-toggle>.
-   */
-  extras.display(ctx);
+    /**
+     * Add a `display` property for each data item regarding of display
+     * configuration (hide private items and aliases for example).
+     *
+     * You'll need to add default values in your `.sassdocrc` before
+     * using this filter:
+     *
+     *     {
+     *       "display": {
+     *         "access": ["public", "private"],
+     *         "alias": false
+     *       }
+     *     }
+     *
+     * See <http://sassdoc.com/extra-tools/#display-toggle>.
+     */
+    extras.display(ctx);
 
-  /**
-   * Allow the user to give a name to the documentation groups.
-   *
-   * We can then have `@group slug` in the docblock, and map `slug`
-   * to `Some title string` in the theme configuration.
-   *
-   * **Note:** all items without a group are in the `undefined` group.
-   *
-   * See <http://sassdoc.com/extra-tools/#groups-aliases>.
-   */
-  extras.groupName(ctx);
+    /**
+     * Allow the user to give a name to the documentation groups.
+     *
+     * We can then have `@group slug` in the docblock, and map `slug`
+     * to `Some title string` in the theme configuration.
+     *
+     * **Note:** all items without a group are in the `undefined` group.
+     *
+     * See <http://sassdoc.com/extra-tools/#groups-aliases>.
+     */
+    extras.groupName(ctx);
 
-  /**
-   * Use SassDoc indexer to index the data by group and type, so we
-   * have the following structure:
-   *
-   *     {
-   *       "group-slug": {
-   *         "function": [...],
-   *         "mixin": [...],
-   *         "variable": [...]
-   *       },
-   *       "another-group": {
-   *         "function": [...],
-   *         "mixin": [...],
-   *         "variable": [...]
-   *       }
-   *     }
-   *
-   * You can then use `data.byGroupAndType` instead of `data` in your
-   * templates to manipulate the indexed object.
-   */
-  ctx.idx = lunr(function () {
-    this.field('type');
-    this.field('name');
+    /**
+     * Use SassDoc indexer to index the data by group and type, so we
+     * have the following structure:
+     *
+     *     {
+     *       "group-slug": {
+     *         "function": [...],
+     *         "mixin": [...],
+     *         "variable": [...]
+     *       },
+     *       "another-group": {
+     *         "function": [...],
+     *         "mixin": [...],
+     *         "variable": [...]
+     *       }
+     *     }
+     *
+     * You can then use `data.byGroupAndType` instead of `data` in your
+     * templates to manipulate the indexed object.
+     */
+    ctx.idx = lunr(function () {
+        this.field('type');
+        this.field('name');
 
-    ctx.data.forEach((doc) => {
-      this.add({
-        id: `${doc.context.type}-${doc.context.name}`,
-        name: doc.context.name,
-        type: doc.context.type
-      });
-    }, this);
-  });
+        ctx.data.forEach((doc) => {
+            this.add({
+                id: `${doc.context.type}-${doc.context.name}`,
+                name: doc.context.name,
+                type: doc.context.type
+            });
+        }, this);
+    });
 
-  ctx.data.byGroupAndType = extras.byGroupAndType(ctx.data);
+    ctx.data.byGroupAndType = extras.byGroupAndType(ctx.data);
 
-  // Avoid key collision with Handlebars default `data`.
-  // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
-  ctx._data = ctx.data;
-  delete ctx.data;
+    // Avoid key collision with Handlebars default `data`.
+    // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
+    ctx._data = ctx.data;
+    delete ctx.data;
 
-  /**
-   * Now we have prepared the data, we can proxy to the Themeleon
-   * generated theme function.
-   */
-  return theme.apply(this, arguments);
+    /**
+     * Now we have prepared the data, we can proxy to the Themeleon
+     * generated theme function.
+     */
+    return theme.apply(this, arguments);
 };

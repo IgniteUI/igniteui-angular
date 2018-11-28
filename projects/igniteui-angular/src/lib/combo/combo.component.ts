@@ -25,7 +25,6 @@ import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directi
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
@@ -36,6 +35,9 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IGX_COMBO_COMPONENT } from './combo.common';
+import { IgxDropDownItemBase } from '../drop-down/drop-down.base';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -95,9 +97,10 @@ const noop = () => { };
 
 @Component({
     selector: 'igx-combo',
-    templateUrl: 'combo.component.html'
+    templateUrl: 'combo.component.html',
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
 })
-export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
      * @hidden
      */
@@ -169,7 +172,9 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Self() @Optional() public ngControl: NgControl) {
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -521,6 +526,42 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
     @HostBinding('class.igx-input-group--invalid')
     public get invalidClass(): boolean {
         return this._valid === IgxComboState.INVALID;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-combo')
+    public cssClass = 'igx-combo'; // Independant of display density, at the time being
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.role`)
+    public role = 'combobox';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-expanded')
+    public get ariaExpanded() {
+        return !this.dropdown.collapsed;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-haspopup')
+    public get hasPopUp() {
+        return 'listbox';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-owns')
+    public get ariaOwns() {
+        return this.dropdown.id;
     }
 
     /**
@@ -1199,7 +1240,7 @@ export class IgxComboComponent implements AfterViewInit, ControlValueAccessor, O
      */
     public addItemToCollection() {
         if (!this.searchValue) {
-            return false;
+            return;
         }
         const newValue = this.searchValue.trim();
         const addedItem = this.displayKey ? {

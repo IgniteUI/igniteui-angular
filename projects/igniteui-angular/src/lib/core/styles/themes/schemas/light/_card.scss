@@ -1,0 +1,33 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light card schema.
+/// @type {Map}
+/// @prop {Color} background [#fff]- The card background color.
+/// @prop {Map} header-text-color [igx-color: ('grays', 800)] - The text color of the card title.
+/// @prop {Map} subtitle-text-color [igx-color: ('grays', 600)] - The text color of the card subtitle.
+/// @prop {Map} content-text-color [igx-color: ('grays', 600)] - The text color of the card content.
+/// @prop {Map} actions-text-color [igx-color: ('grays', 600)] - The text color of the card buttons.
+/// @see $default-palette
+$_light-card: (
+    background: #fff,
+
+    header-text-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    subtitle-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    content-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    actions-text-color: (
+        igx-color: ('grays', 600)
+    )
+);

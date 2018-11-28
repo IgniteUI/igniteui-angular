@@ -13,6 +13,7 @@ describe('IgxGrid - Column properties', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -170,10 +171,11 @@ describe('IgxGrid - Column properties', () => {
         fix.componentInstance.grid.columnWidth = '200px';
         fix.detectChanges();
         const cols = fix.componentInstance.grid.columnList;
+
         cols.forEach((item) => {
             expect(item.width).toEqual('200px');
         });
-        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
         expect(headers[0].nativeElement.style['min-width']).toEqual('200px');
     });
 

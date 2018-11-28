@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, IgxColumnComponent } from './index';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -36,7 +36,8 @@ describe('IgxGrid - Row Selection', () => {
                 GridWithSelectionFilteringComponent,
                 GridWithScrollsComponent,
                 GridSummaryComponent,
-                GridCancelableComponent
+                GridCancelableComponent,
+                GridFeaturesComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1175,6 +1176,30 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstCell.focused).toBeFalsy();
     }));
 
+    it('Hide row checkboxes, when all columns are hidden', (async () => {
+        const fix = TestBed.createComponent(GridFeaturesComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        let headerCheck: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+        let rowCheck: HTMLElement = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
+        expect(headerCheck).toBeDefined();
+        expect(rowCheck).toBeDefined();
+
+        grid.columns.forEach(c => c.hidden = true);
+        fix.detectChanges();
+        headerCheck = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+        rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
+        expect(headerCheck).toBeNull();
+        expect(rowCheck).toBeNull();
+
+        grid.columns.forEach(c => c.hidden = false);
+        fix.detectChanges();
+        headerCheck = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
+        rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
+        expect(headerCheck).toBeDefined();
+        expect(rowCheck).toBeDefined();
+    }));
+
 });
 
 @Component({
@@ -1460,5 +1485,47 @@ export class GridCancelableComponent {
         if (evt.row && (evt.row.index + 1) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
+        [showToolbar]="true"
+        toolbarTitle="Grid Toolbar"
+
+        [columnHiding] = "true"
+        hiddenColumnsText = "Hidden"
+        columnHidingTitle = "Column Hiding"
+
+        [exportExcel]="true"
+        [exportCsv]="true"
+        exportText="Export"
+        exportExcelText="Export to Excel"
+        exportCsvText="Export to CSV"
+        [rowSelectable]="true"
+    >
+    </igx-grid>
+    `
+})
+export class GridFeaturesComponent {
+
+    @ViewChild('grid1', {read: IgxGridComponent}) public grid: IgxGridComponent;
+    public data = [
+        {
+            Name: 'Alice',
+            Age: 25
+        },
+        {
+            Name: 'Bob',
+            Age: 23
+        }
+    ];
+
+    public initColumns(column: IgxColumnComponent) {
+        column.filterable = true;
+        column.sortable = true;
+        column.editable = true;
+        column.resizable = true;
     }
 }

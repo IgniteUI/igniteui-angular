@@ -751,7 +751,7 @@ describe('IgxGrid - Cell component', () => {
     it('should use default column width for cells with width in %.', fakeAsync(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.componentInstance.cols.forEach(() => {
-            delete this.width;
+            // delete this.width;
         });
         fix.componentInstance.defaultWidth = '25%';
         tick();

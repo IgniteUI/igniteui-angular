@@ -1,6 +1,5 @@
-import { Component, HostBinding, Inject,
-    forwardRef, ElementRef, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { IgxExpansionPanelComponent } from './expansion-panel.component';
+import { Component, HostBinding, ElementRef, Input, ChangeDetectorRef, OnInit, Inject } from '@angular/core';
+import { IgxExpansionPanelBase, IGX_EXPANSION_PANEL_COMPONENT } from './expansion-panel.common';
 
 @Component({
     // tslint:disable-next-line:directive-selector
@@ -10,9 +9,9 @@ import { IgxExpansionPanelComponent } from './expansion-panel.component';
 export class IgxExpansionPanelBodyComponent implements OnInit {
     private _labelledBy = '';
     private _label = '';
-    constructor(@Inject(forwardRef(() => IgxExpansionPanelComponent))
-    public panel: IgxExpansionPanelComponent, public element: ElementRef,
-    public cdr: ChangeDetectorRef) {
+    constructor(
+        @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase,
+        public element: ElementRef, public cdr: ChangeDetectorRef) {
     }
     @HostBinding('class.igx-expansion-panel__body')
     public cssClass = `igx-expansion-panel__body`;

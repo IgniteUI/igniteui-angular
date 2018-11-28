@@ -24,6 +24,7 @@ import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -58,7 +59,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService
+        IgxFilteringService, IgxColumnResizingService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -189,6 +190,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
             ungroupedColsArr.forEach((elem) => {
                 ungroupedCols.push(this.getColumnByName(elem.fieldName));
             }, this);
+            this.cdr.detectChanges();
             const groupingDoneArgs: IGroupingDoneEventArgs = {
                 expressions: newExpressions,
                 groupedColumns: groupedCols,
@@ -800,12 +802,19 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
     * @hidden
     */
-   public get dropAreaTemplateResolved(): TemplateRef<any> {
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getGroupByChipTitle(expression: IGroupingExpression): string {
+        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
     }
 
     /**
