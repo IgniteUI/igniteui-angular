@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment } from './../utilities';
+import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, Size } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
 export class GlobalPositionStrategy implements IPositionStrategy {
@@ -20,7 +20,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     }
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size?: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
+    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 contentElement.parentElement.style.justifyContent = 'flex-start';
