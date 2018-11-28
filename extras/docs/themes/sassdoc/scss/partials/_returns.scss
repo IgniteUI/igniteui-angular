@@ -1,0 +1,31 @@
+@include b(returns) {
+    margin: rem($top-gutter) 0 rem($bottom-gutter) 0;
+
+    @include e(title) {
+        @extend %section-title;
+        margin-bottom: rem(16px);
+    }
+
+    @include e(group) {
+        display: flex;
+        flex-wrap: nowrap;
+        font-size: rem(14px);
+    }
+
+    @include e(type) {
+        color: $black;
+    }
+
+    @include e(description) {
+        margin-left: rem(8px);
+        font-style: italic;
+
+        p {
+            margin-bottom: 0;
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+}

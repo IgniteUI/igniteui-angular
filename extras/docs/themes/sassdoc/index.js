@@ -25,9 +25,9 @@ const sassPlug = require('sassdoc-plugin-localization');
 const process = require('process');
 const fs = require('fs');
 const path = require('path');
+const shell = require('../../../template/strings/shell-strings.json');
 
 themeleon.use({
-
     /**
      * Builds a structure of json files which represents the retrieved comments per every sass declaration.
      */
@@ -79,6 +79,7 @@ const theme = themeleon(__dirname, function (t) {
             usedBy: 'partials/usedby',
             parameters: 'partials/parameters',
             properties: 'partials/properties',
+            returns: 'partials/return',
             example: 'partials/example',
             infraHead: 'partials/infragistics/header',
             infraFoot: 'partials/infragistics/footer',
@@ -123,7 +124,7 @@ const theme = themeleon(__dirname, function (t) {
                 const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
                 const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
                 const config = config_file[lang.trim()][node.trim()];
-                return config ? config.url: '';
+                return config ? config.url : '';
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
@@ -150,20 +151,20 @@ const theme = themeleon(__dirname, function (t) {
             }
         }
     };
-    
-  /**
-   * Render `views/index.handlebars` with the theme's context (`ctx` below)
-   * as `index.html` in the destination directory.
-   */
-  t.handlebars('views/index.hbs', 'index.html', options);
 
-  /**
-   * Applies the translations from the json files.
-   */
-  if (t.ctx.render) {
-      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
-      t.render(t.ctx._data, json_dir);
-  }
+    /**
+     * Render `views/index.handlebars` with the theme's context (`ctx` below)
+     * as `index.html` in the destination directory.
+     */
+    t.handlebars('views/index.hbs', 'index.html', options);
+
+    /**
+     * Applies the translations from the json files.
+     */
+    if (t.ctx.render) {
+        const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+        t.render(t.ctx._data, json_dir);
+    }
 });
 /**
  * Actual theme function. It takes the destination directory `dest`
