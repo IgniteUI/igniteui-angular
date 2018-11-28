@@ -358,7 +358,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expressionsList.length === 1 &&
             this.expressionsList[0].expression.searchVal === null &&
             this.expressionsList[0].expression.condition.isUnary === false) {
-            this.filteringService.clearFilter(this.column.field);
+            this.filteringService.getExpressions(this.column.field).pop();
         } else {
             this.expressionsList.forEach((item) => {
                 if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
