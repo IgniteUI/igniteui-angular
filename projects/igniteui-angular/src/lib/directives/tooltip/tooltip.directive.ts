@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, HostListener, Input, NgModule, Renderer2, ChangeDetectorRef, OnInit,
-    Output, EventEmitter, Optional, HostBinding, OnDestroy
+    Output, EventEmitter, Optional, HostBinding, OnDestroy, Inject
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
@@ -521,6 +521,16 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     @HostBinding('attr.role')
     public get role() {
         return 'tooltip';
+    }
+
+    /** @hidden */
+    constructor(
+        elementRef: ElementRef,
+        cdr: ChangeDetectorRef,
+        @Inject(IgxOverlayService) overlayService: IgxOverlayService,
+        @Optional() navigationService: IgxNavigationService) {
+            // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+            super(elementRef, cdr, overlayService, navigationService);
     }
 }
 

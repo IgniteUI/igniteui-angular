@@ -240,8 +240,8 @@ gulp.task('typedoc-build', [
 ]);
 
 const SASSDOC_THEME = {
-    JS_DIR: "./extras/docs/themes/sassdoc/assets/js",
-    TYPESCRIPT_DIR: "./extras/docs/themes/sassdoc/typescript"
+    JS_DIR: path.join(__dirname, 'extras', 'docs', 'themes', 'sassdoc', 'assets', 'js'),
+    TYPESCRIPT_DIR: path.join(__dirname, 'extras', 'docs', 'themes', 'sassdoc', 'typescript')
 }
 
 gulp.task('sassdoc-clear-main', () => {
@@ -270,12 +270,12 @@ const TRANSLATIONS_REPO = {
     LINK: `https://github.com/IgniteUI/igniteui-angular-api-i18n`
 };
 
-const DOCS_OUTPUT_PATH = 'dist\\igniteui-angular\\docs'
+const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
 
 const TYPEDOC = {
-    EXPORT_JSON_PATH: 'dist\\igniteui-angular\\docs\\typescript-exported',
-    PROJECT_PATH: 'projects\\igniteui-angular\\src',
-    TEMPLATE_STRINGS_PATH: 'extras\\template\\strings\\shell-strings.json'
+    EXPORT_JSON_PATH: path.join(__dirname, 'dist', 'igniteui-angular', 'docs', 'typescript-exported'),
+    PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src'),
+    TEMPLATE_STRINGS_PATH: path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json')
 }
 
 gulp.task('typedoc-build:theme', ['typedoc-build'],
@@ -315,9 +315,9 @@ gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-
 );
 
 const SASSDOC = {
-    PROJECT_PATH: "projects\\igniteui-angular\\src\\lib\\core\\styles",
-    DEST: "dist\\igniteui-angular\\docs\\sass",
-    OPTIONS: JSON.parse(fs.readFileSync('./.sassdocrc', 'utf8')),
+    PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'lib', 'core', 'styles'),
+    DEST: path.join(__dirname, 'dist', 'igniteui-angular', 'docs', 'sass'),
+    OPTIONS: path.join(__dirname, '.sassdocrc'),
 }
 
 gulp.task('sassdoc:clean-docs-dir', () => {
@@ -325,7 +325,7 @@ gulp.task('sassdoc:clean-docs-dir', () => {
 });
 
 gulp.task('sassdoc-build:export', () => {
-    const options = SASSDOC.OPTIONS;
+    const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
     options.convert = argv.convert;
 
     return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
@@ -333,7 +333,7 @@ gulp.task('sassdoc-build:export', () => {
 });
 
 gulp.task('sassdoc-build:import', () => {
-    const options = SASSDOC.OPTIONS;
+    const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
     options.render = argv.render;
 
     return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
@@ -342,11 +342,11 @@ gulp.task('sassdoc-build:import', () => {
 
 gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'ja');
-    const options = SASSDOC.OPTIONS;
-    
+    const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
+
     options.lang = 'jp';
     options.render = argv.render;
-    options.jsonDir = pathTranslations;
+    options.json_dir = pathTranslations;
 
     return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
@@ -354,11 +354,11 @@ gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-
 
 gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
     const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'en');
-    const options = SASSDOC.OPTIONS;
+    const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'en';
     options.render = argv.render;
-    options.jsonDir = pathTranslations;
+    options.json_dir = pathTranslations;
 
     return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
