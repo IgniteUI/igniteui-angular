@@ -8,6 +8,7 @@
 /// Generates a dark grid-toolbar schema.
 /// @type {Map}
 /// @prop {map} background-color [#222] - The toolbar background color.
+/// @prop {map} dropdown-background [#222] - The toolbar drop-down background color.
 /// @requires {function} extend
 /// @requires $_light-grid-toolbar
 /// @see $default-palette
