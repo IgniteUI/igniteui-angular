@@ -906,8 +906,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             'igx_grid__cell--edit': this.inEditMode,
             'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--pinned': this.column.pinned,
+            'igx-grid__td--pinned-last': this.isLastPinned,
             'igx-grid__td--selected': this.selected,
             'igx-grid__td--edited': this.dirty
         };
