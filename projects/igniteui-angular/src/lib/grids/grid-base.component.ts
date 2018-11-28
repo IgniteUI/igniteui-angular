@@ -2069,9 +2069,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         private zone: NgZone,
         @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
-        private resolver: ComponentFactoryResolver,
+        protected resolver: ComponentFactoryResolver,
         protected differs: IterableDiffers,
-        private viewRef: ViewContainerRef,
+        protected viewRef: ViewContainerRef,
         private navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {

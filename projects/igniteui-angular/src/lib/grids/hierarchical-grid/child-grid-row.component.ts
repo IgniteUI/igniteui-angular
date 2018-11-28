@@ -164,13 +164,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;
         if (this.layout.childColumns.length > 0 && !this.hGrid.autoGenerate) {
-            this.hGrid.columnList.reset(this.layout.childColumns.toArray());
+            this.hGrid.createColumnsList(this.layout.childColumns.toArray());
         }
-        const columns = this.hGrid.columnList.toArray();
-        columns.forEach((c) => c.gridAPI = this.hGrid.hgridAPI);
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
-        this.hGrid.reflow();
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
     }
 }

@@ -43,6 +43,7 @@ import { IgxSelectionAPIService } from '../../core/selection';
 import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './../grid-summary';
 
 let NEXT_ID = 0;
 @Component({
@@ -234,7 +235,65 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private hg_horizontalScrollHandler(event) {
         this._scrollLeft = event.target.scrollLeft;
     }
+    public createColumnsList(cols: Array<any>) {
+        const columns = [];
+        const topLevelCols = this.onlyTopLevel(cols);
+        topLevelCols.forEach((col) => {
+            const ref = this._createColumn(col);
+            ref.changeDetectorRef.detectChanges();
+            columns.push(ref.instance);
+        });
+        const result = flatten(columns);
+        console.log(result);
+        debugger;
+        this.columnList.reset(result);
+        this.columnList.notifyOnChanges();
+    }
+    private _createColumn(col) {
+        let ref;
+        if (col instanceof IgxColumnGroupComponent) {
+            ref = this._createColGroupComponent(col);
+        } else {
+            ref = this._createColComponent(col);
+        }
+        return ref;
+    }
+    private _createColGroupComponent(col: IgxColumnGroupComponent) {
+        const factoryGroup = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+        const ref = this.viewRef.createComponent(factoryGroup, null, this.viewRef.injector);
+        ref.changeDetectorRef.detectChanges();
+        factoryGroup.inputs.forEach((input) => {
+            const propName = input.propName;
+            if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
+                (<any>ref.instance)[propName] =  (<any>col)[propName];
+            }
+         });
+         if (col.children.length > 0) {
+             const newChildren = [];
+            col.children.forEach(child => {
+                const newCol = this._createColumn(child).instance;
+                newCol.parent = ref.instance;
+                newChildren.push(newCol);
+            });
+            (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
+            (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
+         }
+         (<IgxColumnGroupComponent>ref.instance).gridID = this.id;
+         return ref;
+    }
 
+    private _createColComponent(col) {
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
+        factoryColumn.inputs.forEach((input) => {
+            const propName = input.propName;
+            if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
+                (<any>ref.instance)[propName] =  (<any>col)[propName];
+            }
+        });
+        (<IgxColumnComponent>ref.instance).gridID = this.id;
+        return ref;
+    }
     public updateScrollPosition() {
         const vScr = this.verticalScrollContainer.getVerticalScroll();
         const hScr = this.parentVirtDir.getHorizontalScroll();
@@ -280,4 +339,16 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 export interface IPathSegment {
     rowID: string | object;
     rowIslandKey: string;
+}
+
+function flatten(arr: any[]) {
+    let result = [];
+
+    arr.forEach(el => {
+        result.push(el);
+        if (el.children) {
+            result = result.concat(flatten(el.children.toArray()));
+        }
+    });
+    return result;
 }
