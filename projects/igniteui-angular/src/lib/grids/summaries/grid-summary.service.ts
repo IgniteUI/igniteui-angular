@@ -40,17 +40,20 @@ export class IgxGridSummaryService {
         if (!this.hasSummarizedColumns) {
             return;
         }
-        if (!this.summaryCacheMap.get(rowID)) {
-            this.summaryCacheMap.set(rowID, new Map<string, IgxSummaryResult[]>());
-            this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
-                if (!this.summaryCacheMap.get(rowID).get(column.field)) {
-                    const records = this.isTreeGrid ? data.map(record => record[column.field]) : data;
-                    this.summaryCacheMap.get(rowID).set(column.field,
-                        column.summaries.operate(records));
-                }
-            });
+        let rowSummaries = this.summaryCacheMap.get(rowID);
+        if (!rowSummaries) {
+            rowSummaries = new Map<string, IgxSummaryResult[]>();
+            this.summaryCacheMap.set(rowID, rowSummaries);
         }
-        return this.summaryCacheMap.get(rowID);
+
+        this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
+            if (!rowSummaries.get(column.field)) {
+                const columnValues = data.map(record => record[column.field]);
+                rowSummaries.set(column.field,
+                    column.summaries.operate(columnValues));
+            }
+        });
+        return rowSummaries;
     }
 
     public get hasSummarizedColumns() {
