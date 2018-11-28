@@ -31,7 +31,7 @@ function addDependencies(options: Options): Rule {
       }
     });
 
-    addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
+    addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.optionalDependencies['igniteui-cli']);
     return tree;
   };
 }

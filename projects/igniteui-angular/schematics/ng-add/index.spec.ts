@@ -20,8 +20,7 @@ describe('schematics', () => {
 
   const pkgJsonConfig = {
     dependencies: null,
-    devDependencies: null,
-    optionalDependencies: null
+    devDependencies: null
   };
 
   beforeEach(() => {
@@ -46,9 +45,7 @@ describe('schematics', () => {
 
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
-    // not used atm
-    // expect(pkgJsonData.devDependencies).toBeTruthy();
-    expect(pkgJsonData.optionalDependencies).toBeTruthy();
+    expect(pkgJsonData.devDependencies).toBeTruthy();
   });
 
   it('should add the correct igniteui-angular packages to package.json dependencies', () => {
@@ -70,7 +67,7 @@ describe('schematics', () => {
   it('should add hammer.js to the workspace', () => {
     runner.runSchematic('ng-add', {}, tree);
 
-    const workspace = getWorkspace(tree);
+    const workspace = getWorkspace(tree) as any;
     const currentProjectName = workspace.defaultProject;
 
     expect(
@@ -92,14 +89,14 @@ describe('schematics', () => {
     expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('hammerjs')).length).toBeGreaterThan(0);
   });
 
-  it('should add the CLI only to optionalDependencies', () => {
+  it('should add the CLI only to devDependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
 
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
-    expect(pkgJsonData.optionalDependencies).toBeTruthy();
+    expect(pkgJsonData.devDependencies).toBeTruthy();
 
-    expect(Object.keys(pkgJsonData.optionalDependencies).filter(k => k.includes('igniteui-cli')).length).toBeGreaterThan(0);
+    expect(Object.keys(pkgJsonData.devDependencies).filter(k => k.includes('igniteui-cli')).length).toBeGreaterThan(0);
     expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('igniteui-cli')).length).toBe(0);
   });
 });
