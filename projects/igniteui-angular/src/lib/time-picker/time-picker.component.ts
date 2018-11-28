@@ -172,7 +172,7 @@ export class IgxTimePickerComponent implements
     @Input()
     set okButtonLabel(value: string) {
         this._okButtonLabel = value;
-    } 
+    }
 
     /**
      * An accessor that returns the label of ok button.
