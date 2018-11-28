@@ -1,4 +1,4 @@
-import { PositionSettings } from './../utilities';
+import { PositionSettings, Size } from './../utilities';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html)
@@ -20,5 +20,5 @@ export interface IPositionStrategy {
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-    position(contentElement: HTMLElement, size?: { width: number, height: number }, document?: Document, initialCall?: boolean): void;
+    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void;
 }
