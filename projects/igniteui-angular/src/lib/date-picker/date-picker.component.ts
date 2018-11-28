@@ -349,7 +349,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @Output()
     public onSelection = new EventEmitter<Date>();
 
-    /*
+    /**
      * @hidden
      */
     @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
