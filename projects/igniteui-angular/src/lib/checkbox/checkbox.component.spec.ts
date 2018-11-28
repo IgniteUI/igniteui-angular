@@ -22,6 +22,7 @@ describe('IgxCheckbox', () => {
                 CheckboxRequiredComponent,
                 CheckboxExternalLabelComponent,
                 CheckboxInvisibleLabelComponent,
+                CheckboxDisabledTransitionsComponent,
                 IgxCheckboxComponent
             ],
             imports: [FormsModule, IgxRippleModule]
@@ -156,6 +157,21 @@ describe('IgxCheckbox', () => {
         expect(testInstance.subscribed).toBe(false);
     });
 
+    it('Should be able to enable/disable CSS transitions', () => {
+        const fixture = TestBed.createComponent(CheckboxDisabledTransitionsComponent);
+        const testInstance = fixture.componentInstance;
+        const checkboxInstance = testInstance.cb;
+        const checkboxHost = fixture.debugElement.query(By.css('igx-checkbox')).nativeElement;
+        fixture.detectChanges();
+
+        expect(checkboxInstance.disableTransitions).toBe(true);
+        expect(checkboxHost.classList).toContain('igx-checkbox--plain');
+
+        testInstance.cb.disableTransitions = false;
+        fixture.detectChanges();
+        expect(checkboxHost.classList).not.toContain('igx-checkbox--plain');
+    });
+
     it('Required state', () => {
         const fixture = TestBed.createComponent(CheckboxRequiredComponent);
         const testInstance = fixture.componentInstance;
@@ -280,4 +296,11 @@ class CheckboxExternalLabelComponent {
 class CheckboxInvisibleLabelComponent {
     @ViewChild('cb') public cb: IgxCheckboxComponent;
     label = 'Invisible Label';
+}
+
+@Component({
+    template: `<igx-checkbox #cb [disableTransitions]="true"></igx-checkbox>`
+})
+class CheckboxDisabledTransitionsComponent {
+    @ViewChild('cb') public cb: IgxCheckboxComponent;
 }

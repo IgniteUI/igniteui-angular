@@ -15,7 +15,8 @@ import {
     Pipe,
     PipeTransform,
     Renderer2,
-    TemplateRef
+    TemplateRef,
+    LOCALE_ID
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
@@ -25,6 +26,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { HammerGestureConfig } from '@angular/platform-browser';
 
 /**
  * @hidden
@@ -123,6 +125,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
+
 /**
  * @hidden
  */
@@ -176,6 +179,8 @@ export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
 
     public cancelDrop: boolean;
+    public isColumnMoving: boolean;
+
     public selection: {
         column: IgxColumnComponent,
         rowID: any
@@ -218,11 +223,11 @@ export enum DropPosition {
 export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     @Input('igxColumnMovingDrag')
-    set data(val: IgxColumnComponent) {
+    set data(val) {
         this._column = val;
     }
 
-    get column(): IgxColumnComponent {
+    get column() {
         return this._column;
     }
 
@@ -256,7 +261,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
-
         if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
             return;
         }
@@ -270,7 +274,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerDown(event);
 
-        this.column.grid.isColumnMoving = true;
+        this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
         const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
@@ -296,7 +300,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.column.grid.cdr.detectChanges();
         }
 
-        if (this.column.grid.isColumnMoving) {
+        if (this.cms.isColumnMoving) {
             const args = {
                 source: this.column,
                 cancel: false
@@ -314,14 +318,16 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.zone.run(() => {
             super.onPointerUp(event);
 
-            this.column.grid.isColumnMoving = false;
+            this.cms.isColumnMoving = false;
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         });
     }
 
     protected createDragGhost(event) {
-        super.createDragGhost(event);
+        const index = this.column.grid.hasMovableColumns ? 1 : 0;
+
+        super.createDragGhost(event, this.element.nativeElement.children[index]);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -347,19 +353,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
+            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.removeChild(this._dragGhost.firstElementChild);
-            this._dragGhost.removeChild(this._dragGhost.lastElementChild);
-            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
+            this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
-            this._dragGhost.children[1].style.paddingLeft = '0px';
+            this._dragGhost.children[0].style.paddingLeft = '0px';
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
@@ -389,7 +391,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     get isDropTarget(): boolean {
-        return this._column && this._column.grid.hasMovableColumns;
+        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable;
     }
 
     get horizontalScroll(): any {
@@ -425,7 +427,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
             }
 
-            const pos = this.elementRef.nativeElement.getBoundingClientRect().left + parseFloat(this.column.width) / 2;
+            const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
+            const pos = clientRect.left + clientRect.width / 2;
 
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
@@ -530,11 +533,9 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
             if (this.cms.selection && this.cms.selection.column) {
-                const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
-
                 this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
-                    columnID: colID
+                    columnID: this.column.grid.columnList.toArray().indexOf(this.cms.selection.column)
                 }]));
 
                 const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
@@ -542,8 +543,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 if (cell) {
                     cell.nativeElement.focus();
                 }
-
-                this.cms.selection = null;
             }
 
             this.column.grid.draggedColumn = null;
@@ -559,6 +558,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     name: 'igxdate'
 })
 export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any): string {
         if (value && value instanceof Date) {
             return super.transform(value);
@@ -574,6 +577,10 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
     name: 'igxdecimal'
 })
 export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any): string {
         if (value && typeof value === 'number') {
             return super.transform(value);
@@ -609,4 +616,41 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
         contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
         contentElement.style.width = target.clientWidth + 'px';
     }
+}
+
+/**
+ *@hidden
+ */
+export class GridHammerConfig extends HammerGestureConfig {
+    constructor() {
+        super();
+
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window['MSStream']) {
+            this.events = ['tap', 'doubletap'];
+        }
+    }
+
+    events = [];
+    options: HammerOptions = {
+        recognizers: [
+            [ Hammer.Tap ],
+            [ Hammer.Tap, { event: 'doubletap', taps: 2, interval: 450 } ]
+        ],
+        inputClass: Hammer.TouchInput
+    };
+
+    buildHammer(element: HTMLElement) {
+        const mc = new Hammer(element, this.options);
+
+
+        Object.keys(this.overrides).forEach(eventName => {
+            mc.get(eventName).set(this.overrides[eventName]);
+        });
+
+        mc.get('doubletap').recognizeWith('tap');
+        mc.get('tap').requireFailure('doubletap');
+        mc.get('doubletap').dropRequireFailure('tap');
+
+        return mc;
+      }
 }

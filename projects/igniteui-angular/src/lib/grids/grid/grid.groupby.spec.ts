@@ -22,6 +22,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 describe('IgxGrid - GroupBy', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -1480,8 +1481,8 @@ describe('IgxGrid - GroupBy', () => {
             expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
 
-        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const headerResArea = headers[0].nativeElement.children[2];
+        const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
+        const headerResArea = headers[0].children[1].nativeElement;
         UIInteractions.simulateMouseEvent('mouseover', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
         UIInteractions.simulateMouseEvent('mouseup', headerResArea, 200, 5);
@@ -1491,7 +1492,7 @@ describe('IgxGrid - GroupBy', () => {
         tick(100);
         fix.detectChanges();
 
-        const resizer = headers[0].nativeElement.children[2].children[0];
+        const resizer = headers[0].children[1].children[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
         tick(100);
@@ -2404,6 +2405,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(chips.length).toBe(1);
         const chipText = chips[0].querySelector('div.igx-chip__content').innerText;
         expect(chipText).toEqual('Custom Header Text');
+        expect(chips[0].getAttribute('title')).toEqual('Custom Header Text');
     }));
 
     it('should update grid sizes when columns are grouped/ungrouped.', fakeAsync(() => {
@@ -2770,6 +2772,21 @@ describe('IgxGrid - GroupBy', () => {
         // verify group area is not rendered
         expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
     }));
+
+    it('should add title attribute to chips when column is grouped', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+         const exprs: ISortingExpression[] = [
+            { fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
+        const grid = fix.componentInstance.instance;
+        grid.groupBy(exprs);
+        fix.detectChanges();
+         const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        expect(chips[0].getAttribute('title')).toEqual('ProductName');
+        expect(chips[1].getAttribute('title')).toEqual('Released');
+    });
 
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;

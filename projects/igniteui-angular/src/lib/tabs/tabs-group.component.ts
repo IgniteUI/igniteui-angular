@@ -4,24 +4,22 @@ import {
     Component,
     ContentChild,
     ElementRef,
-    forwardRef,
     HostBinding,
-    Inject,
     Input,
     TemplateRef,
     HostListener
 } from '@angular/core';
 
 import { IgxTabItemComponent } from './tab-item.component';
-import { IgxTabsComponent } from './tabs.component';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
+import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 
 @Component({
     selector: 'igx-tabs-group',
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked {
+export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit, AfterViewChecked {
     public isSelected = false;
 
     /**
@@ -78,7 +76,7 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
      */
     get relatedTab(): IgxTabItemComponent {
         if (this._tabs.tabs) {
-            return this._tabs.tabs.toArray()[this.index];
+            return this._tabs.tabs.toArray()[this.index] as IgxTabItemComponent;
         }
     }
 
@@ -120,19 +118,14 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
-    constructor(
-        @Inject(forwardRef(() => IgxTabsComponent))
-        private _tabs: IgxTabsComponent,
-        private _element: ElementRef) {
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
     }
 
 
     @HostListener('window:resize', ['$event'])
     public onResize(event) {
         if (this.isSelected) {
-            const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-            this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0s`;
-            this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+            this.transformContentAnimation(0);
         }
     }
 
@@ -151,11 +144,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
+
+        if (this.isSelected) {
+            this.transformContentAnimation(0);
+        }
     }
 
     /**
      * A method that sets the focus on a tab.
-     * @memberOf {@link IgxTabGroupComponent}
+     * @memberof {@link IgxTabsGroupComponent}
      *```typescript
      *@ViewChild("MyChild")
      *public tab : IgxTabsGroupComponent;
@@ -192,11 +189,15 @@ export class IgxTabsGroupComponent implements AfterContentInit, AfterViewChecked
             this._tabs.scrollElement(tabElement, true);
         }
 
-        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `0.2s`;
-        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+        this.transformContentAnimation(0.2);
 
         this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
         this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
+    }
+
+    private transformContentAnimation(duration: number) {
+        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
+        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
+        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
     }
 }
