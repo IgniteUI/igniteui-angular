@@ -92,7 +92,7 @@
             [style.flex-basis.px]="summariesMargin"
             ></div>
         </ng-container>
-        <igx-grid-summary-row [gridID]="id" [summaries]="summaryService.calculateSummaries('root', data)" [index]="0" class="igx-grid__summaries" #summaryRow>
+        <igx-grid-summary-row [gridID]="id" [summaries]="summaryService.calculateSummaries(summaryService.rootSummaryID, data)" [index]="0" class="igx-grid__summaries" #summaryRow>
             </igx-grid-summary-row>
     </div>
 </div>

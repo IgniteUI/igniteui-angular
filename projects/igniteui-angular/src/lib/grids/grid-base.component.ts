@@ -3142,7 +3142,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public clearSummaryCache(args?) {
         if (!args) {
-            this.summaryService.deleteSummaryCache();
+            this.summaryService.clearSummaryCache();
             this.gridAPI.remove_summary(this.id);
             return;
         }
