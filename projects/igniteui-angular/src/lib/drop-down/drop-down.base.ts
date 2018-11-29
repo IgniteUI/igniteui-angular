@@ -552,6 +552,12 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
             this._focusedItem.isFocused = true;
         }
     }
+    /**
+     * @hidden
+     */
+    public getFirstSelectableItem() {
+        return this.children.find(child => !child.isHeader && !child.disabled);
+    }
 }
 
 /**
