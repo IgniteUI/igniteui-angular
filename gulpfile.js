@@ -283,7 +283,7 @@ gulp.task('typedoc-build:theme', ['typedoc-build'],
 );
 
 gulp.task('typedoc-build:export',
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH}`)
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH} --tags --params`)
 );
 
 gulp.task('typedoc-build:import', ['typedoc-build'],
