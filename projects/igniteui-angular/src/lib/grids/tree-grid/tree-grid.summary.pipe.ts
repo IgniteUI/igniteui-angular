@@ -23,7 +23,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
 
-        if (summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
+        if (!flatData || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
         }
 

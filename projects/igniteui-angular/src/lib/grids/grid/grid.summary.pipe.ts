@@ -23,7 +23,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         summaryPosition: GridSummaryPosition,
         id: string, pipeTrigger: number): any[] {
 
-        if (summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
+        if (!flatData || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
         }
 
