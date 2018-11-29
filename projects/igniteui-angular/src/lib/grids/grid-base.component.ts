@@ -776,7 +776,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
-            this.markForCheck();
+            this.reflow();
+            // this.markForCheck();
         }
     }
 
@@ -1393,11 +1394,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('tfoot')
     public tfoot: ElementRef;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('summaries')
-    public summaries: ElementRef;
 
     /**
      * @hidden
@@ -2198,7 +2194,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
-        this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         this._derivePossibleHeight();
         this.markForCheck();
 
@@ -2245,7 +2240,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calculateGridSizes();
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
-                this.summariesHeight = 0;
                 this.reflow();
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
@@ -3103,7 +3097,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
-        this.summariesHeight = 0;
+        // this.summariesHeight = 0;
         this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
@@ -3127,8 +3121,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], false);
         }
-        this.summariesHeight = 0;
-        this.markForCheck();
         this.calculateGridHeight();
         this.cdr.detectChanges();
     }
@@ -3257,7 +3249,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public recalculateSummaries() {
-        this.summariesHeight = 0;
         requestAnimationFrame(() => this.calculateGridSizes());
     }
 
@@ -3392,6 +3383,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     */
+    get rootSummariesEnabled(): boolean {
+        return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
+    }
+    /**
      * Returns if the `IgxGridComponent` has moveable columns.
      * ```typescript
      * const movableGrid = this.grid.hasMovableColumns;
@@ -3486,12 +3483,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
                 (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
         }
-
+        this.summariesHeight = 0;
         if (!this._height) {
             this.calcHeight = null;
-            if (this.hasSummarizedColumns && !this.summariesHeight) {
-                this.summariesHeight = this.summaries ?
-                    this.summaryService.calcMaxSummaryHeight() : 0;
+            if (this.hasSummarizedColumns && this.rootSummariesEnabled ) {
+                this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
             }
             return;
         }
@@ -3508,11 +3504,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.paginator.nativeElement.offsetHeight : 0;
         }
 
-        if (!this.summariesHeight) {
-            this.summariesHeight = this.summaries ?
-                this.summaryService.calcMaxSummaryHeight() : 0;
+        if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
+            this.summariesHeight += this.summaryService.calcMaxSummaryHeight();
         }
-
         const groupAreaHeight = this.getGroupAreaHeight();
 
         if (this._height && this._height.indexOf('%') !== -1) {

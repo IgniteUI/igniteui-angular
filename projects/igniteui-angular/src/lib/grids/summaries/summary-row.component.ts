@@ -64,6 +64,13 @@ export class IgxSummaryRowComponent {
     public notGroups(columns) {
         return columns.filter(c => !c.columnGroup);
     }
+
+    /**
+     * @hidden
+     */
+    public width(columnWidth: string) {
+        return parseInt(columnWidth, 10);
+    }
     /**
      * @hidden
      */

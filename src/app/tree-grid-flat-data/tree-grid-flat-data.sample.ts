@@ -13,6 +13,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     private nextRow = 1;
+    public summaryMode = 'rootLevelOnly';
+    public summaryModes = [];
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
@@ -24,6 +26,11 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
+        this.summaryModes = [
+            { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
+            { label: 'childLevelsOnly', selected: this.summaryMode === 'childLevelsOnly', togglable: true },
+            { label: 'rootAndChildLevels', selected: this.summaryMode === 'rootAndChildLevels', togglable: true }
         ];
 
         this.columns = [
@@ -89,6 +96,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public selectSummaryMode(event) {
+        this.summaryMode = this.summaryModes[event.index].label;
     }
 
     public disableSummary() {

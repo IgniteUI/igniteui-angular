@@ -65,6 +65,10 @@ export class IgxGridSummaryService {
         return rowSummaries;
     }
 
+    public get groupingIdentation(): boolean {
+        return !this.isTreeGrid && this.grid.groupingExpressions.length > 0;
+    }
+
     public get hasSummarizedColumns(): boolean {
         const summarizedColumns = this.grid.columnList.filter(col => col.hasSummary && !col.hidden);
         return summarizedColumns.length > 0;

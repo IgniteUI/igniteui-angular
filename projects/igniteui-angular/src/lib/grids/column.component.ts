@@ -198,10 +198,6 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
-                if (this.hasSummary) {
-                    this.grid.summariesHeight = 0;
-                }
-
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
             }
@@ -722,6 +718,16 @@ export class IgxColumnComponent implements AfterContentInit {
             ptr = ptr.parent;
         }
         return lvl;
+    }
+
+    get isLastPinned(): boolean {
+        const pinnedCols = this.grid.pinnedColumns;
+
+        if (pinnedCols.length === 0) {
+            return false;
+        }
+
+        return pinnedCols.indexOf(this) === pinnedCols.length - 1;
     }
 
     /**

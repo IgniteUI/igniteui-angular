@@ -16,6 +16,8 @@ export class GridGroupBySampleComponent implements OnInit {
     public hideGroupedColumns = false;
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
+    public summaryMode = 'rootLevelOnly';
+    public summaryModes = [];
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
@@ -32,6 +34,11 @@ export class GridGroupBySampleComponent implements OnInit {
             { field: 'Fax', width: 150, groupable: true  }
         ];
         this.hideGroupedColumns = true;
+        this.summaryModes = [
+            { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
+            { label: 'childLevelsOnly', selected: this.summaryMode === 'childLevelsOnly', togglable: true },
+            { label: 'rootAndChildLevels', selected: this.summaryMode === 'rootAndChildLevels', togglable: true }
+        ];
 
         /* tslint:disable */
         this.data = [
@@ -101,7 +108,7 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log("onGroupingDone: ");
         console.log(event);
     }
-  
+
     groupMultiple() {
         const expr = [
             {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
@@ -110,11 +117,11 @@ export class GridGroupBySampleComponent implements OnInit {
         ];
         this.grid1.groupBy(expr);
     }
-  
+
     ungroupMultiple() {
         this.grid1.clearGrouping(["Address", "Country"]);
     }
-  
+
     groupUngroupMultiple() {
         const expr = [
             {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
@@ -125,5 +132,9 @@ export class GridGroupBySampleComponent implements OnInit {
 
     changeFocus(event: IGridFocusChangeEventArgs) {
         console.log(event);
+    }
+
+    public selectSummaryMode(event) {
+        this.summaryMode = this.summaryModes[event.index].label;
     }
 }

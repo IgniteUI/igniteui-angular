@@ -1,6 +1,6 @@
 <ng-container *ngIf="column.hasSummary">
     <ng-container *ngFor="let summary of summaryResults">
-            <div  [style.height.px]="itemHeight">
+            <div  [style.height.px]="itemHeight" class="igx-grid-summary__item">
                 <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ summary.label }}</span>
                 <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">
                     {{ columnDatatype === 'number' ? (summary.summaryResult | igxdecimal) : columnDatatype === 'date' ? (summary.summaryResult | igxdate) : (summary.summaryResult) }}
