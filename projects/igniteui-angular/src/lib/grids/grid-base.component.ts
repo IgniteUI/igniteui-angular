@@ -2153,6 +2153,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.gridAPI.clear_sort(this.id, record.item.field);
                     });
                 }
+                if (this.toolbar && this.toolbar.columnHidingUI) {
+                    this.toolbar.columnHidingUI.updateColumns();
+                }
+                if (this.toolbar && this.toolbar.columnPinningUI) {
+                    this.toolbar.columnPinningUI.updateColumns();
+                }
                 this.markForCheck();
             });
     }

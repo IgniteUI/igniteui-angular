@@ -35,10 +35,7 @@ export abstract class ColumnChooserBase implements OnDestroy {
     set columns(value) {
         if (value) {
             this._gridColumns = value;
-            this.createColumnItems();
-            if (this.filterCriteria) {
-                this.filter();
-            }
+            this.updateColumns();
         }
     }
     /**
@@ -284,6 +281,20 @@ export abstract class ColumnChooserBase implements OnDestroy {
      */
     protected clearFiltering() {
         this.createColumnItems();
+    }
+
+    /**
+     * Update the columns in this column chooser if they were changed at the location set in the 'columns' property. 
+     * ```typescript
+     * this.columnHidingUI.updateColumns();
+     * ```
+     * @memberof ColumnChooserBase
+     */
+    public updateColumns() {
+        this.createColumnItems();
+        if (this.filterCriteria) {
+            this.filter();
+        }
     }
 }
 
