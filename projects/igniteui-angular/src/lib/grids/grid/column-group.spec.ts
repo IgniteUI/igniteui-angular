@@ -37,7 +37,8 @@ describe('IgxGrid - multi-column headers', () => {
                 EmptyColGridComponent,
                 OneColPerGroupGridComponent,
                 NestedColumnGroupsGridComponent,
-                DynamicGridComponent
+                DynamicGridComponent,
+                NumberColWidthGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -67,7 +68,8 @@ describe('IgxGrid - multi-column headers', () => {
         addressGroup.hidden = true;
         tick();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
+        expect(document.querySelectorAll('igx-grid-header').length).toEqual(4);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(6);
     }));
 
     it('column hiding - child level', fakeAsync(() => {
@@ -80,7 +82,7 @@ describe('IgxGrid - multi-column headers', () => {
         addressGroup.children.first.hidden = true;
         tick();
 
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(5);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(5);
         expect(addressGroup.children.first.hidden).toBe(true);
         expect(addressGroup.children.first.children.toArray().every(c => c.hidden === true)).toEqual(true);
     }));
@@ -101,7 +103,7 @@ describe('IgxGrid - multi-column headers', () => {
         // Hide column in goup
         grid.getColumnByName('CompanyName').hidden = true;
         tick();
-        expect(document.querySelectorAll('igx-grid-header').length).toEqual(16);
+        expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(16);
         expect(fixture.debugElement.queryAll(By.css(GRID_COL_THEAD_CLASS)).length).toEqual(9);
 
         grid.getColumnByName('Address').hidden = true;
@@ -585,7 +587,7 @@ describe('IgxGrid - multi-column headers', () => {
             testColumnGroupHeaderRendering(secondGroup,
                 secondGroupChildrenCount * secondSubGroupChildrenCount * columnWidthPx,
                 gridHeadersDepth * grid.defaultRowHeight, componentInstance.secondGroupTitle,
-                'secondSubGroup', secondGroupChildrenCount);
+                'secondSubGroup', 0);
 
             const secondSubGroups = secondGroup.queryAll(By.css('.secondSubGroup'));
             testColumnGroupHeaderRendering(secondSubGroups[0],
@@ -1378,6 +1380,13 @@ describe('IgxGrid - multi-column headers', () => {
         const colsCount = 2; // 1 col group and 1 col
         expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
     });
+
+    it('Should not throw exception if multi-column header columns width is set as number', () => {
+        expect(() => {
+            const fixture = TestBed.createComponent(NumberColWidthGridComponent);
+            fixture.detectChanges();
+        }).not.toThrow();
+    });
 });
 
 @Component({
@@ -1842,21 +1851,21 @@ export class StegosaurusGridComponent implements AfterViewInit {
 @Component({
     template: `
         <igx-grid #grid [data]="data" [height]="gridHeight" [columnWidth]="columnWidth">
-            <igx-column-group headerClasses="firstGroup" [header]="firstGroupTitle">
+            <igx-column-group headerGroupClasses="firstGroup" [header]="firstGroupTitle">
                 <igx-column headerClasses="firstGroupColumn" field="ID" *ngFor="let item of hunderdItems;"></igx-column>
             </igx-column-group>
-            <igx-column-group headerClasses="secondGroup" [header]="secondGroupTitle">
-                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+            <igx-column-group headerGroupClasses="secondGroup" [header]="secondGroupTitle">
+                <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
                     <igx-column headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
                 </igx-column-group>
-                <igx-column-group headerClasses="secondSubGroup" [header]="secondSubGroupTitle">
+                <igx-column-group headerGroupClasses="secondSubGroup" [header]="secondSubGroupTitle">
                     <igx-column  headerClasses="secondSubGroupColumn" field="ID" *ngFor="let item of fiftyItems;"></igx-column>
                 </igx-column-group>
             </igx-column-group>
             <igx-column headerClasses="lonelyId" [header]="idHeaderTitle" field="ID"></igx-column>
             <igx-column-group header="General Information">
                 <igx-column headerClasses="companyName" [header]="companyNameTitle" field="CompanyName"></igx-column>
-                <igx-column-group headerClasses="personDetails" [header]="personDetailsTitle">
+                <igx-column-group headerGroupClasses="personDetails" [header]="personDetailsTitle">
                     <igx-column headerClasses="personDetailsColumn" field="ContactName"></igx-column>
                     <igx-column headerClasses="personDetailsColumn" field="ContactTitle"></igx-column>
                 </igx-column-group>
@@ -1899,7 +1908,7 @@ export class BlueWhaleGridComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data" height="600px" columnWidth="100px">
-            <igx-column-group headerClasses="emptyColGroup" #emptyColGroup header="First Group">
+            <igx-column-group headerGroupClasses="emptyColGroup" #emptyColGroup header="First Group">
             </igx-column-group>
         </igx-grid>
     `
@@ -1917,13 +1926,13 @@ export class EmptyColGridComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data" height="600px" [columnWidth]="columnWidth">
-            <igx-column-group headerClasses="addressColGroup" [header]="addressColGroupTitle">
+            <igx-column-group headerGroupClasses="addressColGroup" [header]="addressColGroupTitle">
                 <igx-column headerClasses="addressCol" field="Address" [header]="addressColTitle"></igx-column>
             </igx-column-group>
-            <igx-column-group headerClasses="phoneColGroup" [header]="phoneColGroupTitle">
+            <igx-column-group headerGroupClasses="phoneColGroup" [header]="phoneColGroupTitle">
                 <igx-column headerClasses="phoneCol" field="Phone" [header]="phoneColTitle" [width]="phoneColWidth"></igx-column>
             </igx-column-group>
-            <igx-column-group headerClasses="faxColGroup" [header]="faxColGroupTitle">
+            <igx-column-group headerGroupClasses="faxColGroup" [header]="faxColGroupTitle">
                 <igx-column headerClasses="faxCol" field="Fax" [header]="faxColTitle" [width]="faxColWidth"></igx-column>
             </igx-column-group>
         </igx-grid>
@@ -1952,13 +1961,13 @@ export class OneColPerGroupGridComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data" height="600px" [columnWidth]="columnWidth">
-            <igx-column-group headerClasses="masterColGroup" [header]="masterColGroupTitle">
-                <igx-column-group headerClasses="firstSlaveColGroup slaveColGroup" [header]="firstSlaveColGroupTitle">
+            <igx-column-group headerGroupClasses="masterColGroup" [header]="masterColGroupTitle">
+                <igx-column-group headerGroupClasses="firstSlaveColGroup slaveColGroup" [header]="firstSlaveColGroupTitle">
                     <igx-column headerClasses="addressCol firstSlaveChild" field="Address" [header]="addressColTitle"></igx-column>
                     <igx-column headerClasses="phoneCol firstSlaveChild" field="Phone" [header]="phoneColTitle" [width]="phoneColWidth">
                     </igx-column>
                 </igx-column-group>
-                <igx-column-group headerClasses="secondSlaveColGroup slaveColGroup" [header]="secondSlaveColGroupTitle">
+                <igx-column-group headerGroupClasses="secondSlaveColGroup slaveColGroup" [header]="secondSlaveColGroupTitle">
                     <igx-column headerClasses="faxCol secondSlaveChild" field="Fax" [header]="faxColTitle" [width]="faxColWidth">
                     </igx-column>
                     <igx-column headerClasses="cityCol secondSlaveChild" field="City" [header]="cityColTitle" [width]="cityColWidth">
@@ -2006,6 +2015,32 @@ export class DynamicGridComponent {
     data = SampleTestData.contactInfoDataFull();
 }
 
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" height="500px">
+            <igx-column-group header="MCH">
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [width]="c.width"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+export class NumberColWidthGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    grid: IgxGridComponent;
+
+    data = SampleTestData.contactInfoDataFull();
+
+    columns = [
+        { field: 'ID', width: 100 },
+        { field: 'CompanyName', width: 200 },
+        { field: 'ContactName', width: 150 },
+        { field: 'City', width: 100 },
+    ];
+}
+
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {
     const colGroups = grid.columnList.filter(c => c.columnGroup && c.header === headerName);
     if (colGroups.length === 0) {
@@ -2020,8 +2055,9 @@ function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroup
 // tests column and column group header rendering
 function testColumnGroupHeaderRendering(column: DebugElement, width: number, height: number,
     title: string, descendentColumnCssClass?: string, descendentColumnCount?: number) {
-    expect(column.nativeElement.parentElement.offsetHeight).toBe(height);
-    expect(column.nativeElement.parentElement.offsetWidth).toBe(width);
+
+    expect(column.nativeElement.offsetHeight).toBe(height);
+    expect(column.nativeElement.offsetWidth).toBe(width);
 
     const colHeaderTitle = column.children
         .filter(c => c.nativeElement.classList.contains(GRID_COL_GROUP_THEAD_TITLE_CLASS))[0];
@@ -2069,7 +2105,7 @@ function testColumnsVisibleIndexes(columns: IgxColumnComponent[]) {
 }
 
 function testGroupsAndColumns(groups: number, columns: number) {
-    expect(document.querySelectorAll('igx-grid-header').length).toEqual(groups);
+    expect(document.querySelectorAll('igx-grid-header-group').length).toEqual(groups);
     expect(document.querySelectorAll(GRID_COL_THEAD_CLASS).length).toEqual(columns);
 }
 
@@ -2142,7 +2178,7 @@ class NestedColGroupsTests {
         const masterColGroup = fixture.debugElement.query(By.css('.masterColGroup'));
         const masterColGroupWidth = firstSlaveColGroupWidth + secondSlaveColGroupWidth;
         const masterSlaveColGroupDepth = 3;
-        const masterColGroupChildrenCount = 2;
+        const masterColGroupChildrenCount = 0;
 
         testColumnGroupHeaderRendering(masterColGroup, masterColGroupWidth,
             masterSlaveColGroupDepth * grid.defaultRowHeight, ci.masterColGroupTitle,

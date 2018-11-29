@@ -1,9 +1,9 @@
-<header class="header header--sticky">
-    {{> infraHead}}
+<header class="header header--sticky tsd-header">
+    {{#ifCond lang '==' 'jp'}}{{> infraHeadJA }}{{else}}{{> infraHead }}{{/ifCond}}
     <div class="header__secondary">
         <div class="header__logo">
             <span class="header__logo-name">{{package.name}}</span>
-            <span class="header__logo-version">API ver. {{package.version}}</span>
+            <span class="header__logo-version">API ver. 6.2.x</span>
         </div>
 
         <div class="tsd-nav-toggle align-end">
@@ -14,12 +14,12 @@
             <ul class="tsd-nav">
                 <li class="tsd-nav-item">
                     <button class="infra-button--flat">
-                        <a href="https://www.infragistics.com/products/ignite-ui-angular">Components</a>
+                        <a href="https://www.infragistics.com/products/ignite-ui-angular">{{#localize}}Components{{/localize}}</a>
                     </button>
                 </li>
                 <li class="tsd-nav-item">
                     <button class="infra-button">
-                        <a href="https://infragistics.com/products/ignite-ui-angular/getting-started/">Get Started</a>
+                        <a href="https://infragistics.com/products/ignite-ui-angular/getting-started/">{{#localize}}Get Started{{/localize}}</a>
                     </button>
                 </li>
             </ul>

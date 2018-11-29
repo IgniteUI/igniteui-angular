@@ -1,0 +1,17 @@
+@import '../light/bottom-nav';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark bottom navigation schema.
+/// @type {Map}
+/// @prop {Color} background [#222] - The background color used for the toast.
+/// @requires {function} extend
+/// @requires $_light-bottom-nav
+/// @see $default-palette
+
+$_dark-bottom-nav: extend($_light-bottom-nav, (
+    background: #222
+));

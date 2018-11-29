@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    forwardRef,
     HostBinding,
     HostListener,
     Inject,
@@ -14,7 +13,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { IgxInputGroupComponent } from '../../input-group/input-group.component';
+import { IgxInputGroupBase } from '../../input-group/input-group.common';
 
 const nativeValidationAttributes = ['required', 'pattern', 'minlength', 'maxlength', 'min', 'max', 'step'];
 
@@ -32,8 +31,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _statusChanges$: Subscription;
 
     constructor(
-        @Inject(forwardRef(() => IgxInputGroupComponent))
-        public inputGroup: IgxInputGroupComponent,
+        public inputGroup: IgxInputGroupBase,
         @Optional() @Self() @Inject(NgModel) protected ngModel: NgModel,
         @Optional() @Self() @Inject(FormControlName) protected formControl: FormControlName,
         protected element: ElementRef,
