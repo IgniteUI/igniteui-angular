@@ -29,7 +29,7 @@
             [readonly]="isUnaryCondition"
             (click)="onInputClick()"
             (keydown)="onInputKeyDown($event)"/>
-            <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
+            <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
     </igx-input-group>
