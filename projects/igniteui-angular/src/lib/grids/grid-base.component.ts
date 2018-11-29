@@ -62,6 +62,7 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
@@ -1298,6 +1299,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
     public parentVirtDir: IgxGridForOfDirective<any>;
+
+    /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
 
     /**
      * @hidden
