@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 7.0.1
 ### Bug fixes
-- Removed the `GridHammerConfig` provider which broke touch events for other components.
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
@@ -14,7 +14,7 @@ All notable changes for each version of this project will be documented in this 
 - `igx-checkbox`:
     - Added a new input property - `disableTransitions`. It allows disabling all CSS transitions on the `igx-checkbox` component for performance optimization.
 ### Bug fixes
-- Removed the `GridHammerConfig` provider which broke touch events for other components.
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
 
 
 ## 6.2.1
