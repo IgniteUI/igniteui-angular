@@ -89,7 +89,7 @@
         "ng-packagr": "^3.0.6",
         "protractor": "~5.3.0",
         "sassdoc": "^2.5.0",
-        "sassdoc-plugin-localization": "^1.4.0",
+        "sassdoc-plugin-localization": "^1.4.1",
         "stylelint": "^8.4.0",
         "stylelint-scss": "^2.5.0",
         "themeleon": "^3.0.2",
