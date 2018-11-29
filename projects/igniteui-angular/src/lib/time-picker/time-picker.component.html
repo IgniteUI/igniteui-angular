@@ -34,8 +34,7 @@
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
 
-<div *ngIf="showContainer" #container
-     [ngStyle]="{'width': isModal ? '320px' : dropdownWidth }"
+<div style="display: none" #container
      class="igx-time-picker__wrapper">
     <div *ngIf="isModal" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>

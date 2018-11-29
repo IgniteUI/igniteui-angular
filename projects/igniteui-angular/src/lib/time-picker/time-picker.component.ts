@@ -89,7 +89,7 @@ export interface IgxTimePickerValidationFailedEventArgs {
     styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy, AfterViewInit {
+export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
 
     private _value: Date;
 
@@ -440,15 +440,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
 
-        this.showContainer = true;
-        requestAnimationFrame(()=> {
-            if (this.mode === InteractionMode.dialog) {
-                this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
-            } else if (this._collapsed) {
-                this._overlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-                this._overlayId = this.overlayService.show(this.container, this._overlaySettings);
-            }
-        });
+        if (this.mode === InteractionMode.dialog) {
+            this.container.nativeElement.style.display = "inline";
+            this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
+        } else if (this._collapsed) {
+            this.container.nativeElement.style.display = "inline";
+            this._overlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
+            this._overlayId = this.overlayService.show(this.container, this._overlaySettings);
+        }
 
         if (this.value) {
             const foramttedTime = this._formatTime(this.value, this.format);
@@ -527,15 +526,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         };
     }
 
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit(): void {
-        // this.dialogClosed = this._alert.toggleRef.onClosed.pipe().subscribe((ev) => this.handleDialogCloseAction());
-        if (this.group) {
-            this.dropdownWidth = this.group.element.nativeElement.getBoundingClientRect().width + 'px';
-        }
-    }
+    // /**
+    //  * @hidden
+    //  */
+    // public ngAfterViewInit(): void {
+    //     // this.dialogClosed = this._alert.toggleRef.onClosed.pipe().subscribe((ev) => this.handleDialogCloseAction());
+    // }
 
     /**
      * @hidden
@@ -938,9 +934,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * @hidden
      */
     public nextHour() {
+        debugger;
         const nextHour = this._nextItem(this._hourItems, this.selectedHour, this._isHourListLoop, 'hour');
         this._hourView = nextHour.view;
         this.selectedHour = nextHour.selectedItem;
+
+        if (this.mode === InteractionMode.dropdown) {
+            // this.displayValue = this._getSelectedTime();
+        }
     }
 
     /**
@@ -1126,11 +1127,18 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
     constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
 
+        this.overlayService.onClosing.pipe(
+            filter(event => event.id === this._overlayId),
+            takeUntil(this._destroy$)).subscribe(() => {
+
+            this.container.nativeElement.style.display = "none";
+        });
+
         this.overlayService.onClosed.pipe(
             filter(event => event.id === this._overlayId),
             takeUntil(this._destroy$)).subscribe(() => {
 
-            this.showContainer = false;
+            this.container.nativeElement.style.display = "none";
             this._collapsed = true;
             if (this._input) {
                 this._input.nativeElement.focus();
@@ -1165,8 +1173,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     @ViewChild('outlet', { read: IgxOverlayOutletDirective })
     private outlet: IgxOverlayOutletDirective;
 
-
-    public showContainer = false;
     public buttonType = 'flat';
     public mask: string;
     public displayValue = '';
@@ -1269,6 +1275,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
 
     public spinOnEdit(event) {
+        debugger;
         event.preventDefault();
 
         let sign: number;
@@ -1283,8 +1290,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
             sign = key === 'arrowdown' || key === 'down' ? -1 : 1;
         }
 
-        if (event.wheelDelta) {
-            sign = event.wheelDelta === 120 ? 1 : -1;
+        if (event.deltaY) {
+            sign = event.deltaY < 0 ? 1 : -1;
         }
 
         if (!this.value) {
@@ -1301,6 +1308,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
                 let val = new Date(this.value);
 
                 val.setMinutes(sign * hDelta);
+
                 if (this.format.indexOf('tt') !== -1 && sections[2] && sections[2] === 'PM' && val.getHours() < 11) {
                     val.setHours(val.getHours() + 12);
                 }
@@ -1310,12 +1318,19 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
             if (MINUTES_POS.indexOf(cursor) !== -1) {
                 let val = new Date(this.value);
-                val.setMinutes(this.value.getMinutes() + (sign * mDelta));
 
+                let minutes = this.value.getMinutes() + (sign * mDelta);
+                if (minutes >= 60) {
+                    minutes = this.isSpinLoop ? minutes - 60 : val.getMinutes();
+                } else if (minutes < 0 ) {
+                    minutes = this.isSpinLoop ? minutes + 60 : val.getMinutes();
+                }
+
+                val.setMinutes(minutes);
                 this.value = val;
             }
 
-            if (this.value.getTime() > max.getTime()) {
+            if (this.value.getTime() >= max.getTime()) {
                 if (this.isSpinLoop) {
                     min.setMinutes(0);
                     min.setMinutes(this.value.getMinutes());

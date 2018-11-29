@@ -9,8 +9,8 @@ import { InteractionMode, IgxTimePickerComponent } from 'igniteui-angular';
 export class TimePickerSampleComponent {
     max = "19:00";
     min = "09:00";
-    itemsDelta = { hours: 1, minutes: 1 };
-    format="hh:mm tt";
+    itemsDelta = { hours: 1, minutes: 5 };
+    format="h:mm tt";
     isSpinLoop = true;
     isVertical = false;
     mode = InteractionMode.dropdown;

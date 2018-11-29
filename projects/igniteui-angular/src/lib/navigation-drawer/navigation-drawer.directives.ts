@@ -9,17 +9,17 @@ export class IgxNavDrawerItemDirective {
     /**
      * @hidden
      */
-    @Input('active') public active;;
+    @Input('active') public active = false;
 
     /**
      * @hidden
      */
-    @Input('isHeader') public isHeader;
+    @Input('isHeader') public isHeader = false;
 
     /**
      * @hidden
      */
-    public readonly activeClass;
+    public readonly activeClass = 'igx-nav-drawer__item--active';
 
     /**
      * @hidden
