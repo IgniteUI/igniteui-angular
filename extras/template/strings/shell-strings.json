@@ -30,6 +30,8 @@
         "Default Value": "Default Value",
         "Authors": "Authors",
         "Example": "Example",
-        "Used by": "Used by"
+        "Used by": "Used by",
+        "See": "See",
+        "Requires": "Requires"
     }
 }
