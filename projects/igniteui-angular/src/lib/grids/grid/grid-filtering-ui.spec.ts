@@ -1838,15 +1838,34 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             stringCellChip.nativeElement.click();
             fix.detectChanges();
 
-            GridFunctions.filterBy('Starts With', 'I', fix);
-
-            // remove text from input
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const input = filterUIRow.query(By.directive(IgxInputDirective));
-            input.nativeElement.value = null;
 
-            const exprList = filterUIRow.componentInstance.expressionsList;
-            exprList[0].expression.searchVal = null;
+            // open dropdown
+            const filterIcon = filterUIRow.query(By.css('igx-icon'));
+            filterIcon.nativeElement.click();
+            fix.detectChanges();
+
+            const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const ddItems = ddList.nativeElement.children;
+            let i;
+            for ( i = 0; i < ddItems.length; i++) {
+                if (ddItems[i].textContent === 'Starts With') {
+                    ddItems[i].click();
+                    tick(100);
+                    return;
+                }
+            }
+
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            input.nativeElement.value = 'I';
+            input.nativeElement.dispatchEvent(new Event('input'));
+            fix.detectChanges();
+
+            const clearButton = filterUIRow.query(By.css('igx-suffix'));
+
+            clearButton.nativeElement.click();
+
+            tick();
             fix.detectChanges();
 
             GridFunctions.closeFilterRow(fix);
