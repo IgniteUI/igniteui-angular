@@ -1923,6 +1923,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public disableTransitions = false;
+
+    /**
+     * @hidden
+     */
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
         caseSensitive: false,
@@ -2039,12 +2044,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
+        this.disableTransitions = true;
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
+            this.disableTransitions = false;
         });
     }
 
