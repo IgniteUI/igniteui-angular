@@ -68,7 +68,7 @@
     "web-animations-js": "^2.3.1"
   },
   "optionalDependencies": {
-    "igniteui-cli": "^3.0.1"
+    "igniteui-cli": "~3.1.0"
   },
   "ng-update": {
     "migrations": "./migrations/migration-collection.json"

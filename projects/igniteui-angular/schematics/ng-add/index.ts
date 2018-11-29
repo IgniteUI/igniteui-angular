@@ -1,6 +1,6 @@
 import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
-import { chain, Rule, SchematicContext, Tree, externalSchematic, SchematicsException } from '@angular-devkit/schematics';
-import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { chain, Rule, SchematicContext, Tree, SchematicsException } from '@angular-devkit/schematics';
+import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 // tslint:disable-next-line:no-submodule-imports
 import { getWorkspace } from '@schematics/angular/utility/config';
 
@@ -11,6 +11,15 @@ export interface Options {
 const extSchematicModule = 'igniteui-cli';
 const schematicName = 'cli-config';
 const hammerJsMinAddress = './node_modules/hammerjs/hammer.min.js';
+
+function logSuccess(options: Options): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    context.logger.info(``);
+    context.logger.warn(`Ignite UI for Angular installed`);
+    context.logger.info(`Learn more: https://www.infragistics.com/products/ignite-ui-angular`);
+    context.logger.info(``);
+  };
+}
 
 function addDependencies(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
@@ -136,10 +145,21 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   return tree;
 }
 
-function installPackageJsonDependencies(): Rule {
+function installPackageJsonDependencies(options): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    context.addTask(new NodePackageInstallTask());
-    context.logger.log('info', 'Installing packages...');
+    const installTaskId = context.addTask(new NodePackageInstallTask());
+    // Add Task for igniteu-cli schematic and wait for install task to finish
+    context.addTask(
+      new RunSchematicTask(
+        `${extSchematicModule}`, // Module
+        `${schematicName}`, // Schematic Name
+        {
+          collection: extSchematicModule,
+          name: `${schematicName}`,
+          options
+        }
+      ),
+      [installTaskId]);
 
     return tree;
   };
@@ -148,7 +168,7 @@ function installPackageJsonDependencies(): Rule {
 export default function (options): Rule {
   return chain([
     addDependencies(options),
-    installPackageJsonDependencies(),
-    externalSchematic(extSchematicModule, schematicName, options)
+    installPackageJsonDependencies(options),
+    logSuccess(options)
   ]);
 }
