@@ -25,10 +25,9 @@ const sassPlug = require('sassdoc-plugin-localization');
 const process = require('process');
 const fs = require('fs');
 const path = require('path');
-const shell = JSON.parse(fs.readFileSync('./extras/template/strings/shell-strings.json'));
+const shell = require('../../../template/strings/shell-strings.json');
 
 themeleon.use({
-
     /**
      * Builds a structure of json files which represents the retrieved comments per every sass declaration.
      */
@@ -80,6 +79,7 @@ const theme = themeleon(__dirname, function (t) {
             usedBy: 'partials/usedby',
             parameters: 'partials/parameters',
             properties: 'partials/properties',
+            returns: 'partials/return',
             example: 'partials/example',
             infraHead: 'partials/infragistics/header',
             infraFoot: 'partials/infragistics/footer',
@@ -124,7 +124,7 @@ const theme = themeleon(__dirname, function (t) {
                 const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
                 const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
                 const config = config_file[lang.trim()][node.trim()];
-                return config ? config.url: '';
+                return config ? config.url : '';
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
@@ -161,19 +161,19 @@ const theme = themeleon(__dirname, function (t) {
         }
     };
 
-  /**
-   * Render `views/index.handlebars` with the theme's context (`ctx` below)
-   * as `index.html` in the destination directory.
-   */
-  t.handlebars('views/index.hbs', 'index.html', options);
+    /**
+     * Render `views/index.handlebars` with the theme's context (`ctx` below)
+     * as `index.html` in the destination directory.
+     */
+    t.handlebars('views/index.hbs', 'index.html', options);
 
-  /**
-   * Applies the translations from the json files.
-   */
-  if (t.ctx.render) {
-      const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
-      t.render(t.ctx._data, json_dir);
-  }
+    /**
+     * Applies the translations from the json files.
+     */
+    if (t.ctx.render) {
+        const json_dir = t.ctx.json_dir ? t.ctx.json_dir : path.join('extras', 'sassdoc');
+        t.render(t.ctx._data, json_dir);
+    }
 });
 /**
  * Actual theme function. It takes the destination directory `dest`
@@ -184,109 +184,109 @@ const theme = themeleon(__dirname, function (t) {
  * configuration.
  */
 module.exports = function (dest, ctx) {
-  var def = {
-    display: {
-      access: ['public', 'private'],
-      alias: true,
-      watermark: false,
-    },
-    groups: {
-      'undefined': 'General',
-    },
-    'shortcutIcon': 'http://sass-lang.com/favicon.ico'
-  };
+    var def = {
+        display: {
+            access: ['public', 'private'],
+            alias: true,
+            watermark: false,
+        },
+        groups: {
+            'undefined': 'General',
+        },
+        'shortcutIcon': 'http://sass-lang.com/favicon.ico'
+    };
 
-  // Apply default values for groups and display.
-  ctx.groups = extend(def.groups, ctx.groups);
-  ctx.display = extend(def.display, ctx.display);
+    // Apply default values for groups and display.
+    ctx.groups = extend(def.groups, ctx.groups);
+    ctx.display = extend(def.display, ctx.display);
 
-  // Extend top-level context keys.
-  ctx = extend({}, def, ctx);
+    // Extend top-level context keys.
+    ctx = extend({}, def, ctx);
 
-  /**
-   * Parse text data (like descriptions) as Markdown, and put the
-   * rendered HTML in `html*` variables.
-   *
-   * For example, `ctx.package.description` will be parsed as Markdown
-   * in `ctx.package.htmlDescription`.
-   *
-   * See <http://sassdoc.com/extra-tools/#markdown>.
-   */
-  extras.markdown(ctx);
+    /**
+     * Parse text data (like descriptions) as Markdown, and put the
+     * rendered HTML in `html*` variables.
+     *
+     * For example, `ctx.package.description` will be parsed as Markdown
+     * in `ctx.package.htmlDescription`.
+     *
+     * See <http://sassdoc.com/extra-tools/#markdown>.
+     */
+    extras.markdown(ctx);
 
-  /**
-   * Add a `display` property for each data item regarding of display
-   * configuration (hide private items and aliases for example).
-   *
-   * You'll need to add default values in your `.sassdocrc` before
-   * using this filter:
-   *
-   *     {
-   *       "display": {
-   *         "access": ["public", "private"],
-   *         "alias": false
-   *       }
-   *     }
-   *
-   * See <http://sassdoc.com/extra-tools/#display-toggle>.
-   */
-  extras.display(ctx);
+    /**
+     * Add a `display` property for each data item regarding of display
+     * configuration (hide private items and aliases for example).
+     *
+     * You'll need to add default values in your `.sassdocrc` before
+     * using this filter:
+     *
+     *     {
+     *       "display": {
+     *         "access": ["public", "private"],
+     *         "alias": false
+     *       }
+     *     }
+     *
+     * See <http://sassdoc.com/extra-tools/#display-toggle>.
+     */
+    extras.display(ctx);
 
-  /**
-   * Allow the user to give a name to the documentation groups.
-   *
-   * We can then have `@group slug` in the docblock, and map `slug`
-   * to `Some title string` in the theme configuration.
-   *
-   * **Note:** all items without a group are in the `undefined` group.
-   *
-   * See <http://sassdoc.com/extra-tools/#groups-aliases>.
-   */
-  extras.groupName(ctx);
+    /**
+     * Allow the user to give a name to the documentation groups.
+     *
+     * We can then have `@group slug` in the docblock, and map `slug`
+     * to `Some title string` in the theme configuration.
+     *
+     * **Note:** all items without a group are in the `undefined` group.
+     *
+     * See <http://sassdoc.com/extra-tools/#groups-aliases>.
+     */
+    extras.groupName(ctx);
 
-  /**
-   * Use SassDoc indexer to index the data by group and type, so we
-   * have the following structure:
-   *
-   *     {
-   *       "group-slug": {
-   *         "function": [...],
-   *         "mixin": [...],
-   *         "variable": [...]
-   *       },
-   *       "another-group": {
-   *         "function": [...],
-   *         "mixin": [...],
-   *         "variable": [...]
-   *       }
-   *     }
-   *
-   * You can then use `data.byGroupAndType` instead of `data` in your
-   * templates to manipulate the indexed object.
-   */
-  ctx.idx = lunr(function () {
-    this.field('type');
-    this.field('name');
+    /**
+     * Use SassDoc indexer to index the data by group and type, so we
+     * have the following structure:
+     *
+     *     {
+     *       "group-slug": {
+     *         "function": [...],
+     *         "mixin": [...],
+     *         "variable": [...]
+     *       },
+     *       "another-group": {
+     *         "function": [...],
+     *         "mixin": [...],
+     *         "variable": [...]
+     *       }
+     *     }
+     *
+     * You can then use `data.byGroupAndType` instead of `data` in your
+     * templates to manipulate the indexed object.
+     */
+    ctx.idx = lunr(function () {
+        this.field('type');
+        this.field('name');
 
-    ctx.data.forEach((doc) => {
-      this.add({
-        id: `${doc.context.type}-${doc.context.name}`,
-        name: doc.context.name,
-        type: doc.context.type
-      });
-    }, this);
-  });
+        ctx.data.forEach((doc) => {
+            this.add({
+                id: `${doc.context.type}-${doc.context.name}`,
+                name: doc.context.name,
+                type: doc.context.type
+            });
+        }, this);
+    });
 
-  ctx.data.byGroupAndType = extras.byGroupAndType(ctx.data);
+    ctx.data.byGroupAndType = extras.byGroupAndType(ctx.data);
 
-  // Avoid key collision with Handlebars default `data`.
-  // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
-  ctx._data = ctx.data;
-  delete ctx.data;
+    // Avoid key collision with Handlebars default `data`.
+    // @see https://github.com/SassDoc/generator-sassdoc-theme/issues/22
+    ctx._data = ctx.data;
+    delete ctx.data;
 
-  /**
-   * Now we have prepared the data, we can proxy to the Themeleon
-   * generated theme function.
-   */
-  return theme.apply(this, arguments);
+    /**
+     * Now we have prepared the data, we can proxy to the Themeleon
+     * generated theme function.
+     */
+    return theme.apply(this, arguments);
 };
