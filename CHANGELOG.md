@@ -32,8 +32,6 @@ All notable changes for each version of this project will be documented in this 
 - `igxDropDown`
     - Added a new property `maxHeight`, defining the max height of the drop down. ([#3001](https://github.com/IgniteUI/igniteui-angular/issues/3001))
 - Added migrations for Sass theme properties changes in 6.2.0 ([#2994](https://github.com/IgniteUI/igniteui-angular/issues/2994))
-- `igx-drop-down`:
-    - Added a new property `maxHeight`, defining the max height of the drop down.
 - Localization
     - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
     in the application.
