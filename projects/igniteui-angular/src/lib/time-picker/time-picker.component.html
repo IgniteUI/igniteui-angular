@@ -1,6 +1,9 @@
 <ng-template #dropdownInputTemplate>
     <igx-input-group #group>
         <label igxLabel>Time</label>
+        <igx-prefix (click)="openDialog()">
+            <igx-icon>access_time</igx-icon>
+        </igx-prefix>
         <input #input type="text" [igxMask]="mask" igxInput
                                   [includeLiterals]="false"
                                   [placeholder]="format"
@@ -16,9 +19,6 @@
                                   [disabled]="disabled"/>
         <igx-suffix *ngIf="displayValue || isNotEmpty" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
-        </igx-suffix>
-        <igx-suffix igxButton="icon" igxRipple (click)="openDialog()">
-            <igx-icon>access_time</igx-icon>
         </igx-suffix>
     </igx-input-group>
 </ng-template>

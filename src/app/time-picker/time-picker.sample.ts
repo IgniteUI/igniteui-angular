@@ -10,8 +10,8 @@ export class TimePickerSampleComponent {
     max = "19:00";
     min = "09:00";
     itemsDelta = { hours: 1, minutes: 5 };
-    format="h:mm tt";
-    isSpinLoop = true;
+    format="HH:mm";
+    isSpinLoop = false;
     isVertical = false;
     mode = InteractionMode.dropdown;
 
@@ -21,7 +21,7 @@ export class TimePickerSampleComponent {
     @ViewChild('tp', { read: IgxTimePickerComponent })
     public tp: IgxTimePickerComponent;
 
-    @ViewChild('tp', { read: IgxTimePickerComponent })
+    @ViewChild('tp1', { read: IgxTimePickerComponent })
     public tp1: IgxTimePickerComponent;
 
 
