@@ -1999,6 +1999,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected _keydownListener = null;
+    /**
+     * @hidden
+     */
+    protected _vScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected _hScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected _wheelListener = null;
     protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
@@ -2174,7 +2190,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
-            this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
+            this._keydownListener = this.keydownHandler.bind(this);
+            this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2219,13 +2236,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 .map(row => row.virtDirRow)
         );
 
-        this.zone.runOutsideAngular(() =>
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._vScrollListener = this.verticalScrollHandler.bind(this);
+            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+        });
 
-        this.zone.runOutsideAngular(() =>
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._hScrollListener = this.horizontalScrollHandler.bind(this);
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
+        });
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
@@ -2237,9 +2256,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            this.nativeElement.removeEventListener('keydown', this._keydownListener);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this._hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         });
@@ -4355,7 +4374,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this._wheelListener = this.rowEditingWheelHandler.bind(this);
+        this.rowEditingOverlay.element.addEventListener('wheel', this._wheelListener);
     }
 
     /**
@@ -4363,7 +4383,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public closeRowEditingOverlay() {
         this.gridAPI.set_edit_row_state(this.id, null);
-        this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
+        this.rowEditingOverlay.element.removeEventListener('wheel', this._wheelListener);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
         this.rowEditingOverlay.element.parentElement.style.display = '';
