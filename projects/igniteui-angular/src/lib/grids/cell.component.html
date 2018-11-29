@@ -19,7 +19,7 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
-        <igx-checkbox (change)="editValue" [value]="editValue" [checked]="editValue" [igxFocus]="focused" [disableRipple]="true"></igx-checkbox>
+        <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue" [igxFocus]="focused" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
         <igx-datePicker (onSelection)="editValue = $event" [value]="editValue" [igxFocus]="focused" [labelVisibility]="false"></igx-datePicker>
