@@ -124,6 +124,10 @@
         }
     }
 
+    @include m(plain) {
+        @extend %cbx-display--plain !optional;
+    }
+
     @include mx(focused, checked) {
         @include e(ripple) {
             @extend %cbx-ripple--focused !optional;
