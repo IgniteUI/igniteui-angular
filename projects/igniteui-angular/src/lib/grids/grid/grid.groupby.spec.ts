@@ -19,7 +19,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 
-describe('IgxGrid - GroupBy', () => {
+fdescribe('IgxGrid - GroupBy', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
@@ -2784,8 +2784,8 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(grid.sortingExpressions).toEqual([
             { fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false },
-            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false },
-            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false }
+            { fieldName: 'Downloads', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() }
         ]);
         expect(grid.groupingExpressions).toEqual([{
             fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false
