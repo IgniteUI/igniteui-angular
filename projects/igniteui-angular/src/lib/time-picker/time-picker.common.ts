@@ -13,6 +13,9 @@ export interface IgxTimePickerBase {
     selectedMinute: string;
     selectedAmPm: string;
     mode: InteractionMode;
+    format: string;
+    promptChar: string;
+    cleared: boolean;
     nextHour();
     prevHour();
     nextMinute();
@@ -25,6 +28,7 @@ export interface IgxTimePickerBase {
     scrollMinuteIntoView(item: string): void;
     scrollAmPmIntoView(item: string): void;
     hideDropDownOverlay(): void;
+    parseMask(preserveAmPm?: boolean): string;
 }
 
 export enum InteractionMode {

@@ -15,8 +15,6 @@ import {
     TemplateRef,
     ViewChild,
     Inject,
-    Pipe,
-    PipeTransform,
     ContentChild,
     Injectable
 } from '@angular/core';
@@ -43,6 +41,8 @@ import { takeUntil, filter } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
+import { debug } from 'util';
 
 
 let NEXT_ID = 0;
@@ -443,8 +443,8 @@ export class IgxTimePickerComponent implements
         } else if (this.mode === InteractionMode.dropdown && this._collapsed) {
             this._collapsed = false;
             this.container.nativeElement.style.display = "inline";
-            this._overlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-            this._overlayId = this.overlayService.show(this.container, this._overlaySettings);
+            this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
+            this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
         }
 
         if (this.value) {
@@ -509,7 +509,7 @@ export class IgxTimePickerComponent implements
             verticalStartPoint: VerticalAlignment.Bottom
         };
 
-         this._overlaySettings = {
+         this._dropDownOverlaySettings = {
             modal: false,
             closeOnOutsideClick: true,
             outlet: this.outlet,
@@ -1164,7 +1164,7 @@ export class IgxTimePickerComponent implements
     private _destroy$ = new Subject<boolean>();
     private _collapsed = true;
     private _positionSettings: PositionSettings;
-    private _overlaySettings: OverlaySettings;
+    private _dropDownOverlaySettings: OverlaySettings;
     private _dialogOverlaySettings: OverlaySettings;
 
     get isModal(): boolean {
@@ -1227,18 +1227,20 @@ export class IgxTimePickerComponent implements
     }
 
     public clear() {
-        this.cleared = true;
-        this.isNotEmpty = false;
+        if (this._collapsed) {
+            this.cleared = true;
+            this.isNotEmpty = false;
 
-        this.displayValue = '';
-        this.value = null;
-        this.resetDropdownItems();
+            this.displayValue = '';
+            this.value = null;
+            this.resetDropdownItems();
 
-        const args: IgxTimePickerValueChangedEventArgs = {
-            oldValue: this._oldValue,
-            newValue: this.value
-        };
-        this.onValueChanged.emit(args);
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: this._oldValue,
+                newValue: this.value
+            };
+            this.onValueChanged.emit(args);
+        }
     }
 
     public onKeydown(event) {
@@ -1423,95 +1425,6 @@ export class IgxTimePickerComponent implements
         });
     }
 
-}
-
-@Pipe({ name: "displayFormat" })
-export class TimeDisplayFormatPipe implements PipeTransform {
-
-     constructor(public timePicker: IgxTimePickerComponent) { }
-
-     transform(value: any): string {
-
-        const maskAmPM = this.timePicker.parseMask();
-        const mask = this.timePicker.parseMask(false);
-        if (!value || value === mask || value === maskAmPM) {
-            return '';
-        }
-
-        const sections = value.split(/[\s:]+/);
-
-        let hour = sections[0];
-        let minutes = sections[1];
-        let amPM = sections[2];
-
-        const format = this.timePicker.format;
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(this.timePicker.promptChar,"g");
-
-        if (format.indexOf('hh') !== -1 || format.indexOf('HH') !== -1 && hour.indexOf(prompt) !== -1) {
-           hour = hour === prompt + prompt ? '00' : hour.replace(regExp, '0');
-        }
-
-        if (format.indexOf('mm') !== -1 && minutes.indexOf(prompt) !== -1) {
-           minutes = minutes === prompt + prompt ? '00' : minutes.replace(regExp, '0');
-        }
-
-        if (format.indexOf('hh') === -1 && format.indexOf('HH') === -1) {
-            hour = hour.indexOf(prompt) !== -1 ? hour.replace(regExp, '') : hour;
-            let hourVal = parseInt(hour, 10);
-            hour = !hourVal ? '0' : hourVal < 10 && hourVal !== 0 ? hour.replace('0', '') : hour;
-        }
-
-        if (format.indexOf('mm') === -1) {
-            minutes = minutes.indexOf(prompt) !== -1 ? minutes.replace(regExp, '') : minutes;
-            let minutesVal = parseInt(minutes, 10);
-            minutes = !minutesVal ? '0' : minutesVal < 10 && minutesVal !== 0 ? minutes.replace('0', '') : minutes;
-        }
-
-        if (format.indexOf('tt') !== -1 && (amPM !== 'AM' ||amPM !== 'PM')) {
-           amPM = amPM.indexOf('p') !== -1 || amPM.indexOf('P') !== -1 ? 'PM' : 'AM';
-        }
-
-        return amPM ? `${hour}:${minutes} ${amPM}` : `${hour}:${minutes}`;
-    }
-}
-
-
-@Pipe({ name: "inputFormat" })
-export class TimeInputFormatPipe implements PipeTransform {
-
-    constructor(public timePicker: IgxTimePickerComponent) { }
-
-    transform(value: any): string {
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(prompt,"g");
-
-        let mask: string;
-        if (this.timePicker.cleared) {
-            this.timePicker.cleared = false;
-            mask = this.timePicker.parseMask(false);
-        } else {
-            mask = this.timePicker.parseMask();
-        }
-
-        if (!value || value === mask) {
-            return mask;
-        }
-
-        const sections = value.split(/[\s:]+/);
-
-        let hour = sections[0].replace(regExp, '');
-        let minutes = sections[1].replace(regExp, '');
-        let amPM = sections[2];
-
-        const leadZeroHour = (parseInt(hour, 10) < 10 && !hour.startsWith('0')) || hour === '0';
-        const leadZeroMinutes = (parseInt(minutes, 10) < 10 && !minutes.startsWith('0')) || minutes === '0';
-
-        hour = leadZeroHour ? '0' + hour : hour;
-        minutes = leadZeroMinutes ? '0' + minutes : minutes;
-
-        return amPM ? `${hour}:${minutes} ${amPM}` : `${hour}:${minutes}`;
-    }
 }
 
 /**
