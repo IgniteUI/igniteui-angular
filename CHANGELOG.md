@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.2
+### Features
+- `igxNavbar`:
+    - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
+    (If `igx-action-icon` is provided, the default action icon will not be used.)
+
+## 7.0.1
+### Bug fixes
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+
+## 7.0.0
+- Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
+- Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
+
+## 6.2.3
+- `ISortingEpression`:
+    - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
+
 ## 6.2.2
 - `igx-checkbox`:
     - Added a new input property - `disableTransitions`. It allows disabling all CSS transitions on the `igx-checkbox` component for performance optimization.
