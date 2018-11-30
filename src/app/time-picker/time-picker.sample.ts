@@ -10,12 +10,12 @@ export class TimePickerSampleComponent {
     max = "19:00";
     min = "09:00";
     itemsDelta = { hours: 1, minutes: 5 };
-    format="HH:mm";
-    isSpinLoop = false;
+    format="h:mm tt";
+    isSpinLoop = true;
     isVertical = false;
     mode = InteractionMode.dropdown;
 
-    date = new Date(2018, 10, 27, 11, 45, 0, 0);
+    date = new Date(2018, 10, 27, 17, 45, 0, 0);
     date1 = new Date();
 
     @ViewChild('tp', { read: IgxTimePickerComponent })

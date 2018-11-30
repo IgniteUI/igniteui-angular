@@ -4,27 +4,26 @@
     </app-page-header>
     <section class="sample-content">
         <article class="timepicker-column">
-            <h4 class="sample-title">Default Time Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <!-- <h4 class="sample-title">Default Time Picker.</h4>
+            <p class="sample-description">Detailed description to be added.</p> -->
             <div class="preview">
-                <igx-time-picker style="width: 200px" #tp
-                                 [maxValue]="max"
-                                 [minValue]="min"
-                                 [mode]="mode"
-                                 [vertical]="isVertical"
-                                 [isSpinLoop]="isSpinLoop"
-                                 [(ngModel)]="date"
-                                 [itemsDelta]="itemsDelta"
-                                 [format]="format">
-                </igx-time-picker>
+                <igx-time-picker style="width: 320px" #tp1 [(ngModel)]="date1" [vertical]="true" format="HH:mm"></igx-time-picker>
             </div>
         </article>
         <article class="timepicker-column">
-            <h4 class="sample-title">Default Time Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <!-- <h4 class="sample-title">Default Time Picker.</h4>
+            <p class="sample-description">Detailed description to be added.</p> -->
             <div class="preview">
-                <igx-time-picker                        [maxValue]="max"
-                [minValue]="min" #tp1 [(ngModel)]="date1" [vertical]="true" format="HH:mm"></igx-time-picker>
+                <igx-time-picker style="width: 200px" #tp
+
+                                    [mode]="mode"
+                                    [vertical]="isVertical"
+                                    [isSpinLoop]="isSpinLoop"
+                                    [(ngModel)]="date"
+                                    [itemsDelta]="itemsDelta"
+                                    [format]="format">
+                </igx-time-picker>
+
             </div>
         </article>
         <!-- <article class="timepicker-column">

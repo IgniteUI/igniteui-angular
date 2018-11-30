@@ -433,7 +433,8 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.mode === InteractionMode.dialog) {
             this.container.nativeElement.style.display = "inline";
             this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
-        } else if (this._collapsed) {
+        } else if (this.mode === InteractionMode.dropdown && this._collapsed) {
+            this._collapsed = false;
             this.container.nativeElement.style.display = "inline";
             this._overlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
             this._overlayId = this.overlayService.show(this.container, this._overlaySettings);
@@ -1090,7 +1091,7 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
 
 
-    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
+    constructor(@Inject(IgxOverlayService) public overlayService: IgxOverlayService) {
 
         this.overlayService.onClosing.pipe(
             filter(event => event.id === this._overlayId),
@@ -1145,13 +1146,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     public mask: string;
     public displayValue = '';
     public promptChar = '-';
-    public dropdownWidth;
     public cleared = false;
     public isNotEmpty = false;
     public displayFormat = new TimeDisplayFormatPipe(this);
     public inputFormat = new TimeInputFormatPipe(this);
 
     private _format: string;
+    private _oldValue: Date;
     private _overlayId: string;
     private _destroy$ = new Subject<boolean>();
     private _collapsed = true;
@@ -1175,6 +1176,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.mode === InteractionMode.dropdown) {
             this.displayValue = this._formatTime(this._getSelectedTime(), this.format);
         }
+    }
+
+    private resetDropdownItems() {
+        this.selectedHour = undefined;
+        this.selectedMinute = undefined;
+        this.selectedAmPm = undefined;
     }
 
     private onDropDownClosed() {
@@ -1201,6 +1208,10 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         }
     }
 
+    public hideDropDownOverlay() {
+        this.overlayService.hide(this._overlayId);
+    }
+
     public parseMask(preserveAmPm = true): string {
         const prompts = this.promptChar + this.promptChar;
         let amPm = preserveAmPm ? 'AM' : prompts;
@@ -1214,6 +1225,13 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
         this.displayValue = '';
         this.value = null;
+        this.resetDropdownItems();
+
+        const args: IgxTimePickerValueChangedEventArgs = {
+            oldValue: this._oldValue,
+            newValue: this.value
+        };
+        this.onValueChanged.emit(args);
     }
 
     public onKeydown(event) {
@@ -1241,18 +1259,26 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     public onKeyup(event) {
-        // const val = event.target.value;
-        //const key = event.key.toLowerCase();
+        const val = event.target.value;
+        const key = event.key.toLowerCase();
 
         this.isNotEmpty = event.target.value !== this.parseMask(false);
 
-        // if (key === 'arrowdown' || key === 'arrowup') {
-        //     return;
-        // }
+        if (key === 'arrowdown' || key === 'arrowup') {
+            return;
+        }
 
-        // if (val.indexOf(this.promptChar) === -1) {
-        //     this.value = this._convertMinMaxValue(val);
-        // }
+        if (val.indexOf(this.promptChar) === -1) {
+            this.value = this._convertMinMaxValue(val);
+
+            if (this._isValueValid(this.value) && this._oldValue !== this.value) {
+                const args: IgxTimePickerValueChangedEventArgs = {
+                    oldValue: this._oldValue,
+                    newValue: this.value
+                };
+                this.onValueChanged.emit(args);
+            }
+        }
     }
 
     public updateValueOnDelete(event) {
@@ -1260,21 +1286,39 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
             const value = event.target.value;
              if (!this.value || !value || value === this.parseMask(false)) {
                 this.value = null;
+                this.resetDropdownItems();
+
+                const args: IgxTimePickerValueChangedEventArgs = {
+                    oldValue: this._oldValue,
+                    newValue: this.value
+                };
+                this.onValueChanged.emit(args);
             }
         });
     }
 
     public onFocus(event) {
+        this._oldValue = this.value;
         this.isNotEmpty = event.target.value !== this.parseMask(false);
     }
 
     public onBlur(event) {
-        const value = event.target.value;
+        if (this._collapsed) {
+            const value = event.target.value;
 
-        this.displayValue = value;
-        this.value = value && value !== this.parseMask() ? this._convertMinMaxValue(value) : null;
+            this.isNotEmpty = value === this.format;
 
-        this.isNotEmpty = value === this.format;
+            this.displayValue = value;
+            this.value = value && value !== this.parseMask() ? this._convertMinMaxValue(value) : null;
+
+            if (this._isValueValid(this.value) && this._oldValue !== this.value) {
+                const args: IgxTimePickerValueChangedEventArgs = {
+                    oldValue: this._oldValue,
+                    newValue: this.value
+                };
+                this.onValueChanged.emit(args);
+            }
+        }
     }
 
 
@@ -1297,19 +1341,20 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
             sign = event.deltaY < 0 ? 1 : -1;
         }
 
+        let currentVal = new Date(this.value);
+
         if (!this.value) {
             this.value = sign > 0 ? min : max;
             displayVal = this._formatTime(this.value, this.format);
-        } else {
-            let currentVal = new Date(this.value);
+        }
 
+        if (this.value) {
             const hDelta = this.itemsDelta.hours * 60 + (sign * this.value.getMinutes());
             const mDelta = this.itemsDelta.minutes;
             const sections = this.displayValue.split(/[\s:]+/);
 
+            let val = new Date(this.value);
             if (HOURS_POS.indexOf(cursor) !== -1) {
-                let val = new Date(this.value);
-
                 val.setMinutes(sign * hDelta);
 
                 if (this.format.indexOf('tt') !== -1 && sections[2] && sections[2] === 'PM' && val.getHours() < 11) {
@@ -1318,14 +1363,14 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
 
                 if (val.getTime() > max.getTime()) {
                     if (this.isSpinLoop) {
-                        min.setMinutes(val.getMinutes());
+                        min.setMinutes(sign * val.getMinutes());
                         this.value = min;
                     } else {
                         this.value = currentVal;
                     }
                 } else if (val.getTime() < min.getTime()) {
                     if (this.isSpinLoop) {
-                        let minutes = val.getMinutes() === 0 ? 0 : 60 -val.getMinutes();
+                        let minutes = val.getMinutes() === 0 ? 0 : 60 - val.getMinutes();
                         max.setMinutes(sign * minutes);
                         this.value = max;
                     } else {
@@ -1337,8 +1382,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
             }
 
             if (MINUTES_POS.indexOf(cursor) !== -1) {
-                let val = new Date(this.value);
-
                 let minutes = this.value.getMinutes() + (sign * mDelta);
                 if (minutes >= 60) {
                     minutes = this.isSpinLoop ? minutes - 60 : val.getMinutes();
@@ -1351,8 +1394,6 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
             }
 
             if (AMPM_POS.indexOf(cursor) !== -1 && this.format.indexOf('tt') !== -1) {
-                let val = new Date(this.value);
-
                 sign = sections[2] && sections[2] === 'AM' ? 1 : -1;
                 val.setHours(val.getHours() + (sign * 12));
 
@@ -1363,6 +1404,12 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
         }
 
         this.displayValue = this.inputFormat.transform(displayVal);
+
+        const args: IgxTimePickerValueChangedEventArgs = {
+            oldValue: currentVal,
+            newValue: this.value
+        };
+        this.onValueChanged.emit(args);
 
         requestAnimationFrame(() => {
             this.setCursorPosition(cursor);

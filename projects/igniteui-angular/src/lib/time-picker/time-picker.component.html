@@ -34,7 +34,7 @@
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
 
-<div style="display: none" #container
+<div style="display: none;" #container
      class="igx-time-picker__wrapper">
     <div *ngIf="isModal" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
@@ -54,10 +54,10 @@
         </div>
     </div>
     <div *ngIf="isModal" style="background: #222; height: 50px; display: flex; justify-content: flex-end; padding: .5rem">
-        <button igxButton="{{buttonType}}" (click)="cancelButtonClick()">
+        <button *ngIf="cancelButtonLabel.length" igxButton="{{buttonType}}" (click)="cancelButtonClick()">
             {{cancelButtonLabel}}
         </button>
-        <button type="button" igxButton="{{buttonType}}" (click)="okButtonClick()">
+        <button *ngIf="okButtonLabel.length" igxButton="{{buttonType}}" (click)="okButtonClick()">
             {{okButtonLabel}}
         </button>
     </div>

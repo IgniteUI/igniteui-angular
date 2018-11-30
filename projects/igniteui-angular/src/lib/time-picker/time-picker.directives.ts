@@ -16,7 +16,7 @@ import {
     Output,
     TemplateRef
 } from '@angular/core';
-import { IgxTimePickerComponent } from './time-picker.component';
+import { IgxTimePickerComponent, InteractionMode } from './time-picker.component';
 
 /** @hidden */
 @Directive({
@@ -159,6 +159,11 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
+        if (this.timePicker.mode === InteractionMode.dropdown) {
+
+            this.timePicker.hideDropDownOverlay();
+            return;
+        }
         this.timePicker.okButtonClick();
     }
 
