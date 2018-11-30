@@ -2,12 +2,25 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.1.0
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+
+## 7.0.2
+### Features
+- `igxNavbar`:
+    - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
+    (If `igx-action-icon` is provided, the default action icon will not be used.)
+
+## 7.0.1
+### Bug fixes
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
 ## 6.2.3
-### Features
 - `igxGrid`
     - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
     the changes will be applied to the particular instance of the component:
@@ -27,6 +40,13 @@ All notable changes for each version of this project will be documented in this 
     - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
     in the application.
     - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
+
+## 6.2.2
+- `igx-checkbox`:
+    - Added a new input property - `disableTransitions`. It allows disabling all CSS transitions on the `igx-checkbox` component for performance optimization.
+### Bug fixes
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+
 
 ## 6.2.1
 ### Features
@@ -65,7 +85,7 @@ All notable changes for each version of this project will be documented in this 
     - Cell is not editable on iOS ([#2538](https://github.com/IgniteUI/igniteui-angular/issues/2538))
 - `IgxTreeGrid`
     - Cell selection wrong behavior when collapsing rows ([#2935](https://github.com/IgniteUI/igniteui-angular/issues/2935))
-- `igxCombo` 
+- `igxCombo`
     - Keyboard doesn't scroll virtualized items ([#2999](https://github.com/IgniteUI/igniteui-angular/issues/2999))
 - `igxDatePicker`
     - Error emitting when  value property is initialized with empty string. ([#3021](https://github.com/IgniteUI/igniteui-angular/issues/3021))
@@ -83,7 +103,7 @@ All notable changes for each version of this project will be documented in this 
   - **Breaking change:** Applications using Ignite UI for Angular now require the `igx-typography` class to be applied on wrapping element, like the body element for instance.
 
 - Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
-    
+
     Setting display density on a component level:
     ```typescript
     @Component({
@@ -97,7 +117,7 @@ All notable changes for each version of this project will be documented in this 
     <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
     ```
 - `igx-drop-down`:
-    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
+    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated.
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
@@ -246,9 +266,9 @@ When you focus a specific cell and press one of the following key combinations, 
 ### General
 
 - `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `DefaultSortingStrategy` class and override all or some of its public/protected members.
-- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.  
+- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.
 - `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
-    
+
 ## 6.1.8
 
 ### Bug fixes
@@ -298,7 +318,7 @@ When you focus a specific cell and press one of the following key combinations, 
     - `igxGrid`
         - Adding inertia scrolling for touch devices.
     - `igxCombo`
-        - Adding inertia scrolling for touch devices. 
+        - Adding inertia scrolling for touch devices.
     - `IgxCalendar` - `deselectDate` method added that deselects date(s) (based on the selection type)
     - `IgxDatePicker` - `deselectDate` method added that deselects the calendar date.
 
@@ -439,10 +459,10 @@ When you focus a specific cell and press one of the following key combinations, 
 - Regular highlight makes the highlighted text unreadable when the row is selected. #1852
 - DatePicker focus is wrong on select date value #1965
 - add sass docs, grid document updates and input-group theme-related fixes #1993
-- DatePicker focus handler and AoT build #1994 
-- Change displayDensity runtime #1974 
-- Change IgxGrid display density runtime #1998 
-- Error is thrown when using igx-grid theme without $content-background #1996 
+- DatePicker focus handler and AoT build #1994
+- Change displayDensity runtime #1974
+- Change IgxGrid display density runtime #1998
+- Error is thrown when using igx-grid theme without $content-background #1996
 - Update npm deploy token #2002
 
 ## 6.1.0
