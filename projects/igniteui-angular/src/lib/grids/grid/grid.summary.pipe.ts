@@ -34,7 +34,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
 
     private addSummaryRows(gridId: string, collection: any[], summaryPosition: GridSummaryPosition): any[] {
         const recordsWithSummary = [];
-        const summariesMap = new Map<any, Map<string, IgxSummaryResult[]>[]>();
+        const lastChildMap = new Map<any, IGroupByRecord[]>();
         const grid: IgxGridComponent = this.gridAPI.get(gridId);
 
         for (let i = 0; i < collection.length; i++) {
@@ -51,49 +51,47 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 recordId = this.gridAPI.get_row_id(gridId, record);
             }
 
-            if (summaryPosition === GridSummaryPosition.bottom && summariesMap.has(recordId)) {
-                const summaryRows = summariesMap.get(recordId);
+            if (summaryPosition === GridSummaryPosition.bottom && lastChildMap.has(recordId)) {
+                const groupRecords = lastChildMap.get(recordId);
 
-                for (let j = 0; j < summaryRows.length; j++) {
-                    const summaryRow = summaryRows[j];
-                    recordsWithSummary.push(summaryRow);
+                for (let j = 0; j < groupRecords.length; j++) {
+                    const groupRecord = groupRecords[j];
+                    const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
+                    const summaries = grid.summaryService.calculateSummaries(groupRecordId, groupRecord.records);
+
+                    recordsWithSummary.push(summaries);
                 }
             }
 
-            if (groupByRecord === null) {
+            if (groupByRecord === null || !grid.isExpandedGroup(groupByRecord)) {
                 continue;
             }
 
-            if (grid.isExpandedGroup(groupByRecord)) {
+            if (summaryPosition === GridSummaryPosition.top) {
                 const summaries = grid.summaryService.calculateSummaries(recordId, groupByRecord.records);
+                recordsWithSummary.push(summaries);
+            } else if (summaryPosition === GridSummaryPosition.bottom) {
+                let lastChild = groupByRecord;
 
-                if (summaries) {
-                    if (summaryPosition === GridSummaryPosition.top) {
-                        recordsWithSummary.push(summaries);
-                    } else if (summaryPosition === GridSummaryPosition.bottom) {
-                        let lastChild = groupByRecord;
-
-                        while (lastChild.groups && lastChild.groups.length > 0 && grid.isExpandedGroup(lastChild)) {
-                            lastChild = lastChild.groups[lastChild.groups.length - 1];
-                        }
-
-                        let lastChildId;
-                        if (grid.isExpandedGroup(lastChild)) {
-                            lastChildId = this.gridAPI.get_row_id(gridId, lastChild.records[lastChild.records.length - 1]);
-                        } else {
-                            lastChildId = this.gridAPI.get_groupBy_record_id(lastChild);
-                        }
-
-                        let summaryRows = summariesMap.get(lastChildId);
-                        if (!summaryRows) {
-                            summaryRows = [];
-                            summariesMap.set(lastChildId, summaryRows);
-                        }
-                        summaryRows.unshift(summaries);
-                    }
+                while (lastChild.groups && lastChild.groups.length > 0 && grid.isExpandedGroup(lastChild)) {
+                    lastChild = lastChild.groups[lastChild.groups.length - 1];
                 }
+
+                let lastChildId;
+                if (grid.isExpandedGroup(lastChild)) {
+                    lastChildId = this.gridAPI.get_row_id(gridId, lastChild.records[lastChild.records.length - 1]);
+                } else {
+                    lastChildId = this.gridAPI.get_groupBy_record_id(lastChild);
+                }
+
+                let groupRecords = lastChildMap.get(lastChildId);
+                if (!groupRecords) {
+                    groupRecords = [];
+                    lastChildMap.set(lastChildId, groupRecords);
+                }
+                groupRecords.unshift(groupByRecord);
             }
-        }
+    }
 
         return recordsWithSummary;
     }
