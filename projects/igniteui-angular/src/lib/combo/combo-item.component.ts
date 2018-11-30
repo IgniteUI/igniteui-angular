@@ -8,8 +8,8 @@ import {
     Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
+import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 
 /** @hidden */
 @Component({
@@ -17,9 +17,6 @@ import { IgxComboDropDownComponent } from './combo-dropdown.component';
     templateUrl: 'combo-item.component.html'
 })
 export class IgxComboItemComponent extends IgxDropDownItemBase {
-    private get combo() {
-        return this.dropDown.combo;
-    }
 
     /**
      * Gets the height of a list item
@@ -37,7 +34,8 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     }
 
     constructor(
-        @Inject(forwardRef(() => IgxComboDropDownComponent)) public dropDown: IgxComboDropDownComponent,
+        @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
+        public dropDown: IgxDropDownBase,
         protected elementRef: ElementRef,
         protected selection: IgxSelectionAPIService
     ) {

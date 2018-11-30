@@ -14,10 +14,11 @@ import {
     Output,
     TemplateRef,
     ViewChild,
-    ContentChild,
     Inject,
     Pipe,
-    PipeTransform
+    PipeTransform,
+    ContentChild,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -33,6 +34,7 @@ import {
 } from './time-picker.directives';
 import { Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, InteractionMode } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
@@ -49,11 +51,7 @@ const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
 const AMPM_POS = [6, 7, 8];
 
-export enum InteractionMode {
-    dialog,
-    dropdown
-}
-
+@Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -81,13 +79,22 @@ export interface IgxTimePickerValidationFailedEventArgs {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: TimePickerHammerConfig
+        },
+        {
+            provide: IGX_TIME_PICKER_COMPONENT,
+            useExisting: IgxTimePickerComponent
         }
     ],
     selector: 'igx-time-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
+export class IgxTimePickerComponent implements
+    IgxTimePickerBase,
+    ControlValueAccessor,
+    EditorProvider,
+    OnInit,
+    OnDestroy {
 
     private _value: Date;
 

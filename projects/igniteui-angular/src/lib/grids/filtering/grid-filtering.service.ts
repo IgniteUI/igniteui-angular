@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
+import { IgxColumnComponent } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -21,6 +22,7 @@ export class ExpressionUI {
     public beforeOperator: FilteringLogic;
     public afterOperator: FilteringLogic;
     public isSelected = false;
+    public isVisible = true;
 }
 
 /**
@@ -41,9 +43,9 @@ export class IgxFilteringService implements OnDestroy {
 
     public gridId: string;
     public isFilterRowVisible = false;
-    public filteredColumn = null;
+    public filteredColumn: IgxColumnComponent = null;
     public selectedExpression: IFilteringExpression = null;
-    public columnToFocus = null;
+    public columnToFocus: IgxColumnComponent = null;
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
@@ -66,7 +68,7 @@ export class IgxFilteringService implements OnDestroy {
             this.areEventsSubscribed = true;
 
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
-                this.updateFilteringCell(eventArgs.column.field);
+                this.updateFilteringCell(eventArgs.column);
             });
 
             this.grid.parentVirtDir.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
@@ -77,7 +79,7 @@ export class IgxFilteringService implements OnDestroy {
                     });
                 }
                 if (this.columnToFocus) {
-                    this.focusFilterCellChip(this.columnToFocus.field, false);
+                    this.focusFilterCellChip(this.columnToFocus, false);
                     this.columnToFocus = null;
                 }
             });
@@ -93,9 +95,10 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Execute filtering on the grid.
      */
-    public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
+    public filter(field: string): void {
         this.isFiltering = true;
 
+        const expressionsTree = this.createSimpleFilteringTree(field);
         this.grid.filter(field, null, expressionsTree);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -169,7 +172,7 @@ export class IgxFilteringService implements OnDestroy {
                     this.columnsWithComplexFilter.add(key);
                 }
 
-                this.updateFilteringCell(key);
+                this.updateFilteringCell(column);
             });
         }
     }
@@ -272,8 +275,8 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Updates the content of a filterCell.
      */
-    public updateFilteringCell(columnId: string) {
-        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+    public updateFilteringCell(column: IgxColumnComponent) {
+        const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.updateFilterCellArea();
         }
@@ -282,8 +285,8 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Focus a chip in a filterCell.
      */
-    public focusFilterCellChip(columnId: string, focusFirst: boolean) {
-        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+    public focusFilterCellChip(column: IgxColumnComponent, focusFirst: boolean) {
+        const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.focusChip(focusFirst);
         }
