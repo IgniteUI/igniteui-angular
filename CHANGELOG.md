@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.2
+### Features
+- `igxNavbar`:
+    - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
+    (If `igx-action-icon` is provided, the default action icon will not be used.)
+
 ## 7.0.1
 ### Bug fixes
 - Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
@@ -31,7 +37,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxDropDown`
     - Added a new property `maxHeight`, defining the max height of the drop down. ([#3001](https://github.com/IgniteUI/igniteui-angular/issues/3001))
 - Added migrations for Sass theme properties changes in 6.2.0 ([#2994](https://github.com/IgniteUI/igniteui-angular/issues/2994))
-- Themes
+- Themes 
     - Introducing schemas for easier bootstrapping of component themes.
     - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
 
