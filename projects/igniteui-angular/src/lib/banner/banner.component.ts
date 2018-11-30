@@ -17,6 +17,24 @@ export interface BannerEventArgs {
 
 export interface BannerCancelEventArgs extends BannerEventArgs, CancelableEventArgs {
 }
+/**
+ * **Ignite UI for Angular Banner** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html)
+ *
+ * The Ignite UI Banner provides a highly templateable and easy to use banner that can be shown in your application.
+ *
+ * Usage:
+ *
+ * ```html
+ * <igx-banner #banner>
+ *   Our privacy settings have changed.
+ *  <igx-banner-actions>
+ *      <button igxButton="raised">Read More</button>
+ *      <button igxButton="raised">Accept and Continue</button>
+ *  </igx-banner-actions>
+ * </igx-banner>
+ * ```
+ */
 @Component({
     selector: 'igx-banner',
     templateUrl: 'banner.component.html'
@@ -95,7 +113,12 @@ export class IgxBannerComponent implements IToggleView {
         return this._expansionPanel.collapsed;
     }
 
-    /** @hidden */
+    /**
+     * Returns the native element of the banner component
+     * ```typescript
+     *  const myBannerElement = banner.element;
+     * ```
+     */
     public get element() {
         return this.elementRef.nativeElement;
     }
