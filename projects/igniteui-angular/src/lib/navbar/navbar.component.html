@@ -1,6 +1,7 @@
 <nav class="igx-navbar" role="navigation" [attr.aria-labelledby]="titleId">
     <div class="igx-navbar__left">
         <igx-icon (click)="_triggerAction()" fontSet="material" *ngIf="isActionButtonVisible">{{actionButtonIcon}}</igx-icon>
+        <ng-content select="igx-action-icon"></ng-content>
         <h1 class="igx-navbar__title" [attr.id]="titleId">{{ title }}</h1>
     </div>
     <div class="igx-navbar__right">
