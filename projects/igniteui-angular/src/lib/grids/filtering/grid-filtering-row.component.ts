@@ -263,7 +263,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             this.resetExpression();
             this.scrollChipsWhenAddingExpression();
-        } else if (event.key === KEYS.DOWN_ARROW) {
+        } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
@@ -365,7 +365,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expressionsList.length === 1 &&
             this.expressionsList[0].expression.searchVal === null &&
             this.expressionsList[0].expression.condition.isUnary === false) {
-            this.filteringService.clearFilter(this.column.field);
+            this.filteringService.getExpressions(this.column.field).pop();
         } else {
             this.expressionsList.forEach((item) => {
                 if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
