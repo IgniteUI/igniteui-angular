@@ -311,7 +311,7 @@ describe('IgxGrid - search API', () => {
             grid.findNext(searchString);
 
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             activeHighlight = rv.querySelector('.' + component.activeClass);
@@ -319,7 +319,7 @@ describe('IgxGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+            grid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
             const scrolledCell = grid.getCellByColumn(grid.data.length - 1, 'JobTitle').nativeElement;
 
