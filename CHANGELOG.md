@@ -2,11 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.0.1
+## 7.0.2
 ### Features
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
+
+## 7.0.1
 ### Bug fixes
 - Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
 
