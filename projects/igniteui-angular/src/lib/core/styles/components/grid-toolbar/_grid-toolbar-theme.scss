@@ -305,6 +305,7 @@
     }
 
     %igx-grid-toolbar__dd-list-items {
+        cursor: pointer;
         position: relative;
         padding: em(8px) em(16px);
         color: --var($theme, 'item-text-color');
