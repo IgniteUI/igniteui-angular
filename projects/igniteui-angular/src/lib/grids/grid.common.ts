@@ -26,6 +26,7 @@ import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 
 /**
  * @hidden
@@ -611,6 +612,7 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
             container.clientHeight <
             target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
         this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
+        this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
         contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
         contentElement.style.width = target.clientWidth + 'px';

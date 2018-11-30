@@ -1076,7 +1076,7 @@ describe('IgxGrid - multi-column headers', () => {
         tick();
         fixture.detectChanges();
         // Sort column
-        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
 
         // Verify columns and groups
@@ -1104,7 +1104,7 @@ describe('IgxGrid - multi-column headers', () => {
         expect(grid.getCellByColumn(4, 'Country').value).toEqual('Sweden');
 
         // sort column which is not in the view
-        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'ContactName', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
 
         // Verify columns and groups
