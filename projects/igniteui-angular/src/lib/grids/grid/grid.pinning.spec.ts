@@ -232,7 +232,7 @@ describe('IgxGrid - Column Pinning ', () => {
         const currentColumn = 'ProductName';
         const releasedColumn = 'Released';
 
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
 
         fix.detectChanges();
 

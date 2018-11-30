@@ -40,6 +40,8 @@ All notable changes for each version of this project will be documented in this 
     - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
     in the application.
     - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
+- `ISortingEpression`:
+    - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
 
 ## 6.2.2
 - `igx-checkbox`:
