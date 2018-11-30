@@ -17,6 +17,10 @@ import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase } from './expansio
 
 let NEXT_ID = 0;
 
+export interface AnimationSettings {
+    openAnimation: AnimationReferenceMetadata;
+    closeAnimation: AnimationReferenceMetadata;
+}
 @Component({
     selector: 'igx-expansion-panel',
     templateUrl: 'expansion-panel.component.html',
@@ -25,7 +29,7 @@ let NEXT_ID = 0;
 export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
 
     @Input()
-    public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+    public animationSettings: AnimationSettings = {
         openAnimation: growVerIn,
         closeAnimation: growVerOut
     };
@@ -121,9 +125,17 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
 
     toggle(evt?: Event) {
         if (this.collapsed) {
-            this.expand(evt);
+            this.open(evt);
         } else {
-            this.collapse(evt);
+            this.close(evt);
         }
     }
+
+    open(evt?: Event) {
+        this.expand(evt);
+    }
+    close(evt?: Event) {
+        this.collapse(evt);
+    }
+
 }
