@@ -32,46 +32,38 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
 
     private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[], summaryPosition: GridSummaryPosition): any[] {
         const recordsWithSummary = [];
-        const summariesMap = new Map<any, Map<string, IgxSummaryResult[]>[]>();
 
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
             recordsWithSummary.push(record);
 
-            if (record.children && record.children.length > 0 && record.expanded) {
+            const isExpanded = record.children && record.children.length > 0 && record.expanded;
+
+            if (summaryPosition === GridSummaryPosition.bottom && !isExpanded) {
+                let childRecord = record;
+                let parent = record.parent;
+
+                while (parent) {
+                    const children = parent.children;
+
+                    if (children[children.length - 1] === childRecord ) {
+                        const childData = children.map(r => r.data);
+                        const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
+                        recordsWithSummary.push(summaries);
+
+                        childRecord = parent;
+                        parent = childRecord.parent;
+                    } else {
+                        break;
+                    }
+                }
+            } else if (summaryPosition === GridSummaryPosition.top && isExpanded) {
                 const childData = record.children.map(r => r.data);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
 
-                if (summaries) {
-                    if (summaryPosition === GridSummaryPosition.top) {
-                        recordsWithSummary.push(summaries);
-                    } else if (summaryPosition === GridSummaryPosition.bottom) {
-                        let lastChild = record;
-                        do {
-                            lastChild = lastChild.children[lastChild.children.length - 1];
-                        }
-                        while (lastChild.children && lastChild.children.length > 0 && lastChild.expanded);
-
-                        let summaryRows = summariesMap.get(lastChild.rowID);
-                        if (!summaryRows) {
-                            summaryRows = [];
-                            summariesMap.set(lastChild.rowID, summaryRows);
-                        }
-                        summaryRows.unshift(summaries);
-                    }
-                }
-            }
-
-            if (summaryPosition === GridSummaryPosition.bottom && summariesMap.has(record.rowID)) {
-                const summaryRows = summariesMap.get(record.rowID);
-
-                for (let j = 0; j < summaryRows.length; j++) {
-                    const summaryRow = summaryRows[j];
-                    recordsWithSummary.push(summaryRow);
-                }
+                recordsWithSummary.push(summaries);
             }
         }
-
         return recordsWithSummary;
     }
 
