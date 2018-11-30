@@ -11,13 +11,13 @@ import { IgxGridComponent, Transaction, IgxToggleDirective } from 'igniteui-angu
 export class GridRowEditSampleComponent {
     public console = window.console;
     private addProductId: number;
-    private pinFlag = false;
-    private hideFlag = false;
-    private summaryFlag = true;
-    private customTemplate = false;
-    private update_value;
-    private update_row;
-    private update_column;
+    public pinFlag = false;
+    public hideFlag = false;
+    public summaryFlag = true;
+    public customTemplate = false;
+    public update_value;
+    public update_row;
+    public update_column;
     private cssRed = `color: #aa2222;`;
     private cssGreen = `color: #22aa22;`;
     private cssBlue = `color: #2222aa;`;
@@ -126,7 +126,7 @@ export class GridRowEditSampleComponent {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    private getGridById(gridID): IgxGridComponent {
+    private getGridById(gridID: string): IgxGridComponent {
         switch (gridID) {
             case 'grid':
                 return this.grid;
@@ -220,7 +220,7 @@ export class GridRowEditSampleComponent {
         this.gridRowEditTransaction.updateCell(value, row, column);
     }
 
-    update(grid: IgxGridComponent) {
+    update(grid: string) {
         const editRowValue = this.generateRow();
         editRowValue.ProductID = 3;
         this.getGridById(grid).updateRow(editRowValue, 3);
