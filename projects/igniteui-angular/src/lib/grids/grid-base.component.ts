@@ -4318,12 +4318,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    private removeDublicatedColumnHeaders(diff) {
-        console.log(diff);
-        console.log(this.headerGroupContainer.nativeElement);
-        this.headerContainer.cdr.detectChanges();
-    }
-
     /**
  * @hidden
  */
