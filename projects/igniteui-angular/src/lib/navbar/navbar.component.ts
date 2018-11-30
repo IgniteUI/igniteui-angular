@@ -5,10 +5,21 @@ import {
     HostBinding,
     Input,
     NgModule,
-    Output
+    Output,
+    Directive,
+    ContentChild
 } from '@angular/core';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
+
+/**
+ * IgxActionIcon is a container for the action nav icon of the IgxNavbar.
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: 'igx-action-icon'
+})
+export class IgxActionIconDirective { }
 
 let NEXT_ID = 0;
 /**
@@ -58,7 +69,7 @@ export class IgxNavbarComponent {
      */
     @Input()
     public get isActionButtonVisible(): boolean {
-        if (!this.actionButtonIcon) {
+        if (this.actionIconTemplate || !this.actionButtonIcon) {
             return false;
         }
         return this.isVisible;
@@ -114,6 +125,12 @@ export class IgxNavbarComponent {
     public titleId = `igx-navbar-${IgxNavbarComponent.NEXT_ID++}`;
 
     /**
+     * @hidden
+     */
+    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective })
+    protected actionIconTemplate: IgxActionIconDirective;
+
+    /**
      *@hidden
      */
     public _triggerAction() {
@@ -124,8 +141,8 @@ export class IgxNavbarComponent {
      *The IgxNavbarModule provides the {@link IgxNavbarComponent} inside your application.
      */
 @NgModule({
-    declarations: [IgxNavbarComponent],
-    exports: [IgxNavbarComponent],
+    declarations: [IgxNavbarComponent, IgxActionIconDirective],
+    exports: [IgxNavbarComponent, IgxActionIconDirective],
     imports: [IgxButtonModule, IgxIconModule, CommonModule]
 })
 export class IgxNavbarModule {
