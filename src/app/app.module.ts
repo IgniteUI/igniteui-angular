@@ -75,11 +75,13 @@ import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transac
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
 
 const components = [
     AppComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
+    BannerSampleComponent,
     ButtonSampleComponent,
     CalendarSampleComponent,
     CardSampleComponent,
