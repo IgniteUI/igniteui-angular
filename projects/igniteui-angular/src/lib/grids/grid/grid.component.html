@@ -99,7 +99,7 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="summaryService.calculateSummaries(summaryService.rootSummaryID, data)" [index]="0" class="igx-grid__summaries"  #summaryRow>
+    <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="summaryService.calculateSummaries(summaryService.rootSummaryID, summaryData())" [index]="0" class="igx-grid__summaries"  #summaryRow>
     </igx-grid-summary-row>
 </div>
 

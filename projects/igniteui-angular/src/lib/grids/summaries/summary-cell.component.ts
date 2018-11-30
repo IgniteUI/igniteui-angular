@@ -1,8 +1,11 @@
-import { Component, Input, HostBinding } from '@angular/core';
+import { Component, Input, HostBinding, ChangeDetectionStrategy } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../grid';
+import { DisplayDensity } from '../../core/density';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: 'igx-grid-summary-cell',
     templateUrl: './summary-cell.component.html'
 })
@@ -14,15 +17,21 @@ export class IgxSummaryCellComponent {
     @Input()
     public column: IgxColumnComponent;
 
+    @Input()
+    public hasSummary = false;
+
+    @Input()
+    public density = DisplayDensity.comfortable;
+
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = [];
         const classList = {
             'igx-grid-summary--fw': this.column.width !== null,
             'igx-grid-summary--empty': !this.column.hasSummary,
-            'igx-grid-summary--compact': this.grid.isCompact(),
-            'igx-grid-summary--cosy': this.grid.isCosy(),
-            'igx-grid-summary': this.grid.isComfortable(),
+            'igx-grid-summary--compact': this.density === DisplayDensity.compact,
+            'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
+            'igx-grid-summary': this.density === DisplayDensity.comfortable,
             'igx-grid-summary--pinned': this.column.pinned,
             'igx-grid-summary--pinned-last': this.column.isLastPinned
         };
@@ -46,6 +55,11 @@ export class IgxSummaryCellComponent {
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
+    @HostBinding('attr.aria-describedby')
+    public get describeby() {
+        return `Summary_${this.column.field}`;
+    }
+
     get columnDatatype() {
         return this.column.dataType;
     }
@@ -54,7 +68,4 @@ export class IgxSummaryCellComponent {
         return this.column.grid.defaultRowHeight;
     }
 
-    get grid() {
-        return this.column.grid;
-    }
 }

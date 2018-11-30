@@ -8,6 +8,8 @@ export class IgxGridSummaryService {
     protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, IgxSummaryResult[]>>();
     public grid;
     public rootSummaryID = 'igxGridRootSummary';
+    public summaryHeight = 0;
+    public maxSummariesLenght = 0;
 
     public clearSummaryCache() {
         this.summaryCacheMap.clear();
@@ -31,30 +33,39 @@ export class IgxGridSummaryService {
         }
     }
 
+    public removeSummariesCachePerColumn(columnName) {
+        this.summaryCacheMap.forEach((cache) => {
+            if (cache.get(columnName)) {
+                cache.delete(columnName);
+            }
+        });
+    }
+
     public calcMaxSummaryHeight() {
+        if (this.summaryHeight) {
+            return this.summaryHeight;
+        }
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
-            (this.grid as any).gridAPI.set_summary_by_column_name(this.grid.id, column.field);
-            const getCurrentSummaryColumn = (this.grid as any).gridAPI.get_summaries(this.grid.id).get(column.field);
+            const getCurrentSummaryColumn = column.summaries.operate([]).length;
             if (getCurrentSummaryColumn) {
-                if (maxSummaryLength < getCurrentSummaryColumn.length) {
-                    maxSummaryLength = getCurrentSummaryColumn.length;
+                if (maxSummaryLength < getCurrentSummaryColumn) {
+                    maxSummaryLength = getCurrentSummaryColumn;
                 }
             }
         });
-        return maxSummaryLength * this.grid.defaultRowHeight;
+        this.maxSummariesLenght = maxSummaryLength;
+        this.summaryHeight =  maxSummaryLength * this.grid.defaultRowHeight;
+        return this.summaryHeight;
     }
 
     public calculateSummaries(rowID, data) {
-        if (!this.hasSummarizedColumns) {
-            return;
-        }
+        if (!this.hasSummarizedColumns) { return; }
         let rowSummaries = this.summaryCacheMap.get(rowID);
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
-
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const columnValues = data.map(record => record[column.field]);
@@ -63,6 +74,21 @@ export class IgxGridSummaryService {
             }
         });
         return rowSummaries;
+    }
+
+    public shouldRecalculateHeight(column?): boolean {
+        if (!column && this.grid.rootSummariesEnabled) {
+            this.summaryHeight = 0;
+            return true;
+        }
+        const summaryLenght = column.summaries.operate([]).length;
+        const shouldRecalc = (!column.hasSummary && this.maxSummariesLenght <= summaryLenght) ||
+        (column.hasSummary && this.maxSummariesLenght < summaryLenght);
+        if (shouldRecalc) {
+            this.summaryHeight = 0;
+            return true;
+        }
+        return false;
     }
 
     public get groupingIdentation(): boolean {

@@ -80,6 +80,23 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return this.get(id).columnList.find((col) => col.field === name);
     }
 
+    public get_summary_data(id) {
+        const grid = this.get(id);
+        let data = grid.filteredData;
+        if (!data) {
+            if (grid.transactions.enabled) {
+                data = DataUtil.mergeTransactions(
+                    cloneArray(grid.data),
+                    grid.transactions.getAggregatedChanges(true),
+                    grid.primaryKey
+                );
+            } else {
+                data = grid.data;
+            }
+        }
+        return data;
+    }
+
     public set_summary_by_column_name(id: string, name: string) {
         if (!this.summaryCacheMap.get(id)) {
             this.summaryCacheMap.set(id, new Map<string, any[]>());

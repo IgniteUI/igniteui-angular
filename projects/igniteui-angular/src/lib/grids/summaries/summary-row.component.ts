@@ -1,4 +1,10 @@
-import { Component, Input, ViewChildren, QueryList, HostBinding, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input,
+    ViewChildren, QueryList,
+    HostBinding, ViewChild,
+    ElementRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    DoCheck} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxSummaryCellComponent } from './summary-cell.component';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
@@ -8,10 +14,12 @@ import { IgxColumnComponent } from '../column.component';
 
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    preserveWhitespaces: false,
     selector: 'igx-grid-summary-row',
     templateUrl: './summary-row.component.html'
 })
-export class IgxSummaryRowComponent {
+export class IgxSummaryRowComponent implements DoCheck  {
 
     @Input()
     public summaries: Map<string, IgxSummaryResult[]>;
@@ -42,7 +50,12 @@ export class IgxSummaryRowComponent {
     public virtDirRow: IgxGridForOfDirective<any>;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-                public element: ElementRef) {}
+                public element: ElementRef,
+                public cdr: ChangeDetectorRef) {}
+
+    public ngDoCheck() {
+        this.cdr.detectChanges();
+    }
 
     public get grid() {
         return this.gridAPI.get(this.gridID);
