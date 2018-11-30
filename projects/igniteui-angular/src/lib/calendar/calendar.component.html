@@ -12,7 +12,7 @@
     </span>
 </ng-template>
 
-<div *ngIf="selection === 'single'" class="igx-calendar__header">
+<div *ngIf="selection === 'single' && hasHeader" class="igx-calendar__header">
     <h5 class="igx-calendar__header-year">{{ formattedYear(headerDate) }}</h5>
     <h2 class="igx-calendar__header-date">
         <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeader; context: headerContext">
@@ -20,7 +20,8 @@
     </h2>
 </div>
 
-<div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()" (swipeleft)="nextMonth()">
+<div *ngIf="isDefaultView" class="igx-calendar__body" [@animateView]="activeView" (swiperight)="previousMonth()"
+    (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
         <div class="igx-calendar-picker__prev" (click)="previousMonth()">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
@@ -40,8 +41,8 @@
         </span>
     </div>
 
-    <div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker" class="igx-calendar__body-row" [@animateChange]="monthAction"
-        (@animateChange.done)="animationDone($event, isLast)">
+    <div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker" class="igx-calendar__body-row"
+        [@animateChange]="monthAction" (@animateChange.done)="animationDone($event, isLast)">
         <span [igxCalendarDate]="day" (onDateSelection)="childClicked($event)" *ngFor="let day of week; trackBy: dateTracker">
             {{ formattedDate(day.date) }}
         </span>

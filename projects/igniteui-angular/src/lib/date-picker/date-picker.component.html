@@ -1,16 +1,46 @@
-<div [ngClass]="{'igx-date-picker': !vertical, 'igx-date-picker--vertical': vertical}">
-    <ng-template #defaultDatePickerTemplate>
-        <igx-input-group (click)="openDialog()">
-            <igx-prefix>
-                <igx-icon>today</igx-icon>
-            </igx-prefix>
-            <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-            <input class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="disabled" readonly />
-        </igx-input-group>
-    </ng-template>
-    <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
-    <igx-dialog class="igx-date-picker__dialog-popup" closeOnOutsideSelect="true" [leftButtonLabel]="cancelButtonLabel" (onLeftButtonSelect)="alert.close()"
-        [rightButtonLabel]="todayButtonLabel" (onRightButtonSelect)="triggerTodaySelection()">
-        <ng-container #container></ng-container>
-    </igx-dialog>
+<ng-template #readOnlyDatePickerTemplate>
+    <div [ngClass]="{'igx-date-picker': !vertical, 'igx-date-picker--vertical': vertical}">
+        <ng-template #defaultDatePickerTemplate>
+            <igx-input-group (click)="openCalendar()">
+                <igx-prefix>
+                    <igx-icon>today</igx-icon>
+                </igx-prefix>
+                <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
+                <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="disabled"
+                    readonly />
+            </igx-input-group>
+        </ng-template>
+        <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #editableDatePickerTemplate>
+    <igx-input-group>
+        <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
+        <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="displayData" (blur)="handleInput($event)"
+            (onclick)="closeCalendar()" [igxFocus]="true" />
+        <igx-suffix *ngIf="displayData !== ''" igxRipple (click)="clear()">
+            <igx-icon>clear</igx-icon>
+        </igx-suffix>
+        <igx-suffix igxRipple (click)="openCalendar()">
+            <igx-icon>today</igx-icon>
+        </igx-suffix>
+    </igx-input-group>
+</ng-template>
+
+<div #calendarContainer style="background-color: black;">
+    <igx-calendar #calendar *ngIf="isCalendarVisible" [hasHeader]="hasHeader" [formatOptions]="formatOptions"
+        [formatViews]="formatViews" [locale]="locale" [vertical]="vertical" [weekStart]="weekStart" (onSelection)="handleSelection($event)"></igx-calendar>
+
+    <div *ngIf=" mode==='readonly' && isCalendarVisible &&
+        (cancelButtonLabel || todayButtonLabel)" style="display: flex; flex-flow: row nowrap; justify-content: flex-end; padding: .5rem;">
+        <button *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="closeCalendar()">
+            {{ cancelButtonLabel }}
+        </button>
+        <button *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="triggerTodaySelection()">
+            {{ todayButtonLabel }}
+        </button>
+    </div>
 </div>
+
+<ng-container *ngTemplateOutlet="datePickerTemplate"></ng-container>

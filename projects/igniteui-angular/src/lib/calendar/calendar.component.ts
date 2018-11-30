@@ -281,6 +281,9 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
         this.initFormatters();
     }
 
+    @Input()
+    public hasHeader = true;
+
     /**
      * Gets whether the `day`, `month` and `year` should be rendered
      * according to the locale and formatOptions, if any.

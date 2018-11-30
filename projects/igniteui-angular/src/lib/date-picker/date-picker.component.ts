@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
     ContentChild,
     EventEmitter,
@@ -16,7 +15,8 @@ import {
     HostListener,
     ElementRef,
     TemplateRef,
-    Directive
+    Directive,
+    Inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -26,24 +26,32 @@ import {
     IgxCalendarSubheaderTemplateDirective,
     WEEKDAYS
 } from '../calendar/index';
-import { IgxDialogComponent, IgxDialogModule } from '../dialog/dialog.component';
 import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule, IgxInputDirective } from '../input-group/index';
+import { IgxInputGroupModule } from '../input-group/index';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
-import { OverlaySettings } from '../services';
+import {
+    OverlaySettings,
+    IgxOverlayService,
+    VerticalAlignment,
+    HorizontalAlignment,
+    PositionSettings,
+    ConnectedPositioningStrategy
+} from '../services';
 import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxFocusModule } from '../directives/focus/focus.directive';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
 })
 export class IgxDatePickerTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
-
 
 export interface IFormatViews {
     day?: boolean;
@@ -57,7 +65,14 @@ export interface IFormatOptions {
     weekday?: string;
     year?: string;
 }
+
 let NEXT_ID = 0;
+
+export enum InteractionMode {
+    EDITABLE = 'editable',
+    READONLY = 'readonly'
+}
+
 /**
  * **Ignite UI for Angular Date Picker** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date_picker.html)
@@ -80,90 +95,6 @@ let NEXT_ID = 0;
 @DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
-     *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
-     *```html
-     *<igx-date-picker [id]="'igx-date-picker-3'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     *```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-date-picker-${NEXT_ID++}`;
-
-    /**
-     *An @Input property that applies custom formatter on the selected or passed date.
-     *```typescript
-     *public date: Date = new Date();
-     *private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
-     *private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
-     *public formatter = (date: Date) => { return `You selected
-     *                     ${this.dayFormatter.format(date)},
-     *                     ${date.getDate()} ${this.monthFormatter.format(date)},
-     *                     ${date.getFullYear()}`;
-     *}
-     *```
-     *```html
-     *<igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
-     *```
-     */
-    @Input()
-    public formatter: (val: Date) => string;
-
-    /**
-     *An @Input property that disables the `IgxDatePickerComponent`.
-     *```html
-     *<igx-date-picker [disabled]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public disabled: boolean;
-
-    /**
-     *An @Input property that sets the selected date.
-     *```typescript
-     *public date: Date = new Date();
-     *```
-     *```html
-     *<igx-date-picker [value]="date"></igx-date-picker>
-     *```
-     */
-    @Input()
-    public value: Date;
-
-    /**
-     * An @Input property that sets the `IgxDatePickerComponent` label.
-     * The default label is 'Date'.
-     * ```html
-     * <igx-date-picker [label]="Calendar"></igx-date-picker>
-     * ```
-     */
-    @Input()
-    public label = 'Date';
-
-    /**
-     * An @Input property that sets the `IgxDatePickerComponent` label visibility.
-     * By default the visibility is set to true.
-     * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
-     */
-    @Input()
-    public labelVisibility = true;
-
-    /**
-     *An @Input property that sets locales. Default locale is en.
-     *```html
-     *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
-     *```
-     */
-    @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
-
-    /**
-     *An @Input property that sets on which day the week starts.
-     *```html
-     *<igx-date-picker [weekStart]="WEEKDAYS.FRIDAY" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
-     *```
-     */
-    @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
-
-    /**
      *Returns the format options of the `IgxDatePickerComponent`.
      *```typescript
      *@ViewChild("MyDatePicker")
@@ -177,6 +108,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public get formatOptions(): IFormatOptions {
         return this._formatOptions;
     }
+
     /**
      *Sets the format options of the `IgxDatePickerComponent`.
      *```typescript
@@ -282,6 +214,150 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     /**
+     *Returns the formatted date.
+     *```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *public selection(event){
+     *    let selectedDate = this.datePicker.displayData;
+     *    alert(selectedDate);
+     *}
+     *```
+     *```html
+     *<igx-date-picker #MyDatePicker (onSelection)="selection()" todayButtonLabel="today"></igx-date-picker>
+     *```
+     */
+    public get displayData() {
+        if (this.value) {
+            return this._customFormatChecker(this.formatter, this.value);
+        }
+
+        return '';
+    }
+
+    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) { }
+
+    /**
+     * Gets the input group template.
+     * ```typescript
+     * let template = this.template();
+     * ```
+     * @memberof IgxTimePickerComponent
+     */
+    get template(): TemplateRef<any> {
+        if (this.datePickerTemplateDirective) {
+            return this.datePickerTemplateDirective.template;
+        }
+        return this.defaultDatePickerTemplate;
+    }
+
+    /**
+     * Gets the input group template.
+     * ```typescript
+     * let template = this.template();
+     * ```
+     * @memberof IgxTimePickerComponent
+     */
+    get datePickerTemplate(): TemplateRef<any> {
+        return (this.mode === InteractionMode.READONLY) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
+    }
+
+    /**
+     * Gets the context passed to the input group template.
+     * @memberof IgxTimePickerComponent
+     */
+    get context() {
+        return {
+            value: this.value,
+            displayData: this.displayData,
+            openCalendar: () => { this.openCalendar(); }
+        };
+    }
+    /**
+     *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     *```html
+     *<igx-date-picker [id]="'igx-date-picker-3'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
+     *```
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-date-picker-${NEXT_ID++}`;
+
+    /**
+     *An @Input property that applies custom formatter on the selected or passed date.
+     *```typescript
+     *public date: Date = new Date();
+     *private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
+     *private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
+     *public formatter = (date: Date) => { return `You selected
+     *                     ${this.dayFormatter.format(date)},
+     *                     ${date.getDate()} ${this.monthFormatter.format(date)},
+     *                     ${date.getFullYear()}`;
+     *}
+     *```
+     *```html
+     *<igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
+     *```
+     */
+    @Input()
+    public formatter: (val: Date) => string;
+
+    /**
+     *An @Input property that disables the `IgxDatePickerComponent`.
+     *```html
+     *<igx-date-picker [disabled]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
+     * ```
+     */
+    @Input()
+    public disabled: boolean;
+
+    /**
+     *An @Input property that sets the selected date.
+     *```typescript
+     *public date: Date = new Date();
+     *```
+     *```html
+     *<igx-date-picker [value]="date"></igx-date-picker>
+     *```
+     */
+    @Input()
+    public value: Date;
+
+    /**
+     * An @Input property that sets the `IgxDatePickerComponent` label.
+     * The default label is 'Date'.
+     * ```html
+     * <igx-date-picker [label]="Calendar"></igx-date-picker>
+     * ```
+     */
+    @Input()
+    public label = 'Date';
+
+    /**
+     * An @Input property that sets the `IgxDatePickerComponent` label visibility.
+     * By default the visibility is set to true.
+     * <igx-date-picker [labelVisibility]="false"></igx-date-picker>
+     */
+    @Input()
+    public labelVisibility = true;
+
+    /**
+     *An @Input property that sets locales. Default locale is en.
+     *```html
+     *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
+     *```
+     */
+    @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
+
+    /**
+     *An @Input property that sets on which day the week starts.
+     *```html
+     *<igx-date-picker [weekStart]="WEEKDAYS.FRIDAY" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
+     *```
+     */
+    @Input() public weekStart: WEEKDAYS | number = WEEKDAYS.SUNDAY;
+
+    /**
      *An @Input proeprty that sets the orientation of the `IgxDatePickerComponent` header.
      *```html
      *<igx-date-picker [vertical]="'true'" cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
@@ -308,11 +384,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @Input()
     public cancelButtonLabel: string;
 
+    @Input()
+    public mode = InteractionMode.READONLY;
+
     /**
-     *An event that is emitted when the `IgxDatePickerComponent` is opened.
+     *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
      *```typescript
      *public open(event){
-     *    alert("The date-picker has been opened!");
+     *    alert("The date-picker calendar has been opened!");
      *}
      *```
      *```html
@@ -355,33 +434,32 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
     protected defaultDatePickerTemplate: TemplateRef<any>;
 
+    /*
+     * @hidden
+     */
+    @ViewChild('readOnlyDatePickerTemplate', { read: TemplateRef })
+    protected readOnlyDatePickerTemplate: TemplateRef<any>;
+
+    /*
+     * @hidden
+     */
+    @ViewChild('editableDatePickerTemplate', { read: TemplateRef })
+    protected editableDatePickerTemplate: TemplateRef<any>;
+
     /**
      *@hidden
      */
     @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
-    /**
-     *Returns the formatted date.
-     *```typescript
-     *@ViewChild("MyDatePicker")
-     *public datePicker: IgxDatePickerComponent;
-     *public selection(event){
-     *    let selectedDate = this.datePicker.displayData;
-     *    alert(selectedDate);
-     *}
-     *```
-     *```html
-     *<igx-date-picker #MyDatePicker (onSelection)="selection()" todayButtonLabel="today"></igx-date-picker>
-     *```
-     */
-    public get displayData() {
-        if (this.value) {
-            return this._customFormatChecker(this.formatter, this.value);
-        }
+    @ViewChild('editableInput', { read: ElementRef })
+    protected editableInput: ElementRef;
 
-        return '';
-    }
+    @ViewChild('readonlyInput', { read: ElementRef })
+    protected readonlyInput: ElementRef;
+
+    @ViewChild('calendar')
+    protected calendar: IgxCalendarComponent;
 
     /**
      *@hidden
@@ -404,8 +482,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     /**
      *@hidden
      */
-    @ViewChild(IgxDialogComponent)
-    public alert: IgxDialogComponent;
+    @ViewChild('calendarContainer')
+    public calendarContainer: ElementRef;
 
     /**
      *@hidden
@@ -421,11 +499,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     /**
      *@hidden
      */
-    public get calendar() {
-        return this.calendarRef.instance;
-    }
+    @Input()
+    public calendarOutlet: IgxOverlayOutletDirective | ElementRef;
 
-    protected destroy$ = new Subject<boolean>();
+    private _destroy$ = new Subject<boolean>();
+
+    private _componentID;
 
     private _formatOptions = {
         day: 'numeric',
@@ -444,9 +523,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     private _specialDates: DateRangeDescriptor[] = null;
 
-    @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
+    private _positionSettings: PositionSettings;
+    private _dropDownOverlaySettings: OverlaySettings;
+    private _modalOverlaySettings: OverlaySettings;
+    private _collapsed = true;
 
-    constructor(private resolver: ComponentFactoryResolver) { }
+    public inputDate = '';
+    public isCalendarVisible = false;
+    public hasHeader = true;
 
     /**
      *Method that sets the selected date.
@@ -477,23 +561,54 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     /** @hidden */
     getEditElement() {
-        return this.input.nativeElement;
+        return ((this.mode === InteractionMode.READONLY) ? this.readonlyInput : this.editableInput).nativeElement;
     }
 
     /**
      *@hidden
      */
     public ngOnInit(): void {
-        this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
-        this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
+        // this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
+        // this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
+
+        this._positionSettings = {
+            horizontalDirection: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+        };
+
+        this._dropDownOverlaySettings = {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
+            // outlet: this.outlet
+        };
+
+        this._modalOverlaySettings = {
+            closeOnOutsideClick: true,
+            modal: true,
+            // outlet: this.outlet
+        };
+
+        this.overlayService.onOpened.pipe(
+            filter(overlay => overlay.id === this._componentID),
+            takeUntil(this._destroy$)).subscribe(() => {
+                this.onOpened();
+            });
+
+        this.overlayService.onClosed.pipe(
+            filter(overlay => overlay.id === this._componentID),
+            takeUntil(this._destroy$)).subscribe(() => {
+                this.onClosed();
+            });
     }
 
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
-        this.destroy$.next(true);
-        this.destroy$.complete();
+        this.overlayService.hide(this._componentID);
+        this._destroy$.next(true);
+        this._destroy$.complete();
     }
 
     /**
@@ -552,29 +667,54 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *
      * @hidden
      */
-    public openDialog(): void {
-        this.createCalendarRef();
-        if (this.outlet) {
-            const overlaySettings: OverlaySettings = {
-                outlet: this.outlet
-            };
-            this.alert.open(overlaySettings);
-        } else {
-            this.alert.open();
+    public openCalendar(): void {
+        this.isCalendarVisible = true;
+        switch (this.mode) {
+            case InteractionMode.READONLY: {
+                this.hasHeader = true;
+                requestAnimationFrame(() => {
+                    this._componentID = this.overlayService.show(this.calendarContainer, this._modalOverlaySettings);
+                });
+
+                break;
+            }
+            case InteractionMode.EDITABLE: {
+                if (this._collapsed) {
+                    this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInput.nativeElement;
+                    this.hasHeader = false;
+                    requestAnimationFrame(() => {
+                        this._componentID = this.overlayService.show(this.calendarContainer, this._dropDownOverlaySettings);
+                    });
+                }
+
+                break;
+            }
         }
-        this._onTouchedCallback();
-        this.onOpen.emit(this);
     }
 
-    private createCalendarRef(): void {
-        const factory = this.resolver.resolveComponentFactory(IgxCalendarComponent);
+    public closeCalendar() {
+        this.overlayService.hide(this._componentID);
+    }
 
-        this.calendarRef = this.container.createComponent(factory);
+    public clear() {
+        // TODO - clear selected date?
+        this.value = undefined;
+    }
 
-        this.calendarRef.changeDetectorRef.detach();
-        this.updateCalendarInstance();
-        this.calendarRef.location.nativeElement.classList.add('igx-date-picker__date--opened');
-        this.calendarRef.changeDetectorRef.reattach();
+    public calculateDate(data: string) {
+        // debugger;
+        const isValid = this.isDateValid(data);
+        if (isValid) {
+            this.value = new Date(data);
+        } else {
+            this.value = undefined;
+        }
+    }
+
+    private isDateValid(data) {
+        const isValid = (new Date(data).toLocaleString(this.locale) !== 'Invalid Date');
+        // debugger;
+        return isValid;
     }
 
     /**
@@ -582,13 +722,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *
      * @hidden
      */
-    public handleDialogCloseAction() {
-        this.onClose.emit(this);
-        this.calendarRef.destroy();
-        if (this.input) {
-            this.input.nativeElement.focus();
-        }
-    }
+    // public handleDialogCloseAction() {
+    //     this.onClose.emit(this);
+    //     this.calendarRef.destroy();
+    //     if (this.input) {
+    //         this.input.nativeElement.focus();
+    //     }
+    // }
 
     /**
      * Evaluates when @calendar.onSelection event was fired
@@ -609,68 +749,85 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         this.value = date;
         this.calendar.viewDate = date;
         this._onChangeCallback(date);
-        this.alert.close();
+
+        this.closeCalendar();
+
         this.onSelection.emit(date);
+    }
+
+    public handleInput(eventArgs) {
+        // debugger;
+        this.calculateDate(eventArgs.target.value);
+    }
+
+    @HostListener('keydown.alt.arrowdown', ['$event'])
+    public onAltArrowDownKeydown(event: KeyboardEvent) {
+        // debugger;
+        event.preventDefault();
+        event.stopPropagation();
+        this.calculateDate(this.editableInput.nativeElement.value);
+        this.openCalendar();
+    }
+
+    @HostListener('keydown.alt.arrowup', ['$event'])
+    public onAltArrowUpKeydown(event: KeyboardEvent) {
+        console.log('onAltArrowUpKeydown');
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeCalendar();
+    }
+
+    @HostListener('keydown.esc', ['$event'])
+    public onEscKeydown(event) {
+        console.log('onEscKeydown');
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeCalendar();
+    }
+
+
+
+
+    public onKeyDown() {
+        debugger;
     }
 
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
     public onSpaceClick(event) {
-        this.openDialog();
+        this.openCalendar();
         event.preventDefault();
     }
 
-    /**
-     * Gets the input group template.
-     * ```typescript
-     * let template = this.template();
-     * ```
-     * @memberof IgxTimePickerComponent
-     */
-    get template(): TemplateRef<any> {
-        if (this.datePickerTemplateDirective) {
-            return this.datePickerTemplateDirective.template;
-        }
-        return this.defaultDatePickerTemplate;
-    }
-
-    /**
-     * Gets the context passed to the input group template.
-     * @memberof IgxTimePickerComponent
-     */
-    get context() {
-        return {
-            value: this.value,
-            displayData: this.displayData,
-            openDialog: () => { this.openDialog(); }
-        };
-    }
-
-    private updateCalendarInstance() {
-        this.calendar.formatOptions = this._formatOptions;
-        this.calendar.formatViews = this._formatViews;
-        this.calendar.locale = this.locale;
-        this.calendar.vertical = this.vertical;
-        this.calendar.disabledDates = this.disabledDates;
-        this.calendar.specialDates = this.specialDates;
-
-        if (this.headerTemplate) {
-            this.calendar.headerTemplate = this.headerTemplate;
-        }
-
-        if (this.subheaderTemplate) {
-            this.calendar.subheaderTemplate = this.subheaderTemplate;
-        }
+    private onOpened() {
+        // debugger;
+        this._collapsed = false;
 
         if (this.value) {
             this.calendar.value = this.value;
             this.calendar.viewDate = this.value;
         }
-        this.calendar.weekStart = this.weekStart;
-        this.calendar.onSelection.pipe(takeUntil(this.destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
+
+        this._onTouchedCallback();
+        this.onOpen.emit(this);
+
+        if (this.calendar && this.value) {
+            this._focusCalendarDate();
+        }
     }
 
-    // Focus a date, after the celendar appearence into DOM.
+    private onClosed() {
+        debugger;
+        this.isCalendarVisible = false;
+        this._collapsed = true;
+        this.onClose.emit(this);
+
+        if (this.editableInput) {
+            this.editableInput.nativeElement.focus();
+        }
+    }
+
+    // Focus a date, after the calendar appearence into DOM.
     private _focusCalendarDate() {
         requestAnimationFrame(() => {
             this.calendar.focusActiveDate();
@@ -704,8 +861,7 @@ class Constants {
  */
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
-    entryComponents: [IgxCalendarComponent],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxDialogModule, IgxCalendarModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
 })
 export class IgxDatePickerModule { }
