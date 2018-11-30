@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.1.0
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+
 ## 7.0.2
 ### Features
 - `igxNavbar`:
@@ -17,6 +21,25 @@ All notable changes for each version of this project will be documented in this 
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
 
 ## 6.2.3
+- `igxGrid`
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
+    the changes will be applied to the particular instance of the component:
+    ```typescript
+        this.grid.resourceStrings = {
+            igx_grid_filter: 'My filter',
+            igx_grid_filter_row_close: 'My close'
+        };
+    ```
+    If only a value is updated, all component instances will be updated:
+    ```typescript
+        this.grid.resourceStrings.igx_grid_filter = 'My filter';
+    ```
+- `igxTimePicker`:
+    - `resourceStrings` property added, which allows changing/localizing strings for component.
+- Localization
+    - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
+    in the application.
+    - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
 - `ISortingEpression`:
     - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
 

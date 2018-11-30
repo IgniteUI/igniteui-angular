@@ -256,7 +256,11 @@ export class IgxFilteringService implements OnDestroy {
      * Returns the string representation of the FilteringLogic operator.
      */
     public getOperatorAsString(operator: FilteringLogic): any {
-        return FilteringLogic[operator];
+        if (operator === 0) {
+            return this.grid.resourceStrings.igx_grid_filter_operator_and;
+        } else {
+            return this.grid.resourceStrings.igx_grid_filter_operator_or;
+        }
     }
 
     /**
@@ -264,7 +268,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+            return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
             return this.datePipe.transform(expression.searchVal);
         } else {
