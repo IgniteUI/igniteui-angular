@@ -2763,8 +2763,8 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy }]);
         expect(grid.groupingExpressions).toEqual([]);
 
-        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false });
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+        grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: strategy });
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy });
 
         expect(grid.sortingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
         expect(grid.groupingExpressions).toEqual([{ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: strategy }]);
