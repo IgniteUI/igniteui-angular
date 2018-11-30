@@ -519,7 +519,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private _clearCellSelection() {
+    protected _clearCellSelection() {
         const cell = this._getLastSelectedCell();
         if (cell) {
             cell.selected = false;
@@ -544,7 +544,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         this._saveCellSelection(this.selection.get_empty());
     }
 
-    private _saveCellSelection(newSelection?: Set<any>) {
+    protected _saveCellSelection(newSelection?: Set<any>) {
         const sel = this.selection.get(this.cellSelectionID);
         if (sel && sel.size > 0) {
             this.selection.set(this.prevCellSelectionID, sel);
@@ -555,7 +555,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         this.selection.set(this.cellSelectionID, newSelection);
     }
 
-    private _getLastSelectedCell() {
+    protected _getLastSelectedCell() {
         const cellID = this.selection.first_item(this.cellSelectionID);
         if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);

@@ -39,13 +39,15 @@ import {
     IgxGridSortingPipe
 } from '.././grid/grid.pipes';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './../grid-summary';
+import { IgxHierarchicalSelectionAPIService } from './selection';
+import { IgxSelectionAPIService } from '../../core/selection';
 
 let NEXT_ID = 0;
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
@@ -54,7 +56,7 @@ let NEXT_ID = 0;
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxFilteringService ]
-})
+    })
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
@@ -62,6 +64,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
     private _scrollLeft = 0;
+    public parent = null;
 
     /**
      * @hidden
@@ -307,7 +310,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-        selection: IgxSelectionAPIService,
+        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,

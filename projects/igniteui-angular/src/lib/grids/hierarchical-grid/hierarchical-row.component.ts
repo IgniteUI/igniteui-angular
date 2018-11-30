@@ -2,10 +2,15 @@ import {
     ChangeDetectionStrategy,
     Component,
     HostBinding,
-    forwardRef
+    forwardRef,
+    ElementRef,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
+import { IgxHierarchicalSelectionAPIService } from './selection';
+import { GridBaseAPIService } from '.././api.service';
+import { IgxSelectionAPIService } from '../../core/selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,4 +68,11 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             });
         }
     }
+
+    constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
+        private hselection: IgxHierarchicalSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) {
+            super(gridAPI, hselection, element, cdr);
+         }
 }
