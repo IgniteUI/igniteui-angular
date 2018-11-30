@@ -263,7 +263,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             this.resetExpression();
             this.scrollChipsWhenAddingExpression();
-        } else if (event.key === KEYS.DOWN_ARROW) {
+        } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
