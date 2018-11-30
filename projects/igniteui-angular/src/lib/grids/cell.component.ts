@@ -643,7 +643,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     @HostListener('dblclick', ['$event'])
-    @HostListener('doubletap', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
             this.inEditMode = true;
@@ -827,6 +826,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
+                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;

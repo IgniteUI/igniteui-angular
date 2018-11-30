@@ -1832,38 +1832,57 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     }));
 
     it('should not render chip in header if condition that requires value is applied and then value is cleared in filter row.',
-    fakeAsync(() => {
-        const fix = TestBed.createComponent(IgxGridFilteringComponent);
-        fix.detectChanges();
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridFilteringComponent);
+            fix.detectChanges();
 
-        let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
-        const grid = fix.componentInstance.grid;
+            let filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
+            const grid = fix.componentInstance.grid;
 
-        // filter string col
-        stringCellChip.nativeElement.click();
-        fix.detectChanges();
+            // filter string col
+            stringCellChip.nativeElement.click();
+            fix.detectChanges();
 
-        GridFunctions.filterBy('Starts With', 'I', fix);
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
 
-        // remove text from input
-        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        const input = filterUIRow.query(By.directive(IgxInputDirective));
-        input.nativeElement.value = null;
+            // open dropdown
+            const filterIcon = filterUIRow.query(By.css('igx-icon'));
+            filterIcon.nativeElement.click();
+            fix.detectChanges();
 
-        const exprList = filterUIRow.componentInstance.expressionsList;
-        exprList[0].expression.searchVal = null;
-        fix.detectChanges();
+            const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const ddItems = ddList.nativeElement.children;
+            let i;
+            for ( i = 0; i < ddItems.length; i++) {
+                if (ddItems[i].textContent === 'Starts With') {
+                    ddItems[i].click();
+                    tick(100);
+                    return;
+                }
+            }
 
-        GridFunctions.closeFilterRow(fix);
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            input.nativeElement.value = 'I';
+            input.nativeElement.dispatchEvent(new Event('input'));
+            fix.detectChanges();
 
-        // check no condition is applied
-        expect(grid.rowList.length).toEqual(8);
+            const clearButton = filterUIRow.query(By.css('igx-suffix'));
 
-        filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
-        const stringCellText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
-        expect(stringCellText.nativeElement.textContent).toBe('Filter');
-    }));
+            clearButton.nativeElement.click();
+
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.closeFilterRow(fix);
+
+            // check no condition is applied
+            expect(grid.rowList.length).toEqual(8);
+
+            filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            const stringCellText = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
+            expect(stringCellText.nativeElement.textContent).toBe('Filter');
+        }));
 
     it('Should correctly update empty filter cells when scrolling horizontally.', async() => {
         const fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
