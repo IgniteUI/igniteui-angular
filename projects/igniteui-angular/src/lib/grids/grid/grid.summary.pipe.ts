@@ -19,11 +19,13 @@ export class IgxGridSummaryPipe implements PipeTransform {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
-    public transform(flatData: any[], summaryCalculationMode: GridSummaryCalculationMode,
+    public transform(flatData: any[],
+        hasSummary: boolean,
+        summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
         id: string, pipeTrigger: number): any[] {
 
-        if (!flatData || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
+        if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
         }
 

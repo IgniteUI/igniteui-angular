@@ -18,12 +18,14 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
      }
 
-    public transform(flatData: ITreeGridRecord[], summaryCalculationMode: GridSummaryCalculationMode,
+    public transform(flatData: ITreeGridRecord[],
+        hasSummary: boolean,
+        summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
         id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
 
-        if (!flatData || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
+        if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
         }
 
