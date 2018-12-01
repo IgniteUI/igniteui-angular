@@ -29,6 +29,7 @@ export interface IgxTimePickerBase {
     scrollAmPmIntoView(item: string): void;
     hideDropDownOverlay(): void;
     parseMask(preserveAmPm?: boolean): string;
+    collapsed: boolean;
 }
 
 export enum InteractionMode {

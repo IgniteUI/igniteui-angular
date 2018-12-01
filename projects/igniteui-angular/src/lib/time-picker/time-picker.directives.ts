@@ -6,14 +6,10 @@
 import {
     Directive,
     ElementRef,
-    EventEmitter,
-    forwardRef,
-    Host,
     HostBinding,
     HostListener,
     Inject,
     Input,
-    Output,
     TemplateRef
 } from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase, InteractionMode } from './time-picker.common';
@@ -347,4 +343,20 @@ export class IgxAmPmItemDirective {
 })
 export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxTimePickerContainer]'
+})
+export class IgxTimePickerContainerDirective {
+
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase) {}
+
+    @HostBinding('class.hidden')
+    get isCollapsed() {
+        return this.timePicker.collapsed;
+    }
 }

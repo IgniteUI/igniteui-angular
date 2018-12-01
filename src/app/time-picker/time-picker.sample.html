@@ -6,8 +6,8 @@
         <article class="timepicker-column">
             <h4 class="sample-title">Time Picker with Dropdown.</h4>
             <div class="sample-description">{{showDate()}}</div>
-            <div class="preview">
-                <igx-time-picker #tp [mode]="mode" style="width: 200px"
+            <div class="preview" style="width: 200px">
+                <igx-time-picker #tp [mode]="mode"
                                      [isSpinLoop]="isSpinLoop"
                                      [(ngModel)]="date"
                                      [itemsDelta]="itemsDelta"
@@ -17,7 +17,7 @@
         </article>
         <article class="timepicker-column">
             <h4 class="sample-title">Time Picker with Dialog.</h4>
-            <p class="sample-description">Vertical dialog.</p>
+            <p class="sample-description">AM/PM Time format.</p>
             <p class="sample-description"> </p>
             <div class="preview">
                 <igx-time-picker format="h:mm tt" ></igx-time-picker>
@@ -25,9 +25,9 @@
         </article>
         <article class="timepicker-column">
             <h4 class="sample-title">Time Picker with Dialog.</h4>
-            <p class="sample-description">AM/PM Time format.</p>
+            <p class="sample-description">Vertical dialog.</p>
             <div class="preview">
-                <igx-time-picker [vertical]="true" format="h:mm tt" ></igx-time-picker>
+                <igx-time-picker [vertical]="isVertical" format="h:mm tt" ></igx-time-picker>
             </div>
         </article>
         <article class="timepicker-column">

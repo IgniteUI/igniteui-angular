@@ -13,6 +13,7 @@ export class TimePickerSampleComponent {
     itemsDelta = { hours: 1, minutes: 5 };
     format="hh:mm tt";
     isSpinLoop = true;
+    isVertical = true;
     mode = InteractionMode.dropdown;
 
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
