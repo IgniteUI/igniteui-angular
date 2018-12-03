@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent } from 'igniteui-angular';
+import { IgxComboComponent, DisplayDensity } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -122,7 +122,7 @@ export class ComboSampleComponent implements OnInit {
         this.initialItemTemplate = comboTemplate;
     }
 
-    setDensity(density: string) {
+    setDensity(density: DisplayDensity) {
         this.igxCombo.displayDensity = density;
     }
 }
