@@ -297,6 +297,29 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
     }));
 
+    it('The dialog is focused after opening it and can be closed with keyboard.', fakeAsync(() => {
+        const fix = TestBed.createComponent(CustomTemplates1DialogComponent);
+        fix.detectChanges();
+
+        const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
+        dialog.open();
+        tick();
+        fix.detectChanges();
+
+        // Verify dialog is opened and focused
+        expect(document.activeElement).toBe(dialog.toggleRef.element);
+        expect(dialog.isOpen).toEqual(true);
+
+        // Press 'escape' key
+        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Escape');
+        tick();
+        fix.detectChanges();
+
+        // Verify dialog is closed and no longer focused
+        expect(document.activeElement).not.toBe(dialog.toggleRef.element);
+        expect(dialog.isOpen).toEqual(false);
+    }));
+
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);
         element.dispatchEvent(event);
