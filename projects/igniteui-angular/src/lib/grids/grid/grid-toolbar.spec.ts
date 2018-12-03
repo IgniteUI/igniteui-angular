@@ -420,7 +420,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         fixture.detectChanges();
 
         const toolbar = getToolbar().nativeElement;
-        expect(grid.toolbar.isComfortable()).toBe(true);
+        expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
         expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
 
@@ -447,7 +447,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         fixture.detectChanges();
 
         const toolbar = getToolbar().nativeElement;
-        expect(grid.toolbar.isComfortable()).toBe(true);
+        expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
 
         grid.displayDensity = DisplayDensity.compact;

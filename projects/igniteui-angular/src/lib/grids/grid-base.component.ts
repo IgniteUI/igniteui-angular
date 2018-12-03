@@ -1464,26 +1464,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        if (this.isCosy()) {
-            return 'igx-grid--cosy';
-        } else if (this.isCompact()) {
-            return 'igx-grid--compact';
-        } else {
-            return 'igx-grid';
-        }
+        return this.componentDensityClass('igx-grid');
     }
 
     get bannerClass(): string {
-        let bannerClass = '';
-        if (this.isCosy()) {
-            bannerClass = 'igx-banner--cosy';
-        } else if (this.isCompact()) {
-            bannerClass = 'igx-banner--compact';
-        } else {
-            bannerClass = 'igx-banner';
-        }
-        bannerClass += this.rowEditPositioningStrategy.isTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
-        return bannerClass;
+        const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
+        return `${this.componentDensityClass('igx-banner')} ${position}`;
     }
 
     /**
@@ -2368,12 +2354,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get defaultRowHeight(): number {
-        if (this.isCosy()) {
-            return 40;
-        } else if (this.isCompact()) {
-            return 32;
-        } else {
-            return 50;
+        switch (this.displayDensity) {
+            case 'cosy':
+                return 40;
+            case 'compact':
+                return 32;
+            default:
+                return 50;
         }
     }
 

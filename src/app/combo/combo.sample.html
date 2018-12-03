@@ -64,9 +64,9 @@
         </div>
         <div>
             <h4>Display Density</h4>
-            <button igxButton="raised" [disabled]="igxCombo.isCompact()" (click)="setDensity('compact')">Compact</button>
-            <button igxButton="raised" [disabled]="igxCombo.isCosy()" (click)="setDensity('cosy')">Cosy</button>
-            <button igxButton="raised" [disabled]="!igxCombo.isCosy() && !igxCombo.isCompact()" (click)="setDensity('comfortable')">Comfortable</button>
+            <button igxButton="raised" [disabled]="igxCombo.displayDensity === 'compact'" (click)="setDensity('compact')">Compact</button>
+            <button igxButton="raised" [disabled]="igxCombo.displayDensity === 'cosy'" (click)="setDensity('cosy')">Cosy</button>
+            <button igxButton="raised" [disabled]="igxCombo.displayDensity === 'comfortable'" (click)="setDensity('comfortable')">Comfortable</button>
         </div>
     </section>
     </div>
