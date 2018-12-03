@@ -12,6 +12,6 @@ export enum SortingDirection {
 export interface ISortingExpression {
    fieldName: string;
    dir: SortingDirection;
-   ignoreCase: boolean;
-   strategy: ISortingStrategy;
+   ignoreCase?: boolean;
+   strategy?: ISortingStrategy;
 }
