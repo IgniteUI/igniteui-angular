@@ -12,7 +12,6 @@ export interface ThemePropertyChange extends ChangeAction {
     owner: string;
 }
 
-
 export interface SelectorChanges {
     /** An array of changes to component/directive selectors */
     changes: SelectorChange[];
@@ -57,6 +56,18 @@ export interface TemplateElement {
     type: ElementType;
     /** Original selector to apply change to */
     selector: string;
+}
+
+export interface ImportsChange {
+    /** Name of the module to change */
+    name: string;
+    /** Replace original name with new one */
+    replaceWith: string;
+}
+
+export interface ImportsChanges {
+    /** An array of changes to imports array */
+    changes: ImportsChange[];
 }
 
 export enum ElementType {

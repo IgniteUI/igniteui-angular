@@ -88,3 +88,4 @@ export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs } from './lib/core/utils';
 export { InteractionMode } from './lib/time-picker/time-picker.common';
+export { changei18n, getCurrentResourceStrings } from './lib/core/i18n/resources';

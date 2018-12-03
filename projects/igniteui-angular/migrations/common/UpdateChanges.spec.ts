@@ -4,7 +4,7 @@ import { EmptyTree } from '@angular-devkit/schematics';
 import { UnitTestTree } from '@angular-devkit/schematics/testing';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
 import { UpdateChanges } from './UpdateChanges';
 
 describe('UpdateChanges', () => {
@@ -16,6 +16,7 @@ describe('UpdateChanges', () => {
         public getOutputChanges() { return this.outputChanges; }
         public getInputChanges() { return this.inputChanges; }
         public getThemePropChanges() { return this.themePropsChanges; }
+        public getImportsChanges() { return this.importsChanges; }
     }
 
     beforeEach(() => {
@@ -445,6 +446,68 @@ $var3: igx-comp-theme(
 );`);
         expect(appTree.readContent('src/app/app.component.sass')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
         expect(appTree.readContent('test.component.sass')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
+        done();
+    });
+
+    it('should replace imports', done => {
+        const importsJson: ImportsChanges = {
+            changes: [
+                {
+                    name: 'IgxIconModule.forRoot()', replaceWith: 'IgxIconModule'
+                },
+                {
+                    name: 'module1', replaceWith: 'module2'
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'imports.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn(fs, 'readFileSync').and.callFake(() => JSON.stringify(importsJson));
+
+        const fileContent = `
+@NgModule({
+    declarations: components,
+    imports: [
+        IgxIconModule.forRoot(),
+        IgxGridModule.forRoot(),
+        IgxTreeGridModule,
+        module1
+    ],
+    providers: [
+        LocalService,
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }`;
+        appTree.create('app.module.ts', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getImportsChanges()).toEqual(importsJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('app.module.ts')).toEqual(`
+@NgModule({
+    declarations: components,
+    imports: [
+        IgxIconModule,
+        IgxGridModule.forRoot(),
+        IgxTreeGridModule,
+        module2
+    ],
+    providers: [
+        LocalService,
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }`);
+
         done();
     });
 });
