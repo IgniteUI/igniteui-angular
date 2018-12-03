@@ -108,6 +108,9 @@ export class IgxSorting {
             return data;
         }
         expr = expressions[expressionIndex];
+        if (!expr.strategy) {
+            expr.strategy = DefaultSortingStrategy.instance();
+        }
         data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue);
         if (expressionIndex === exprsLen - 1) {
             return data;

@@ -1,0 +1,9 @@
+{
+  "$schema": "../../../../@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Installs the needed dependencies onto the host application..",
+      "factory": "./ng-add/index"
+    }
+  }
+}

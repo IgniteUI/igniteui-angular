@@ -206,11 +206,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
         } else if (this.column.dataType === DataType.Date) {
-            return 'Pick up date';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_date_placeholder;
         } else if (this.column.dataType === DataType.Boolean) {
-            return 'All';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_boolean_placeholder;
         } else {
-            return 'Add filter value';
+            return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
         }
     }
 
@@ -263,7 +263,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             this.resetExpression();
             this.scrollChipsWhenAddingExpression();
-        } else if (event.key === KEYS.DOWN_ARROW) {
+        } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
             this.input.nativeElement.blur();
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
@@ -295,6 +295,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.instance().condition(value);
+    }
+
+    /**
+     * Returns the translated condition name for a given value.
+     */
+    public translateCondition(value: string): string {
+        return this.filteringService.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     /**
@@ -358,7 +365,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.expressionsList.length === 1 &&
             this.expressionsList[0].expression.searchVal === null &&
             this.expressionsList[0].expression.condition.isUnary === false) {
-            this.filteringService.clearFilter(this.column.field);
+            this.filteringService.getExpressions(this.column.field).pop();
         } else {
             this.expressionsList.forEach((item) => {
                 if (item.expression.searchVal === null && !item.expression.condition.isUnary) {
