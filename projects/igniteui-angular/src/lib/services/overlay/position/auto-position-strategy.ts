@@ -41,8 +41,8 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
         const viewPort = this.getViewPort(document);
         super.position(contentElement, size);
         const checkIfMoveHorizontal = (elem: HTMLElement) => {
-            const leftBound = elem.offsetLeft;
-            const rightBound = elem.offsetLeft + elem.lastElementChild.clientWidth;
+            const leftBound = elem.getBoundingClientRect().left;
+            const rightBound = elem.getBoundingClientRect().right;
             switch (this.settings.horizontalDirection) {
                 case HorizontalAlignment.Left:
                     if (leftBound < viewPort.left) {
@@ -61,8 +61,8 @@ export class AutoPositionStrategy extends ConnectedPositioningStrategy implement
             }
         };
         const checkIfMoveVertical = (elem: HTMLElement) => {
-            const topBound = elem.offsetTop;
-            const bottomBound = elem.offsetTop + elem.lastElementChild.clientHeight;
+            const topBound = elem.getBoundingClientRect().top;
+            const bottomBound = elem.getBoundingClientRect().bottom;
             switch (this.settings.verticalDirection) {
                 case VerticalAlignment.Top:
                     if (topBound < viewPort.top) {

@@ -23,8 +23,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   position(contentElement: HTMLElement, size: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
-    contentElement.style.top = startPoint.y + this.settings.verticalDirection * size.height + 'px';
-    contentElement.style.left = startPoint.x + this.settings.horizontalDirection * size.width + 'px';
+       let transformString = '';
+       transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
+       transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
+       contentElement.style.transform = transformString.trim();
   }
 }
 

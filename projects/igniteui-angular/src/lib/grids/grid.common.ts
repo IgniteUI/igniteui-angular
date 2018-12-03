@@ -613,7 +613,9 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
             target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
         this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
-        contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
+        const translateY = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height;
+        const translateYString = `translateY(${translateY}px)`;
+        contentElement.style.transform = contentElement.style.transform.replace(/translateY\(\d+px\)/g, translateYString);
         contentElement.style.width = target.clientWidth + 'px';
     }
 }

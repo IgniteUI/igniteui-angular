@@ -367,18 +367,15 @@ describe('igxOverlay', () => {
             };
             const connectedStrat1 = new ConnectedPositioningStrategy(mockPositioningSettings1);
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('-200px');
+            expect(mockItem.style.transform).toEqual('translateX(-200px) translateY(0px)');
 
             connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Center;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('-100px');
+            expect(mockItem.style.transform).toEqual('translateX(-100px) translateY(0px)');
 
             connectedStrat1.settings.horizontalStartPoint = HorizontalAlignment.Right;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
 
             right = 0;
             bottom = 0;
@@ -386,18 +383,14 @@ describe('igxOverlay', () => {
             height = 200;
             connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Top;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('-200px');
-            expect(mockItem.style.left).toEqual('0px');
-
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-200px)');
             connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Middle;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('-100px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-100px)');
 
             connectedStrat1.settings.verticalStartPoint = VerticalAlignment.Bottom;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
 
             right = 0;
             bottom = 0;
@@ -405,18 +398,15 @@ describe('igxOverlay', () => {
             height = 0;
             connectedStrat1.settings.verticalDirection = VerticalAlignment.Top;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('-200px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-200px)');
 
             connectedStrat1.settings.verticalDirection = VerticalAlignment.Middle;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('-100px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(-100px)');
 
             connectedStrat1.settings.verticalDirection = VerticalAlignment.Bottom;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
 
             right = 0;
             bottom = 0;
@@ -424,34 +414,29 @@ describe('igxOverlay', () => {
             height = 0;
             connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Left;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('-200px');
+            expect(mockItem.style.transform).toEqual('translateX(-200px) translateY(0px)');
 
             connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Center;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('-100px');
+            expect(mockItem.style.transform).toEqual('translateX(-100px) translateY(0px)');
 
             connectedStrat1.settings.horizontalDirection = HorizontalAlignment.Right;
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
 
             // If target is Point
             connectedStrat1.settings.target = new Point(0, 0);
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
 
             // If target is not point or html element, should fallback to new Point(0,0)
             connectedStrat1.settings.target = <any>'g';
             connectedStrat1.position(mockItem, { width: 200, height: 200 });
-            expect(mockItem.style.top).toEqual('0px');
-            expect(mockItem.style.left).toEqual('0px');
+            expect(mockItem.style.transform).toEqual('translateX(0px) translateY(0px)');
         });
 
         it('Should properly call position method - AutoPosition.', () => {
-            const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild']);
+            const mockParent = jasmine.createSpyObj('parentElement', ['style', 'lastElementChild', 'getBoundingClientRect']);
             const mockItem = { parentElement: mockParent, clientHeight: 0, clientWidth: 0 } as HTMLElement;
             spyOn<any>(mockItem, 'parentElement').and.returnValue(mockParent);
             const mockPositioningSettings1: PositionSettings = {
@@ -464,6 +449,7 @@ describe('igxOverlay', () => {
             const autoStrat1 = new AutoPositionStrategy(mockPositioningSettings1);
             spyOn(autoStrat1, 'getViewPort').and.returnValue(jasmine.createSpyObj('obj', ['left', 'top', 'right', 'bottom']));
             spyOn(ConnectedPositioningStrategy.prototype, 'position');
+            mockParent.getBoundingClientRect.and.returnValue(jasmine.createSpyObj('obj', ['left', 'top']));
 
             autoStrat1.position(mockItem.parentElement, null, null, true);
             expect(ConnectedPositioningStrategy.prototype.position).toHaveBeenCalledTimes(2);
@@ -1320,8 +1306,8 @@ describe('igxOverlay', () => {
                     const strategy = new ConnectedPositioningStrategy(positionSettings2);
                     strategy.position(contentWrapper, size);
                     fixture.detectChanges();
-                    expect(contentWrapper.style.top).toBe(expectedTopForPoint[j]);
-                    expect(contentWrapper.style.left).toBe(expectedLeftForPoint[i]);
+                    const transform = `translateX(${expectedLeftForPoint[i]}) translateY(${expectedTopForPoint[j]})`;
+                    expect(contentWrapper.style.transform).toBe(transform);
                 }
             }
             document.body.removeChild(contentWrapper);
@@ -1368,8 +1354,10 @@ describe('igxOverlay', () => {
                             const strategy = new ConnectedPositioningStrategy(positionSettings2);
                             strategy.position(contentWrapper, size);
                             fixture.detectChanges();
-                            expect(contentWrapper.style.top).toBe((expectedTopForPoint[j] + 30 * tsp) + 'px');
-                            expect(contentWrapper.style.left).toBe((expectedLeftForPoint[i] + 50 * lsp) + 'px');
+                            const translateY = (expectedTopForPoint[j] + 30 * tsp) + 'px';
+                            const translateX = (expectedLeftForPoint[i] + 50 * lsp) + 'px';
+                            const transform = `translateX(${translateX}) translateY(${translateY})`;
+                            expect(contentWrapper.style.transform).toBe(transform);
                         }
                     }
                 }
@@ -1483,8 +1471,8 @@ describe('igxOverlay', () => {
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth;
             const expectedTop = buttonTop - wrapperContent.lastElementChild.lastElementChild.clientHeight;
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
+            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+            const wrapperTop = wrapperContent.getBoundingClientRect().top;
             expect(wrapperTop).toEqual(expectedTop);
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
@@ -2146,8 +2134,8 @@ describe('igxOverlay', () => {
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
             const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
+            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+            const wrapperTop = wrapperContent.getBoundingClientRect().top;
             expect(wrapperTop).toEqual(expectedTop);
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
@@ -2194,8 +2182,8 @@ describe('igxOverlay', () => {
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft - wrapperContent.lastElementChild.lastElementChild.clientWidth; // To the left of the button
             const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
+            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+            const wrapperTop = wrapperContent.getBoundingClientRect().top;
             expect(wrapperTop).toEqual(expectedTop);
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
@@ -2242,8 +2230,8 @@ describe('igxOverlay', () => {
             const buttonTop = buttonElement.offsetTop;
             const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
             const expectedTop = buttonTop - wrapperContent.lastElementChild.clientHeight; // On top of the button
-            const wrapperLeft = wrapperContent.offsetLeft;
-            const wrapperTop = wrapperContent.offsetTop;
+            const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+            const wrapperTop = wrapperContent.getBoundingClientRect().top;
             expect(wrapperTop).toEqual(expectedTop);
             expect(wrapperLeft).toEqual(expectedLeft);
         }));
