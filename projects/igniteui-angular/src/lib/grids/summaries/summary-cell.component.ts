@@ -21,7 +21,7 @@ export class IgxSummaryCellComponent {
     public hasSummary = false;
 
     @Input()
-    public density = DisplayDensity.comfortable;
+    public density;
 
     @HostBinding('class')
     get styleClasses(): string {

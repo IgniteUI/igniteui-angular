@@ -2230,7 +2230,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
         this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
-        this.onRowEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
         });
@@ -3235,7 +3234,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public clearSummaryCache(args?) {
         if (!args) {
             this.summaryService.clearSummaryCache();
-            this.gridAPI.remove_summary(this.id);
             return;
         }
         if (args.data) {
@@ -3244,13 +3242,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 rowID = this.primaryKey ? args.data[this.primaryKey] : args.data;
             }
             this.summaryService.removeSummaries(rowID);
-            this.gridAPI.remove_summary(this.id);
             return;
         }
-        if (args.cellID) {
-            const columnName = this.columnList.find(col => col.index === args.cellID.columnID).field;
-            this.summaryService.removeSummaries(args.cellID.rowID, columnName);
-            this.gridAPI.remove_summary(this.id, columnName);
+        if (args.rowID) {
+            const columnName = args.cellID ? this.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
+            this.summaryService.removeSummaries(args.rowID, columnName);
         }
     }
 
@@ -3313,6 +3309,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public recalculateSummaries() {
+        this.summaryService.summaryHeight = 0;
         requestAnimationFrame(() => this.calculateGridSizes());
     }
 
