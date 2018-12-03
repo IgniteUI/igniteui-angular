@@ -35,6 +35,6 @@
         "Requires": "必須",
         "Default value": "デフォルト値",
         "Optional": "オプション",
-        "Rest": "Rest"
+        "Rest": "残りの引数"
     }
 }
