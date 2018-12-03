@@ -422,14 +422,14 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
 
-                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
             }));
 
             it('should update correct cell when sorting is applied', (async () => {
-                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false});
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'fullName');
