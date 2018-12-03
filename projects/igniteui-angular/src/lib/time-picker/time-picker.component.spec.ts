@@ -130,9 +130,9 @@ describe('IgxTimePicker', () => {
 
     }));
 
-    it('TimePicker open event', fakeAsync(() => {
+    it('TimePicker open event', async() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
-        tick();
+        await wait();
         fixture.detectChanges();
 
         const timePicker = fixture.componentInstance.timePicker;
@@ -143,10 +143,10 @@ describe('IgxTimePicker', () => {
         spyOn(timePicker.onOpen, 'emit');
 
         target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        tick(100);
+        await wait(900);
 
         expect(timePicker.onOpen.emit).toHaveBeenCalled();
-    }));
+    });
 
     it('TimePicker Validation Failed event', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerWithMInMaxTimeValueComponent);

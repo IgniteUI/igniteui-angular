@@ -522,7 +522,9 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public ngOnDestroy(): void {
-        this.overlayService.hide(this._overlayId);
+        if (this._overlayId) {
+            this.overlayService.hide(this._overlayId);
+        }
 
         this._destroy$.next(true);
         this._destroy$.complete();
