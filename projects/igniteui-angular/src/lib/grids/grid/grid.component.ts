@@ -87,6 +87,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      */
     protected groupingDiffer;
     private _hideGroupedColumns = false;
+    private _dropAreaMessage = null;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -319,7 +320,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+    set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed inside the GroupBy drop area where columns can be dragged on.
+    */
+    get dropAreaMessage(): string {
+        return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
 
     /**
      * An @Input property that sets the template that will be rendered as a GroupBy drop area.
