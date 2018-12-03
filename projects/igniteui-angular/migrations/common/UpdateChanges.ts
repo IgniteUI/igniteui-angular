@@ -3,9 +3,9 @@ import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges } from './schema';
+import { ClassChanges, BindingChanges, SelectorChange, SelectorChanges, ThemePropertyChanges, ImportsChanges } from './schema';
 import { getIdentifierPositions } from './tsUtils';
-import { getProjectPaths, getWorkspace, getProjects } from './util';
+import { getProjectPaths, getWorkspace, getProjects, escapeRegExp } from './util';
 
 // tslint:disable:arrow-parens
 export class UpdateChanges {
@@ -16,6 +16,7 @@ export class UpdateChanges {
     protected inputChanges: BindingChanges;
     protected selectorChanges: SelectorChanges;
     protected themePropsChanges: ThemePropertyChanges;
+    protected importsChanges: ImportsChanges;
     protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
 
     private _templateFiles: string[] = [];
@@ -72,6 +73,7 @@ export class UpdateChanges {
         this.outputChanges = this.loadConfig('outputs.json');
         this.inputChanges = this.loadConfig('inputs.json');
         this.themePropsChanges = this.loadConfig('theme-props.json');
+        this.importsChanges = this.loadConfig('imports.json');
     }
 
     /** Apply configured changes to the Host Tree */
@@ -104,6 +106,12 @@ export class UpdateChanges {
         if (this.themePropsChanges && this.themePropsChanges.changes.length) {
             for (const entryPath of this.sassFiles) {
                 this.updateThemeProps(entryPath);
+            }
+        }
+
+        if (this.importsChanges && this.importsChanges.changes.length) {
+            for (const entryPath of this.tsFiles) {
+                this.updateImports(entryPath);
             }
         }
     }
@@ -279,6 +287,27 @@ export class UpdateChanges {
                     }
                 }
             }
+        }
+        if (overwrite) {
+            this.host.overwrite(entryPath, fileContent);
+        }
+    }
+
+    protected updateImports(entryPath: string) {
+        let fileContent = this.host.read(entryPath).toString();
+        let overwrite = false;
+
+        for (const change of this.importsChanges.changes) {
+            if (fileContent.indexOf(change.name) === -1) {
+                continue;
+            }
+
+            const replace = escapeRegExp(change.replaceWith);
+            const base = escapeRegExp(change.name);
+            const reg = new RegExp(base, 'g');
+
+            fileContent = fileContent.replace(reg, replace);
+            overwrite = true;
         }
         if (overwrite) {
             this.host.overwrite(entryPath, fileContent);

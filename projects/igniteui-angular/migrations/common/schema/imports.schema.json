@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "properties": {
+        "name": {
+            "description": "Name of the module to change",
+            "type": "string"
+        },
+        "replaceWith": {
+            "description": "Replace original name with new one",
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "replaceWith"
+    ],
+    "type": "object"
+}
+

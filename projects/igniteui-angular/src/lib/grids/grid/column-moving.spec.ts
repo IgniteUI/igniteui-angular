@@ -409,7 +409,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             // step 1 - group a column
-            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
 
             // step 2 - move a column

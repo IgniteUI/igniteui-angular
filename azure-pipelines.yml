@@ -28,8 +28,8 @@ steps:
   env:
     COVERALLS_REPO_TOKEN: $(coveralls.repoToken)
 
-- script: npm run test:migration
-  displayName: 'Run migrations'
+- script: npm run test:schematics
+  displayName: 'Run migrations & schematics'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
