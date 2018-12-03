@@ -84,11 +84,9 @@
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template>
-            <div style="overflow:auto;width: 100%;">
-                <div *ngFor="let layout of childLayoutList">
-                    <igx-child-grid-row [parentGridID]="id" [index]="rowIndex" [rowData]="rowData" [layout]='layout' #row>
+            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex'>
+                    <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex" [rowData]="rowData" [layout]='layout' #row>
                     </igx-child-grid-row>
-                </div>
             </div>
         </ng-template>
         <ng-template #group_template>

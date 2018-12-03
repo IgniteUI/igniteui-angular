@@ -45,6 +45,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -55,7 +56,7 @@ let NEXT_ID = 0;
     templateUrl: 'hierarchical-grid.component.html',
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
-        IgxFilteringService ]
+        IgxFilteringService, IgxHierarchicalGridNavigationService ]
     })
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -319,7 +320,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
+        navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(
