@@ -488,7 +488,7 @@ describe('IgxTreeGrid - Integration', () => {
 
         it('should preserve updates after removing Sorting', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
-            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.sort({ fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             const childCell = grid.getCellByColumn(0, 'Age');
