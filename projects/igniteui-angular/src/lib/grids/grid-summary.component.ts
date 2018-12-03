@@ -59,17 +59,17 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-summary--compact')
     get compactCSS() {
-        return this.gridAPI.get(this.gridID).isCompact();
+        return this.gridAPI.get(this.gridID).displayDensity === 'compact';
     }
 
     @HostBinding('class.igx-grid-summary--cosy')
     get cosyCSS() {
-        return this.gridAPI.get(this.gridID).isCosy();
+        return this.gridAPI.get(this.gridID).displayDensity === 'cosy';
     }
 
     @HostBinding('class.igx-grid-summary')
     get defaultCSS() {
-        return this.gridAPI.get(this.gridID).isComfortable();
+        return this.gridAPI.get(this.gridID).displayDensity === 'comfortable';
     }
 
     get dataType(): DataType {
