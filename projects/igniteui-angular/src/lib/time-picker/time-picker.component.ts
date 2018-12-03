@@ -475,7 +475,6 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
-
         if (this.mode === InteractionMode.dialog) {
             this.collapsed = false;
             this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
@@ -1212,6 +1211,34 @@ export class IgxTimePickerComponent implements
         }
     }
 
+    get validMinuteEntries(): any[] {
+        let minuteEntries = [];
+        for (let i = 0; i < 60; i++) {
+            minuteEntries.push(i);
+        }
+        return minuteEntries;
+    }
+    get validHourEntries(): any[] {
+        let hourEntries = [];
+        let index = this.format.indexOf('h') !== -1 || this.format.indexOf('hh') !== -1 ? 12 : 24;
+        for (let i = 0; i < index; i++) {
+            hourEntries.push(i);
+        }
+        return hourEntries;
+    }
+
+    private _isEntryValid(val: string): boolean {
+        const sections = val.split(/[\s:]+/);
+        const re = new RegExp(this.promptChar,"g");
+
+        const hour = sections[0].replace(re, '');
+        const minutes = sections[1].replace(re, '');
+
+        if (this.validHourEntries.indexOf(parseInt(hour, 10)) !== -1 && this.validMinuteEntries.indexOf(parseInt(minutes, 10)) !== -1) {
+            return true;
+        }
+    }
+
     private _getCursorPosition(): number {
         return this.input.nativeElement.selectionStart;
     }
@@ -1322,7 +1349,9 @@ export class IgxTimePickerComponent implements
         }
 
         if (val.indexOf(this.promptChar) === -1) {
-            this.value = this._convertMinMaxValue(val);
+            if (this._isEntryValid(val)) {
+                this.value = this._convertMinMaxValue(val);
+            }
 
             if (this._isValueValid(this.value) && this._oldValue !== this.value) {
                 const args: IgxTimePickerValueChangedEventArgs = {
@@ -1356,9 +1385,9 @@ export class IgxTimePickerComponent implements
     }
 
     public onBlur(event): void {
-        if (this.collapsed) {
-            const value = event.target.value;
+        const value = event.target.value;
 
+        if (this.collapsed && this._isEntryValid(value)) {
             this.isNotEmpty = value === this.format;
 
             this.displayValue = value;
@@ -1393,6 +1422,7 @@ export class IgxTimePickerComponent implements
             sign = event.deltaY < 0 ? 1 : -1;
         }
 
+        let oldVal = new Date(this.value);
         let currentVal = new Date(this.value);
 
         if (!this.value) {
@@ -1417,7 +1447,7 @@ export class IgxTimePickerComponent implements
                         min.setMinutes(sign * currentVal.getMinutes());
                         this.value = min;
                     } else {
-                        this.value = currentVal;
+                        this.value = oldVal;
                     }
                 } else if (currentVal.getTime() < min.getTime()) {
                     if (this.isSpinLoop) {
@@ -1425,7 +1455,7 @@ export class IgxTimePickerComponent implements
                         max.setMinutes(sign * minutes);
                         this.value = max;
                     } else {
-                        this.value = currentVal;
+                        this.value = oldVal;
                     }
                 } else {
                     this.value = currentVal;
