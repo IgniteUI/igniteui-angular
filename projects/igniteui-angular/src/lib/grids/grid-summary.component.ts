@@ -6,7 +6,7 @@ import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxSummaryResult } from './grid-summary';
+import { IgxSummaryResult } from './summaries/grid-summary';
 /**
  *@hidden
  */
