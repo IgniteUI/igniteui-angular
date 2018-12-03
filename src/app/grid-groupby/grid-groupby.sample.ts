@@ -88,7 +88,7 @@ export class GridGroupBySampleComponent implements OnInit {
                 return;
             }
         }
-        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
     }
     toggleGroupedVisibility(event){
         this.grid1.hideGroupedColumns = !event.checked;
@@ -111,9 +111,9 @@ export class GridGroupBySampleComponent implements OnInit {
 
     groupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
+            {fieldName: "Country", dir: 2, ignoreCase: true}
         ];
         this.grid1.groupBy(expr);
     }
@@ -124,8 +124,8 @@ export class GridGroupBySampleComponent implements OnInit {
 
     groupUngroupMultiple() {
         const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
+            {fieldName: "ContactTitle", dir: 1, ignoreCase: true},
+            {fieldName: "Address", dir: 2, ignoreCase: true},
         ];
         this.grid1.groupingExpressions = expr;
     }
