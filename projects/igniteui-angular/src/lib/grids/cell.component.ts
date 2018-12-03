@@ -388,7 +388,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
         if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll && this._isLastColCollidingWithScroll() ?
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll &&
+            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
                 parseInt(colWidth, 10) - 18 + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
@@ -561,22 +562,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (cellID) {
             return this.gridAPI.get_cell_by_index(this.gridID, cellID.rowIndex, cellID.columnID);
         }
-    }
-
-    private _isLastColCollidingWithScroll(): boolean {
-        const cellElement = this.element.nativeElement;
-        const scrollElement = this.grid.verticalScrollContainer.dc.instance.scrollContainer;
-        if (!cellElement || !scrollElement) {
-            return false;
-        }
-
-        const scrollLeftBorder = scrollElement.getBoundingClientRect().left;
-        const cellRightBorder = cellElement.getBoundingClientRect().right;
-        if (cellRightBorder > scrollLeftBorder) {
-            return true;
-        }
-
-        return false;
     }
 
     /**
