@@ -261,6 +261,10 @@ export class AppComponent implements OnInit {
             link: '/hierarhicalGrid',
             icon: 'view_column',
             name: 'Hierarchical Grid'
+        }, {
+            link: '/hierarhicalGridRemote',
+            icon: 'view_column',
+            name: 'Hierarchical Grid Remote'
         }
     ];
 

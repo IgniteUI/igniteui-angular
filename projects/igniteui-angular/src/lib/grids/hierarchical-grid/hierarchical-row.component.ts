@@ -34,20 +34,11 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * ```
      */
     public get expanded() {
-        return this.grid.isExpanded(this.rowID);
+        return this.grid.isExpanded(this.rowData);
     }
 
     public get hasChildren() {
-        let hasChild = false;
-        const childKeys = this.grid.childLayoutKeys;
-        for (let i = 0; i < childKeys.length; i++) {
-            const childKey = childKeys[i];
-            if (this.rowData[childKey]) {
-                hasChild = true;
-                break;
-            }
-        }
-        return  hasChild;
+        return  this.grid.childLayoutKeys.length;
     }
 
     /**

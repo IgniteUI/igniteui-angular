@@ -1,4 +1,3 @@
-import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent, IPathSegment } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';

@@ -1023,7 +1023,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _calcHeight(): number {
         let height;
         if (this.heightCache) {
-            height = this.heightCache.reduce((acc, val) => acc + val);
+            height = this.heightCache.reduce((acc, val) => acc + val, 0);
         } else {
             height = this.initSizesCache(this.igxForOf);
         }
