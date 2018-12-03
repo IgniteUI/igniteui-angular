@@ -6,6 +6,7 @@ import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxSummaryResult } from './grid-summary';
 /**
  *@hidden
  */
@@ -82,6 +83,10 @@ export class IgxGridSummaryComponent implements DoCheck {
     ngDoCheck() {
         this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
         this.cdr.detectChanges();
+    }
+
+    public translateSummary(summary: IgxSummaryResult): string {
+        return this.gridAPI.get(this.gridID).resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
     get resolveSummaries(): any[] {
