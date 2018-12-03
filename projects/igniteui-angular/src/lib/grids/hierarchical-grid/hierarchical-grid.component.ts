@@ -28,21 +28,12 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
-
-
-import {
-    IgxGridFilteringPipe,
-    IgxGridPagingPipe,
-    IgxGridPostGroupingPipe,
-    IgxGridPreGroupingPipe,
-    IgxGridSortingPipe
-} from '.././grid/grid.pipes';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
-import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
+import { Transaction, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './../grid-summary';
+import { IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
@@ -108,10 +99,11 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
     public isChildGridRecord(record: any): boolean {
-        return record.childGridData;
+        // Can be null when there is defined layout but no child data was found
+        return record.childGridData !== undefined;
     }
 
-      /**
+    /**
      * @hidden
      */
     public isGroupByRecord(record: any): boolean {
@@ -125,8 +117,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     /**
- * @hidden
- */
+     * @hidden
+     */
     public getTemplate(rowData: any): TemplateRef<any> {
         let template;
         if (this.isChildGridRecord(rowData)) {
@@ -188,7 +180,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 
     public isExpanded(record: any): boolean {
         let inState;
-        if (record.childGridData) {
+        if (record.childGridData !== undefined) {
             inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
         } else {
             inState = !!this.hierarchicalState.find(v => {
@@ -248,8 +240,6 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             columns.push(ref.instance);
         });
         const result = flatten(columns);
-        console.log(result);
-        debugger;
         this.columnList.reset(result);
         this.columnList.notifyOnChanges();
     }

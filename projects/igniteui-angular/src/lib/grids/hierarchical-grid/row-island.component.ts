@@ -18,26 +18,32 @@ import {
     OnChanges,
     Output,
     EventEmitter,
-    Optional
+    Optional,
+    OnDestroy
 } from '@angular/core';
 import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction } from '../grid';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { Transaction, TransactionType, TransactionService, State } from '../../services/index';
+import { Transaction, TransactionService, State } from '../../services/index';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 
+export interface IGridCreatedEventArgs {
+    owner: IgxRowIslandComponent;
+    parendID: any;
+    grid: IgxHierarchicalGridComponent;
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
     template: ``
 })
-export class IgxRowIslandComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit, OnChanges {
+export class IgxRowIslandComponent extends IgxGridComponent implements AfterContentInit, OnInit, AfterViewInit, OnChanges, OnDestroy {
     private layout_id = `igx-row-island-`;
     private hgridAPI;
     private isInit = false;
@@ -53,6 +59,9 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
 
     @Output()
     public onLayoutChange = new EventEmitter<any>();
+
+    @Output()
+    public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
     @Input() public key: string;
 
@@ -77,36 +86,6 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
             ptr = ptr.parent;
         }
         return lvl + 1;
-    }
-    ngAfterContentInit() {
-        this.children.reset(this.children.toArray().slice(1));
-        this.children.forEach(child => {
-            child.parent = this;
-        });
-        const nestedColumns = this.children.map((layout) => layout.allColumns.toArray());
-        const colsArray = [].concat.apply([], nestedColumns);
-        const topCols = this.allColumns.filter((item) => {
-            return colsArray.indexOf(item) === -1;
-        });
-        this.childColumns.reset(topCols);
-    }
-    ngOnInit() {
-    }
-    ngAfterViewInit() {
-        console.log('rowIsland width ID: ' + this.id + ' registered');
-        this.hgridAPI.registerLayout(this);
-    }
-    ngOnChanges(changes) {
-        this.onLayoutChange.emit(changes);
-        if (!this.isInit) {
-            this.initialChanges = changes;
-        }
-    }
-
-    reflow() {}
-
-    getGrids() {
-        return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 
     constructor(
@@ -140,6 +119,47 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
+
+    ngOnInit() {
+    }
+
+    ngAfterContentInit() {
+        this.children.reset(this.children.toArray().slice(1));
+        this.children.forEach(child => {
+            child.parent = this;
+        });
+        const nestedColumns = this.children.map((layout) => layout.allColumns.toArray());
+        const colsArray = [].concat.apply([], nestedColumns);
+        const topCols = this.allColumns.filter((item) => {
+            return colsArray.indexOf(item) === -1;
+        });
+        this.childColumns.reset(topCols);
+    }
+
+    ngAfterViewInit() {
+        console.log('rowIsland width ID: ' + this.id + ' registered');
+        this.hgridAPI.registerLayout(this);
+    }
+
+    ngOnChanges(changes) {
+        this.onLayoutChange.emit(changes);
+        if (!this.isInit) {
+            this.initialChanges = changes;
+        }
+    }
+
+    reflow() {}
+
+    calculateGridHeight() {}
+
+    ngOnDestroy() {
+        // Override the base destroy because we don't have rendered anything to use removeEventListener on
+        this.destroy$.next(true);
+        this.destroy$.complete();
+        this.hgridAPI.unset(this.id);
+    }
+
+    getGrids() {
+        return this.hgridAPI.getChildGridsForRowIsland(this.key);
+    }
 }
-
-

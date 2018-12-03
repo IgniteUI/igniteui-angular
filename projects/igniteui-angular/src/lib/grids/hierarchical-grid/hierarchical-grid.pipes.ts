@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
-import { IGroupByResult } from '../../data-operations/grouping-strategy';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 
@@ -42,10 +41,11 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         data.forEach((v) => {
             result.push(v);
             childKeys.forEach((childKey) => {
-                if (v[childKey] && grid.isExpanded(v)) {
-                    result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: v[childKey], key: childKey });
-                } else if (v[childKey] && !grid.dataInitialized && layoutsExpanded) {
-                    result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: v[childKey], key: childKey });
+                const childData = v[childKey] ? v[childKey] : null;
+                if (grid.isExpanded(v)) {
+                    result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: childData, key: childKey });
+                } else if (!grid.dataInitialized && layoutsExpanded) {
+                    result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: childData, key: childKey });
                     state.push({ rowID: primaryKey ? v[primaryKey] : v });
                 }
             });

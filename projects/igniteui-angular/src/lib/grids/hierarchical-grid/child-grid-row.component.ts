@@ -13,8 +13,6 @@ import {
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxRowIslandComponent } from './row-island.component';
-import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -170,5 +168,11 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         const layouts = this.hGrid.childLayoutList.toArray();
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
+
+        this.layout.onGridCreated.emit({
+            owner: this.layout,
+            parendID: this.rowData.rowID,
+            grid: this.hGrid
+        });
     }
 }
