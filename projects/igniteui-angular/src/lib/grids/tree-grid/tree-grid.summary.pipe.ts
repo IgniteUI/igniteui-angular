@@ -49,7 +49,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                     const children = parent.children;
 
                     if (children[children.length - 1] === childRecord ) {
-                        const childData = children.map(r => r.data);
+                        const childData = children.filter(r => !r.isFilteredOutParent).map(r => r.data);
                         const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
                         recordsWithSummary.push(summaries);
 
