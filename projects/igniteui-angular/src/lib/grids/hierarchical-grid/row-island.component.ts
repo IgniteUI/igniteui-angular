@@ -61,7 +61,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     public onLayoutChange = new EventEmitter<any>();
 
     @Output()
-    public gridCreated = new EventEmitter<IGridCreatedEventArgs>();
+    public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
     @Input() public key: string;
 

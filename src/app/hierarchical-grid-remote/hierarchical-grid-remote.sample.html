@@ -5,13 +5,13 @@
     <igx-column field="ContactTitle"></igx-column>
     <igx-column field="Country"></igx-column>
     <igx-column field="Phone"></igx-column>
-    <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'300px'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (gridCreated)="gridCreated($event, rowIsland1)">
+    <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'300px'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)">
         <igx-column field="OrderID"></igx-column>
         <igx-column field="OrderDate"></igx-column>
         <igx-column field="ShipCountry"></igx-column>
         <igx-column field="ShipCity"></igx-column>
         <igx-column field="ShipAddress"></igx-column>
-        <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'200px'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (gridCreated)="gridCreated($event, rowIsland2)">
+        <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'200px'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland2)">
             <igx-column field="ProductID"></igx-column>
             <igx-column field="UnitPrice"></igx-column>
             <igx-column field="Quantity"></igx-column>

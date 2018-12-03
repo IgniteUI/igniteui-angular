@@ -169,7 +169,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
 
-        this.layout.gridCreated.emit({
+        this.layout.onGridCreated.emit({
             owner: this.layout,
             parendID: this.rowData.rowID,
             grid: this.hGrid
