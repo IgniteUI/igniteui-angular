@@ -81,16 +81,18 @@ export class WorksheetFile implements IExcelFile {
             sheetData.push('</row>');
 
             for (let i = 1; i < worksheetData.rowCount; i++) {
-                const rowData = worksheetData.data[i - 1].originalRowData;
+                if (!worksheetData.isTreeGridData) {
+                    sheetData.push(`<row r="${(i + 1)}"${rowHeight}>`);
+                } else {
+                    const rowData = worksheetData.data[i - 1].originalRowData;
+                    const sCollapsed = (!rowData.expanded) ? '' : (rowData.expanded === true) ? '' : ` collapsed="1"`;
+                    const sHidden = (rowData.parent && this.hasCollapsedParent(rowData)) ? ` hidden="1"` : '';
+                    const rowOutlineLevel = rowData.level ? rowData.level : 0;
+                    const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
+                    maxOutlineLevel = maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : maxOutlineLevel;
 
-                const sCollapsed = (!rowData.expanded) ? '' : (rowData.expanded === true) ? '' : ` collapsed="1"`;
-                const sHidden = (rowData.parent && this.hasCollapsedParent(rowData)) ? ` hidden="1"` : '';
-                const rowOutlineLevel = rowData.level ? rowData.level : 0;
-                const sOutlineLevel = rowOutlineLevel > 0 ? ` outlineLevel="${rowOutlineLevel}"` : '';
-                maxOutlineLevel = maxOutlineLevel < rowOutlineLevel ? rowOutlineLevel : maxOutlineLevel;
-
-                sheetData.push(`<row r="${(i + 1)}"${rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`);
-
+                    sheetData.push(`<row r="${(i + 1)}"${rowHeight}${sOutlineLevel}${sCollapsed}${sHidden}>`);
+                }
                 for (let j = 0; j < worksheetData.columnCount; j++) {
                     const cellData = WorksheetFile.getCellData(worksheetData, i, j);
                     sheetData.push(cellData);
