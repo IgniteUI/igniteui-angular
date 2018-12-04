@@ -845,7 +845,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() =>  { this.endEdit(true); this.clearSummaryCache(); });
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
+            this.endEdit(true);
+            this.summaryService.updateSummaryCache(args);
+        });
     }
 
     public ngDoCheck(): void {
