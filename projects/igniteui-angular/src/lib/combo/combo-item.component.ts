@@ -8,8 +8,9 @@ import {
     Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { IgxDropDownItemBase } from '../drop-down/drop-down.base';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
 /** @hidden */
 @Component({
@@ -35,7 +36,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
 
     constructor(
         @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
-        public dropDown: IgxDropDownBase,
+        public dropDown: IgxComboDropDownComponent,
         protected elementRef: ElementRef,
         protected selection: IgxSelectionAPIService
     ) {
