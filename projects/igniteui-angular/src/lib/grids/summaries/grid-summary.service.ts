@@ -74,7 +74,7 @@ export class IgxGridSummaryService {
     }
 
     public shouldRecalculateHeight(column): boolean {
-        if (this.summaryHeight === 0) { return false; }
+        if (this.summaryHeight === 0) { return true; }
         const summaryLenght = column.summaries.operate([]).length;
         const shouldRecalc = (!column.hasSummary && this.maxSummariesLenght <= summaryLenght) ||
         (column.hasSummary && this.maxSummariesLenght < summaryLenght);
@@ -97,10 +97,6 @@ export class IgxGridSummaryService {
         }
         this.compareGroupingExpressions(this.groupingExpressions, groupingArgs);
         this.groupingExpressions = groupingArgs.expressions.map(record => record.fieldName);
-    }
-
-    public get groupingIdentation(): boolean {
-        return !this.isTreeGrid && this.grid.groupingExpressions.length > 0;
     }
 
     public get hasSummarizedColumns(): boolean {
