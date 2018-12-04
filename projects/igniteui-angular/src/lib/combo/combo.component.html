@@ -43,7 +43,7 @@
             (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
             <igx-combo-item [value]="item" isHeader={{item.isHeader}} role="option">
                 <ng-container *ngIf="!item.isHeader">
-                    <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
+                    <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" [disableTransitions]="dropdown.disableTransitions" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
                 </ng-container>
                 <ng-container *ngIf="item.isHeader">
                     <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
