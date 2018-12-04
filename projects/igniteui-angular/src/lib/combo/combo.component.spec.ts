@@ -2892,7 +2892,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('My New Custom Item');
         }));
 
-        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+       it('Disable/Enable filtering at runtime', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2916,8 +2916,8 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
-            combo.searchInput.nativeElement.value = 'Not-available item';
-            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            combo.searchValue = 'Not-available item';
+            combo.handleInputChange();
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
