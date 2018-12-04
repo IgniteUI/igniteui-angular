@@ -1,7 +1,3 @@
-igx-banner > .igx-expansion-panel > .igx-expansion-panel__body {
-    box-shadow: 2px 1px #d3d3d3;
-}
-
-igx-banner {
+.banner-border {
     border-bottom: 2px solid #d3d3d3;
 }
