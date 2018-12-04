@@ -130,15 +130,6 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 
 [General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-for-Angular)
 
-
-## Quickstart App
-[Ignite UI for Angular Quickstart app](https://github.com/IgniteUI/igniteui-angular-quickstart)
-This repository is a fork of the Angular QuickStart Source and has been updated to demonstrate how to include and use components from Ignite UI for Angular. It basically follows the shortest path to bootstrap writing the application with Ignite UI for Angular:
-
-- Fork the [the angular quickstart](https://github.com/angular/quickstart)
-- Install Ignite UI for Angular from npm using `npm install igniteui-angular --save-dev`
-- Update the views with sample Ignite UI for Angular controls.
-
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
