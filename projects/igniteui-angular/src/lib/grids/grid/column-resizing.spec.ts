@@ -721,7 +721,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(column.width).toEqual('111px');
     }));
 
-    fit('should size headers correctly when column width is below the allowed minimum.', fakeAsync(() => {
+    it('should size headers correctly when column width is below the allowed minimum.', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColGridComponent);
         fixture.detectChanges();
         tick();
