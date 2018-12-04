@@ -33,7 +33,7 @@
 </ng-template>
 <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
 
-<div #container igxTimePickerContainer
+<div #container [hidden]="collapsed"
     [style.width.px]="dropDownWidth" class="igx-time-picker__wrapper"
     [ngClass]="{'dropdown': !isModal, 'horozontal': !vertical && isModal, 'igx-time-picker--vertical': vertical && isModal}">
     <div *ngIf="isModal" class="igx-time-picker__header">
