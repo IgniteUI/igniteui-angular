@@ -42,8 +42,13 @@ export class ComboSampleComponent implements OnInit {
     @ViewChild('customItemTemplate', {read: TemplateRef})
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
-    constructor() {
 
+    comfortable = DisplayDensity.comfortable;
+    cosy = DisplayDensity.cosy;
+    compact = DisplayDensity.compact;
+
+
+    constructor() {
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],

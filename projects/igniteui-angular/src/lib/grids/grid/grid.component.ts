@@ -426,7 +426,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      * @hidden
      */
     get groupAreaHostClass(): string {
-        return this.componentDensityClass('igx-drop-area');
+        return this.getComponentDensityClass('igx-drop-area');
     }
 
     /**

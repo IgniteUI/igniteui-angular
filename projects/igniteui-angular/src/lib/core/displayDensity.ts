@@ -91,7 +91,7 @@ export class DisplayDensityBase implements DoCheck {
      * Given a style class of a component/element returns the modified version of it based
      * on the current display density.
      */
-    protected componentDensityClass(baseStyleClass: string): string {
+    protected getComponentDensityClass(baseStyleClass: string): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return `${baseStyleClass}--${DisplayDensity.cosy}`;
