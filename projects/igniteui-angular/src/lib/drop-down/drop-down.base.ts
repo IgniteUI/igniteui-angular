@@ -272,11 +272,6 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
-     * @hidden
-     */
-    public disableTransitions = false;
-
-    /**
      * Get dropdown's html element of it scroll container
      */
     protected get scrollContainer() {
