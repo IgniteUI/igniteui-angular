@@ -1,0 +1,18 @@
+@import '../light/grid-toolbar';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a dark grid-toolbar schema.
+/// @type {Map}
+/// @prop {map} background-color [#222] - The toolbar background color.
+/// @prop {map} dropdown-background [#222] - The toolbar drop-down background color.
+/// @requires {function} extend
+/// @requires $_light-grid-toolbar
+/// @see $default-palette
+$_dark-grid-toolbar: extend($_light-grid-toolbar, (
+    background-color: #222,
+    dropdown-background: #222
+));

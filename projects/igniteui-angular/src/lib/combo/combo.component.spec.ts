@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -15,6 +14,8 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxDropDownBase } from '../drop-down/drop-down.base';
+import { Navigate } from '../drop-down/drop-down.common';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -382,7 +383,6 @@ describe('igxCombo', () => {
             spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
-            spyOn<any>(combo, 'cdr').and.callThrough();
             expect(combo.dropdown.collapsed).toEqual(true);
             combo.dropdown.toggle();
             tick();
@@ -881,6 +881,22 @@ describe('igxCombo', () => {
                 });
             });
         });
+
+        it('Should properly get the first focusable item when focusing the component list', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboInputTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            spyOn(combo.dropdown, 'getFirstSelectableItem').and.callThrough();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            combo.searchInput.nativeElement.dispatchEvent(new KeyboardEvent('keypress', { key: 'Tab'}));
+            (<HTMLElement>document.getElementsByClassName('igx-combo__content')[0]).dispatchEvent(new Event('focus'));
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.getFirstSelectableItem).toHaveBeenCalledTimes(1);
+            expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
+        }));
     });
 
 

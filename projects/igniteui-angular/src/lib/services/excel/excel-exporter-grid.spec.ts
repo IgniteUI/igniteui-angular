@@ -371,7 +371,7 @@ describe('Excel Exporter', () => {
         const grid = fix.componentInstance.grid;
         grid.columns[1].header = 'My header';
         grid.columns[1].sortable = true;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
         const sortField = grid.sortingExpressions[0].fieldName;
         fix.detectChanges();
 

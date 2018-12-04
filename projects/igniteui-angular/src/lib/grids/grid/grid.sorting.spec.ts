@@ -7,7 +7,8 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 const SORTING_ICON_NONE_CONTENT = 'none';
@@ -22,7 +23,8 @@ describe('IgxGrid - Grid Sorting', () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                GridDeclaredColumnsComponent
+                GridDeclaredColumnsComponent,
+                SortByParityComponent
             ],
             imports: [IgxGridModule.forRoot()]
         })
@@ -38,7 +40,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should sort grid ascending by column name', () => {
         const currentColumn = 'Name';
         const lastNameColumn = 'LastName';
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false});
 
         fixture.detectChanges();
 
@@ -52,7 +54,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual(expectedResult);
 
         // Ignore case on sorting set to true
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
 
         expectedResult = 'ALex';
@@ -62,7 +64,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should sort grid descending by column name', () => {
         const currentColumn = 'Name';
         // Ignore case on sorting set to false
-        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false});
         fixture.detectChanges();
 
         let expectedResult = 'Rick';
@@ -72,7 +74,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual(expectedResult);
 
         // Ignore case on sorting set to true
-        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: true});
         fixture.detectChanges();
 
         expectedResult = 'Rick';
@@ -85,7 +87,7 @@ describe('IgxGrid - Grid Sorting', () => {
     it('Should not sort grid when trying to sort by invalid column', () => {
         const gridData = fixture.componentInstance.data;
         const invalidColumn = 'Age';
-        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: invalidColumn, dir: SortingDirection.Desc, ignoreCase: false});
 
         let expectedResult = 'Jane';
         expect(grid.getCellByColumn(0, 'Name').value).toEqual(expectedResult);
@@ -124,8 +126,8 @@ describe('IgxGrid - Grid Sorting', () => {
         const thirdColumn = 'LastName';
 
         grid.sortingExpressions = [
-            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true},
+            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
         ];
 
         fixture.detectChanges();
@@ -146,8 +148,8 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.sortingExpressions[0].fieldName).toEqual(secondColumn);
 
         grid.sortingExpressions = [
-            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+            {fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true},
+            {fieldName: firstColumn, dir: SortingDirection.Desc, ignoreCase: true }
         ];
         fixture.detectChanges();
 
@@ -165,8 +167,8 @@ describe('IgxGrid - Grid Sorting', () => {
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
         const exprs = [
-            { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
-            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+            { fieldName: secondColumn, dir: SortingDirection.Asc, ignoreCase: true },
+            { fieldName: thirdColumn, dir: SortingDirection.Desc, ignoreCase: true }
         ];
 
         grid.sortingExpressions = exprs;
@@ -210,8 +212,8 @@ describe('IgxGrid - Grid Sorting', () => {
         const secondColumn = 'Name';
         const thirdColumn = 'LastName';
         const invalidAndValidExp = [
-            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() },
-            {fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+            {fieldName: secondColumn, dir: SortingDirection.Desc, ignoreCase: false },
+            {fieldName: firstColumn, dir: SortingDirection.Asc, ignoreCase: true }
         ];
 
         grid.sort(invalidAndValidExp);
@@ -303,17 +305,41 @@ describe('IgxGrid - Grid Sorting', () => {
         const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
-        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true});
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
 
         grid.clearSort();
         fixture.detectChanges();
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
+    });
+
+    it(`Should allow sorting using a custom Sorting Strategy.`, () => {
+        fixture = TestBed.createComponent(SortByParityComponent);
+        grid = fixture.componentInstance.grid;
+        fixture.componentInstance.data.push(
+            { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
+            { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
+            { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
+        );
+        fixture.detectChanges();
+        grid.sort({
+            fieldName: 'ID',
+            dir: SortingDirection.Desc,
+            ignoreCase: false,
+            strategy: new SortByParityComponent()
+        });
+        fixture.detectChanges();
+        const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
+        const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
+        const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
+        const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
+        expect(isFirstHalfOdd).toEqual(true);
+        expect(isSecondHalfEven).toEqual(true);
     });
 });
 
@@ -332,6 +358,32 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
     @ViewChild('nameColumn') public nameColumn;
     public width = '800px';
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            '',
+            '',
+            ColumnDefinitions.idFirstLastNameSortable)
+})
+export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
+     public sort(data: any[], fieldName: string, dir: SortingDirection) {
+        const key = fieldName;
+        const reverse = (dir === SortingDirection.Desc ? -1 : 1);
+        const cmpFunc = (obj1, obj2) => {
+            return this.compareObjects(obj1, obj2, key, reverse);
+        };
+        return data.sort(cmpFunc);
+    }
+     protected sortByParity(a: any, b: any) {
+        return a % 2 === 0 ? -1 : b % 2 === 0 ? 1 : 0;
+    }
+     protected compareObjects(obj1: object, obj2: object, key: string, reverse: number) {
+        const a = obj1[key];
+        const b = obj2[key];
+        return reverse * this.sortByParity(a, b);
+    }
+}
+
 
 function getCurrentCellFromGrid(grid, row, cell) {
     const gridRow = grid.rowList.toArray()[row];
