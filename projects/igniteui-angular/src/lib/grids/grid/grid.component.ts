@@ -743,6 +743,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
         columnExpr.dir = 3 - columnExpr.dir;
         this.sort(columnExpr);
+        this.onSortingDone.emit({
+            dir: columnExpr.dir,
+            fieldName: columnExpr.fieldName,
+            ignoreCase: columnExpr.ignoreCase,
+            strategy: columnExpr.strategy
+        });
         this.markForCheck();
     }
 
