@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
+    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy, AfterViewInit
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -18,7 +18,7 @@ import { Navigate } from '../drop-down/drop-down.common';
     templateUrl: '../drop-down/drop-down.component.html',
     providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDestroy {
+export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterViewInit, OnDestroy {
     private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
     private destroy$ = new Subject<boolean>();
@@ -29,6 +29,11 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
         super(elementRef, cdr, selection);
     }
+
+    /**
+     * @hidden
+     */
+    private _vScrollListener = null;
 
     /**
      * @hidden
@@ -331,6 +336,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     }
 
     protected scrollToHiddenItem(newItem: any): void {}
+
+    /**
+     * @hidden
+     */
+    protected verticalScrollHandler(event) {
+        this.disableTransitions = true;
+    }
+
     /**
      * @hidden
      */
@@ -377,10 +390,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 
+    public ngAfterViewInit() {
+        this._vScrollListener = this.verticalScrollHandler.bind(this);
+        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+    }
+
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
+        this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
         this.destroy$.next(true);
         this.destroy$.complete();
     }
