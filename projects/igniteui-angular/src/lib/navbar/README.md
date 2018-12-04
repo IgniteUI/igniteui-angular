@@ -34,3 +34,21 @@ You can set the action button icon of the navbar by setting `actionButtonIcon="a
 You can set the visible state of the navbar by setting `isActionButtonVisible="true"`;
 
 You can set the action of the navbar button by setting `(onAction)="executeAction()"`;
+
+## Navbar with custom action icon
+
+The navbar component provides us with the ability to use a template for the action icon instead of the default one. This can be done by simply using the `igx-action-icon` tag.
+
+```html
+<igx-navbar title="Settings"
+            actionButtonIcon="arrow_back"
+            [isActionButtonVisible]="canGoBack()"
+            (onAction)="navigateBack()">
+    <igx-action-icon>
+        Navigate back:
+        <igx-icon fontSet="material">arrow_back</igx-icon>
+    </igx-action-icon>
+</igx-navbar>
+```
+
+If a custom `igx-action-icon` is provided, the default action icon will not be used. 

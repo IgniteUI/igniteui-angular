@@ -67,7 +67,11 @@
     "@angular/forms": "^7.0.3",
     "web-animations-js": "^2.3.1"
   },
+  "devDependencies": {
+    "igniteui-cli": "~3.1.0"
+  },
   "ng-update": {
     "migrations": "./migrations/migration-collection.json"
-  }
+  },
+  "schematics": "./schematics/collection.json"
 }

@@ -125,6 +125,14 @@ gulp.task('copy-migrations', () => {
         .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 });
 
+gulp.task('copy-schematics', () => {
+    return gulp.src([
+        './projects/igniteui-angular/schematics/**/*.json',
+        '!**/tsconfig.json'
+    ])
+        .pipe(gulp.dest('./dist/igniteui-angular/schematics'));
+});
+
 gulp.task('typedoc-styles', ['typedoc:clean-styles'], () => {
     const prefixer = postcss([autoprefixer({
         browsers: ['last 5 versions', '> 3%'],
