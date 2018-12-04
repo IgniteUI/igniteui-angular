@@ -206,7 +206,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
 
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.componentDensityClass('igx-grid-toolbar');
+        return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
