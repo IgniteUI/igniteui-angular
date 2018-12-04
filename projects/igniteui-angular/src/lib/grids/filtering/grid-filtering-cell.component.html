@@ -2,15 +2,16 @@
         <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
             <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" [displayDensity]="'cosy'">
                 <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
-                <span [attr.draggable]="false">Filter</span>
+                <span [attr.draggable]="false">{{filteringService.grid.resourceStrings.igx_grid_filter}}</span>
             </igx-chip>
         </igx-chips-area>
 </ng-template>
 
 <ng-template #defaultFilter>
     <igx-chips-area #chipsArea class="igx-filtering-chips">
-        <ng-container *ngFor="let item of visibleExpressionsList; let last = last;" >
+        <ng-container *ngFor="let item of expressionsList; let last = last; let index = index;" >
             <igx-chip
+                *ngIf="isChipVisible(index)"
                 [removable]="true"
                 [displayDensity]="'cosy'"
                 (click)="onChipClicked(item.expression)"
@@ -24,7 +25,7 @@
                     {{filteringService.getChipLabel(item.expression)}}
                 </span>
             </igx-chip>
-            <span class="igx-filtering-chips__connector" *ngIf="!last">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
+            <span class="igx-filtering-chips__connector" *ngIf="!last && isChipVisible(index + 1)">{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
         </ng-container>
         <div #moreIcon [ngClass]="filteringIndicatorClass()" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" tabindex="0">
             <igx-icon>filter_list</igx-icon>
@@ -36,7 +37,7 @@
 <ng-template #complexFilter>
     <igx-chip #complexChip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
         <igx-icon igxPrefix>filter_list</igx-icon>
-        <span>Complex Filter</span>
+        <span>{{filteringService.grid.resourceStrings.igx_grid_complex_filter}}</span>
     </igx-chip>
 </ng-template>
 

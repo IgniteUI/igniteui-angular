@@ -15,10 +15,11 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey, valToPxlsUsingRange } from '../core/utils';
+import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { first } from 'rxjs/operators';
+import { DataType } from '../data-operations/data-util';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -379,6 +380,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
@@ -698,6 +700,14 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
 
         if (this.inEditMode && isNavigationKey(key)) {
+            const editCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+            const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
+
+            if (column.inlineEditorTemplate === undefined && (
+                (column.dataType === DataType.Boolean &&  (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+                || column.dataType === DataType.Date)) {
+                event.preventDefault();
+            }
             return;
         }
 
@@ -800,6 +810,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
+                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -893,7 +904,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
-                   .map((child) => valToPxlsUsingRange(range, child)));
+                   .map((child) => getNodeSizeViaRange(range, child)));
     }
 
     private isToggleKey(key) {

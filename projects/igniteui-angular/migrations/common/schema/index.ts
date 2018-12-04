@@ -1,7 +1,17 @@
 // generate schema:
 // npx typescript-json-schema migrations/common/schema/index.ts SelectorChanges -o migrations/common/schema/selector.schema.json --required
 
-// tslint:disable:interface-name
+export interface ThemePropertyChanges {
+    /** An array of changes to theme function properties */
+    changes: ThemePropertyChange[];
+}
+export interface ThemePropertyChange extends ChangeAction {
+    /** Name of the theme property */
+    name: string;
+    /** Theming function this parameter belongs to */
+    owner: string;
+}
+
 export interface SelectorChanges {
     /** An array of changes to component/directive selectors */
     changes: SelectorChange[];
@@ -35,9 +45,9 @@ export interface ClassChange {
 }
 
 export interface ChangeAction {
-    /** Replace original selector with new one */
+    /** Replace original selector/property with new one */
     replaceWith?: string;
-    /** Remove directive/component */
+    /** Remove directive/component/property */
     remove?: boolean;
 }
 
@@ -46,6 +56,18 @@ export interface TemplateElement {
     type: ElementType;
     /** Original selector to apply change to */
     selector: string;
+}
+
+export interface ImportsChange {
+    /** Name of the module to change */
+    name: string;
+    /** Replace original name with new one */
+    replaceWith: string;
+}
+
+export interface ImportsChanges {
+    /** An array of changes to imports array */
+    changes: ImportsChange[];
 }
 
 export enum ElementType {

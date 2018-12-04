@@ -24,6 +24,7 @@ import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -58,7 +59,7 @@ export interface IGroupingDoneEventArgs {
     providers: [IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService
+        IgxFilteringService, IgxColumnResizingService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -86,6 +87,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
      */
     protected groupingDiffer;
     private _hideGroupedColumns = false;
+    private _dropAreaMessage = null;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -318,7 +320,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+    set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed inside the GroupBy drop area where columns can be dragged on.
+    */
+    get dropAreaMessage(): string {
+        return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
 
     /**
      * An @Input property that sets the template that will be rendered as a GroupBy drop area.
@@ -801,12 +812,19 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     /**
     * @hidden
     */
-   public get dropAreaTemplateResolved(): TemplateRef<any> {
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getGroupByChipTitle(expression: IGroupingExpression): string {
+        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
     }
 
     /**

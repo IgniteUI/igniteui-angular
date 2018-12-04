@@ -1,0 +1,16 @@
+@import '../light/dialog';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark dialog schema.
+/// @type {Map}
+/// @prop {Color} background [#222] - The dialog background color.
+/// @requires extend
+/// @requires $_light-dialog
+/// @see $default-palette
+$_dark-dialog: extend($_light-dialog, (
+    background: #222
+));

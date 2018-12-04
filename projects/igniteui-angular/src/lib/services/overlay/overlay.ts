@@ -159,6 +159,9 @@ export class IgxOverlayService implements OnDestroy {
             info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
             this.moveElementToOverlay(info);
+            if (info.componentRef) {
+                info.componentRef.changeDetectorRef.detectChanges();
+            }
             this.updateSize(info);
             this._overlayInfos.push(info);
 
@@ -271,7 +274,7 @@ export class IgxOverlayService implements OnDestroy {
             this._appRef.attachView(dynamicComponent.hostView);
 
             // If the element is newly created from a Component, it is wrapped in 'ng-component' tag - we do not want that.
-            const element = dynamicComponent.location.nativeElement.lastElementChild;
+            const element = dynamicComponent.location.nativeElement;
             info.elementRef = <ElementRef>{ nativeElement: element };
             info.componentRef = dynamicComponent;
         }
@@ -399,7 +402,6 @@ export class IgxOverlayService implements OnDestroy {
         if (!info.openAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.openAnimation);
             info.openAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
-            info.openAnimationPlayer.init();
 
             //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
             //  and then getting the positions from it.
@@ -424,6 +426,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.closeAnimationInnerPlayer.getPosition();
             info.closeAnimationPlayer.reset();
+            info.openAnimationPlayer.init();
             info.openAnimationPlayer.setPosition(position);
         }
 
@@ -435,7 +438,6 @@ export class IgxOverlayService implements OnDestroy {
         if (!info.closeAnimationPlayer) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
             info.closeAnimationPlayer = animationBuilder.create(info.elementRef.nativeElement);
-            info.closeAnimationPlayer.init();
 
             //  AnimationPlayer.getPosition returns always 0. To workaround this we are getting inner WebAnimationPlayer
             //  and then getting the positions from it.
@@ -461,6 +463,7 @@ export class IgxOverlayService implements OnDestroy {
             //  getPosition() returns from one
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
+            info.closeAnimationPlayer.init();
             info.closeAnimationPlayer.setPosition(position);
         }
 

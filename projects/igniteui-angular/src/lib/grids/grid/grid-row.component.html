@@ -1,9 +1,9 @@
 <ng-container *ngIf="grid.groupingExpressions.length > 0">
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
-<ng-container *ngIf="rowSelectable">
+<ng-container *ngIf="showRowCheckboxes">
     <div class="igx-grid__cbx-selection">
-        <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
     </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">

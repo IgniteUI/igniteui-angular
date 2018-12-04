@@ -44,6 +44,11 @@ export class AppComponent implements OnInit {
             name: 'Bottom Navigation'
         },
         {
+            link: '/banner',
+            icon: 'banner',
+            name: 'Banner'
+        },
+        {
             link: '/buttonGroup',
             icon: 'group_work',
             name: 'Button Group'
@@ -147,6 +152,11 @@ export class AppComponent implements OnInit {
             link: '/gridPerformance',
             icon: 'view_column',
             name: 'Grid Performance'
+        },
+        {
+            link: '/gridPercentage',
+            icon: 'view_column',
+            name: 'Grid Percentage'
         },
         {
             link: '/gridRemoteVirtualization',
