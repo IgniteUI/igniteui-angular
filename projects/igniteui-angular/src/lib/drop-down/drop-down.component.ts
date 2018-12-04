@@ -43,6 +43,13 @@ export class IgxDropDownItemNavigationDirective {
     set target(target: IgxDropDownBase) {
         this._target = target ? target : this.dropdown;
     }
+    @HostListener('focus')
+    handleFocus() {
+        if ((<any>this.target).combo) {
+            this.target.focusedItem = this.target.getFirstSelectableItem();
+            this.target.focusedItem.isFocused = true;
+        }
+    }
 
     /**
      * @hidden
@@ -52,7 +59,7 @@ export class IgxDropDownItemNavigationDirective {
         if (event) {
             const key = event.key.toLowerCase();
             if (!this.target.collapsed) { // If dropdown is opened
-                const navKeys = ['esc', 'escape', 'enter', 'tab', 'space', 'spacebar', ' ',
+                const navKeys = ['esc', 'escape', 'enter', 'space', 'spacebar', ' ',
             'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
@@ -65,10 +72,10 @@ export class IgxDropDownItemNavigationDirective {
             switch (key) {
                 case 'esc':
                 case 'escape':
+                // case 'tab':
                     this.onEscapeKeyDown(event);
                     break;
                 case 'enter':
-                case 'tab':
                     this.onEnterKeyDown(event);
                     break;
                 case 'space':
