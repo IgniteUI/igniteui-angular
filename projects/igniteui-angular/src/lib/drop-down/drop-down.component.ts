@@ -65,10 +65,10 @@ export class IgxDropDownItemNavigationDirective {
             switch (key) {
                 case 'esc':
                 case 'escape':
-                case 'tab':
                     this.onEscapeKeyDown(event);
                     break;
                 case 'enter':
+                case 'tab':
                     this.onEnterKeyDown(event);
                     break;
                 case 'space':
