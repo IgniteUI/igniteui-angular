@@ -7,6 +7,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxSummaryResult } from './grid-summary';
+import { DisplayDensity } from '../core/displayDensity';
 /**
  *@hidden
  */
@@ -59,17 +60,17 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-summary--compact')
     get compactCSS() {
-        return this.gridAPI.get(this.gridID).displayDensity === 'compact';
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.compact;
     }
 
     @HostBinding('class.igx-grid-summary--cosy')
     get cosyCSS() {
-        return this.gridAPI.get(this.gridID).displayDensity === 'cosy';
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.cosy;
     }
 
     @HostBinding('class.igx-grid-summary')
     get defaultCSS() {
-        return this.gridAPI.get(this.gridID).displayDensity === 'comfortable';
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.comfortable;
     }
 
     get dataType(): DataType {

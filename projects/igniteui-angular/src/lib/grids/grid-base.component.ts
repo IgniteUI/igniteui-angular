@@ -1464,12 +1464,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        return this.componentDensityClass('igx-grid');
+        return this.getComponentDensityClass('igx-grid');
     }
 
     get bannerClass(): string {
         const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
-        return `${this.componentDensityClass('igx-banner')} ${position}`;
+        return `${this.getComponentDensityClass('igx-banner')} ${position}`;
     }
 
     /**
