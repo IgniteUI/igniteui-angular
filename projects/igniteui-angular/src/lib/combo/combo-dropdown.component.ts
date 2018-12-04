@@ -33,11 +33,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    private _vScrollListener = null;
-
-    /**
-     * @hidden
-     */
     protected get scrollContainer() {
         return this.verticalScrollContainer.dc.location.nativeElement;
     }
@@ -56,6 +51,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
             Math.floor(this.combo.itemsMaxHeight / this.combo.itemHeight) :
             this.items.length - 1;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
 
     /**
      *  Event emitter overrides
@@ -340,7 +341,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    protected verticalScrollHandler(event) {
+    protected scrollHandler: () => void = () => {
         this.disableTransitions = true;
     }
 
@@ -391,15 +392,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     }
 
     public ngAfterViewInit() {
-        this._vScrollListener = this.verticalScrollHandler.bind(this);
-        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.scrollHandler);
     }
 
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
-        this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
+        this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.scrollHandler);
         this.destroy$.next(true);
         this.destroy$.complete();
     }
