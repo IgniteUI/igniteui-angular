@@ -28,8 +28,7 @@ import {
     IgxHourItemDirective,
     IgxItemListDirective,
     IgxMinuteItemDirective,
-    IgxTimePickerTemplateDirective,
-    IgxTimePickerContainerDirective
+    IgxTimePickerTemplateDirective
 } from './time-picker.directives';
 import { Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
@@ -87,8 +86,6 @@ export interface IgxTimePickerValidationFailedEventArgs {
         }
     ],
     selector: 'igx-time-picker',
-    styles: [':host {display: block;}'],
-    styleUrls: ['time-picker.component.scss'],
     templateUrl: 'time-picker.component.html'
 })
 export class IgxTimePickerComponent implements
@@ -1541,8 +1538,7 @@ export class IgxTimePickerComponent implements
         IgxAmPmItemDirective,
         IgxTimePickerTemplateDirective,
         TimeDisplayFormatPipe,
-        TimeInputFormatPipe,
-        IgxTimePickerContainerDirective
+        TimeInputFormatPipe
     ],
     exports: [
         IgxTimePickerComponent,

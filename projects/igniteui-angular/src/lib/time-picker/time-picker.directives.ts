@@ -345,18 +345,3 @@ export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxTimePickerContainer]'
-})
-export class IgxTimePickerContainerDirective {
-
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase) {}
-
-    @HostBinding('class.hidden')
-    get isCollapsed() {
-        return this.timePicker.collapsed;
-    }
-}
