@@ -1,6 +1,20 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent } from 'igniteui-angular';
+import { IgxTreeGridComponent, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
+
+export class MySummaryOperand extends IgxSummaryOperand {
+    public operate(data: any[] = []): IgxSummaryResult[] {
+        return [{
+            key: 'count',
+            label: 'Count',
+            summaryResult: IgxSummaryOperand.count(data)
+        }, {
+            key: 'countIf',
+            label: 'Count If',
+            summaryResult: data.filter(r => r > 10).length
+        }];
+    }
+}
 
 @Component({
     providers: [],
@@ -104,10 +118,14 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public disableSummary() {
         const name = 'employeeID';
-        if (this.grid1.getColumnByName(name).hasSummary) {
+        const col = this.grid1.getColumnByName(name);
+        // col.hasSummary = !col.hasSummary;
+        // col.summaries = MySummaryOperand;
+
+        if (col.hasSummary) {
             this.grid1.disableSummaries(name);
         } else {
-            this.grid1.enableSummaries(name);
+            this.grid1.enableSummaries([{ fieldName: name, customSummary: MySummaryOperand }]);
         }
     }
 }

@@ -139,18 +139,31 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public resizable = false;
     /**
-     * Enables/disables summary for the column.
-     * Default value is `false`.
+     * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
      * let hasSummary = this.column.hasSummary;
      * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get hasSummary() {
+        return this._hasSummary;
+    }
+    /**
+     * Sets a value indicating whether the summary for the column is enabled.
+     * Default value is `false`.
      * ```html
      * <igx-column [hasSummary] = "true"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input()
-    public hasSummary = false;
+    set hasSummary(value) {
+        this._hasSummary = value;
+
+        if (this.grid) {
+            this.grid.recalculateSummaries();
+        }
+    }
     /**
      * Gets whether the column is hidden.
      * ```typescript
@@ -198,7 +211,7 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
-                this.grid.summaryService.shouldRecalculateHeight(this);
+                this.grid.summaryService.resetSummaryHeight();
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
             }
@@ -450,6 +463,12 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set summaries(classRef: any) {
         this._summaries = new classRef();
+
+        if (this.grid) {
+            this.grid.summaryService.removeSummariesCachePerColumn(this.field);
+            (this.grid as any)._summaryPipeTrigger++;
+            this.grid.recalculateSummaries();
+        }
     }
     /**
      * Sets/gets whether the column is `searchable`.
@@ -829,6 +848,10 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _defaultMinWidth = '64';
+    /**
+     *@hidden
+     */
+    protected _hasSummary = false;
     /**
      *@hidden
      */

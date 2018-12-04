@@ -73,16 +73,8 @@ export class IgxGridSummaryService {
         return rowSummaries;
     }
 
-    public shouldRecalculateHeight(column): boolean {
-        if (this.summaryHeight === 0) { return true; }
-        const summaryLenght = column.summaries.operate([]).length;
-        const shouldRecalc = (!column.hasSummary && this.maxSummariesLenght <= summaryLenght) ||
-        (column.hasSummary && this.maxSummariesLenght < summaryLenght);
-        if (shouldRecalc) {
-            this.summaryHeight = 0;
-            return true;
-        }
-        return false;
+    public resetSummaryHeight() {
+        this.summaryHeight = 0;
     }
 
     public updateSummaryCache(groupingArgs) {

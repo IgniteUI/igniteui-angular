@@ -1566,6 +1566,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     */
+    get summaryPipeTrigger(): number {
+        return this._summaryPipeTrigger;
+    }
+
+    /**
      * Returns the sorting state of the `IgxGridComponent`.
      * ```typescript
      * const sortingState = this.grid.sortingExpressions;
@@ -2066,6 +2073,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _pipeTrigger = 0;
+    /**
+     * @hidden
+     */
+    protected _summaryPipeTrigger = 0;
     /**
      * @hidden
      */
@@ -3301,16 +3312,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Recalculates grid summary area.
-     * Should be run for example when enabling or disabling summaries for a column.
-     * ```typescript
-     * this.grid.recalculateSummaries();
-     * ```
-	 * @memberof IgxGridBaseComponent
+     * @hidden
      */
     public recalculateSummaries() {
-        this.summaryService.summaryHeight = 0;
-        requestAnimationFrame(() => this.calculateGridSizes());
+        this.summaryService.resetSummaryHeight();
+        this.calculateGridHeight();
+        this.cdr.detectChanges();
     }
 
     /**
@@ -3726,14 +3733,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
+        column.hasSummary = hasSummary;
+
         if (summaryOperand) {
-            if (column.hasSummary) {
-                this.summaryService.removeSummariesCachePerColumn(column.field);
-            }
             column.summaries = summaryOperand;
         }
-        column.hasSummary = hasSummary;
-        this.summaryService.shouldRecalculateHeight(column);
     }
 
     /**
