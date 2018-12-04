@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-icon-sample',
@@ -7,7 +8,7 @@ import { IgxIconService } from 'igniteui-angular';
     templateUrl: 'icon.sample.html'
 })
 export class IconSampleComponent implements OnInit {
-    constructor (private _iconService: IgxIconService) {}
+    constructor (public router: Router, private _iconService: IgxIconService) {}
 
     ngOnInit(): void {
         // register custom svg icons
