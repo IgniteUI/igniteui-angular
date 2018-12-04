@@ -90,6 +90,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                     grid.transactions.getAggregatedChanges(true),
                     grid.primaryKey
                 );
+                const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
+                deletedRows.forEach(rowID => {
+                    const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+                    const index = tempData.indexOf(rowID);
+                    if (index !== -1) {
+                       data.splice(index, 1);
+                    }
+                });
             } else {
                 data = grid.data;
             }
@@ -383,9 +391,14 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 const rowValue = this.get_all_data(id)[rowIndex];
                 mergeObjects(rowValue, {[column.field]: emittedArgs.newValue });
             }
-            if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
-                grid.selection.deselect_item(id, rowID);
-                grid.selection.select_item(id, emittedArgs.newValue);
+            if (grid.primaryKey === column.field) {
+                if (currentGridEditState.isRowSelected) {
+                    grid.selection.deselect_item(id, rowID);
+                    grid.selection.select_item(id, emittedArgs.newValue);
+                }
+                if (grid.hasSummarizedColumns) {
+                    grid.summaryService.removeSummaries(rowID);
+                }
             }
             if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
                 (grid as any)._pipeTrigger++;
@@ -432,6 +445,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
                 grid.selection.select_item(id, newRowID);
+            }
+            if (grid.hasSummarizedColumns) {
+                grid.summaryService.removeSummaries(rowID);
             }
             (grid as any)._pipeTrigger++;
         }
