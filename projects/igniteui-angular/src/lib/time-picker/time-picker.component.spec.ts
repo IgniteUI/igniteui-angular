@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
+import { InteractionMode } from './time-picker.common';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 
@@ -15,6 +16,7 @@ describe('IgxTimePicker', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
+                IgxTimePickerDropDown,
                 IgxTimePickerTestComponent,
                 IgxTimePickerWithPassedTimeComponent,
                 IgxTimePickerWithPmTimeComponent,
@@ -842,7 +844,7 @@ describe('IgxTimePicker', () => {
         expect(minuteColumn.nativeElement.children[3].innerText).toEqual('28');
     }));
 
-    it('TimePicker vertical', fakeAsync(() => {
+    xit('TimePicker vertical', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         tick();
         fixture.detectChanges();
@@ -953,6 +955,106 @@ describe('IgxTimePicker', () => {
             expect(instance.getEditElement()).toBe(editElement);
         });
     });
+
+    describe('DropDown Mode', () => {        
+        configureTestSuite();
+        let fixture;
+        let timePicker;
+        let dom;
+        let input
+        beforeEach(
+            async(() => {
+                fixture = TestBed.createComponent(IgxTimePickerDropDown);
+                fixture.detectChanges();
+                timePicker = fixture.componentInstance.timePicker;
+                dom = fixture.debugElement;
+                input = dom.query(By.directive(IgxInputDirective));
+            })
+        );
+
+        afterEach(async(() => {
+            UIInteractions.clearOverlay();
+        }));
+        
+        it('should initialize a timePicker with dropdown', () => {
+            expect(fixture.componentInstance).toBeDefined();
+        });
+        
+        it('should accept specific time in the input', fakeAsync(() => {
+            fixture.detectChanges();
+            const customValue = '12:01 AM';
+
+            UIInteractions.sendInput(input, customValue);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toEqual(customValue);
+        }));
+
+        it('Increase and decrease hours/minutes/AMPM, where the caret is, using arrows', fakeAsync(() => {
+            fixture.detectChanges();
+
+            // initial input value is 05:45 PM
+            input.nativeElement.value = '05:45 PM'
+            timePicker.itemsDelta = { hours: 1, minutes: 1 };
+
+            // focus the input, position the caret at the hours
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(1,1);
+
+            // press arrow down
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('04:45 PM');
+
+            input.nativeElement.setSelectionRange(1,1);
+            fixture.detectChanges();
+            // press double arrow up
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('06:45 PM');
+
+            input.nativeElement.setSelectionRange(1,1);
+            fixture.detectChanges();
+
+            // test minutes
+            // press arrow down
+            input.nativeElement.setSelectionRange(3,3);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('06:44 PM');
+
+            input.nativeElement.setSelectionRange(3,3);
+            fixture.detectChanges();
+            // press double arrow up
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('06:46 PM');
+
+            // test AMPM
+            // press arrow down
+            input.nativeElement.setSelectionRange(7,7);
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('06:46 AM');
+
+            input.nativeElement.setSelectionRange(7,7);
+            fixture.detectChanges();
+            // press double arrow up
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toEqual('06:46 PM');
+
+        }));
+        
+
+    });
 });
 
 @Component({
@@ -1061,6 +1163,30 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
     `
 })
 export class IgxTimePickerRetemplatedComponent {}
+
+@Component({
+    template: `
+    <igx-time-picker [mode]="mode.dropdown"
+                     [isSpinLoop]="isSpinLoop"
+                     [(ngModel)]="date"
+                     [itemsDelta]="itemsDelta"
+                     [format]="format" >
+                </igx-time-picker>
+    `
+})
+export class IgxTimePickerDropDown {
+    min = "09:00";
+    max = "19:00";
+
+    itemsDelta = { hours: 1, minutes: 5 };
+    format = "hh:mm tt";
+    isSpinLoop = true;
+    isVertical = true;
+    mode = InteractionMode;
+
+    date = new Date(2018, 10, 27, 17, 45, 0, 0);
+    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+}
 
 // helper functions
 function findByInnerText(collection, searchText) {
