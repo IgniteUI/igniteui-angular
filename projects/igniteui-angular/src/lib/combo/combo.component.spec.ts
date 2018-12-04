@@ -1933,6 +1933,19 @@ describe('igxCombo', () => {
             expect(dropDownWidth).toEqual(comboWidth);
             expect(inputWidth).toEqual(comboWidth);
         }));
+
+        it(`Should not render a search input if both 'allowCustomValues' and 'filterable' are false`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.allowCustomValues = false;
+            combo.filterable = false;
+            expect(combo.displaySearchInput).toBeFalsy();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(combo.searchInput).toBeFalsy();
+        }));
     });
 
     describe('Virtualization tests: ', () => {
