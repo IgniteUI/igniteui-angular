@@ -2689,6 +2689,27 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             igx_grid_filter_row_close: 'Close'
         });
     }));
+
+    it('Should remove FilterRow, when allowFiltering is set to false.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        let filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        grid.allowFiltering = false;
+        fix.detectChanges();
+
+        filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeNull();
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
