@@ -1376,9 +1376,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
-    @ViewChild('summaryContainer', { read: IgxGridForOfDirective })
-    protected summaryContainer: IgxGridForOfDirective<any>;
-
     /**
      * @hidden
      */
@@ -2179,9 +2176,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
-        if (this.summaryContainer) {
-            this.summaryContainer.onHScroll(scrollLeft);
-        }
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
@@ -2237,9 +2231,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcHeight = 0;
         this.calcRowCheckboxWidth = 0;
 
-        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
-        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.refreshGridState());
+        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
@@ -2265,7 +2259,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
 
         this.columnListDiffer.diff(this.columnList);
-        this.clearSummaryCache();
         this._derivePossibleHeight();
         this.markForCheck();
 
@@ -3264,9 +3257,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public refreshGridState(editCell?) {
+    public refreshGridState(args?) {
         this.endEdit(true);
-        this.clearSummaryCache(editCell);
+        this.clearSummaryCache(args);
     }
 
     // TODO: We have return values here. Move them to event args ??

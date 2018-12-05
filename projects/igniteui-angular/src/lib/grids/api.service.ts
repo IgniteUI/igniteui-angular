@@ -11,7 +11,6 @@ import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType } from '../services/index';
-import { ISortingStrategy } from '../data-operations/sorting-strategy';
 /**
  *@hidden
  */
@@ -22,7 +21,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
     protected state: Map<string, T> = new Map<string, T>();
     protected editCellState: Map<string, any> = new Map<string, any>();
     protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
-    protected summaryCacheMap: Map<string, Map<string, any[]>> = new Map<string, Map<string, any[]>>();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
     public register(grid: T) {
@@ -40,7 +38,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public unset(id: string) {
         this.state.delete(id);
-        this.summaryCacheMap.delete(id);
         this.editCellState.delete(id);
         this.editRowState.delete(id);
         this.destroyMap.delete(id);
@@ -48,7 +45,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public reset(oldId: string, newId: string) {
         const destroy = this.destroyMap.get(oldId);
-        const summary = this.summaryCacheMap.get(oldId);
         const editCellState = this.editCellState.get(oldId);
         const editRowState = this.editRowState.get(oldId);
         const grid = this.get(oldId);
@@ -61,10 +57,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         if (destroy) {
             this.destroyMap.set(newId, destroy);
-        }
-
-        if (summary) {
-            this.summaryCacheMap.set(newId, summary);
         }
 
         if (editCellState) {
@@ -103,44 +95,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
         }
         return data;
-    }
-
-    public set_summary_by_column_name(id: string, name: string) {
-        if (!this.summaryCacheMap.get(id)) {
-            this.summaryCacheMap.set(id, new Map<string, any[]>());
-        }
-        const column = this.get_column_by_name(id, name);
-        const grid = this.get(id);
-        let data = grid.filteredData;
-        if (!data) {
-            if (grid.transactions.enabled) {
-                data = DataUtil.mergeTransactions(
-                    cloneArray(grid.data),
-                    grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey
-                );
-            } else {
-                data = grid.data;
-            }
-        }
-        if (data) {
-            const columnValues = data.map((rec) => rec[column.field]);
-            this.calculateSummaries(id, column, columnValues);
-        }
-    }
-
-    public get_summaries(id: string) {
-        return this.summaryCacheMap.get(id);
-    }
-
-    public remove_summary(id: string, name?: string) {
-        if (this.summaryCacheMap.has(id)) {
-            if (!name) {
-                this.summaryCacheMap.delete(id);
-            } else {
-                this.summaryCacheMap.get(id).delete(name);
-            }
-        }
     }
 
     public set_cell_inEditMode(gridId: string, cell: IgxGridCellComponent) {
@@ -507,8 +461,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
 
         filteringTree.filteringOperands = [];
-        this.remove_summary(id);
-
         if (condition) {
             for (const column of grid.columns) {
                 this.prepare_filtering_expression(filteringTree, column.field, term,
@@ -533,21 +485,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         if (index > -1) {
             filteringState.filteringOperands.splice(index, 1);
-            this.remove_summary(id, fieldName);
         } else {
             filteringState.filteringOperands = [];
-            this.remove_summary(id);
         }
 
         grid.filteredData = null;
         grid.filteringExpressionsTree = filteringState;
-    }
-
-    protected calculateSummaries(id: string, column, data) {
-        if (!this.summaryCacheMap.get(id).get(column.field)) {
-            this.summaryCacheMap.get(id).set(column.field,
-                column.summaries.operate(data));
-        }
     }
 
     public clear_sort(id, fieldName) {
