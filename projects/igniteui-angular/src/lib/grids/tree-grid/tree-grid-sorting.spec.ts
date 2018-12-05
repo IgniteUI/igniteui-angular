@@ -51,7 +51,7 @@ describe('IgxTreeGrid - Sorting', () => {
         });
 
         it('should sort ascending all treeGrid levels by column name through API', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             // Verify first level records are asc sorted
@@ -97,7 +97,7 @@ describe('IgxTreeGrid - Sorting', () => {
             expect(treeGrid.getCellByColumn(1, 'Age').value).toEqual(30);
             expect(treeGrid.getCellByColumn(4, 'Age').value).toEqual(35);
 
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             // Verify first record of all 3 levels (sorted layout)
@@ -122,8 +122,8 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             const exprs = [
-                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
-                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true }
             ];
 
             treeGrid.sort(exprs);
@@ -170,8 +170,8 @@ describe('IgxTreeGrid - Sorting', () => {
             fix.detectChanges();
 
             const exprs = [
-                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
-                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+                { fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'Age', dir: SortingDirection.Desc, ignoreCase: true }
             ];
 
             treeGrid.sort(exprs);
