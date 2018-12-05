@@ -16,7 +16,9 @@ import { DOCUMENT } from '@angular/common';
  * ```
  */
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class IgxIconService {
     private _fontSet = 'material-icons';
     private _fontSetAliases = new Map<string, string>();

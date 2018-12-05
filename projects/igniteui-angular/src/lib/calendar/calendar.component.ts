@@ -870,6 +870,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         if (value === null || value === undefined) {
             this.selectedDates = this.selection === 'single' ? null : [];
+            this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
             return;
         }
@@ -1283,6 +1284,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         if (!(valueEnd < selectedDatesStart) && !(valueStart > selectedDatesEnd)) {
             this.selectedDates = [];
+            this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
     }

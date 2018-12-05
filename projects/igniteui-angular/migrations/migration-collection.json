@@ -30,6 +30,11 @@
             "version": "6.2.1",
             "description": "Updates Ignite UI for Angular from v6.2.0 to v6.2.1",
             "factory": "./update-6_2_1"
+        },
+        "migration-07": {
+            "version": "7.0.2",
+            "description": "Updates Ignite UI for Angular from v6.2.1 to v7.0.2",
+            "factory": "./update-7_0_2"
         }
     }
 }
