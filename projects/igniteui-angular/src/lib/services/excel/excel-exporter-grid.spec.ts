@@ -199,7 +199,7 @@ describe('Excel Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
 
         const wrapper = await getExportedData(grid, options);
@@ -215,20 +215,20 @@ describe('Excel Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
 
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyDataFilesContent(actualData.simpleGridSortByName, 'Ascending sorted data should have been exported.');
 
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
         fix.detectChanges();
 
         wrapper = await getExportedData(grid, options);
         wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
 
         grid.clearSort();
-        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
 
         // wrapper = await getExportedData(grid, options);
@@ -371,7 +371,7 @@ describe('Excel Exporter', () => {
         const grid = fix.componentInstance.grid;
         grid.columns[1].header = 'My header';
         grid.columns[1].sortable = true;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
         const sortField = grid.sortingExpressions[0].fieldName;
         fix.detectChanges();
 
