@@ -44,7 +44,6 @@ import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxFocusModule } from '../directives/focus/focus.directive';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -248,17 +247,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.datePickerTemplateDirective) {
             return this.datePickerTemplateDirective.template;
         }
-        return this.defaultDatePickerTemplate;
-    }
-
-    /**
-     * Gets the input group template.
-     * ```typescript
-     * let template = this.template();
-     * ```
-     * @memberof IgxTimePickerComponent
-     */
-    get datePickerTemplate(): TemplateRef<any> {
         return (this.mode === InteractionMode.READONLY) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
     }
 
@@ -428,12 +416,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @Output()
     public onSelection = new EventEmitter<Date>();
 
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultDatePickerTemplate', { read: TemplateRef })
-    protected defaultDatePickerTemplate: TemplateRef<any>;
-
     /*
      * @hidden
      */
@@ -451,6 +433,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      */
     @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
+
+    @ViewChild('editableInputGroup', { read: ElementRef })
+    protected editableInputGroup: ElementRef;
 
     @ViewChild('editableInput', { read: ElementRef })
     protected editableInput: ElementRef;
@@ -520,17 +505,15 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     };
 
     private _disabledDates: DateRangeDescriptor[] = null;
-
     private _specialDates: DateRangeDescriptor[] = null;
 
     private _positionSettings: PositionSettings;
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
-    private _collapsed = true;
 
     public inputDate = '';
-    public isCalendarVisible = false;
     public hasHeader = true;
+    public collapsed = true;
 
     /**
      *Method that sets the selected date.
@@ -568,9 +551,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *@hidden
      */
     public ngOnInit(): void {
-        // this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
-        // this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
-
         this._positionSettings = {
             horizontalDirection: HorizontalAlignment.Right,
             verticalDirection: VerticalAlignment.Bottom,
@@ -600,13 +580,16 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
             takeUntil(this._destroy$)).subscribe(() => {
                 this.onClosed();
             });
+
+        if (this.calendarContainer) {
+            this.calendarContainer.nativeElement.style.display = 'none';
+        }
     }
 
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
-        this.overlayService.hide(this._componentID);
         this._destroy$.next(true);
         this._destroy$.complete();
     }
@@ -668,7 +651,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      * @hidden
      */
     public openCalendar(): void {
-        this.isCalendarVisible = true;
         switch (this.mode) {
             case InteractionMode.READONLY: {
                 this.hasHeader = true;
@@ -679,8 +661,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
                 break;
             }
             case InteractionMode.EDITABLE: {
-                if (this._collapsed) {
-                    this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInput.nativeElement;
+                if (this.collapsed) {
+                    this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
                     this.hasHeader = false;
                     requestAnimationFrame(() => {
                         this._componentID = this.overlayService.show(this.calendarContainer, this._dropDownOverlaySettings);
@@ -702,7 +684,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     public calculateDate(data: string) {
-        // debugger;
         const isValid = this.isDateValid(data);
         if (isValid) {
             this.value = new Date(data);
@@ -712,23 +693,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     private isDateValid(data) {
-        const isValid = (new Date(data).toLocaleString(this.locale) !== 'Invalid Date');
-        // debugger;
-        return isValid;
+        return (new Date(data).toLocaleString(this.locale) !== 'Invalid Date');
     }
-
-    /**
-     * Closes the dialog, after was clearing all calendar items from dom.
-     *
-     * @hidden
-     */
-    // public handleDialogCloseAction() {
-    //     this.onClose.emit(this);
-    //     this.calendarRef.destroy();
-    //     if (this.input) {
-    //         this.input.nativeElement.focus();
-    //     }
-    // }
 
     /**
      * Evaluates when @calendar.onSelection event was fired
@@ -756,41 +722,21 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     public handleInput(eventArgs) {
-        // debugger;
         this.calculateDate(eventArgs.target.value);
     }
 
     @HostListener('keydown.alt.arrowdown', ['$event'])
     public onAltArrowDownKeydown(event: KeyboardEvent) {
-        // debugger;
-        event.preventDefault();
-        event.stopPropagation();
         this.calculateDate(this.editableInput.nativeElement.value);
         this.openCalendar();
     }
 
-    @HostListener('keydown.alt.arrowup', ['$event'])
-    public onAltArrowUpKeydown(event: KeyboardEvent) {
-        console.log('onAltArrowUpKeydown');
-        event.preventDefault();
-        event.stopPropagation();
-        this.closeCalendar();
-    }
-
-    @HostListener('keydown.esc', ['$event'])
-    public onEscKeydown(event) {
-        console.log('onEscKeydown');
-        event.preventDefault();
-        event.stopPropagation();
-        this.closeCalendar();
-    }
-
-
-
-
-    public onKeyDown() {
-        debugger;
-    }
+    // @HostListener('keydown.esc', ['$event'])
+    // public onEscKeydown(event) {
+    //     this.closeCalendar();
+    //     event.preventDefault();
+    //     event.stopPropagation();
+    // }
 
     @HostListener('keydown.spacebar', ['$event'])
     @HostListener('keydown.space', ['$event'])
@@ -799,9 +745,22 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         event.preventDefault();
     }
 
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onArrowDownKeydown(event) {
+        event.preventDefault();
+        const cursor = this._getCursorPosition();
+    }
+
+    @HostListener('keydown.arrowup', ['$event'])
+    public onArrowUpKeydown(event) {
+        event.preventDefault();
+        const cursor = this._getCursorPosition();
+    }
+
     private onOpened() {
         // debugger;
-        this._collapsed = false;
+        this.collapsed = false;
+        this.calendarContainer.nativeElement.style.display = 'block';
 
         if (this.value) {
             this.calendar.value = this.value;
@@ -817,9 +776,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     private onClosed() {
-        debugger;
-        this.isCalendarVisible = false;
-        this._collapsed = true;
+        // debugger;
+        this.collapsed = true;
+        this.calendarContainer.nativeElement.style.display = 'none';
         this.onClose.emit(this);
 
         if (this.editableInput) {
@@ -836,6 +795,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
         return value.toLocaleDateString(locale);
+    }
+
+    private _getCursorPosition(): number {
+        return this.editableInput.nativeElement.selectionStart;
     }
 
     /**
@@ -862,6 +825,6 @@ class Constants {
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule]
 })
 export class IgxDatePickerModule { }

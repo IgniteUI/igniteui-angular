@@ -36,12 +36,12 @@
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
                 <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter">
-                    <ng-template igxDatePickerTemplate let-openDialog="openCalendar" let-value="value" let-displayData="displayData">
+                    <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
+                        let-displayData="displayData">
                         <igx-input-group (click)="openCalendar()">
                             <label igxLabel>Date</label>
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>
-                        <label>{{value}}</label>
                     </ng-template>
                 </igx-datePicker>
             </div>
