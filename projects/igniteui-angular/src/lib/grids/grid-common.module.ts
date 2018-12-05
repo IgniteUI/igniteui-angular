@@ -20,7 +20,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
@@ -59,6 +58,7 @@ import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
+import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 
 @NgModule({
     declarations: [
@@ -66,7 +66,6 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridSummaryComponent,
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
@@ -85,6 +84,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxGridFilteringRowComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
+        IgxSummaryDataPipe,
         IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
@@ -99,7 +99,6 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridSummaryComponent,
         IgxGridToolbarComponent,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
@@ -115,6 +114,7 @@ import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
         IgxRowComponent,
         IgxGridFilterConditionPipe,
         IgxGridTransactionPipe,
+        IgxSummaryDataPipe,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxButtonModule,

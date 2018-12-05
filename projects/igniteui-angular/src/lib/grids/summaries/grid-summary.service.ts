@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
-import { GridSummaryCalculationMode } from '../grid-base.component';
 
 /** @hidden */
 @Injectable()
@@ -11,6 +10,7 @@ export class IgxGridSummaryService {
     public summaryHeight = 0;
     public maxSummariesLenght = 0;
     public groupingExpressions = [];
+    public retriggerRootPipe = false;
 
     public clearSummaryCache() {
         this.summaryCacheMap.clear();
@@ -28,6 +28,7 @@ export class IgxGridSummaryService {
                this.deleteSummaryCache(id, columnName);
            });
         }
+        this.retriggerRootPipe = !this.retriggerRootPipe;
     }
 
     public removeSummariesCachePerColumn(columnName) {
