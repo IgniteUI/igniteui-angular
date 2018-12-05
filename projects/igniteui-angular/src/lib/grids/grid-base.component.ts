@@ -62,6 +62,8 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IGridResourceStrings } from '../core/i18n/grid-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 
@@ -157,6 +159,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Input()
     public data: any[];
+
+    private _resourceStrings = CurrentResourceStrings.GridResStrings;
+    private _emptyGridMessage = null;
+    private _emptyFilteredGridMessage = null;
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+    */
+    @Input()
+    set resourceStrings(value: IGridResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+   /**
+    * An accessor that returns the resource strings.
+   */
+   get resourceStrings(): IGridResourceStrings {
+       return this._resourceStrings;
+   }
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -619,7 +640,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyGridMessage = 'Grid has no data.';
+    set emptyGridMessage(value: string) {
+        this._emptyGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records.
+    */
+    get emptyGridMessage(): string {
+        return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
+    }
 
     /**
      * An @Input property that sets the message displayed when there are no records and the grid is filtered.
@@ -629,7 +659,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyFilteredGridMessage = 'No records found.';
+    set emptyFilteredGridMessage(value: string) {
+        this._emptyFilteredGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records and the grid is filtered.
+    */
+    get emptyFilteredGridMessage(): string {
+        return this._emptyFilteredGridMessage || this.resourceStrings.igx_grid_emptyFilteredGrid_message;
+    }
 
     /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
@@ -706,6 +745,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
