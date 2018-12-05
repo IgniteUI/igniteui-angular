@@ -2731,7 +2731,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
       }));
-  
+
     it('Should remove FilterRow, when allowFiltering is set to false.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;

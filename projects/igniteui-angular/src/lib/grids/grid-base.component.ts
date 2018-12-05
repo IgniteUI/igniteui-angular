@@ -66,6 +66,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
+const FILTER_ROW_HEIGHT = 50;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -746,11 +747,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
 
-            this.calcHeight += value ? -this.defaultFilterRowHeight : this.defaultFilterRowHeight;
+            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
             if (this._ngAfterViewInitPaassed) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                        (value ? this.defaultFilterRowHeight : 0) + 1}px`;
+                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
                 }
             }
 
@@ -2389,10 +2390,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    get defaultFilterRowHeight(): number {
-        return 50;
-    }
-
     /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
@@ -3470,7 +3467,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? this.defaultFilterRowHeight : 0) + 1}px`;
+                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
 
         if (!this._height) {
