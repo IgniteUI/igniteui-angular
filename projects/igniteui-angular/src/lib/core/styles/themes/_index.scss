@@ -164,7 +164,7 @@
     }
 
     @if not(index($exclude, 'igx-date-picker')) {
-        @include igx-date-picker(igx-date-picker-theme($palette, $schema));
+        @include igx-date-picker(igx-calendar-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-dialog')) {

@@ -11,7 +11,6 @@
 @import './chip';
 @import './column-hiding';
 @import './combo';
-@import './date-picker';
 @import './dialog';
 @import './drop-down';
 @import './expansion-panel';
@@ -52,7 +51,6 @@
 /// @property {Map} igx-chip [$_dark-chip]
 /// @property {Map} igx-column-hiding [$_dark-column-hiding]
 /// @property {Map} igx-combo [$_dark-combo]
-/// @property {Map} igx-date-picker [$_dark-date-picker]
 /// @property {Map} igx-dialog [$_dark-dialog]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
@@ -93,7 +91,6 @@ $dark-schema: (
     igx-chip: $_dark-chip,
     igx-column-hiding: $_dark-column-hiding,
     igx-combo: $_dark-combo,
-    igx-date-picker: extend($_dark-calendar, $_dark-date-picker),
     igx-dialog: $_dark-dialog,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,

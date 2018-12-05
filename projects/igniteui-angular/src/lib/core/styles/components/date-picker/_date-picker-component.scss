@@ -9,13 +9,17 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    .igx-dialog__window {
-        @extend %date-picker-display !optional;
+    @extend %date-picker !optional;
+
+    @include e(buttons) {
+        @extend %date-picker__buttons !optional;
     }
 
     @include m(vertical) {
-        .igx-dialog__window {
-            @extend %date-picker-display--vertical !optional;
-        }
+        @extend %date-picker--vertical !optional;
+    }
+
+    @include m(dropdown) {
+        @extend %date-picker--dropdown !optional;
     }
 }
