@@ -62,7 +62,7 @@ From the root folder run:
 npm install
 ```
 
-## Create new Project with IgniteUI CLI
+## Create new Project with Ignite UI CLI
 To get started with the Ignite UI CLI and Ignite UI for Angular:
 
 ```
@@ -75,7 +75,7 @@ ig start
 
 ## Adding IgniteUI for Angular to Existing Project
 
-Including the `igniteui-angular` package to your project:
+Including the `igniteui-angular` and `igniteui-cli` packages to your project:
 
 ```
 ng add igniteui-angular
