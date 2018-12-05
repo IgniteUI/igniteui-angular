@@ -147,9 +147,8 @@ export class WorksheetFile implements IExcelFile {
         const columnHeader = worksheetData.keys[column];
 
         const rowData = worksheetData.data[row - 1].rowData;
-        const actualData = rowData.data ? rowData.data : rowData;
 
-        const cellValue = worksheetData.isSpecialData ? actualData : actualData[columnHeader];
+        const cellValue = worksheetData.isSpecialData ? rowData : rowData[columnHeader];
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
