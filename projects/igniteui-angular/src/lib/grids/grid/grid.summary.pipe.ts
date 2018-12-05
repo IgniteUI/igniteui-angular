@@ -3,7 +3,7 @@ import { IgxGridAPIService } from './grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, GridSummaryPosition, GridSummaryCalculationMode } from '../grid-base.component';
 import { IgxGridComponent } from './grid.component';
-import { IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxSummaryResult, ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataUtil } from '../../data-operations/data-util';
 
@@ -58,8 +58,10 @@ export class IgxGridSummaryPipe implements PipeTransform {
                     const groupRecord = groupRecords[j];
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
                     const summaries = grid.summaryService.calculateSummaries(groupRecordId, groupRecord.records);
-
-                    recordsWithSummary.push(summaries);
+                    const summaryRecord: ISummaryRecord = {
+                        summaries: summaries
+                    };
+                    recordsWithSummary.push(summaryRecord);
                 }
             }
 
@@ -69,7 +71,10 @@ export class IgxGridSummaryPipe implements PipeTransform {
 
             if (summaryPosition === GridSummaryPosition.top) {
                 const summaries = grid.summaryService.calculateSummaries(recordId, groupByRecord.records);
-                recordsWithSummary.push(summaries);
+                const summaryRecord: ISummaryRecord = {
+                    summaries: summaries
+                };
+                recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {
                 let lastChild = groupByRecord;
 

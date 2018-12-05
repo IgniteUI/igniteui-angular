@@ -2,6 +2,7 @@ import { Component, Input, HostBinding, ChangeDetectionStrategy } from '@angular
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../grid';
 import { DisplayDensity } from '../../core/density';
+import { IgxSummaryRowComponent } from './summary-row.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,6 +17,9 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public column: IgxColumnComponent;
+
+    @Input()
+    public row: IgxSummaryRowComponent;
 
     @Input()
     public hasSummary = false;

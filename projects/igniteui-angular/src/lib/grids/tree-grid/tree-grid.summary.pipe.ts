@@ -4,7 +4,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, GridSummaryPosition, GridSummaryCalculationMode } from '../grid-base.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxSummaryResult, ISummaryRecord } from '../summaries/grid-summary';
 
 /** @hidden */
 @Pipe({
@@ -51,7 +51,11 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                     if (children[children.length - 1] === childRecord ) {
                         const childData = children.filter(r => !r.isFilteredOutParent).map(r => r.data);
                         const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
-                        recordsWithSummary.push(summaries);
+                        const summaryRecord: ISummaryRecord = {
+                            summaries: summaries,
+                            cellIndentation: parent.level + 1
+                        };
+                        recordsWithSummary.push(summaryRecord);
 
                         childRecord = parent;
                         parent = childRecord.parent;
@@ -62,8 +66,11 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
             } else if (summaryPosition === GridSummaryPosition.top && isExpanded) {
                 const childData = record.children.map(r => r.data);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
-
-                recordsWithSummary.push(summaries);
+                const summaryRecord: ISummaryRecord = {
+                    summaries: summaries,
+                    cellIndentation: record.level + 1
+                };
+                recordsWithSummary.push(summaryRecord);
             }
         }
         return recordsWithSummary;
