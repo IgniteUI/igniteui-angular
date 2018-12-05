@@ -11,6 +11,7 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
+import { DisplayDensity } from '../../core/density';
 
 
 @Component({
@@ -68,6 +69,17 @@ export class IgxSummaryRowComponent implements DoCheck  {
     }
     public get nativeElement() {
         return this.element.nativeElement;
+    }
+
+    // TO DO: to be refactored when displayDensity refactoring is merged
+    get gridDensity(): string {
+        if (this.grid.isCosy()) {
+            return DisplayDensity.cosy;
+        } else if (this.grid.isCompact()) {
+            return DisplayDensity.compact;
+        } else {
+            return DisplayDensity.comfortable;
+        }
     }
 
     public getColumnSummaries(columnName) {
