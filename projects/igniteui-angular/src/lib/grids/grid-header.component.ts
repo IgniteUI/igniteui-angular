@@ -141,12 +141,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
                 this.sortDirection = sortDir;
                 this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
                     strategy: this.column.sortStrategy });
-                this.grid.onSortingDone.emit({
-                    dir: this.sortDirection,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.sortingIgnoreCase,
-                    strategy: this.column.sortStrategy
-                });
             }
         }
     }
