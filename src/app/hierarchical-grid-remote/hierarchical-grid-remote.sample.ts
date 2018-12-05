@@ -1,11 +1,17 @@
-import { Component, ViewChild, Injectable, AfterViewInit } from '@angular/core';
-import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IGridCreatedEventArgs } from 'igniteui-angular';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import {
+    IgxRowIslandComponent,
+    IgxHierarchicalGridComponent,
+    IGridCreatedEventArgs,
+    IgxGridTransaction,
+    IgxTransactionService
+} from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 @Component({
     selector: 'app-hierarchical-grid-remote-sample',
     templateUrl: 'hierarchical-grid-remote.sample.html',
-    providers: [RemoteService]
+    providers: [RemoteService, { provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
 export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
 
@@ -57,7 +63,7 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     }
 
     setterChange() {
-       this.rowIsland1.rowSelectable = !this.rowIsland1.rowSelectable;
+        this.rowIsland1.rowSelectable = !this.rowIsland1.rowSelectable;
     }
 
     setterBindingChange() {
