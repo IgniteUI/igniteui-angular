@@ -2488,7 +2488,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return minWidth.toString();
         }
 
-        return column.width
+        return column.width;
     }
 
     /**
