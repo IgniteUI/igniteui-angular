@@ -123,4 +123,20 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
+
+    public flattening_ids(id: string, rowIDs: any[]) {
+        const flatRowIDs = rowIDs;
+        let row;
+        for (let index = 0; index < rowIDs.length; index++) {
+            row = this.get_row_by_key(id, rowIDs[index]);
+            if (row && row.treeRow.children) {
+                row.treeRow.children.forEach((childRow: ITreeGridRecord) => {
+                    const childID = childRow.rowID;
+                    flatRowIDs.push(childID);
+                    flatRowIDs.concat(this.flattening_ids(id, [childID]));
+                });
+            }
+        }
+        return flatRowIDs;
+    }
 }

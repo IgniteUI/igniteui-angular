@@ -411,6 +411,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
+    public deselectRows(rowIDs: any[], deselectSiblings = true) {
+        super.deselectRows(deselectSiblings ? this._gridAPI.flattening_ids(this.id, rowIDs) : rowIDs);
+    }
+
+    /**
+     * @hidden
+     */
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
