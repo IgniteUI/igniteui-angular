@@ -106,8 +106,7 @@ export class IgxColumnResizingService {
                 this.column.width = size;
             }
 
-
-            this.zone.run(() => this.column.grid.markForCheck());
+            this.zone.run(() => {});
 
             this.column.grid.reflow();
             this.column.grid.onColumnResized.emit({
@@ -149,7 +148,7 @@ export class IgxColumnResizingService {
                 this.column.width = (currentColWidth + diff) + 'px';
             }
 
-            this.zone.run(() => this.column.grid.markForCheck());
+            this.zone.run(() => {});
             this.column.grid.reflow();
 
             if (currentColWidth !== parseFloat(this.column.width)) {
