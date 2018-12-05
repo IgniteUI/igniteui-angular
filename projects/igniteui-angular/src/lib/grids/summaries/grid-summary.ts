@@ -8,6 +8,11 @@ export interface IgxSummaryResult {
     summaryResult: any;
 }
 
+export interface ISummaryRecord {
+    summaries: Map<string, IgxSummaryResult[]>;
+    cellIndentation?: number;
+}
+
 export class IgxSummaryOperand {
     /**
      * Counts all the records in the data source.

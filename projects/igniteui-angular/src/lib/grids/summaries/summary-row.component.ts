@@ -30,6 +30,12 @@ export class IgxSummaryRowComponent implements DoCheck  {
     @Input()
     public index: number;
 
+    @Input()
+    public indentation = 0;
+
+    @Input()
+    public firstCellIndentation = -1;
+
     @HostBinding('attr.data-rowIndex')
     get dataRowIndex() {
         return this.index;

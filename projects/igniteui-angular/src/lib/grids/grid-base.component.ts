@@ -4671,7 +4671,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @hidden
     */
     public isSummaryRow(rowData): boolean {
-        return rowData instanceof Map;
+        return rowData.summaries && (rowData.summaries instanceof Map);
     }
 
 
