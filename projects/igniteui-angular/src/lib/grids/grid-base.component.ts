@@ -746,6 +746,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
