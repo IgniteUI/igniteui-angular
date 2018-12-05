@@ -192,11 +192,11 @@ export abstract class IgxBaseExporter {
     }
 
     private prepareData(grid: any, options: IgxExporterOptionsBase): any[] {
-        let _rootRecords = grid.rootRecords;
-        this._isTreeGrid = _rootRecords !== undefined;
+        let rootRecords = grid.rootRecords;
+        this._isTreeGrid = rootRecords !== undefined;
 
         if (this._isTreeGrid) {
-            this.prepareHierarchicalData(_rootRecords);
+            this.prepareHierarchicalData(rootRecords);
         }
 
         let data = this._isTreeGrid ? this.flatRecords : grid.data;
@@ -211,8 +211,8 @@ export abstract class IgxBaseExporter {
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                _rootRecords = DataUtil.treeGridFilter(_rootRecords, filteringState);
-                this.prepareHierarchicalData(_rootRecords);
+                rootRecords = DataUtil.treeGridFilter(rootRecords, filteringState);
+                this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
                 data = DataUtil.filter(data, filteringState);
@@ -222,16 +222,12 @@ export abstract class IgxBaseExporter {
         if (grid.sortingExpressions &&
             grid.sortingExpressions.length > 0 &&
             !options.ignoreSorting) {
-            const sortingState = {
-                expressions: grid.sortingExpressions
-            };
-
             this._sort = cloneValue(grid.sortingExpressions[0]);
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                _rootRecords = DataUtil.treeGridSort(_rootRecords, grid.sortingExpressions);
-                this.prepareHierarchicalData(_rootRecords);
+                rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions);
+                this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
                 data = DataUtil.sort(data, grid.sortingExpressions);

@@ -2,27 +2,25 @@ import { async, TestBed } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
-import { FileContentData } from '../excel/test-data.service.spec';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
-import { IgxStringFilteringOperand, IgxTreeGridComponent, IgxNumberFilteringOperand } from '../../../public_api';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
-import { IgxTreeGridModule } from '../../grids/tree-grid';
+import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('CSV Grid Exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
-    let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
@@ -40,7 +38,6 @@ describe('CSV Grid Exporter', () => {
 
     beforeEach(async(() => {
         exporter = new IgxCsvExporterService();
-        actualData = new FileContentData();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
