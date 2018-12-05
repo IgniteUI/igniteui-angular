@@ -341,7 +341,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    protected scrollHandler: () => void = () => {
+    protected scrollHandler = () => {
         this.disableTransitions = true;
     }
 
