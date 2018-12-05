@@ -3236,22 +3236,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public clearSummaryCache(args?) {
-        if (!args) {
-            this.summaryService.clearSummaryCache();
-            return;
-        }
-        if (args.data) {
-            let rowID = args.rowID;
-            if (!args.rowID) {
-                rowID = this.primaryKey ? args.data[this.primaryKey] : args.data;
-            }
-            this.summaryService.removeSummaries(rowID);
-            return;
-        }
-        if (args.rowID) {
-            const columnName = args.cellID ? this.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
-            this.summaryService.removeSummaries(args.rowID, columnName);
-        }
+        this.summaryService.clearSummaryCache(args);
     }
 
     /**
@@ -4665,14 +4650,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     */
     public isSummaryRow(rowData): boolean {
         return rowData.summaries && (rowData.summaries instanceof Map);
-    }
-
-
-    /**
-     * @hidden
-    */
-    public summaryData() {
-        return this.gridAPI.get_summary_data(this.id);
     }
 
 }

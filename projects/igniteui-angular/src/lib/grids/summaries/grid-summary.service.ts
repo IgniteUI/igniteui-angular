@@ -12,8 +12,28 @@ export class IgxGridSummaryService {
     public groupingExpressions = [];
     public retriggerRootPipe = false;
 
-    public clearSummaryCache() {
-        this.summaryCacheMap.clear();
+    public clearSummaryCache(args?) {
+        if (!args) {
+            this.summaryCacheMap.clear();
+            if (this.grid.rootSummariesEnabled) {
+                this.retriggerRootPipe = !this.retriggerRootPipe;
+            }
+            return;
+        }
+        if (args.data) {
+            let rowID = args.rowID;
+            if (!args.rowID) {
+                rowID = this.grid.primaryKey ? args.data[this.grid.primaryKey] : args.data;
+            }
+            this.removeSummaries(rowID);
+        }
+        if (args.rowID) {
+            const columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
+            this.removeSummaries(args.rowID, columnName);
+        }
+        if (this.grid.rootSummariesEnabled) {
+            this.retriggerRootPipe = !this.retriggerRootPipe;
+        }
     }
 
     public removeSummaries(rowID, columnName?) {

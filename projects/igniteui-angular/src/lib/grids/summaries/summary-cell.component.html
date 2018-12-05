@@ -1,6 +1,6 @@
 <ng-container *ngIf="hasSummary">
     <ng-container *ngFor="let summary of summaryResults">
-            <div class="igx-grid-summary__item">
+            <div class="igx-grid-summary__item" [style.height.px]="itemHeight">
 
                 <ng-container *ngIf="visibleColumnIndex === 0 && firstCellIndentation >= 0">
                     <div class="igx-grid__tree-cell--padding-level-{{firstCellIndentation}}"></div>
