@@ -72,7 +72,7 @@
         </ng-template>
     </igx-nav-drawer>
 
-    <div class="content">
+    <div [style.paddingLeft]="drawerState.miniVariant && !drawerState.pin ? '60px' : null" class="content">
         <router-outlet></router-outlet>
     </div>
 </div>
