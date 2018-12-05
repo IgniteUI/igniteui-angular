@@ -1,6 +1,20 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent } from 'igniteui-angular';
+import { IgxTreeGridComponent, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
+
+export class MySummaryOperand extends IgxSummaryOperand {
+    public operate(data: any[] = []): IgxSummaryResult[] {
+        return [{
+            key: 'count',
+            label: 'Count',
+            summaryResult: IgxSummaryOperand.count(data)
+        }, {
+            key: 'countIf',
+            label: 'Count If',
+            summaryResult: data.filter(r => r > 10).length
+        }];
+    }
+}
 
 @Component({
     providers: [],
@@ -13,6 +27,8 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     private nextRow = 1;
+    public summaryMode = 'rootLevelOnly';
+    public summaryModes = [];
 
     @ViewChild('grid1') public grid1: IgxTreeGridComponent;
 
@@ -25,12 +41,17 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
+        this.summaryModes = [
+            { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
+            { label: 'childLevelsOnly', selected: this.summaryMode === 'childLevelsOnly', togglable: true },
+            { label: 'rootAndChildLevels', selected: this.summaryMode === 'rootAndChildLevels', togglable: true }
+        ];
 
         this.columns = [
-            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number' },
-            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string' },
-            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string' },
-            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string' }
+            { field: 'employeeID', label: 'ID', width: 200, resizable: true, movable: true, dataType: 'number', hasSummary: true },
+            { field: 'firstName', label: 'First Name', width: 300, resizable: true, movable: true, dataType: 'string', hasSummary: false },
+            { field: 'lastName', label: 'Last Name', width: 150, resizable: true, movable: true, dataType: 'string', hasSummary: false },
+            { field: 'Title', label: 'Title', width: 200, resizable: true, movable: true, dataType: 'string', hasSummary: true }
         ];
         this.data = [
             { 'employeeID': 0, 'PID': -1, 'firstName': 'Andrew', 'lastName': 'Fuller', 'Title': 'Vice President, Sales' },
@@ -89,5 +110,22 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public selectSummaryMode(event) {
+        this.summaryMode = this.summaryModes[event.index].label;
+    }
+
+    public disableSummary() {
+        const name = 'employeeID';
+        const col = this.grid1.getColumnByName(name);
+        // col.hasSummary = !col.hasSummary;
+        // col.summaries = MySummaryOperand;
+
+        if (col.hasSummary) {
+            this.grid1.disableSummaries(name);
+        } else {
+            this.grid1.enableSummaries([{ fieldName: name, customSummary: MySummaryOperand }]);
+        }
     }
 }

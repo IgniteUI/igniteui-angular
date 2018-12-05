@@ -13,6 +13,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return data ? data : [];
     }
 
+    public get_summary_data(id) {
+        const grid = this.get(id);
+        const data = grid.processedRootRecords.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
+            .map(rec => rec.data);
+        return data;
+    }
+
     public expand_row(id: string, rowID: any) {
         const grid = this.get(id);
         const expandedStates = grid.expansionStates;
