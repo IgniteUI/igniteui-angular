@@ -5,8 +5,8 @@ import { ValueData } from '../services/excel/test-data.service.spec';
 
 export class SampleTestData {
 
-    private static timeGenerator: Calendar = new Calendar();
-    private static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public static timeGenerator: Calendar = new Calendar();
+    public static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
     // tslint:disable:quotemark
     public static stringArray = () => ([
@@ -46,14 +46,14 @@ export class SampleTestData {
 
     /* Fields: index: number, value: number; 2 items. */
     public static numberDataTwoFields = () => ([
-        { index: 1, value: 1},
-        { index: 2, value: 2}
+        { index: 1, value: 1 },
+        { index: 2, value: 2 }
     ])
 
     /* Fields: index: number, value: number, other: number, another: number; 2 items. */
     public static numberDataFourFields = () => ([
-        { index: 1, value: 1, other: 1, another: 1},
-        { index: 2, value: 2, other: 2, another: 2}
+        { index: 1, value: 1, other: 1, another: 1 },
+        { index: 2, value: 2, other: 2, another: 2 }
     ])
 
     /* Fields: Number: number, String: string, Boolean: boolean; Date: date; 3 items. */
@@ -152,7 +152,7 @@ export class SampleTestData {
     public static personIDNameRegionData = () => ([
         { ID: 2, Name: "Jane", LastName: "Brown", Region: "AD" },
         { ID: 1, Name: "Brad", LastName: "Williams", Region: "BD" },
-        { ID: 6, Name: "Rick", LastName: "Jones", Region: "ACD"},
+        { ID: 6, Name: "Rick", LastName: "Jones", Region: "ACD" },
         { ID: 7, Name: "Rick", LastName: "BRown", Region: "DD" },
         { ID: 5, Name: "ALex", LastName: "Smith", Region: "MlDs" },
         { ID: 4, Name: "Alex", LastName: "Wilson", Region: "DC" },
@@ -446,7 +446,7 @@ export class SampleTestData {
             Released: null
         },
         {
-            Downloads: 0,
+            Downloads: 1,
             ID: 7,
             ProductName: null,
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, "month", 1),
@@ -608,7 +608,7 @@ export class SampleTestData {
         const data = [];
         for (let i = 0; i < rowsCount; i++) {
             const obj = {};
-            for (let j = 0; j <  cols.length; j++) {
+            for (let j = 0; j < cols.length; j++) {
                 const col = cols[j].field;
                 obj[col] = 10 * i * j;
             }
@@ -1106,12 +1106,164 @@ export class SampleTestData {
         { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 }
     ])
 
+    public static employeeTreeDataPrimaryForeignKey = () => ([
+        {
+            ID: 147,
+            ParentID: -1,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            OnPTO: false
+        },
+        {
+            ID: 475,
+            ParentID: 147,
+            Name: 'Michael Langdon',
+            HireDate: new Date(2011, 6, 3),
+            Age: 43,
+            OnPTO: false,
+            Employees: null
+        },
+        {
+            ID: 957,
+            ParentID: 147,
+            Name: 'Thomas Hardy',
+            HireDate: new Date(2009, 6, 19),
+            Age: 29,
+            OnPTO: true,
+            Employees: undefined
+        },
+        {
+            ID: 317,
+            ParentID: 147,
+            Name: 'Monica Reyes',
+            HireDate: new Date(2014, 8, 18),
+            Age: 31,
+            OnPTO: false
+        },
+        {
+            ID: 711,
+            ParentID: 317,
+            Name: 'Roland Mendel',
+            HireDate: new Date(2015, 9, 17),
+            Age: 35,
+            OnPTO: true,
+        },
+        {
+            ID: 998,
+            ParentID: 317,
+            Name: 'Sven Ottlieb',
+            HireDate: new Date(2009, 10, 11),
+            Age: 44,
+            OnPTO: false,
+        },
+        {
+            ID: 847,
+            ParentID: -1,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+            OnPTO: false
+        },
+        {
+            ID: 225,
+            ParentID: 847,
+            Name: 'Laurence Johnson',
+            HireDate: new Date(2014, 4, 4),
+            OnPTO: true,
+            Age: 44,
+        },
+        {
+            ID: 663,
+            ParentID: 847,
+            Name: 'Elizabeth Richards',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25,
+            OnPTO: false
+        },
+
+        {
+            ID: 141,
+            ParentID: 663,
+            Name: 'Trevor Ashworth',
+            HireDate: new Date(2010, 3, 22),
+            OnPTO: false,
+            Age: 39
+        },
+        {
+            ID: 19,
+            ParentID: -1,
+            Name: 'Victoria Lincoln',
+            HireDate: new Date(2014, 1, 22),
+            Age: 49,
+            OnPTO: false
+        },
+        {
+            ID: 15,
+            ParentID: 19,
+            Name: 'Antonio Moreno',
+            HireDate: new Date(2014, 4, 4),
+            Age: 44,
+            OnPTO: true,
+            Employees: []
+        },
+        {
+            ID: 17,
+            ParentID: -1,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61,
+            OnPTO: false
+        },
+        {
+            ID: 12,
+            ParentID: 17,
+            Name: 'Pedro Afonso',
+            HireDate: new Date(2007, 11, 18),
+            Age: 50,
+            OnPTO: false
+        },
+        {
+            ID: 101,
+            ParentID: 12,
+            Name: 'Patricio Simpson',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25,
+            OnPTO: false,
+            Employees: []
+        },
+        {
+            ID: 99,
+            ParentID: 12,
+            Name: 'Francisco Chang',
+            HireDate: new Date(2010, 3, 22),
+            OnPTO: true,
+            Age: 39
+        },
+        {
+            ID: 299,
+            ParentID: 12,
+            Name: 'Peter Lewis',
+            HireDate: new Date(2018, 3, 18),
+            OnPTO: false,
+            Age: 25
+        },
+        {
+            ID: 101,
+            ParentID: 17,
+            Name: 'Casey Harper',
+            HireDate: new Date(2016, 2, 19),
+            OnPTO: false,
+            Age: 27
+        }
+    ])
+
     /**
      * Generates simple array of primitve values
      * @param rows Number of items to add to the array
      * @param type The type of the items
      */
-    public static generateListOfPrimitiveValues(rows: number, type: Number|String|Boolean): any[] {
+    public static generateListOfPrimitiveValues(rows: number, type: Number | String | Boolean): any[] {
         const data: any[] = [];
         for (let row = 0; row < rows; row++) {
             if (type === 'Number') {
@@ -1143,7 +1295,7 @@ export class SampleTestData {
     }
 }
 
-    // tslint:enable:quotemark
+// tslint:enable:quotemark
 
 export class DataParent {
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
