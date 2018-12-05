@@ -3644,6 +3644,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _sort(expression: ISortingExpression) {
         this.gridAPI.sort(this.id, expression);
+        this.onSortingDone.emit({
+            dir: expression.dir,
+            fieldName: expression.fieldName,
+            ignoreCase: expression.ignoreCase,
+            strategy: expression.strategy
+        });
     }
 
     /**
