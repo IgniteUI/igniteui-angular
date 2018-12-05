@@ -754,6 +754,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
 
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
+
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
