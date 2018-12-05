@@ -28,13 +28,13 @@ export class IgxSummaryCellComponent {
 
     @HostBinding('class')
     get styleClasses(): string {
-        const defaultClasses = [];
+        const defaultClasses = ['igx-grid-summary--cell'];
         const classList = {
+            'igx-grid-summary': this.density === DisplayDensity.comfortable,
             'igx-grid-summary--fw': this.column.width !== null,
             'igx-grid-summary--empty': !this.column.hasSummary,
             'igx-grid-summary--compact': this.density === DisplayDensity.compact,
             'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
-            'igx-grid-summary': this.density === DisplayDensity.comfortable,
             'igx-grid-summary--pinned': this.column.pinned,
             'igx-grid-summary--pinned-last': this.column.isLastPinned
         };
@@ -70,5 +70,4 @@ export class IgxSummaryCellComponent {
     get itemHeight() {
         return this.column.grid.defaultRowHeight;
     }
-
 }

@@ -87,7 +87,7 @@
             </igx-grid-groupby-row>
         </ng-template>
         <ng-template #summary_template>
-            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [indentation]="groupingExpressions.length" [index]="rowIndex" class="igx-grid__summaries" #summaryRow>
+            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [indentation]="groupingExpressions.length" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
             </igx-grid-summary-row>
         </ng-template>
         <ng-container *igxTemplateOutlet="isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
@@ -134,13 +134,16 @@
         <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
     </div>
 </div>
+
 <ng-template #defaultRowEditText>
     You have {{ rowChangesCount }} changes in this row
 </ng-template>
+
 <ng-template #defaultRowEditActions>
     <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
     <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
 </ng-template>
+
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">
