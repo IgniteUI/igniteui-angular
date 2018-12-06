@@ -37,7 +37,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT } from './combo.common';
-import { IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { IDropDownItem } from '../drop-down/drop-down-utils';
+import { IgxComboItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -150,7 +151,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     private _dataType = '';
     private _data = [];
     private _filteredData = [];
-    private _children: QueryList<IgxDropDownItemBase>;
+    private _children: QueryList<IDropDownItem>;
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
@@ -388,14 +389,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * @hidden
      */
     @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    public set children(list: QueryList<IgxDropDownItemBase>) {
+    public set children(list: QueryList<IDropDownItem>) {
         this._children = list;
     }
 
     /**
      * @hidden
      */
-    public get children(): QueryList<IgxDropDownItemBase> {
+    public get children(): QueryList<IDropDownItem> {
         return this._children;
     }
 
@@ -1039,7 +1040,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     public handleKeyUp(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdownContainer.nativeElement.focus();
-            this.dropdown.onFocus();
             this.dropdown.focusedItem = this.dropdown.items[0];
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
@@ -1174,11 +1174,12 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
             if (newItem.disabled || newItem.isHeader) {
                 return;
             }
-            if (!newItem.isSelected) {
+            if (select) {
                 this.changeSelectedItem(itemID, true);
             } else {
                 this.changeSelectedItem(itemID, false);
             }
+            newItem.isSelected = select;
         } else {
             const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
             if (target) {
@@ -1283,7 +1284,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         } else {
             if (opening) {
                 this.dropdownContainer.nativeElement.focus();
-                this.dropdown.onFocus();
             } else {
                 this.comboInput.nativeElement.focus();
                 this.toggle();
@@ -1563,14 +1563,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
  */
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,
+        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboItemNavigationDirective,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent,
+    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboItemNavigationDirective,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,

@@ -2,9 +2,13 @@ import {
     Component,
     ElementRef,
     Input,
-    DoCheck
+    DoCheck,
+    Inject
 } from '@angular/core';
-import { IgxDropDownBase, IgxDropDownItemBase } from './drop-down.base';
+import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownComponent } from './drop-down.component';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
+import { IgxSelectionAPIService } from '../core/selection';
 
 @Component({
     selector: 'igx-drop-down-item',
@@ -17,8 +21,9 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     protected _isSelected = false;
 
     constructor(
-        public dropDown: IgxDropDownBase,
-        protected elementRef: ElementRef
+        @Inject(IGX_DROPDOWN_BASE) public dropDown: IDropDownBase,
+        protected elementRef: ElementRef,
+        protected selection: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
     }
@@ -34,6 +39,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     get isSelected() {
         return this._isSelected;
     }
+
     @Input()
     set isSelected(value: boolean) {
         if (this.isHeader) {
