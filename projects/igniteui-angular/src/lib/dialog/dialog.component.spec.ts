@@ -2,7 +2,7 @@ import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
@@ -297,26 +297,28 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
     }));
 
-    it('The dialog is focused after opening it and can be closed with keyboard.', fakeAsync(() => {
-        const fix = TestBed.createComponent(CustomTemplates1DialogComponent);
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', (async() => {
+        const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
-        tick();
         fix.detectChanges();
+        await wait(16);
 
-        // Verify dialog is opened and focused
-        expect(document.activeElement).toBe(dialog.toggleRef.element);
+        // Verify dialog is opened and its default right button is focused
+        const dialogDOM = fix.debugElement.query(By.css('.igx-dialog'));
+        const rightButton = dialogDOM.queryAll(By.css('button')).filter((b) => b.nativeElement.innerText === 'right button')[0];
+        expect(document.activeElement).toBe(rightButton.nativeElement);
         expect(dialog.isOpen).toEqual(true);
 
         // Press 'escape' key
         UIInteractions.simulateKeyDownEvent(document.activeElement, 'Escape');
-        tick();
         fix.detectChanges();
+        await wait(16);
 
-        // Verify dialog is closed and no longer focused
-        expect(document.activeElement).not.toBe(dialog.toggleRef.element);
+        // Verify dialog is closed and its default right button is no longer focused
+        expect(document.activeElement).not.toBe(rightButton.nativeElement);
         expect(dialog.isOpen).toEqual(false);
     }));
 
