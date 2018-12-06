@@ -2,7 +2,7 @@
         <igx-chips-area [attr.draggable]="false" class="igx-filtering-chips">
             <igx-chip #ghostChip [attr.draggable]="false" (click)="onChipClicked()" (keydown)="onChipKeyDown($event)" [displayDensity]="'cosy'">
                 <igx-icon [attr.draggable]="false" igxPrefix>filter_list</igx-icon>
-                <span [attr.draggable]="false">Filter</span>
+                <span [attr.draggable]="false">{{filteringService.grid.resourceStrings.igx_grid_filter}}</span>
             </igx-chip>
         </igx-chips-area>
 </ng-template>
@@ -37,7 +37,7 @@
 <ng-template #complexFilter>
     <igx-chip #complexChip [removable]="true" [displayDensity]="'cosy'" (onRemove)="clearFiltering()">
         <igx-icon igxPrefix>filter_list</igx-icon>
-        <span>Complex Filter</span>
+        <span>{{filteringService.grid.resourceStrings.igx_grid_complex_filter}}</span>
     </igx-chip>
 </ng-template>
 

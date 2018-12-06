@@ -36,6 +36,8 @@ export class ComboSampleComponent implements OnInit {
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
+    public filterableFlag = false;
+    public customValuesFlag = false;
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';
@@ -98,9 +100,11 @@ export class ComboSampleComponent implements OnInit {
 
         this.igxCombo.dropdown.onOpened.pipe(take(1)).subscribe(() => {
             console.log('Attaching');
-            this.igxCombo.searchInput.nativeElement.onchange = (e) => {
-                console.log(e);
-            };
+            if (this.igxCombo.searchInput) {
+                this.igxCombo.searchInput.nativeElement.onchange = (e) => {
+                    console.log(e);
+                };
+            }
         });
 
         this.igxCombo.dropdown.onClosing.subscribe(() => {
