@@ -230,31 +230,28 @@ export class DataUtil {
             const transaction = transactions[i];
 
             if (transaction.path) {
-                const dataRow = this.findDataRowFromPath(data, primaryKey, childDataKey, transaction.path);
+                const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
+                let collection: any[] = parent ? parent[childDataKey] : data;
                 switch (transaction.type) {
                     case TransactionType.ADD:
-                        //  if there is no dataRow this is ADD row at root level
-                        if (dataRow) {
-                            if (!dataRow[childDataKey]) {
-                                dataRow[childDataKey] = [];
-                            }
-                            if (!dataRow[childDataKey].find(r => r[primaryKey] === transaction.id)) {
-                                dataRow[childDataKey].push(transaction.newValue);
-                            }
-                        } else {
-                            data.push(transaction.newValue);
+                        //  if there is no parent this is ADD row at root level
+                        if (parent && !parent[childDataKey]) {
+                            parent[childDataKey] = collection = [];
                         }
+                        collection.push(transaction.newValue);
                         break;
                     case TransactionType.UPDATE:
-                        const collectionToUpdate: any[] = this.findCollectionToManipulate(childDataKey, dataRow, data);
-                        const updateIndex: number = collectionToUpdate.findIndex(r => r[primaryKey] === transaction.id);
-                        collectionToUpdate[updateIndex] = mergeObjects(cloneValue(collectionToUpdate[updateIndex]), transaction.newValue);
+                        const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
+                        if (updateIndex !== -1) {
+                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                        }
                         break;
                     case TransactionType.DELETE:
                         if (deleteRows) {
-                            const collectionToDelete: any[] = this.findCollectionToManipulate(childDataKey, dataRow, data);
-                            const deleteIndex: number = collectionToDelete.findIndex(r => r[primaryKey] === transaction.id);
-                            collectionToDelete.splice(deleteIndex, 1);
+                            const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
+                            if (deleteIndex !== -1) {
+                                collection.splice(deleteIndex, 1);
+                            }
                         }
                         break;
                 }
@@ -266,27 +263,17 @@ export class DataUtil {
         return data;
     }
 
-    private static findDataRowFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
+    private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
         let collection: any[] = data;
         let result: any;
-        for (let i = 0; i < path.length; i++) {
-            const rowIndex = collection ? collection.findIndex(r => r[primaryKey] === path[i]) : undefined;
-            result = collection ? collection[rowIndex] : undefined;
+
+        for (const id of path) {
+            result = collection && collection.find(x => x[primaryKey] === id);
             if (!result) {
                 break;
             }
+
             collection = result[childDataKey];
-        }
-
-        return result;
-    }
-
-    private static findCollectionToManipulate(childDataKey: any, dataRow: any, data: any[]): any[] {
-        let result: any[];
-        if (dataRow && dataRow[childDataKey]) {
-            result = dataRow[childDataKey];
-        } else {
-            result = data;
         }
 
         return result;
