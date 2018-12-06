@@ -2710,6 +2710,48 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
         expect(filteringRow).toBeNull();
     }));
+
+    it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+    }));
+
+    it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -2822,6 +2864,11 @@ export class IgxGridFilteringComponent {
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
 }
 
 @Component({
@@ -2858,7 +2905,15 @@ export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
         </igx-column>
     </igx-grid>`
 })
-export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+ }
 
 const expectedResults = [];
 
