@@ -60,6 +60,13 @@ export interface OverlayAnimationEventArgs {
     animationType: 'open' | 'close';
 }
 
+export interface Size {
+    /** Gets or sets the horizontal component of Size */
+    width: number;
+     /** Gets or sets the vertical component of Size */
+    height: number;
+}
+
 /** @hidden */
 export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
     let result: Point = new Point(0, 0);
@@ -96,4 +103,5 @@ export interface OverlayInfo {
     closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
+    originalElementStyle?: string;
 }
