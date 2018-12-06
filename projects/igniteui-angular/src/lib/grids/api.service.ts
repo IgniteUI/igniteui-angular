@@ -421,11 +421,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                 grid.transactions.endPending(false);
             }
             this.updateData(grid, rowID, data[index], emitArgs.oldValue, emitArgs.newValue);
-            // if (grid.transactions.enabled && emitArgs.newValue !== null) {
-            //     grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
-            // } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
-            //     Object.assign(data[index], emitArgs.newValue);
-            // }
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
@@ -609,9 +604,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return column.dataType === DataType.Number;
     }
 
-    public get_all_data(id: string, transactions?: boolean): any[] {
+    public get_all_data(id: string, includeTransactions = false): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
+        const data = includeTransactions ? grid.dataWithAddedInTransactionRows : grid.data;
         return data ? data : [];
     }
 
