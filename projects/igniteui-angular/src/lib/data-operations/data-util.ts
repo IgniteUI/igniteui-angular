@@ -228,9 +228,9 @@ export class DataUtil {
 
         for (let i = 0; i < transactions.length; i++) {
             const transaction = transactions[i];
-            const path = transaction.path;
 
-            if (path) {
+            if (transaction.path) {
+                const path = [...transaction.path];
                 //  We need to get parent data row. If there is a path and path contains this row id,
                 //  this is the case for UPDATE and DELETE transactions type, remove the last id from
                 //  the path
