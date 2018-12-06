@@ -11,8 +11,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
 - `IgxMask`:
     - `placeholder` input property is added to allow developers to specify the placeholder attribute of the host input element that the `igxMask` is applied on;
-    - `displayValuePipe` input property is provided that allows develpers to additionally transform the value on blur;
-    - `focusedValuePipe` input property is provided that allows devel0pers to additionally transform the value on focus;
+    - `displayValuePipe` input property is provided that allows developers to additionally transform the value on blur;
+    - `focusedValuePipe` input property is provided that allows developers to additionally transform the value on focus;
 
 
 ## 7.0.2

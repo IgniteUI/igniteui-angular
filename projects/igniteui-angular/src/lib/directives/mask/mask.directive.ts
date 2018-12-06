@@ -199,7 +199,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
         this._maskOptions.format = this.mask ? this.mask : 'CCCCCCCCCC';
         this._maskOptions.promptChar = this.promptChar ? this.promptChar : '_';
-        this.nativeElement.setAttribute('placeholder', this.placeholder ? this.placeholder : this.mask);
+        this.nativeElement.setAttribute('placeholder', this.placeholder ? this.placeholder : this._maskOptions.format);
     }
 
     /**
@@ -296,6 +296,8 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public onBlur(value) {
         if (this.displayValuePipe) {
             this.value = this.displayValuePipe.transform(value);
+        } else if (value === this.maskHelper.parseMask(this._maskOptions)) {
+            this.value = '';
         }
     }
 
@@ -321,7 +323,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
 
-        this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
+        if (value) {
+            this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
+        }
 
         this.dataValue = this.includeLiterals ? this.value : value;
         this._onChangeCallback(this.dataValue);

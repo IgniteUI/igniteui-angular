@@ -26,7 +26,8 @@ describe('igxMask', () => {
                 LetterSpaceMaskComponent,
                 MaskComponent,
                 OneWayBindComponent,
-                PipesMaskComponent
+                PipesMaskComponent,
+                PlaceholderMaskComponent
             ],
             imports: [
                 FormsModule,
@@ -43,7 +44,8 @@ describe('igxMask', () => {
 
         const input = fixture.componentInstance.input;
 
-        expect(input.nativeElement.value).toEqual('__________');
+        expect(input.nativeElement.value).toEqual('');
+        expect(input.nativeElement.getAttribute('placeholder')).toEqual('CCCCCCCCCC');
 
         input.nativeElement.dispatchEvent(new Event('click'));
         tick();
@@ -332,6 +334,28 @@ describe('igxMask', () => {
 
         expect(input.nativeElement.value).toEqual('SSS');
     }));
+
+    it('Apply placehodler when value is not defined.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(PlaceholderMaskComponent);
+        fixture.detectChanges();
+
+        const input = fixture.componentInstance.input;
+
+        expect(input.nativeElement.value).toEqual('');
+        expect(input.nativeElement.placeholder).toEqual('hello');
+
+        input.nativeElement.dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('(__) (__)');
+        expect(input.nativeElement.placeholder).toEqual('hello');
+
+        input.nativeElement.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('');
+        expect(input.nativeElement.placeholder).toEqual('hello');
+    }));
 });
 
 @Component({ template: `<igx-input-group>
@@ -464,8 +488,22 @@ class OneWayBindComponent {
 
 @Component({ template: `<igx-input-group>
                             <input #input type="text" igxInput
+                                [placeholder]="'hello'"
+                                [(ngModel)]="value"
+                                [igxMask]="mask"/>
+                        </igx-input-group>` })
+class PlaceholderMaskComponent {
+    public mask = '(00) (00)';
+    public value = null;
+
+    @ViewChild('input')
+    public input: ElementRef;
+}
+
+@Component({ template: `<igx-input-group>
+                            <input #input type="text" igxInput
                                 [displayValuePipe]="displayFormat"
-                                [inputValuePipe]="inputFormat"
+                                [focusedValuePipe]="inputFormat"
                                 [(ngModel)]="value"
                                 [igxMask]="mask"/>
                         </igx-input-group>` })
