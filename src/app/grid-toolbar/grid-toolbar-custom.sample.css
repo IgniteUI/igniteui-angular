@@ -1,0 +1,12 @@
+
+.sample-content {
+    flex-flow: column nowrap;
+}
+
+.grid-sample {
+    margin-bottom: 144px;
+}
+
+.grid-sample:last-child {
+    margin-bottom: 0;
+}
