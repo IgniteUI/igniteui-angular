@@ -160,6 +160,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return keys;
     }
 
+    public get rootGrid() {
+        let currGrid = this;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+        }
+        return currGrid;
+    }
+
     getChildGrid(path: Array<IPathSegment>) {
         if (!path) {
             return;
