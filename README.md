@@ -81,7 +81,8 @@ Including the `igniteui-angular` and `igniteui-cli` packages to your project:
 ng add igniteui-angular
 ```
 
-After this operation you can use the Ignite UI CLI commands.
+After this operation you can use the Ignite UI CLI commands in your project, such as `ig` and `ig add`.
+[Learn more](https://github.com/IgniteUI/igniteui-cli#usage)
 
 ## Updating Existing Project
 
