@@ -52,6 +52,7 @@ export class IgxGridSummaryService {
     }
 
     public removeSummariesCachePerColumn(columnName) {
+        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe = !this.retriggerRootPipe; }
         this.summaryCacheMap.forEach((cache) => {
             if (cache.get(columnName)) {
                 cache.delete(columnName);
