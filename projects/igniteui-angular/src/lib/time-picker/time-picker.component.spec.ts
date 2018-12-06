@@ -16,7 +16,7 @@ describe('IgxTimePicker', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTimePickerDropDown,
+                IgxTimePickerDropDownComponent,
                 IgxTimePickerTestComponent,
                 IgxTimePickerWithPassedTimeComponent,
                 IgxTimePickerWithPmTimeComponent,
@@ -956,30 +956,32 @@ describe('IgxTimePicker', () => {
         });
     });
 
-    describe('DropDown Mode', () => {        
+    describe('DropDown Mode', () => {
         configureTestSuite();
         let fixture;
         let timePicker;
         let dom;
-        let input
+        let input;
+        let button;
         beforeEach(
             async(() => {
-                fixture = TestBed.createComponent(IgxTimePickerDropDown);
+                fixture = TestBed.createComponent(IgxTimePickerDropDownComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
                 dom = fixture.debugElement;
                 input = dom.query(By.directive(IgxInputDirective));
+                button = dom.query(By.css('.myButton'));
             })
         );
 
         afterEach(async(() => {
             UIInteractions.clearOverlay();
         }));
-        
+
         it('should initialize a timePicker with dropdown', () => {
-            expect(fixture.componentInstance).toBeDefined();
+            expect(timePicker).toBeDefined();
         });
-        
+
         it('should accept specific time in the input', fakeAsync(() => {
             fixture.detectChanges();
             const customValue = '12:01 AM';
@@ -989,71 +991,206 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toEqual(customValue);
         }));
 
-        it('Increase and decrease hours/minutes/AMPM, where the caret is, using arrows', fakeAsync(() => {
+        it('should increase and decrease hours/minutes/AMPM, where the caret is, using arrows and mousewheel', fakeAsync(() => {
             fixture.detectChanges();
 
             // initial input value is 05:45 PM
-            input.nativeElement.value = '05:45 PM'
+            input.nativeElement.value = '05:45 PM';
             timePicker.itemsDelta = { hours: 1, minutes: 1 };
 
             // focus the input, position the caret at the hours
             input.nativeElement.focus();
-            input.nativeElement.setSelectionRange(1,1);
+            input.nativeElement.setSelectionRange(1, 1);
 
             // press arrow down
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('04:45 PM');
+            expect(input.nativeElement.value).toBe('04:45 PM', 'ArrowDown on hours failed');
 
-            input.nativeElement.setSelectionRange(1,1);
-            fixture.detectChanges();
-            // press double arrow up
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            // position caret at the hours
+            input.nativeElement.setSelectionRange(1, 1);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('06:45 PM');
-
-            input.nativeElement.setSelectionRange(1,1);
+            // mousewheel up
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, -10);
             fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('05:45 PM', 'MouseWheel Up on hours dailed');
 
             // test minutes
-            // press arrow down
-            input.nativeElement.setSelectionRange(3,3);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            // position caret at the minutes and mousewheel down
+            input.nativeElement.setSelectionRange(3, 3);
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, 10);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('06:44 PM');
+            expect(input.nativeElement.value).toBe('05:44 PM', 'MouseWheel Down on minutes failed');
 
-            input.nativeElement.setSelectionRange(3,3);
+            input.nativeElement.setSelectionRange(3, 3);
             fixture.detectChanges();
-            // press double arrow up
+            // press arrow up
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('06:46 PM');
+            expect(input.nativeElement.value).toBe('05:45 PM', 'ArrowUp on minutes failed');
 
             // test AMPM
-            // press arrow down
-            input.nativeElement.setSelectionRange(7,7);
+            // position caret at AMPM and arrow down
+            input.nativeElement.setSelectionRange(7, 7);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('06:46 AM');
+            expect(input.nativeElement.value).toBe('05:45 AM', 'ArrowDown on AMPM failed');
 
-            input.nativeElement.setSelectionRange(7,7);
+            input.nativeElement.setSelectionRange(7, 7);
             fixture.detectChanges();
-            // press double arrow up
+            // mousewheel up
+            UIInteractions.simulateWheelEvent(input.nativeElement, 0, -10);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('05:45 PM', 'MouseWheel Up on AMPM failed');
+
+        }));
+        it('should open the dropdown when click on the clock icon', fakeAsync(() => {
+            fixture.detectChanges();
+            // clock icon
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+            UIInteractions.clickElement(iconTime);
+            const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+            fixture.detectChanges();
+            expect(dropDown.properties.hidden).toBeFalsy();
+        }));
+        it('should reset value on clear button click', fakeAsync(() => {
+            fixture.detectChanges();
+            // clear icon
+            const clearTime = dom.queryAll(By.css('.igx-icon'))[1];
+            UIInteractions.clickElement(clearTime);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.innerText).toEqual('');
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            expect(input.nativeElement.placeholder).toBe('hh:mm tt');
+        }));
+        it('should break on spinloop witn min and max value on arrow down', fakeAsync(() => {
+            fixture.detectChanges();
+
+            const customValue = '07:07 AM';
+
+            UIInteractions.sendInput(input, customValue);
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            timePicker.isSpinLoop = false;
+            timePicker.minValue = customValue;
+            timePicker.maxValue = '08:07 AM';
+            timePicker.itemsDelta = { hours: 1, minutes: 1 };
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(0, 0);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on hours');
+
+            input.nativeElement.setSelectionRange(5, 5);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on minutes');
+
+        }));
+
+        it('should break on spinloop witn min and max value on arrow up', fakeAsync(() => {
+            fixture.detectChanges();
+
+            const customValue = '08:07 AM';
+
+            UIInteractions.sendInput(input, customValue);
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            timePicker.isSpinLoop = false;
+            timePicker.minValue = '07:07 AM';
+            timePicker.maxValue = customValue;
+            timePicker.itemsDelta = { hours: 1, minutes: 1 };
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(2, 2);
+            fixture.detectChanges();
+
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
             fixture.detectChanges();
 
-            expect(input.nativeElement.value).toEqual('06:46 PM');
+            expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on hours');
+
+            input.nativeElement.setSelectionRange(5, 5);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on minutes');
+
+            input.nativeElement.setSelectionRange(7, 7);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on AMPM');
 
         }));
-        
 
+        it('should spinloop on correct time after max or min values', fakeAsync(() => {
+            fixture.detectChanges();
+
+            const customValue = '08:05 AM';
+
+            UIInteractions.sendInput(input, customValue);
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            timePicker.isSpinLoop = true;
+            timePicker.minValue = '08:05 AM';
+            timePicker.maxValue = '11:07 AM';
+            timePicker.itemsDelta = { hours: 1, minutes: 1 };
+            fixture.detectChanges();
+
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(1, 1);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(input.nativeElement.value).toBe('11:05 AM', 'SpinLoop Down wrong time');
+
+            // set a new value which is the max value
+            UIInteractions.sendInput(input, '11:03 AM');
+            fixture.detectChanges();
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            // should skip one hour because of the minutes
+            input.nativeElement.focus();
+            input.nativeElement.setSelectionRange(2, 2);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+            expect(input.nativeElement.value).toBe('09:03 AM', 'SpinLoop Up wrong time');
+        }));        
     });
 });
 
@@ -1174,17 +1311,14 @@ export class IgxTimePickerRetemplatedComponent {}
                 </igx-time-picker>
     `
 })
-export class IgxTimePickerDropDown {
-    min = "09:00";
-    max = "19:00";
-
+export class IgxTimePickerDropDownComponent {
     itemsDelta = { hours: 1, minutes: 5 };
-    format = "hh:mm tt";
+    format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
-    mode = InteractionMode;
+    public mode = InteractionMode;
 
-    date = new Date(2018, 10, 27, 17, 45, 0, 0);
+    public date = new Date(2018, 10, 27, 17, 45, 0, 0);
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
 
