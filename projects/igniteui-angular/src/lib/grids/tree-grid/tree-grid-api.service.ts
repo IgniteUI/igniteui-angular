@@ -123,4 +123,18 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
+
+    public get_selected_children(id: string, record: ITreeGridRecord, selectedRowIDs: any[]) {
+        const grid = this.get(id);
+        if (!record.children || record.children.length === 0) {
+            return;
+        }
+         for (let i = 0; i < record.children.length; i++) {
+            const child = record.children[i];
+            if (grid.selection.is_item_selected(id, child.rowID)) {
+                selectedRowIDs.push(child.rowID);
+            }
+            this.get_selected_children(id, child, selectedRowIDs);
+        }
+    }
 }
