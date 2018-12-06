@@ -26,6 +26,7 @@ export interface IgxComboBase {
     onClosing: EventEmitter<CancelableEventArgs>;
     onClosed: EventEmitter<void>;
 
+    focusSearchInput(opening?: boolean): void;
     triggerCheck();
     setSelectedItem(itemID: any, select?: boolean);
     isItemSelected(item: any): boolean;
