@@ -14,11 +14,12 @@ import {
     ProductsComponent,
     VirtualSummaryColumnComponent,
     SummaryColumnComponent,
-    FilteringComponent
+    FilteringComponent,
+    SummarieGroupByComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxNumberFilteringOperand } from 'igniteui-angular';
+import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 
 describe('IgxGrid - Summaries', () => {
@@ -35,7 +36,8 @@ describe('IgxGrid - Summaries', () => {
                 VirtualSummaryColumnComponent,
                 SummaryColumnsWithIdenticalWidthsComponent,
                 FilteringComponent,
-                ColumnGroupFourLevelTestComponent
+                ColumnGroupFourLevelTestComponent,
+                SummarieGroupByComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot(), NoopAnimationsModule]
         })
@@ -498,7 +500,7 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 1, [], []);
                 HelperUtils.verifyColumnSummaries(summaryRow, 2, [], []);
                 HelperUtils.verifyColumnSummaries(summaryRow, 3,
-                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
+                    ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '0', '20,000', '39,004', '3,900.4']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 4, [], []);
 
                 grid.getColumnByName('UnitsInStock').hidden = true;
@@ -675,6 +677,60 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 6, ['Count'], ['27']);
         }));
     });
+
+    describe('Grouping tests: ', () => {
+        let fix;
+        let grid;
+        beforeEach(() => {
+            fix = TestBed.createComponent(SummarieGroupByComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+
+            fix.detectChanges();
+        });
+
+        it('should render correct summaries when there is grouped colomn', () => {
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID1(fix, 5);
+            const groupRows = grid.groupsRowList.toArray();
+            groupRows[0].toggle();
+            fix.detectChanges();
+            verifySummariesForParentID12(fix, 5);
+        });
+    });
+
+    function verifyBaseSummaries(fixture) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, 0);
+        HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['18', '-1', '847', '3,517', '195.389']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['18']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['18', 'Dec 18, 2007', 'Apr 18, 2018']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['18', '25', '61', '707', '39.278']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['18']);
+    }
+
+    function verifySummariesForParentID1(fixture, vissibleIndex) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
+        HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '-1', '-1', '-4', '-1']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['4', 'Apr 20, 2008', 'Feb 22, 2014']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
+    }
+
+    function verifySummariesForParentID12(fixture, vissibleIndex) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
+        HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '12', '12', '36', '12']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['3', 'Apr 22, 2010', 'Apr 18, 2018']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '25', '39', '89', '29.667']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
+    }
 });
 
 @Component({

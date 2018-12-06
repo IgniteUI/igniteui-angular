@@ -410,7 +410,6 @@ describe('IgxTreeGrid - Summaries', () => {
 
             expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(2);
             verifyTreeBaseSummaries(fix);
-
             verifySummaryForRow147(fix, 4);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
@@ -423,7 +422,6 @@ describe('IgxTreeGrid - Summaries', () => {
 
             expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(3);
             verifyTreeBaseSummaries(fix);
-
             verifySummaryForRow147(fix, 3);
             verifySummaryForRow317(fix, 2);
         });
