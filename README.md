@@ -81,6 +81,8 @@ Including the `igniteui-angular` and `igniteui-cli` packages to your project:
 ng add igniteui-angular
 ```
 
+After this operation you can use the Ignite UI CLI commands.
+
 ## Updating Existing Project
 
 Analyze your project for possible migrations:
@@ -92,7 +94,9 @@ ng update
 If there are new versions available, update your packages:
 
 ```
-ng update <package name>
+ng update igniteui-angular
+...
+ng update igniteui-cli
 ```
 
 ## Building the Library
@@ -154,6 +158,8 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
+
+The [Crypto Portfolio App](https://igniteui.github.io/crypto-portfolio-app/#/home) is a delicate web and mobile app, developed with Ignite UI for Angular most solid components and styled with one of a kind theming engine.
 
 To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/angular-samples/components/grid.html).
 
