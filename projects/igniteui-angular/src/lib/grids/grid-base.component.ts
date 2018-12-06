@@ -998,7 +998,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Output()
-    public onSortingDone = new EventEmitter<ISortingExpression>();
+    public onSortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
 
     /**
      * Emitted when filtering is performed through the UI.
@@ -3018,9 +3018,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public sort(...rest): void {
         this.endEdit(false);
         if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+            const expressions: Array<ISortingExpression> = rest[0];
+            this._sortMultiple(expressions);
+            this.onSortingDone.emit(expressions);
         } else {
-            this._sort(rest[0]);
+            const expression: ISortingExpression = rest[0];
+            this._sort(expression);
+            this.onSortingDone.emit(expression);
         }
     }
 
@@ -3646,12 +3650,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _sort(expression: ISortingExpression) {
         this.gridAPI.sort(this.id, expression);
-        this.onSortingDone.emit({
-            dir: expression.dir,
-            fieldName: expression.fieldName,
-            ignoreCase: expression.ignoreCase,
-            strategy: expression.strategy
-        });
     }
 
     /**
