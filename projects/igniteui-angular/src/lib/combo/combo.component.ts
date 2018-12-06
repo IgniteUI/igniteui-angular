@@ -219,6 +219,13 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
+    get displaySearchInput(): boolean {
+        return this.filterable || this.allowCustomValues;
+    }
+
+    /**
+     * @hidden
+     */
     @ViewChild('comboInput')
     set comboInput(content: ElementRef<HTMLInputElement>) {
         this._comboInput = content;
@@ -1263,11 +1270,27 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
-        if (this.searchInput) {
-            this.searchInput.nativeElement.focus();
-        }
+        this.searchInput.nativeElement.focus();
         this.handleInputChange();
     }
+
+    /**
+     * @hidden;
+     */
+    public focusSearchInput(opening?: boolean): void {
+        if (this.displaySearchInput && this.searchInput) {
+            this.searchInput.nativeElement.focus();
+        } else {
+            if (opening) {
+                this.dropdownContainer.nativeElement.focus();
+                this.dropdown.onFocus();
+            } else {
+                this.comboInput.nativeElement.focus();
+                this.toggle();
+            }
+        }
+    }
+
 
     /**
      * @hidden
