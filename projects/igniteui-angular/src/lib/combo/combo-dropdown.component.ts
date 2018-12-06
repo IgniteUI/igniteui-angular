@@ -124,7 +124,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
      */
     navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
-            this.combo.searchInput.nativeElement.focus();
+            this.combo.focusSearchInput(false);
         } else {
             super.navigatePrev();
         }
@@ -309,7 +309,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     }
 
     private focusComboSearch() {
-        this.combo.searchInput.nativeElement.focus();
+        this.combo.focusSearchInput(false);
         if (this.focusedItem) {
             this.focusedItem.isFocused = false;
         }
@@ -349,7 +349,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
      */
     onToggleOpened() {
         this.combo.triggerCheck();
-        this.combo.searchInput.nativeElement.focus();
+        this.combo.focusSearchInput(true);
         this.onOpened.emit();
     }
 
