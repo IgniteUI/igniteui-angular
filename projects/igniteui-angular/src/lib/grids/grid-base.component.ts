@@ -62,10 +62,12 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
+const FILTER_ROW_HEIGHT = 50;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -745,8 +747,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+
+            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this._ngAfterViewInitPaassed) {
+                if (this.maxLevelHeaderDepth) {
+                    this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                }
+            }
+
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
+
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
@@ -1302,6 +1314,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+
+    /**
      * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
@@ -1685,15 +1707,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
-
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
 
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
@@ -3433,7 +3446,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _derivePossibleWidth() {
         if (!this._columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
-            this.initColumns(this.columnList, null);
+            this.columnList.forEach((column: IgxColumnComponent) => {
+                column.defaultWidth = this.columnWidth;
+            });
         }
     }
 
@@ -3455,7 +3470,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
+                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
 
         if (!this._height) {
