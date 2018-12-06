@@ -411,13 +411,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    public deselectRows(rowIDs: any[], deselectSiblings = true) {
-        super.deselectRows(deselectSiblings ? this._gridAPI.flattening_ids(this.id, rowIDs) : rowIDs);
-    }
-
-    /**
-     * @hidden
-     */
     protected deleteRowFromData(rowID: any, index: number) {
          if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
@@ -436,6 +429,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
+
+            const selectedChildren = [];
+            this._gridAPI.get_selected_children(this.id, record, selectedChildren);
+
+            if (selectedChildren.length > 0) {
+                this.deselectRows(selectedChildren);
+            }
+
             if (this.transactions.enabled) {
                 this.transactions.add({
                     id: rowID,

@@ -124,19 +124,18 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
-    public flattening_ids(id: string, rowIDs: any[]) {
-        const flatRowIDs = rowIDs;
-        let row;
-        for (let index = 0; index < rowIDs.length; index++) {
-            row = this.get_row_by_key(id, rowIDs[index]);
-            if (row && row.treeRow.children) {
-                row.treeRow.children.forEach((childRow: ITreeGridRecord) => {
-                    const childID = childRow.rowID;
-                    flatRowIDs.push(childID);
-                    flatRowIDs.concat(this.flattening_ids(id, [childID]));
-                });
-            }
+    public get_selected_children(id: string, record: ITreeGridRecord, selectedRowIDs: any[]) {
+        const grid = this.get(id);
+        if (!record.children || record.children.length === 0) {
+            return;
         }
-        return flatRowIDs;
+
+        for (let i = 0; i < record.children.length; i++) {
+            const child = record.children[i];
+            if (grid.selection.is_item_selected(id, child.rowID)) {
+                selectedRowIDs.push(child.rowID);
+            }
+            this.get_selected_children(id, child, selectedRowIDs);
+        }
     }
 }
