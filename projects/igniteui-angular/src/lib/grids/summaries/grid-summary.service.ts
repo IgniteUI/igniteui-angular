@@ -31,9 +31,6 @@ export class IgxGridSummaryService {
             const columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
             this.removeSummaries(args.rowID, columnName);
         }
-        if (this.grid.rootSummariesEnabled) {
-            this.retriggerRootPipe = !this.retriggerRootPipe;
-        }
     }
 
     public removeSummaries(rowID, columnName?) {
@@ -48,16 +45,15 @@ export class IgxGridSummaryService {
                this.deleteSummaryCache(id, columnName);
            });
         }
-        this.retriggerRootPipe = !this.retriggerRootPipe;
     }
 
     public removeSummariesCachePerColumn(columnName) {
-        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe = !this.retriggerRootPipe; }
         this.summaryCacheMap.forEach((cache) => {
             if (cache.get(columnName)) {
                 cache.delete(columnName);
             }
         });
+        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe = !this.retriggerRootPipe; }
     }
 
     public calcMaxSummaryHeight() {
@@ -97,6 +93,9 @@ export class IgxGridSummaryService {
 
     public resetSummaryHeight() {
         this.summaryHeight = 0;
+        if (this.grid.rootSummariesEnabled) {
+            this.retriggerRootPipe = !this.retriggerRootPipe;
+        }
     }
 
     public updateSummaryCache(groupingArgs) {
@@ -124,6 +123,9 @@ export class IgxGridSummaryService {
                 this.summaryCacheMap.get(id).delete(columnName);
             } else {
                 this.summaryCacheMap.delete(id);
+            }
+            if (id === this.rootSummaryID && this.grid.rootSummariesEnabled) {
+                this.retriggerRootPipe = !this.retriggerRootPipe;
             }
         }
     }

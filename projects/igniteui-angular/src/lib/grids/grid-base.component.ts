@@ -818,6 +818,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
             this.summaryService.summaryHeight = 0;
+            this.endEdit(true);
             this.calculateGridHeight();
             this.cdr.markForCheck();
         }
@@ -3717,10 +3718,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _summaries(fieldName: string, hasSummary: boolean, summaryOperand?: any) {
         const column = this.gridAPI.get_column_by_name(this.id, fieldName);
-        column.hasSummary = hasSummary;
-
-        if (summaryOperand) {
-            column.summaries = summaryOperand;
+        if (column) {
+            column.hasSummary = hasSummary;
+            if (summaryOperand) {
+                if (this.rootSummariesEnabled) {this.summaryService.retriggerRootPipe = !this.summaryService.retriggerRootPipe; }
+                column.summaries = summaryOperand;
+            }
         }
     }
 
@@ -3735,8 +3738,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _disableMultipleSummaries(expressions: string[]) {
-        expressions.forEach((column) => { this._summaries(column, false); });
+    protected _disableMultipleSummaries(expressions) {
+        expressions.forEach((column) => {
+            const columnName = column && column.fieldName ? column.fieldName : column;
+            this._summaries(columnName, false); });
     }
 
     /**
