@@ -28,7 +28,7 @@
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'">
-    <igx-input-group [displayDensity]="displayDensity" class="igx-combo__search">
+    <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
         <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue"
             (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)"
             (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
