@@ -882,6 +882,22 @@ describe('igxCombo', () => {
                 });
             });
         });
+
+        it('Should properly get the first focusable item when focusing the component list', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboInputTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            spyOn(combo.dropdown, 'getFirstSelectableItem').and.callThrough();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            combo.searchInput.nativeElement.dispatchEvent(new KeyboardEvent('keypress', { key: 'Tab'}));
+            (<HTMLElement>document.getElementsByClassName('igx-combo__content')[0]).dispatchEvent(new Event('focus'));
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.getFirstSelectableItem).toHaveBeenCalledTimes(1);
+            expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
+        }));
     });
 
 
@@ -1918,6 +1934,19 @@ describe('igxCombo', () => {
             expect(dropDownWidth).toEqual(comboWidth);
             expect(inputWidth).toEqual(comboWidth);
         }));
+
+        it(`Should not render a search input if both 'allowCustomValues' and 'filterable' are false`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.allowCustomValues = false;
+            combo.filterable = false;
+            expect(combo.displaySearchInput).toBeFalsy();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(combo.searchInput).toBeFalsy();
+        }));
     });
 
     describe('Virtualization tests: ', () => {
@@ -2864,7 +2893,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('My New Custom Item');
         }));
 
-        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+       it('Disable/Enable filtering at runtime', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2888,8 +2917,8 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
-            combo.searchInput.nativeElement.value = 'Not-available item';
-            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            combo.searchValue = 'Not-available item';
+            combo.handleInputChange();
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
