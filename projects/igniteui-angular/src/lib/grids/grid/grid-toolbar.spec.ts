@@ -73,6 +73,11 @@ describe('IgxGrid - Grid Toolbar', () => {
         grid.toolbarTitle = '';
         fixture.detectChanges();
 
+        expect(getToolbar(fixture)).not.toBe(null);
+
+        grid.showToolbar = false;
+        fixture.detectChanges();
+
         expect(getToolbar(fixture)).toBe(null);
     });
 
