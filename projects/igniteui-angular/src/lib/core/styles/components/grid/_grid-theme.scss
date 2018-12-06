@@ -146,6 +146,7 @@
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
+    $row-selected-cell-background: darken(map-get($theme, 'row-selected-background'), 8%);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -358,7 +359,8 @@
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
-        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color,
+        row-selected-cell-background: $row-selected-cell-background
     ));
 }
 
@@ -654,6 +656,11 @@
         color: --var($theme, 'row-selected-text-color');
         background-color: --var($theme, 'row-selected-background');
 
+        %grid-cell--selected,
+        %grid-cell--pinned-selected {
+            background-color: --var($theme, 'row-selected-cell-background');
+        }
+
         &:hover {
             background-color: --var($theme, 'row-selected-background');
             color: --var($theme, 'row-selected-text-color');
@@ -820,7 +827,7 @@
 
     %grid-cell--selected {
         color: --var($theme, 'cell-selected-text-color');
-        background-color: --var($theme, 'cell-selected-background') !important;
+        background-color: --var($theme, 'cell-selected-background');
         border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
@@ -867,6 +874,12 @@
         position: relative;
         background-color: inherit;
         z-index: 9999;
+    }
+
+    %grid-cell--pinned-selected {
+        color: --var($theme, 'cell-selected-text-color');
+        background-color: --var($theme, 'cell-selected-background');
+        border-bottom: 0;
     }
 
     %grid-cell--pinned-last {
@@ -1157,8 +1170,7 @@
     %igx-grid__drag-col-header {
         background-color: --var($theme, 'header-background');
 
-        %grid-cell-header-title,
-        %grid-cell-header-icons {
+        %grid-cell-header {
             opacity: .4;
         }
     }

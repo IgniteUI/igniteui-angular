@@ -4,9 +4,24 @@ All notable changes for each version of this project will be documented in this 
 
 ## 7.0.2
 ### Features
+- `ng add igniteui-angular` support :tada:
+    - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
+    This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
+    
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
 
 ## 7.0.1
 ### Bug fixes
@@ -15,6 +30,39 @@ All notable changes for each version of this project will be documented in this 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
+
+## 6.2.3
+- `igxGrid`
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
+    the changes will be applied to the particular instance of the component:
+    ```typescript
+        this.grid.resourceStrings = {
+            igx_grid_filter: 'My filter',
+            igx_grid_filter_row_close: 'My close'
+        };
+    ```
+    If only a value is updated, all component instances will be updated:
+    ```typescript
+        this.grid.resourceStrings.igx_grid_filter = 'My filter';
+    ```
+- `igxTimePicker`:
+    - `resourceStrings` property added, which allows changing/localizing strings for component.
+- Localization
+    - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
+    in the application.
+    - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
+- `ISortingEpression`:
+    - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
+
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
 
 ## 6.2.2
 - `igx-checkbox`:
