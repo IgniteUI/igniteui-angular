@@ -6,7 +6,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
 import { IgxColumnGroupComponent } from '../column.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
-import { IgxToggleDirective } from '../../directives/toggle/toggle.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import {
     MovableColumnsComponent,
@@ -18,7 +17,6 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - Column Moving', () => {
     configureTestSuite();
@@ -156,9 +154,9 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
             await wait();
             fixture.detectChanges();
