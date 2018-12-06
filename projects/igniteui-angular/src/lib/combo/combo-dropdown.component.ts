@@ -53,12 +53,6 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public disableTransitions = false;
-
-    /**
      *  Event emitter overrides
      *
      * @hidden
