@@ -55,14 +55,12 @@ All notable changes for each version of this project will be documented in this 
 - Removed the `GridHammerConfig` provider which broke touch events for other components.
 
 ## 6.2.1
-
 ### Features
 - `igxGrid`, `igxChip`: Add display density DI token to igxGrid and igxChip ([#2804](https://github.com/IgniteUI/igniteui-angular/issues/2804))
 - `igxGrid`
     - Quick filter auto close ([#2979](https://github.com/IgniteUI/igniteui-angular/issues/2979))
     - Group By: Added title to chip in Group By area ([#3035](https://github.com/IgniteUI/igniteui-angular/issues/3035))
     - Improve UX for boolean and date columns, ([#3092](https://github.com/IgniteUI/igniteui-angular/issues/3092))
-    - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
     - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
     the changes will be applied to the particular instance of the component:
     ```typescript
