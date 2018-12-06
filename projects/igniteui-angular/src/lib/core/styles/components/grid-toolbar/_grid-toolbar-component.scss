@@ -15,6 +15,10 @@
         @extend %igx-grid-toolbar__title !optional;
     }
 
+    @include e(custom-content){
+        @extend %igx-grid-toolbar__custom-content !optional;
+    }
+
     @include e(actions){
         @extend %igx-grid-toolbar__actions !optional;
     }

@@ -149,9 +149,13 @@ export const enum KEYS {
     ESCAPE = 'Escape',
     ESCAPE_IE = 'Esc',
     LEFT_ARROW = 'ArrowLeft',
+    LEFT_ARROW_IE = 'Left',
     UP_ARROW = 'ArrowUp',
+    UP_ARROW_IE = 'Up',
     RIGHT_ARROW = 'ArrowRight',
+    RIGHT_ARROW_IE = 'Right',
     DOWN_ARROW = 'ArrowDown',
+    DOWN_ARROW_IE = 'Down',
     F2 = 'F2',
     TAB = 'Tab'
 }

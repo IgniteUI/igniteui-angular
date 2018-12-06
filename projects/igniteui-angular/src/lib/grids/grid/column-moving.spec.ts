@@ -156,9 +156,9 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 250, 65);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 244, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 100, 71);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 100, 71);
             await wait();
             fixture.detectChanges();
@@ -409,7 +409,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             // step 1 - group a column
-            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            grid.groupBy({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
 
             // step 2 - move a column
