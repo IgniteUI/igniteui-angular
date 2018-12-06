@@ -22,9 +22,9 @@ Position strategies determine where to display the component in the provided Igx
 
 4) **Elastic** - Positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view. Defaults to:
 
-| target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       |
-|:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|
-| new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom |
+| target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       | minSize                 |
+|:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|-------------------------|
+| new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom | { width: 0, height: 0 } |
 
 ## Usage
 Position an element based on an existing button as a target, so it's start point is the button's Bottom/Left corner.
@@ -34,7 +34,8 @@ const positionSettings: PositionSettings = {
     horizontalDirection: HorizontalAlignment.Right,
     verticalDirection: VerticalAlignment.Bottom,
     horizontalStartPoint: HorizontalAlignment.Left,
-    verticalStartPoint: VerticalAlignment.Bottom
+    verticalStartPoint: VerticalAlignment.Bottom,
+    minSize: { width: 100, height: 300 }
 };
 
 const strategy =  new ConnectedPositioningStrategy(positionSettings);
@@ -71,3 +72,4 @@ import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrate
 |verticalStartPoint  | VerticalAlignment           | Target's starting point                             |
 |openAnimation       | AnimationReferenceMetadata  | Animation applied while overlay opens               |
 |closeAnimation      | AnimationReferenceMetadata  | Animation applied while overlay closes              |
+|minSize             | Size                        | The size up to which element could be reduced       |

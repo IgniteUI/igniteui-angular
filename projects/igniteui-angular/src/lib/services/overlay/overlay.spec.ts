@@ -114,7 +114,7 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
     return expectedLeft;
 }
 
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     beforeEach(async(() => {
         UIInteractions.clearOverlay();
     }));

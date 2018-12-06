@@ -11,7 +11,8 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     horizontalStartPoint: HorizontalAlignment.Left,
     verticalStartPoint: VerticalAlignment.Bottom,
     openAnimation: scaleInVerTop,
-    closeAnimation: scaleOutVerTop
+    closeAnimation: scaleOutVerTop,
+    minSize: { width: 0, height: 0 }
   };
 
   public settings: PositionSettings;
@@ -22,10 +23,11 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
-       let transformString = '';
-       transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
-       transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
-       contentElement.style.transform = transformString.trim();
+    //  TODO: extract transform setting in util function
+    let transformString = '';
+    transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
+    transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
+    contentElement.style.transform = transformString.trim();
   }
 }
 

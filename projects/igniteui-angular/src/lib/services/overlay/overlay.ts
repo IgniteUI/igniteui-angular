@@ -116,7 +116,7 @@ export class IgxOverlayService implements OnDestroy {
      */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
-    show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
+    show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
         if (typeof compOrId === 'string') {
@@ -165,7 +165,13 @@ export class IgxOverlayService implements OnDestroy {
             this.updateSize(info);
             this._overlayInfos.push(info);
 
-            settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
+            info.originalElementStyle = info.elementRef.nativeElement.style;
+            settings.positionStrategy.position(
+                info.elementRef.nativeElement.parentElement,
+                { width: info.initialSize.width, height: info.initialSize.height },
+                document,
+                true,
+                settings.positionStrategy.settings.minSize);
             settings.scrollStrategy.initialize(this._document, this, id);
             settings.scrollStrategy.attach();
         }
@@ -245,16 +251,18 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     reposition(id: string) {
-        const overlay = this.getOverlayById(id);
-        if (!overlay) {
+        const overlayInfo = this.getOverlayById(id);
+        if (!overlayInfo) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
             return;
         }
 
-        overlay.settings.positionStrategy.position(
-            overlay.elementRef.nativeElement.parentElement,
-            overlay.initialSize,
-            this._document);
+        overlayInfo.settings.positionStrategy.position(
+            overlayInfo.elementRef.nativeElement.parentElement,
+            { width: overlayInfo.initialSize.width, height: overlayInfo.initialSize.height },
+            this._document,
+            false,
+            overlayInfo.settings.positionStrategy.settings.minSize);
     }
 
     private getOverlayInfo(component: any): OverlayInfo {
@@ -394,7 +402,7 @@ export class IgxOverlayService implements OnDestroy {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
         }
-
+        info.elementRef.nativeElement.style = info.originalElementStyle;
         this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
     }
 

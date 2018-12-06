@@ -31,6 +31,7 @@ export interface PositionSettings {
     verticalStartPoint?: VerticalAlignment;
     openAnimation?: AnimationReferenceMetadata;
     closeAnimation?: AnimationReferenceMetadata;
+    minSize?: Size;
 }
 
 export interface OverlaySettings {
