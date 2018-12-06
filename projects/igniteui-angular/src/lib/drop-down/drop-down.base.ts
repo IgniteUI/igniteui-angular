@@ -23,13 +23,6 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected toggleDirective: IgxToggleDirective;
 
     /**
-     * Get dropdown's html element of it scroll container
-     */
-    protected get scrollContainer() {
-        return this.toggleDirective.element;
-    }
-
-    /**
      * Emitted before the dropdown is opened
      *
      * ```html
@@ -201,6 +194,19 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
      */
     public get element() {
         return this.elementRef.nativeElement;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
+
+    /**
+     * Get dropdown's html element of it scroll container
+     */
+    protected get scrollContainer() {
+        return this.toggleDirective.element;
     }
 
     constructor(

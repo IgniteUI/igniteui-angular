@@ -34,13 +34,13 @@
     <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
-        [igxComboItemNavigation]="dropdown" (focus)="dropdown.onFocus($event)" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        [igxComboItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
             (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
             <igx-combo-item  [itemHeight]='itemHeight' [value]="item" isHeader={{item.isHeader}} role="option">
                 <ng-container *ngIf="!item.isHeader">
-                    <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
+                    <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" [disableTransitions]="dropdown.disableTransitions" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
                 </ng-container>
                 <ng-container *ngIf="item.isHeader">
                     <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>

@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy, Input, HostListener
+    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -19,7 +19,7 @@ import { IDropDownItemClickEventArgs } from '../drop-down/drop-down-item.base';
     templateUrl: 'combo-dropdown.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy {
+export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     private _children: QueryList<IDropDownItem>;
     private _scrollPosition = 0;
     private destroy$ = new Subject<boolean>();
@@ -335,6 +335,14 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     protected _handleClick(event: IDropDownItemClickEventArgs) {
         this.setSelectedItem(event.itemID, !event.item.isSelected);
     }
+
+    /**
+     * @hidden
+     */
+    protected scrollHandler = () => {
+        this.disableTransitions = true;
+    }
+
     /**
      * @hidden
      */
@@ -381,10 +389,16 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.scrollHandler);
+    }
+
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
+        this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.scrollHandler);
         this.destroy$.next(true);
         this.destroy$.complete();
     }
