@@ -282,8 +282,8 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @HostListener('focus', ['$event.target.value'])
     public onFocus(value) {
-        if (this.inputValuePipe) {
-            this.value = this.inputValuePipe.transform(value);
+        if (this.focusedValuePipe) {
+            this.value = this.focusedValuePipe.transform(value);
         } else {
             this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
         }
