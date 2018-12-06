@@ -50,7 +50,7 @@ handleValueChange(event) {
 <input type="text" igxInput [(ngModel)]="1234567890" [igxMask]="'(000) 0000-000'" (onValueChange)="handleValueChange($event)"/>
 ```
 
-Use the `placeholder` input property to specify a custom a short hint that describes the expected value.
+Use the `placeholder` input property to specify the placeholder attribute of the host input element that the `igxMask` is applied on.
 ```typescript
 placeholder = 'hello';
 ```
@@ -58,7 +58,7 @@ placeholder = 'hello';
 <input type="text" igxInput [igxMask]="'CCCCCC'" [placeholder]="placeholder"/>
 ```
 
-Use the `inputValuePipe` and `displayValuePipe` input properties to additionally transform the value on focus and blur.
+Use the `focusedValuePipe` and `displayValuePipe` input properties to additionally transform the value on focus and blur.
 ```typescript
 @Pipe({ name: "displayFormat" })
 export class DisplayFormatPipe implements PipeTransform {
@@ -83,7 +83,7 @@ displayFormat = new DisplayFormatPipe();
 | `includeLiterals`| `Boolean` | Include or exclude literals in the raw value. |
 | `placeholder`| `string` | Specifies a short hint that describes the expected value. |
 | `displayValuePipe`| `PipeTransform` | A pipe to transform the input value on blur. |
-| `inputValuePipe`| `PipeTransform` | A pipe to transform the input value on focus. |
+| `focusedValuePipe`| `PipeTransform` | A pipe to transform the input value on focus. |
 
 ### Outputs
 | Name | Return Type | Description |

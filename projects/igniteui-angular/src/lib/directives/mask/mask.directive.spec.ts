@@ -311,7 +311,7 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('(666) 6___-___');
     }));
 
-    it('Apply display and input pipes on blour and focus.', fakeAsync(() => {
+    it('Apply display and input pipes on blur and focus.', fakeAsync(() => {
         const fixture = TestBed.createComponent(PipesMaskComponent);
         fixture.detectChanges();
 
@@ -448,7 +448,11 @@ class EventFiringComponent {
 }
 
 @Component({ template: `<igx-input-group>
-                            <input type="text" #input igxInput [value]="value" [igxMask]="myMask" [includeLiterals]="true" [promptChar]="'*@#'"/>
+                            <input type="text" #input igxInput
+                                   [value]="value"
+                                   [igxMask]="myMask"
+                                   [includeLiterals]="true"
+                                   [promptChar]="'*@#'"/>
                         </igx-input-group>` })
 class OneWayBindComponent {
     myMask = 'AAAAAAAA';
@@ -476,14 +480,14 @@ class PipesMaskComponent {
     public input: ElementRef;
 }
 
-@Pipe({ name: "inputFormat" })
+@Pipe({ name: 'inputFormat' })
 export class InputFormatPipe implements PipeTransform {
      transform(value: any): string {
         return value.toUpperCase();
     }
 }
 
-@Pipe({ name: "displayFormat" })
+@Pipe({ name: 'displayFormat' })
 export class DisplayFormatPipe implements PipeTransform {
      transform(value: any): string {
         return value.toLowerCase();

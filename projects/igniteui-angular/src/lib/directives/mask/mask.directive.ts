@@ -29,6 +29,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Input('igxMask')
     public mask: string;
+
     /**
      * Sets the character representing a fillable spot in the input mask.
      * Default value is "'_'".
@@ -39,6 +40,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Input()
     public promptChar: string;
+
     /**
      * Specifies if the bound value includes the formatting symbols.
      * ```html
@@ -48,15 +50,17 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Input()
     public includeLiterals: boolean;
+
     /**
      * Specifies a placeholder.
      * ```html
-     * <input placeholder = "emty">
+     * <input placeholder = "enter text...">
      * ```
      * @memberof IgxMaskDirective
      */
     @Input()
     public placeholder: string;
+
     /**
      * Specifies a pipe to be used on blur.
      * ```html
@@ -66,21 +70,23 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Input()
     public displayValuePipe: PipeTransform;
+
     /**
      * Specifies a pipe to be used on focus.
      * ```html
-     * <input [inputValuePipe] = "inputFormatPipe">
+     * <input [focusedValuePipe] = "inputFormatPipe">
      * ```
      * @memberof IgxMaskDirective
      */
     @Input()
-    public inputValuePipe: PipeTransform;
+    public focusedValuePipe: PipeTransform;
 
     /**
      *@hidden
      */
     @Input()
     private dataValue: string;
+
     /**
      * Emits an event each time the value changes.
      * Provides `rawValue: string` and `formattedValue: string` as event arguments.
@@ -90,52 +96,57 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @Output()
     public onValueChange = new EventEmitter<IMaskEventArgs>();
+
     /**
      *@hidden
      */
     private get value() {
         return this.nativeElement.value;
     }
+
     /**
      *@hidden
      */
     private set value(val) {
         this.nativeElement.value = val;
     }
+
     /**
      *@hidden
      */
     private get nativeElement() {
         return this.elementRef.nativeElement;
     }
+
     /**
      *@hidden
      */
     private get selectionStart() {
         return this.nativeElement.selectionStart;
     }
+
     /**
      *@hidden
      */
     private get selectionEnd() {
         return this.nativeElement.selectionEnd;
     }
+
     /**
      *@hidden
      */
     private _ctrlDown: boolean;
-    /**
-     *@hidden
-     */
-    private _cachedVal: string;
+
     /**
      *@hidden
      */
     private _paste: boolean;
+
     /**
      *@hidden
      */
     private _selection: number;
+
     /**
      *@hidden
      */
@@ -143,26 +154,32 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         format: '',
         promptChar: ''
     };
+
     /**
      *@hidden
      */
     private _key;
+
     /**
      *@hidden
      */
     private _cursorOnPaste;
+
     /**
      *@hidden
      */
     private _valOnPaste;
+
     /**
      *@hidden
      */
     private maskHelper: MaskHelper;
+
     /**
      *@hidden
      */
     private _onTouchedCallback: () => void = noop;
+
     /**
      *@hidden
      */
@@ -171,6 +188,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     constructor(private elementRef: ElementRef) {
         this.maskHelper = new MaskHelper();
     }
+
     /**
      *@hidden
      */
@@ -183,6 +201,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         this._maskOptions.promptChar = this.promptChar ? this.promptChar : '_';
         this.nativeElement.setAttribute('placeholder', this.placeholder ? this.placeholder : this.mask);
     }
+
     /**
      *@hidden
      */
@@ -201,6 +220,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         this._key = key;
         this._selection = Math.abs(this.selectionEnd - this.selectionStart);
     }
+
     /**
      *@hidden
      */
@@ -212,6 +232,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._ctrlDown = false;
         }
     }
+
     /**
      *@hidden
      */
@@ -222,6 +243,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
         this._valOnPaste = this.value;
         this._cursorOnPaste = this.getCursorPosition();
     }
+
     /**
      *@hidden
      */
@@ -254,6 +276,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
         this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.value });
     }
+
     /**
      *@hidden
      */
@@ -265,6 +288,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
         }
     }
+
     /**
      *@hidden
      */
@@ -281,12 +305,14 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     private getCursorPosition(): number {
         return this.nativeElement.selectionStart;
     }
+
     /**
      *@hidden
      */
     private setCursorPosition(start: number, end: number = start): void {
         this.nativeElement.setSelectionRange(start, end);
     }
+
     /**
      *@hidden
      */
@@ -302,19 +328,21 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 
         this.onValueChange.emit({ rawValue: value, formattedValue: this.value });
     }
+
     /**
      *@hidden
      */
     public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+
     /**
      *@hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 }
+
 /**
  * The IgxMaskModule provides the {@link IgxMaskDirective} inside your application.
  */
-
 export interface IMaskEventArgs {
     rawValue: string;
     formattedValue: string;
