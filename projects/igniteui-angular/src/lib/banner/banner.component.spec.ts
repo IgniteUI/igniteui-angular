@@ -513,6 +513,29 @@ describe('igxBanner', () => {
             expect(cardContent.innerHTML).toEqual('Brad Stanley has requested to follow you.');
             expect(cardContent.childElementCount).toEqual(0);
         }));
+
+        it('Should apply the appropriate display style to the banner host', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxBannerOneButtonComponent);
+            fixture.detectChanges();
+            const banner = fixture.componentInstance.banner;
+            // Banner is collapsed, display is '';
+            expect(banner.elementRef.nativeElement.style.display).toEqual('');
+            banner.toggle();
+            tick();
+            // Banner is expanded, display is 'block';
+            fixture.detectChanges();
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+            expect(banner.collapsed).toBeFalsy();
+            banner.toggle();
+            tick(100);
+            // Banner is collapsING, display is 'block';
+            expect(banner.elementRef.nativeElement.style.display).toEqual('block');
+            tick();
+            fixture.detectChanges();
+            // Banner is collapsed, display is '';
+            expect(banner.elementRef.nativeElement.style.display).toEqual('');
+            expect(banner.collapsed).toBeTruthy();
+        }));
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
