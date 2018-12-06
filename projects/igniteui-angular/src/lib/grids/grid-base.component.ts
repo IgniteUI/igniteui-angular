@@ -185,12 +185,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
-   /**
-    * An accessor that returns the resource strings.
-   */
-   get resourceStrings(): IGridResourceStrings {
-       return this._resourceStrings;
-   }
+    /**
+     * An accessor that returns the resource strings.
+    */
+    get resourceStrings(): IGridResourceStrings {
+        return this._resourceStrings;
+    }
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -1303,7 +1303,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChildren('row')
     private _rowList: QueryList<IgxGridRowComponent>;
 
-    @ViewChildren('summaryRow', {read: IgxSummaryRowComponent})
+    @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected summaryRowList: QueryList<IgxSummaryRowComponent>;
 
     /**
@@ -2344,10 +2344,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
             this._horizontalForOfs = this.combineForOfCollections(list.toArray()
                 .filter(item => item.element.nativeElement.parentElement !== null), this.summaryRowList)
-            );
+        );
         this.summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
-            this._horizontalForOfs - this.combineForOfCollections (this._dataRowList, summaryList.toArray()
-            .filter(item => item.element.nativeElement.parentElement !== null)));
+            this._horizontalForOfs - this.combineForOfCollections(this._dataRowList, summaryList.toArray()
+                .filter(item => item.element.nativeElement.parentElement !== null)));
 
         this.zone.runOutsideAngular(() => {
             this._vScrollListener = this.verticalScrollHandler.bind(this);
@@ -3535,7 +3535,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.summariesHeight = 0;
         if (!this._height) {
             this.calcHeight = null;
-            if (this.hasSummarizedColumns && this.rootSummariesEnabled ) {
+            if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
                 this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
             }
             return;
@@ -3650,12 +3650,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
+
         if (this.showRowCheckboxes) {
-            this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.clientWidth;
+            this.calcRowCheckboxWidth = this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
+
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
         }
+
         this.cdr.detectChanges();
     }
 
