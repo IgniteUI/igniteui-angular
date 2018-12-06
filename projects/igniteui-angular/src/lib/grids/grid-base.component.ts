@@ -819,6 +819,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.gridAPI.get(this.id)) {
             this.summaryService.summaryHeight = 0;
             this.calculateGridHeight();
+            this.cdr.markForCheck();
         }
     }
 
