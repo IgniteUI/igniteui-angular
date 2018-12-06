@@ -25,6 +25,7 @@ import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.dir
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
+import { IgxFocusModule } from '../directives/focus/focus.directive';
 
 let DIALOG_ID = 0;
 /**
@@ -371,17 +372,12 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         };
     }
 
-    ngAfterContentInit() {
-        this.onOpen.pipe(takeUntil(this.destroy$)).subscribe(() => this.focusDialog());
+    ngAfterContentInit() {        
         this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe(() => this.emitCloseFromDialog());
     }
 
     private emitCloseFromDialog() {
         this.onClose.emit({ dialog: this, event: null });
-    }
-
-    private focusDialog() {
-        this.toggleRef.element.focus();
     }
 
     /**
@@ -490,6 +486,6 @@ export interface IDialogEventArgs {
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
 })
 export class IgxDialogModule { }
