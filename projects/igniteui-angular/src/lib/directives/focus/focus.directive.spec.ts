@@ -6,7 +6,7 @@ import {
     tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxFocusDirective } from './focus.directive';
+import { IgxFocusDirective, IgxFocusModule } from './focus.directive';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { EditorProvider } from '../../core/edit-provider';
@@ -19,13 +19,12 @@ describe('igxFocus', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxFocusDirective,
                 SetFocusComponent,
                 NoFocusComponent,
                 TriggerFocusOnClickComponent,
                 CheckboxPickerComponent
             ],
-            imports: [ IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
+            imports: [ IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
         }).compileComponents();
     }));
 
