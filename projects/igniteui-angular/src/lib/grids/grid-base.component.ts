@@ -1708,16 +1708,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
 
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.toolbarCustomContentTemplate != null ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
-
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
      * ```typescript
