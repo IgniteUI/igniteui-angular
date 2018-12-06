@@ -230,14 +230,7 @@ export class DataUtil {
             const transaction = transactions[i];
 
             if (transaction.path) {
-                const path = [...transaction.path];
-                //  We need to get parent data row. If there is a path and path contains this row id,
-                //  this is the case for UPDATE and DELETE transactions type, remove the last id from
-                //  the path
-                if (path.find(id => id === transaction.id)) {
-                    path.splice(-1, 1);
-                }
-                const dataRow = this.findDataRowFromPath(data, primaryKey, childDataKey, path);
+                const dataRow = this.findDataRowFromPath(data, primaryKey, childDataKey, transaction.path);
                 switch (transaction.type) {
                     case TransactionType.ADD:
                         //  if there is no dataRow this is ADD row at root level

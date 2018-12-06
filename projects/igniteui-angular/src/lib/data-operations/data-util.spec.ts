@@ -523,13 +523,13 @@ function testMerging() {
                     id: data[2].Employees[0].ID,
                     newValue: updateChildRow1,
                     type: TransactionType.UPDATE,
-                    path: [data[2].ID, data[2].Employees[0].ID]
+                    path: [data[2].ID]
                 },
                 {
                     id: (data[0].Employees[2] as any).Employees[0].ID,
                     newValue: updateChildRow2,
                     type: TransactionType.UPDATE,
-                    path: [data[0].ID, data[0].Employees[2].ID, (data[0].Employees[2] as any).Employees[0].ID]
+                    path: [data[0].ID, data[0].Employees[2].ID]
                 },
             ];
 
@@ -548,13 +548,13 @@ function testMerging() {
             const data = SampleTestData.employeeSmallTreeData();
             const transactions: HierarchicalTransaction[] = [
                 //  root row with no children
-                { id: data[1].ID, newValue: null, type: TransactionType.DELETE, path: [data[1].ID] },
+                { id: data[1].ID, newValue: null, type: TransactionType.DELETE, path: [] },
                 //  root row with children
-                { id: data[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[2].ID] },
+                { id: data[2].ID, newValue: null, type: TransactionType.DELETE, path: [] },
                 //  child row with no children
-                { id: data[0].Employees[0].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID, data[0].Employees[0].ID] },
+                { id: data[0].Employees[0].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] },
                 //  child row with children
-                { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID, data[0].Employees[2].ID] }
+                { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] }
             ];
 
             DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', true);
