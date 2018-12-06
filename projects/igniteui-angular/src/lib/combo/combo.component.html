@@ -21,10 +21,7 @@
         <igx-icon fontSet="material">clear</igx-icon>
     </igx-suffix>
     <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
-        <igx-icon *ngIf="dropdown.collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
-        <ng-template #toggleUp>
-            <igx-icon fontSet="material">arrow_drop_up</igx-icon>
-        </ng-template>
+        <igx-icon fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'">
@@ -37,11 +34,11 @@
     <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
-        [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        [igxComboItemNavigation]="dropdown" (focus)="dropdown.onFocus($event)" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
             (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
-            <igx-combo-item [value]="item" isHeader={{item.isHeader}} role="option">
+            <igx-combo-item  [itemHeight]='itemHeight' [value]="item" isHeader={{item.isHeader}} role="option">
                 <ng-container *ngIf="!item.isHeader">
                     <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" [disableTransitions]="dropdown.disableTransitions" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
                 </ng-container>
@@ -59,7 +56,7 @@
             <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
             </ng-container>
         </div>
-        <igx-combo-item *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+        <igx-combo-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
             class="igx-combo__add-item" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false"
             [value]="'ADD ITEM'" role="button" aria-label="Add Item">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">

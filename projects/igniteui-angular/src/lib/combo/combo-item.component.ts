@@ -8,23 +8,24 @@ import {
     Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html'
 })
-export class IgxComboItemComponent extends IgxDropDownItemBase {
+export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     /**
      * Gets the height of a list item
+     * @hidden
      */
+    @Input()
     @HostBinding('style.height.px')
-    get itemHeight() {
-        return this.combo.itemHeight;
-    }
+    public itemHeight = '';
 
     /**
      * @hidden
@@ -35,33 +36,21 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
 
     constructor(
         @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
-        public dropDown: IgxDropDownBase,
+        @Inject(IGX_DROPDOWN_BASE) public dropDown: IDropDownBase,
         protected elementRef: ElementRef,
         protected selection: IgxSelectionAPIService
     ) {
-        super(dropDown, elementRef);
+        super(dropDown, elementRef, selection);
     }
 
     /**
      * @hidden
      */
-    get isSelected() {
-        return this.combo.isItemSelected(this.itemID);
+    get isSelected(): boolean {
+        return this._isSelected;
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('click', ['$event'])
-    clicked(event) {
-        this.dropDown.disableTransitions = false;
-        if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.focusedItem;
-            if (focusedItem) {
-                focusedItem.element.nativeElement.focus({ preventScroll: true });
-            }
-            return;
-        }
-        this.dropDown.selectItem(this, event);
+    set isSelected(value: boolean) {
+        this._isSelected = value;
     }
 }

@@ -16,6 +16,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownBase } from '../drop-down/drop-down.base';
 import { Navigate } from '../drop-down/drop-down.common';
+import { IDropDownItem } from '../drop-down/drop-down-utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -963,7 +964,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items).toBeDefined();
 
             // items are only accessible when the combo dropdown is opened;
-            let targetItem: IgxComboItemComponent;
+            let targetItem: IDropDownItem;
             spyOn(combo, 'setSelectedItem').and.callThrough();
             spyOn(combo.dropdown, 'navigateItem').and.callThrough();
             spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
@@ -974,7 +975,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.dropdown.collapsed).toEqual(false);
             expect(combo.dropdown.items.length).toEqual(9); // Virtualization
-            targetItem = combo.dropdown.items[5] as IgxComboItemComponent;
+            targetItem = combo.dropdown.items[5] as IDropDownItem;
             expect(targetItem).toBeDefined();
             expect(targetItem.index).toEqual(5);
             combo.dropdown.selectItem(targetItem);

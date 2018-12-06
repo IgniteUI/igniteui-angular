@@ -5,164 +5,28 @@ import {
     ContentChildren,
     ElementRef,
     forwardRef,
-    Input,
     NgModule,
     QueryList,
-    Self,
-    Optional,
-    HostListener,
-    Directive
+    OnInit,
+    Output,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    AfterViewInit,
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxComboDropDownComponent } from '../combo/combo-dropdown.component';
-import { IgxDropDownBase, IgxDropDownItemBase } from './drop-down.base';
+import { IgxDropDownBase } from './drop-down.base';
+import { IgxDropDownItemNavigationDirective } from './drop-down-navigation.directive';
+import { IDropDownItem, IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
+import { IToggleView } from '../core/navigation/IToggleView';
+import { ISelectionEventArgs, Navigate } from './drop-down.common';
+import { CancelableEventArgs } from '../core/utils';
+import { IgxSelectionAPIService } from '../core/selection';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { IDropDownItemClickEventArgs } from './drop-down-item.base';
 
-
-@Directive({
-    selector: '[igxDropDownItemNavigation]'
-})
-export class IgxDropDownItemNavigationDirective {
-
-    private _target;
-
-    constructor(@Self() @Optional() public dropdown: IgxDropDownBase) { }
-
-    /**
-     * @hidden
-     */
-    get target() {
-        return this._target;
-    }
-
-    /**
-     * @hidden
-     */
-    @Input('igxDropDownItemNavigation')
-    set target(target: IgxDropDownBase) {
-        this._target = target ? target : this.dropdown;
-    }
-    @HostListener('focus')
-    handleFocus() {
-        if ((<any>this.target).combo) {
-            this.target.focusedItem = this.target.getFirstSelectableItem();
-            this.target.focusedItem.isFocused = true;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown', ['$event'])
-    handleKeyDown(event: KeyboardEvent) {
-        if (event) {
-            const key = event.key.toLowerCase();
-            if (!this.target.collapsed) { // If dropdown is opened
-                const navKeys = ['esc', 'escape', 'enter', 'space', 'spacebar', ' ',
-            'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
-                if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
-                    return;
-                }
-                event.preventDefault();
-                event.stopPropagation();
-            } else { // If dropdown is closed, do nothing
-                return;
-            }
-            switch (key) {
-                case 'esc':
-                case 'escape':
-                // case 'tab':
-                    this.onEscapeKeyDown(event);
-                    break;
-                case 'enter':
-                    this.onEnterKeyDown(event);
-                    break;
-                case 'space':
-                case 'spacebar':
-                case ' ':
-                    this.onSpaceKeyDown(event);
-                    break;
-                case 'arrowup':
-                case 'up':
-                    this.onArrowUpKeyDown(event);
-                    break;
-                case 'arrowdown':
-                case 'down':
-                    this.onArrowDownKeyDown(event);
-                    break;
-                case 'home':
-                    this.onHomeKeyDown(event);
-                    break;
-                case 'end':
-                    this.onEndKeyDown(event);
-                    break;
-                default:
-                    return;
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    onEscapeKeyDown(event) {
-        this.target.close();
-    }
-
-    /**
-     * @hidden
-     */
-    onSpaceKeyDown(event) {
-        // V.S. : IgxDropDownComponent.selectItem needs event to be true in order to close DD as per specification
-        this.target.selectItem(this.target.focusedItem, this.target instanceof IgxDropDownComponent);
-    }
-
-    /**
-     * @hidden
-     */
-    onEnterKeyDown(event) {
-        if (!(this.target instanceof IgxDropDownComponent)) {
-            if (this.target.focusedItem.value === 'ADD ITEM') {
-                // TODO: refactor:
-                const targetC = this.target as IgxComboDropDownComponent;
-                targetC.combo.addItemToCollection();
-            } else {
-                this.target.close();
-            }
-            return;
-        }
-        this.target.selectItem(this.target.focusedItem, event);
-    }
-
-    /**
-     * @hidden
-     */
-    onArrowDownKeyDown(event) {
-        this.target.navigateNext();
-    }
-
-    /**
-     * @hidden
-     */
-    onArrowUpKeyDown(event) {
-        this.target.navigatePrev();
-    }
-
-    /**
-     * @hidden
-     */
-    onEndKeyDown(event) {
-        this.target.navigateLast();
-    }
-
-    /**
-     * @hidden
-     */
-    onHomeKeyDown(event) {
-        this.target.navigateFirst();
-    }
-}
 
 /**
  * **Ignite UI for Angular DropDown** -
@@ -183,25 +47,216 @@ export class IgxDropDownItemNavigationDirective {
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
-    providers: [{ provide: IgxDropDownBase, useExisting: IgxDropDownComponent }]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase {
-
+export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy, AfterViewInit {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    protected children: QueryList<IgxDropDownItemBase>;
+    protected children: QueryList<IDropDownItem>;
+
+    protected _destroy$ = new Subject<boolean>();
+
+    /**
+     * Emitted when item selection is changing, before the selection completes
+     *
+     * ```html
+     * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onSelection = new EventEmitter<ISelectionEventArgs>();
+
+    /**
+     * Gets/sets whether items take focus. Disabled by default.
+     * When enabled, drop down items gain tab index and are focused when active -
+     * this includes activating the selected item when opening the drop down and moving with keyboard navigation.
+     *
+     * Note: Keep that focus shift in mind when using the igxDropDownItemNavigation directive
+     * and ensure it's placed either on each focusable item or a common ancestor to allow it to handle keyboard events.
+     *
+     * ```typescript
+     * // get
+     * let dropDownAllowsItemFocus = this.dropdown.allowItemsFocus;
+     * ```
+     *
+     * ```html
+     * <!--set-->
+     * <igx-drop-down [allowItemsFocus]='true'></igx-drop-down>
+     * ```
+     */
+    @Input()
+    public allowItemsFocus = false;
+
+    @Input()
+    get id(): string {
+        return this._id;
+    }
+    set id(value: string) {
+        this.toggleDirective.id = value;
+        this._id = value;
+        this.selection.set(value, this.selection.get(this.id));
+    }
+
+    /**
+     * Get currently selected item
+     *
+     * ```typescript
+     * let currentItem = this.dropdown.selectedItem;
+     * ```
+     */
+    public get selectedItem(): any {
+        const selectedItem = this.selection.first_item(this.id);
+        if (selectedItem) {
+            if (selectedItem.isSelected) {
+                return selectedItem;
+            }
+            this.selection.clear(this.id);
+        }
+        return null;
+    }
+
+    /**
+     * Get all header items
+     *
+     * ```typescript
+     * let myDropDownHeaderItems = this.dropdown.headers;
+     * ```
+     */
+    public get headers(): IDropDownItem[] {
+        const headers: IDropDownItem[] = [];
+        if (this.children !== undefined) {
+            for (const child of this.children.toArray()) {
+                if (child.isHeader) {
+                    headers.push(child);
+                }
+            }
+        }
+
+        return headers;
+    }
+
+    /**
+     * Select an item by index
+     * @param index of the item to select
+     */
+    public setSelectedItem(index: number) {
+        if (index < 0 || index >= this.items.length) {
+            return;
+        }
+
+        const newSelection = this.items.find((item) => item.index === index);
+        if (newSelection.isHeader) {
+            return;
+        }
+
+        this.changeSelectedItem(newSelection);
+    }
+
+    /**
+     * @hidden
+     */
+    public selectItem(item: IDropDownItem, event?) {
+        if (item === null) {
+            return;
+        }
+        this.changeSelectedItem(item);
+
+        if (event) {
+            this.toggleDirective.close();
+        }
+    }
+
+    public onToggleOpening(e: CancelableEventArgs) {
+        super.onToggleOpening(e);
+        this.scrollToItem(this.selectedItem);
+    }
+
+    public onToggleOpened() {
+        this._focusedItem = this.selectedItem;
+        if (this._focusedItem) {
+            this._focusedItem.isFocused = true;
+        } else if (this.allowItemsFocus) {
+            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
+            if (firstItemIndex !== -1) {
+                this.navigateItem(firstItemIndex);
+            }
+        }
+        super.onToggleOpened();
+    }
+
+    ngOnInit() {
+        super.ngOnInit();
+        this.selection.clear(this.id);
+    }
+
+    ngAfterViewInit() {
+        this.items.map(item => item.onClicked.pipe(takeUntil(this._destroy$)).subscribe(e => {
+            this._handleClick(e);
+        }));
+    }
+
+    ngOnDestroy() {
+        this._destroy$.next(true);
+        this._destroy$.complete();
+    }
+
+    /**
+     * @hidden
+     */
+    protected scrollToItem(item: IDropDownItem) {
+        const itemPosition = this.calculateScrollPosition(item);
+        this.scrollContainer.scrollTop = (itemPosition);
+    }
+
+    /**
+     * @hidden
+     */
+    protected calculateScrollPosition(item: IDropDownItem): number {
+        if (!item) {
+            return 0;
+        }
+
+        const elementRect = item.element.nativeElement.getBoundingClientRect();
+        const parentRect = this.scrollContainer.getBoundingClientRect();
+        const scrollDelta = parentRect.top - elementRect.top;
+        let scrollPosition = this.scrollContainer.scrollTop - scrollDelta;
+
+        const dropDownHeight = this.scrollContainer.clientHeight;
+        scrollPosition -= dropDownHeight / 2;
+        scrollPosition += item.elementHeight / 2;
+
+        return Math.floor(scrollPosition);
+    }
+
+    protected _handleClick(event: IDropDownItemClickEventArgs) {
+        this.selectItem(event.itemID);
+    }
+
+    /**
+     * @hidden
+     */
+    public getFirstSelectableItem() {
+        return this.children.find(child => !child.isHeader && !child.disabled);
+    }
 
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr, selection);
+        super(elementRef, cdr);
     }
 
-    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent): boolean {
+    protected changeSelectedItem(newSelection?: IDropDownItem): boolean {
         const oldSelection = this.selectedItem;
-        const selectionChanged = super.changeSelectedItem(newSelection);
+        if (!newSelection) {
+            newSelection = this._focusedItem;
+        }
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        this.onSelection.emit(args);
+        if (!args.cancel) {
+            this.selection.set(this.id, new Set([newSelection]));
+        }
 
-        if (selectionChanged) {
+        if (!args.cancel) {
             if (oldSelection) {
                 oldSelection.isSelected = false;
             }
@@ -210,7 +265,7 @@ export class IgxDropDownComponent extends IgxDropDownBase {
             }
         }
 
-        return selectionChanged;
+        return !args.cancel;
     }
 }
 

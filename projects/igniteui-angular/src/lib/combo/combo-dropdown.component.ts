@@ -1,25 +1,26 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy, AfterViewInit
+    ElementRef, forwardRef, Inject, QueryList, OnDestroy, Input, HostListener
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
-import { IgxComboItemComponent } from './combo-item.component';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
 import { Navigate } from '../drop-down/drop-down.common';
+import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IDropDownItemClickEventArgs } from '../drop-down/drop-down-item.base';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
-    templateUrl: '../drop-down/drop-down.component.html',
-    providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
+    templateUrl: 'combo-dropdown.component.html',
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterViewInit, OnDestroy {
-    private _children: QueryList<IgxDropDownItemBase>;
+export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy {
+    private _children: QueryList<IDropDownItem>;
     private _scrollPosition = 0;
     private destroy$ = new Subject<boolean>();
     constructor(
@@ -83,17 +84,17 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    protected get children(): QueryList<IgxDropDownItemBase> {
+    protected get children(): QueryList<IDropDownItem> {
         return this.combo.children;
     }
 
-    protected set children(list: QueryList<IgxDropDownItemBase>) {
-        this._children = list;
+    protected set children(value: QueryList<IDropDownItem>) {
+        this._children = value;
     }
-
     /**
      * @hidden
      */
+    @HostListener('focus')
     onFocus() {
         this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
         if (this._focusedItem) {
@@ -191,7 +192,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    selectItem(item: IgxComboItemComponent, event?: Event) {
+    selectItem(item: IDropDownItem, event?: Event) {
         if (item.value === 'ADD ITEM') {
             if (event) {
                 this.combo.addItemToCollection();
@@ -275,7 +276,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         let targetDataIndex = newIndex === -1 ? this.itemIndexInData(focusedItem.index) - 1 : this.itemIndexInData(newIndex);
         if (newIndex !== -1) { // If no scroll is required
             if (this.isScrolledToLast && targetDataIndex === vContainer.state.startIndex) {
-                 // If virt scrollbar is @ bottom, first item is in DOM but not visible
+                // If virt scrollbar is @ bottom, first item is in DOM but not visible
                 vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
                 super.navigateItem(0); // Focus first visible item
             } else {
@@ -330,7 +331,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         });
     }
 
-    protected scrollToHiddenItem(newItem: any): void {}
+    protected scrollToHiddenItem(newItem: any): void { }
+    protected _handleClick(event: IDropDownItemClickEventArgs) {
+        this.setSelectedItem(event.itemID, !event.item.isSelected);
+    }
 
     /**
      * @hidden
