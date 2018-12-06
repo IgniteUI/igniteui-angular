@@ -1,4 +1,5 @@
-import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef, ContentChild } from '@angular/core';
+import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef,
+    ContentChild, HostBinding } from '@angular/core';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { AnimationSettings } from '../expansion-panel/expansion-panel.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel';
@@ -157,6 +158,14 @@ export class IgxBannerComponent implements IToggleView {
      */
     public get element() {
         return this.elementRef.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.display')
+    public get displayStyle(): string {
+        return this.collapsed ? '' : 'block';
     }
 
     constructor(public elementRef: ElementRef) { }
