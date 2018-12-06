@@ -573,6 +573,7 @@ export class IgxTimePickerComponent implements
 
         if (this.mode === InteractionMode.dropdown) {
             this.displayValue = this._formatTime(this.value, this.format);
+            this._currentDate = this.value;
         }
     }
 
@@ -1342,19 +1343,15 @@ export class IgxTimePickerComponent implements
         }
     }
 
-    public onKeyup(event): void {
+    public onInput(event): void {
         const val = event.target.value;
-        const key = event.key.toLowerCase();
-
         this.isNotEmpty = val !== this.parseMask(false);
-
-        if (key === 'arrowdown' || key === 'down' || key === 'arrowup' || key === 'up') {
-            return;
-        }
 
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
                 this.value = this._convertMinMaxValue(val);
+
+                this._currentDate = this.value;
 
                 if (this._isValueValid(this.value) && this._oldValue !== this.value) {
                     const args: IgxTimePickerValueChangedEventArgs = {
@@ -1429,6 +1426,7 @@ export class IgxTimePickerComponent implements
     }
 
     public spinOnEdit(event): void {
+        debugger;
         event.preventDefault();
 
         let sign: number;
@@ -1453,9 +1451,7 @@ export class IgxTimePickerComponent implements
         if (!this.value) {
             this.value = sign > 0 ? min : max;
             displayVal = this._formatTime(this.value, this.format);
-        }
-
-        if (this.value) {
+        } else {
             const hDelta = this.itemsDelta.hours * 60 + (sign * this.value.getMinutes());
             const mDelta = this.itemsDelta.minutes;
             const sections = this.displayValue.split(/[\s:]+/);
