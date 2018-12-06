@@ -38,7 +38,6 @@ export class HelperUtils {
         expect(chkInput.checked).toBe(isChecked);
     }
 
-
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
@@ -104,15 +103,46 @@ export class HelperUtils {
         } else {
             expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeFalsy();
             expect(summaryItems.length).toEqual(summaryLabels.length);
-            for (let i = 0; i < summaryLabels.length; i++) {
-                const summaryItem = summaryItems[i];
-                const summaryLabel = summaryItem.query(By.css('.igx-grid-summary__label'));
-                expect(summaryLabels[i]).toEqual(summaryLabel.nativeElement.textContent.trim());
-                if (summaryResults.length > 0) {
-                    const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
-                    expect(summaryResults[i]).toEqual(summaryResult.nativeElement.textContent.trim());
+            if (summaryItems.length === summaryLabels.length) {
+                for (let i = 0; i < summaryLabels.length; i++) {
+                    const summaryItem = summaryItems[i];
+                    const summaryLabel = summaryItem.query(By.css('.igx-grid-summary__label'));
+                    expect(summaryLabels[i]).toEqual(summaryLabel.nativeElement.textContent.trim());
+                    if (summaryResults.length > 0) {
+                        const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
+                        expect(summaryResults[i]).toEqual(summaryResult.nativeElement.textContent.trim());
+                    }
                 }
             }
         }
+    }
+
+    public static getSummaryRowByDataRowIndex(fix, rowIndex: number) {
+        return fix.debugElement.query(By.css('igx-grid-summary-row[data-rowindex="' + rowIndex + '"]'));
+    }
+
+    public static getAllVisbleSummariesLength(fix) {
+        return HelperUtils.getAllVisbleSummaries(fix).length;
+    }
+
+    public static getAllVisbleSummariesRowIndexes(fix) {
+        const summaries = HelperUtils.getAllVisbleSummaries(fix);
+        const rowIndexes = [];
+        summaries.forEach(summary => {
+            rowIndexes.push(Number(summary.attributes['data-rowIndex']));
+        });
+        return rowIndexes.sort((a: number, b: number) => a - b);
+    }
+
+    public static getAllVisbleSummaries(fix) {
+        return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
+    }
+
+    public static verifyVisbleSummariesHeight(fix, summariesRows, rowHeight = 50) {
+        const visibleSummaries = HelperUtils.getAllVisbleSummaries(fix);
+        visibleSummaries.forEach(summary => {
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight);
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
+        });
     }
 }

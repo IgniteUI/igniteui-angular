@@ -187,7 +187,6 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
             grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.dealsSummaryMinMax;
-            // grid.recalculateSummaries();
             tick(100);
             fixture.detectChanges();
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '20,000']);
