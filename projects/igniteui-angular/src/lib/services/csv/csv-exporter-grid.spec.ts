@@ -2,25 +2,25 @@ import { async, TestBed } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridModule } from '../../grids/grid';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
-import { FileContentData } from '../excel/test-data.service.spec';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { CSVWrapper } from './csv-verification-wrapper.spec';
+import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
-import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('CSV Grid Exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
-    let actualData: FileContentData;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
@@ -28,16 +28,16 @@ describe('CSV Grid Exporter', () => {
         TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                IgxTreeGridPrimaryForeignKeyComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
         })
         .compileComponents();
     }));
 
     beforeEach(async(() => {
         exporter = new IgxCsvExporterService();
-        actualData = new FileContentData();
         options = new IgxCsvExporterOptions('CsvGridExport', CsvFileTypes.CSV);
 
         // Spy the saveBlobToFile method so the files are not really created
@@ -303,6 +303,88 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData('');
     });
 
+    describe('', () => {
+        let fix;
+        let treeGrid: IgxTreeGridComponent;
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        });
+
+        it('should export tree grid as displayed.', async () => {
+            const wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export sorted tree grid properly.', async () => {
+            treeGrid.sort({fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            options.ignoreSorting = true;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+
+            options.ignoreSorting = false;
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataSorted);
+
+            treeGrid.clearSort();
+            fix.detectChanges();
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export filtered tree grid properly.', async () => {
+            treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            options.ignoreFiltering = true;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+
+            options.ignoreFiltering = false;
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFiltered);
+
+            treeGrid.clearFilter();
+            fix.detectChanges();
+
+            wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridData);
+        });
+
+        it('should export filtered and sorted tree grid properly.', async () => {
+            treeGrid.filter('ID', 3, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+            treeGrid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            fix.detectChanges();
+
+            const wrapper = await getExportedData(treeGrid, options);
+            wrapper.verifyData(wrapper.treeGridDataFilterSorted);
+        });
+
+        it('should fire \'onRowExport\' for each tree grid row.', async () => {
+            const rows = [];
+
+            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+                rows.push({ data: value.rowData, index: value.rowIndex });
+            });
+
+            await getExportedData(treeGrid, options);
+
+            expect(rows.length).toBe(8);
+            for (let i = 0; i < rows.length; i++) {
+                expect(rows[i].index).toBe(i);
+                expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(SampleTestData.employeeTreeDataDisplayOrder()[i]));
+            }
+        });
+
+    });
+
     function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
         const result = new Promise<CSVWrapper>((resolve) => {
             exporter.onExportEnded.pipe(first()).subscribe((value) => {
@@ -312,5 +394,10 @@ describe('CSV Grid Exporter', () => {
             exporter.export(grid, csvOptions);
         });
         return result;
+    }
+
+    async function exportAndVerify(component, csvOptions, expectedData, errorMessage = '') {
+        const wrapper = await getExportedData(component, csvOptions);
+        wrapper.verifyData(expectedData, errorMessage);
     }
 });
