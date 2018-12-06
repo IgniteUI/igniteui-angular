@@ -32,6 +32,9 @@
         "Example": "例",
         "Used by": "次で使用",
         "See": "参照先",
-        "Requires": "必須"
+        "Requires": "必須",
+        "Default value": "デフォルト値",
+        "Optional": "オプション",
+        "Rest": "残りの引数"
     }
 }
