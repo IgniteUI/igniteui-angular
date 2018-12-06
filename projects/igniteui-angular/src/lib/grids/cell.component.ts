@@ -705,7 +705,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
 
             if (column.inlineEditorTemplate === undefined && (
-                (column.dataType === DataType.Boolean &&  (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+                (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
                 || column.dataType === DataType.Date)) {
                 event.preventDefault();
             }
@@ -728,11 +728,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
                 }
-            return;
+                return;
             }
         }
 
-        const args = {cell: this, groupRow: null, event: event, cancel: false };
+        const args = { cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
             return;
@@ -886,8 +886,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             'igx_grid__cell--edit': this.inEditMode,
             'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--pinned': this.column.pinned,
+            'igx-grid__td--pinned-last': this.isLastPinned,
             'igx-grid__td--selected': this.selected,
             'igx-grid__td--edited': this.dirty
         };
@@ -905,7 +905,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
-                   .map((child) => getNodeSizeViaRange(range, child)));
+            .map((child) => getNodeSizeViaRange(range, child)));
     }
 
     private isToggleKey(key) {
