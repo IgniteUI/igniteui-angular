@@ -272,6 +272,12 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
+
+    /**
      * Get dropdown's html element of it scroll container
      */
     protected get scrollContainer() {
@@ -551,6 +557,12 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
             this.scrollToHiddenItem(newItem);
             this._focusedItem.isFocused = true;
         }
+    }
+    /**
+     * @hidden
+     */
+    public getFirstSelectableItem() {
+        return this.children.find(child => !child.isHeader && !child.disabled);
     }
 }
 
