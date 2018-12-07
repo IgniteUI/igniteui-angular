@@ -56,6 +56,7 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
@@ -67,6 +68,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -100,6 +102,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,

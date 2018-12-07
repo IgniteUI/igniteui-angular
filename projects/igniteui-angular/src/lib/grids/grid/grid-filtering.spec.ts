@@ -553,7 +553,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect((grid.filteringExpressionsTree.filteringOperands[0] as FilteringExpressionsTree).filteringOperands.length).toEqual(2);
     });
 
-    fit('Should correctly update summary.', fakeAsync(() => {
+    it('Should correctly update summary.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 

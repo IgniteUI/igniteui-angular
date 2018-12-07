@@ -2,6 +2,7 @@ import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, E
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../grid';
 import { DisplayDensity } from '../../core/density';
+import { DataType } from '../../data-operations/data-util';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

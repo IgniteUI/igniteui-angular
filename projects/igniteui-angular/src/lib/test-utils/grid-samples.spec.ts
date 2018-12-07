@@ -266,7 +266,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
 
 }
 
-/* NoActiveSummariesComponent */
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
 })
@@ -740,4 +739,53 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
 export class GridWithAvatarComponent extends GridWithSizeComponent {
     data = SampleTestData.personAvatarData();
     height = '500px';
+}
+
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="1000px"  width="900px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.summariesGoupByColumns)}`
+})
+export class SummarieGroupByComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+class AgeSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class AgeSummaryTest extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        result.push({
+            key: 'test',
+            label: 'Test',
+            summaryResult: summaries.filter(rec => rec > 10 && rec < 40).length
+        });
+
+        return result;
+    }
 }
