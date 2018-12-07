@@ -1,5 +1,5 @@
 <div class="sample-wrapper">
-    <igx-banner #bannerNoSafeConnection (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
+    <igx-banner #bannerNoSafeConnection class="banner-border" [animationSettings]="animationSettings" (onOpened)="onOpen($event)" (onClosed)="onClose($event)">
             Your connections is not private! 
         <igx-icon>lock</igx-icon>
     </igx-banner>
