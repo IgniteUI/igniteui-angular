@@ -1,6 +1,8 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
-import { IgxColumnComponent } from '../grid';
+import { IgxColumnComponent } from '../column.component';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { DisplayDensity } from '../../core/density';
 import { DataType } from '../../data-operations/data-util';
 
@@ -27,6 +29,10 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        private element: ElementRef) {
+    }
+
     @HostBinding('class')
     get styleClasses(): string {
         const defaultClasses = ['igx-grid-summary--cell'];
@@ -50,8 +56,6 @@ export class IgxSummaryCellComponent {
     @Input()
     @HostBinding('attr.data-rowIndex')
     public rowIndex: number;
-
-    constructor( private element: ElementRef) { }
 
     @HostBinding('attr.data-visibleIndex')
     get visibleColumnIndex(): number {
@@ -117,7 +121,34 @@ export class IgxSummaryCellComponent {
         }
     }
 
-    get columnDatatype() {
+    @HostBinding('style.min-width')
+    @HostBinding('style.max-width')
+    @HostBinding('style.flex-basis')
+    get width() {
+        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const colWidth = this.column.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (colWidth && !isPercentageWidth) {
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+                parseInt(colWidth, 10) - 18 + '' : colWidth;
+
+            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
+                cellWidth += 'px';
+            }
+
+            return cellWidth;
+        } else {
+            return colWidth;
+        }
+    }
+
+    get isLastUnpinned() {
+        const unpinnedColumns = this.grid.unpinnedColumns;
+        return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
+    }
+
+    get columnDatatype(): DataType {
         return this.column.dataType;
     }
 
