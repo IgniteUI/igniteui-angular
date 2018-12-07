@@ -67,6 +67,7 @@ The TimePicker input group could be retemplated.
 | `okButtonLabel` | string | Renders OK button with custom name, which commits the selected time, and fill the timePicker input. By default `okButtonLabel` is set to 'OK'. |
 | `cancelButtonLabel` | string | Renders cancel button with custom name, which closes the dialog. By default `cancelButtonLabel` is set to 'Cancel'. |
 | `value` | Date | Value of the timePicker. |
+|`resourceStrings`| ITimePickerResourceStrings | Resource strings of the time-picker. |
 | `disabled` | boolean | Disable the timePicker. |
 | `itemsDelta`| object | Sets the delta for hour and minute items. By default `itemsDelta` is set ti {hours:1, minutes:1} |
 | `minValue` | string | Sets minimum value. It should follow the `format` of the timePicker. |

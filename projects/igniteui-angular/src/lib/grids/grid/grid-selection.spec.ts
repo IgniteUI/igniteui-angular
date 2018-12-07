@@ -699,7 +699,7 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeTruthy();
         expect(grid.rowList.find((row) => row === firstRow)).toBeTruthy();
 
-        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+        grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true });
         fix.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
@@ -803,7 +803,7 @@ describe('IgxGrid - Row Selection', () => {
         const oldCellID = oldCell.cellID;
         oldCell.nativeElement.focus();
         oldCell.nativeElement.click();
-        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
+        grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Asc, ignoreCase: true });
         fixture.detectChanges();
         expect(grid.selectedCells).toBeDefined();
         expect(grid.selectedCells.length).toBe(1);

@@ -29,7 +29,8 @@ describe('IgxGrid - Cell component', () => {
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
                 ConditionalCellStyleTestComponent,
-                ColumnEditablePropertyTestComponent
+                ColumnEditablePropertyTestComponent,
+                GridColumnWidthsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         }).compileComponents();
@@ -372,14 +373,14 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 'Rick Gilmore');
                 await wait();
 
-                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode(cell.gridID)).toBeNull();
             }));
 
             it('should update correct cell when sorting is applied', (async () => {
-                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()});
+                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false});
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'fullName');
@@ -787,7 +788,7 @@ export class VirtualGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public instance: IgxGridComponent;
 
-    public gridWidth = '800px';
+    public gridWidth = '700px';
     public gridHeight = '300px';
     public data = [];
     public cols = [
@@ -1017,4 +1018,42 @@ export class ColumnEditablePropertyTestComponent {
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
         { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
     ];
+}
+
+@Component({
+    template: `
+        <igx-grid #grid
+            [data]="data"
+            [primaryKey]="'0'"
+            [height]="'300px'">
+            <igx-column *ngFor="let column of columns;"
+                        [field]="column.field"
+                        [width]="column.width">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GridColumnWidthsComponent {
+    public static COLUMN_WIDTH;
+     @ViewChild('grid', { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+     public data;
+     public columns;
+     private columnsLenght: Number = 4;
+     constructor() {
+        const mydata = [];
+        const mycolumns = [];
+        for (let i = 0; i < 10; i++) {
+            const record = {};
+            for (let j = 0; j < this.columnsLenght; j++) {
+                record['' + j] = j + i;
+            }
+            mydata.push(record);
+            this.data = mydata;
+        }
+         for (let i = 0; i < this.columnsLenght; i++) {
+            mycolumns.push({ field: '' + i, width: GridColumnWidthsComponent.COLUMN_WIDTH });
+        }
+         this.columns = mycolumns;
+    }
 }

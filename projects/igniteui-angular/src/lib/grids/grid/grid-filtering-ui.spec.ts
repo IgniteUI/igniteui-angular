@@ -24,6 +24,7 @@ import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
+import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -1837,15 +1838,34 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             stringCellChip.nativeElement.click();
             fix.detectChanges();
 
-            GridFunctions.filterBy('Starts With', 'I', fix);
-
-            // remove text from input
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            const input = filterUIRow.query(By.directive(IgxInputDirective));
-            input.nativeElement.value = null;
 
-            const exprList = filterUIRow.componentInstance.expressionsList;
-            exprList[0].expression.searchVal = null;
+            // open dropdown
+            const filterIcon = filterUIRow.query(By.css('igx-icon'));
+            filterIcon.nativeElement.click();
+            fix.detectChanges();
+
+            const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            const ddItems = ddList.nativeElement.children;
+            let i;
+            for ( i = 0; i < ddItems.length; i++) {
+                if (ddItems[i].textContent === 'Starts With') {
+                    ddItems[i].click();
+                    tick(100);
+                    return;
+                }
+            }
+
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            input.nativeElement.value = 'I';
+            input.nativeElement.dispatchEvent(new Event('input'));
+            fix.detectChanges();
+
+            const clearButton = filterUIRow.query(By.css('igx-suffix'));
+
+            clearButton.nativeElement.click();
+
+            tick();
             fix.detectChanges();
 
             GridFunctions.closeFilterRow(fix);
@@ -2580,6 +2600,87 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
 
         expect(filteringRow).toBeNull();
+    }));
+
+    it('Should correctly load default resource strings for filter row', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        const editingBtns = filteringRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingBtns.queryAll(By.css('button'))[0];
+        const close = editingBtns.queryAll(By.css('button'))[1];
+
+        expect(close.nativeElement.innerText).toBe('Close');
+        expect(reset.nativeElement.innerText).toBe('Reset');
+    }));
+
+    it('Should correctly change resource strings for filter row', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        const grid = fix.componentInstance.grid;
+        grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
+            igx_grid_filter: 'My filter',
+            igx_grid_filter_row_close: 'My close'
+        });
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        const editingBtns = filteringRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingBtns.queryAll(By.css('button'))[0];
+        const close = editingBtns.queryAll(By.css('button'))[1];
+
+        expect(close.nativeElement.innerText).toBe('My close');
+        expect(reset.nativeElement.innerText).toBe('Reset');
+    }));
+
+    it('Should correctly change resource strings for filter row using Changei18n', fakeAsync(() => {
+        const strings = getCurrentResourceStrings();
+        strings.igx_grid_filter = 'My filter';
+        strings.igx_grid_filter_row_close = 'My close';
+        changei18n(strings);
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const stringCellChip = initialChips[0].nativeElement;
+
+        expect(stringCellChip.children[0].children[1].innerText).toBe('My filter');
+
+        stringCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        const editingBtns = filteringRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
+        const reset = editingBtns.queryAll(By.css('button'))[0];
+        const close = editingBtns.queryAll(By.css('button'))[1];
+
+        expect(close.nativeElement.innerText).toBe('My close');
+        expect(reset.nativeElement.innerText).toBe('Reset');
+
+        changei18n({
+            igx_grid_filter: 'Filter',
+            igx_grid_filter_row_close: 'Close'
+        });
     }));
 });
 
