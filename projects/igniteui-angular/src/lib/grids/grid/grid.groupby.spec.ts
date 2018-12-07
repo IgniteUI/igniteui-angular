@@ -913,47 +913,6 @@ describe('IgxGrid - GroupBy', () => {
 
     }));
 
-    it('should group by the specified field when grouping by an already sorted field.', fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.componentInstance.enableSorting = true;
-        fix.detectChanges();
-        grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-        fix.detectChanges();
-
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-        });
-        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
-        fix.detectChanges();
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
-        // await wait(100);
-        fix.detectChanges();
-        const groupRows = grid.groupsRowList.toArray();
-        // verify group order
-        checkGroups(groupRows, [null, '', 'Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']);
-    }));
-
-    it('should allow grouping of already sorted column', async(() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.componentInstance.enableSorting = true;
-        fix.detectChanges();
-        grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-        fix.detectChanges();
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-        });
-        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
-        fix.detectChanges();
-        const groupRows = grid.groupsRowList.toArray();
-        const dataRows = grid.dataRowList.toArray();
-        // verify groups and data rows count
-        expect(groupRows.length).toEqual(5);
-        expect(dataRows.length).toEqual(8);
-        expect(grid.groupingExpressions.length).toEqual(1);
-    }));
-
     // GroupBy + Virtualization integration
     it('should virtualize data and group records.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
