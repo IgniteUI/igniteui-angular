@@ -54,7 +54,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
@@ -185,7 +185,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         this.cdr.markForCheck();
     }
 
-    private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
+    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
@@ -258,12 +258,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
 
-    private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
+    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
         mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
 
-          mapCloned.set(key, value);
+            mapCloned.set(key, value);
         });
 
         return mapCloned;
@@ -360,9 +360,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 const childKey = this.childDataKey;
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
+                    const path: any[] = [];
+                    path.push(parentRowID);
+                    path.push(...this.generateRowPath(parentRowID));
+                    path.reverse();
                     this.transactions.add({
                         id: rowId,
-                        parentId: parentRowID,
+                        path: path,
                         newValue: data,
                         type: TransactionType.ADD
                     } as HierarchicalTransaction,
@@ -385,26 +389,31 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public deleteRowById(rowId: any) {
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        //  if this is flat self-referencing data, and CascadeOnDelete is set to true
+        //  and if we have transactions we should start pending transaction. This allows
+        //  us in case of delete action to delete all child rows as single undo action
+        const flatDataWithCascadeOnDeleteAndTransactions =
+            this.primaryKey &&
+            this.foreignKey &&
+            this.cascadeOnDelete &&
+            this.transactions.enabled;
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.startPending();
         }
 
         super.deleteRowById(rowId);
 
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.endPending(true);
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     protected deleteRowFromData(rowID: any, index: number) {
-         if (this.primaryKey && this.foreignKey) {
+        if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
 
             if (this.cascadeOnDelete) {
@@ -416,11 +425,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     }
                 }
             }
-       } else {
+        } else {
             const record = this.records.get(rowID);
-            const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
-            index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
-                childData.indexOf(rowID);
+            const collection = record.parent ? record.parent.data[this.childDataKey] : this.data;
+            index = this.primaryKey ?
+                collection.map(c => c[this.primaryKey]).indexOf(rowID) :
+                collection.indexOf(rowID);
 
             const selectedChildren = [];
             this._gridAPI.get_selected_children(this.id, record, selectedChildren);
@@ -429,17 +439,32 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             }
 
             if (this.transactions.enabled) {
+                const path = this.generateRowPath(rowID);
                 this.transactions.add({
-                    id: rowID,
-                    type: TransactionType.DELETE,
-                    newValue: null,
-                    parentId: record.parent ? record.parent.rowID : undefined
-                },
-                this.data);
+                        id: rowID,
+                        type: TransactionType.DELETE,
+                        newValue: null,
+                        path: path
+                    },
+                    collection[index]
+                );
             } else {
-                childData.splice(index, 1);
+                collection.splice(index, 1);
             }
         }
+    }
+
+    /** @hidden */
+    public generateRowPath(rowId: any): any[] {
+        const path: any[] = [];
+        let record = this.records.get(rowId);
+
+        while (record.parent) {
+            path.push(record.parent.rowID);
+            record = record.parent;
+        }
+
+        return path;
     }
 
     /**
@@ -478,14 +503,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
     * @hidden
     */
-   public getContext(rowData): any {
+    public getContext(rowData): any {
         return {
             $implicit: rowData,
             templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
-    }
-
-    protected writeToData(rowIndex: number, value: any) {
-        mergeObjects(this.flatData[rowIndex], value);
     }
 }

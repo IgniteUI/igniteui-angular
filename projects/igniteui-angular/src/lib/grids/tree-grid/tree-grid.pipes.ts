@@ -55,16 +55,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, row),
                 data: row,
-                children: [],
-                path: []
+                children: []
             };
             const parent = map.get(row[foreignKey]);
             if (parent) {
                 record.parent = parent;
-                if (parent) {
-                    record.path.push(...parent.path);
-                    record.path.push(parent.rowID);
-                }
                 parent.children.push(record);
             } else {
                 missingParentRecords.push(record);
@@ -110,13 +105,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
                 parent: parent,
-                level: indentationLevel,
-                path: []
+                level: indentationLevel
             };
-            if (parent) {
-                record.path.push(...parent.path);
-                record.path.push(parent.rowID);
-            }
             record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.level);
             flatData.push(item);
             map.set(record.rowID, record);
@@ -270,26 +260,30 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         if (collection && grid.transactions.enabled) {
-            const primaryKey = grid.primaryKey;
-            if (!primaryKey) {
-                return collection;
-            }
+            const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
+            if (aggregatedChanges.length > 0) {
+                const primaryKey = grid.primaryKey;
+                if (!primaryKey) {
+                    return collection;
+                }
 
-            const foreignKey = grid.foreignKey;
-            const childDataKey = grid.childDataKey;
+                const foreignKey = grid.foreignKey;
+                const childDataKey = grid.childDataKey;
 
-            if (foreignKey) {
-                return DataUtil.mergeTransactions(
-                    cloneArray(collection),
-                    grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey);
-            } else if (childDataKey) {
-                return DataUtil.mergeHierarchicalTransactions(
-                    cloneHierarchicalArray(collection, childDataKey),
-                    grid.transactions.getAggregatedChanges(true),
-                    childDataKey,
-                    grid.primaryKey
-                );
+                if (foreignKey) {
+                    const flatDataClone = cloneArray(collection);
+                    return DataUtil.mergeTransactions(
+                        flatDataClone,
+                        aggregatedChanges,
+                        grid.primaryKey);
+                } else if (childDataKey) {
+                    const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
+                    return DataUtil.mergeHierarchicalTransactions(
+                        hierarchicalDataClone,
+                        aggregatedChanges,
+                        childDataKey,
+                        grid.primaryKey);
+                }
             }
         }
 
