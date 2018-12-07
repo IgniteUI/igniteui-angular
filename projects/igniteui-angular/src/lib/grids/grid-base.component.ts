@@ -62,8 +62,12 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
+import { IGridResourceStrings } from '../core/i18n/grid-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
+const FILTER_ROW_HEIGHT = 50;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -157,6 +161,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Input()
     public data: any[];
+
+    private _resourceStrings = CurrentResourceStrings.GridResStrings;
+    private _emptyGridMessage = null;
+    private _emptyFilteredGridMessage = null;
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+    */
+    @Input()
+    set resourceStrings(value: IGridResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+   /**
+    * An accessor that returns the resource strings.
+   */
+   get resourceStrings(): IGridResourceStrings {
+       return this._resourceStrings;
+   }
 
     /**
      * An @Input property that autogenerates the `IgxGridComponent` columns.
@@ -619,7 +642,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyGridMessage = 'Grid has no data.';
+    set emptyGridMessage(value: string) {
+        this._emptyGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records.
+    */
+    get emptyGridMessage(): string {
+        return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
+    }
 
     /**
      * An @Input property that sets the message displayed when there are no records and the grid is filtered.
@@ -629,7 +661,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public emptyFilteredGridMessage = 'No records found.';
+    set emptyFilteredGridMessage(value: string) {
+        this._emptyFilteredGridMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed when there are no records and the grid is filtered.
+    */
+    get emptyFilteredGridMessage(): string {
+        return this._emptyFilteredGridMessage || this.resourceStrings.igx_grid_emptyFilteredGrid_message;
+    }
 
     /**
      * An @Input property that sets the title to be displayed in the built-in column hiding UI.
@@ -706,6 +747,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
+
+            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this._ngAfterViewInitPaassed) {
+                if (this.maxLevelHeaderDepth) {
+                    this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                }
+            }
+
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
@@ -1261,6 +1313,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+
+    /**
      * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
@@ -1645,15 +1707,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
 
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
-
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
      * ```typescript
@@ -1923,6 +1976,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    public disableTransitions = false;
+
+    /**
+     * @hidden
+     */
     public lastSearchInfo: ISearchInfo = {
         searchText: '',
         caseSensitive: false,
@@ -1988,6 +2046,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _columnPinning = false;
+    /**
+     * @hidden
+     */
+    protected _keydownListener = null;
+    /**
+     * @hidden
+     */
+    protected _vScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected _hScrollListener = null;
+    /**
+     * @hidden
+     */
+    protected _wheelListener = null;
     protected _allowFiltering = false;
     private _filteredData = null;
     private resizeHandler;
@@ -2023,12 +2097,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
+        this.disableTransitions = true;
         this.zone.run(() => {
             this.cdr.detectChanges();
             this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
+            this.disableTransitions = false;
         });
     }
 
@@ -2164,7 +2240,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.addEventListener('resize', this.resizeHandler);
-            this.nativeElement.addEventListener('keydown', this.keydownHandler.bind(this));
+            this._keydownListener = this.keydownHandler.bind(this);
+            this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
         this.calculateGridWidth();
         this.initPinning();
@@ -2209,13 +2286,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 .map(row => row.virtDirRow)
         );
 
-        this.zone.runOutsideAngular(() =>
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._vScrollListener = this.verticalScrollHandler.bind(this);
+            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this._vScrollListener);
+        });
 
-        this.zone.runOutsideAngular(() =>
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this))
-        );
+        this.zone.runOutsideAngular(() => {
+            this._hScrollListener = this.horizontalScrollHandler.bind(this);
+            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
+        });
         this._horizontalForOfs = this._dataRowList.map(row => row.virtDirRow);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
@@ -2227,9 +2306,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.document.defaultView.removeEventListener('resize', this.resizeHandler);
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            this.nativeElement.removeEventListener('keydown', this._keydownListener);
+            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this._vScrollListener);
+            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this._hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         });
@@ -2310,6 +2389,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return 32;
         } else {
             return 50;
+        }
+    }
+
+    /**
+     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     * Used internally for restricting header group component width.
+     * The values below depend on the header cell default right/left padding values.
+	 * @memberof IgxGridBaseComponent
+     */
+    get defaultHeaderGroupMinWidth(): number {
+        if (this.isCosy()) {
+            return 32;
+        } else if (this.isCompact()) {
+            return 24;
+        } else {
+            return 48;
         }
     }
 
@@ -2395,6 +2490,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
+    }
+
+    /**
+     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
+	 * @memberof IgxGridBaseComponent
+     */
+    public getHeaderGroupWidth(column: IgxColumnComponent): string {
+
+        const minWidth = this.defaultHeaderGroupMinWidth;
+        if (parseInt(column.width, 10) < minWidth) {
+            return minWidth.toString();
+        }
+
+        return column.width;
     }
 
     /**
@@ -3368,7 +3477,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _derivePossibleWidth() {
         if (!this._columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
-            this.initColumns(this.columnList, null);
+            this.columnList.forEach((column: IgxColumnComponent) => {
+                column.defaultWidth = this.columnWidth;
+            });
         }
     }
 
@@ -3390,7 +3501,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
+                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
 
         if (!this._height) {
@@ -3490,7 +3601,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
-            const width = parseInt(computed.getPropertyValue('width'), 10);
+            const width = computed.getPropertyValue('width').indexOf('%') === -1 ?
+                parseInt(computed.getPropertyValue('width'), 10) :
+                this.document.getElementById(this.nativeElement.id).offsetWidth;
+
             if (Number.isFinite(width) && width !== this.calcWidth) {
                 this.calcWidth = width;
 
@@ -4342,7 +4456,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.configureRowEditingOverlay(cell.rowID);
         this.rowEditingOverlay.open(this.rowEditSettings);
         this.rowEditPositioningStrategy.isTopInitialPosition = this.rowEditPositioningStrategy.isTop;
-        this.rowEditingOverlay.element.addEventListener('wheel', this.rowEditingWheelHandler.bind(this));
+        this._wheelListener = this.rowEditingWheelHandler.bind(this);
+        this.rowEditingOverlay.element.addEventListener('wheel', this._wheelListener);
     }
 
     /**
@@ -4350,7 +4465,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public closeRowEditingOverlay() {
         this.gridAPI.set_edit_row_state(this.id, null);
-        this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
+        this.rowEditingOverlay.element.removeEventListener('wheel', this._wheelListener);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
         this.rowEditingOverlay.element.parentElement.style.display = '';
