@@ -471,9 +471,7 @@ export class IgxGridNavigationService {
                         this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
                 }
         } else {
-            console.log('ShiftTab');
             const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary);
-            console.log('Cell', cell);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
                     this.movePreviousEditable( rowIndex, visibleColumnIndex);
