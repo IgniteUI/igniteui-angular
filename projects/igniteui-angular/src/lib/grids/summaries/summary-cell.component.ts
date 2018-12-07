@@ -79,6 +79,11 @@ export class IgxSummaryCellComponent {
         const ctrl = event.ctrlKey;
         event.preventDefault();
         event.stopPropagation();
+        if (this.rowIndex === 0 &&
+            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
+                return;
+
+        }
         if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down' || key === 'arrowdown')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
