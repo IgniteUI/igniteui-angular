@@ -1095,6 +1095,17 @@ export class SampleTestData {
         }
     ])
 
+    public static employeeTreeDataDisplayOrder = () => ([
+        { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
+        { ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
+        { ID: 3, ParentID: 2, Name: 'Tanya Bennett', JobTitle: 'Director', Age: 29 },
+        { ID: 7, ParentID: 2, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', Age: 35 },
+        { ID: 4, ParentID: 1, Name: 'Jack Simon', JobTitle: 'Software Developer', Age: 33 },
+        { ID: 6, ParentID: -1, Name: 'Erma Walsh', JobTitle: 'CEO', Age: 52 },
+        { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 },
+        { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 }
+    ])
+
     public static employeePrimaryForeignKeyTreeData = () => ([
         { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
         { ID: 2, ParentID: 1, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
