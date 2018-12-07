@@ -6,9 +6,8 @@ import {
     Inject
 } from '@angular/core';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { IgxDropDownComponent } from './drop-down.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
-import { IgxSelectionAPIService } from '../core/selection';
+import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 @Component({
     selector: 'igx-drop-down-item',
@@ -23,7 +22,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     constructor(
         @Inject(IGX_DROPDOWN_BASE) public dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        protected selection: IgxSelectionAPIService
+        protected selection: IgxDropDownSelectionService
     ) {
         super(dropDown, elementRef);
     }

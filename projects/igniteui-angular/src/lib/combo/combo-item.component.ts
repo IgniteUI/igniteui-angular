@@ -1,23 +1,23 @@
 import {
     Component,
     ElementRef,
-    forwardRef,
-    HostListener,
     HostBinding,
     Inject,
-    Input
+    Input,
+    DoCheck,
+    Host
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html'
 })
-export class IgxComboItemComponent extends IgxDropDownItemComponent {
+export class IgxComboItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
     /**
      * Gets the height of a list item
@@ -38,7 +38,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
         @Inject(IGX_DROPDOWN_BASE) public dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        protected selection: IgxSelectionAPIService
+        protected selection: IgxDropDownSelectionService
     ) {
         super(dropDown, elementRef, selection);
     }
@@ -47,10 +47,13 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      * @hidden
      */
     get isSelected(): boolean {
-        return this._isSelected;
+        return this.combo.isItemSelected(this.itemID);
     }
 
     set isSelected(value: boolean) {
         this._isSelected = value;
+    }
+
+    ngDoCheck(): void {
     }
 }

@@ -10,8 +10,7 @@ import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IDropDownItemClickEventArgs } from '../drop-down/drop-down-item.base';
+import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 /** @hidden */
 @Component({
@@ -22,11 +21,10 @@ import { IDropDownItemClickEventArgs } from '../drop-down/drop-down-item.base';
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     private _children: QueryList<IDropDownItem>;
     private _scrollPosition = 0;
-    private destroy$ = new Subject<boolean>();
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
+        protected selection: IgxDropDownSelectionService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
         super(elementRef, cdr, selection);
     }
@@ -96,7 +94,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     @HostListener('focus')
     onFocus() {
-        this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
+        this._focusedItem = this._focusedItem ?
+        this._focusedItem :
+        this.items.length ? this.items[0] : null;
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         }
@@ -116,7 +116,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public get selectedItem(): any[] {
-        const sel = this.selection.get(this.combo.id);
+        const sel = this.selection.get();
         return sel ? Array.from(sel) : [];
     }
 
@@ -185,20 +185,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    setSelectedItem(itemID: any, select = true) {
-        this.combo.setSelectedItem(itemID, select);
-    }
-
-    /**
-     * @hidden
-     */
-    selectItem(item: IDropDownItem, event?: Event) {
+    selectItem(item: IDropDownItem) {
         if (item.value === 'ADD ITEM') {
-            if (event) {
-                this.combo.addItemToCollection();
-            }
+            this.combo.addItemToCollection();
         } else {
-            this.setSelectedItem(item.itemID);
+            this.combo.setSelectedItem(item.itemID, !item.isSelected);
             this._focusedItem = item;
         }
     }
@@ -332,8 +323,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     protected scrollToHiddenItem(newItem: any): void { }
-    protected _handleClick(event: IDropDownItemClickEventArgs) {
-        this.setSelectedItem(event.itemID, !event.item.isSelected);
+    protected _handleClick(event: any) {
+        this.combo.setSelectedItem(event.itemID, !event.item.isSelected);
     }
 
     /**

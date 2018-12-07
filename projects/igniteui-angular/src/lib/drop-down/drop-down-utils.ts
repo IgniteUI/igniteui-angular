@@ -3,7 +3,6 @@ import { OnInit, EventEmitter, ElementRef } from '@angular/core';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase } from '../combo/combo.common';
-import { IDropDownItemClickEventArgs } from './drop-down-item.base';
 
 export interface ListNavigationDirective {
     target: any;
@@ -71,6 +70,5 @@ export interface IDropDownItem {
     index: number;
     elementHeight: number;
     element: ElementRef;
-    onClicked: EventEmitter<IDropDownItemClickEventArgs>;
     clicked(event: Event): void;
 }

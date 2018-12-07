@@ -86,7 +86,7 @@ export class ComboSampleComponent implements OnInit {
 
     toggleItem(itemID) {
         this.toggleItemState = !this.toggleItemState;
-        this.igxCombo.dropdown.setSelectedItem(itemID, this.toggleItemState);
+        this.igxCombo.dropdown.setSelectedItem(itemID);
     }
 
     ngOnInit() {

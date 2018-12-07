@@ -25,7 +25,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IDropDownItemClickEventArgs } from './drop-down-item.base';
+import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 
 /**
@@ -53,7 +53,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     protected children: QueryList<IDropDownItem>;
 
-    protected _destroy$ = new Subject<boolean>();
+    protected destroy$ = new Subject<boolean>();
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -93,7 +93,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     set id(value: string) {
         this.toggleDirective.id = value;
         this._id = value;
-        this.selection.set(value, this.selection.get(this.id));
+        this.selection.set(this.selection.get());
     }
 
     /**
@@ -104,12 +104,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public get selectedItem(): any {
-        const selectedItem = this.selection.first_item(this.id);
+        const selectedItem = this.selection.first_item();
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
             }
-            this.selection.clear(this.id);
+            this.selection.clear();
         }
         return null;
     }
@@ -158,6 +158,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (item === null) {
             return;
         }
+        if (item.isHeader || item.disabled) {
+            return;
+        }
+
         this.changeSelectedItem(item);
 
         if (event) {
@@ -185,18 +189,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     ngOnInit() {
         super.ngOnInit();
-        this.selection.clear(this.id);
+        this.selection.clear();
     }
 
     ngAfterViewInit() {
-        this.items.map(item => item.onClicked.pipe(takeUntil(this._destroy$)).subscribe(e => {
-            this._handleClick(e);
-        }));
+        this.selection.onSelection.pipe(takeUntil(this.destroy$)).subscribe(e => this._handleClick(e));
     }
 
     ngOnDestroy() {
-        this._destroy$.next(true);
-        this._destroy$.complete();
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 
     /**
@@ -227,7 +229,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return Math.floor(scrollPosition);
     }
 
-    protected _handleClick(event: IDropDownItemClickEventArgs) {
+    protected _handleClick(event: any) {
         this.selectItem(event.itemID);
     }
 
@@ -241,8 +243,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
+        protected selection: IgxDropDownSelectionService) {
         super(elementRef, cdr);
+        if (!selection) {
+            this.selection = new IgxDropDownSelectionService();
+        }
     }
 
     protected changeSelectedItem(newSelection?: IDropDownItem): boolean {
@@ -253,7 +258,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
         if (!args.cancel) {
-            this.selection.set(this.id, new Set([newSelection]));
+            this.selection.set(new Set([newSelection]));
         }
 
         if (!args.cancel) {

@@ -39,6 +39,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
 import { IgxComboItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
+import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -99,7 +100,7 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxDropDownSelectionService]
 })
 export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -165,14 +166,13 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         modal: false,
         closeOnOutsideClick: true
     };
-
+    protected selection = new IgxDropDownSelectionService();
     private _value = '';
     private _searchValue = '';
 
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
@@ -1157,8 +1157,8 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
             return;
         }
         const newSelection = select ?
-            this.selection.add_item(this.id, newItem) :
-            this.selection.delete_item(this.id, newItem);
+            this.selection.add_item(newItem) :
+            this.selection.delete_item(newItem);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1192,7 +1192,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * @hidden
      */
     public isItemSelected(item) {
-        return this.selection.is_item_selected(this.id, this._stringifyItemID(item));
+        return this.selection.is_item_selected(this._stringifyItemID(item));
     }
 
     /**
@@ -1208,7 +1208,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
             for (let i = 0; i < args.newSelection.length; i++) {
                 newSelectionAsSet.add(args.newSelection[i]);
             }
-            this.selection.set(this.id, newSelectionAsSet);
+            this.selection.set(newSelectionAsSet);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
                 newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 newSelection.join(', ');
@@ -1508,7 +1508,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
-            const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selection.add_items(newItems, clearCurrentSelection);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1523,7 +1523,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public deselectItems(items: Array<any>) {
         if (items) {
-            const newSelection = this.selection.delete_items(this.id, items);
+            const newSelection = this.selection.delete_items(items);
             this.triggerSelectionChange(newSelection);
         }
     }
@@ -1538,7 +1538,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public selectAllItems(ignoreFilter?: boolean) {
         const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData);
-        const newSelection = this.selection.add_items(this.id, allVisible);
+        const newSelection = this.selection.add_items(allVisible);
         this.triggerSelectionChange(newSelection);
     }
 
@@ -1553,7 +1553,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     public deselectAllItems(ignoreFilter?: boolean) {
         const newSelection = this.filteredData.length === this.data.length || ignoreFilter ?
             this.selection.get_empty() :
-            this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
+            this.selection.delete_items(this.selection.get_all_ids(this.filteredData));
         this.triggerSelectionChange(newSelection);
     }
 }

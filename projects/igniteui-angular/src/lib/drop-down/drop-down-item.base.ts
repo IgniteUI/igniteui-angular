@@ -1,18 +1,11 @@
 import { IDropDownItem, IDropDownBase } from './drop-down-utils';
-import { Input, HostBinding, HostListener, ElementRef, Output, EventEmitter } from '@angular/core';
-
-export interface IDropDownItemClickEventArgs {
-    item: IDropDownItem;
-    itemID: any;
-}
+import { Input, HostBinding, HostListener, ElementRef, Output, EventEmitter, Optional } from '@angular/core';
+import { IDropDownServiceArgs, IgxDropDownSelectionService } from '../core/drop-down.selection';
 /**
  * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
 export abstract class IgxDropDownItemBase implements IDropDownItem {
-
-    @Output()
-    onClicked = new EventEmitter<IDropDownItemClickEventArgs>();
     /**
      * @hidden
      */
@@ -23,7 +16,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
      * @hidden
      */
     public get itemID() {
-        return;
+        return this;
     }
 
     /**
@@ -91,7 +84,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
      */
     @HostBinding('class.igx-drop-down__item--focused')
     get isFocused(): boolean {
-        return this._isFocused;
+        return (!this.isHeader && !this.disabled) && this._isFocused;
     }
 
     /**
@@ -188,7 +181,8 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
 
     constructor(
         public dropDown: IDropDownBase,
-        protected elementRef: ElementRef
+        protected elementRef: ElementRef,
+        @Optional() protected selection?: IgxDropDownSelectionService
     ) { }
 
     /**
@@ -203,9 +197,12 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
             }
             return;
         }
-        this.onClicked.emit({
-            item: this,
-            itemID: this.itemID
-        });
+        if (this.selection) {
+            const args: IDropDownServiceArgs = {
+                item: this,
+                itemID: this.itemID
+            };
+            this.selection.onSelection.emit(args);
+        }
     }
 }
