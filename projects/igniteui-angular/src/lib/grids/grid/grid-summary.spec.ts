@@ -164,7 +164,7 @@ describe('IgxGrid - Summaries', () => {
                     ['11', '0', '99,000', '138,004', '12,545.818']);
             }));
 
-        it('When we have data which is undefined and enable summary per defined column, error should not be thrown', () => {
+        xit('When we have data which is undefined and enable summary per defined column, error should not be thrown', () => {
             const fixture = TestBed.createComponent(ProductsComponent);
             fixture.detectChanges();
 
@@ -182,7 +182,7 @@ describe('IgxGrid - Summaries', () => {
             }).not.toThrow();
         });
 
-        it('should change custom summaries at runtime', fakeAsync(() => {
+        xit('should change custom summaries at runtime', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomSummariesComponent);
             const grid = fixture.componentInstance.grid1;
             fixture.detectChanges();
