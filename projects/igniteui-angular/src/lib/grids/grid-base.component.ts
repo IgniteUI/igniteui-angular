@@ -2499,7 +2499,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
 
         const minWidth = this.defaultHeaderGroupMinWidth;
-        if (parseInt(column.width, 10) < minWidth) {
+        if (column.width && column.width.indexOf('%') === -1 && parseInt(column.width, 10) < minWidth) {
             return minWidth.toString();
         }
 
