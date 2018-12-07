@@ -221,7 +221,7 @@ describe('IgxTreeGrid - Summaries', () => {
             treeGrid.enableSummaries('HireDate');
             fix.detectChanges();
 
-            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(0);
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(3);
 
             HelperUtils.verifyVisbleSummariesHeight(fix, 3);
 

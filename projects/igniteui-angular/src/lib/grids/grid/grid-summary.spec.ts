@@ -698,42 +698,150 @@ describe('IgxGrid - Summaries', () => {
 
         it('should render correct summaries when there is grouped colomn', () => {
             verifyBaseSummaries(fix);
-            verifySummariesForParentID1(fix, 5);
+            verifySummariesForParentID17(fix, 3);
             const groupRows = grid.groupsRowList.toArray();
             groupRows[0].toggle();
             fix.detectChanges();
-            verifySummariesForParentID12(fix, 5);
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID19(fix, 3);
         });
+
+        it('should be able to enable/disable summaries at runtime', () => {
+            grid.getColumnByName('Age').hasSummary = false;
+            grid.getColumnByName('ParentID').hasSummary = false;
+            fix.detectChanges();
+
+            HelperUtils.verifyVisbleSummariesHeight(fix, 3,  grid.defaultRowHeight );
+
+            let summaries = HelperUtils.getAllVisbleSummaries(fix);
+            summaries.forEach(summary => {
+                HelperUtils.verifyColumnSummaries(summary, 0, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 1, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 2, ['Count'], []);
+                HelperUtils.verifyColumnSummaries(summary, 3, ['Count', 'Earliest', 'Latest'], []);
+                HelperUtils.verifyColumnSummaries(summary, 4, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 5, ['Count'], []);
+            });
+
+            // Disable all summaries
+            grid.getColumnByName('Name').hasSummary = false;
+            grid.getColumnByName('HireDate').hasSummary = false;
+            grid.getColumnByName('OnPTO').hasSummary = false;
+            fix.detectChanges();
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(0);
+
+            grid.getColumnByName('Name').hasSummary = true;
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(5);
+            HelperUtils.verifyVisbleSummariesHeight(fix, 1,  grid.defaultRowHeight );
+            summaries = HelperUtils.getAllVisbleSummaries(fix);
+            summaries.forEach(summary => {
+                HelperUtils.verifyColumnSummaries(summary, 0, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 1, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 2, ['Count'], []);
+                HelperUtils.verifyColumnSummaries(summary, 3, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 4, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 5, [], []);
+            });
+        });
+
+        it('should show/hide summaries when expand/collapse group row', () => {
+            grid.disableSummaries([{ fieldName: 'Age' }, { fieldName: 'ParentID' }, { fieldName: 'HireDate' }]);
+            fix.detectChanges();
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(5);
+            
+            const groupRows = grid.groupsRowList.toArray();
+            groupRows[0].toggle();
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(4);
+
+            grid.toggleAllGroupRows();
+            fix.detectChanges();
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
+
+            groupRows[0].toggle();
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(2);
+
+            grid.toggleAllGroupRows();
+            fix.detectChanges();
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(5);
+        });
+
+        it('should be able to enable/disable summaries at runtime', () => {
+            grid.getColumnByName('Age').hasSummary = false;
+            grid.getColumnByName('ParentID').hasSummary = false;
+            fix.detectChanges();
+
+            HelperUtils.verifyVisbleSummariesHeight(fix, 3,  grid.defaultRowHeight );
+
+            let summaries = HelperUtils.getAllVisbleSummaries(fix);
+            summaries.forEach(summary => {
+                HelperUtils.verifyColumnSummaries(summary, 0, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 1, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 2, ['Count'], []);
+                HelperUtils.verifyColumnSummaries(summary, 3, ['Count', 'Earliest', 'Latest'], []);
+                HelperUtils.verifyColumnSummaries(summary, 4, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 5, ['Count'], []);
+            });
+
+            // Disable all summaries
+            grid.getColumnByName('Name').hasSummary = false;
+            grid.getColumnByName('HireDate').hasSummary = false;
+            grid.getColumnByName('OnPTO').hasSummary = false;
+            fix.detectChanges();
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(0);
+
+            grid.getColumnByName('Name').hasSummary = true;
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(5);
+            HelperUtils.verifyVisbleSummariesHeight(fix, 1,  grid.defaultRowHeight );
+            summaries = HelperUtils.getAllVisbleSummaries(fix);
+            summaries.forEach(summary => {
+                HelperUtils.verifyColumnSummaries(summary, 0, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 1, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 2, ['Count'], []);
+                HelperUtils.verifyColumnSummaries(summary, 3, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 4, [], []);
+                HelperUtils.verifyColumnSummaries(summary, 5, [], []);
+            });
+        });
+
+
     });
 
     function verifyBaseSummaries(fixture) {
         const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, 0);
         HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
-        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['18', '-1', '847', '3,517', '195.389']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['18']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['18', 'Dec 18, 2007', 'Apr 18, 2018']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['18', '25', '61', '707', '39.278']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['18']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '17', '847', '2,188', '273.5']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Dec 18, 2007', 'Dec 9, 2017']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '25', '50', '293', '36.625']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['8']);
     }
 
-    function verifySummariesForParentID1(fixture, vissibleIndex) {
+    function verifySummariesForParentID19(fixture, vissibleIndex) {
         const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
         HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
-        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '-1', '-1', '-4', '-1']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['4', 'Apr 20, 2008', 'Feb 22, 2014']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '19', '19', '19', '19']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['1']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['1', 'May 4, 2014', 'May 4, 2014']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '44', '44', '44', '44']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['1']);
     }
 
-    function verifySummariesForParentID12(fixture, vissibleIndex) {
+    function verifySummariesForParentID17(fixture, vissibleIndex) {
         const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, vissibleIndex);
         HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
-        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '12', '12', '36', '12']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['3']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['3', 'Apr 22, 2010', 'Apr 18, 2018']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '25', '39', '89', '29.667']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Dec 18, 2007', 'Mar 19, 2016']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
     }
 });
 

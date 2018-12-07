@@ -1258,6 +1258,78 @@ export class SampleTestData {
         }
     ])
 
+    public static employeeGroupByData = () => ([
+          {
+            ID: 475,
+            ParentID: 147,
+            Name: 'Michael Langdon',
+            HireDate: new Date(2011, 6, 3),
+            Age: 43,
+            OnPTO: false,
+            Employees: null
+        },
+        {
+            ID: 957,
+            ParentID: 147,
+            Name: 'Thomas Hardy',
+            HireDate: new Date(2009, 6, 19),
+            Age: 29,
+            OnPTO: true,
+            Employees: undefined
+        },
+        {
+            ID: 317,
+            ParentID: 147,
+            Name: 'Monica Reyes',
+            HireDate: new Date(2014, 8, 18),
+            Age: 31,
+            OnPTO: false
+        },
+        {
+            ID: 225,
+            ParentID: 847,
+            Name: 'Laurence Johnson',
+            HireDate: new Date(2014, 4, 4),
+            OnPTO: true,
+            Age: 44,
+        },
+        {
+            ID: 663,
+            ParentID: 847,
+            Name: 'Elizabeth Richards',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25,
+            OnPTO: false
+        },
+
+        {
+            ID: 15,
+            ParentID: 19,
+            Name: 'Antonio Moreno',
+            HireDate: new Date(2014, 4, 4),
+            Age: 44,
+            OnPTO: true,
+            Employees: []
+        },
+        {
+            ID: 12,
+            ParentID: 17,
+            Name: 'Pedro Afonso',
+            HireDate: new Date(2007, 11, 18),
+            Age: 50,
+            OnPTO: false
+        },
+        {
+            ID: 101,
+            ParentID: 17,
+            Name: 'Casey Harper',
+            HireDate: new Date(2016, 2, 19),
+            OnPTO: false,
+            Age: 27
+        }
+    ])
+
+
     /**
      * Generates simple array of primitve values
      * @param rows Number of items to add to the array
