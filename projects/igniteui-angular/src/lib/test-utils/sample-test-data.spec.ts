@@ -1268,7 +1268,7 @@ export class SampleTestData {
         { ID: 10, ParentID: -1, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Age: 53 },
         { ID: 9, ParentID: 10, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', Age: 44 }
     ])
-  
+
     /**
      * Generates simple array of primitve values
      * @param rows Number of items to add to the array
