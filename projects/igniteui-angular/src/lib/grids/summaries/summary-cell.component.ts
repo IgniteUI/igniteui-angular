@@ -1,8 +1,6 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
 import { DisplayDensity } from '../../core/density';
 import { DataType } from '../../data-operations/data-util';
 
@@ -29,8 +27,7 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
-        private element: ElementRef) {
+    constructor(private element: ElementRef) {
     }
 
     @HostBinding('class')
