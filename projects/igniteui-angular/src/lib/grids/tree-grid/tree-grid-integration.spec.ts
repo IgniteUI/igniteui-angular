@@ -668,7 +668,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
 
             // Commit
-            trans.commit(treeGrid.data, treeGrid.childDataKey, treeGrid.primaryKey);
+            trans.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
             tick();
 
             // Verify the correct value is set
@@ -749,7 +749,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(rowData[475].Age).not.toEqual(treeGrid.getRowByKey(475).rowData.Age);
             expect(rowData[19].Name).not.toEqual(treeGrid.getRowByKey(19).rowData.Name);
             expect(treeGridData[0].Employees[475]).toEqual(initialData[0].Employees[475]);
-            trans.commit(treeGridData, treeGrid.childDataKey, treeGrid.primaryKey);
+            trans.commit(treeGridData, treeGrid.primaryKey, treeGrid.childDataKey);
             expect(treeGridData[0].Name).toEqual('Testy Testington');
             expect(treeGridData[0].Employees[0].Age).toEqual(42);
             expect(treeGridData[1].Name).toEqual('Old Richard');
@@ -890,7 +890,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).toEqual(-1);
             expect(treeGrid.transactions.getAggregatedChanges(true).length).toEqual(2);
             // 4. Commit
-            treeGrid.transactions.commit(treeGrid.data, treeGrid.childDataKey, treeGrid.primaryKey);
+            treeGrid.transactions.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
             // 5. verify the rows are committed, the styles are OK
             expect(treeGrid.data.findIndex(e => e.ID === rowData.parent.ID)).not.toEqual(-1);
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).not.toEqual(-1);
@@ -1241,7 +1241,7 @@ describe('IgxTreeGrid - Integration', () => {
             treeGrid.addRow(childRow, 11);
             expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain('igx-grid__tr--edited');
             expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain('igx-grid__tr--edited');
-            trans.commit(treeGrid.data, treeGrid.childDataKey, treeGrid.primaryKey);
+            trans.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
             expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain('igx-grid__tr--edited');
             expect(treeGrid.getRowByKey(12).nativeElement.classList).not.toContain('igx-grid__tr--edited');
             treeGrid.addRow(grandChildRow, 12);

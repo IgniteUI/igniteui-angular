@@ -397,30 +397,29 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
     }
 
-    /**
-     * Removes the `IgxGridRowComponent` and the corresponding data record by primary key.
-     * Requires that the `primaryKey` property is set.
-     * The method accept rowSelector as a parameter, which is the rowID.
-     * ```typescript
-     * this.grid1.deleteRow(0);
-     * ```
-     * @param rowSelector
-     * @memberof IgxGridBaseComponent
-     */
-    public deleteRowById(rowId: any) {
-        if (this.primaryKey && this.foreignKey && this.cascadeOnDelete && this.transactions.enabled) {
+    /** @hidden */
+    protected deleteRowById(rowId: any) {
+        //  if this is flat self-referencing data, and CascadeOnDelete is set to true
+        //  and if we have transactions we should start pending transaction. This allows
+        //  us in case of delete action to delete all child rows as single undo action
+        const flatDataWithCascadeOnDeleteAndTransactions =
+            this.primaryKey &&
+            this.foreignKey &&
+            this.cascadeOnDelete &&
+            this.transactions.enabled;
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.startPending();
         }
+
         super.deleteRowById(rowId);
 
-        if (this.primaryKey && this.foreignKey && this.cascadeOnDelete && this.transactions.enabled) {
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.endPending(true);
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     protected deleteRowFromData(rowID: any, index: number) {
         if (this.primaryKey && this.foreignKey) {
             super.deleteRowFromData(rowID, index);
@@ -436,21 +435,23 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             }
         } else {
             const record = this.records.get(rowID);
-            const childData = record.parent ? record.parent.data[this.childDataKey] :
-                this.transactions.enabled ? this._gridAPI.get_all_data(this.id, true) : this.data;
-            index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
-                childData.indexOf(rowID);
+            const collection = record.parent ? record.parent.data[this.childDataKey] : this.data;
+            index = this.primaryKey ?
+                collection.map(c => c[this.primaryKey]).indexOf(rowID) :
+                collection.indexOf(rowID);
+
             if (this.transactions.enabled) {
                 const path = this.generateRowPath(rowID);
                 this.transactions.add({
-                    id: rowID,
-                    type: TransactionType.DELETE,
-                    newValue: null,
-                    path: path
-                },
-                    childData[index]);
+                        id: rowID,
+                        type: TransactionType.DELETE,
+                        newValue: null,
+                        path: path
+                    },
+                    collection[index]
+                );
             } else {
-                childData.splice(index, 1);
+                collection.splice(index, 1);
             }
         }
     }

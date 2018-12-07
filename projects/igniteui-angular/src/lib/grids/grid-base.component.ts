@@ -2896,11 +2896,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * @hidden
-     * @param
-     */
-    public deleteRowById(rowId: any) {
+    /** @hidden */
+    protected deleteRowById(rowId: any) {
         let index: number;
         const data = this.gridAPI.get_all_data(this.id);
         if (this.primaryKey) {

@@ -36,7 +36,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         //  transaction type and value of UPDATE states
         if (transaction.type === TransactionType.DELETE) {
             states.forEach((v: S, k: any) => {
-                if (v.path.indexOf(transaction.id) !== -1) {
+                if (v.path && v.path.indexOf(transaction.id) !== -1) {
                     switch (v.type) {
                         case TransactionType.ADD:
                             states.delete(k);
@@ -50,7 +50,7 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
         }
     }
 
-    public commit(data: any[], childDataKey?: any, primaryKey?: any): void {
+    public commit(data: any[], primaryKey?: any, childDataKey?: any): void {
         if (childDataKey) {
             DataUtil.mergeHierarchicalTransactions(data, this.getAggregatedChanges(true), childDataKey, primaryKey, true);
         } else {

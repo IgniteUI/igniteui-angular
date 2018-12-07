@@ -90,7 +90,7 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
     }
 
     public selectDensity(event) {
