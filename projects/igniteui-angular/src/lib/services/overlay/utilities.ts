@@ -24,20 +24,32 @@ export class Point {
 }
 
 export interface PositionSettings {
+    /** Attaching target for the component to show */
     target?: Point | HTMLElement;
+    /** Direction in which the component should show */
     horizontalDirection?: HorizontalAlignment;
+    /** Direction in which the component should show */
     verticalDirection?: VerticalAlignment;
+    /** Target's starting point */
     horizontalStartPoint?: HorizontalAlignment;
+    /** Target's starting point */
     verticalStartPoint?: VerticalAlignment;
+    /** Animation applied while overlay opens */
     openAnimation?: AnimationReferenceMetadata;
+    /** Animation applied while overlay closes */
     closeAnimation?: AnimationReferenceMetadata;
 }
 
 export interface OverlaySettings {
+    /** Position strategy to use with this settings */
     positionStrategy?: IPositionStrategy;
+    /** Scroll strategy to use with this settings */
     scrollStrategy?: IScrollStrategy;
+    /** Set if the overlay should be in modal mode */
     modal?: boolean;
+    /** Set if the overlay should closed on outside click */
     closeOnOutsideClick?: boolean;
+    /** Set the outlet container to attach the overlay to */
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
@@ -58,6 +70,14 @@ export interface OverlayAnimationEventArgs {
     animationPlayer: AnimationPlayer;
     /** Type of animation to be played. It should be either 'open' or 'close' */
     animationType: 'open' | 'close';
+}
+
+export interface Size {
+    /** Gets or sets the horizontal component of Size */
+    width: number;
+
+    /** Gets or sets the vertical component of Size */
+    height: number;
 }
 
 /** @hidden */
@@ -90,7 +110,7 @@ export interface OverlayInfo {
     elementRef?: ElementRef;
     componentRef?: ComponentRef<{}>;
     settings?: OverlaySettings;
-    initialSize?: { width?: number, height?: number, x?: number, y?: number };
+    initialSize?: Size;
     hook?: HTMLElement;
     openAnimationPlayer?: AnimationPlayer;
     closeAnimationPlayer?: AnimationPlayer;
