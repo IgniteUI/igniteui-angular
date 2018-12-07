@@ -116,7 +116,7 @@ export class IgxOverlayService implements OnDestroy {
      */
     // tslint:disable-next-line:unified-signatures
     show(component: ElementRef | Type<{}>, settings?: OverlaySettings): string;
-    show(compOrId: string | ElementRef | Type<{}> , settings?: OverlaySettings): string {
+    show(compOrId: string | ElementRef | Type<{}>, settings?: OverlaySettings): string {
         let info: OverlayInfo;
         let id: string;
         if (typeof compOrId === 'string') {
@@ -155,7 +155,8 @@ export class IgxOverlayService implements OnDestroy {
         //  opening. Otherwise, if there is close animation player playing animation now we should not setup
         //  overlay this is already done
         if (!info.closeAnimationPlayer || (info.closeAnimationPlayer && !info.closeAnimationPlayer.hasStarted())) {
-            info.initialSize = info.elementRef.nativeElement.getBoundingClientRect();
+            const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
+            info.initialSize = { width: elementRect.width, height: elementRect.height };
             info.hook = this.placeElementHook(info.elementRef.nativeElement);
 
             this.moveElementToOverlay(info);
