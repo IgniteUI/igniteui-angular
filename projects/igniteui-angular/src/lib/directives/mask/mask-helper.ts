@@ -87,6 +87,22 @@ export class MaskHelper {
         return inputValue;
     }
 
+    public parseMask(maskOptions): string {
+        let outputVal = '';
+        const mask: string = maskOptions.format;
+        const literals: Map<number, string> = this.getMaskLiterals(mask);
+
+        for (const maskSym of mask) {
+            outputVal += maskOptions.promptChar;
+        }
+
+        literals.forEach((val: string, key: number) => {
+            outputVal = this.replaceCharAt(outputVal, key, val);
+        });
+
+        return outputVal;
+    }
+
     public parseValueByMaskOnInit(inputVal, maskOptions): string {
         let outputVal = '';
         let value = '';
