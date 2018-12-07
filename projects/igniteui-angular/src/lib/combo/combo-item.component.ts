@@ -8,7 +8,7 @@ import {
     Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { IgxDropDownItemBase, IgxDropDownBase } from '../drop-down/drop-down.base';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 
 /** @hidden */
@@ -54,6 +54,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
      */
     @HostListener('click', ['$event'])
     clicked(event) {
+        this.dropDown.disableTransitions = false;
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.focusedItem;
             if (focusedItem) {
