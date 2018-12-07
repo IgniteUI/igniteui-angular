@@ -56,7 +56,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('@#$YUA123_');
     }));
@@ -69,7 +68,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('555 55');
 
@@ -83,7 +81,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('+359-884 19 08 54');
     }));
@@ -133,7 +130,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('input'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(123) 4567-890');
         expect(comp.value).toEqual('1234567890');
@@ -143,7 +139,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('input'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(777) 7___-___');
         expect(comp.value).toEqual('7777');
@@ -164,7 +159,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(___) 4569-_12');
 
@@ -177,7 +171,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(111) 1111-111');
     }));
@@ -210,9 +203,7 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
 
-        fixture.detectChanges();
         expect(input.nativeElement.value).toEqual('(123) ____-___');
-
         expect(fixture.componentInstance.raw).toEqual('123');
     }));
 
@@ -227,7 +218,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('3456****');
         expect(comp.value).toEqual(3456);
@@ -258,8 +248,6 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(keyEvent);
         tick();
 
-        fixture.detectChanges();
-
         input.nativeElement.value = '';
         input.nativeElement.dispatchEvent(new Event('input'));
         tick();
@@ -267,10 +255,7 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
 
-        fixture.detectChanges();
-
         expect(input.nativeElement.value).toEqual('(___) ____-___');
-
     }));
 
     it('Enter value over literal', fakeAsync(() => {
@@ -289,16 +274,12 @@ describe('igxMask', () => {
         input.nativeElement.dispatchEvent(keyEvent);
         tick();
 
-        fixture.detectChanges();
-
         input.nativeElement.value = '';
         input.nativeElement.dispatchEvent(new Event('input'));
         tick();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(___) ____-___');
 
@@ -308,7 +289,6 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
-        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(666) 6___-___');
     }));
@@ -325,12 +305,12 @@ describe('igxMask', () => {
         expect(input.nativeElement.value).toEqual('SSS');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
-        fixture.detectChanges();
+        tick();
 
         expect(input.nativeElement.value).toEqual('sss');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        fixture.detectChanges();
+        tick();
 
         expect(input.nativeElement.value).toEqual('SSS');
     }));
@@ -345,13 +325,13 @@ describe('igxMask', () => {
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        fixture.detectChanges();
+        tick();
 
         expect(input.nativeElement.value).toEqual('(__) (__)');
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
-        fixture.detectChanges();
+        tick();
 
         expect(input.nativeElement.value).toEqual('');
         expect(input.nativeElement.placeholder).toEqual('hello');
