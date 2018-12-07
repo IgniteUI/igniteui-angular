@@ -60,6 +60,7 @@ export class IgxGridSummaryService {
         if (this.summaryHeight) {
             return this.summaryHeight;
         }
+        if (!this.grid.data) {return this.summaryHeight = 0; }
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
             const getCurrentSummaryColumn = column.summaries.operate([]).length;
@@ -75,12 +76,12 @@ export class IgxGridSummaryService {
     }
 
     public calculateSummaries(rowID, data) {
-        if (!this.hasSummarizedColumns && !data) { return; }
         let rowSummaries = this.summaryCacheMap.get(rowID);
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
+        if (!this.hasSummarizedColumns || !data) {return rowSummaries; }
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 const columnValues = data.map(record => record[column.field]);
@@ -99,6 +100,7 @@ export class IgxGridSummaryService {
     }
 
     public updateSummaryCache(groupingArgs) {
+        if (this.summaryCacheMap.size === 0 || !this.hasSummarizedColumns) { return; }
         if (this.groupingExpressions.length === 0) {
             this.groupingExpressions = groupingArgs.expressions.map(record => record.fieldName);
             return;
@@ -155,7 +157,6 @@ export class IgxGridSummaryService {
     }
 
     private compareGroupingExpressions(current, groupingArgs) {
-        if (this.summaryCacheMap.size === 0) { return ; }
         const newExpressions = groupingArgs.expressions.map(record => record.fieldName);
         const removedCols = groupingArgs.ungroupedColumns;
         if (current.length <= newExpressions.length) {
