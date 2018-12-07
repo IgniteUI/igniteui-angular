@@ -19,7 +19,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
-    const COLUMN_FILTER_CELL_CLASS = 'igx-grid-filtering-cell';
+    const COLUMN_FILTER_CELL_SELECTOR = 'igx-grid-filtering-cell';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -730,7 +730,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         const headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const headerGroups = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
-        const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_CLASS));
+        const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_SELECTOR));
 
         expect(headers[0].nativeElement.getBoundingClientRect().width).toBe(49);
         expect(headers[1].nativeElement.getBoundingClientRect().width).toBe(50);
