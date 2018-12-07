@@ -125,6 +125,14 @@ gulp.task('copy-migrations', () => {
         .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 });
 
+gulp.task('copy-schematics', () => {
+    return gulp.src([
+        './projects/igniteui-angular/schematics/**/*.json',
+        '!**/tsconfig.json'
+    ])
+        .pipe(gulp.dest('./dist/igniteui-angular/schematics'));
+});
+
 gulp.task('typedoc-styles', ['typedoc:clean-styles'], () => {
     const prefixer = postcss([autoprefixer({
         browsers: ['last 5 versions', '> 3%'],
@@ -283,7 +291,7 @@ gulp.task('typedoc-build:theme', ['typedoc-build'],
 );
 
 gulp.task('typedoc-build:export',
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH}`)
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH} --tags --params`)
 );
 
 gulp.task('typedoc-build:import', ['typedoc-build'],

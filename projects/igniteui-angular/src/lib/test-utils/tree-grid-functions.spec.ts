@@ -411,7 +411,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
                 expect(newCell.focused).toEqual(true);
 
@@ -466,7 +465,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })
@@ -492,7 +490,6 @@ export class TreeGridFunctions {
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
-
                 expect(newCell.inEditMode).toBe(true);
                 resolve();
             })

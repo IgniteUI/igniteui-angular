@@ -288,11 +288,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         if (this.column.editable && value) {
-            this.editValue = this.value;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
             }
+            this.editValue = this.value;
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
@@ -482,9 +482,30 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private highlight: IgxTextHighlightDirective;
 
     /**
-     * @hidden
+     * Sets the current edit value while a cell is in edit mode.
+     * Only for cell editing mode.
+     * ```typescript
+     * let isLastPinned = this.cell.isLastPinned;
+     * ```
+     * @memberof IgxGridCellComponent
      */
-    public editValue;
+    public set editValue(value) {
+        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+            this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue = value;
+        }
+    }
+
+    /**
+     * Gets the current edit value while a cell is in edit mode.
+     * Only for cell editing mode.
+     * ```typescript
+     * let editValue = this.cell.editValue;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    public get editValue() {
+        return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
+    }
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
@@ -627,7 +648,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     @HostListener('dblclick', ['$event'])
-    @HostListener('doubletap', ['$event'])
     public onDoubleClick(event) {
         if (this.column.editable) {
             this.inEditMode = true;
@@ -705,7 +725,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             const column = this.gridAPI.get(this.gridID).columns[editCell.cellID.columnID];
 
             if (column.inlineEditorTemplate === undefined && (
-                (column.dataType === DataType.Boolean &&  (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
+                (column.dataType === DataType.Boolean && (key !== KEYS.SPACE && key !== KEYS.SPACE_IE))
                 || column.dataType === DataType.Date)) {
                 event.preventDefault();
             }
@@ -728,11 +748,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
                     (this.gridAPI as any).trigger_row_expansion_toggle(
                         this.gridID, this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
                 }
-            return;
+                return;
             }
         }
 
-        const args = {cell: this, groupRow: null, event: event, cancel: false };
+        const args = { cell: this, groupRow: null, event: event, cancel: false };
         this.grid.onFocusChange.emit(args);
         if (args.cancel) {
             return;
@@ -811,6 +831,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
+                this.inEditMode = false;
                 this.nativeElement.focus();
             } else {
                 this.inEditMode = true;
@@ -904,7 +925,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     public calculateSizeToFit(range: any): number {
         return Math.max(...Array.from(this.nativeElement.children)
-                   .map((child) => getNodeSizeViaRange(range, child)));
+            .map((child) => getNodeSizeViaRange(range, child)));
     }
 
     private isToggleKey(key) {

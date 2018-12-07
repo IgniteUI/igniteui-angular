@@ -4,11 +4,6 @@
     <ng-content></ng-content>
 </ng-template>
 
-<!-- TODO: remove this after glyphName property is deprecated. -->
-<ng-template #implicitLigature>
-    {{getIconName}}
-</ng-template>
-
 <ng-template #svgImage>
     <svg>
         <use [attr.href]="getSvgKey"></use>
