@@ -86,8 +86,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this._isPending = false;
         if (commit) {
             const actions: { transaction: T, recordRef: any }[] = [];
-            for (let i = 0; i < this._pendingTransactions.length; i++) {
-                const transaction: T = this._pendingTransactions[i];
+            for (const transaction of this._pendingTransactions) {
                 const pendingState = this._pendingStates.get(transaction.id);
                 this._transactions.push(transaction);
                 this.updateState(this._states, transaction, pendingState.recordRef);
@@ -135,12 +134,17 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             return;
         }
 
-        const actions: { transaction: T, recordRef: any }[] = this._undoStack.pop();
-        this._transactions.splice(this._transactions.length - actions.length);
-        this._redoStack.push(actions);
+        const lastActions: { transaction: T, recordRef: any }[] = this._undoStack.pop();
+        this._transactions.splice(this._transactions.length - lastActions.length);
+        this._redoStack.push(lastActions);
 
         this._states.clear();
-        this._undoStack.map(a => a.map(t => this.updateState(this._states, t.transaction, t.recordRef)));
+        for (const currentActions of this._undoStack) {
+            for (const transaction of currentActions) {
+                this.updateState(this._states, transaction.transaction, transaction.recordRef);
+            }
+        }
+
         this.onStateUpdate.emit();
     }
 
@@ -148,10 +152,11 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         if (this._redoStack.length > 0) {
             let actions: { transaction: T, recordRef: any, useInUndo?: boolean }[];
             actions = this._redoStack.pop();
-            actions.map(a => {
-                this.updateState(this._states, a.transaction, a.recordRef);
-                this._transactions.push(a.transaction);
-            });
+            for (const action of actions) {
+                this.updateState(this._states, action.transaction, action.recordRef);
+                this._transactions.push(action.transaction);
+            }
+
             this._undoStack.push(actions);
             this.onStateUpdate.emit();
         }

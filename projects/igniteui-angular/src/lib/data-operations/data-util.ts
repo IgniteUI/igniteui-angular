@@ -234,9 +234,7 @@ export class DataUtil {
         primaryKey?: any,
         deleteRows: boolean = false): any[] {
 
-        for (let i = 0; i < transactions.length; i++) {
-            const transaction = transactions[i];
-
+        for (const transaction of transactions) {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
                 let collection: any[] = parent ? parent[childDataKey] : data;
