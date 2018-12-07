@@ -17,6 +17,14 @@
         @extend %igx-banner__illustration !optional;
     }
 
+    @include e(border-top) {
+        @extend %igx-banner__border-top !optional;
+    }
+
+    @include e(border-bottom) {
+        @extend %igx-banner__border-bottom !optional;
+    }
+
     @include e(text) {
         @extend %igx-banner__text !optional;
     }
