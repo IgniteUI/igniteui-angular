@@ -160,7 +160,7 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.
 
-The [Crypto Portfolio App](https://igniteui.github.io/crypto-portfolio-app/#/home) is a delicate web and mobile app, developed with Ignite UI for Angular most solid components and styled with one of a kind theming engine.
+The [Crypto Portfolio App](https://igniteui.github.io/crypto-portfolio-app/#/home) is web and mobile application, developed with Ignite UI for Angular most solid components and styled with one of a kind theming engine.
 
 To get started with the Data Grid, use the steps in the [grid walk-through](https://www.infragistics.com/angular-samples/components/grid.html).
 
