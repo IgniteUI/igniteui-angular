@@ -11,6 +11,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
+- `IgxMask`:
+    - `placeholder` input property is added to allow developers to specify the placeholder attribute of the host input element that the `igxMask` is applied on;
+    - `displayValuePipe` input property is provided that allows developers to additionally transform the value on blur;
+    - `focusedValuePipe` input property is provided that allows developers to additionally transform the value on focus;
 - `IgxTreeGrid`:
     - You can now export the tree grid both to CSV and Excel.
     - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
