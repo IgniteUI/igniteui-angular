@@ -727,7 +727,7 @@ describe('IgxGrid - Cell component', () => {
             expect(item.width).toEqual('482px');
         });
     });
-    
+
     it('should be able to conditionally style cells', async(() => {
         const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
         fixture.detectChanges();
