@@ -844,24 +844,28 @@ describe('IgxTimePicker', () => {
         expect(minuteColumn.nativeElement.children[3].innerText).toEqual('28');
     }));
 
-    xit('TimePicker vertical', fakeAsync(() => {
+    it('TimePicker vertical', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerTestComponent);
         tick();
         fixture.detectChanges();
         const dom = fixture.debugElement;
 
-        fixture.componentInstance.isVertical = true;
+        fixture.componentInstance.timePicker.vertical = true;
+        tick(200);
+        fixture.detectChanges();
 
         const timePickerTarget = dom.query(By.directive(IgxInputDirective));
         UIInteractions.clickElement(timePickerTarget);
         tick(200);
         fixture.detectChanges();
 
-        expect(dom.query(By.css('.igx-time-picker--vertical'))).not.toBeNull();
+        const timePickerVertical = dom.query(By.css('.igx-time-picker--vertical'));
 
-        const dialog = dom.query(By.css('.igx-dialog__window')).nativeElement;
+        expect(timePickerVertical).not.toBeNull();
 
-        expect(dialog.offsetWidth).toBeGreaterThan(dialog.offsetHeight);
+        const dialog = dom.query(By.css('.igx-time-picker__main')).nativeElement;
+
+        expect(timePickerVertical.nativeElement.offsetWidth).toBeGreaterThan(timePickerVertical.nativeElement.offsetHeight);
         tick();
     }));
 
@@ -962,7 +966,6 @@ describe('IgxTimePicker', () => {
         let timePicker;
         let dom;
         let input;
-        let button;
         beforeEach(
             async(() => {
                 fixture = TestBed.createComponent(IgxTimePickerDropDownComponent);
@@ -970,7 +973,6 @@ describe('IgxTimePicker', () => {
                 timePicker = fixture.componentInstance.timePicker;
                 dom = fixture.debugElement;
                 input = dom.query(By.directive(IgxInputDirective));
-                button = dom.query(By.css('.myButton'));
             })
         );
 
@@ -1051,6 +1053,7 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toBe('05:45 PM', 'MouseWheel Up on AMPM failed');
 
         }));
+
         it('should open the dropdown when click on the clock icon', fakeAsync(() => {
             fixture.detectChanges();
             // clock icon
@@ -1060,6 +1063,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
             expect(dropDown.properties.hidden).toBeFalsy();
         }));
+
         it('should reset value on clear button click', fakeAsync(() => {
             fixture.detectChanges();
             // clear icon
@@ -1073,6 +1077,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
             expect(input.nativeElement.placeholder).toBe('hh:mm tt');
         }));
+
         it('should break on spinloop witn min and max value on arrow down', fakeAsync(() => {
             fixture.detectChanges();
 
@@ -1190,7 +1195,135 @@ describe('IgxTimePicker', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
             fixture.detectChanges();
             expect(input.nativeElement.value).toBe('09:03 AM', 'SpinLoop Up wrong time');
-        }));        
+        }));
+
+        it('should open the dropdown with Alt + arrow down', fakeAsync(() => {
+            fixture.detectChanges();
+            const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+
+            // should open dropdown on alt + arrow down
+            input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'down', altKey: true}));
+            fixture.detectChanges();
+
+            expect(dropDown.properties.hidden).toBeFalsy();
+        }));
+
+        it('should open the dropdown with SpaceBar', fakeAsync(() => {
+            fixture.detectChanges();
+            const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
+
+            // should open dropdown on alt + arrow down
+            UIInteractions.triggerKeyDownEvtUponElem('SpaceBar', input.nativeElement, true);
+            fixture.detectChanges();
+            expect(dropDown.properties.hidden).toBeFalsy();
+        }));
+
+        it('should prevent interaction when disabled', fakeAsync(() => {
+            fixture.detectChanges();
+
+            let styles = window.getComputedStyle(input.nativeElement);
+            // normal text color
+            expect(styles.color).toBe('rgba(0, 0, 0, 0.87)');
+
+            timePicker.disabled = true;
+            fixture.detectChanges();
+
+            styles = window.getComputedStyle(input.nativeElement);
+
+            // disabled text color
+            expect(styles.color).toBe('rgba(0, 0, 0, 0.38)');
+
+            expect(dom.query(By.css('.igx-input-group--disabled'))).toBeDefined();
+        }));
+
+        it('should trigger onValidationFailed event when setting invalid time.', fakeAsync(() => {
+            fixture.detectChanges();
+
+            UIInteractions.sendInput(input, '77:77 TT');
+            spyOn(timePicker.onValidationFailed, 'emit');
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
+        }));
+
+        it('should scroll on dropdown opened and accept value when focust lost', fakeAsync(() => {
+            fixture.detectChanges();
+            const initVal = fixture.componentInstance.date;
+            timePicker.itemsDelta = { hours: 1, minutes: 5 };
+
+            // clock icon
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+            UIInteractions.clickElement(iconTime);
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+
+            UIInteractions.simulateWheelEvent(hourColumn.nativeElement, 0, -10);
+            fixture.detectChanges();
+            let childCount = hourColumn.children.length;
+            expect(hourColumn.children[0].nativeElement.innerText).toBe('01');
+            expect(hourColumn.children[childCount - 1].nativeElement.innerText).toBe('07');
+
+            UIInteractions.simulateWheelEvent(minuteColumn.nativeElement, 0, 10);
+            fixture.detectChanges();
+            childCount = minuteColumn.children.length;
+            expect(minuteColumn.children[0].nativeElement.innerText).toBe('35');
+            expect(minuteColumn.children[childCount - 1].nativeElement.innerText).toBe('05');
+
+            UIInteractions.simulateWheelEvent(AMPMColumn.nativeElement, 0, -10);
+            fixture.detectChanges();
+            expect(AMPMColumn.children[0].nativeElement.innerText).toBe('AM');
+            expect(AMPMColumn.children[1].nativeElement.innerText).toBe('PM');
+
+            // expect input value to be changed
+            expect(input.nativeElement.value).toBe('04:50 AM');
+            // expect the timePicker date not to be changed
+            expect(fixture.componentInstance.date).toBe(initVal);
+
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.date).toEqual(new Date(2018, 10, 27, 4, 50, 0, 0));
+        }));
+
+        it('should not accept invalid value from dropdown when min is set', fakeAsync(() => {
+            fixture.detectChanges();
+
+            timePicker.isSpinLoop = true;
+            timePicker.minValue = '05:45 PM';
+            timePicker.maxValue = '06:45 PM';
+            timePicker.itemsDelta = { hours: 1, minutes: 1 };
+            const initVal = fixture.componentInstance.date;
+            fixture.detectChanges();
+
+            // clock icon
+            const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
+            UIInteractions.clickElement(iconTime);
+            fixture.detectChanges();
+
+            const hourColumn = dom.query(By.css('.igx-time-picker__hourList'));
+            const minuteColumn = dom.query(By.css('.igx-time-picker__minuteList'));
+            const AMPMColumn = dom.query(By.css('.igx-time-picker__ampmList'));
+
+            UIInteractions.simulateWheelEvent(hourColumn.nativeElement, 0, -10);
+            fixture.detectChanges();
+
+            UIInteractions.simulateWheelEvent(minuteColumn.nativeElement, 0, -10);
+            fixture.detectChanges();
+
+            UIInteractions.simulateWheelEvent(AMPMColumn.nativeElement, 0, -10);
+            fixture.detectChanges();
+
+            spyOn(timePicker.onValidationFailed, 'emit');
+            input.nativeElement.dispatchEvent(new Event('blur'));
+            fixture.detectChanges();
+            expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
+
+            // ininitial value should not be changed
+            expect(fixture.componentInstance.date).toEqual(initVal);
+        }));
     });
 });
 
