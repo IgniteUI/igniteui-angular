@@ -39,14 +39,14 @@ export class AppComponent implements OnInit {
             name: 'Badge'
         },
         {
-            link: '/bottom-navigation',
-            icon: 'tab',
-            name: 'Bottom Navigation'
-        },
-        {
             link: '/banner',
             icon: 'banner',
             name: 'Banner'
+        },
+        {
+            link: '/bottom-navigation',
+            icon: 'tab',
+            name: 'Bottom Navigation'
         },
         {
             link: '/buttonGroup',
@@ -89,14 +89,14 @@ export class AppComponent implements OnInit {
             name: 'Dialog'
         },
         {
-            link: '/dropDown',
-            icon: 'view_list',
-            name: 'DropDown'
-        },
-        {
             link: '/drag-drop',
             icon: 'view_column',
             name: 'Drag and Drop'
+        },
+        {
+            link: '/dropDown',
+            icon: 'view_list',
+            name: 'DropDown'
         },
         {
             link: '/expansionPanel',
@@ -119,11 +119,6 @@ export class AppComponent implements OnInit {
             name: 'Grid Cell Editing'
         },
         {
-            link: '/gridConditionalCellStyling',
-            icon: 'view_column',
-            name: 'Grid Cell Styling'
-        },
-        {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
@@ -144,19 +139,24 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Resizing'
         },
         {
+            link: '/gridConditionalCellStyling',
+            icon: 'view_column',
+            name: 'Grid Cell Styling'
+        },
+        {
             link: '/gridGroupBy',
             icon: 'view_column',
             name: 'Grid GroupBy'
         },
         {
-            link: '/gridPerformance',
-            icon: 'view_column',
-            name: 'Grid Performance'
-        },
-        {
             link: '/gridPercentage',
             icon: 'view_column',
             name: 'Grid Percentage'
+        },
+        {
+            link: '/gridPerformance',
+            icon: 'view_column',
+            name: 'Grid Performance'
         },
         {
             link: '/gridRemoteVirtualization',
@@ -182,6 +182,11 @@ export class AppComponent implements OnInit {
             link: '/gridToolbar',
             icon: 'view_column',
             name: 'Grid Toolbar'
+        },
+        {
+            link: '/gridToolbarCustom',
+            icon: 'view_column',
+            name: 'Grid Toolbar Custom Content'
         },
         {
             link: '/icon',

@@ -1,6 +1,15 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent, IgxHierarchicalTransactionService, IgxGridTransaction } from 'igniteui-angular';
+import {
+    CsvFileTypes,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExcelExporterService,
+    IgxGridTransaction,
+    IgxHierarchicalTransactionService,
+    IgxTreeGridComponent,
+} from 'igniteui-angular';
 
 @Component({
     providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
@@ -18,6 +27,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public density = '';
     public displayDensities;
+
+    constructor(private excelExporterService: IgxExcelExporterService,
+                private csvExporterService: IgxCsvExporterService) {
+    }
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -107,5 +120,13 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public commit() {
         this.grid1.transactions.commit(this.data);
+    }
+
+    public exportToExcel() {
+        this.excelExporterService.export(this.grid1, new IgxExcelExporterOptions('TreeGrid'));
+    }
+
+    public exportToCSV() {
+        this.csvExporterService.export(this.grid1, new IgxCsvExporterOptions('TreeGrid', CsvFileTypes.CSV));
     }
 }

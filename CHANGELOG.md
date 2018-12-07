@@ -6,12 +6,15 @@ All notable changes for each version of this project will be documented in this 
 ### Features
 - **New component** `IgxBannerComponent`:
     - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+- `igxGrid`
+    - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
 - `IgxTreeGrid`:
     - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
-
+    - You can now export the tree grid both to CSV and Excel.
+    - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
 
 ## 7.0.2
 ### Features
@@ -23,7 +26,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
-    
+
 ### Bug fixes
 
 - `igxGrid`
@@ -45,7 +48,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 6.2.3
 - `igxGrid`
-    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set, 
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set,
     the changes will be applied to the particular instance of the component:
     ```typescript
         this.grid.resourceStrings = {
@@ -95,7 +98,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxDropDown`
     - Added a new property `maxHeight`, defining the max height of the drop down. ([#3001](https://github.com/IgniteUI/igniteui-angular/issues/3001))
 - Added migrations for Sass theme properties changes in 6.2.0 ([#2994](https://github.com/IgniteUI/igniteui-angular/issues/2994))
-- Themes 
+- Themes
     - Introducing schemas for easier bootstrapping of component themes.
     - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
 
