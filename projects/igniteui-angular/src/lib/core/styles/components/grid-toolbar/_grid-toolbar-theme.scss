@@ -277,6 +277,11 @@
         @include ellipsis();
     }
 
+    %igx-grid-toolbar__custom-content {
+        display: flex;
+        flex-flow: row wrap;
+    }
+
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;

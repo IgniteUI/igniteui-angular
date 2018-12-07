@@ -57,6 +57,7 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 
 @NgModule({
     declarations: [
@@ -66,6 +67,7 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxGridHeaderComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -97,6 +99,7 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxGridHeaderComponent,
         IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
