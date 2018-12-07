@@ -398,7 +398,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
     /** @hidden */
-    protected deleteRowById(rowId: any) {
+    public deleteRowById(rowId: any) {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
