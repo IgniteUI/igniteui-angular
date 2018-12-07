@@ -1,4 +1,3 @@
-import { FileContentData } from '../excel/test-data.service.spec';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -11,12 +10,10 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 describe('CSV exporter', () => {
     configureTestSuite();
     let exporter: IgxCsvExporterService;
-    let actualData: FileContentData;
     const fileTypes = [ CsvFileTypes.CSV, CsvFileTypes.TSV, CsvFileTypes.TAB ];
 
     beforeEach(() => {
         exporter = new IgxCsvExporterService();
-        actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
         spyOn(ExportUtilities as any, 'saveBlobToFile');
