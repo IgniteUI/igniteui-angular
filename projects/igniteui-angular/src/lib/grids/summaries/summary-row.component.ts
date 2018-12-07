@@ -42,7 +42,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.index;
     }
 
-    @HostBinding('style.min-height.px')
     get minHeight() {
         return this.grid.summaryService.calcMaxSummaryHeight();
     }

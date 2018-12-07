@@ -1305,7 +1305,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowList: QueryList<IgxGridRowComponent>;
 
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
-    protected summaryRowList: QueryList<IgxSummaryRowComponent>;
+    protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
+
+
+    public get summariesRowList() {
+        const res = new QueryList<any>();
+        if (!this._summaryRowList) {
+            return res;
+        }
+        const sumList = this._summaryRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(sumList);
+        return res;
+    }
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -2238,7 +2251,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
         });
@@ -2344,9 +2356,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
             this._horizontalForOfs = this.combineForOfCollections(list.toArray()
-                .filter(item => item.element.nativeElement.parentElement !== null), this.summaryRowList)
+                .filter(item => item.element.nativeElement.parentElement !== null), this._summaryRowList)
         );
-        this.summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
+        this._summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
             this._horizontalForOfs - this.combineForOfCollections(this._dataRowList, summaryList.toArray()
                 .filter(item => item.element.nativeElement.parentElement !== null)));
 
@@ -2359,7 +2371,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._hScrollListener = this.horizontalScrollHandler.bind(this);
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
         });
-        this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this.summaryRowList);
+        this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }

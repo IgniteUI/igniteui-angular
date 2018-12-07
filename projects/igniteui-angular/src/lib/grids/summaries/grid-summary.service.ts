@@ -75,7 +75,7 @@ export class IgxGridSummaryService {
     }
 
     public calculateSummaries(rowID, data) {
-        if (!this.hasSummarizedColumns) { return; }
+        if (!this.hasSummarizedColumns && !data) { return; }
         let rowSummaries = this.summaryCacheMap.get(rowID);
         if (!rowSummaries) {
             rowSummaries = new Map<string, IgxSummaryResult[]>();
