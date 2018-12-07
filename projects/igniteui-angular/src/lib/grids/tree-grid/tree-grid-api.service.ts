@@ -153,4 +153,17 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
+
+    public get_selected_children(id: string, record: ITreeGridRecord, selectedRowIDs: any[]) {
+        const grid = this.get(id);
+        if (!record.children || record.children.length === 0) {
+            return;
+        }
+        for (const child of record.children) {
+            if (grid.selection.is_item_selected(id, child.rowID)) {
+                selectedRowIDs.push(child.rowID);
+            }
+            this.get_selected_children(id, child, selectedRowIDs);
+        }
+    }
 }

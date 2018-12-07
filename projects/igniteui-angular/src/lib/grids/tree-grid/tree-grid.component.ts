@@ -440,6 +440,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 collection.map(c => c[this.primaryKey]).indexOf(rowID) :
                 collection.indexOf(rowID);
 
+            const selectedChildren = [];
+            this._gridAPI.get_selected_children(this.id, record, selectedChildren);
+                if (selectedChildren.length > 0) {
+                this.deselectRows(selectedChildren);
+            }
+
             if (this.transactions.enabled) {
                 const path = this.generateRowPath(rowID);
                 this.transactions.add({
