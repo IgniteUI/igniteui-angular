@@ -1,10 +1,18 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
-    IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes } from 'igniteui-angular';
+import {
+    CsvFileTypes,
+    IgxCsvExporterOptions,
+    IgxCsvExporterService,
+    IgxExcelExporterOptions,
+    IgxExcelExporterService,
+    IgxGridTransaction,
+    IgxHierarchicalTransactionService,
+    IgxTreeGridComponent,
+} from 'igniteui-angular';
 
 @Component({
-    providers: [],
+    providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
     selector: 'app-tree-grid-flat-data-sample',
     styleUrls: ['tree-grid-flat-data.sample.css'],
     templateUrl: 'tree-grid-flat-data.sample.html'
@@ -73,12 +81,18 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public addRow() {
-        this.grid1.addRow({ 'employeeID': 24, 'PID': -1, 'firstName': 'John', 'lastName': 'Doe', 'Title': 'Junior Sales Representative' });
+        this.grid1.addRow({
+            'employeeID': this.data.length + this.nextRow++,
+            'PID': -1,
+            'firstName': 'John',
+            'lastName': 'Doe',
+            'Title': 'Junior Sales Representative'
+        });
     }
 
     public addChildRow() {
         const selectedRowId = this.grid1.selectedRows()[0];
-        this.grid1.addRow (
+        this.grid1.addRow(
             {
                 'employeeID': this.data.length + this.nextRow++,
                 'firstName': `Added `,
@@ -89,11 +103,23 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
     }
 
     public selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public undo() {
+        this.grid1.transactions.undo();
+    }
+
+    public redo() {
+        this.grid1.transactions.redo();
+    }
+
+    public commit() {
+        this.grid1.transactions.commit(this.data);
     }
 
     public exportToExcel() {
