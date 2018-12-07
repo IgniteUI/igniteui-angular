@@ -2930,10 +2930,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * @hidden
-     * @param
-     */
+    /** @hidden */
     public deleteRowById(rowId: any) {
         let index: number;
         const data = this.gridAPI.get_all_data(this.id);
@@ -4509,9 +4506,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return rowChanges ? Object.keys(rowChanges).length : 0;
     }
 
-    protected writeToData(rowIndex: number, value: any) {
-        mergeObjects(this.data[rowIndex], value);
-    }
     /**
      * TODO: Refactor
      * @hidden
@@ -4542,6 +4536,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
         if (!commit) {
             this.onRowEditCancel.emit(emitArgs);
+            this.transactions.endPending(commit);
         } else {
             this.gridAPI.update_row(emitArgs.newValue, this.id, rowID, currentGridState);
         }
@@ -4549,7 +4544,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.transactions.startPending();
             return;
         }
-        this.transactions.endPending(commit);
         this.closeRowEditingOverlay();
     }
 
