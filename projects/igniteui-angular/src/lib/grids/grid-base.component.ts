@@ -57,7 +57,7 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -2370,9 +2370,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get defaultRowHeight(): number {
         switch (this.displayDensity) {
-            case 'cosy':
+            case DisplayDensity.cosy:
                 return 40;
-            case 'compact':
+            case DisplayDensity.compact:
                 return 32;
             default:
                 return 50;
@@ -2386,12 +2386,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get defaultHeaderGroupMinWidth(): number {
-        if (this.isCosy()) {
-            return 32;
-        } else if (this.isCompact()) {
-            return 24;
-        } else {
-            return 48;
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 32;
+            case DisplayDensity.compact:
+                return 24;
+            default:
+                return 48;
         }
     }
 
