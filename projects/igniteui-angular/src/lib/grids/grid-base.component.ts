@@ -2378,7 +2378,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxGridHeaderGroupComponent`'s minimum allloed width.
+     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
      * Used internally for restricting header group component width.
      * The values below depend on the header cell default right/left padding values.
 	 * @memberof IgxGridBaseComponent
@@ -2484,7 +2484,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
 
         const minWidth = this.defaultHeaderGroupMinWidth;
-        if (parseInt(column.width, 10) < this.defaultHeaderGroupMinWidth) {
+        if (parseInt(column.width, 10) < minWidth) {
             return minWidth.toString();
         }
 
