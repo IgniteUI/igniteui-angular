@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
+import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
+         IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult } from 'igniteui-angular';
 
 export class MySummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = []): IgxSummaryResult[] {
@@ -34,6 +35,10 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
 
     public density = '';
     public displayDensities;
+
+    constructor(private excelExporterService: IgxExcelExporterService,
+                private csvExporterService: IgxCsvExporterService) {
+    }
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -128,5 +133,13 @@ export class TreeGridFlatDataSampleComponent implements OnInit {
         } else {
             this.grid1.enableSummaries([{ fieldName: name, customSummary: MySummaryOperand }]);
         }
+    }
+  
+    public exportToExcel() {
+        this.excelExporterService.export(this.grid1, new IgxExcelExporterOptions('TreeGrid'));
+    }
+
+    public exportToCSV() {
+        this.csvExporterService.export(this.grid1, new IgxCsvExporterOptions('TreeGrid', CsvFileTypes.CSV));
     }
 }

@@ -438,20 +438,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    protected getExportExcel(): boolean {
-        return false;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportCsv(): boolean {
-        return false;
-    }
-
-    /**
-     * @hidden
-     */
     protected restoreHighlight(): void {
     }
 

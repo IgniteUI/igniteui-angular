@@ -62,6 +62,7 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
@@ -1388,6 +1389,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+
+    /**
      * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
@@ -1770,15 +1781,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
-
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
 
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
@@ -3109,13 +3111,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -3712,20 +3713,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
     }
 
     /**
