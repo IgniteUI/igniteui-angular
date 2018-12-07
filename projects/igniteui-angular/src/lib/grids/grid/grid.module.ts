@@ -18,6 +18,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
+import { IgxGridSummaryPipe } from './grid.summary.pipe';
 
 /**
  * @hidden
@@ -33,7 +34,8 @@ import { DeprecateMethod } from '../../core/deprecateDecorators';
     IgxGridPostGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
-    IgxGridFilteringPipe
+    IgxGridFilteringPipe,
+    IgxGridSummaryPipe
   ],
   exports: [
     IgxGridComponent,

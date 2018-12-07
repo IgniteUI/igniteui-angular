@@ -9,7 +9,7 @@ export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
         const chkElement = checkboxElements.find((el) =>
-        (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
+            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
 
         return chkElement;
     }
@@ -38,7 +38,6 @@ export class HelperUtils {
         expect(chkInput.checked).toBe(isChecked);
     }
 
-
     public static clearOverlay() {
         const overlays = document.getElementsByClassName('igx-overlay') as HTMLCollectionOf<Element>;
         Array.from(overlays).forEach(element => {
@@ -52,46 +51,98 @@ export class HelperUtils {
         grid: IgxGridComponent,
         rowStartIndex: number,
         rowEndIndex: number,
-        colIndex?: number) => new Promise(async(resolve, reject) => {
-        const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
-        const row = grid.getRowByIndex(rowStartIndex);
-        const cIndx = colIndex || 0;
-        const colKey = grid.columnList.toArray()[cIndx].field;
-        let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-        const elem = row instanceof IgxGridGroupByRowComponent ?
-            row : grid.getCellByColumn(row.index, colKey);
-        if (rowStartIndex === rowEndIndex) {
-            if (!elem.focused) {
-                elem.nativeElement.focus();
-            }
-            resolve();
-            return;
-        }
-        const keyboardEvent = new KeyboardEvent('keydown', {
-            code: dir,
-            key: dir
-        });
-
-        if (dir === 'ArrowDown') {
-            elem.nativeElement.dispatchEvent(keyboardEvent);
-        } else {
-            elem.nativeElement.dispatchEvent(keyboardEvent);
-        }
-
-        if (nextRow) {
-            await wait(10);
-            HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
-            .then(() => { resolve(); });
-        } else {
-            // else wait for chunk to load.
-            grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                next: async() => {
-                    nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                    HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
-                    .then(() => { resolve(); });
+        colIndex?: number) => new Promise(async (resolve, reject) => {
+            const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+            const row = grid.getRowByIndex(rowStartIndex);
+            const cIndx = colIndex || 0;
+            const colKey = grid.columnList.toArray()[cIndx].field;
+            let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+            const elem = row instanceof IgxGridGroupByRowComponent ?
+                row : grid.getCellByColumn(row.index, colKey);
+            if (rowStartIndex === rowEndIndex) {
+                if (!elem.focused) {
+                    elem.nativeElement.focus();
                 }
+                resolve();
+                return;
+            }
+            const keyboardEvent = new KeyboardEvent('keydown', {
+                code: dir,
+                key: dir
             });
-        }
 
-    })
+            if (dir === 'ArrowDown') {
+                elem.nativeElement.dispatchEvent(keyboardEvent);
+            } else {
+                elem.nativeElement.dispatchEvent(keyboardEvent);
+            }
+
+            if (nextRow) {
+                await wait(10);
+                HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                    .then(() => { resolve(); });
+            } else {
+                // else wait for chunk to load.
+                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
+                    next: async () => {
+                        nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
+                        HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
+                            .then(() => { resolve(); });
+                    }
+                });
+            }
+        })
+
+    public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
+        const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+        expect(summary).toBeDefined();
+        const summaryItems = summary.queryAll(By.css('.igx-grid-summary__item'));
+        if (summaryLabels.length === 0) {
+            expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeTruthy();
+            expect(summaryItems.length).toBe(0);
+        } else {
+            expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeFalsy();
+            expect(summaryItems.length).toEqual(summaryLabels.length);
+            if (summaryItems.length === summaryLabels.length) {
+                for (let i = 0; i < summaryLabels.length; i++) {
+                    const summaryItem = summaryItems[i];
+                    const summaryLabel = summaryItem.query(By.css('.igx-grid-summary__label'));
+                    expect(summaryLabels[i]).toEqual(summaryLabel.nativeElement.textContent.trim());
+                    if (summaryResults.length > 0) {
+                        const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
+                        expect(summaryResults[i]).toEqual(summaryResult.nativeElement.textContent.trim());
+                    }
+                }
+            }
+        }
+    }
+
+    public static getSummaryRowByDataRowIndex(fix, rowIndex: number) {
+        return fix.debugElement.query(By.css('igx-grid-summary-row[data-rowindex="' + rowIndex + '"]'));
+    }
+
+    public static getAllVisbleSummariesLength(fix) {
+        return HelperUtils.getAllVisbleSummaries(fix).length;
+    }
+
+    public static getAllVisbleSummariesRowIndexes(fix) {
+        const summaries = HelperUtils.getAllVisbleSummaries(fix);
+        const rowIndexes = [];
+        summaries.forEach(summary => {
+            rowIndexes.push(Number(summary.attributes['data-rowIndex']));
+        });
+        return rowIndexes.sort((a: number, b: number) => a - b);
+    }
+
+    public static getAllVisbleSummaries(fix) {
+        return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
+    }
+
+    public static verifyVisbleSummariesHeight(fix, summariesRows, rowHeight = 50) {
+        const visibleSummaries = HelperUtils.getAllVisbleSummaries(fix);
+        visibleSummaries.forEach(summary => {
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight);
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
+        });
+    }
 }

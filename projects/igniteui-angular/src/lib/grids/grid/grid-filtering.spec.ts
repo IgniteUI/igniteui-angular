@@ -10,6 +10,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxFilteringOperand, FilteringExpressionsTree } from '../../../public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
@@ -574,10 +575,8 @@ describe('IgxGrid - Filtering actions', () => {
 
         expect(grid.rowList.length).toEqual(1);
 
-        const summariesReleaseDate = fix.debugElement.queryAll(By.css('.igx-grid-summary'))[0];
-        const count = summariesReleaseDate.query(By.css('[title=\'Count\']')).nativeElement.nextSibling.innerText;
-
-        expect(count).toBe('1');
+        const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
+        HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
 });
 

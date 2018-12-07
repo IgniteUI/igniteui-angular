@@ -22,6 +22,10 @@
 /// @prop {Map} group-row-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The drop area background on drop color.
 /// @prop {Color} filtering-header-background [#222] - The background color of the filtered column header.
 /// @prop {Color} filtering-row-background [#222] - The background color of the filtering row.
+/// @prop {Map} body-summaries-background [igx-color: ('grays', 300), hexrgba: #222] - The background color of the summary groups located the body.
+/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [igx-color: ('grays', 100), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @requires extend
 /// @requires $_light-grid
 /// @see $default-palette
@@ -75,5 +79,27 @@ $_dark-grid: extend($_light-grid, (
 
     filtering-row-background: #222,
 
-    cell-selected-text-color: #fff
+    cell-selected-text-color: #fff,
+
+    body-summaries-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    body-summaries-text-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #222,
+        text-contrast: ()
+    ),
+
+    root-summaries-background: (
+        igx-color: ('grays', 300),
+        hexrgba: #222
+    ),
+
+    root-summaries-text-color: (
+        igx-color: ('grays', 300),
+        hexrgba: #222,
+        text-contrast: ()
+    )
 ));

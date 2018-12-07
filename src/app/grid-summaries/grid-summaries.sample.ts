@@ -395,7 +395,7 @@ export class GridSummaryComponent implements OnInit {
                 this.grid1.getColumnByName(name).hasSummary = true;
             }
         }
-        this.grid1.recalculateSummaries();
+        this.grid1.reflow();
     }
 
     public addRow() {
@@ -458,7 +458,7 @@ export class GridSummaryComponent implements OnInit {
 
     disableSummary() {
         this.grid1.getColumnByName('UnitsInStock').hasSummary = false;
-        this.grid1.recalculateSummaries();
+        // this.grid1.recalculateSummaries();
     }
 
     hide() {
