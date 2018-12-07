@@ -590,10 +590,16 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
     }
 }
 
+/**
+ * @hidden
+ */
 export interface ContainerPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
+/**
+ * @hidden
+ */
 export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
