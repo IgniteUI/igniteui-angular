@@ -187,7 +187,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return -1;
         }
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
@@ -276,7 +276,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     } {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         const isRowSelected = grid.selection.is_item_selected(id, rowID);
         const editableCell = this.get_cell_inEditMode(id);
         const column = grid.columnList.toArray()[columnID];
@@ -313,9 +313,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
         const args = {
             rowID,
-                oldValue: oldValue,
-                newValue: editValue,
-                cancel: false
+            oldValue: oldValue,
+            newValue: editValue,
+            cancel: false
         };
         if (cellObj) {
             Object.assign(args, {
@@ -337,7 +337,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        // const data = this.get_all_data(id, grid.transactions.enabled);
         const currentGridEditState = gridEditState || this.create_grid_edit_args(id, rowID, columnID, editValue);
         const emittedArgs = currentGridEditState.args;
         const column = grid.columnList.toArray()[columnID];
@@ -357,22 +357,36 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             //  if edit (new) value is same as old value do nothing here
             if (emittedArgs.oldValue !== undefined
                 && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
-            const transaction: Transaction = {
-                id: rowID, type: TransactionType.UPDATE, newValue: { [column.field]: emittedArgs.newValue }
-            };
-            if (grid.transactions.enabled) {
-                grid.transactions.add(transaction, currentGridEditState.rowData);
-            } else {
-                const rowValue = this.get_all_data(id)[rowIndex];
-                mergeObjects(rowValue, {[column.field]: emittedArgs.newValue });
-            }
+            const rowValue = this.get_all_data(id, grid.transactions.enabled)[rowIndex];
+            this.updateData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field && currentGridEditState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 grid.selection.select_item(id, emittedArgs.newValue);
             }
-            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
+            if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID || !grid.transactions.enabled) {
                 (grid as any)._pipeTrigger++;
             }
+        }
+    }
+
+    /**
+     * Updates related row of provided grid's data source with provided new row value
+     * @param grid Grid to update data for
+     * @param rowID ID of the row to update
+     * @param rowValueInDataSource Initial value of the row as it is in data source
+     * @param rowCurrentValue Current value of the row as it is with applied previous transactions
+     * @param rowNewValue New value of the row
+     */
+    protected updateData(grid, rowID, rowValueInDataSource: any, rowCurrentValue: any, rowNewValue: {[x: string]: any}) {
+        if (grid.transactions.enabled) {
+            const transaction: Transaction = {
+                id: rowID,
+                type: TransactionType.UPDATE,
+                newValue: rowNewValue
+            };
+            grid.transactions.add(transaction, rowCurrentValue);
+        } else {
+            mergeObjects(rowValueInDataSource, rowNewValue);
         }
     }
 
@@ -382,7 +396,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         rowData: any
     }): void {
         const grid = this.get(id);
-        const data = this.get_all_data(id);
+        const data = this.get_all_data(id, grid.transactions.enabled);
         const currentGridState = gridState ? gridState : this.create_grid_edit_args(id, rowID, null, value);
         const emitArgs = currentGridState.args;
         const index = this.get_row_index_in_data(id, rowID);
@@ -406,11 +420,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (currentRowInEditMode) {
                 grid.transactions.endPending(false);
             }
-            if (grid.transactions.enabled && emitArgs.newValue !== null) {
-                grid.transactions.add({id: rowID, newValue: emitArgs.newValue, type: TransactionType.UPDATE}, emitArgs.oldValue);
-            } else if (emitArgs.newValue !== null && emitArgs.newValue !== undefined) {
-                Object.assign(data[index], emitArgs.newValue);
-            }
+            this.updateData(grid, rowID, data[index], emitArgs.oldValue, emitArgs.newValue);
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
@@ -594,9 +604,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return column.dataType === DataType.Number;
     }
 
-    public get_all_data(id: string, transactions?: boolean): any[] {
+    public get_all_data(id: string, includeTransactions = false): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
+        const data = includeTransactions ? grid.dataWithAddedInTransactionRows : grid.data;
         return data ? data : [];
     }
 
