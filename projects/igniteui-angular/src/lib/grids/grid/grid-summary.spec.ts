@@ -750,7 +750,7 @@ describe('IgxGrid - Summaries', () => {
             grid.disableSummaries([{ fieldName: 'Age' }, { fieldName: 'ParentID' }, { fieldName: 'HireDate' }]);
             fix.detectChanges();
             expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(5);
-            
+
             const groupRows = grid.groupsRowList.toArray();
             groupRows[0].toggle();
             fix.detectChanges();
