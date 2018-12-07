@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
-import { IgxColumnComponent } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -54,6 +54,22 @@ export class IgxFilteringService implements OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
+    }
+
+    public get displayContainerWidth() {
+        return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10);
+    }
+
+    public get displayContainerScrollLeft() {
+        return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
+    }
+
+    public get unpinnedFilterableColumns() {
+        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+    }
+
+    public get unpinnedColumns() {
+        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
     }
 
     public get grid(): IgxGridBaseComponent {
@@ -256,7 +272,11 @@ export class IgxFilteringService implements OnDestroy {
      * Returns the string representation of the FilteringLogic operator.
      */
     public getOperatorAsString(operator: FilteringLogic): any {
-        return FilteringLogic[operator];
+        if (operator === 0) {
+            return this.grid.resourceStrings.igx_grid_filter_operator_and;
+        } else {
+            return this.grid.resourceStrings.igx_grid_filter_operator_or;
+        }
     }
 
     /**
@@ -264,7 +284,7 @@ export class IgxFilteringService implements OnDestroy {
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+            return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
             return this.datePipe.transform(expression.searchVal);
         } else {
@@ -289,6 +309,33 @@ export class IgxFilteringService implements OnDestroy {
         const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.focusChip(focusFirst);
+        }
+    }
+
+    /**
+     * Scrolls to a filterCell.
+     */
+    public scrollToFilterCell(column: IgxColumnComponent, shouldFocusNext: boolean) {
+        this.grid.nativeElement.focus({preventScroll: true});
+        this.columnToFocus = column;
+        this.shouldFocusNext = shouldFocusNext;
+
+        let currentColumnRight = 0;
+        let currentColumnLeft = 0;
+        for (let index = 0; index < this.unpinnedColumns.length; index++) {
+            currentColumnRight += parseInt(this.unpinnedColumns[index].width, 10);
+            if (this.unpinnedColumns[index] === column) {
+                currentColumnLeft = currentColumnRight - parseInt(this.unpinnedColumns[index].width, 10);
+                break;
+            }
+        }
+
+        const forOfDir = this.grid.headerContainer;
+        const width = this.displayContainerWidth + this.displayContainerScrollLeft;
+        if (shouldFocusNext) {
+            forOfDir.getHorizontalScroll().scrollLeft += currentColumnRight - width;
+        } else {
+            forOfDir.getHorizontalScroll().scrollLeft = currentColumnLeft;
         }
     }
 

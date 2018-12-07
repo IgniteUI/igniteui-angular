@@ -59,7 +59,7 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -214,7 +214,7 @@ describe('IgxTreeGrid - Indentation', () => {
         });
 
         it('should persist the indentation after sorting', () => {
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             const rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));

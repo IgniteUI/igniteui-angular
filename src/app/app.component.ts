@@ -44,6 +44,11 @@ export class AppComponent implements OnInit {
             name: 'Bottom Navigation'
         },
         {
+            link: '/banner',
+            icon: 'banner',
+            name: 'Banner'
+        },
+        {
             link: '/buttonGroup',
             icon: 'group_work',
             name: 'Button Group'
@@ -177,6 +182,11 @@ export class AppComponent implements OnInit {
             link: '/gridToolbar',
             icon: 'view_column',
             name: 'Grid Toolbar'
+        },
+        {
+            link: '/gridToolbarCustom',
+            icon: 'view_column',
+            name: 'Grid Toolbar Custom Content'
         },
         {
             link: '/treeGrid',
