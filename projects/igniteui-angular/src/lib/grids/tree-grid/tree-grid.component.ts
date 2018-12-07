@@ -429,6 +429,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
             index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
                 childData.indexOf(rowID);
+
+            const selectedChildren = [];
+            this._gridAPI.get_selected_children(this.id, record, selectedChildren);
+                if (selectedChildren.length > 0) {
+                this.deselectRows(selectedChildren);
+            }
+
             if (this.transactions.enabled) {
                 this.transactions.add({
                     id: rowID,
@@ -448,20 +455,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      */
     protected calcMaxSummaryHeight() {
         return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportExcel(): boolean {
-        return false;
-    }
-
-    /**
-     * @hidden
-     */
-    protected getExportCsv(): boolean {
-        return false;
     }
 
     /**
