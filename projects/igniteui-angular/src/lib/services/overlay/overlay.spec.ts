@@ -2541,6 +2541,56 @@ fdescribe('igxOverlay', () => {
                 const currentElement = fix.componentInstance;
                 const buttonElement = fix.componentInstance.buttonElement.nativeElement;
                 fix.detectChanges();
+                currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Left;
+                currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
+                currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
+                currentElement.ButtonPositioningSettings.horizontalStartPoint = HorizontalAlignment.Left;
+                currentElement.ButtonPositioningSettings.target = buttonElement;
+                buttonElement.click();
+                fix.detectChanges();
+                tick();
+
+                fix.detectChanges();
+                const wrappers = document.getElementsByClassName(CLASS_OVERLAY_CONTENT);
+                const wrapperContent = wrappers[wrappers.length - 1] as HTMLElement;
+                const expectedStyle = 'position: absolute; width:100px; height: 100px; background-color: red';
+                expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
+                const buttonLeft = buttonElement.offsetLeft;
+                const buttonTop = buttonElement.offsetTop;
+                const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
+                const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
+                const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+                const wrapperTop = wrapperContent.getBoundingClientRect().top;
+                expect(wrapperTop).toEqual(expectedTop);
+                expect(wrapperLeft).toEqual(expectedLeft);
+            }));
+
+        it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
+        TOP + RIGHT.`, fakeAsync(async () => {
+                TestBed.overrideComponent(DownRightButtonComponent, {
+                    set: {
+                        styles: [`button {
+                position: absolute;
+                top: 16px;
+                right: 16px;
+                width: 84px;
+                height: 84px;
+                padding: 0px;
+                margin: 0px;
+                border: 0px;
+            }`]
+                    }
+                });
+                await TestBed.compileComponents();
+                const fix = TestBed.createComponent(DownRightButtonComponent);
+                fix.detectChanges();
+
+                fix.componentInstance.positionStrategy = new AutoPositionStrategy();
+                UIInteractions.clearOverlay();
+                fix.detectChanges();
+                const currentElement = fix.componentInstance;
+                const buttonElement = fix.componentInstance.buttonElement.nativeElement;
+                fix.detectChanges();
                 currentElement.ButtonPositioningSettings.horizontalDirection = HorizontalAlignment.Right;
                 currentElement.ButtonPositioningSettings.verticalDirection = VerticalAlignment.Top;
                 currentElement.ButtonPositioningSettings.verticalStartPoint = VerticalAlignment.Top;
