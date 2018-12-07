@@ -120,9 +120,18 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     set value(value: Date) {
+        debugger;
         if (this._isValueValid(value)) {
+            // const args: IgxTimePickerValueChangedEventArgs = {
+            //     oldValue: this._value,
+            //     newValue: value
+            // };
+            // this.onValueChanged.emit(args);
+
             this._value = value;
             this._onChangeCallback(value);
+
+
         } else {
             const args: IgxTimePickerValidationFailedEventArgs = {
                 timePicker: this,
@@ -569,11 +578,11 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public writeValue(value: Date) {
+        this._dateFromModel = value;
         this.value = value;
 
         if (this.mode === InteractionMode.dropdown) {
             this.displayValue = this._formatTime(this.value, this.format);
-            this._currentDate = this.value;
         }
     }
 
@@ -840,7 +849,7 @@ export class IgxTimePickerComponent implements
     }
 
     private _convertMinMaxValue(value: string): Date {
-        const date = this.value ? new Date(this.value) : this._currentDate ? new Date(this._currentDate) : new Date();
+        const date = this.value ? new Date(this.value) : this._dateFromModel ? new Date(this._dateFromModel) : new Date();
         const sections = value.split(/[\s:]+/);
 
         date.setHours(parseInt(sections[0], 10));
@@ -861,7 +870,6 @@ export class IgxTimePickerComponent implements
             return true;
         }
 
-        this._currentDate = value;
         if (value && this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
             return false;
         } else if (value && this.minValue && value < this._convertMinMaxValue(this.minValue)) {
@@ -1194,8 +1202,8 @@ export class IgxTimePickerComponent implements
 
     private _format: string;
     private _oldValue: Date;
-    private _currentDate: Date;
     private _overlayId: string;
+    private _dateFromModel: Date;
     private _destroy$ = new Subject<boolean>();
     private _positionSettings: PositionSettings;
     private _dropDownOverlaySettings: OverlaySettings;
@@ -1221,7 +1229,7 @@ export class IgxTimePickerComponent implements
 
     get validHourEntries(): any[] {
         let hourEntries = [];
-        let index = this.format.indexOf('h') !== -1 ? 12 : 24;
+        let index = this.format.indexOf('h') !== -1 ? 13 : 24;
         for (let i = 0; i < index; i++) {
             hourEntries.push(i);
         }
@@ -1303,10 +1311,8 @@ export class IgxTimePickerComponent implements
             this.cleared = true;
             this.isNotEmpty = false;
 
-            this._currentDate = this.value;
-
             this.displayValue = '';
-            this.value = null;
+            this.value.setHours(0, 0);
             this._resetDropdownItems();
 
             const args: IgxTimePickerValueChangedEventArgs = {
@@ -1333,11 +1339,6 @@ export class IgxTimePickerComponent implements
                     this.spinOnEdit(event);
                 }
                 break;
-            case 'backspace':
-            case 'delete':
-            case 'del':
-                this.updateValueOnDelete(event);
-                break;
             default:
                 return;
         }
@@ -1350,8 +1351,6 @@ export class IgxTimePickerComponent implements
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
                 this.value = this._convertMinMaxValue(val);
-
-                this._currentDate = this.value;
 
                 if (this._isValueValid(this.value) && this._oldValue !== this.value) {
                     const args: IgxTimePickerValueChangedEventArgs = {
@@ -1369,25 +1368,17 @@ export class IgxTimePickerComponent implements
                 this.onValidationFailed.emit(args);
             }
         }
-    }
 
-    public updateValueOnDelete(event): void {
-        requestAnimationFrame(() => {
-            const value = event.target.value;
-            if (!this.value || !value || value === this.parseMask(false)) {
+        if (!this.value || !val || val === this.parseMask(false)) {
+            this.value.setHours(0, 0);
+            this._resetDropdownItems();
 
-                this._currentDate = this.value;
-
-                this.value = null;
-                this._resetDropdownItems();
-
-                const args: IgxTimePickerValueChangedEventArgs = {
-                    oldValue: this._oldValue,
-                    newValue: this.value
-                };
-                this.onValueChanged.emit(args);
-            }
-        });
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: this._oldValue,
+                newValue: this.value
+            };
+            this.onValueChanged.emit(args);
+        }
     }
 
     public onFocus(event): void {
@@ -1398,7 +1389,7 @@ export class IgxTimePickerComponent implements
     public onBlur(event): void {
         const value = event.target.value;
 
-        this.isNotEmpty = value === this.format;
+        this.isNotEmpty = value !== '';
 
         this.displayValue = value;
         if (value && value !== this.parseMask()) {
@@ -1412,8 +1403,6 @@ export class IgxTimePickerComponent implements
                 };
                 this.onValidationFailed.emit(args);
             }
-        } else {
-            this.value = null;
         }
 
         if (this._isValueValid(this.value) && this._oldValue !== this.value) {
@@ -1426,7 +1415,6 @@ export class IgxTimePickerComponent implements
     }
 
     public spinOnEdit(event): void {
-        debugger;
         event.preventDefault();
 
         let sign: number;
@@ -1448,8 +1436,8 @@ export class IgxTimePickerComponent implements
         let oldVal = new Date(this.value);
         let currentVal = new Date(this.value);
 
-        if (!this.value) {
-            this.value = sign > 0 ? min : max;
+        if (!this.displayValue) {
+            this.value = min;
             displayVal = this._formatTime(this.value, this.format);
         } else {
             const hDelta = this.itemsDelta.hours * 60 + (sign * this.value.getMinutes());
@@ -1459,11 +1447,11 @@ export class IgxTimePickerComponent implements
             if (HOURS_POS.indexOf(cursor) !== -1) {
                 currentVal.setMinutes(sign * hDelta);
 
-                if (this.format.indexOf('tt') !== -1 && sections[2] && sections[2] === 'PM' && currentVal.getHours() < 11) {
-                    currentVal.setHours(currentVal.getHours() + 12);
+                if (currentVal.getDate() !== oldVal.getDate() && this.isSpinLoop) {
+                    currentVal.setDate(oldVal.getDate());
                 }
 
-                if (currentVal.getTime() > max.getTime()) {
+                if (currentVal.getTime() >= max.getTime()) {
                     if (this.isSpinLoop) {
                         min.setMinutes(sign * currentVal.getMinutes());
                         this.value = min;
