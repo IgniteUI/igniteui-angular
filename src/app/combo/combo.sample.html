@@ -19,9 +19,9 @@
                 <igx-combo class="input-container" placeholder="Location(s)"
                             (onAddition)="handleAddition($event)"
                             [data]="items"
-                            [allowCustomValues]="true"
+                            [allowCustomValues]="customValuesFlag"
                             [displayDensity]="'comfortable'"
-                            [filterable]="true" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                            [filterable]="filterableFlag" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
                                 [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">
@@ -67,6 +67,11 @@
             <button igxButton="raised" [disabled]="igxCombo.isCompact()" (click)="setDensity('compact')">Compact</button>
             <button igxButton="raised" [disabled]="igxCombo.isCosy()" (click)="setDensity('cosy')">Cosy</button>
             <button igxButton="raised" [disabled]="!igxCombo.isCosy() && !igxCombo.isCompact()" (click)="setDensity('comfortable')">Comfortable</button>
+        </div>
+        <div>
+            <h4>Search Input</h4>
+            <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch><br/>
+            <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
         </div>
     </section>
     </div>
