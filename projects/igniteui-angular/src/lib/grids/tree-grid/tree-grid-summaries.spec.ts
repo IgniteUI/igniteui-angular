@@ -1,16 +1,13 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridSummariesComponent,
     IgxTreeGridSummariesKeyComponent,
     IgxTreeGridCustomSummariesComponent
 } from '../../test-utils/tree-grid-components.spec';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { first } from 'rxjs/operators';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-import { By } from 'selenium-webdriver';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 

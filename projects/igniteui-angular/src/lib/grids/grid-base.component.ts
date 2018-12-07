@@ -501,7 +501,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     */
     set rowEditable(val: boolean) {
         this._rowEditable = val;
-        this.refreshGridState();
+        if (this.gridAPI.get(this.id)) {
+            this.refreshGridState();
+        }
     }
 
     /**
@@ -3258,8 +3260,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public refreshGridState(args?) {
-        this.endEdit(true);
-        this.clearSummaryCache(args);
+            this.endEdit(true);
+            this.clearSummaryCache(args);
     }
 
     // TODO: We have return values here. Move them to event args ??
