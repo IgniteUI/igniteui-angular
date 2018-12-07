@@ -62,10 +62,12 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 const MINIMUM_COLUMN_WIDTH = 136;
+const FILTER_ROW_HEIGHT = 50;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
@@ -745,6 +747,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set allowFiltering(value) {
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
+
+            this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
+            if (this._ngAfterViewInitPaassed) {
+                if (this.maxLevelHeaderDepth) {
+                    this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
+                        (value ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+                }
+            }
+
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
+
             this.filteringService.registerSVGIcons();
             if (this.gridAPI.get(this.id)) {
                 this.markForCheck();
@@ -1300,6 +1314,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+
+    /**
      * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
@@ -1669,15 +1693,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
-
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
 
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
@@ -2365,6 +2380,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     * Used internally for restricting header group component width.
+     * The values below depend on the header cell default right/left padding values.
+	 * @memberof IgxGridBaseComponent
+     */
+    get defaultHeaderGroupMinWidth(): number {
+        if (this.isCosy()) {
+            return 32;
+        } else if (this.isCompact()) {
+            return 24;
+        } else {
+            return 48;
+        }
+    }
+
+    /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
@@ -2446,6 +2477,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
+    }
+
+    /**
+     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
+	 * @memberof IgxGridBaseComponent
+     */
+    public getHeaderGroupWidth(column: IgxColumnComponent): string {
+
+        const minWidth = this.defaultHeaderGroupMinWidth;
+        if (parseInt(column.width, 10) < minWidth) {
+            return minWidth.toString();
+        }
+
+        return column.width;
     }
 
     /**
@@ -2999,13 +3044,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -3419,7 +3463,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _derivePossibleWidth() {
         if (!this._columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
-            this.initColumns(this.columnList, null);
+            this.columnList.forEach((column: IgxColumnComponent) => {
+                column.defaultWidth = this.columnWidth;
+            });
         }
     }
 
@@ -3441,7 +3487,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering ? this._rowHeight : 0) + 1}px`;
+                (this.allowFiltering ? FILTER_ROW_HEIGHT : 0) + 1}px`;
         }
 
         if (!this._height) {
@@ -3624,20 +3670,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
     }
 
     /**
