@@ -2,15 +2,26 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 7.1.0
-- **New component** `IgxBannerComponent`:
-    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
-
 ## 7.0.2
 ### Features
+- `ng add igniteui-angular` support :tada:
+    - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
+    This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
+    
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
 
 ## 7.0.1
 ### Bug fixes
@@ -42,6 +53,16 @@ All notable changes for each version of this project will be documented in this 
     - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
 - `ISortingEpression`:
     - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
+
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
 
 ## 6.2.2
 - `igx-checkbox`:

@@ -54,6 +54,7 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
      */
     @HostListener('click', ['$event'])
     clicked(event) {
+        this.dropDown.disableTransitions = false;
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.focusedItem;
             if (focusedItem) {
