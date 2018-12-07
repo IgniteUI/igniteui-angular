@@ -42,7 +42,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.index;
     }
 
-    @HostBinding('style.min-height.px')
     get minHeight() {
         return this.grid.summaryService.calcMaxSummaryHeight();
     }
@@ -96,12 +95,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return columns.filter(c => !c.columnGroup);
     }
 
-    /**
-     * @hidden
-     */
-    public width(columnWidth: string) {
-        return parseInt(columnWidth, 10);
-    }
     /**
      * @hidden
      */

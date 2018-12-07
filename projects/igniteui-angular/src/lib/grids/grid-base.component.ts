@@ -62,6 +62,7 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
@@ -1318,7 +1319,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _rowList: QueryList<IgxGridRowComponent>;
 
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
-    protected summaryRowList: QueryList<IgxSummaryRowComponent>;
+    protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
+
+
+    public get summariesRowList() {
+        const res = new QueryList<any>();
+        if (!this._summaryRowList) {
+            return res;
+        }
+        const sumList = this._summaryRowList.filter((item) => {
+            return item.element.nativeElement.parentElement !== null;
+        });
+        res.reset(sumList);
+        return res;
+    }
 
     /**
      * A list of `IgxGridRowComponent`.
@@ -1386,6 +1400,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('scrollContainer', { read: IgxGridForOfDirective })
     public parentVirtDir: IgxGridForOfDirective<any>;
+
+    /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
 
     /**
      * @hidden
@@ -1770,15 +1794,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
-
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
 
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
@@ -2251,7 +2266,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        this.onCellEdit.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
         });
@@ -2357,9 +2371,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this._dataRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(list =>
             this._horizontalForOfs = this.combineForOfCollections(list.toArray()
-                .filter(item => item.element.nativeElement.parentElement !== null), this.summaryRowList)
+                .filter(item => item.element.nativeElement.parentElement !== null), this._summaryRowList)
         );
-        this.summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
+        this._summaryRowList.changes.pipe(takeUntil(this.destroy$)).subscribe(summaryList =>
             this._horizontalForOfs - this.combineForOfCollections(this._dataRowList, summaryList.toArray()
                 .filter(item => item.element.nativeElement.parentElement !== null)));
 
@@ -2372,7 +2386,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._hScrollListener = this.horizontalScrollHandler.bind(this);
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this._hScrollListener);
         });
-        this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this.summaryRowList);
+        this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
     }
@@ -2475,6 +2489,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     * Used internally for restricting header group component width.
+     * The values below depend on the header cell default right/left padding values.
+	 * @memberof IgxGridBaseComponent
+     */
+    get defaultHeaderGroupMinWidth(): number {
+        if (this.isCosy()) {
+            return 32;
+        } else if (this.isCompact()) {
+            return 24;
+        } else {
+            return 48;
+        }
+    }
+
+    /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
@@ -2556,6 +2586,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
+    }
+
+    /**
+     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
+	 * @memberof IgxGridBaseComponent
+     */
+    public getHeaderGroupWidth(column: IgxColumnComponent): string {
+
+        const minWidth = this.defaultHeaderGroupMinWidth;
+        if (parseInt(column.width, 10) < minWidth) {
+            return minWidth.toString();
+        }
+
+        return column.width;
     }
 
     /**
@@ -3109,13 +3153,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -3712,20 +3755,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
     }
 
     /**

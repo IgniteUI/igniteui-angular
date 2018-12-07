@@ -2,6 +2,11 @@
     {{ getTitle() }}
 </span>
 
+<div class="igx-grid-toolbar__custom-content" *ngIf="customContentTemplate != null">
+    <ng-container *ngTemplateOutlet="customContentTemplate; context: context">
+    </ng-container>
+</div>
+
 <div class="igx-grid-toolbar__actions">
     <div *ngIf="grid.columnHiding">
         <button igxButton="flat" #columnHidingButton name="btnColumnHiding" igxButton igxRipple

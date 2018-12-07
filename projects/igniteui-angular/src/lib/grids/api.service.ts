@@ -354,6 +354,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                     grid.summaryService.removeSummaries(rowID);
                 }
             }
+            grid.summaryService.clearSummaryCache(emittedArgs);
             if (!grid.rowEditable || !grid.rowInEditMode || grid.rowInEditMode.rowID !== rowID) {
                 (grid as any)._pipeTrigger++;
             }
