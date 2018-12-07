@@ -75,6 +75,29 @@ Example status workflows:
 1. `status: pending-localization` this status tells that there are changes in the localization strings that need to be translated. When you make such changes, put this status badge without removing the other applicable ones and assign a person to do the translations.
 2. `status: localized` this status is for issues that were with a pending translation status and have already been localized. Place this status label once these translation changes have been included in the current pull request, or the changes are already pulled with a different pull request.
 
+## Localization - applicable to components' string resources
+There are several ways to localize components' string resources:
+
+1. Using custom resource strings:
+    1.1. Localize a given instance of component - each component which supports localization has input property `resourceStrings`. Setting a newly instantiated object to this property will localize only that given component's instance.
+    1.2. Localize all resources for a component type - each component which supports localization has input property `resourceStrings`. To localize all instances of a given component in the application the following steps should be performed - get the value of the input property `resourceStrings` of the component to be localized; do not create a new instance but replace the existing strings within the object. By default all components of a given type in an application share one instance of the resource strings. Replacing a value in that instance affects all components of that type in the application.
+    1.3. Localize all resources for all components - use global method `getCurrentResourceStrings` to get an object containing current resource strings for all components. To provide localized resources just pass an object of type `IResourceStrings` to the global method `changei18n`.
+
+2. Using npm package:
+We've created new repository which will hold the resource strings for languages different than English:
+https://github.com/IgniteUI/igniteui-angular-i18n
+A npm package should be published each time we release new version of IgniteUI for Angular. Its version should correspond to the version of the igniteui-angular npm package.
+One could localize an application by importing the corresponding localized resource strings from the localization package (`igniteui-angular-i18n`) and use the methods described in the previous bullet to localize the whole application or part of it.
+Example:
+Inside app.module you can perform:
+_import { IgxResouceStringsJA } from ‘igniteui-angular-i18n’;_
+And then:
+_Changei18n(IgxResouceStringsJA);_
+
+###Resource strings keys naming convention
+Each key in the `IResourceStrings` (and `IGridResourceStrings`, `ITimePickerResourceStrings`, etc.) is prefixed with components' selector and followed by the resource string key. Having components' selectors as prefixes allows us to have same resource strings keys for more than one component.
+Example: _igx_grid_groupByArea_message_.
+
 # Commit message conventions
 When committing a message you need to follow this template convention:
 `<type>(<scope>): <subject> <issue|optional>`
