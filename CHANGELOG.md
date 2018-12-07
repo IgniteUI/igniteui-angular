@@ -9,6 +9,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
+- `IgxTreeGrid`:
+    - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
 
 
 ## 7.0.2
