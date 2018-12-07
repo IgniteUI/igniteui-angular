@@ -747,7 +747,7 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
     ColumnDefinitions.summariesGoupByColumns)}`
 })
 export class SummarieGroupByComponent extends BasicGridComponent {
-    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+    public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
     public ageSummaryTest = AgeSummaryTest;
