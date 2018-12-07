@@ -99,12 +99,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
     /**
      * @hidden
      */
-    public width(columnWidth: string) {
-        return parseInt(columnWidth, 10);
-    }
-    /**
-     * @hidden
-     */
     public get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
     }
