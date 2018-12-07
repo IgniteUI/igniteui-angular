@@ -2393,6 +2393,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
+     * Used internally for restricting header group component width.
+     * The values below depend on the header cell default right/left padding values.
+	 * @memberof IgxGridBaseComponent
+     */
+    get defaultHeaderGroupMinWidth(): number {
+        if (this.isCosy()) {
+            return 32;
+        } else if (this.isCompact()) {
+            return 24;
+        } else {
+            return 48;
+        }
+    }
+
+    /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
@@ -2474,6 +2490,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
+    }
+
+    /**
+     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
+	 * @memberof IgxGridBaseComponent
+     */
+    public getHeaderGroupWidth(column: IgxColumnComponent): string {
+
+        const minWidth = this.defaultHeaderGroupMinWidth;
+        if (parseInt(column.width, 10) < minWidth) {
+            return minWidth.toString();
+        }
+
+        return column.width;
     }
 
     /**
@@ -3027,13 +3057,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -3654,20 +3683,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
     }
 
     /**
