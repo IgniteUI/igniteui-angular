@@ -9,6 +9,7 @@ import { IgxTreeGridHierarchizingPipe } from './tree-grid.pipes';
 import { IgxTreeGridFlatteningPipe, IgxTreeGridSortingPipe, IgxTreeGridPagingPipe, IgxTreeGridTransactionPipe } from './tree-grid.pipes';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
+import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
     IgxTreeGridSortingPipe,
     IgxTreeGridFilteringPipe,
     IgxTreeGridPagingPipe,
-    IgxTreeGridTransactionPipe
+    IgxTreeGridTransactionPipe,
+    IgxTreeGridSummaryPipe
   ],
   exports: [
     IgxTreeGridComponent,
