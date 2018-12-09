@@ -62,6 +62,7 @@ import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
@@ -1312,6 +1313,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public parentVirtDir: IgxGridForOfDirective<any>;
 
     /**
+     * Returns the template which will be used by the toolbar to show custom content.
+     * ```typescript
+     * let customContentTemplate = this.grid.toolbarCustomContentTemplate;
+     * ```
+     * @memberof IgxGridBaseComponent
+     */
+    @ContentChild(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective })
+    public toolbarCustomContentTemplate: IgxGridToolbarCustomContentDirective;
+
+    /**
      * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
@@ -1695,15 +1706,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
-
-    public get shouldShowToolbar(): boolean {
-        return this.showToolbar &&
-            (this.columnHiding ||
-                this.columnPinning ||
-                this.exportExcel ||
-                this.exportCsv ||
-                (this.toolbarTitle && this.toolbarTitle !== null && this.toolbarTitle !== ''));
-    }
 
     /**
      * Returns whether the `IgxGridComponent`'s toolbar is shown or hidden.
@@ -2206,7 +2208,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 const diff = this.columnListDiffer.diff(change);
                 if (diff) {
-
                     this.initColumns(this.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
@@ -2215,16 +2216,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.onColumnInit.emit(record.item);
                     });
 
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        // Recalculate Summaries
-                        this.clearSummaryCache();
-                        this.calculateGridSizes();
+                    requestAnimationFrame(() => {
+                        diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                            // Recalculate Summaries
+                            this.clearSummaryCache();
+                            this.calculateGridSizes();
 
-                        // Clear Filtering
-                        this.gridAPI.clear_filter(this.id, record.item.field);
+                            // Clear Filtering
+                            this.gridAPI.clear_filter(this.id, record.item.field);
 
-                        // Clear Sorting
-                        this.gridAPI.clear_sort(this.id, record.item.field);
+                            // Clear Sorting
+                            this.gridAPI.clear_sort(this.id, record.item.field);
+                        });
                     });
                 }
                 this.markForCheck();

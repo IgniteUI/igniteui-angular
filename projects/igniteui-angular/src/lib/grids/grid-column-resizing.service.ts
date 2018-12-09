@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { isFirefox } from '../core/utils';
 import { IgxColumnComponent } from './column.component';
 
@@ -36,6 +36,8 @@ export class IgxColumnResizingService {
      * The column being resized.
      */
     public column: IgxColumnComponent;
+
+    constructor(private zone: NgZone) { }
 
 
     /**
@@ -104,7 +106,8 @@ export class IgxColumnResizingService {
                 this.column.width = size;
             }
 
-            this.column.grid.markForCheck();
+            this.zone.run(() => {});
+
             this.column.grid.reflow();
             this.column.grid.onColumnResized.emit({
                 column: this.column,
@@ -145,7 +148,7 @@ export class IgxColumnResizingService {
                 this.column.width = (currentColWidth + diff) + 'px';
             }
 
-            this.column.grid.markForCheck();
+            this.zone.run(() => {});
             this.column.grid.reflow();
 
             if (currentColWidth !== parseFloat(this.column.width)) {

@@ -1,14 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxBannerComponent } from 'igniteui-angular';
+import { IgxBannerComponent, growVerIn, growVerOut } from 'igniteui-angular';
+import { animate, useAnimation } from '@angular/animations';
 
 @Component({
     selector: 'app-banner-sample',
-    templateUrl: `banner.sample.html`
+    templateUrl: `banner.sample.html`,
+    styleUrls: [`banner.sample.css`]
 })
 export class BannerSampleComponent {
     @ViewChild('bannerNoSafeConnection') bannerNoSafeConnection: IgxBannerComponent;
     @ViewChild('bannerCookies') bannerCookies: IgxBannerComponent;
 
+    public animationSettings = { openAnimation: useAnimation(growVerIn, {
+        params: {
+            duration: '2000ms'
+        }
+    }), closeAnimation:  useAnimation(growVerOut)};
     public toggle() {
         if (this.bannerNoSafeConnection.collapsed) {
             this.bannerNoSafeConnection.open();
