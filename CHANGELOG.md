@@ -26,7 +26,6 @@ All notable changes for each version of this project will be documented in this 
 - When scroll with the mouse wheel the value in datePicker editor for edited cell is empty ([#2958](https://github.com/IgniteUI/igniteui-angular/issues/2958))
 - igxToolbar should have the option to add custom template ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
 - fix(grid): mark grid for check inside NgZone when resizing ([#2792](https://github.com/IgniteUI/igniteui-angular/issues/2792)) ([#3277](https://github.com/IgniteUI/igniteui-angular/issues/3277))
-- IgxGridHeaderGroupComponent should have preset min width ([#3071](https://github.com/IgniteUI/igniteui-angular/issues/3071))
 - Tree grid selection ([#3334](https://github.com/IgniteUI/igniteui-angular/issues/3334))
 
 ## 7.0.2
