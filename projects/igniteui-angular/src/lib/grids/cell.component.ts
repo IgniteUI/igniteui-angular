@@ -288,11 +288,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         if (this.column.editable && value) {
-            this.editValue = this.value;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
             }
+            this.editValue = this.value;
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
         }
@@ -388,7 +388,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
         if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll &&
+            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
                 parseInt(colWidth, 10) - 18 + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
@@ -482,9 +483,30 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private highlight: IgxTextHighlightDirective;
 
     /**
-     * @hidden
+     * Sets the current edit value while a cell is in edit mode.
+     * Only for cell editing mode.
+     * ```typescript
+     * let isLastPinned = this.cell.isLastPinned;
+     * ```
+     * @memberof IgxGridCellComponent
      */
-    public editValue;
+    public set editValue(value) {
+        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+            this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue = value;
+        }
+    }
+
+    /**
+     * Gets the current edit value while a cell is in edit mode.
+     * Only for cell editing mode.
+     * ```typescript
+     * let editValue = this.cell.editValue;
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    public get editValue() {
+        return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
+    }
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
