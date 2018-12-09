@@ -28,6 +28,8 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 
@@ -52,7 +54,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
@@ -248,23 +250,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, _displayDensityOptions);
+                filteringService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-    /**
-     * @hidden
-     * Returns if the `IgxTreeGridComponent` has summarized columns.
-     * ```typescript
-     * const summarizedGrid = this.grid.hasSummarizedColumns;
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    get hasSummarizedColumns(): boolean {
-        return false;
-    }
 
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
@@ -478,13 +470,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    protected calcMaxSummaryHeight() {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
     protected restoreHighlight(): void {
     }
 
@@ -521,7 +506,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: 'dataRow'
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 }

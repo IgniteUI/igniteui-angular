@@ -18,7 +18,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 40, resizable: true, movable: true },
+            { field: 'ID', width: 80, resizable: true, movable: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
