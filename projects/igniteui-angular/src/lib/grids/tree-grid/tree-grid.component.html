@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" [style.width.px]="calcWidth" *ngIf="shouldShowToolbar" [gridID]="id" [displayDensity]="displayDensity" #toolbar>
+<igx-grid-toolbar role="rowgroup" [style.width.px]="calcWidth" *ngIf="showToolbar" [gridID]="id" [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
 <ng-template #defaultPager let-api>
@@ -31,12 +31,12 @@
         </ng-container>
         <ng-container *ngIf="pinnedColumns.length > 0">
             <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
-                <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header-group>
+                <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
         </ng-container>
         <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
-            <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="col.width" [style.flex-basis.px]="col.width"></igx-grid-header-group>
+            <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     </div>
@@ -52,7 +52,8 @@
     | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
     | treeGridSorting:sortingExpressions:id:pipeTrigger
     | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
-    | treeGridPaging:page:perPage:id:pipeTrigger"
+    | treeGridPaging:page:perPage:id:pipeTrigger
+    | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:summaryPipeTrigger"
 
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
@@ -60,8 +61,12 @@
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
             </igx-tree-grid-row>
         </ng-template>
+        <ng-template #summary_template>
+            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [firstCellIndentation]="rowData.cellIndentation" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
+            </igx-grid-summary-row>
+        </ng-template>
 
-        <ng-container *igxTemplateOutlet="record_template; context: getContext(rowData) "></ng-container>
+        <ng-container *igxTemplateOutlet="isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
@@ -69,22 +74,8 @@
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <!-- Hiding until summaries are implemented for TreeGrid -->
-    <!-- <div *ngIf="hasSummarizedColumns" class="igx-grid__summaries" [style.height.px]="summariesHeight" role="row" #summaries>
-        <ng-container *ngIf="summariesMargin">
-            <div
-            class="igx-grid__summaries-patch"
-            [style.min-width.px]="summariesMargin"
-            [style.flex-basis.px]="summariesMargin"
-            ></div>
-        </ng-container>
-        <ng-container *ngIf="pinnedColumns.length > 0">
-            <igx-grid-summary [gridID]="id" *ngFor="let col of notGroups(pinnedColumns)"  [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
-        </ng-container>
-        <ng-template igxGridFor let-col [igxGridForOf]="notGroups(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir" [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #summaryContainer>
-            <igx-grid-summary [gridID]="id" [column]="col" [style.min-width.px]="col.width" [style.flex-basis.px]='col.width'></igx-grid-summary>
-        </ng-template>
-    </div> -->
+    <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [firstCellIndentation]="0" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0" class="igx-grid__summaries"  #summaryRow>
+    </igx-grid-summary-row>
 </div>
 
 <div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">

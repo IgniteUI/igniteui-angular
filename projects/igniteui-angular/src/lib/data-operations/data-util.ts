@@ -8,6 +8,7 @@ import { IPagingState, PagingError } from './paging-state.interface';
 import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
+import { TreeGridFilteringStrategy } from '../grids/tree-grid/tree-grid.filtering.pipe';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
 import { ITreeGridRecord } from '../grids/tree-grid';
@@ -28,15 +29,14 @@ export enum DataType {
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression [], sorting: IgxSorting = new IgxSorting()): T[] {
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IgxSorting = new IgxSorting()): T[] {
         return sorting.sort(data, expressions);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
-                               expressions: ISortingExpression [],
-                               parent?: ITreeGridRecord): ITreeGridRecord[] {
+        expressions: ISortingExpression[],
+        parent?: ITreeGridRecord): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
-
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
@@ -58,8 +58,7 @@ export class DataUtil {
             children: hierarchicalRecord.children,
             isFilteredOutParent: hierarchicalRecord.isFilteredOutParent,
             level: hierarchicalRecord.level,
-            expanded: hierarchicalRecord.expanded,
-            path: [...hierarchicalRecord.path]
+            expanded: hierarchicalRecord.expanded
         };
         return rec;
     }
@@ -155,6 +154,14 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
+
+    public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
+        if (!state.strategy) {
+            state.strategy = new TreeGridFilteringStrategy();
+        }
+        return state.strategy.filter(data, state.expressionsTree);
+    }
+
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
         const hierarchy: Array<IGroupByKey> = [];
         if (gRow !== undefined && gRow.expression) {
@@ -181,60 +188,100 @@ export class DataUtil {
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
+     * @param deleteRows Should delete rows with DELETE transaction type from data
+     * @returns Provided data collections updated with all provided transactions
      */
-    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any): T[] {
+    public static mergeTransactions<T>(data: T[], transactions: Transaction[], primaryKey?: any, deleteRows: boolean = false): T[] {
         data.forEach((item: any, index: number) => {
             const rowId = primaryKey ? item[primaryKey] : item;
             const transaction = transactions.find(t => t.id === rowId);
-            if (Array.isArray(item.children)) {
-                this.mergeTransactions(item.children, transactions, primaryKey);
-            }
             if (transaction && transaction.type === TransactionType.UPDATE) {
                 data[index] = transaction.newValue;
             }
         });
 
+        if (deleteRows) {
+            transactions
+                .filter(t => t.type === TransactionType.DELETE)
+                .forEach(t => {
+                    const index = primaryKey ? data.findIndex(d => d[primaryKey] === t.id) : data.findIndex(d => d === t.id);
+                    if (0 <= index && index < data.length) {
+                        data.splice(index, 1);
+                    }
+                });
+        }
+
         data.push(...transactions
             .filter(t => t.type === TransactionType.ADD)
             .map(t => t.newValue));
+
         return data;
     }
 
-    // TODO: optimize addition of added rows. Should not filter transaction in each recursion!!!
-    /** @experimental @hidden */
+    /**
+     * Merges all changes from provided transactions into provided hierarchical data collection
+     * @param data Collection to merge
+     * @param transactions Transactions to merge into data
+     * @param childDataKey Data key of child collections
+     * @param primaryKey Primary key of the collection, if any
+     * @param deleteRows Should delete rows with DELETE transaction type from data
+     * @returns Provided data collections updated with all provided transactions
+     */
     public static mergeHierarchicalTransactions(
         data: any[],
         transactions: HierarchicalTransaction[],
         childDataKey: any,
         primaryKey?: any,
-        parentKey?: any): any[] {
+        deleteRows: boolean = false): any[] {
 
-        for (let index = 0; index < data.length; index++) {
-            const dataItem = data[index];
-            const rowId = primaryKey ? dataItem[primaryKey] : dataItem;
-            const updateTransaction = transactions.filter(t => t.type === TransactionType.UPDATE).find(t => t.id === rowId);
-            const addedTransactions = transactions.filter(t => t.type === TransactionType.ADD).filter(t => t.parentId === rowId);
-            if (updateTransaction || addedTransactions.length > 0) {
-                data[index] = mergeObjects(cloneValue(dataItem), updateTransaction && updateTransaction.newValue);
-            }
-            if (addedTransactions.length > 0) {
-                if (!data[index][childDataKey]) {
-                    data[index][childDataKey] = [];
+        for (const transaction of transactions) {
+            if (transaction.path) {
+                const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);
+                let collection: any[] = parent ? parent[childDataKey] : data;
+                switch (transaction.type) {
+                    case TransactionType.ADD:
+                        //  if there is no parent this is ADD row at root level
+                        if (parent && !parent[childDataKey]) {
+                            parent[childDataKey] = collection = [];
+                        }
+                        collection.push(transaction.newValue);
+                        break;
+                    case TransactionType.UPDATE:
+                        const updateIndex = collection.findIndex(x => x[primaryKey] === transaction.id);
+                        if (updateIndex !== -1) {
+                            collection[updateIndex] = mergeObjects(cloneValue(collection[updateIndex]), transaction.newValue);
+                        }
+                        break;
+                    case TransactionType.DELETE:
+                        if (deleteRows) {
+                            const deleteIndex = collection.findIndex(r => r[primaryKey] === transaction.id);
+                            if (deleteIndex !== -1) {
+                                collection.splice(deleteIndex, 1);
+                            }
+                        }
+                        break;
                 }
-                for (const addedTransaction of addedTransactions) {
-                    data[index][childDataKey].push(addedTransaction.newValue);
-                }
-            }
-            if (data[index][childDataKey]) {
-                data[index][childDataKey] = this.mergeHierarchicalTransactions(
-                    data[index][childDataKey],
-                    transactions,
-                    childDataKey,
-                    primaryKey,
-                    rowId
-                );
+            } else {
+                //  if there is no path this is ADD row in root. Push the newValue to data
+                data.push(transaction.newValue);
             }
         }
         return data;
+    }
+
+    private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
+        let collection: any[] = data;
+        let result: any;
+
+        for (const id of path) {
+            result = collection && collection.find(x => x[primaryKey] === id);
+            if (!result) {
+                break;
+            }
+
+            collection = result[childDataKey];
+        }
+
+        return result;
     }
 }
