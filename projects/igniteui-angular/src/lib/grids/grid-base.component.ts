@@ -2319,7 +2319,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     requestAnimationFrame(() => {
                         diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                             // Recalculate Summaries
-                            this.clearSummaryCache();
+                            this.summaryService.clearSummaryCache();
                             this.calculateGridSizes();
 
                             // Clear Filtering
