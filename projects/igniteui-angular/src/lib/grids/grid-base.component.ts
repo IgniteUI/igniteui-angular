@@ -3154,11 +3154,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.endEdit(false);
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(this.id, expression);
-            this.onSortingDone.emit(expression);
         } else {
             this.gridAPI.sort(this.id, expression);
-            this.onSortingDone.emit(expression);
         }
+        this.onSortingDone.emit(expression);
     }
 
     /**
