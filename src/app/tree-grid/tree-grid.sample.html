@@ -10,16 +10,18 @@
             <div class="density-chooser" style="margin-bottom: 16px">
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
             </div>
-            <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" primaryKey="ID" expansionDepth="1"
-                rowSelectable="true" [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
-                [showToolbar]="true" [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true"
-                exportText="Export" exportExcelText="Export to Excel" exportCsvText="Export to CSV">
-                <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
-                    [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
-                    [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
-                    [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
-                </igx-column>
-            </igx-tree-grid>
+            <app-tree-grid-with-transactions>
+                <igx-tree-grid #grid1 [data]="data" childDataKey="ChildCompanies" primaryKey="ID" expansionDepth="1"
+                    rowSelectable="true" [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
+                    [showToolbar]="true" [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true"
+                    exportText="Export" exportExcelText="Export to Excel" exportCsvText="Export to CSV" [allowFiltering]="true">
+                    <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+                        [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+                        [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+                        [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+                    </igx-column>
+                </igx-tree-grid>
+            </app-tree-grid-with-transactions>
 
             <div class="topMargin">
                 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
@@ -28,6 +30,11 @@
                     <button igxButton="raised" (click)="addRow()">Add row</button>
                     <button igxButton="raised" (click)="addChildRow()">Add child row</button>
                     <button igxButton="raised" (click)="deleteRow()">Delete Selected Row</button>
+                    <button igxButton="raised" (click)="undo()">Undo</button>
+                    <button igxButton="raised" (click)="redo()">Redo</button>
+                    <button igxButton="raised" (click)="commit()">Commit</button>
+                    <button igxButton="raised" (click)="exportToExcel()">Export to Excel</button>
+                    <button igxButton="raised" (click)="exportToCSV()">Export to CSV</button>
                 </div>
             </div>
         </div>

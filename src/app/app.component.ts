@@ -39,14 +39,14 @@ export class AppComponent implements OnInit {
             name: 'Badge'
         },
         {
-            link: '/bottom-navigation',
-            icon: 'tab',
-            name: 'Bottom Navigation'
-        },
-        {
             link: '/banner',
             icon: 'banner',
             name: 'Banner'
+        },
+        {
+            link: '/bottom-navigation',
+            icon: 'tab',
+            name: 'Bottom Navigation'
         },
         {
             link: '/buttonGroup',
@@ -89,14 +89,14 @@ export class AppComponent implements OnInit {
             name: 'Dialog'
         },
         {
-            link: '/dropDown',
-            icon: 'drop_down',
-            name: 'DropDown'
-        },
-        {
             link: '/drag-drop',
             icon: 'view_column',
             name: 'Drag and Drop'
+        },
+        {
+            link: '/dropDown',
+            icon: 'view_list',
+            name: 'DropDown'
         },
         {
             link: '/expansionPanel',
@@ -119,11 +119,6 @@ export class AppComponent implements OnInit {
             name: 'Grid Cell Editing'
         },
         {
-            link: '/gridConditionalCellStyling',
-            icon: 'view_column',
-            name: 'Grid Cell Styling'
-        },
-        {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
@@ -144,19 +139,24 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Resizing'
         },
         {
+            link: '/gridConditionalCellStyling',
+            icon: 'view_column',
+            name: 'Grid Cell Styling'
+        },
+        {
             link: '/gridGroupBy',
             icon: 'view_column',
             name: 'Grid GroupBy'
         },
         {
-            link: '/gridPerformance',
-            icon: 'view_column',
-            name: 'Grid Performance'
-        },
-        {
             link: '/gridPercentage',
             icon: 'view_column',
             name: 'Grid Percentage'
+        },
+        {
+            link: '/gridPerformance',
+            icon: 'view_column',
+            name: 'Grid Performance'
         },
         {
             link: '/gridRemoteVirtualization',
@@ -184,14 +184,9 @@ export class AppComponent implements OnInit {
             name: 'Grid Toolbar'
         },
         {
-            link: '/treeGrid',
+            link: '/gridToolbarCustom',
             icon: 'view_column',
-            name: 'Tree Grid'
-        },
-        {
-            link: '/treeGridFlatData',
-            icon: 'view_column',
-            name: 'Tree Grid Flat Data'
+            name: 'Grid Toolbar Custom Content'
         },
         {
             link: '/icon',
@@ -225,12 +220,12 @@ export class AppComponent implements OnInit {
         },
         {
             link: '/overlay',
-            icon: 'overlay',
+            icon: 'flip_to_front',
             name: 'Overlay'
         },
         {
             link: '/overlay-animation',
-            icon: 'overlay_animation',
+            icon: 'flip_to_front',
             name: 'Overlay Animation'
         },
         {
@@ -267,6 +262,16 @@ export class AppComponent implements OnInit {
             link: '/toast',
             icon: 'android',
             name: 'Toast'
+        },
+        {
+            link: '/treeGrid',
+            icon: 'view_column',
+            name: 'Tree Grid'
+        },
+        {
+            link: '/treeGridFlatData',
+            icon: 'view_column',
+            name: 'Tree Grid Flat Data'
         }
     ];
 
@@ -287,24 +292,24 @@ export class AppComponent implements OnInit {
             name: 'Layout'
         },
         {
-            link: '/ripple',
-            icon: 'wifi_tethering',
-            name: 'Ripple'
-        },
-        {
-            link: '/virtualForDirective',
-            icon: 'view_column',
-            name: 'Virtual-For Directive'
-        },
-        {
             link: '/mask',
             icon: 'view_column',
             name: 'Mask Directive'
         },
         {
+            link: '/ripple',
+            icon: 'wifi_tethering',
+            name: 'Ripple'
+        },
+        {
             link: '/tooltip',
             icon: 'info',
             name: 'Tooltip'
+        },
+        {
+            link: '/virtualForDirective',
+            icon: 'view_column',
+            name: 'Virtual-For Directive'
         }
     ];
 
@@ -315,14 +320,14 @@ export class AppComponent implements OnInit {
             name: 'Colors'
         },
         {
-            link: '/typography',
-            icon: 'font_download',
-            name: 'Typography'
-        },
-        {
             link: '/shadows',
             icon: 'layers',
             name: 'Shadows'
+        },
+        {
+            link: '/typography',
+            icon: 'font_download',
+            name: 'Typography'
         }
     ];
 
