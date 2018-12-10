@@ -453,7 +453,7 @@ export class TreeGridFunctions {
                 let newCell;
 
                 UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                await wait(50);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
