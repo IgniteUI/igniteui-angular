@@ -67,6 +67,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -286,7 +287,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
             this.filteringService.refreshExpressions();
-            this.clearSummaryCache();
+            this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
     }
@@ -2272,7 +2273,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.summaryService.clearSummaryCache(args));
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
@@ -2281,7 +2282,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.clearSummaryCache();
+            this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.markForCheck();
         });
@@ -2310,7 +2311,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     this.initColumns(this.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        this.clearSummaryCache();
+                        this.summaryService.clearSummaryCache();
                         this.calculateGridSizes();
                         this.onColumnInit.emit(record.item);
                     });
@@ -3302,8 +3303,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
     public clearSummaryCache(args?) {
-        this.summaryService.clearSummaryCache(args);
     }
 
     /**
@@ -3311,7 +3312,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public refreshGridState(args?) {
             this.endEdit(true);
-            this.clearSummaryCache(args);
+            this.summaryService.clearSummaryCache(args);
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -3359,10 +3360,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
     public recalculateSummaries() {
-        this.summaryService.resetSummaryHeight();
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
