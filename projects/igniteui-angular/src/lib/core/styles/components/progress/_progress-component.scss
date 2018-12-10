@@ -7,47 +7,19 @@
 ////
 
 /// Linear Progress
-@include b(progress-linear) {
+@include b(igx-linear-bar) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
     @extend %linear-display !optional;
 
-    @include e(bar) {
+    @include e(base) {
         @extend %linear-bar !optional;
     }
 
-    @include e(bar-base) {
-        @extend %linear-bar-base !optional;
-    }
-
-    @include e(bar-progress) {
-        @extend %linear-bar-progress !optional;
-    }
-
-    @include e(bar-progress, $m: default) {
-        @extend %linear-bar-progress !optional;
-        @extend %linear-bar-progress--default !optional;
-    }
-
-    @include e(bar-progress, $m: danger) {
-        @extend %linear-bar-progress !optional;
-        @extend %linear-bar-progress--danger !optional;
-    }
-
-    @include e(bar-progress, $m: warning) {
-        @extend %linear-bar-progress !optional;
-        @extend %linear-bar-progress--warning !optional;
-    }
-
-    @include e(bar-progress, $m: info) {
-        @extend %linear-bar-progress !optional;
-        @extend %linear-bar-progress--info !optional;
-    }
-
-    @include e(bar-progress, $m: success) {
-        @extend %linear-bar-progress !optional;
-        @extend %linear-bar-progress--success !optional;
+    @include e(indicator) {
+        @extend %linear-indicator !optional;
+        @extend %linear-indicator--default !optional;
     }
 
     @include e(value) {
@@ -80,35 +52,44 @@
         @extend %linear-value--hidden !optional;
     }
 
+    @include m(danger) {
+        @include e(indicator) {
+            @extend %linear-indicator--danger !optional;
+        }
+    }
+
+    @include m(warning) {
+        @include e(indicator) {
+            @extend %linear-indicator--warning !optional;
+        }
+    }
+
+    @include m(info) {
+        @include e(indicator) {
+            @extend %linear-indicator--info !optional;
+        }
+    }
+
+    @include m(success) {
+        @include e(indicator) {
+            @extend %linear-indicator--success !optional;
+        }
+    }
+
     @include m(striped) {
-        @include e(bar-progress) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
+        @include e(indicator) {
+            @extend %linear-indicator--striped !optional;
+        }
+    }
+
+    @include m(indeterminate) {
+        @include e(indicator) {
+            @extend %linear-indicator--indeterminate !optional;
         }
 
-        @include e(bar-progress, $m: default) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
-        }
-
-        @include e(bar-progress, $m: danger) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
-        }
-
-        @include e(bar-progress, $m: warning) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
-        }
-
-        @include e(bar-progress, $m: info) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
-        }
-
-        @include e(bar-progress, $m: success) {
-            @extend %linear-bar-progress !optional;
-            @extend %linear-bar-progress--striped !optional;
+        @include e(value) {
+            @extend %linear-value !optional;
+            @extend %linear-value--hidden !optional;
         }
     }
 }

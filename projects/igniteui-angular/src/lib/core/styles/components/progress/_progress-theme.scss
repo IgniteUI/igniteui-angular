@@ -82,27 +82,21 @@
     }
 
     %linear-bar {
-        width: inherit;
-        height: $bar-height;
-        overflow: hidden;
-    }
-
-    %linear-bar-base {
         position: absolute;
         width: inherit;
-        height: inherit;
+        height: $bar-height;
         background: --var($theme, 'track-color');
+        overflow: hidden;
         z-index: 0;
     }
 
-    %linear-bar-progress {
+    %linear-indicator {
         width: 100%;
         position: relative;
         height: inherit;
-        backface-visibility: hidden;
     }
 
-    %linear-bar-progress--striped {
+    %linear-indicator--striped {
         background-image: linear-gradient(
             -45deg,
             $stripe-color 25%,
@@ -116,23 +110,39 @@
         background-size: 40px 40px;
     }
 
-    %linear-bar-progress--default {
+    %linear-indicator--indeterminate {
+        animation: indeterminate-progress 2s cubic-bezier(0, .085, .68, .53) infinite;
+        width: 100% !important;
+
+        &::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: -200%;
+            width: 100%;
+            height: inherit;
+            background-color: inherit;
+            transform-origin: top right;
+        }
+    }
+
+    %linear-indicator--default {
         background: --var($theme, 'fill-color-default')
     }
 
-    %linear-bar-progress--danger {
+    %linear-indicator--danger {
         background-color: --var($theme, 'fill-color-danger');
     }
 
-    %linear-bar-progress--warning {
+    %linear-indicator--warning {
         background-color: --var($theme, 'fill-color-warning');
     }
 
-    %linear-bar-progress--info {
+    %linear-indicator--info {
         background-color: --var($theme, 'fill-color-info');
     }
 
-    %linear-bar-progress--success {
+    %linear-indicator--success {
         background-color: --var($theme, 'fill-color-success');
     }
 
@@ -162,6 +172,23 @@
 
     %linear-value--hidden {
         display: none;
+    }
+
+    @keyframes indeterminate-progress {
+        0% {
+            transform: scaleX(0) translateX(-100%);
+            transform-origin: left;
+        }
+
+        50% {
+            transform: scaleX(1) translateX(50%);
+            transform-origin: right;
+        }
+
+        100% {
+            transform: scaleX(0) translateX(200%);
+            transform-origin: right;
+        }
     }
 }
 
@@ -202,7 +229,6 @@
         text-color: $text-color
     ));
 }
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
@@ -229,8 +255,7 @@
     %circular-circle {
         fill: transparent;
         stroke: --var($theme, 'progress-circle-color');
-        stroke-width: 6;
-        stroke-linecap: round;
+        stroke-width: 4;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
         transform-origin: 50% 50%;
@@ -245,5 +270,22 @@
 
     %circular-text--hidden {
         visibility: hidden;
+    }
+
+    @keyframes indeterminate-progress {
+        0% {
+            transform: scaleX(0) translateX(-100%);
+            transform-origin: left;
+        }
+
+        50% {
+            transform: scaleX(1) translateX(50%);
+            transform-origin: right;
+        }
+
+        100% {
+            transform: scaleX(0) translateX(200%);
+            transform-origin: right;
+        }
     }
 }

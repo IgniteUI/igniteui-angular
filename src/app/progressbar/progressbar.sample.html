@@ -6,7 +6,7 @@
         <article class="linear-samples sample-column">
             <h4 class="sample-title">Linear progress bar</h4>
             <div class="linear-container">
-                <igx-linear-bar [striped]="false" [value]="currentValue" [max]="200">
+                <igx-linear-bar [striped]="false" [value]="currentValue" max="100">
                 </igx-linear-bar>
             </div>
 
@@ -27,6 +27,11 @@
 
             <div class="linear-container">
                 <igx-linear-bar type="info" [striped]="false" [value]="currentValue">
+                </igx-linear-bar>
+            </div>
+
+            <div class="linear-container">
+                <igx-linear-bar [indeterminate]="true">
                 </igx-linear-bar>
             </div>
         </article>

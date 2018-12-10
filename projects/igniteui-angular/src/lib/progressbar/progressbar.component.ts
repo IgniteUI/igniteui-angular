@@ -1,17 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit,
     Component,
     ElementRef,
     EventEmitter,
     HostBinding,
     Input,
     NgModule,
-    OnChanges,
     Output,
     Renderer2,
     ViewChild,
-    TemplateRef,
     ContentChild
 } from '@angular/core';
 import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
@@ -110,8 +107,8 @@ export abstract class BaseProgress {
             this.updateProgress(val);
             cancelAnimationFrame(this.requestAnimationId);
         } else if (this.isInLimitRange(progressValue, passedValue, step)) {
-                this.updateProgress(val);
-                cancelAnimationFrame(this.requestAnimationId);
+            this.updateProgress(val);
+            cancelAnimationFrame(this.requestAnimationId);
         } else {
             this.valueInPercent = progressValue;
             this.requestAnimationId = requestAnimationFrame(() => this.updateProgressSmoothly.call(this, val, step));
@@ -183,6 +180,40 @@ let NEXT_CIRCULAR_ID = 0;
     templateUrl: 'templates/linear-bar.component.html'
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
+    @HostBinding('attr.aria-valuemin')
+    private valueMin = 0;
+
+    @HostBinding('class.igx-linear-bar')
+    public cssClass = 'igx-linear-bar';
+
+    /**
+     *Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
+     *```html
+     *<igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
+     *```
+     */
+    @HostBinding('class.igx-linear-bar--striped')
+    @Input()
+    public striped = false;
+
+    /**
+     *Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
+     *```html
+     *<igx-linear-bar [indeterminate]="true"></igx-linear-bar>
+     *```
+     */
+    @HostBinding('class.igx-linear-bar--indeterminate')
+    @Input()
+    public indeterminate = false;
+
+    /**An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
+     * ```html
+     *<igx-linear-bar role="progressbar"></igx-linear-bar>
+     * ```
+     */
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'progressbar';
 
     /**An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -238,15 +269,6 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     public text: string;
 
     /**
-     *Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
-     *```html
-     *<igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public striped = false;
-
-    /**
      *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `danger`.
      *```html
      *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
@@ -287,6 +309,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      *<igx-linear-bar [striped]="false" [max]="200" [value]="0"></igx-linear-bar>
      *```
      */
+    @HostBinding('attr.aria-valuemax')
     @Input()
     set max(maxNum: number) {
         this._max = maxNum;
@@ -348,6 +371,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      *}
      *```
      */
+    @HostBinding('attr.aria-valuenow')
     @Input()
     get value(): number {
         return this._value;
@@ -466,7 +490,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     */
     public get context(): any {
         return {
-            $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max}
+            $implicit: { value: this.value, valueInPercent: this.valueInPercent, max: this.max }
         };
     }
 
