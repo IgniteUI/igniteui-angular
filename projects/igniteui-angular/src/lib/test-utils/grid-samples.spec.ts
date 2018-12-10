@@ -192,9 +192,9 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             EventSubscriptions.onColumnInit, '')
 })
 export class ScrollsComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigDataRowsAndCols(100, 100);
+    data = SampleTestData.generateBigDataRowsAndCols(16, 16);
     public columnInit(column) {
-        column.width = '50px';
+        // column.width = '50px';
     }
 }
 
@@ -788,4 +788,64 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
 
         return result;
     }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
+    `${ EventSubscriptions.onSelection }`, ColumnDefinitions.generatedWithWidth)
+})
+export class VirtualGridComponent extends BasicGridComponent {
+    public gridWidth = '800px';
+    public gridHeight = '300px';
+    public defaultWidth = '200px';
+    public columns = [
+        { field: 'index' },
+        { field: 'value' },
+        { field: 'other' },
+        { field: 'another' }
+    ];
+     public selectedCell: IgxGridCellComponent;
+     constructor() {
+        super();
+        this.data = this.generateData(1000);
+    }
+     public generateCols(numCols: number, defaultColWidth = null) {
+        const cols = [];
+        for (let j = 0; j < numCols; j++) {
+            cols.push({
+                field: j.toString(),
+                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+            });
+        }
+        return cols;
+    }
+     public generateData(numRows: number) {
+        const data = [];
+         for (let i = 0; i < numRows; i++) {
+            const obj = {};
+            for (let j = 0; j < this.columns.length; j++) {
+                const col = this.columns[j].field;
+                obj[col] = 10 * i * j;
+            }
+            data.push(obj);
+        }
+        return data;
+    }
+     public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+     public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+     public scrollLeft(newLeft: number) {
+        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
+}
+ @Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [primaryKey]="'ID'"`,
+        '', ColumnDefinitions.idNameJobHireDate)
+})
+export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
+    data = SampleTestData.personJobDataFull();
 }
