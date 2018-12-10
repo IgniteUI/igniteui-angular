@@ -137,4 +137,21 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         });
     }
 
+    public get_groupBy_record_id(gRow: IGroupByRecord): string {
+        let recordId = '{ ';
+        const hierrarchy = DataUtil.getHierarchy(gRow);
+
+        for (let i = 0; i < hierrarchy.length; i++) {
+            const groupByKey = hierrarchy[i];
+            recordId += `'${groupByKey.fieldName}': '${groupByKey.value}'`;
+
+            if (i < hierrarchy.length - 1) {
+                recordId += ', ';
+            }
+        }
+        recordId += ' }';
+
+        return recordId;
+    }
+
 }

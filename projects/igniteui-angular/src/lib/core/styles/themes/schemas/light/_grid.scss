@@ -55,6 +55,10 @@
 /// @prop {Map} filtering-header-text-color [igx-color: ('grays', 800)] - The text color color of the filtered column header.
 /// @prop {Color} filtering-row-background [#fff] - The background color of the filtering row.
 /// @prop {Map} filtering-row-text-color [igx-color: ('grays', 800)] - The text-color color of the filtering row.
+/// @prop {Map} body-summaries-background [igx-color: ('grays', 300), hexrgba: #fff] - The background color of the summary groups located the body.
+/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @see $default-palette
 $_light-grid: (
     header-background: (
@@ -244,5 +248,27 @@ $_light-grid: (
 
     tree-filtered-text-color: (
         igx-color: ('grays', 500)
+    ),
+
+    body-summaries-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff
+    ),
+
+    body-summaries-text-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff,
+        text-contrast: ()
+    ),
+
+    root-summaries-background: (
+        igx-color: ('grays', 300),
+        hexrgba: #fff
+    ),
+
+    root-summaries-text-color: (
+        igx-color: ('grays', 300),
+        hexrgba: #fff,
+        text-contrast: ()
     )
 );
