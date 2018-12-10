@@ -15,7 +15,7 @@
                 [rowSelectable]="true"
                 [paging]="false"
                 [width]="'900px'"
-                [height]="'500px'">
+                [height]="'800px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
@@ -26,7 +26,7 @@
                                                     [filterable]="true"
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
-                                                    [hasSummary]="c.summary"
+                                                    [hasSummary]="true"
                                                     [minWidth]="c.minWidth"
                                                     [maxWidth]="c.maxWidth"
                                                     [dataType]="c.type">

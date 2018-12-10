@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grids/grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/grid-base.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
@@ -206,7 +206,39 @@ export class ScrollsComponent extends BasicGridComponent {
 export class SummariesComponent extends BasicGridComponent {
     data = SampleTestData.foodProductData();
 }
-/* Maybe add SummaryColumnComponent? */
+
+class DealsSummaryMinMax extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'min' || obj.key === 'max') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            '', ColumnDefinitions.productDefaultSummaries)
+})
+export class SummaryColumnComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductData();
+    public hasSummary = true;
+
+    public numberSummary = new IgxNumberSummaryOperand();
+    public dateSummary = new IgxDateSummaryOperand();
+    public dealsSummaryMinMax = DealsSummaryMinMax;
+}
 
 @Component({
     template: GridTemplateStrings.declareGrid(
@@ -234,7 +266,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
 
 }
 
-/* NoActiveSummariesComponent */
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
 })
@@ -708,4 +739,53 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
 export class GridWithAvatarComponent extends GridWithSizeComponent {
     data = SampleTestData.personAvatarData();
     height = '500px';
+}
+
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="1000px"  width="900px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.summariesGoupByColumns)}`
+})
+export class SummarieGroupByComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+class AgeSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class AgeSummaryTest extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        result.push({
+            key: 'test',
+            label: 'Test',
+            summaryResult: summaries.filter(rec => rec > 10 && rec < 40).length
+        });
+
+        return result;
+    }
 }

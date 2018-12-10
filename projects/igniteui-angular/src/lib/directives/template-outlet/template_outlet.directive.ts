@@ -58,7 +58,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
   private _recreateView() {
      // remove and recreate
      if (this._viewRef) {
-         this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._viewRef));
+         this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
       }
       if (this.igxTemplateOutlet) {
         this._viewRef = this._viewContainerRef.createEmbeddedView(
@@ -70,10 +70,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
                 // Note: Views in detached state do not appear in the DOM, however they remain stored in memory.
                 const res = this._embeddedViewsMap.get(this.igxTemplateOutletContext['templateID']);
                 if (!res) {
-                    let emptyView = this._viewContainerRef.createEmbeddedView(
-                        this.igxTemplateOutlet, {});
-                    emptyView = this._viewContainerRef.detach(this._viewContainerRef.indexOf(emptyView)) as EmbeddedViewRef<any>;
-                    this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'], emptyView);
+                    this._embeddedViewsMap.set(this.igxTemplateOutletContext['templateID'], this._viewRef);
                 }
             }
       }
