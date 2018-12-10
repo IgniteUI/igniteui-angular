@@ -16,6 +16,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return this.grid.nativeElement.parentNode.parentNode.parentNode;
     }
 
+    private getChildGridRowContainer() {
+        return this.grid.nativeElement.parentNode.parentNode;
+    }
+
     public navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
         const prevElem = rowElement.previousElementSibling;
         if (prevElem) {
@@ -26,7 +30,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             } else {
                 if (this.grid.parent !== null) {
                     // currently navigating in child grid
-                    const childContainer = this.grid.nativeElement.parentNode.parentNode.parentNode;
+                    const childContainer = this.grid.nativeElement.parentNode.parentNode;
                     const diff = childContainer.getBoundingClientRect().top;
                     const topIsVisible = diff >= 0;
                     console.log('diff:' + diff);
@@ -51,17 +55,21 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             super.navigateUp(rowElement, currentRowIndex, visibleColumnIndex);
         } else if (this.grid.parent !== null &&
             currentRowIndex === 0) {
-                // move to prev row in parent
-                const container = this.getChildContainer();
-                const prev = container.previousElementSibling;
+                // move to prev row in sibling layout or parent
+                let parentContainer = this.getChildContainer();
+                let childRowContainer = this.getChildGridRowContainer();
+                let prev = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
                 if (prev) {
-                    this.focusPrev(container.previousElementSibling, visibleColumnIndex, this.grid.parent);
+                    this.focusPrev(prev, visibleColumnIndex, this.grid.parent);
                 } else {
                     this.grid.parent.verticalScrollContainer.scrollPrev();
                     this.grid.parent.verticalScrollContainer.onChunkLoad
                     .pipe(first())
                     .subscribe(() => {
-                        this.focusPrev(container.previousElementSibling, visibleColumnIndex, this.grid.parent);
+                        parentContainer = this.getChildContainer();
+                        childRowContainer = this.getChildGridRowContainer();
+                        prev = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
+                        this.focusPrev(prev, visibleColumnIndex, this.grid.parent);
                     });
                 }
         }
@@ -82,7 +90,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             } else {
                 if (this.grid.parent !== null) {
                     // currently navigating in child grid
-                    const childContainer = this.grid.nativeElement.parentNode.parentNode.parentNode;
+                    const childContainer = this.grid.nativeElement.parentNode.parentNode;
                     const diff =
                     childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
                     const endIsVisible = diff < 0;
@@ -108,9 +116,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else if (this.grid.parent !== null &&
             currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1
             && !this.isAtBottom(this.grid.parent)) {
-                // move to next row in parent
-                const container = this.getChildContainer();
-                this.focusNext(container.nextElementSibling, visibleColumnIndex, this.grid.parent);
+                // move to next row in sibling layout or in parent
+                const parentContainer = this.getChildContainer();
+                const childRowContainer = this.getChildGridRowContainer();
+                const next = childRowContainer.nextElementSibling || parentContainer.nextElementSibling;
+                this.focusNext(next, visibleColumnIndex, this.grid.parent);
         }
     }
 
