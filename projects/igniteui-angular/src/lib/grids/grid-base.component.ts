@@ -164,6 +164,7 @@ export enum GridSummaryCalculationMode {
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+    private _data: any[];
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -173,7 +174,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public data: any[];
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+    }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;

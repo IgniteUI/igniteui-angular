@@ -15,7 +15,7 @@ export class IgxGridSummaryService {
     public clearSummaryCache(args?) {
         if (!args) {
             this.summaryCacheMap.clear();
-            if (this.grid.rootSummariesEnabled) {
+            if (this.grid && this.grid.rootSummariesEnabled) {
                 this.retriggerRootPipe = !this.retriggerRootPipe;
             }
             return;
