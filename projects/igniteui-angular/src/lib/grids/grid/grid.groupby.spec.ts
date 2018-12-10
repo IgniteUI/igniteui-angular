@@ -1541,35 +1541,6 @@ describe('IgxGrid - GroupBy', () => {
         }
     }));
 
-    // GroupBy + Summaries
-    it('should take into account only the data records when calculating summaries.', fakeAsync(() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        const grid = fix.componentInstance.instance;
-        fix.componentInstance.width = '1200px';
-        tick();
-        grid.columnWidth = '200px';
-        tick();
-        fix.detectChanges();
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-        });
-        fix.detectChanges();
-
-        grid.enableSummaries([{ fieldName: 'ProductName' }]);
-        tick();
-        fix.detectChanges();
-
-        expect(grid.hasSummarizedColumns).toBe(true);
-
-        const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary'));
-        const labels = summaries[2].queryAll(By.css(SUMMARY_LABEL_CLASS));
-        const values = summaries[2].queryAll(By.css(SUMMARY_VALUE_CLASS));
-        expect(labels.length).toBe(1);
-        expect(labels[0].nativeElement.innerText).toBe('Count');
-        expect(values.length).toBe(1);
-        expect(values[0].nativeElement.innerText).toBe('8');
-    }));
-
     // GroupBy + Hiding
     it('should retain same size for group row after a column is hidden.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
