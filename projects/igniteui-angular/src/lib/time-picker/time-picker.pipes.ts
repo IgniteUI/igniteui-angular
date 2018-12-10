@@ -1,6 +1,8 @@
 import { Pipe, PipeTransform, Inject} from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 
+
+/** @hidden */
 @Pipe({ name: "displayFormat" })
 export class TimeDisplayFormatPipe implements PipeTransform {
 
@@ -52,7 +54,7 @@ export class TimeDisplayFormatPipe implements PipeTransform {
     }
 }
 
-
+/** @hidden */
 @Pipe({ name: "inputFormat" })
 export class TimeInputFormatPipe implements PipeTransform {
 

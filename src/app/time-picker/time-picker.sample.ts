@@ -22,6 +22,14 @@ export class TimePickerSampleComponent {
         return this.date ? this.date.toLocaleString() : 'Value is null.';
     }
 
+    valueChanged(event) {
+        console.log(event);
+    }
+
+    validationFailed(event) {
+        console.log(event);
+    }
+
     @ViewChild('tp', { read: IgxTimePickerComponent })
     public tp: IgxTimePickerComponent;
 }

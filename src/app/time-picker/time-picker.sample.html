@@ -7,11 +7,14 @@
             <h4 class="sample-title">Time Picker with Dropdown</h4>
             <div class="sample-description">{{showDate()}}</div>
             <div class="preview" style="width: 200px">
-                <igx-time-picker #tp [mode]="mode"
-                                     [isSpinLoop]="isSpinLoop"
-                                     [(ngModel)]="date"
-                                     [itemsDelta]="itemsDelta"
-                                     [format]="format" >
+                <igx-time-picker name="timePicker" #tp
+                                (onValueChanged)="valueChanged($event)"
+                                (onValidationFailed)="validationFailed($event)"
+                                [mode]="mode"
+                                [isSpinLoop]="isSpinLoop"
+                                [(ngModel)]="date"
+                                [itemsDelta]="itemsDelta"
+                                [format]="format" >
                 </igx-time-picker>
             </div>
         </article>

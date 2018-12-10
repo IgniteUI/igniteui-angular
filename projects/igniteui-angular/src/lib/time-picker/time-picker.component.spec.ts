@@ -145,7 +145,7 @@ describe('IgxTimePicker', () => {
         spyOn(timePicker.onOpen, 'emit');
 
         target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        await wait(900);
+        await wait(950);
 
         expect(timePicker.onOpen.emit).toHaveBeenCalled();
     });

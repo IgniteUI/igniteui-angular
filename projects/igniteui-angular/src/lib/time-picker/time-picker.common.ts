@@ -16,6 +16,7 @@ export interface IgxTimePickerBase {
     format: string;
     promptChar: string;
     cleared: boolean;
+    collapsed: boolean;
     nextHour();
     prevHour();
     nextMinute();
@@ -27,11 +28,13 @@ export interface IgxTimePickerBase {
     scrollHourIntoView(item: string): void;
     scrollMinuteIntoView(item: string): void;
     scrollAmPmIntoView(item: string): void;
-    hideDropDownOverlay(): void;
+    hideOverlay(): void;
     parseMask(preserveAmPm?: boolean): string;
-    collapsed: boolean;
 }
 
+/**
+ * Defines the posible values of the igxTimePicker's time slelection mode.
+ */
 export enum InteractionMode {
     dialog,
     dropdown

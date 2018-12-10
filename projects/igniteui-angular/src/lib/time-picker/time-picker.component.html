@@ -55,10 +55,10 @@
             </div>
         </div>
         <div *ngIf="isModal" class="igx-time-picker__buttons">
-            <button *ngIf="cancelButtonLabel.length" igxButton="{{buttonType}}" (click)="cancelButtonClick()">
+            <button *ngIf="cancelButtonLabel.length" igxButton="flat" (click)="cancelButtonClick()">
                 {{cancelButtonLabel}}
             </button>
-            <button *ngIf="okButtonLabel.length" igxButton="{{buttonType}}" (click)="okButtonClick()">
+            <button *ngIf="okButtonLabel.length" igxButton="flat" (click)="okButtonClick()">
                 {{okButtonLabel}}
             </button>
         </div>
