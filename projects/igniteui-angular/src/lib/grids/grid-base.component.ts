@@ -2208,7 +2208,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 const diff = this.columnListDiffer.diff(change);
                 if (diff) {
-
                     this.initColumns(this.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
@@ -2217,16 +2216,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.onColumnInit.emit(record.item);
                     });
 
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        // Recalculate Summaries
-                        this.clearSummaryCache();
-                        this.calculateGridSizes();
+                    requestAnimationFrame(() => {
+                        diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                            // Recalculate Summaries
+                            this.clearSummaryCache();
+                            this.calculateGridSizes();
 
-                        // Clear Filtering
-                        this.gridAPI.clear_filter(this.id, record.item.field);
+                            // Clear Filtering
+                            this.gridAPI.clear_filter(this.id, record.item.field);
 
-                        // Clear Sorting
-                        this.gridAPI.clear_sort(this.id, record.item.field);
+                            // Clear Sorting
+                            this.gridAPI.clear_sort(this.id, record.item.field);
+                        });
                     });
                 }
                 this.markForCheck();
@@ -3026,13 +3027,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public sort(expression: ISortingExpression | Array<ISortingExpression>): void;
-    public sort(...rest): void {
+    public sort(expression: ISortingExpression | Array<ISortingExpression>): void {
         this.endEdit(false);
-        if (rest.length === 1 && rest[0] instanceof Array) {
-            this._sortMultiple(rest[0]);
+        if (expression instanceof Array) {
+            this.gridAPI.sort_multiple(this.id, expression);
         } else {
-            this._sort(rest[0]);
+            this.gridAPI.sort(this.id, expression);
         }
     }
 
@@ -3653,20 +3653,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         return width - this.getPinnedWidth(takeHidden);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sort(expression: ISortingExpression) {
-        this.gridAPI.sort(this.id, expression);
-    }
-
-    /**
-     * @hidden
-     */
-    protected _sortMultiple(expressions: ISortingExpression[]) {
-        this.gridAPI.sort_multiple(this.id, expressions);
     }
 
     /**

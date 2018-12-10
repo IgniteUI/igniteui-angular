@@ -7,18 +7,36 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     protected _isPending = false;
     protected _pendingTransactions: T[] = [];
     protected _pendingStates: Map<any, S> = new Map();
+
+    /**
+     * @inheritdoc
+     */
     public get canRedo(): boolean {
         return false;
     }
+
+    /**
+     * @inheritdoc
+     */
     public get canUndo(): boolean {
         return false;
     }
+
+    /**
+     * @inheritdoc
+     */
     public get enabled(): boolean {
         return this._isPending;
     }
 
+    /**
+     * @inheritdoc
+     */
     public onStateUpdate = new EventEmitter<void>();
 
+    /**
+     * @inheritdoc
+     */
     public add(transaction: T, recordRef?: any): void {
         if (this._isPending) {
             this.updateState(this._pendingStates, transaction, recordRef);
@@ -26,12 +44,24 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     getTransactionLog(id?: any): T[] { return []; }
 
+    /**
+     * @inheritdoc
+     */
     undo(): void { }
 
+    /**
+     * @inheritdoc
+     */
     redo(): void { }
 
+    /**
+     * @inheritdoc
+     */
     getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._pendingStates.forEach((state: S, key: any) => {
@@ -41,10 +71,16 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return result;
     }
 
+    /**
+     * @inheritdoc
+     */
     public getState(id: any): S {
         return this._pendingStates.get(id);
     }
 
+    /**
+     * @inheritdoc
+     */
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._pendingStates.get(id);
         if (!state) {
@@ -56,17 +92,29 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return state.value;
     }
 
-    commit(data: any): void { }
+    /**
+     * @inheritdoc
+     */
+    commit(data: any[]): void { }
 
+    /**
+     * @inheritdoc
+     */
     clear(): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
     }
 
+    /**
+     * @inheritdoc
+     */
     public startPending(): void {
         this._isPending = true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public endPending(commit: boolean): void {
         this._isPending = false;
         this._pendingStates.clear();
