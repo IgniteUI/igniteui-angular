@@ -1,0 +1,19 @@
+<ng-container *ngIf="hasSummary">
+    <ng-container *ngFor="let summary of summaryResults">
+            <div class="igx-grid-summary__item" [style.height.px]="itemHeight">
+
+                <ng-container *ngIf="visibleColumnIndex === 0 && firstCellIndentation >= 0">
+                    <div class="igx-grid__tree-cell--padding-level-{{firstCellIndentation}}"></div>
+
+                    <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': 'hidden'}">
+                        <igx-icon fontSet="material">chevron_right</igx-icon>
+                    </div>
+                </ng-container>
+
+                <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ summary.label }}</span>
+                <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">
+                    {{ columnDatatype === 'number' ? (summary.summaryResult | igxdecimal) : columnDatatype === 'date' ? (summary.summaryResult | igxdate) : (summary.summaryResult) }}
+                </span>
+            </div>
+    </ng-container>
+</ng-container>

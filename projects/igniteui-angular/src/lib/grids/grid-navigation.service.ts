@@ -27,7 +27,11 @@ export class IgxGridNavigationService {
     }
 
     public horizontalScroll(rowIndex) {
-        return this.grid.dataRowList.find((row) => row.index === rowIndex).virtDirRow;
+        let rowComp = this.grid.dataRowList.find((row) => row.index === rowIndex);
+        if (!rowComp) {
+            rowComp = this.grid.summariesRowList.find((row) => row.index === rowIndex);
+        }
+        return rowComp.virtDirRow;
     }
 
     public getColumnUnpinnedIndex(visibleColumnIndex: number) {
@@ -90,7 +94,11 @@ export class IgxGridNavigationService {
         }
     }
 
-    public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex) {
+    public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary = false) {
+        if (isSummary) {
+            return this.grid.nativeElement.querySelector(
+                `igx-grid-summary-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+        }
         if (this.isTreeGrid && visibleColumnIndex === 0) {
             return this.grid.nativeElement.querySelector(
                 `igx-tree-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
@@ -99,12 +107,12 @@ export class IgxGridNavigationService {
             `igx-grid-cell[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
     }
 
-    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex) {
+    public onKeydownArrowRight(element, rowIndex, visibleColumnIndex, isSummary = false) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
         if (this.isColumnFullyVisible(visibleColumnIndex + 1)) { // if next column is fully visible or is pinned
-            if (element.classList.contains('igx-grid__th--pinned-last')) {
+            if (element.classList.contains('igx-grid__th--pinned-last') || element.classList.contains('igx-grid-summary--pinned-last')) {
                 if (this.isColumnLeftFullyVisible(visibleColumnIndex + 1)) {
                     element.nextElementSibling.firstElementChild.focus();
                 } else {
@@ -121,11 +129,11 @@ export class IgxGridNavigationService {
             }
         } else {
             this.grid.nativeElement.focus({preventScroll: true});
-            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1);
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex + 1, isSummary);
         }
     }
 
-    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex) {
+    public onKeydownArrowLeft(element, rowIndex, visibleColumnIndex, isSummary = false) {
         if (visibleColumnIndex === 0) {
             return;
         }
@@ -134,7 +142,7 @@ export class IgxGridNavigationService {
             element.parentNode.previousElementSibling.focus();
         } else if (!this.isColumnLeftFullyVisible(visibleColumnIndex - 1)) {
             this.grid.nativeElement.focus({preventScroll: true});
-            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1);
+            this.performHorizontalScrollToCell(rowIndex, visibleColumnIndex - 1, isSummary);
         } else {
             element.previousElementSibling.focus();
         }
@@ -188,11 +196,16 @@ export class IgxGridNavigationService {
             this.performHorizontalScrollToCell(rowIndex, editableIndex);
         }
     }
-    public onKeydownHome(rowIndex) {
-        const rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex).nativeElement;
-        let firstCell = this.isTreeGrid ?
-        rowElement.querySelector('igx-tree-grid-cell') :
-        rowElement.querySelector('igx-grid-cell');
+    public onKeydownHome(rowIndex, isSummary = false) {
+        let rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex);
+        let cellTag =  this.isTreeGrid ? 'igx-tree-grid-cell' : 'igx-grid-cell';
+        if (isSummary) {
+            rowElement = this.grid.summariesRowList.find((row) => row.index === rowIndex);
+            cellTag = 'igx-grid-summary-cell';
+        }
+        if (!rowElement) { return; }
+        rowElement = rowElement.nativeElement;
+        let firstCell = rowElement.querySelector(`${cellTag}`);
         if (this.grid.pinnedColumns.length || this.displayContainerScrollLeft === 0) {
             firstCell.focus();
         } else {
@@ -200,18 +213,24 @@ export class IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     this.grid.nativeElement.focus({preventScroll: true});
-                    firstCell = this.isTreeGrid ? rowElement.querySelector('igx-tree-grid-cell') :
-                    rowElement.querySelector('igx-grid-cell');
+                    firstCell = rowElement.querySelector(`${cellTag}`);
                     firstCell.focus();
                 });
             this.horizontalScroll(rowIndex).scrollTo(0);
         }
     }
 
-    public onKeydownEnd(rowIndex) {
+    public onKeydownEnd(rowIndex, isSummary = false) {
         const index = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
-        const rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex).nativeElement;
-        const allCells = rowElement.querySelectorAll('igx-grid-cell');
+        let rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex);
+        let cellTag = 'igx-grid-cell';
+        if (isSummary) {
+            rowElement = this.grid.summariesRowList.find((row) => row.index === rowIndex);
+            cellTag = 'igx-grid-summary-cell';
+        }
+        if (!rowElement) { return; }
+        rowElement = rowElement.nativeElement;
+        const allCells = rowElement.querySelectorAll(`${cellTag}`);
         const lastCell = allCells[allCells.length - 1];
         if (this.isColumnFullyVisible(index)) {
             lastCell.focus();
@@ -277,8 +296,8 @@ export class IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     const tag = rowElement.tagName.toLowerCase();
-                    if (tag === 'igx-grid-row' || tag === 'igx-tree-grid-row') {
-                        rowElement = this.getRowByIndex(currentRowIndex);
+                    if (tag === 'igx-grid-row' || tag === 'igx-tree-grid-row' || tag === 'igx-grid-summary-row') {
+                        rowElement = this.getRowByIndex(currentRowIndex, tag);
                     } else {
                         rowElement = this.grid.nativeElement.querySelector(
                             `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
@@ -294,7 +313,13 @@ export class IgxGridNavigationService {
         if (currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
             currentRowEl.previousElementSibling.focus();
         } else {
+            const isSummaryRow = currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-summary-row';
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                if (isSummaryRow) {
+                    currentRowEl.previousElementSibling.
+                        querySelector(`igx-grid-summary-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                    return;
+                }
                 const cell = this.isTreeGrid && visibleColumnIndex === 0 ?
                 currentRowEl.previousElementSibling.querySelector(`igx-tree-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`) :
                 currentRowEl.previousElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
@@ -303,7 +328,7 @@ export class IgxGridNavigationService {
             }
             this.grid.nativeElement.focus({preventScroll: true});
             this.performHorizontalScrollToCell(parseInt(
-                currentRowEl.previousElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex);
+                currentRowEl.previousElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex, isSummaryRow);
             }
         }
 
@@ -323,8 +348,8 @@ export class IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     const tag = rowElement.tagName.toLowerCase();
-                    if (tag === 'igx-grid-row' || tag === 'igx-tree-grid-row') {
-                        rowElement = this.getRowByIndex(currentRowIndex);
+                    if (tag === 'igx-grid-row' || tag === 'igx-tree-grid-row' || tag === 'igx-grid-summary-row') {
+                        rowElement = this.getRowByIndex(currentRowIndex, tag);
                     } else {
                         rowElement = this.grid.nativeElement.querySelector(
                             `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
@@ -340,7 +365,12 @@ export class IgxGridNavigationService {
         if (rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-groupby-row') {
             rowElement.nextElementSibling.focus();
         } else {
+            const isSummaryRow = rowElement.nextElementSibling.tagName.toLowerCase() === 'igx-grid-summary-row';
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
+                if (isSummaryRow) {
+                    rowElement.nextElementSibling.querySelector(`igx-grid-summary-cell[data-visibleIndex="${visibleColumnIndex}"]`).focus();
+                    return;
+                }
                 const cell = this.isTreeGrid && visibleColumnIndex === 0 ?
                 rowElement.nextElementSibling.querySelector(`igx-tree-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`) :
                 rowElement.nextElementSibling.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
@@ -348,7 +378,7 @@ export class IgxGridNavigationService {
                 return;
             }
             this.performHorizontalScrollToCell(parseInt(
-                rowElement.nextElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex);
+                rowElement.nextElementSibling.getAttribute('data-rowindex'), 10), visibleColumnIndex, isSummaryRow);
             }
         }
 
@@ -394,23 +424,26 @@ export class IgxGridNavigationService {
         }
     }
 
-    public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
+    public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex)) {
                 this.grid.rowEditTabs.first.element.nativeElement.focus();
                 return;
             }
-            if (this.grid.rowList.find(row => row.index === rowIndex + 1)) {
+            const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
+                this.grid.rowList.find(row => row.index === rowIndex + 1) :
+                this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
+            if (rowEl) {
                 this.navigateDown(currentRowEl, rowIndex, 0);
             }
         } else {
-            const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex);
+            const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummaryRow);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
                     this.moveNextEditable(cell, rowIndex, visibleColumnIndex);
                     return;
                 }
-                this.onKeydownArrowRight(cell, rowIndex, visibleColumnIndex);
+                this.onKeydownArrowRight(cell, rowIndex, visibleColumnIndex, isSummaryRow);
             }
         }
     }
@@ -425,7 +458,7 @@ export class IgxGridNavigationService {
         }
     }
 
-    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
+    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary = false) {
         if (visibleColumnIndex === 0) {
                 if (this.isRowInEditMode(rowIndex)) {
                     this.grid.rowEditTabs.last.element.nativeElement.focus();
@@ -438,31 +471,30 @@ export class IgxGridNavigationService {
                         this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
                 }
         } else {
-            const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
+            const cell = this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
                     this.movePreviousEditable( rowIndex, visibleColumnIndex);
                     return;
                 }
-                this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex);
+                this.onKeydownArrowLeft(cell, rowIndex, visibleColumnIndex, isSummary);
             }
         }
     }
 
-    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex) {
+    private performHorizontalScrollToCell(rowIndex, visibleColumnIndex, isSummary = false) {
         const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
         this.grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(() => {
-                this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex).focus();
+                this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary).focus();
             });
         this.horizontalScroll(rowIndex).scrollTo(unpinnedIndex);
     }
-    private getRowByIndex(index) {
-        return this.isTreeGrid ? this.grid.nativeElement.querySelector(
-            `igx-tree-grid-row[data-rowindex="${index}"]`) :
-            this.grid.nativeElement.querySelector(
-                `igx-grid-row[data-rowindex="${index}"]`);
+
+    private getRowByIndex(index, tag) {
+        return this.grid.nativeElement.querySelector(
+            `${tag}[data-rowindex="${index}"]`);
     }
 
     private getAllRows() {
