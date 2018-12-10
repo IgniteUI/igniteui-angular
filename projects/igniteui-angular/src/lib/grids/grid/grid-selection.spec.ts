@@ -10,19 +10,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-
-let data = [
-    {ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z'},
-    {ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z'},
-    {ID: 3, Name: 'Tanya Bennett', JobTitle: 'Director', HireDate: '2005-11-18T11:23:17.714Z'},
-    {ID: 4, Name: 'Jack Simon', JobTitle: 'Software Developer', HireDate: '2008-12-18T11:23:17.714Z'},
-    {ID: 5, Name: 'Celia Martinez', JobTitle: 'Senior Software Developer', HireDate: '2007-12-19T11:23:17.714Z'},
-    {ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z'},
-    {ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z'},
-    {ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z'},
-    {ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z'},
-    {ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z'}
-];
+import { ScrollsComponent, GridWithPrimaryKeyComponent, SelectionComponent } from '../../test-utils/grid-samples.spec';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - Row Selection', () => {
     configureTestSuite();
@@ -32,9 +21,9 @@ describe('IgxGrid - Row Selection', () => {
             declarations: [
                 GridWithPrimaryKeyComponent,
                 GridWithPagingAndSelectionComponent,
-                GridWithSelectionComponent,
+                SelectionComponent,
                 GridWithSelectionFilteringComponent,
-                GridWithScrollsComponent,
+                ScrollsComponent,
                 GridSummaryComponent,
                 GridCancelableComponent,
                 GridFeaturesComponent
@@ -45,24 +34,12 @@ describe('IgxGrid - Row Selection', () => {
             ]
         })
             .compileComponents();
-        data = [
-            {ID: 1, Name: 'Casey Houston', JobTitle: 'Vice President', HireDate: '2017-06-19T11:43:07.714Z'},
-            {ID: 2, Name: 'Gilberto Todd', JobTitle: 'Director', HireDate: '2015-12-18T11:23:17.714Z'},
-            {ID: 3, Name: 'Tanya Bennett', JobTitle: 'Software Developer', HireDate: '2005-11-18T11:23:17.714Z'},
-            {ID: 4, Name: 'Jack Simon', JobTitle: 'Senior Software Developer', HireDate: '2008-12-18T11:23:17.714Z'},
-            {ID: 5, Name: 'Celia Martinez', JobTitle: 'CEO', HireDate: '2007-12-19T11:23:17.714Z'},
-            {ID: 6, Name: 'Erma Walsh', JobTitle: 'CEO', HireDate: '2016-12-18T11:23:17.714Z'},
-            {ID: 7, Name: 'Debra Morton', JobTitle: 'Associate Software Developer', HireDate: '2005-11-19T11:23:17.714Z'},
-            {ID: 8, Name: 'Erika Wells', JobTitle: 'Software Development Team Lead', HireDate: '2005-10-14T11:23:17.714Z'},
-            {ID: 9, Name: 'Leslie Hansen', JobTitle: 'Associate Software Developer', HireDate: '2013-10-10T11:23:17.714Z'},
-            {ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', HireDate: '2011-11-28T11:23:17.714Z'}
-        ];
     }));
 
     it('Should be able to select row through primaryKey and index', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
 
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
@@ -73,7 +50,7 @@ describe('IgxGrid - Row Selection', () => {
     it('Should be able to update a cell in a row through primaryKey', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
@@ -85,7 +62,7 @@ describe('IgxGrid - Row Selection', () => {
     it('Should be able to update row through primaryKey', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
         spyOn(grid.cdr, 'markForCheck').and.callThrough();
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
@@ -100,7 +77,7 @@ describe('IgxGrid - Row Selection', () => {
     it('Should be able to delete a row through primaryKey', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2)).toBeDefined();
@@ -113,7 +90,7 @@ describe('IgxGrid - Row Selection', () => {
     it('Should handle update by not overwriting the value in the data column specified as primaryKey', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2)).toBeDefined();
@@ -123,61 +100,6 @@ describe('IgxGrid - Row Selection', () => {
         expect(grid.getRowByIndex(1)).toBeDefined();
         expect(grid.getRowByIndex(1).rowData[grid.primaryKey]).toEqual(7);
     });
-
-    it('Should handle keydown events on cells properly even when primaryKey is specified', (async () => {
-        const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection1;
-        expect(grid.primaryKey).toBeTruthy();
-        expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-        const targetCell = grid.getCellByKey(2, 'Name');
-        const targetCellElement: HTMLElement = grid.getCellByKey(2, 'Name').nativeElement;
-        spyOn(grid.getCellByKey(2, 'Name'), 'onFocus').and.callThrough();
-        expect(targetCell.focused).toEqual(false);
-        targetCellElement.dispatchEvent(new FocusEvent('focus'));
-        await wait(30);
-        spyOn(grid.getCellByKey(3, 'Name'), 'onFocus').and.callThrough();
-        fix.detectChanges();
-        expect(targetCell.onFocus).toHaveBeenCalledTimes(1);
-        expect(targetCell.focused).toEqual(true);
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(grid.getCellByKey(3, 'Name').onFocus).toHaveBeenCalledTimes(1);
-        expect(grid.getCellByKey(3, 'Name').focused).toEqual(true);
-        expect(targetCell.focused).toEqual(false);
-        expect(grid.selectedCells.length).toEqual(1);
-        expect(grid.selectedCells[0].row.rowData[grid.primaryKey]).toEqual(3);
-    }));
-
-    it('Should properly move focus when loading new row chunk', (async() => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection3;
-        const lastRowIndex = grid.rowList.length - 2;
-        let targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
-        const initialValue = targetCell.value;
-        const targetCellElement: HTMLElement = targetCell.nativeElement;
-        spyOn(targetCell, 'onFocus').and.callThrough();
-        expect(targetCell.focused).toEqual(false);
-        targetCellElement.focus();
-        spyOn(targetCell.gridAPI, 'get_cell_by_visible_index').and.callThrough();
-        fix.detectChanges();
-        targetCell = grid.getCellByColumn(lastRowIndex, 'Column1');
-        expect(targetCell.focused).toEqual(true);
-        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
-        await wait(200);
-        fix.detectChanges();
-        const newLastRowIndex = lastRowIndex + 1;
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').value === initialValue).toBeFalsy();
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').focused).toEqual(true);
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').selected).toEqual(true);
-        expect(grid.getCellByColumn(newLastRowIndex, 'Column1').nativeElement.classList).toContain('igx-grid__td--selected');
-        expect(grid.getCellByColumn(lastRowIndex, 'Column1').focused).toEqual(false);
-        expect(grid.selectedCells.length).toEqual(1);
-    }));
 
     it('Should persist through paging', (async () => {
         const fix = TestBed.createComponent(GridWithPagingAndSelectionComponent);
@@ -287,9 +209,9 @@ describe('IgxGrid - Row Selection', () => {
 
     it('Should persist through scrolling', (async () => {
         let selectedCell;
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection3;
+        const grid = fix.componentInstance.grid;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         const selectedRow = grid.getRowByIndex(0);
         expect(selectedRow).toBeDefined();
@@ -359,10 +281,10 @@ describe('IgxGrid - Row Selection', () => {
     }));
 
     it('Should handle the deleteion on a selected row propertly', (async () => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.gridSelection3;
+        const grid = fix.componentInstance.grid;
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
         const firstRow = grid.getRowByKey('0_0');
         const firstRowCheckbox: HTMLInputElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -468,9 +390,9 @@ describe('IgxGrid - Row Selection', () => {
     }));
 
     it('Should have checkbox on each row if rowSelectable is true', (async () => {
-        const fix = TestBed.createComponent(GridWithScrollsComponent);
+        const fix = TestBed.createComponent(ScrollsComponent);
         fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection5;
+        const grid = fix.componentInstance.grid;
 
         grid.rowSelectable = false;
 
@@ -533,10 +455,10 @@ describe('IgxGrid - Row Selection', () => {
     });
 
     it('Should be able to select/deselect rows programatically', fakeAsync(() => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.gridSelection3;
+        const grid = fix.componentInstance.grid;
         let rowsCollection = [];
         const firstRow = grid.getRowByKey('0_0');
         const secondRow = grid.getRowByKey('0_1');
@@ -585,10 +507,10 @@ describe('IgxGrid - Row Selection', () => {
     }));
 
     it('Should be able to select/deselect ALL rows programatically', fakeAsync(() => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.gridSelection3;
+        const grid = fix.componentInstance.grid;
         let rowsCollection = [];
         const firstRow = grid.getRowByKey('0_0');
 
@@ -749,10 +671,10 @@ describe('IgxGrid - Row Selection', () => {
     });
 
     it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
-        const fix = TestBed.createComponent(GridWithSelectionComponent);
+        const fix = TestBed.createComponent(SelectionComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.gridSelection3;
+        const grid = fix.componentInstance.grid;
         const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
@@ -920,10 +842,10 @@ describe('IgxGrid - Row Selection', () => {
     });
 
     it('Should be able to correctly select all rows programatically', fakeAsync(() => {
-        const fixture = TestBed.createComponent(GridWithSelectionComponent);
+        const fixture = TestBed.createComponent(SelectionComponent);
         fixture.detectChanges();
 
-        const grid = fixture.componentInstance.gridSelection3;
+        const grid = fixture.componentInstance.grid;
         const firstRow = grid.getRowByIndex(0);
         const secondRow = grid.getRowByIndex(1);
         const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -946,7 +868,7 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
 
-        const grid = fix.componentInstance.gridSelection1;
+        const grid = fix.componentInstance.grid;
         grid.selectAllRows();
         fix.detectChanges();
 
@@ -1031,151 +953,6 @@ describe('IgxGrid - Row Selection', () => {
         expect(headerCheckbox.parentElement.classList).toContain('igx-checkbox--checked');
     }));
 
-    it('Should properly handle TAB / SHIFT + TAB on edge cell, triggering virt scroll', (async () => {
-        const fix = TestBed.createComponent(GridWithScrollsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection5;
-        const virtualizationSpy = spyOn<any>(grid.parentVirtDir.onChunkLoad, 'emit').and.callThrough();
-        // Focus left right cell
-        const gridFirstRow = grid.rowList.first;
-        const cellsLength = grid.rowList.first.cells.length;
-        const mockEvent = jasmine.createSpyObj('mockEvt', ['preventDefault', 'stopPropagation']);
-
-        // Focus last right cell
-        const lastVisibleCell = gridFirstRow.cells.toArray()[cellsLength - 3];
-
-        lastVisibleCell.onFocus(mockEvent);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(lastVisibleCell.isSelected).toBeTruthy();
-        UIInteractions.triggerKeyDownEvtUponElem('tab', lastVisibleCell, true);
-        await wait(30);
-        fix.detectChanges();
-        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-
-        const targetCell = gridFirstRow.cells.toArray()[cellsLength - 3];
-        targetCell.onFocus(mockEvent);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(targetCell.isSelected).toBeTruthy();
-
-        // Focus second last right cell, TAB will NOT trigger virtualization;
-        UIInteractions.triggerKeyDownEvtUponElem('tab', targetCell, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-        expect(lastVisibleCell.isSelected).toBeTruthy();
-
-        // Focus leftmost cell, SHIFT + TAB will NOT trigger virtualization
-        gridFirstRow.cells.first.onFocus(mockEvent);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(gridFirstRow.cells.first.isSelected).toBeTruthy();
-        gridFirstRow.cells.first.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'tab', shiftKey: true}));
-        await wait(30);
-        fix.detectChanges();
-
-        // There are not cells prior to the first cell - no scrolling will be done, spy will not be called;
-        expect(virtualizationSpy).toHaveBeenCalledTimes(1);
-    }));
-
-    it('keyboard navigation - Should properly handle TAB / SHIFT + TAB on row selectors', (async () => {
-        const fix = TestBed.createComponent(GridWithScrollsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection5;
-
-        const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox');
-        const secondRow = grid.getRowByIndex(1);
-        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox');
-        let cell = grid.getCellByColumn(1, 'ID');
-
-        cell.onFocus(new Event('focus'));
-        await wait(30);
-        fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(secondRow.isSelected).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(secondRow.isSelected).toBeFalsy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
-
-        cell = grid.getCellByColumn(1, 'ID');
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', {key: 'tab', shiftKey: true}));
-        await wait(100);
-        fix.detectChanges();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-
-        cell = grid.getCellByColumn(0, 'Column 15');
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(firstRow.isSelected).toBeTruthy();
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
-        await wait(30);
-        fix.detectChanges();
-
-        expect(cell.selected).toBeTruthy();
-        expect(firstRow.isSelected).toBeFalsy();
-        expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
-
-        UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
-        await wait(100);
-        fix.detectChanges();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-
-        cell = grid.getCellByColumn(1, 'ID');
-        expect(cell.selected).toBeTruthy();
-        expect(cell.focused).toBeTruthy();
-        expect(secondRowCheckbox.classList.contains('igx-checkbox--focused')).toBeFalsy();
-    }));
-
-    it('keyboard navigation - Should properly blur the focused cell when scroll with mouse wheeel', (async () => {
-        pending('This scenario need to be tested manually');
-        const fix = TestBed.createComponent(GridWithScrollsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.gridSelection5;
-        const firstCell = grid.rowList.first.cells.toArray()[0];
-
-        firstCell.onFocus(new Event('focus'));
-        await wait(30);
-        fix.detectChanges();
-
-        expect(firstCell.selected).toBeTruthy();
-        expect(firstCell.focused).toBeTruthy();
-
-        const displayContainer = grid.nativeElement.querySelector('.igx-grid__tbody >.igx-display-container');
-        const event = new WheelEvent('wheel', {deltaX: 0, deltaY: 500});
-        displayContainer.dispatchEvent(event);
-        await wait(300);
-
-        expect(firstCell.isSelected).toBeFalsy();
-        expect(firstCell.selected).toBeFalsy();
-        expect(firstCell.focused).toBeFalsy();
-    }));
-
     it('Hide row checkboxes, when all columns are hidden', (async () => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
         fix.detectChanges();
@@ -1201,23 +978,6 @@ describe('IgxGrid - Row Selection', () => {
     }));
 
 });
-
-@Component({
-    template: `
-        <igx-grid #gridSelection1 [data]="data" [primaryKey]="'ID'">
-            <igx-column field="ID"></igx-column>
-            <igx-column field="Name"></igx-column>
-            <igx-column field="JobTitle"></igx-column>
-            <igx-column field="HireDate"></igx-column>
-        </igx-grid>
-    `
-})
-export class GridWithPrimaryKeyComponent {
-    public data = data;
-
-    @ViewChild('gridSelection1', {read: IgxGridComponent})
-    public gridSelection1: IgxGridComponent;
-}
 
 @Component({
     template: `
@@ -1266,35 +1026,6 @@ export class GridWithPagingAndSelectionComponent implements OnInit {
 
 @Component({
     template: `
-        <igx-grid #gridSelection3 [data]="data" [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'"
-                  [autoGenerate]="true" [rowSelectable]="true">
-        </igx-grid>
-    `
-})
-export class GridWithSelectionComponent implements OnInit {
-    public data = [];
-
-    @ViewChild('gridSelection3', {read: IgxGridComponent})
-    public gridSelection3: IgxGridComponent;
-
-    ngOnInit() {
-        const bigData = [];
-        for (let i = 0; i < 100; i++) {
-            for (let j = 0; j < 5; j++) {
-                bigData.push({
-                    ID: i.toString() + '_' + j.toString(),
-                    Column1: i * j,
-                    Column2: i * j * Math.pow(10, i),
-                    Column3: i * j * Math.pow(100, i)
-                });
-            }
-        }
-        this.data = bigData;
-    }
-}
-
-@Component({
-    template: `
         <igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
             <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
             <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
@@ -1313,105 +1044,12 @@ export class GridWithSelectionFilteringComponent {
     @ViewChild('gridSelection4', {read: IgxGridComponent})
     public gridSelection4: IgxGridComponent;
 
-    public data = [
-        {
-            Downloads: 254,
-            ID: 1,
-            ProductName: 'Ignite UI for JavaScript',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 15),
-            Released: false
-        },
-        {
-            Downloads: 127,
-            ID: 2,
-            ProductName: 'NetAdvantage',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', -1),
-            Released: true
-        },
-        {
-            Downloads: 20,
-            ID: 3,
-            ProductName: 'Ignite UI for Angular',
-            ReleaseDate: null,
-            Released: null
-        },
-        {
-            Downloads: null,
-            ID: 4,
-            ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', -1),
-            Released: true
-        },
-        {
-            Downloads: 100,
-            ID: 5,
-            ProductName: '',
-            ReleaseDate: undefined,
-            Released: ''
-        },
-        {
-            Downloads: 702,
-            ID: 6,
-            ProductName: 'Some other item with Script',
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'day', 1),
-            Released: null
-        },
-        {
-            Downloads: 0,
-            ID: 7,
-            ProductName: null,
-            ReleaseDate: this.timeGenerator.timedelta(this.today, 'month', 1),
-            Released: true
-        },
-        {
-            Downloads: 1000,
-            ID: 8,
-            ProductName: null,
-            ReleaseDate: this.today,
-            Released: false
-        }
-    ];
+    public data = SampleTestData.productInfoData();
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
 }
 
-@Component({
-    template: `
-            <igx-grid #gridSelection3
-            [data]="data"
-            [primaryKey]="'ID'"
-            [width]="'800px'"
-            [height]="'600px'"
-            [autoGenerate]="true"
-            [rowSelectable]="true"
-        >
-        </igx-grid>
-    `
-})
-export class GridWithScrollsComponent implements OnInit {
-    public data = [];
 
-    @ViewChild(IgxGridComponent, {read: IgxGridComponent})
-    public gridSelection5: IgxGridComponent;
-
-    ngOnInit() {
-        this.data = this.getData();
-    }
-
-    public getData(rows: number = 16, cols: number = 16): any[] {
-        const bigData = [];
-        for (let i = 0; i < rows; i++) {
-            const row = {};
-            row['ID'] = i.toString();
-            for (let j = 1; j < cols; j++) {
-                row['Column ' + j] = i * j;
-            }
-
-            bigData.push(row);
-        }
-        return bigData;
-    }
-}
 
 @Component({
     template: `
@@ -1430,22 +1068,9 @@ export class GridWithScrollsComponent implements OnInit {
     `
 })
 export class GridSummaryComponent {
-
-    public data = [
-        {ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21')},
-        {ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15')},
-        {ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20')},
-        {ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11')},
-        {ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27')},
-        {ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17')},
-        {ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03')},
-        {ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09')},
-        {ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25')},
-        {ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01')}
-    ];
+    public data = SampleTestData.foodProductData();
     @ViewChild('grid1', {read: IgxGridComponent})
     public gridSummaries: IgxGridComponent;
-
 }
 
 @Component({
@@ -1465,19 +1090,7 @@ export class GridSummaryComponent {
     `
 })
 export class GridCancelableComponent {
-
-    public data = [
-        {ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21')},
-        {ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15')},
-        {ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date('2010-11-20')},
-        {ProductID: 4, ProductName: 'Grandmas Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date('2007-10-11')},
-        {ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date('2001-07-27')},
-        {ProductID: 6, ProductName: 'Northwoods Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date('1990-05-17')},
-        {ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date('2005-03-03')},
-        {ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date('2017-09-09')},
-        {ProductID: 9, ProductName: 'Teatime Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date('2025-12-25')},
-        {ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01')}
-    ];
+    public data = SampleTestData.foodProductData();
     @ViewChild('gridCancelable', {read: IgxGridComponent})
     public gridCancelable: IgxGridComponent;
 
@@ -1493,11 +1106,9 @@ export class GridCancelableComponent {
     <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="600px" (onColumnInit)="initColumns($event)"
         [showToolbar]="true"
         toolbarTitle="Grid Toolbar"
-
         [columnHiding] = "true"
         hiddenColumnsText = "Hidden"
         columnHidingTitle = "Column Hiding"
-
         [exportExcel]="true"
         [exportCsv]="true"
         exportText="Export"
