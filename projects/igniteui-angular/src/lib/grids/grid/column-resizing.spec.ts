@@ -19,7 +19,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
-    const COLUMN_FILTER_CELL_CLASS = 'igx-grid-filtering-cell';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -29,8 +28,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
                 GridFeaturesComponent,
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
-                MultiColumnHeadersComponent,
-                ColGridComponent
+                MultiColumnHeadersComponent
             ],
             imports: [
                 FormsModule,
@@ -721,27 +719,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         fixture.detectChanges();
         expect(column.width).toEqual('111px');
     }));
-
-    it('should size headers correctly when column width is below the allowed minimum.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(ColGridComponent);
-        fixture.detectChanges();
-
-        const headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-        const headerGroups = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
-        const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_CLASS ));
-
-        expect(headers[0].nativeElement.getBoundingClientRect().width).toBe(49);
-        expect(headers[1].nativeElement.getBoundingClientRect().width).toBe(50);
-        expect(headers[2].nativeElement.getBoundingClientRect().width).toBe(49);
-
-        expect(filteringCells[0].nativeElement.getBoundingClientRect().width).toBe(49);
-        expect(filteringCells[1].nativeElement.getBoundingClientRect().width).toBe(50);
-        expect(filteringCells[2].nativeElement.getBoundingClientRect().width).toBe(49);
-
-        expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
-        expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
-        expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
-    }));
 });
 
 @Component({
@@ -848,25 +825,5 @@ export class NullColumnsComponent implements OnInit {
         ];
 
         this.data = SampleTestData.contactInfoData();
-    }
-}
-
-@Component({
-    template: GridTemplateStrings.declareGrid(`width="400px" height="600px" [allowFiltering]="true"`, ``,
-        `<igx-column [field]="'Items'" [width]="'40px'" dataType="string" [filterable]="true"></igx-column>
-         <igx-column [field]="'ID'" [width]="'50px'" [header]="'ID'" [filterable]="true"></igx-column>
-         <igx-column [field]="'ProductName'" [width]="'30px'" dataType="string" [filterable]="true"></igx-column>
-         <igx-column [field]="'Test'" width="300px" dataType="string" [resizable]="true"></igx-column>
-         <igx-column [field]="'Downloads'" width="300px" dataType="number" [resizable]="true"></igx-column>
-         <igx-column [field]="'Category'" width="300px" dataType="string" [resizable]="true"></igx-column>`
-    )
-})
-export class ColGridComponent implements OnInit {
-    data = [];
-
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-
-    ngOnInit() {
-        this.data = SampleTestData.generateProductData(10);
     }
 }

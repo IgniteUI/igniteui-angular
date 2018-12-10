@@ -2208,7 +2208,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             .subscribe((change: QueryList<IgxColumnComponent>) => {
                 const diff = this.columnListDiffer.diff(change);
                 if (diff) {
-
                     this.initColumns(this.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
@@ -2217,16 +2216,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                         this.onColumnInit.emit(record.item);
                     });
 
-                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        // Recalculate Summaries
-                        this.clearSummaryCache();
-                        this.calculateGridSizes();
+                    requestAnimationFrame(() => {
+                        diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                            // Recalculate Summaries
+                            this.clearSummaryCache();
+                            this.calculateGridSizes();
 
-                        // Clear Filtering
-                        this.gridAPI.clear_filter(this.id, record.item.field);
+                            // Clear Filtering
+                            this.gridAPI.clear_filter(this.id, record.item.field);
 
-                        // Clear Sorting
-                        this.gridAPI.clear_sort(this.id, record.item.field);
+                            // Clear Sorting
+                            this.gridAPI.clear_sort(this.id, record.item.field);
+                        });
                     });
                 }
                 this.markForCheck();
@@ -2392,22 +2393,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxGridHeaderGroupComponent`'s minimum allowed width.
-     * Used internally for restricting header group component width.
-     * The values below depend on the header cell default right/left padding values.
-	 * @memberof IgxGridBaseComponent
-     */
-    get defaultHeaderGroupMinWidth(): number {
-        if (this.isCosy()) {
-            return 32;
-        } else if (this.isCompact()) {
-            return 24;
-        } else {
-            return 48;
-        }
-    }
-
-    /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
@@ -2489,20 +2474,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get unpinnedColumns(): IgxColumnComponent[] {
         return this._unpinnedColumns.filter((col) => !col.hidden); // .sort((col1, col2) => col1.index - col2.index);
-    }
-
-    /**
-     * Returns the `width` to be set on `IgxGridHeaderGroupComponent`.
-	 * @memberof IgxGridBaseComponent
-     */
-    public getHeaderGroupWidth(column: IgxColumnComponent): string {
-
-        const minWidth = this.defaultHeaderGroupMinWidth;
-        if (parseInt(column.width, 10) < minWidth) {
-            return minWidth.toString();
-        }
-
-        return column.width;
     }
 
     /**
