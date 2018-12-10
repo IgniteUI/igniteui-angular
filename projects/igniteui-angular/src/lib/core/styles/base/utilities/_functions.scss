@@ -472,7 +472,7 @@
 
 /// Returns a random color.
 /// @access private
-@function random-color {
+@function random-color() {
     @return hsl(random(360), 100%, 50%);
 }
 
@@ -550,7 +550,7 @@
 ///     }
 ///   }
 ///
-@function is-root {
+@function is-root() {
     @each $selector in & {
         @return if($selector == null, true, false);
     }
