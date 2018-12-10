@@ -1,0 +1,18 @@
+<ng-container *ngIf="summaries.size">
+    <ng-container *ngIf="indentation">
+        <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{indentation}}"></div>
+    </ng-container>
+    <ng-container *ngIf="grid.summariesMargin">
+        <div
+        class="igx-grid__summaries-patch"
+        [style.min-width.px]="grid.summariesMargin"
+        [style.flex-basis.px]="grid.summariesMargin"
+        ></div>
+    </ng-container>
+    <ng-container *ngIf="pinnedColumns.length > 0">
+        <igx-grid-summary-cell *ngFor="let col of notGroups(pinnedColumns)" [column]="col" [firstCellIndentation]="firstCellIndentation" [rowIndex]="index" [summaryResults]="getColumnSummaries(col.field)" [hasSummary]="col.hasSummary" [density]="gridDensity" [style.min-height.px]="minHeight"></igx-grid-summary-cell>
+    </ng-container>
+    <ng-template igxGridFor let-col [igxGridForOf]="notGroups(unpinnedColumns)" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" #igxDirRef>
+        <igx-grid-summary-cell [column]="col" [rowIndex]="index" [firstCellIndentation]="firstCellIndentation" [summaryResults]="getColumnSummaries(col.field)" [hasSummary]="col.hasSummary" [density]="gridDensity" [style.min-height.px]="minHeight"></igx-grid-summary-cell>
+    </ng-template>
+</ng-container>

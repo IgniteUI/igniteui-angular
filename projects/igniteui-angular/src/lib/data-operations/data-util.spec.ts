@@ -14,11 +14,15 @@ import { FilteringStrategy } from './filtering-strategy';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from './filtering-expressions-tree';
 import { IFilteringState } from './filtering-state.interface';
 import { FilteringLogic } from './filtering-expression.interface';
-import { IgxNumberFilteringOperand,
+import {
+    IgxNumberFilteringOperand,
     IgxStringFilteringOperand,
     IgxDateFilteringOperand,
-    IgxBooleanFilteringOperand } from './filtering-condition';
+    IgxBooleanFilteringOperand
+} from './filtering-condition';
 import { IPagingState, PagingError } from './paging-state.interface';
+import { SampleTestData } from '../test-utils/sample-test-data.spec';
+import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
 
 /* Test sorting */
 function testSort() {
@@ -266,6 +270,7 @@ function testGroupBy() {
     });
 }
 /* //Test sorting */
+
 /* Test filtering */
 class CustomFilteringStrategy extends FilteringStrategy {
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
@@ -387,6 +392,7 @@ function testFilter() {
     });
 }
 /* //Test filtering */
+
 /* Test paging */
 function testPage() {
     const dataGenerator: DataGenerator = new DataGenerator();
@@ -426,9 +432,144 @@ function testPage() {
     });
 }
 /* //Test paging */
+
+/* Test merging */
+function testMerging() {
+    describe('Test merging', () => {
+        it('Should merge add transactions correctly', () => {
+            const data = SampleTestData.personIDNameData();
+            const addRow4 = { ID: 4, Name: 'Peter' };
+            const addRow5 = { ID: 5, Name: 'Mimi' };
+            const addRow6 = { ID: 6, Name: 'Pedro' };
+            const transactions: Transaction[] = [
+                { id: addRow4.ID, newValue: addRow4, type: TransactionType.ADD },
+                { id: addRow5.ID, newValue: addRow5, type: TransactionType.ADD },
+                { id: addRow6.ID, newValue: addRow6, type: TransactionType.ADD },
+            ];
+
+            DataUtil.mergeTransactions(data, transactions, 'ID');
+            expect(data.length).toBe(6);
+            expect(data[3]).toBe(addRow4);
+            expect(data[4]).toBe(addRow5);
+            expect(data[5]).toBe(addRow6);
+        });
+
+        it('Should merge update transactions correctly', () => {
+            const data = SampleTestData.personIDNameData();
+            const transactions: Transaction[] = [
+                { id: 1, newValue: { Name: 'Peter' }, type: TransactionType.UPDATE },
+                { id: 3, newValue: { Name: 'Mimi' }, type: TransactionType.UPDATE },
+            ];
+
+            DataUtil.mergeTransactions(data, transactions, 'ID');
+            expect(data.length).toBe(3);
+            expect(data[0].Name).toBe('Peter');
+            expect(data[2].Name).toBe('Mimi');
+        });
+
+        it('Should merge delete transactions correctly', () => {
+            const data = SampleTestData.personIDNameData();
+            const secondRow = data[1];
+            const transactions: Transaction[] = [
+                { id: 1, newValue: null, type: TransactionType.DELETE },
+                { id: 3, newValue: null, type: TransactionType.DELETE },
+            ];
+
+            DataUtil.mergeTransactions(data, transactions, 'ID', true);
+            expect(data.length).toBe(1);
+            expect(data[0]).toEqual(secondRow);
+        });
+
+        it('Should merge add hierarchical transactions correctly', () => {
+            const data = SampleTestData.employeeSmallTreeData();
+            const addRootRow = { ID: 1000, Name: 'Pit Peter', HireDate: new Date(2008, 3, 20), Age: 55 };
+            const addChildRow1 = { ID: 1001, Name: 'Marry May', HireDate: new Date(2018, 4, 1), Age: 102 };
+            const addChildRow2 = { ID: 1002, Name: 'April Alison', HireDate: new Date(2021, 5, 10), Age: 4 };
+            const transactions: HierarchicalTransaction[] = [
+                { id: addRootRow.ID, newValue: addRootRow, type: TransactionType.ADD, path: [] },
+                { id: addChildRow1.ID, newValue: addChildRow1, type: TransactionType.ADD, path: [data[0].ID, data[0].Employees[1].ID] },
+                { id: addChildRow2.ID, newValue: addChildRow2, type: TransactionType.ADD, path: [addRootRow.ID] },
+            ];
+
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', false);
+            expect(data.length).toBe(4);
+
+            expect(data[3].Age).toBe(addRootRow.Age);
+            expect(data[3].Employees.length).toBe(1);
+            expect(data[3].HireDate).toBe(addRootRow.HireDate);
+            expect(data[3].ID).toBe(addRootRow.ID);
+            expect(data[3].Name).toBe(addRootRow.Name);
+
+            expect((data[0].Employees[1] as any).Employees.length).toBe(1);
+            expect((data[0].Employees[1] as any).Employees[0]).toBe(addChildRow1);
+
+            expect(data[3].Employees[0]).toBe(addChildRow2);
+        });
+
+        it('Should merge update hierarchical transactions correctly', () => {
+            const data = SampleTestData.employeeSmallTreeData();
+            const updateRootRow = { Name: 'May Peter', Age: 13 };
+            const updateChildRow1 = { HireDate: new Date(2100, 1, 12), Age: 1300 };
+            const updateChildRow2 = { HireDate: new Date(2100, 1, 12), Name: 'Santa Claus' };
+
+            const transactions: HierarchicalTransaction[] = [
+                {
+                    id: data[1].ID,
+                    newValue: updateRootRow,
+                    type: TransactionType.UPDATE,
+                    path: []
+                },
+                {
+                    id: data[2].Employees[0].ID,
+                    newValue: updateChildRow1,
+                    type: TransactionType.UPDATE,
+                    path: [data[2].ID]
+                },
+                {
+                    id: (data[0].Employees[2] as any).Employees[0].ID,
+                    newValue: updateChildRow2,
+                    type: TransactionType.UPDATE,
+                    path: [data[0].ID, data[0].Employees[2].ID]
+                },
+            ];
+
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', false);
+            expect(data[1].Name).toBe(updateRootRow.Name);
+            expect(data[1].Age).toBe(updateRootRow.Age);
+
+            expect(data[2].Employees[0].HireDate.getTime()).toBe(updateChildRow1.HireDate.getTime());
+            expect(data[2].Employees[0].Age).toBe(updateChildRow1.Age);
+
+            expect((data[0].Employees[2] as any).Employees[0].Name).toBe(updateChildRow2.Name);
+            expect((data[0].Employees[2] as any).Employees[0].HireDate.getTime()).toBe(updateChildRow2.HireDate.getTime());
+        });
+
+        it('Should merge delete hierarchical transactions correctly', () => {
+            const data = SampleTestData.employeeSmallTreeData();
+            const transactions: HierarchicalTransaction[] = [
+                //  root row with no children
+                { id: data[1].ID, newValue: null, type: TransactionType.DELETE, path: [] },
+                //  root row with children
+                { id: data[2].ID, newValue: null, type: TransactionType.DELETE, path: [] },
+                //  child row with no children
+                { id: data[0].Employees[0].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] },
+                //  child row with children
+                { id: data[0].Employees[2].ID, newValue: null, type: TransactionType.DELETE, path: [data[0].ID] }
+            ];
+
+            DataUtil.mergeHierarchicalTransactions(data, transactions, 'Employees', 'ID', true);
+
+            expect(data.length).toBe(1);
+            expect(data[0].Employees.length).toBe(1);
+        });
+    });
+}
+/* //Test merging */
+
 describe('DataUtil', () => {
     testSort();
     testGroupBy();
     testFilter();
     testPage();
+    testMerging();
 });
