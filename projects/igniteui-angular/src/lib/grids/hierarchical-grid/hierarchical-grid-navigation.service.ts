@@ -36,6 +36,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     console.log('diff:' + diff);
                     console.log('topIsVisible:' + topIsVisible);
                     if (!topIsVisible) {
+                        this.grid.nativeElement.focus({preventScroll: true});
                         requestAnimationFrame(() => {
                             this.grid.parent.verticalScrollContainer.addScrollTop(-prevElem.offsetHeight);
                             this.grid.parent.verticalScrollContainer.onChunkLoad
@@ -95,6 +96,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
                     const endIsVisible = diff < 0;
                     if (!endIsVisible) {
+                        this.grid.nativeElement.focus({preventScroll: true});
                         requestAnimationFrame(() => {
                             this.grid.parent.verticalScrollContainer.addScrollTop(nextElem.offsetHeight);
                             this.grid.parent.verticalScrollContainer.onChunkLoad
@@ -135,6 +137,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
         const inView =  diff <= 0;
         if (!inView) {
+            this.grid.nativeElement.focus({preventScroll: true});
             requestAnimationFrame(() => {
                 grid.verticalScrollContainer.addScrollTop(diff);
                 grid.verticalScrollContainer.onChunkLoad
@@ -155,6 +158,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const diff = cell.getBoundingClientRect().top - cell.offsetHeight;
         const inView =  diff >= 0;
          if (!inView) {
+            this.grid.nativeElement.focus({preventScroll: true});
             requestAnimationFrame(() => {
                 grid.verticalScrollContainer.addScrollTop(diff);
                 grid.verticalScrollContainer.onChunkLoad
@@ -164,7 +168,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 });
             });
         } else {
-            cell.focus({ preventScroll: true });
+             cell.focus({ preventScroll: true });
         }
     }
 }
