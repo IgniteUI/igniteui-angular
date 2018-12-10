@@ -753,55 +753,6 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - keyboard navigation tests', () => {
-        configureTestSuite();
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxGridDefaultRenderingComponent
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
-            }).compileComponents();
-        }));
-
-        it('should allow pageup/pagedown navigation when the grid is focused', async () => {
-            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-            fix.detectChanges();
-            const grid = fix.componentInstance.grid;
-            const pageDownKeyEvent = new KeyboardEvent('keydown', {
-                code: 'PageDown',
-                key: 'PageDown'
-            });
-            const pageUpKeyEvent = new KeyboardEvent('keydown', {
-                code: 'PageUp',
-                key: 'PageUp'
-            });
-            let currScrollTop;
-            grid.width = '800px';
-            grid.height = '500px';
-            fix.componentInstance.initColumnsRows(25, 25);
-            await wait();
-            fix.detectChanges();
-            grid.nativeElement.dispatchEvent(new Event('focus'));
-
-            // testing the pagedown key
-            grid.nativeElement.dispatchEvent(pageDownKeyEvent);
-            grid.cdr.detectChanges();
-
-            await wait();
-            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
-            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
-
-            // testing the pageup key
-            grid.nativeElement.dispatchEvent(pageUpKeyEvent);
-            grid.cdr.detectChanges();
-            await wait();
-            currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
-            expect(currScrollTop).toEqual(0);
-        });
-    });
-
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
         beforeEach(async(() => {
@@ -1148,7 +1099,6 @@ describe('IgxGrid Component Tests', () => {
             it(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 const firstCellElement = targetCell.nativeElement;
                 fixture.detectChanges();
@@ -1667,7 +1617,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 fix.detectChanges();
 
                 // expect(gridAPI.submit_value).toHaveBeenCalled();
@@ -2131,7 +2081,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
                 tick();
 
-                grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true,
+                 grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true,
                     strategy: DefaultSortingStrategy.instance() });
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -2183,7 +2133,7 @@ describe('IgxGrid Component Tests', () => {
                 cell.update(newValue);
 
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
 
@@ -2557,7 +2507,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // On sort
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 fixture.detectChanges();
                 expect(grid.onRowEdit.emit).toHaveBeenCalled();
                 expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
@@ -2954,7 +2904,7 @@ describe('IgxGrid Component Tests', () => {
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
                     grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
-                        strategy: DefaultSortingStrategy.instance() });
+                    strategy: DefaultSortingStrategy.instance() });
                     tick();
                     fix.detectChanges();
                     let row: HTMLElement;
