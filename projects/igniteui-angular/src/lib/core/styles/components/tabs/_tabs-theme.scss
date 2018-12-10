@@ -27,11 +27,13 @@
 ///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
+/// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires igx-elevation
 /// @requires text-contrast
 ///
 /// @example scss Set a custom background color
