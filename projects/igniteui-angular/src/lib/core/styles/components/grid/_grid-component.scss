@@ -86,6 +86,15 @@
         }
     }
 
+    @include e(summaries, $m: 'body') {
+        @extend %grid-summaries !optional;
+        @extend %grid-summaries--body !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
+    }
+
     @include e(summaries-patch) {
         @extend %grid-summaries-patch !optional;
     }
@@ -210,6 +219,10 @@
 
     @include e(td, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(td, $mods: (pinned, selected)) {
+        @extend %grid-cell--pinned-selected !optional;
     }
 
     @include e(td-text) {

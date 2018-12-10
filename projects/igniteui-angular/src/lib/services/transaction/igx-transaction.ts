@@ -6,8 +6,8 @@ import { isObject, mergeObjects, cloneValue } from '../../core/utils';
 @Injectable()
 export class IgxTransactionService<T extends Transaction, S extends State> extends IgxBaseTransactionService<T, S> {
     protected _transactions: T[] = [];
-    protected _redoStack: { transaction: T, recordRef: any, useInUndo?: boolean }[] = [];
-    protected _undoStack: { transaction: T, recordRef: any, useInUndo?: boolean }[] = [];
+    protected _redoStack: { transaction: T, recordRef: any }[][] = [];
+    protected _undoStack: { transaction: T, recordRef: any }[][] = [];
     protected _states: Map<any, S> = new Map();
 
     /**
@@ -38,14 +38,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this.addTransaction(transaction, states, recordRef);
     }
 
-    private addTransaction(transaction: T, states: Map<any, S>, recordRef?: any, useInUndo: boolean = true) {
+    protected addTransaction(transaction: T, states: Map<any, S>, recordRef?: any) {
         this.updateState(states, transaction, recordRef);
 
         const transactions = this._isPending ? this._pendingTransactions : this._transactions;
         transactions.push(transaction);
 
         if (!this._isPending) {
-            this._undoStack.push({ transaction, recordRef, useInUndo });
+            this._undoStack.push([{ transaction, recordRef }]);
             this._redoStack = [];
             this.onStateUpdate.emit();
         }
@@ -115,11 +115,16 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
-            let i = 0;
-            this._pendingStates.forEach((s: S, k: any) => {
-                this.addTransaction({ id: k, newValue: s.value, type: s.type } as T, this._states, s.recordRef, i === 0);
-                i++;
-            });
+            const actions: { transaction: T, recordRef: any }[] = [];
+            for (const transaction of this._pendingTransactions) {
+                const pendingState = this._pendingStates.get(transaction.id);
+                this._transactions.push(transaction);
+                this.updateState(this._states, transaction, pendingState.recordRef);
+                actions.push({ transaction, recordRef: pendingState.recordRef });
+            }
+
+            this._undoStack.push(actions);
+            this._redoStack = [];
         }
         super.endPending(commit);
     }
@@ -168,15 +173,17 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             return;
         }
 
-        let action: { transaction: T, recordRef: any, useInUndo?: boolean };
-        do {
-            action = this._undoStack.pop();
-            this._transactions.pop();
-            this._redoStack.push(action);
-        } while (!action.useInUndo);
+        const lastActions: { transaction: T, recordRef: any }[] = this._undoStack.pop();
+        this._transactions.splice(this._transactions.length - lastActions.length);
+        this._redoStack.push(lastActions);
 
         this._states.clear();
-        this._undoStack.map(a => this.updateState(this._states, a.transaction, a.recordRef));
+        for (const currentActions of this._undoStack) {
+            for (const transaction of currentActions) {
+                this.updateState(this._states, transaction.transaction, transaction.recordRef);
+            }
+        }
+
         this.onStateUpdate.emit();
     }
 
@@ -185,21 +192,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      */
     public redo(): void {
         if (this._redoStack.length > 0) {
-            //  remove first item from redo stack (it should always has useInUndo === true)
-            //  and then all next items until there are items and useInUndo === false.
-            //  If there are no more items, or next item's useInUndo === true leave.
-            let undoItem: { transaction: T, recordRef: any, useInUndo?: boolean };
-            undoItem = this._redoStack.pop();
-            this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
-            this._transactions.push(undoItem.transaction);
-            this._undoStack.push(undoItem);
-
-            while (this._redoStack[this._redoStack.length - 1] && !this._redoStack[this._redoStack.length - 1].useInUndo) {
-                undoItem = this._redoStack.pop();
-                this.updateState(this._states, undoItem.transaction, undoItem.recordRef);
-                this._transactions.push(undoItem.transaction);
-                this._undoStack.push(undoItem);
+            let actions: { transaction: T, recordRef: any, useInUndo?: boolean }[];
+            actions = this._redoStack.pop();
+            for (const action of actions) {
+                this.updateState(this._states, action.transaction, action.recordRef);
+                this._transactions.push(action.transaction);
             }
+
+            this._undoStack.push(actions);
             this.onStateUpdate.emit();
         }
     }

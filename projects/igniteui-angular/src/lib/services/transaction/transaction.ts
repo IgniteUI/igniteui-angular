@@ -14,7 +14,7 @@ export interface Transaction {
 
 /** @experimental @hidden */
 export interface HierarchicalTransaction extends Transaction {
-    parentId: any;
+    path: any[];
 }
 
 export interface State {
@@ -25,14 +25,7 @@ export interface State {
 
 /** @experimental @hidden */
 export interface HierarchicalState extends State {
-    parentId: any;
-}
-
-/** @experimental @hidden */
-export interface HierarchicalTransactionNode {
-    id: any;
-    parentId?: any;
-    childNodes: HierarchicalTransactionNode[];
+    path: any[];
 }
 
 export interface TransactionService<T extends Transaction, S extends State> {
