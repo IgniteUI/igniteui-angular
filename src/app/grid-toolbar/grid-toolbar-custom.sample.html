@@ -1,0 +1,41 @@
+<div class="sample-wrapper">
+    <app-page-header title="Grid Toolbar">
+        The grid toolbar's custom content area provides a place for custom UI.
+        To create such an area, define an ng-template in the IgxGrid and mark it with the 'igxToolbarCustomContent' directive.
+    </app-page-header>
+    <section class="sample-content">
+        <article class="grid-sample">
+            <h4 class="sample-title">Toolbar</h4>
+
+            <igx-grid [data]="data" [autoGenerate]="true" height="400px" width="900px" [allowFiltering]="true" (onColumnInit)="initColumns($event)"
+
+                    [showToolbar]="true"
+                    toolbarTitle="Grid Toolbar"
+
+                    [columnHiding]="true"
+                    hiddenColumnsText="Hidden"
+                    columnHidingTitle="Column Hiding"
+
+                    [columnPinning]="true"
+
+                    [exportExcel]="true"
+                    [exportCsv]="true"
+                    exportText="Export"
+                    exportExcelText="Export to Excel"
+                    exportCsvText="Export to CSV">
+
+                <ng-template igxToolbarCustomContent let-sampleGrid="grid">
+                    <button igxButton="flat" igxRipple igxRippleCentered="true" (click)="sampleGrid.clearFilter()">
+                        <igx-icon fontSet="material" name="clear"></igx-icon>
+                        Clear Filter
+                    </button>
+                    <button igxButton="flat" igxRipple igxRippleCentered="true" (click)="sampleGrid.clearSort()">
+                        <igx-icon fontSet="material" name="clear"></igx-icon>
+                        Clear Sort
+                    </button>
+                </ng-template>
+
+            </igx-grid>
+        </article>
+    </section>
+</div>

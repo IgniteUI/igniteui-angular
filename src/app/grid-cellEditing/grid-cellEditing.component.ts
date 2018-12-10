@@ -49,6 +49,14 @@ export class GridCellEditingComponent {
         });
     }
 
+    enDisSummaries() {
+        if (this.gridWithPK.getColumnByName('ReorderLevel').hasSummary) {
+            this.gridWithPK.disableSummaries([{ fieldName: 'ReorderLevel' }]);
+        } else {
+            this.gridWithPK.enableSummaries([{ fieldName: 'ReorderLevel' }]);
+        }
+    }
+
     public deleteRow(event, rowID) {
         event.stopPropagation();
         const row = this.gridWithPK.getRowByKey(rowID);

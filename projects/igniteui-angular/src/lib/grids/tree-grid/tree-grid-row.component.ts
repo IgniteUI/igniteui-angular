@@ -89,22 +89,24 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.hasDeletedParent(this.rowID) || super.isRowDeleted();
+        return this.hasDeletedParent() || super.isRowDeleted();
     }
 
-    private hasDeletedParent(rowId: any): boolean {
-        if (this.grid.cascadeOnDelete) {
-            const node = this.grid.records.get(rowId);
-            for (const parentId of node.path) {
-                const state: State = this.grid.transactions.getState(parentId);
+    /**
+     * Checks if any of its parent rows are in deleted state
+     * @returns whether any of its parent rows are in deleted state
+     */
+    private hasDeletedParent(): boolean {
+        if ((this.grid.cascadeOnDelete && this.grid.foreignKey) || this.grid.childDataKey) {
+            let node = this.grid.records.get(this.rowID);
+            while (node) {
+                const state: State = this.grid.transactions.getState(node.rowID);
                 if (state && state.type === TransactionType.DELETE) {
-                    if (this.gridAPI.get_row_by_key(this.grid.id, parentId).deleted) {
-                        return true;
-                    }
+                    return true;
                 }
+                node = node.parent;
             }
         }
-
         return false;
     }
 }
