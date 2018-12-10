@@ -20,7 +20,8 @@ describe('IgxGrid - Column Pinning ', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const FIXED_CELL_CSS = 'igx-grid__th--pinned';
+    const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
+    const FIXED_CELL_CSS = 'igx-grid__td--pinned';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -36,7 +37,7 @@ describe('IgxGrid - Column Pinning ', () => {
         }).compileComponents();
     }));
 
-   it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
+    it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         tick();
         fix.detectChanges();
@@ -58,7 +59,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[0].context.column.field).toEqual('CompanyName');
 
         expect(headers[1].context.column.field).toEqual('ContactName');
-        expect(headers[1].parent.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+        expect(headers[1].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
@@ -387,7 +388,7 @@ describe('IgxGrid - Column Pinning ', () => {
         let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('ID');
-        expect(headers[0].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
+        expect(headers[0].nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(false);
 
         col.hidden = false;
         tick();
@@ -399,7 +400,7 @@ describe('IgxGrid - Column Pinning ', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('CompanyName');
-        expect(headers[0].parent.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+        expect(headers[0].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
     }));
 
     it('should allow pinning a hidden column.', fakeAsync(() => {
@@ -497,7 +498,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
-                    column.index === 6) {
+                column.index === 6) {
                 column.pinned = true;
             }
         });
@@ -565,32 +566,32 @@ describe('IgxGrid - Column Pinning ', () => {
     }));
 
     it('should unpin initially pinned column, child of a column group which group exceeds the minimum unpinned area width',
-    fakeAsync(() => {
-        const fix = TestBed.createComponent(InnerPinnedGroupsGridComponent);
-        fix.detectChanges();
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(InnerPinnedGroupsGridComponent);
+            fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
-        const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
-        const rowChildren = firstRow.nativeElement.children;
+            const grid = fix.componentInstance.instance;
+            const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
+            const rowChildren = firstRow.nativeElement.children;
 
-        expect(rowChildren[0].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[1].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[2].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
+            expect(rowChildren[0].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[1].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[2].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
 
-        expect(grid.columns[0].pinned).toBe(true);
-        expect(grid.columns[1].pinned).toBe(true);
-        expect(grid.columns[2].pinned).toBe(true);
-        expect(grid.columns[3].pinned).toBe(true);
-        expect(grid.columns[4].pinned).toBe(true);
-        expect(grid.columns[5].pinned).toBe(true);
-        expect(grid.columns[6].pinned).not.toBe(true);
-        expect(grid.columns[7].pinned).not.toBe(true);
-        expect(grid.columns[8].pinned).not.toBe(true);
+            expect(grid.columns[0].pinned).toBe(true);
+            expect(grid.columns[1].pinned).toBe(true);
+            expect(grid.columns[2].pinned).toBe(true);
+            expect(grid.columns[3].pinned).toBe(true);
+            expect(grid.columns[4].pinned).toBe(true);
+            expect(grid.columns[5].pinned).toBe(true);
+            expect(grid.columns[6].pinned).not.toBe(true);
+            expect(grid.columns[7].pinned).not.toBe(true);
+            expect(grid.columns[8].pinned).not.toBe(true);
 
-        expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
-    }));
+            expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
+        }));
 });
 
 /* tslint:disable */
@@ -804,7 +805,7 @@ export class OverPinnedGridComponent {
     public selectedCell;
     public data = companyData;
     public columns = [
-        { field: 'ID', width: '150px', hidden: true},
+        { field: 'ID', width: '150px', hidden: true },
         { field: 'CompanyName', width: '150px', pinned: true },
         { field: 'ContactName', width: '150px', pinned: true },
         { field: 'ContactTitle', width: '150px', pinned: true },
