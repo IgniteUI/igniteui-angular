@@ -114,8 +114,8 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
     return expectedLeft;
 }
 
-fdescribe('igxOverlay', () => {
-    beforeEach(async(() => {
+describe('igxOverlay', () => {
+        beforeEach(async(() => {
         UIInteractions.clearOverlay();
     }));
 
@@ -684,7 +684,6 @@ fdescribe('igxOverlay', () => {
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
-        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -2365,7 +2364,6 @@ fdescribe('igxOverlay', () => {
     });
 
     describe('Integration tests - Scroll Strategies: ', () => {
-        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -2557,12 +2555,12 @@ fdescribe('igxOverlay', () => {
                 expect(wrapperContent.lastElementChild.lastElementChild.getAttribute('style')).toEqual(expectedStyle);
                 const buttonLeft = buttonElement.offsetLeft;
                 const buttonTop = buttonElement.offsetTop;
-                const expectedLeft = buttonLeft + buttonElement.clientWidth; // To the right of the button
+                const expectedRight = buttonLeft; // To the left of the button
                 const expectedTop = buttonTop + buttonElement.clientHeight; // Bottom of the button
-                const wrapperLeft = wrapperContent.getBoundingClientRect().left;
+                const wrapperRight = wrapperContent.getBoundingClientRect().right;
                 const wrapperTop = wrapperContent.getBoundingClientRect().top;
                 expect(wrapperTop).toEqual(expectedTop);
-                expect(wrapperLeft).toEqual(expectedLeft);
+                expect(wrapperRight).toEqual(expectedRight);
             }));
 
         it(`Should show the component, AutoPositionStrategy, inside of the viewport if it would normally be outside of bounds,
@@ -3106,9 +3104,6 @@ fdescribe('igxOverlay', () => {
     });
 
     describe('Integration tests p3 (IgniteUI components): ', () => {
-        beforeAll(() => {
-            TestBed.resetTestingModule();
-        });
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule, IgxComponentsModule],
