@@ -255,6 +255,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             treeGrid.getColumnByName('HireDate').editable = true;
             treeGrid.getColumnByName('Age').editable = true;
             treeGrid.getColumnByName('OnPTO').editable = true;
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
 
             await testEditingNavigationTab(fix, treeGrid, treeColumns);
@@ -800,7 +801,7 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
 
     const testEditingNavigationTab =
         (fixture, treegrid: IgxTreeGridComponent, columns) => new Promise(async (resolve, reject) => {
-            let cell = treegrid.getCellByColumn(2, columns[2]);
+            let cell = treegrid.getCellByColumn(2, columns[1]);
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
             await wait(DEBOUNCETIME);
@@ -812,10 +813,12 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
 
-            cell = treeGrid.getCellByColumn(2, columns[2]);
+            cell = treeGrid.getCellByColumn(2, columns[1]);
             expect(cell.inEditMode).toBe(true);
 
             // Test tab on child row
+            await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 1, columns);
+
             await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 2, columns);
 
             await TreeGridFunctions.moveEditableCellWithTab(fixture, treegrid, 2, 3, columns);
