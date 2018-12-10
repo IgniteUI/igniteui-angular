@@ -2247,7 +2247,7 @@ describe('IgxGrid Component Tests', () => {
                 grid.recalculateSummaries();
 
                 // get the summaries for a particular column
-                const summaries = targetCell.gridAPI.get_summaries(targetCell.gridID);
+                const summaries = targetCell.gridAPI.get_summary_data(targetCell.gridID);
                 const earliestDate = summaries.get('OrderDate')[1].summaryResult.toLocaleDateString();
 
                 expect(earliestDate).toEqual(newDate);

@@ -390,6 +390,15 @@ export class ColumnDefinitions {
     <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
                 editable="true"></igx-column>
     `;
+
+    public static summariesGoupByColumns = `
+    <igx-column [field]="'ID'" dataType="number" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'ParentID'" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Name'" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Age'" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+    `;
 }
 
 export class EventSubscriptions {

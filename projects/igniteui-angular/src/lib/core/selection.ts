@@ -208,7 +208,7 @@ export class IgxSelectionAPIService {
      * @returns If all items are selected.
      */
     public are_all_selected(componentID: string, dataCount: number): boolean {
-        return this.size(componentID) === dataCount;
+        return dataCount > 0 && dataCount === this.size(componentID);
     }
 
     /**

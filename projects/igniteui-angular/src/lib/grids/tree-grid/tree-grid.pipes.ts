@@ -6,7 +6,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISortingExpression } from '../../../public_api';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent } from '../grid';
+import { IgxGridBaseComponent, IgxSummaryResult } from '../grid';
 
 /**
  *@hidden
@@ -55,16 +55,11 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, row),
                 data: row,
-                children: [],
-                path: []
+                children: []
             };
             const parent = map.get(row[foreignKey]);
             if (parent) {
                 record.parent = parent;
-                if (parent) {
-                    record.path.push(...parent.path);
-                    record.path.push(parent.rowID);
-                }
                 parent.children.push(record);
             } else {
                 missingParentRecords.push(record);
@@ -110,13 +105,8 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
                 parent: parent,
-                level: indentationLevel,
-                path: []
+                level: indentationLevel
             };
-            if (parent) {
-                record.path.push(...parent.path);
-                record.path.push(parent.rowID);
-            }
             record.expanded = this.gridAPI.get_row_expansion_state(id, record.rowID, record.level);
             flatData.push(item);
             map.set(record.rowID, record);
@@ -148,7 +138,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
-        const data: ITreeGridRecord[] = [];
+        const data: any[] = [];
 
         grid.processedRootRecords = collection;
         grid.processedRecords = new Map<any, ITreeGridRecord>();
@@ -158,12 +148,13 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         return data;
     }
 
-    private getFlatDataRecursive(collection: ITreeGridRecord[], data: ITreeGridRecord[] = [],
+    private getFlatDataRecursive(collection: ITreeGridRecord[], data: any[],
         expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
         parentExpanded: boolean) {
         if (!collection || !collection.length) {
             return;
         }
+        const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
 
         for (let i = 0; i < collection.length; i++) {
             const hierarchicalRecord = collection[i];
@@ -172,10 +163,9 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
                 data.push(hierarchicalRecord);
             }
 
-            const grid: IgxTreeGridComponent = this.gridAPI.get(gridID);
-
             hierarchicalRecord.expanded = this.gridAPI.get_row_expansion_state(gridID,
                 hierarchicalRecord.rowID, hierarchicalRecord.level);
+
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 
             grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
@@ -234,7 +224,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     }
 
     public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id) as IgxTreeGridComponent;
+        const grid = this.gridAPI.get(id);
         if (!grid.paging) {
             return collection;
         }
@@ -270,26 +260,30 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.get(id);
         if (collection && grid.transactions.enabled) {
-            const primaryKey = grid.primaryKey;
-            if (!primaryKey) {
-                return collection;
-            }
+            const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
+            if (aggregatedChanges.length > 0) {
+                const primaryKey = grid.primaryKey;
+                if (!primaryKey) {
+                    return collection;
+                }
 
-            const foreignKey = grid.foreignKey;
-            const childDataKey = grid.childDataKey;
+                const foreignKey = grid.foreignKey;
+                const childDataKey = grid.childDataKey;
 
-            if (foreignKey) {
-                return DataUtil.mergeTransactions(
-                    cloneArray(collection),
-                    grid.transactions.getAggregatedChanges(true),
-                    grid.primaryKey);
-            } else if (childDataKey) {
-                return DataUtil.mergeHierarchicalTransactions(
-                    cloneHierarchicalArray(collection, childDataKey),
-                    grid.transactions.getAggregatedChanges(true),
-                    childDataKey,
-                    grid.primaryKey
-                );
+                if (foreignKey) {
+                    const flatDataClone = cloneArray(collection);
+                    return DataUtil.mergeTransactions(
+                        flatDataClone,
+                        aggregatedChanges,
+                        grid.primaryKey);
+                } else if (childDataKey) {
+                    const hierarchicalDataClone = cloneHierarchicalArray(collection, childDataKey);
+                    return DataUtil.mergeHierarchicalTransactions(
+                        hierarchicalDataClone,
+                        aggregatedChanges,
+                        childDataKey,
+                        grid.primaryKey);
+                }
             }
         }
 
