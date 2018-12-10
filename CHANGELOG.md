@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
+- `IgxColumnComponent`:
+    - **Breaking change** the `filters` input now expects `IgxFilteringOperand` instance, instead of class ref. This way custom `IgxFilteringOperands` no longer need to be singleton, with defined `instance` method.
 - `IgxMask`:
     - `placeholder` input property is added to allow developers to specify the placeholder attribute of the host input element that the `igxMask` is applied on;
     - `displayValuePipe` input property is provided that allows developers to additionally transform the value on blur;
