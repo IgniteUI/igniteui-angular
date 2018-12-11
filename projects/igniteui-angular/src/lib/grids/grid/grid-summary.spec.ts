@@ -13,7 +13,7 @@ import {
     SummaryColumnComponent,
     FilteringComponent,
     SummarieGroupByComponent,
-    SummarieGroupByComponentWithScrolls
+    SummarieGroupByWithScrollsComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -21,7 +21,7 @@ import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 
 describe('IgxGrid - Summaries', () => {
-    //configureTestSuite();
+    configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
     const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -39,7 +39,7 @@ describe('IgxGrid - Summaries', () => {
                 FilteringComponent,
                 ColumnGroupFourLevelTestComponent,
                 SummarieGroupByComponent,
-                SummarieGroupByComponentWithScrolls
+                SummarieGroupByWithScrollsComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot(), NoopAnimationsModule]
         })
@@ -688,7 +688,7 @@ describe('IgxGrid - Summaries', () => {
         let fix;
         let grid: IgxGridComponent;
         beforeEach(() => {
-            fix = TestBed.createComponent(SummarieGroupByComponentWithScrolls);
+            fix = TestBed.createComponent(SummarieGroupByWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
         });
