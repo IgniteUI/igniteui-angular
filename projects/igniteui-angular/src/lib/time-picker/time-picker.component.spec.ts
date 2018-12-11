@@ -900,7 +900,7 @@ describe('IgxTimePicker', () => {
         UIInteractions.clickElement(iconTime);
         fixture.detectChanges();
 
-        expect(input.nativeElement.value).toBe('4:5')
+        expect(input.nativeElement.value).toBe('4:5');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
         fixture.detectChanges();
@@ -908,14 +908,14 @@ describe('IgxTimePicker', () => {
         input.nativeElement.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
-        expect(input.nativeElement.value).toBe('04:05')
+        expect(input.nativeElement.value).toBe('04:05');
 
         fixture.componentInstance.timePicker.format = 'h:m tt';
 
         UIInteractions.clickElement(iconTime);
         fixture.detectChanges();
 
-        expect(input.nativeElement.value).toBe('4:5 AM')
+        expect(input.nativeElement.value).toBe('4:5 AM');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
         fixture.detectChanges();
@@ -1131,7 +1131,7 @@ describe('IgxTimePicker', () => {
             input.nativeElement.setSelectionRange(0, 0);
             fixture.detectChanges();
 
-            //spin hours
+            // spin hours
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
             fixture.detectChanges();
 
@@ -1420,16 +1420,12 @@ describe('IgxTimePicker', () => {
 
 @Component({
     template: `
-        <igx-time-picker [vertical]="isVertical" (onValueChanged)="test($event)"></igx-time-picker>
+        <igx-time-picker [vertical]="isVertical"></igx-time-picker>
     `
 })
 export class IgxTimePickerTestComponent {
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
     public isVertical = false;
-
-    test($event) {
-        debugger;
-    }
 }
 
 @Component({
