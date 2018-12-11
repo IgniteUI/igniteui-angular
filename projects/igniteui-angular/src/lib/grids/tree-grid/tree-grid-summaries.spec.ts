@@ -192,7 +192,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyVisbleSummariesHeight(fix, 1);
         });
 
-        xit('should be able to enable/disable summaries with API', () => {
+        it('should be able to enable/disable summaries with API', () => {
             treeGrid.disableSummaries([{ fieldName: 'Age' }, { fieldName: 'HireDate' }]);
             fix.detectChanges();
 
@@ -258,7 +258,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '19', '847', '207', '51.75']);
         });
 
-        xit('should be able to change summary operant at runtime', () => {
+        it('should be able to change summary operant at runtime', () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -482,7 +482,7 @@ describe('IgxTreeGrid - Summaries', () => {
             verifySummaryForRow147(fix, 7);
         });
 
-        xit('CRUD: Add child node', () => {
+        it('CRUD: Add child node', () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
