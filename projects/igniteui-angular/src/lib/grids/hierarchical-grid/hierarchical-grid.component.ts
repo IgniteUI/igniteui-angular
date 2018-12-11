@@ -103,6 +103,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return record.childGridData !== undefined;
     }
 
+    public trackChanges(index, rec) {
+        if (rec.childGridData !== undefined) {
+            // if is child rec
+            return rec.rowID;
+        }
+        return rec;
+    }
+
     /**
      * @hidden
      */

@@ -78,7 +78,7 @@
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
     | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
-    [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+    [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #hierarchical_record_template>
             <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
