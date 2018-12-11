@@ -40,7 +40,8 @@ export class IgxSummaryCellComponent {
             'igx-grid-summary--compact': this.density === DisplayDensity.compact,
             'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
             'igx-grid-summary--pinned': this.column.pinned,
-            'igx-grid-summary--pinned-last': this.column.isLastPinned
+            'igx-grid-summary--pinned-last': this.column.isLastPinned,
+            'igx_grid__cell--active': this.focused
         };
         Object.entries(classList).forEach(([className, value]) => {
             if (value) {
@@ -67,8 +68,16 @@ export class IgxSummaryCellComponent {
         return `Summary_${this.column.field}`;
     }
 
-    get nativeElement(): any {
-        return this.element.nativeElement;
+    private focused;
+
+    @HostListener('focus')
+    public onFocus() {
+        this.focused = true;
+    }
+
+    @HostListener('blur')
+    public onBlur() {
+        this.focused = false;
     }
 
     @HostListener('keydown', ['$event'])
@@ -148,6 +157,10 @@ export class IgxSummaryCellComponent {
         } else {
             return colWidth;
         }
+    }
+
+    get nativeElement(): any {
+        return this.element.nativeElement;
     }
 
     get isLastUnpinned() {

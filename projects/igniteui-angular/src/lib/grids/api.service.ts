@@ -136,7 +136,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
                     this.editCellState.delete(gridId);
                 }
             } else {
-                const grid = this.get(gridId);
                 this.editCellState.delete(gridId);
             }
         }
