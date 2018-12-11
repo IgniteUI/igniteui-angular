@@ -121,13 +121,11 @@ export class IgxTimePickerComponent implements
     @Input()
     set value(value: Date) {
         if (this._isValueValid(value)) {
-            if (this._value && value && this._value.getTime() !== value.getTime()) {
-                const args: IgxTimePickerValueChangedEventArgs = {
-                    oldValue: this._value,
-                    newValue: value
-                };
-                this.onValueChanged.emit(args);
-            }
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: this._value,
+                newValue: value
+            };
+            this.onValueChanged.emit(args);
 
             this._value = value;
             this._onChangeCallback(value);
@@ -1431,13 +1429,14 @@ export class IgxTimePickerComponent implements
             const sections = this.displayValue.split(/[\s:]+/);
 
             if (HOURS_POS.indexOf(cursor) !== -1) {
+
                 currentVal.setMinutes(sign * hDelta);
 
                 if (currentVal.getDate() !== oldVal.getDate() && this.isSpinLoop) {
                     currentVal.setDate(oldVal.getDate());
                 }
 
-                if (currentVal.getTime() > max.getTime()) {
+                if (currentVal.getTime() >= max.getTime()) {
                     if (this.isSpinLoop) {
                         let minutes = currentVal.getMinutes() < min.getMinutes()  ? 60 + currentVal.getMinutes() : currentVal.getMinutes();
                         min.setMinutes(sign * minutes);
@@ -1445,7 +1444,7 @@ export class IgxTimePickerComponent implements
                     } else {
                         this.value = oldVal;
                     }
-                } else if (currentVal.getTime() <= min.getTime()) {
+                } else if (currentVal.getTime() < min.getTime()) {
                     if (this.isSpinLoop) {
                         let minutes = currentVal.getMinutes() <= max.getMinutes()  ? currentVal.getMinutes() : currentVal.getMinutes() - 60;
                         max.setMinutes(minutes);
