@@ -36,6 +36,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const grid: IgxGridComponent = this.gridAPI.get(gridId);
+        const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
@@ -59,7 +60,8 @@ export class IgxGridSummaryPipe implements PipeTransform {
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
                     const summaries = grid.summaryService.calculateSummaries(groupRecordId, groupRecord.records);
                     const summaryRecord: ISummaryRecord = {
-                        summaries: summaries
+                        summaries: summaries,
+                        max: maxSummaryHeight
                     };
                     recordsWithSummary.push(summaryRecord);
                 }
@@ -72,7 +74,8 @@ export class IgxGridSummaryPipe implements PipeTransform {
             if (summaryPosition === GridSummaryPosition.top) {
                 const summaries = grid.summaryService.calculateSummaries(recordId, groupByRecord.records);
                 const summaryRecord: ISummaryRecord = {
-                    summaries: summaries
+                    summaries: summaries,
+                    max:  maxSummaryHeight
                 };
                 recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {

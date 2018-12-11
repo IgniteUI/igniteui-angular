@@ -386,6 +386,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const index = this.get_row_index_in_data(id, rowID);
         const currentRowInEditMode = this.get_edit_row_state(id);
         let oldValue = Object.assign({}, data[index]);
+        const hasSummarizedColumns = grid.hasSummarizedColumns;
         if (grid.currentRowState && grid.currentRowState[grid.primaryKey] === rowID
             || currentRowInEditMode && currentRowInEditMode.rowID === rowID) {
             oldValue = Object.assign(oldValue, grid.currentRowState);
@@ -404,13 +405,16 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             if (currentRowInEditMode) {
                 grid.transactions.endPending(false);
             }
+            if (hasSummarizedColumns) {
+                grid.summaryService.removeSummaries(emitArgs.rowID);
+            }
             this.updateData(grid, rowID, data[index], emitArgs.oldValue, emitArgs.newValue);
             if (currentGridState.isRowSelected) {
                 grid.selection.deselect_item(id, rowID);
                 const newRowID = (grid.primaryKey) ? emitArgs.newValue[grid.primaryKey] : emitArgs.newValue;
                 grid.selection.select_item(id, newRowID);
             }
-            if (grid.hasSummarizedColumns) {
+            if (hasSummarizedColumns) {
                 grid.summaryService.removeSummaries(rowID);
             }
             (grid as any)._pipeTrigger++;

@@ -10,6 +10,7 @@ export interface IgxSummaryResult {
 
 export interface ISummaryRecord {
     summaries: Map<string, IgxSummaryResult[]>;
+    max?: number;
     cellIndentation?: number;
 }
 

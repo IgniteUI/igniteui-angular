@@ -34,6 +34,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
 
     private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[], summaryPosition: GridSummaryPosition): any[] {
         const recordsWithSummary = [];
+        const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
@@ -53,6 +54,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                         const summaries = grid.summaryService.calculateSummaries(parent.rowID, childData);
                         const summaryRecord: ISummaryRecord = {
                             summaries: summaries,
+                            max: maxSummaryHeight,
                             cellIndentation: parent.level + 1
                         };
                         recordsWithSummary.push(summaryRecord);
@@ -68,6 +70,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries: summaries,
+                    max: maxSummaryHeight,
                     cellIndentation: record.level + 1
                 };
                 recordsWithSummary.push(summaryRecord);

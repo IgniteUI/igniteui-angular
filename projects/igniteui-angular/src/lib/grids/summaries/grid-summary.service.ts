@@ -94,6 +94,7 @@ export class IgxGridSummaryService {
 
     public resetSummaryHeight() {
         this.summaryHeight = 0;
+        (this.grid as any)._summaryPipeTrigger++;
         if (this.grid.rootSummariesEnabled) {
             this.retriggerRootPipe = !this.retriggerRootPipe;
         }
@@ -135,7 +136,7 @@ export class IgxGridSummaryService {
     private getSummaryID(rowID, groupingExpressions) {
         if (groupingExpressions.length === 0) { return []; }
         const summaryIDs = [];
-        const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
+        const rowData = this.grid.primaryKey ? this.grid.data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
         let id = '{ ';
         groupingExpressions.forEach(expr => {
                 id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;
