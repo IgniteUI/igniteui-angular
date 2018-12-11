@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IgxCheckboxComponent, IgxGridComponent } from '../../public_api';
-import { wait } from '../test-utils/ui-interactions.spec';
+import { IgxCheckboxComponent, IgxGridComponent, IgxGridCellComponent } from '../../public_api';
+import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { take } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 
@@ -60,25 +60,14 @@ export class HelperUtils {
             const elem = row instanceof IgxGridGroupByRowComponent ?
                 row : grid.getCellByColumn(row.index, colKey);
             if (rowStartIndex === rowEndIndex) {
-                if (!elem.focused) {
-                    elem.nativeElement.focus();
-                }
                 resolve();
                 return;
             }
-            const keyboardEvent = new KeyboardEvent('keydown', {
-                code: dir,
-                key: dir
-            });
 
-            if (dir === 'ArrowDown') {
-                elem.nativeElement.dispatchEvent(keyboardEvent);
-            } else {
-                elem.nativeElement.dispatchEvent(keyboardEvent);
-            }
+            UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true);
 
             if (nextRow) {
-                await wait(10);
+                await wait(20);
                 HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
                     .then(() => { resolve(); });
             } else {
@@ -92,6 +81,77 @@ export class HelperUtils {
                 });
             }
         })
+
+    public static navigateHorizontallyToIndex = (
+        grid: IgxGridComponent,
+        cell: IgxGridCellComponent,
+        index: number) => new Promise(async (resolve) => {
+            // grid - the grid in which to navigate.
+            // cell - current cell from which the navigation will start.
+            // index - the index to which to navigate
+
+            const currIndex = cell.visibleColumnIndex;
+            const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
+            const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
+            const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+            const nextCol = visibleColumns[nextIndex];
+            let nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+
+            // if index reached return
+            if (currIndex === index) { resolve(); return; }
+            // else call arrow up/down
+            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true);
+
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextCell) {
+                await wait(10);
+                grid.cdr.detectChanges();
+                HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+            } else {
+                // else wait for chunk to load.
+                grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+                        HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+                    }
+                });
+            }
+        })
+
+    public static expandCollapceGroupRow =
+        (fix, groupRow: IgxGridGroupByRowComponent,
+            cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+
+                groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', code: 'arrowleft', altKey: true }));
+                await wait(300);
+                fix.detectChanges();
+
+                expect(groupRow.expanded).toBe(false);
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+
+                groupRow.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', code: 'arrowright', altKey: true }));
+                await wait(100);
+                fix.detectChanges();
+
+                expect(groupRow.expanded).toBe(true);
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains('igx-grid__group-row--active')).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+                resolve();
+            })
 
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
         const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));

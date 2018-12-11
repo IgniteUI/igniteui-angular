@@ -2793,7 +2793,7 @@ export class IgxGridFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    public customFilter = CustomFilter;
+    public customFilter = CustomFilter.instance();
     public resizable = false;
 
     public data = [

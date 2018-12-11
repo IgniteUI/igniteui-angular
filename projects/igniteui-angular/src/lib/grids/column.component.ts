@@ -28,7 +28,8 @@ import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+    IgxStringFilteringOperand,
+    IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -316,7 +317,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
-        /**
+    /**
      *@hidden
      */
     @Input()
@@ -491,18 +492,18 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get filters(): any {
+    public get filters(): IgxFilteringOperand {
         return this._filters;
     }
     /**
      * Sets the column `filters`.
      * ```typescript
-     * this.column.filters = IgxBooleanFilteringOperand.
+     * this.column.filters = IgxBooleanFilteringOperand.instance().
      * ```
      * @memberof IgxColumnComponent
      */
-    public set filters(classRef: any) {
-        this._filters = classRef;
+    public set filters(instance: IgxFilteringOperand) {
+        this._filters = instance;
     }
     /**
      * Gets the column `sortStrategy`.
@@ -917,17 +918,17 @@ export class IgxColumnComponent implements AfterContentInit {
         if (!this.filters) {
             switch (this.dataType) {
                 case DataType.Boolean:
-                    this.filters = IgxBooleanFilteringOperand;
+                    this.filters = IgxBooleanFilteringOperand.instance();
                     break;
                 case DataType.Number:
-                    this.filters = IgxNumberFilteringOperand;
+                    this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
-                    this.filters = IgxDateFilteringOperand;
+                    this.filters = IgxDateFilteringOperand.instance();
                     break;
                 case DataType.String:
                 default:
-                    this.filters = IgxStringFilteringOperand;
+                    this.filters = IgxStringFilteringOperand.instance();
                     break;
             }
         }
@@ -1104,7 +1105,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
-    /**
+     /**
      * Returns a reference to the filter cell of the column.
      * ```typescript
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];

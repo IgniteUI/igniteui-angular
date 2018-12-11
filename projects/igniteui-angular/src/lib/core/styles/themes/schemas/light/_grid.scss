@@ -22,7 +22,7 @@
 /// @prop {Color} row-even-text-color [inherit] - The text color of even rows.
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 50), hexrgba: #fff] - The selected row background color.
 /// @prop {Map} row-selected-text-color [igx-contrast-color: ('secondary', 50)] - The selected row text color.
-/// @prop {Map} row-hover-background [igx-color: ('grays', 200), hexrgba: #fff] - The hover row background color.
+/// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #fff] - The hover row background color.
 /// @prop {Map} row-hover-text-color [igx-contrast-color: ('grays', 200)] - The hover row text color.
 /// @prop {Map} row-border-color [igx-color: ('grays', 300)] - The row bottom border color.
 /// @prop {Number} pinned-border-width [2px] - The border width of the pinned border.
@@ -107,7 +107,7 @@ $_light-grid: (
     ),
 
     row-hover-background: (
-        igx-color: ('grays', 200),
+        igx-color: ('grays', 100),
         hexrgba: #fff
     ),
 
@@ -131,6 +131,7 @@ $_light-grid: (
 
     cell-selected-background: (
         igx-color: ('grays', 200),
+        hexrgba: #fff
     ),
 
     cell-selected-text-color: (

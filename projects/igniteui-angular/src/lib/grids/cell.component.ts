@@ -388,7 +388,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
         if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll &&
+            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
                 parseInt(colWidth, 10) - 18 + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
@@ -906,8 +907,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             'igx_grid__cell--edit': this.inEditMode,
             'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--pinned': this.column.pinned,
+            'igx-grid__td--pinned-last': this.isLastPinned,
             'igx-grid__td--selected': this.selected,
             'igx-grid__td--edited': this.dirty
         };
