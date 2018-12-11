@@ -423,6 +423,31 @@ export class IgxGridNavigationService {
         }
     }
 
+    public goToLastBodyElement() {
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+            if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                row.focus();
+                return;
+            }
+            this.onKeydownEnd(rowIndex);
+        } else {
+            this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+                    if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                        row.focus();
+                        return;
+                    }
+                    this.onKeydownEnd(rowIndex);
+                });
+        }
+    }
+
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex)) {

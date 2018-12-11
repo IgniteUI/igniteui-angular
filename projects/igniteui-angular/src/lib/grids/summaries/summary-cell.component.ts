@@ -86,7 +86,7 @@ export class IgxSummaryCellComponent {
             case 'tab':
                 if (shift) {
                     if (this.rowIndex === 0 && this.visibleColumnIndex === 0 && this.grid.data && this.grid.data.length) {
-                        this.grid.navigation.goToLastCell();
+                        this.grid.navigation.goToLastBodyElement();
                         return;
                     }
                     this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
