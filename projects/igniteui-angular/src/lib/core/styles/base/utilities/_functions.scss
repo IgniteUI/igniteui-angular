@@ -489,11 +489,11 @@
     @each $fn, $args in $ctx {
         @if function-exists($fn) {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call(get-function($fn), $extra, $args...);
+                $result: call($fn, $extra, $args...);
             } @else if $result != null {
-                $result: call(get-function($fn), $result, $args...)
+                $result: call($fn, $result, $args...)
             } @else {
-                $result: call(get-function($fn), $args...)
+                $result: call($fn, $args...)
             }
         }
     }
