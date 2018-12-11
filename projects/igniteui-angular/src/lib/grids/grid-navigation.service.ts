@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridRowComponent } from './grid/grid-row.component';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -433,6 +432,10 @@ export class IgxGridNavigationService {
             const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
                 this.grid.rowList.find(row => row.index === rowIndex + 1) :
                 this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
+            if (rowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+                this.onKeydownHome(0, true);
+                return;
+            }
             if (rowEl) {
                 this.navigateDown(currentRowEl, rowIndex, 0);
             }
@@ -449,7 +452,6 @@ export class IgxGridNavigationService {
     }
 
     public moveFocusToFilterCell() {
-        this.grid.rowList.find(row => row instanceof IgxGridRowComponent).cells.first._clearCellSelection();
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         if (this.isColumnFullyVisible(columns.length - 1)) {
             this.grid.filteringService.focusFilterCellChip(columns[columns.length - 1], false);

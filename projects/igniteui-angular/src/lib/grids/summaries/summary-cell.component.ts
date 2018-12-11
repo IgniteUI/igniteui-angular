@@ -79,18 +79,23 @@ export class IgxSummaryCellComponent {
         const ctrl = event.ctrlKey;
         event.preventDefault();
         event.stopPropagation();
-        if (this.rowIndex === 0 &&
-            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
-                return;
 
-        }
         if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down' || key === 'arrowdown')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':
                 if (shift) {
+                    if (this.rowIndex === 0 && this.visibleColumnIndex === 0 && this.grid.data && this.grid.data.length) {
+                        this.grid.navigation.goToLastCell();
+                        return;
+                    }
                     this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
                     break;
+                }
+                if (this.rowIndex === 0 &&
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
+                        return;
+
                 }
                 this.grid.navigation.performTab(row, this.rowIndex, this.visibleColumnIndex, true);
                 break;
