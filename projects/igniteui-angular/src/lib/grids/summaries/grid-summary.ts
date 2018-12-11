@@ -10,8 +10,13 @@ export interface IgxSummaryResult {
 
 export interface ISummaryRecord {
     summaries: Map<string, IgxSummaryResult[]>;
+    max?: number;
     cellIndentation?: number;
 }
+
+const clear = (el) => el === 0 || Boolean(el);
+const first = (arr) => arr[0];
+const last = (arr) => arr[arr.length - 1];
 
 export class IgxSummaryOperand {
     /**
@@ -74,7 +79,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static min(data: any[]): any {
-        return data.length ? data.reduce((a, b) => Math.min(a, b)) : [];
+        return data.length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : [];
     }
     /**
      * Returns the maximum numeric value in the provided data records.
@@ -85,7 +90,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static max(data: any[]): any {
-        return data.length ? data.reduce((a, b) => Math.max(a, b)) : [];
+        return data.length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : [];
     }
     /**
      * Returns the sum of the numeric values in the provided data records.
@@ -96,7 +101,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxNumberSummaryOperand
      */
     public static sum(data: any[]): any {
-        return data.length ? data.reduce((a, b) => +a + +b) : [];
+        return data.length ? data.filter(clear).reduce((a, b) => +a + +b) : [];
     }
     /**
      * Returns the average numeric value in the data provided data records.
@@ -180,7 +185,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public static latest(data: any[]) {
-        return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[0];
+        return first(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf()));
     }
     /**
      * Returns the earliest date value in the data records.
@@ -191,7 +196,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * @memberof IgxDateSummaryOperand
      */
     public static earliest(data: any[]) {
-        return data.sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())[data.length - 1];
+        return last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf()));
     }
     /**
      * Executes the static methods and returns `IgxSummaryResult[]`.

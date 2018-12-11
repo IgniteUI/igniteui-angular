@@ -19,6 +19,16 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const grid = this.get(id);
         const data = grid.processedRootRecords.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);
+        if (grid.transactions.enabled) {
+            const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
+            deletedRows.forEach(rowID => {
+                const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+                const index = tempData.indexOf(rowID);
+                if (index !== -1) {
+                    data.splice(index, 1);
+                }
+            });
+        }
         return data;
     }
 

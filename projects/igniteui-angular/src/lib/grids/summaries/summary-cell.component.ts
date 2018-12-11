@@ -89,7 +89,7 @@ export class IgxSummaryCellComponent {
         event.preventDefault();
         event.stopPropagation();
 
-        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down' || key === 'arrowdown')) { return; }
+        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down'  || key === 'end' || key === 'home')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':
@@ -128,11 +128,15 @@ export class IgxSummaryCellComponent {
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                if (this.rowIndex !== 0) {
+                    this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                }
                 break;
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
+                if (this.rowIndex !== 0) {
+                    this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
+                }
                 break;
         }
     }

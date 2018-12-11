@@ -831,7 +831,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
-            this.summaryService.summaryHeight = 0;
+            this.summaryService.resetSummaryHeight();
             this.endEdit(true);
             this.calculateGridHeight();
             this.cdr.markForCheck();
@@ -2264,7 +2264,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            this.summaryService.deleteOperation = true; this.clearSummaryCache(args); });
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
@@ -2595,9 +2596,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
-
+        const colWidth = column.width;
         const minWidth = this.defaultHeaderGroupMinWidth;
-        if (parseInt(column.width, 10) < minWidth) {
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (!isPercentageWidth && parseInt(column.width, 10) < minWidth) {
             return minWidth.toString();
         }
 
@@ -3247,8 +3250,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], false);
         }
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
