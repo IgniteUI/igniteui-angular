@@ -719,6 +719,16 @@ fdescribe('IgxTransaction', () => {
             expect(transaction.getState(2)).toBeDefined();
             expect(transaction.getState(2).type).toBe(TransactionType.DELETE);
         });
+
+        it('Should correctly call getAggregatedChanges with commit', () => {
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, path: [] };
+            transaction.add(deleteTransaction, 'Deleted row');
+
+            expect(transaction.getAggregatedChanges(false)).toBe(null);
+        });
     });
 });
 
