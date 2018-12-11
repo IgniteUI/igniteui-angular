@@ -5,6 +5,9 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { take } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 
+const CELL_ACTIVE_CSS_CLASS = 'igx_grid__cell--active';
+const DEBOUNCETIME = 30;
+
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
@@ -154,7 +157,8 @@ export class HelperUtils {
             })
 
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
-        const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+        // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+        const summary = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);
         expect(summary).toBeDefined();
         const summaryItems = summary.queryAll(By.css('.igx-grid-summary__item'));
         if (summaryLabels.length === 0) {
@@ -181,6 +185,10 @@ export class HelperUtils {
         return fix.debugElement.query(By.css('igx-grid-summary-row[data-rowindex="' + rowIndex + '"]'));
     }
 
+    public static getSummaryCellByVisibleIndex(summaryRow: DebugElement, summaryIndex: number) {
+        return summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+    }
+
     public static getAllVisbleSummariesLength(fix) {
         return HelperUtils.getAllVisbleSummaries(fix).length;
     }
@@ -205,4 +213,32 @@ export class HelperUtils {
             expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
         });
     }
+
+    public static verifySummaryCellActive(fix, rowIndex, cellIndex, active: boolean = true) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summ = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+        const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
+        expect(hasClass === active).toBeTruthy();
+    }
+
+    public static moveSummaryCell =
+        (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
+            const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+            summaryCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: key, shiftKey: shift, ctrlKey: ctrl }));
+            await wait(100);
+            fix.detectChanges();
+            resolve();
+        })
+
+        public static focusSummaryCell =
+        (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
+            const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+            summaryCell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait(30);
+            fix.detectChanges();
+            HelperUtils.verifySummaryCellActive(fix, rowIndex, cellIndex);
+            resolve();
+        })
 }
