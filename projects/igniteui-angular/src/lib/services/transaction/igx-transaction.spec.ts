@@ -3,7 +3,7 @@ import { Transaction, TransactionType, HierarchicalTransaction } from './transac
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
-fdescribe('IgxTransaction', () => {
+describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
         it('Should initialize transactions log properly', () => {
             const trans = new IgxTransactionService();
@@ -651,7 +651,7 @@ fdescribe('IgxTransaction', () => {
         });
     });
 
-    fdescribe('IgxHierarchicalTransaction UNIT Test', () => {
+    describe('IgxHierarchicalTransaction UNIT Test', () => {
         it('Should set path for each state when transaction is added in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
