@@ -651,7 +651,7 @@ fdescribe('IgxTransaction', () => {
         });
     });
 
-    describe('IgxHierarchicalTransaction UNIT Test', () => {
+    fdescribe('IgxHierarchicalTransaction UNIT Test', () => {
         it('Should set path for each state when transaction is added in Hierarchical data source', () => {
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
@@ -720,14 +720,14 @@ fdescribe('IgxTransaction', () => {
             expect(transaction.getState(2).type).toBe(TransactionType.DELETE);
         });
 
-        it('Should correctly call getAggregatedChanges with commit', () => {
+        it('Should correctly call getAggregatedChanges without commit when recordRef is null', () => {
             const transaction = new IgxHierarchicalTransactionService();
             expect(transaction).toBeDefined();
 
             const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, path: [] };
             transaction.add(deleteTransaction, 'Deleted row');
 
-            expect(transaction.getAggregatedChanges(false)).toBe(null);
+            expect(transaction.getAggregatedChanges(false)).toEqual([deleteTransaction]);
         });
     });
 });
