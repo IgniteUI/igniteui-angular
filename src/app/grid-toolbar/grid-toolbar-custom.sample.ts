@@ -1,6 +1,6 @@
 
-import { Component } from '@angular/core';
-import { IgxColumnComponent } from 'igniteui-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-toolbar-custom-sample',
@@ -8,6 +8,9 @@ import { IgxColumnComponent } from 'igniteui-angular';
     templateUrl: 'grid-toolbar-custom.sample.html'
 })
 export class GridToolbarCustomSampleComponent {
+
+    @ViewChild('grid1', { read: IgxGridComponent })
+    public igxGrid1: IgxGridComponent;
 
     data = [
         {
