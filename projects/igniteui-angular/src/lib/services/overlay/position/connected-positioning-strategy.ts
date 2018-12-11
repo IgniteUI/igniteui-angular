@@ -15,7 +15,9 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     minSize: { width: 0, height: 0 }
   };
 
+  /** @inheritdoc */
   public settings: PositionSettings;
+
   constructor(settings?: PositionSettings) {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }

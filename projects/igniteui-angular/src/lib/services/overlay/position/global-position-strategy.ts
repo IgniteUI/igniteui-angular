@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, Size } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
 export class GlobalPositionStrategy implements IPositionStrategy {
@@ -13,7 +13,9 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         minSize: { width: 0, height: 0 }
     };
 
+    /** @inheritdoc */
     public settings: PositionSettings;
+
     constructor(settings?: PositionSettings) {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
