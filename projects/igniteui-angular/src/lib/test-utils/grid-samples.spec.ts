@@ -757,7 +757,7 @@ export class SummarieGroupByComponent extends BasicGridComponent {
     template: `${GridTemplateStrings.declareGrid(`height="800px"  width="400px" [primaryKey]="'ID'"`, '',
     ColumnDefinitions.summariesGoupByColumns)}`
 })
-export class SummarieGroupByComponentWithScrolls extends BasicGridComponent {
+export class SummarieGroupByWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
