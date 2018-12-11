@@ -831,7 +831,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
-            this.summaryService.summaryHeight = 0;
+            this.summaryService.resetSummaryHeight();
             this.endEdit(true);
             this.calculateGridHeight();
             this.cdr.markForCheck();
@@ -3249,8 +3249,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], false);
         }
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
