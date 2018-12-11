@@ -22,9 +22,15 @@ All notable changes for each version of this project will be documented in this 
     - You can now export the tree grid both to CSV and Excel.
     - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
 
+## 7.0.4
+### Bug fixes
+- Fix(igx-grid): revert row editing styles ([#2672](https://github.com/IgniteUI/igniteui-angular/issues/2672))
+- Revert "fix(grid): set min width to header groups programmatically"  status: verified version: 7.0.x
+([#3357](https://github.com/IgniteUI/igniteui-angular/issues/3357))
+
+
 ## 7.0.3
 ### Bug fixes
-
 - ng add igniteui-angular adds igniteui-cli package to both dependencies and devDependencies ([#3254](https://github.com/IgniteUI/igniteui-angular/issues/3254))
 - Group column header is not styled correctly when moving that column ([#3072](https://github.com/IgniteUI/igniteui-angular/issues/3072))
 - igx-grid: Filter row remains after disabling filtering feature ([#3255](https://github.com/IgniteUI/igniteui-angular/issues/3255))
@@ -55,7 +61,7 @@ All notable changes for each version of this project will be documented in this 
     - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
     This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
 - **New component** `IgxBannerComponent`:
-    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed.
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)
