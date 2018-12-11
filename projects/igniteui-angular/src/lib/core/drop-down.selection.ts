@@ -13,6 +13,7 @@ export class IgxDropDownSelectionService {
     protected selection: Set<any> = new Set<any>();
 
     public onSelection = new EventEmitter<IDropDownServiceArgs>();
+    public onAddItem = new EventEmitter<any>();
 
     /**
      * Get current component selection.
@@ -242,5 +243,11 @@ export class IgxDropDownSelectionService {
     */
     public get_empty(): Set<any> {
         return new Set();
+    }
+
+    public add_custom_item(item: any): void {
+        this.onAddItem.emit({
+            item
+        });
     }
 }

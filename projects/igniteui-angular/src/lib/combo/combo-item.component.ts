@@ -51,6 +51,9 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     }
 
     set isSelected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
         this._isSelected = value;
     }
 
