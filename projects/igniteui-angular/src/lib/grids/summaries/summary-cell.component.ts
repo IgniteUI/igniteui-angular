@@ -89,7 +89,7 @@ export class IgxSummaryCellComponent {
         event.preventDefault();
         event.stopPropagation();
 
-        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down' || key === 'arrowdown')) { return; }
+        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down'  || key === 'end' || key === 'home')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':
