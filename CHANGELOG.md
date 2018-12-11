@@ -62,7 +62,7 @@ All notable changes for each version of this project will be documented in this 
     - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
     This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
 - **New component** `IgxBannerComponent`:
-    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed.
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxNavbar`:
     - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
     (If `igx-action-icon` is provided, the default action icon will not be used.)

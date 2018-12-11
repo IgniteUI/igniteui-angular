@@ -1,7 +1,7 @@
-import { IScrollStrategy } from './IScrollStrategy';
 import { IgxOverlayService } from '../overlay';
+import { ScrollStrategy } from './scroll-strategy';
 
-export class CloseScrollStrategy implements IScrollStrategy {
+export class CloseScrollStrategy extends ScrollStrategy {
     private _document: Document;
     private _overlayService: IgxOverlayService;
     private _id: string;
@@ -15,13 +15,15 @@ export class CloseScrollStrategy implements IScrollStrategy {
     private _scrollContainer: HTMLElement;
 
     constructor(scrollContainer?: HTMLElement) {
+        super(scrollContainer);
         this._scrollContainer = scrollContainer;
         this._threshold = 10;
         this.cumulativeScrollTop = 0;
         this.cumulativeScrollLeft = 0;
     }
 
-    initialize(document: Document, overlayService: IgxOverlayService, id: string) {
+    /** @inheritdoc */
+    public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
         if (this._initialized) {
             return;
         }
@@ -31,7 +33,8 @@ export class CloseScrollStrategy implements IScrollStrategy {
         this._initialized = true;
     }
 
-    attach(): void {
+    /** @inheritdoc */
+    public attach(): void {
         if (this._scrollContainer) {
             this._scrollContainer.addEventListener('scroll', this.onScroll);
             this._sourceElement = this._scrollContainer;
@@ -54,7 +57,8 @@ export class CloseScrollStrategy implements IScrollStrategy {
         this.initialScrollLeft = this._sourceElement.scrollLeft;
     }
 
-    detach(): void {
+    /** @inheritdoc */
+    public detach(): void {
         // TODO: check why event listener removes only on first call and remains on each next!!!
         if (this._scrollContainer) {
             this._scrollContainer.removeEventListener('scroll', this.onScroll);
