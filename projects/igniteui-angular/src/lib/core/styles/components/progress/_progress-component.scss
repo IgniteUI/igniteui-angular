@@ -95,18 +95,18 @@
 }
 
 /// Circular Progress
-@include b(progress-circular) {
+@include b(igx-circular-bar) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
     @extend %circular-display !optional;
 
-    @include e(innercircle) {
-        @extend %circular-innercircle !optional;
+    @include e(inner) {
+        @extend %circular-inner !optional;
     }
 
-    @include e(circle) {
-        @extend %circular-circle !optional;
+    @include e(outer) {
+        @extend %circular-outer !optional;
     }
 
     @include e(text) {
@@ -116,5 +116,17 @@
     @include e(text, $m: hidden) {
         @extend %circular-text !optional;
         @extend %circular-text--hidden !optional;
+    }
+
+    @include m(indeterminate) {
+        @extend %circular-display--indeterminate !optional;
+
+        @include e(outer) {
+            @extend %circular-outer--indeterminate !optional;
+        }
+
+        @include e(text) {
+            @extend %circular-text--hidden !optional;
+        }
     }
 }

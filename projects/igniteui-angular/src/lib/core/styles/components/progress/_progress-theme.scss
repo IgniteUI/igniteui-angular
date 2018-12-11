@@ -41,7 +41,7 @@
     $stripes-color: null,
     $text-color: null
 ) {
-    $name: 'igx-progress-linear';
+    $name: 'igx-linear-bar';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
@@ -111,7 +111,7 @@
     }
 
     %linear-indicator--indeterminate {
-        animation: indeterminate-progress 2s cubic-bezier(0, .085, .68, .53) infinite;
+        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) infinite);
         width: 100% !important;
 
         &::before {
@@ -173,23 +173,6 @@
     %linear-value--hidden {
         display: none;
     }
-
-    @keyframes indeterminate-progress {
-        0% {
-            transform: scaleX(0) translateX(-100%);
-            transform-origin: left;
-        }
-
-        50% {
-            transform: scaleX(1) translateX(50%);
-            transform-origin: right;
-        }
-
-        100% {
-            transform: scaleX(0) translateX(200%);
-            transform-origin: right;
-        }
-    }
 }
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
@@ -218,7 +201,7 @@
     $progress-circle-color: null,
     $text-color: null
 ) {
-    $name: 'igx-progress-circular';
+    $name: 'igx-circular-bar';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
@@ -232,8 +215,12 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
+/// @requires {mixin} rotate-center
 /// @requires --var
 @mixin igx-progress-circular($theme) {
+    // Include rotate animation
+    @include rotate-center();
+
     @include igx-root-css-vars($theme);
 
     // @debug $theme;
@@ -246,13 +233,17 @@
         height: 100%;
     }
 
-    %circular-innercircle {
+    %circular-display--indeterminate {
+        @include animation(rotate-center 1.4s linear infinite);
+    }
+
+    %circular-inner {
         stroke-width: 4;
         fill: transparent;
         stroke: --var($theme, 'base-circle-color');
     }
 
-    %circular-circle {
+    %circular-outer {
         fill: transparent;
         stroke: --var($theme, 'progress-circle-color');
         stroke-width: 4;
@@ -260,6 +251,12 @@
         stroke-dasharray: 289;
         transform-origin: 50% 50%;
         transform: rotate(-90deg);
+    }
+
+    %circular-outer--indeterminate {
+        stroke-dashoffset: 180;
+        stroke-dasharray: 180;
+        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) infinite);
     }
 
     %circular-text {
@@ -271,21 +268,32 @@
     %circular-text--hidden {
         visibility: hidden;
     }
+}
 
-    @keyframes indeterminate-progress {
-        0% {
-            transform: scaleX(0) translateX(-100%);
-            transform-origin: left;
-        }
+@include keyframes('indeterminate-bar') {
+    0% {
+        transform: scaleX(0) translateX(-100%);
+        transform-origin: left;
+    }
 
-        50% {
-            transform: scaleX(1) translateX(50%);
-            transform-origin: right;
-        }
+    50% {
+        transform: scaleX(1) translateX(50%);
+        transform-origin: right;
+    }
 
-        100% {
-            transform: scaleX(0) translateX(200%);
-            transform-origin: right;
-        }
+    100% {
+        transform: scaleX(0) translateX(200%);
+        transform-origin: right;
+    }
+}
+
+@include keyframes('indeterminate-accordion') {
+    50% {
+        stroke-dashoffset: 260;
+        stroke-dasharray: 289;
+    }
+
+    100% {
+        stroke-dashoffset: -180;
     }
 }
