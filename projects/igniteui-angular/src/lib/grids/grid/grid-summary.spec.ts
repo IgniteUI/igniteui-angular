@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDateSummaryOperand, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
 import { IgxGridComponent } from './grid.component';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
@@ -764,7 +764,7 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifySummaryCellActive(fix, 0, 1);
         });
 
-        xit('Grouping: should be able to select summaries with arrow keys', async () => {
+        it('Grouping: should be able to select summaries with arrow keys', async () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
@@ -772,6 +772,7 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             HelperUtils.focusSummaryCell(fix, 3, 0);
+            await wait(DEBOUNCETIME);
 
             for (let i = 0; i < 5; i++) {
                 HelperUtils.verifySummaryCellActive(fix, 3, i);
@@ -790,6 +791,126 @@ describe('IgxGrid - Summaries', () => {
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
             HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+        });
+
+        it('Grouping: should not change active summary cell when press cntr+ArrowUp/Down', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 3, 1);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'ArrowDown', false, true);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'ArrowUp', false, true);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+        });
+
+        it('Grouping: should be able to navigate with Arrow keys Up/Down and Ctrl', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 3, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'ArrowRight', false, true);
+            await wait(100);
+            HelperUtils.verifySummaryCellActive(fix, 3, 5);
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 5, 'ArrowLeft', false, true);
+            await wait(100);
+            HelperUtils.verifySummaryCellActive(fix, 3, 0);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+        });
+
+        it('Grouping: should not change active summary cell when press CTRL+Home/End ', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 3, 1);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'End', false, true);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 1, 'Home', false, true);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
+        });
+
+        it('Grouping: should navigate with Tab key on summary row ', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 3, 0);
+
+            for (let i = 0; i < 5; i++) {
+                HelperUtils.verifySummaryCellActive(fix, 3, i);
+                await HelperUtils.moveSummaryCell(fix, 3, i, 'Tab');
+            }
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
+
+            for (let i = 5; i > 0; i--) {
+                HelperUtils.verifySummaryCellActive(fix, 3, i);
+                await HelperUtils.moveSummaryCell(fix, 3, i, 'Tab', true);
+            }
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+        });
+
+        it('Grouping: should navigate with Tab and Shift+Tab key on summary cell to grid cell ', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 3, 0);
+            await HelperUtils.moveSummaryCell(fix, 3, 0, 'Tab', true);
+            await wait(100);
+
+            let cell = grid.getCellByColumn(2, 'OnPTO');
+            expect(cell.selected).toBe(true);
+            expect(cell.focused).toBe(true);
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '27', '50', '77', '38.5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['2']);
+
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            HelperUtils.verifySummaryCellActive(fix, 3, 0);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '17', '17', '34', '17']);
+
+            await HelperUtils.moveSummaryCell(fix, 3, 0, 'ArrowRight', false, true);
+            await wait(100);
+            HelperUtils.verifySummaryCellActive(fix, 3, 5);
+            cell = grid.getCellByColumn(2, 'OnPTO');
+            expect(cell.selected).toBe(true);
         });
 
     });

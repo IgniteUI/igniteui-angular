@@ -226,7 +226,7 @@ export class HelperUtils {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
             summaryCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: key, shiftKey: shift, ctrlKey: ctrl }));
-            await wait(100);
+            await wait(50);
             fix.detectChanges();
             resolve();
         })
@@ -236,9 +236,8 @@ export class HelperUtils {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
             summaryCell.nativeElement.dispatchEvent(new Event('focus'));
-            await wait(30);
             fix.detectChanges();
-            HelperUtils.verifySummaryCellActive(fix, rowIndex, cellIndex);
+            await wait(50);
             resolve();
         })
 }
