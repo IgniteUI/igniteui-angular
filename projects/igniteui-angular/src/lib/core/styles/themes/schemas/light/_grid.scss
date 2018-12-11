@@ -22,13 +22,13 @@
 /// @prop {Color} row-even-text-color [inherit] - The text color of even rows.
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 50), hexrgba: #fff] - The selected row background color.
 /// @prop {Map} row-selected-text-color [igx-contrast-color: ('secondary', 50)] - The selected row text color.
-/// @prop {Map} row-hover-background [igx-color: ('grays', 200), hexrgba: #fff] - The hover row background color.
+/// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #fff] - The hover row background color.
 /// @prop {Map} row-hover-text-color [igx-contrast-color: ('grays', 200)] - The hover row text color.
 /// @prop {Map} row-border-color [igx-color: ('grays', 300)] - The row bottom border color.
 /// @prop {Number} pinned-border-width [2px] - The border width of the pinned border.
 /// @prop {String} pinned-border-style [solid] - The CSS border style of the pinned border.
 /// @prop {Map} pinned-border-color [igx-color: ('grays', 400)] - The color of the pinned border.
-/// @prop {Map} cell-selected-background [igx-color: ('grays', 200)] - The selected cell background color.
+/// @prop {Map} cell-selected-background [igx-color: ('grays', 200), hexrgba: #fff] - The selected cell background color.
 /// @prop {Map} cell-selected-text-color [igx-contrast-color: ('grays', 200)] - The selected cell text color.
 /// @prop {Map} resize-line-color [igx-color: ('secondary', 500)] - The table header resize line color.
 /// @prop {Map} grouparea-background [igx-color: ('grays', 100), hexrgba: #fff] - The grid group area background color.
@@ -54,6 +54,10 @@
 /// @prop {Map} filtering-header-text-color [igx-color: ('grays', 800)] - The text color color of the filtered column header.
 /// @prop {Color} filtering-row-background [#fff] - The background color of the filtering row.
 /// @prop {Map} filtering-row-text-color [igx-color: ('grays', 800)] - The text-color color of the filtering row.
+/// @prop {Map} body-summaries-background [igx-color: ('grays', 300), hexrgba: #fff] - The background color of the summary groups located the body.
+/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @see $default-palette
 $_light-grid: (
     header-background: (
@@ -102,7 +106,7 @@ $_light-grid: (
     ),
 
     row-hover-background: (
-        igx-color: ('grays', 200),
+        igx-color: ('grays', 100),
         hexrgba: #fff
     ),
 
@@ -122,6 +126,7 @@ $_light-grid: (
 
     cell-selected-background: (
         igx-color: ('grays', 200),
+        hexrgba: #fff
     ),
 
     cell-selected-text-color: (
@@ -239,5 +244,27 @@ $_light-grid: (
 
     tree-filtered-text-color: (
         igx-color: ('grays', 500)
+    ),
+
+    body-summaries-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff
+    ),
+
+    body-summaries-text-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff,
+        text-contrast: ()
+    ),
+
+    root-summaries-background: (
+        igx-color: ('grays', 300),
+        hexrgba: #fff
+    ),
+
+    root-summaries-text-color: (
+        igx-color: ('grays', 300),
+        hexrgba: #fff,
+        text-contrast: ()
     )
 );

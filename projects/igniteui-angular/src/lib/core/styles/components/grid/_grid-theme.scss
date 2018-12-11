@@ -61,6 +61,11 @@
 /// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
 /// @param {Color} $filtering-row-text-color [null] - The text-color color of the filtering row.
 ///
+/// @param {Color} $body-summaries-background [null] - The background color of the summary groups located the body.
+/// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
+/// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
+/// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -139,13 +144,19 @@
     $filtering-header-text-color: null,
     $filtering-row-background: null,
     $filtering-row-text-color: null,
-    $tree-filtered-text-color: null
+    $tree-filtered-text-color: null,
+
+    $body-summaries-background: null,
+    $body-summaries-text-color: null,
+    $root-summaries-background: null,
+    $root-summaries-text-color: null
 ) {
     $name: 'igx-grid';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
+    $row-selected-cell-background: darken(map-get($theme, 'row-selected-background'), 8%);
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
         $ghost-header-icon-color: rgba(text-contrast($ghost-header-background), .07);
@@ -283,6 +294,14 @@
         $filtering-row-text-color: text-contrast(hexrgba($filtering-row-background));
     }
 
+    @if not($body-summaries-text-color) and $body-summaries-background {
+        $body-summaries-text-color: text-contrast($body-summaries-background);
+    }
+
+    @if not($root-summaries-text-color) and $root-summaries-background {
+        $root-summaries-text-color: text-contrast($root-summaries-background);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -358,7 +377,13 @@
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
-        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color,
+
+        body-summaries-background: $body-summaries-background,
+        body-summaries-text-color: $body-summaries-text-color,
+        root-summaries-background: $root-summaries-background,
+        root-summaries-text-color: $root-summaries-text-color,
+        row-selected-cell-background: $row-selected-cell-background
     ));
 }
 
@@ -614,7 +639,7 @@
     }
 
     %grid-scroll-start {
-        background: igx-color($palette, 'grays', 200);
+        background: --var($theme, 'header-background');
     }
 
     %grid-scroll-main {
@@ -653,6 +678,11 @@
     %grid-row--selected {
         color: --var($theme, 'row-selected-text-color');
         background-color: --var($theme, 'row-selected-background');
+
+        %grid-cell--selected,
+        %grid-cell--pinned-selected {
+            background-color: --var($theme, 'row-selected-cell-background');
+        }
 
         &:hover {
             background-color: --var($theme, 'row-selected-background');
@@ -820,7 +850,7 @@
 
     %grid-cell--selected {
         color: --var($theme, 'cell-selected-text-color');
-        background-color: --var($theme, 'cell-selected-background') !important;
+        background-color: --var($theme, 'cell-selected-background');
         border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
@@ -867,6 +897,12 @@
         position: relative;
         background-color: inherit;
         z-index: 9999;
+    }
+
+    %grid-cell--pinned-selected {
+        color: --var($theme, 'cell-selected-text-color');
+        background-color: --var($theme, 'cell-selected-background');
+        border-bottom: 0;
     }
 
     %grid-cell--pinned-last {
@@ -1023,13 +1059,33 @@
 
     %grid-summaries {
         display: flex;
-        background: inherit;
+        background: --var($theme, 'root-summaries-background');
+
+        // %igx-grid-summary__label,
+        %igx-grid-summary__result {
+            color: --var($theme, 'root-summaries-text-color');
+        }
+    }
+
+    %grid-summaries--body {
+        background: --var($theme, 'body-summaries-background');
+        border-bottom: 1px dashed --var($theme, 'row-border-color');
+
+        &:last-of-type {
+            border-bottom: none;
+        }
+
+        // %igx-grid-summary__label,
+        %igx-grid-summary__result {
+            color: --var($theme, 'body-summaries-text-color');
+        }
     }
 
     %grid-summaries-patch {
         background: inherit;
         position: relative;
         z-index: 1;
+        border-right: 1px solid --var($theme, 'header-border-color');
     }
 
     // Column moving

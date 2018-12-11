@@ -453,7 +453,7 @@ export class TreeGridFunctions {
                 let newCell;
 
                 UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
-                await wait(DEBOUNCETIME);
+                await wait(50);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
@@ -491,6 +491,14 @@ export class TreeGridFunctions {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
                 expect(newCell.inEditMode).toBe(true);
+                resolve();
+            })
+
+    public static moveGridCellWithTab =
+        (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
                 resolve();
             })
 }

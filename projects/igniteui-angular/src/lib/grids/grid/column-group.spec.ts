@@ -1207,36 +1207,6 @@ describe('IgxGrid - multi-column headers', () => {
         testGroupsAndColumns(18, 11);
     }));
 
-    it('summaries - verify summaries when there are grouped columns', (async () => {
-        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
-        fixture.detectChanges();
-        const grid = fixture.componentInstance.grid;
-
-        // Verify columns and groups
-        testGroupsAndColumns(18, 11);
-
-        const allColumns = grid.columnList;
-        allColumns.forEach((col) => {
-            if (!col.columnGroup) {
-                col.hasSummary = true;
-            }
-        });
-        await wait();
-        fixture.detectChanges();
-
-        const summaries = fixture.debugElement.queryAll(By.css('igx-grid-summary'));
-        expect(summaries.length).toBe(7);
-        let index = 0;
-        grid.visibleColumns.forEach((col) => {
-            if (!col.columnGroup && index < 7) {
-                expect(col.hasSummary).toBeTruthy();
-                const labels = summaries[index].queryAll(By.css('.igx-grid-summary__label'));
-                expect(labels.length).toBe(1);
-                expect(labels[0].nativeElement.innerText).toBe('Count');
-                index++;
-            }
-        });
-    }));
 
     it('grouping - verify grouping when there are grouped columns', () => {
         const fixture = TestBed.createComponent(ColumnGroupGroupingTestComponent);
