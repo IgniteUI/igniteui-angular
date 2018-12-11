@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand } from '../grids/grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/grid-base.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
@@ -192,9 +192,9 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             EventSubscriptions.onColumnInit, '')
 })
 export class ScrollsComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigDataRowsAndCols(100, 100);
+    data = SampleTestData.generateBigDataRowsAndCols(16, 16);
     public columnInit(column) {
-        column.width = '50px';
+        // column.width = '50px';
     }
 }
 
@@ -206,7 +206,39 @@ export class ScrollsComponent extends BasicGridComponent {
 export class SummariesComponent extends BasicGridComponent {
     data = SampleTestData.foodProductData();
 }
-/* Maybe add SummaryColumnComponent? */
+
+class DealsSummaryMinMax extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'min' || obj.key === 'max') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            '', ColumnDefinitions.productDefaultSummaries)
+})
+export class SummaryColumnComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductData();
+    public hasSummary = true;
+
+    public numberSummary = new IgxNumberSummaryOperand();
+    public dateSummary = new IgxDateSummaryOperand();
+    public dealsSummaryMinMax = DealsSummaryMinMax;
+}
 
 @Component({
     template: GridTemplateStrings.declareGrid(
@@ -234,7 +266,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
 
 }
 
-/* NoActiveSummariesComponent */
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.productBasic)
 })
@@ -708,4 +739,113 @@ export class MultiColumnHeadersWithGroupingComponent extends BasicGridComponent 
 export class GridWithAvatarComponent extends GridWithSizeComponent {
     data = SampleTestData.personAvatarData();
     height = '500px';
+}
+
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="1000px"  width="900px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.summariesGoupByColumns)}`
+})
+export class SummarieGroupByComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+class AgeSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class AgeSummaryTest extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        result.push({
+            key: 'test',
+            label: 'Test',
+            summaryResult: summaries.filter(rec => rec > 10 && rec < 40).length
+        });
+
+        return result;
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
+    `${ EventSubscriptions.onSelection }`, ColumnDefinitions.generatedWithWidth)
+})
+export class VirtualGridComponent extends BasicGridComponent {
+    public gridWidth = '800px';
+    public gridHeight = '300px';
+    public defaultWidth = '200px';
+    public columns = [
+        { field: 'index' },
+        { field: 'value' },
+        { field: 'other' },
+        { field: 'another' }
+    ];
+     public selectedCell: IgxGridCellComponent;
+     constructor() {
+        super();
+        this.data = this.generateData(1000);
+    }
+     public generateCols(numCols: number, defaultColWidth = null) {
+        const cols = [];
+        for (let j = 0; j < numCols; j++) {
+            cols.push({
+                field: j.toString(),
+                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+            });
+        }
+        return cols;
+    }
+     public generateData(numRows: number) {
+        const data = [];
+         for (let i = 0; i < numRows; i++) {
+            const obj = {};
+            for (let j = 0; j < this.columns.length; j++) {
+                const col = this.columns[j].field;
+                obj[col] = 10 * i * j;
+            }
+            data.push(obj);
+        }
+        return data;
+    }
+     public cellSelected(event: IGridCellEventArgs) {
+        this.selectedCell = event.cell;
+    }
+     public scrollTop(newTop: number) {
+        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+    }
+     public scrollLeft(newLeft: number) {
+        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+    }
+}
+ @Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [primaryKey]="'ID'"`,
+        '', ColumnDefinitions.idNameJobHireDate)
+})
+export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
+    data = SampleTestData.personJobDataFull();
 }

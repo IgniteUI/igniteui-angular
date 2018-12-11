@@ -25,6 +25,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 
@@ -56,7 +57,7 @@ export interface IGroupingDoneEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService,
+    providers: [IgxGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService, IgxColumnResizingService
@@ -124,9 +125,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService, _displayDensityOptions);
+                  filteringService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -628,7 +630,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
    public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 
@@ -843,7 +845,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
+            this.endEdit(true);
+            this.summaryService.updateSummaryCache(args);
+        });
     }
 
     public ngDoCheck(): void {

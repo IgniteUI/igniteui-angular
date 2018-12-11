@@ -191,7 +191,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     get conditions(): any {
-        return this.column.filters.instance().conditionList();
+        return this.column.filters.conditionList();
     }
 
     get isUnaryCondition(): boolean {
@@ -294,7 +294,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Returns the filtering operation condition for a given value.
      */
     public getCondition(value: string): IFilteringOperation {
-        return this.column.filters.instance().condition(value);
+        return this.column.filters.condition(value);
     }
 
     /**

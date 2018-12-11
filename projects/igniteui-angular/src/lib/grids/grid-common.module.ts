@@ -20,7 +20,6 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { IgxColumnHidingModule } from './column-hiding.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridSummaryComponent } from './grid-summary.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
@@ -57,6 +56,10 @@ import {
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
+import { IgxSummaryRowComponent } from './summaries/summary-row.component';
+import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
+import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 
 @NgModule({
     declarations: [
@@ -64,8 +67,8 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -83,8 +86,11 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxGridFilteringRowComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
+        IgxSummaryDataPipe,
         IgxRowComponent,
-        IgxGridHeaderGroupComponent
+        IgxGridHeaderGroupComponent,
+        IgxSummaryRowComponent,
+        IgxSummaryCellComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -95,8 +101,8 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxGridHeaderComponent,
-        IgxGridSummaryComponent,
         IgxGridToolbarComponent,
+        IgxGridToolbarCustomContentDirective,
         IgxCellFooterTemplateDirective,
         IgxCellHeaderTemplateDirective,
         IgxCellEditorTemplateDirective,
@@ -111,6 +117,7 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxRowComponent,
         IgxGridFilterConditionPipe,
         IgxGridTransactionPipe,
+        IgxSummaryDataPipe,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxButtonModule,
@@ -134,7 +141,9 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
         IgxColumnPinningModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
-        IgxGridHeaderGroupComponent
+        IgxGridHeaderGroupComponent,
+        IgxSummaryRowComponent,
+        IgxSummaryCellComponent
     ],
     imports: [
         CommonModule,
