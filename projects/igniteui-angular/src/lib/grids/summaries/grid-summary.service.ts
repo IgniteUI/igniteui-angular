@@ -31,7 +31,7 @@ export class IgxGridSummaryService {
             }
             this.removeSummaries(rowID);
         }
-        if (args.rowID !== undefined || args.rowID !== null) {
+        if (args.rowID !== undefined && args.rowID !== null) {
             const columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
             this.removeSummaries(args.rowID, columnName);
         }
