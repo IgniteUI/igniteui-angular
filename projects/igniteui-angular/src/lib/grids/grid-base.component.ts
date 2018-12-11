@@ -3765,7 +3765,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (column) {
             column.hasSummary = hasSummary;
             if (summaryOperand) {
-                if (this.rootSummariesEnabled) {this.summaryService.retriggerRootPipe = !this.summaryService.retriggerRootPipe; }
+                if (this.rootSummariesEnabled) { this.summaryService.retriggerRootPipe++; }
                 column.summaries = summaryOperand;
             }
         }

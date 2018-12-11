@@ -58,7 +58,8 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 for (let j = 0; j < groupRecords.length; j++) {
                     const groupRecord = groupRecords[j];
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
-                    const summaries = grid.summaryService.calculateSummaries(groupRecordId, groupRecord.records);
+                    const records = this.removeDeletedRecord(grid, groupRecord.records);
+                    const summaries = grid.summaryService.calculateSummaries(groupRecordId, records);
                     const summaryRecord: ISummaryRecord = {
                         summaries: summaries,
                         max: maxSummaryHeight
@@ -102,5 +103,20 @@ export class IgxGridSummaryPipe implements PipeTransform {
     }
 
         return recordsWithSummary;
+    }
+
+    private removeDeletedRecord(grid, data) {
+        if (!grid.transactions.enabled) {
+            return data;
+        }
+        const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === 'delete').map(t => t.id);
+        deletedRows.forEach(rowID => {
+            const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+            const index = tempData.indexOf(rowID);
+            if (index !== -1) {
+                data.splice(index, 1);
+            }
+        });
+        return data;
     }
 }
