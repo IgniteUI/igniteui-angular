@@ -48,7 +48,9 @@
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
-/// @param {List} $exclude [()] - A list of igx components to be excluded from the global theme styles.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
 /// @requires {variable} $components
 /// @requires {variable} $default-palette
 /// @requires {function} is-component
@@ -264,6 +266,10 @@
     }
 }
 
+/// Creates a global theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
 @mixin igx-light-theme(
     $palette,
     $exclude: (),
@@ -280,6 +286,10 @@
     );
 }
 
+/// Creates a global theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
 @mixin igx-dark-theme(
     $palette,
     $exclude: (),
