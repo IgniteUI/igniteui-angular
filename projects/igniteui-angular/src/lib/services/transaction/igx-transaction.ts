@@ -10,16 +10,28 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     protected _undoStack: { transaction: T, recordRef: any }[][] = [];
     protected _states: Map<any, S> = new Map();
 
+    /**
+     * @inheritdoc
+     */
     get canUndo(): boolean {
         return this._undoStack.length > 0;
     }
 
+    /**
+     * @inheritdoc
+     */
     get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
 
+    /**
+     * @inheritdoc
+     */
     public onStateUpdate = new EventEmitter<void>();
 
+    /**
+     * @inheritdoc
+     */
     public add(transaction: T, recordRef?: any): void {
         const states = this._isPending ? this._pendingStates : this._states;
         this.verifyAddedTransaction(states, transaction, recordRef);
@@ -39,6 +51,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public getTransactionLog(id?: any): T[] {
         if (id) {
             return this._transactions.filter(t => t.id === id);
@@ -46,6 +61,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         return [...this._transactions];
     }
 
+    /**
+     * @inheritdoc
+     */
     public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._states.forEach((state: S, key: any) => {
@@ -55,14 +73,23 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         return result;
     }
 
+    /**
+     * @inheritdoc
+     */
     public getState(id: any): S {
         return this._states.get(id);
     }
 
+    /**
+     * @inheritdoc
+     */
     public get enabled(): boolean {
         return true;
     }
 
+    /**
+     * @inheritdoc
+     */
     public getAggregatedValue(id: any, mergeChanges: boolean): any {
         const state = this._states.get(id);
         const pendingState = super.getState(id);
@@ -82,6 +109,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         return aggregatedValue;
     }
 
+    /**
+     * @inheritdoc
+     */
     public endPending(commit: boolean): void {
         this._isPending = false;
         if (commit) {
@@ -99,6 +129,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         super.endPending(commit);
     }
 
+    /**
+     * @inheritdoc
+     */
     public commit(data: any[]): void {
         this._states.forEach((s: S) => {
             const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(s.recordRef));
@@ -121,6 +154,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this.clear();
     }
 
+    /**
+     * @inheritdoc
+     */
     public clear(): void {
         this._transactions = [];
         this._states.clear();
@@ -129,6 +165,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this.onStateUpdate.emit();
     }
 
+    /**
+     * @inheritdoc
+     */
     public undo(): void {
         if (this._undoStack.length <= 0) {
             return;
@@ -148,6 +187,9 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this.onStateUpdate.emit();
     }
 
+    /**
+     * @inheritdoc
+     */
     public redo(): void {
         if (this._redoStack.length > 0) {
             let actions: { transaction: T, recordRef: any, useInUndo?: boolean }[];
