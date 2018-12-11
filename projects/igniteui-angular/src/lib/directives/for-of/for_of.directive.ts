@@ -1196,7 +1196,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 changes.forEachOperation((op) => operations.push(op));
                 if (operations.length > 0) {
                     // only update if some operation was done - adding/removing/moving of items
-                    console.log('update cache');
                     this._updateSizeCache();
                 }
                 this._applyChanges(changes);
