@@ -116,6 +116,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this._isPending = false;
         if (commit) {
             const actions: { transaction: T, recordRef: any }[] = [];
+            // don't use addTransaction due to custom undo handling
             for (const transaction of this._pendingTransactions) {
                 const pendingState = this._pendingStates.get(transaction.id);
                 this._transactions.push(transaction);
@@ -125,6 +126,8 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
 
             this._undoStack.push(actions);
             this._redoStack = [];
+
+            this.onStateUpdate.emit();
         }
         super.endPending(commit);
     }
