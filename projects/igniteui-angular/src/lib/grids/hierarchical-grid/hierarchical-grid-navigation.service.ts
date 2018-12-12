@@ -227,6 +227,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             super.performTab(currentRowEl, rowIndex, visibleColumnIndex);
         }
     }
+    public performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex) {
+        if (visibleColumnIndex === 0 && this.grid.parent) {
+            if (rowIndex === 0 && this.grid.allowFiltering) {
+                this.moveFocusToFilterCell();
+            } else {
+                this.navigateUp(currentRowEl, rowIndex,
+                    this.grid.parent.unpinnedColumns[this.grid.parent.unpinnedColumns.length - 1].visibleIndex);
+            }
+        } else {
+            super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex);
+        }
+    }
 
     private _focusScrollCellInView(visibleColumnIndex) {
         const cellSelector = this.getCellSelector(visibleColumnIndex);
@@ -341,15 +353,20 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     private focusPrevRow(elem, visibleColumnIndex, grid) {
-        const cellSelector = this.getCellSelector(visibleColumnIndex);
-        const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-        const cell = cells[cells.length - 1];
-        const diff = cell.getBoundingClientRect().top - cell.offsetHeight;
-        const inView =  diff >= 0 || grid.verticalScrollContainer.getVerticalScroll().scrollTop === 0;
-         if (!inView) {
-             this.scrollGrid(grid, diff, () => cell.focus({ preventScroll: true }));
+        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
+            const cellSelector = this.getCellSelector(visibleColumnIndex);
+            const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
+            const cell = cells[cells.length - 1];
+            const diff = cell.getBoundingClientRect().top - cell.offsetHeight;
+            const inView =  diff >= 0 || grid.verticalScrollContainer.getVerticalScroll().scrollTop === 0;
+            if (!inView) {
+                this.scrollGrid(grid, diff, () => cell.focus({ preventScroll: true }));
+            } else {
+                cell.focus({ preventScroll: true });
+            }
         } else {
-             cell.focus({ preventScroll: true });
+            const rowIndex = parseInt(elem.getAttribute('data-rowindex'), 10);
+            grid.navigation.performHorizontalScrollToCell(rowIndex, visibleColumnIndex);
         }
     }
 
