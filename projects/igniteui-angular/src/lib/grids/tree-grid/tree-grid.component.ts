@@ -384,6 +384,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 this.refreshSearch();
             }
         } else {
+            if (this.primaryKey && this.foreignKey) {
+                const rowID = data[this.foreignKey];
+                this.summaryService.clearSummaryCache({rowID: rowID});
+            }
             super.addRow(data);
         }
     }
