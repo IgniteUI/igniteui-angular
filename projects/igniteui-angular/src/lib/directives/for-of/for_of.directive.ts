@@ -1191,9 +1191,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
     }
 
     protected _updateSizeCache() {
-        const scr = this.igxForScrollOrientation === 'horizontal' ?
-        this.hScroll : this.vh.instance.elementRef.nativeElement;
-        const dir = this.igxForScrollOrientation === 'horizontal' ? 'scrollLeft' : 'scrollTop';
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.initSizesCache(this.igxForOf);
+            return;
+        }
+        const scr = this.vh.instance.elementRef.nativeElement;
 
         const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
         const newHeight =  this.initSizesCache(this.igxForOf);
@@ -1202,10 +1204,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
-        if (Math.abs(diff) > 0 && scr[dir] > 0) {
+        if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
             this.recalcUpdateSizes();
             const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            scr[dir] = this.sizesCache[this.state.startIndex] - offset;
+            scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
         }
     }
 
