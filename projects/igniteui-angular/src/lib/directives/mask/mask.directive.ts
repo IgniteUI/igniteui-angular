@@ -323,9 +323,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
 
-        if (value) {
-            this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
-        }
+        this.value = value ? this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions) : '';
 
         this.dataValue = this.includeLiterals ? this.value : value;
         this._onChangeCallback(this.dataValue);

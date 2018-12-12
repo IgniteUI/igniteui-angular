@@ -17,7 +17,7 @@
                                   (focus)="onFocus($event)"
                                   (wheel)="spinOnEdit($event)"
                                   [disabled]="disabled"/>
-        <igx-suffix *ngIf="displayValue || isNotEmpty" igxRipple (click)="clear()">
+        <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
             <igx-icon fontSet="material">clear</igx-icon>
         </igx-suffix>
     </igx-input-group>

@@ -570,6 +570,13 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
+    get showClearButton(): boolean {
+        return (this.displayValue && this.displayValue !== this.parseMask(false)) || this.isNotEmpty;
+    }
+
+    /**
+     * @hidden
+     */
     get dropDownWidth(): any {
         if (this.group) {
             return this.group.element.nativeElement.getBoundingClientRect().width;
@@ -724,7 +731,7 @@ export class IgxTimePickerComponent implements
      */
     public ngOnDestroy(): void {
         if (this._overlayId) {
-            this.overlayService.hide(this._overlayId);
+            this.hideOverlay();
         }
 
         this._destroy$.next(true);
@@ -1026,13 +1033,9 @@ export class IgxTimePickerComponent implements
     }
 
     private _isValueValid(value: Date): boolean {
-        if (!value && this.mode === InteractionMode.dropdown) {
-            return true;
-        }
-
-        if (value && this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
+        if (this.maxValue && value > this._convertMinMaxValue(this.maxValue)) {
             return false;
-        } else if (value && this.minValue && value < this._convertMinMaxValue(this.minValue)) {
+        } else if (this.minValue && value < this._convertMinMaxValue(this.minValue)) {
             return false;
         } else {
             return true;
@@ -1233,7 +1236,7 @@ export class IgxTimePickerComponent implements
     public okButtonClick(): boolean {
         const time = this._getSelectedTime();
         if (this._isValueValid(time)) {
-            this.overlayService.hide(this._overlayId);
+            this.hideOverlay();
             this.value = time;
             return true;
         } else {
@@ -1256,7 +1259,7 @@ export class IgxTimePickerComponent implements
      * ```
      */
     public cancelButtonClick(): void {
-        this.overlayService.hide(this._overlayId);
+        this.hideOverlay();
 
         this.selectedHour = this._prevSelectedHour;
         this.selectedMinute = this._prevSelectedMinute;
@@ -1389,7 +1392,7 @@ export class IgxTimePickerComponent implements
 
         this.isNotEmpty = val !== this.parseMask(false);
 
-        // handle cases where the all empty positions (promts) are filled and we want to update
+        // handle cases where all empty positions (promts) are filled and we want to update
         // timepicker own value property if it is a valid Date
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
@@ -1408,6 +1411,7 @@ export class IgxTimePickerComponent implements
 
         // handle cases where the user deletes the display value (when pressing backspace or delete)
         if (!this.value || !val || val === this.parseMask(false)) {
+            this.isNotEmpty = false;
             this.value.setHours(0, 0);
 
             newVal = new Date(this.value);

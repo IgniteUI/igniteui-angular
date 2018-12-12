@@ -327,13 +327,13 @@ describe('igxMask', () => {
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(__) (__)');
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
-        tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('');
         expect(input.nativeElement.placeholder).toEqual('hello');
