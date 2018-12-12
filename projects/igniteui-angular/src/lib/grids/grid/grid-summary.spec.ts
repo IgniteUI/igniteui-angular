@@ -180,7 +180,7 @@ describe('IgxGrid - Summaries', () => {
             }).not.toThrow();
         });
 
-        fit('should change custom summaries at runtime', fakeAsync(() => {
+        it('should change custom summaries at runtime', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomSummariesComponent);
             const grid = fixture.componentInstance.grid1;
             fixture.detectChanges();
@@ -274,7 +274,7 @@ describe('IgxGrid - Summaries', () => {
                 expect(grid.hasSummarizedColumns).toBe(false);
             });
 
-            fit('should change summary operand through grid API ', (async () => {
+            it('should change summary operand through grid API ', (async () => {
                 grid.enableSummaries([{ fieldName: 'UnitsInStock', customSummary: fix.componentInstance.dealsSummaryMinMax }]);
                 // grid.recalculateSummaries();
                 await wait(200);
