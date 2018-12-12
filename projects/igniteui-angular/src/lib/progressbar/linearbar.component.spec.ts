@@ -11,6 +11,14 @@ import { Common } from './common.spec';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
+const SUCCESS_TYPE_CLASS = 'igx-linear-bar--success';
+const INFO_TYPE_CLASS = 'igx-linear-bar--info';
+const WARNING_TYPE_CLASS = 'igx-linear-bar--warning';
+const DANGER_TYPE_CLASS = 'igx-linear-bar--danger';
+const STRIPED_CLASS = 'igx-linear-bar--striped';
+const LINEAR_BAR_TAG = 'igx-linear-bar';
+const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
+
 describe('IgLinearBar', () => {
     configureTestSuite();
     const tickTime = 2000;
@@ -30,7 +38,7 @@ describe('IgLinearBar', () => {
         fixture.detectChanges();
 
         const progress = fixture.componentInstance.linearBar;
-        const domProgress = fixture.debugElement.query(By.css('igx-linear-bar')).nativeElement;
+        const domProgress = fixture.debugElement.query(By.css(LINEAR_BAR_TAG)).nativeElement;
         const defaultMaxValue = 100;
         const defaultValue = 0;
         const defaultStriped = false;
@@ -144,7 +152,7 @@ describe('IgLinearBar', () => {
     it('Should update value when we try to decrese it', fakeAsync(() => {
         const fixture = TestBed.createComponent(LinearBarComponent);
         fixture.detectChanges();
-        const progressBar = fixture.componentInstance.linearBar;
+        const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
 
         fixture.componentInstance.value = expectedValue;
@@ -167,7 +175,7 @@ describe('IgLinearBar', () => {
 
     it('Should update value when we try to decrease it (without animation)', () => {
         const fixture = TestBed.createComponent(LinearBarComponent);
-        const progressBar = fixture.componentInstance.linearBar;
+        const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
 
         fixture.componentInstance.animate = false;
@@ -187,24 +195,24 @@ describe('IgLinearBar', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
-        const datepicker = fix.componentInstance.linearBar;
+        const progressbar = fix.componentInstance.linearBar;
         const expectedRes = fix.componentInstance.value;
 
         tick(tickTime);
         fix.detectChanges();
-        expect(datepicker.value).toEqual(expectedRes);
+        expect(progressbar.value).toEqual(expectedRes);
 
-        datepicker.value = '0345-234';
+        progressbar.value = '0345-234';
         tick(tickTime);
         fix.detectChanges();
-        expect(datepicker.value).toEqual(expectedRes);
+        expect(progressbar.value).toEqual(expectedRes);
     }));
 
     it('The update step is 1% of the maximum value, which prevents from slow update with big nums', () => {
         const fix = TestBed.createComponent(LinearBarComponent);
         fix.detectChanges();
 
-        const bar = fix.componentInstance.linearBar;
+        const bar = fix.componentInstance.progressbar;
         const ONE_PERCENT = 0.01;
         let expectedValue = bar.max * ONE_PERCENT;
         expect(bar.step).toBe(expectedValue);
@@ -225,7 +233,7 @@ describe('IgLinearBar', () => {
         fix.detectChanges();
 
         tick(tickTime);
-        const bar = compInstance.linearBar;
+        const bar = compInstance.progressbar;
         const expectedRes = 0;
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
@@ -248,7 +256,7 @@ describe('IgLinearBar', () => {
         compInstance.value = value;
         fix.detectChanges();
 
-        const bar = compInstance.linearBar;
+        const bar = compInstance.progressbar;
         tick(tickTime);
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
@@ -333,70 +341,62 @@ describe('IgLinearBar', () => {
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
-            const progressBarContainer =
-                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
-            const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
+            const linearBar = fixture.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
+            const progressIndicator = linearBar.querySelector('.igx-linear-bar__indicator');
 
             tick(tickTime);
             fixture.detectChanges();
 
-            expect(progressBarElem.style.width).toBe(componentInstance.value + '%');
-            expect(progressBarContainer.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
+            expect(progressIndicator.style.width).toBe(componentInstance.value + '%');
+            expect(linearBar.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
         }));
 
         it('Should change class suffix which would be relevant to the type that has been passed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressBarContainer =
-                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
-            const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
+            const linearBar =
+                fixture.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
+            expect(linearBar.classList.length).toEqual(1);
+            expect(linearBar.classList.contains(LINEAR_BAR_TAG)).toEqual(true);
 
             fixture.componentInstance.type = 'info';
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--info')).toBe(true);
+            expect(linearBar.classList.contains(INFO_TYPE_CLASS)).toEqual(true);
         });
 
         it('Change progressbar style to be striped', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.debugElement.nativeElement
-                .getElementsByClassName('progress-linear')[0];
+            const linerBar = fixture.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
 
-            expect(progressElem.classList.contains('progress-linear--striped')).toBe(false);
+            expect(linerBar.classList.contains(STRIPED_CLASS)).toEqual(false);
 
             fixture.componentInstance.striped = true;
             fixture.detectChanges();
 
-            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
+            expect(linerBar.classList.contains(STRIPED_CLASS)).toEqual(true);
         });
 
         it('should stay striped when the type has changed', () => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();
 
-            const progressElem = fixture.debugElement.nativeElement
-                .getElementsByClassName('progress-linear')[0];
-
-            const progressBarContainer =
-                fixture.debugElement.nativeElement.querySelector('.progress-linear__bar');
-            const progressBarElem = progressBarContainer.querySelector('[class*=\'progress-linear__bar-progress\']');
+            const linearBar = fixture.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
 
             fixture.componentInstance.striped = true;
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--default')).toBe(true);
-            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
+            expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
 
             fixture.componentInstance.type = 'success';
             fixture.detectChanges();
 
-            expect(progressBarElem.classList.contains('progress-linear__bar-progress--success')).toBe(true);
-            expect(progressElem.classList.contains('progress-linear--striped')).toBe(true);
+            expect(linearBar.classList.contains(SUCCESS_TYPE_CLASS)).toEqual(true);
+            expect(linearBar.classList.contains(STRIPED_CLASS)).toEqual(true);
         });
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
@@ -413,8 +413,9 @@ describe('IgLinearBar', () => {
             fix.detectChanges();
 
             const progressRepresentation = Common.calcPercentage(val, maxVal);
-            const getProgressIndicator = fix.debugElement.query(By.css(`[class*='progress-linear__bar-progress']`));
-            expect(getProgressIndicator.styles.width).toBe(`${progressRepresentation}%`);
+            const progressbar = fix.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
+            const progressIndicator = progressbar.querySelector('.igx-linear-bar__indicator');
+            expect(progressIndicator.style.width).toBe(`${progressRepresentation}%`);
         }));
 
         it('Prevent constant update of progress value when value and max value differ', fakeAsync(() => {
@@ -431,10 +432,23 @@ describe('IgLinearBar', () => {
             tick(tickTime + tickTime); // enough time to exceed the progress update.
             fix.detectChanges();
 
-            const progressBarContainer = fix.debugElement.query(By.css('.progress-linear__bar')).nativeElement;
+            const progressBarContainer = fix.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
             expect(bar.value).toBe(value);
         }));
+
+        it('When enable indeterminate mode, then the appropriate class should be applied.', () => {
+            const fix = TestBed.createComponent(LinearBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.debugElement.nativeElement.querySelector(LINEAR_BAR_TAG);
+            expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(false);
+
+            fix.componentInstance.progressbar.indeterminate = true;
+
+            fix.detectChanges();
+            expect(bar.classList.contains(INDETERMINATE_CLASS)).toEqual(true);
+        });
     });
 });
 
@@ -451,7 +465,6 @@ class InitLinearProgressBarComponent {
                         </div>` })
 class LinearBarComponent {
     @ViewChild(IgxLinearProgressBarComponent) public progressbar: IgxLinearProgressBarComponent;
-    @ViewChild('wrapper') public wrapper;
     @ViewChild('linearBar') public linearBar;
 
     public value: string | number = 30;

@@ -22,6 +22,13 @@ export enum IgxTextAlign {
     END = 'end'
 }
 
+export enum IgxProgressType {
+    DANGER = 'danger',
+    INFO = 'info',
+    WARNING = 'warning',
+    SUCCESS = 'success'
+}
+
 export interface IChangeProgressEventArgs {
     previousValue: number;
     currentValue: number;
@@ -180,102 +187,6 @@ let NEXT_CIRCULAR_ID = 0;
     templateUrl: 'templates/linear-bar.component.html'
 })
 export class IgxLinearProgressBarComponent extends BaseProgress {
-    @HostBinding('attr.aria-valuemin')
-    private valueMin = 0;
-
-    @HostBinding('class.igx-linear-bar')
-    public cssClass = 'igx-linear-bar';
-
-    /**
-     *Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
-     *```html
-     *<igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
-     *```
-     */
-    @HostBinding('class.igx-linear-bar--striped')
-    @Input()
-    public striped = false;
-
-    /**
-     *Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
-     *```html
-     *<igx-linear-bar [indeterminate]="true"></igx-linear-bar>
-     *```
-     */
-    @HostBinding('class.igx-linear-bar--indeterminate')
-    @Input()
-    public indeterminate = false;
-
-    /**An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
-     * ```html
-     *<igx-linear-bar role="progressbar"></igx-linear-bar>
-     * ```
-     */
-    @HostBinding('attr.role')
-    @Input()
-    public role = 'progressbar';
-
-    /**An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
-     * ```html
-     *<igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
-
-    /**
-     *Set the position that defines where the text is aligned.
-     Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
-     *```typescript
-     *public positionCenter: IgxTextAlign;
-     *public ngOnInit() {
-     *    this.positionCenter = IgxTextAlign.CENTER;
-     *}
-     * //...
-     *```
-     * ```html
-     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public textAlign: IgxTextAlign = IgxTextAlign.START;
-
-    /**
-     *Set the text to be visible. By default it is set to true.
-     * ```html
-     *<igx-linear-bar type="default" [textVisibility]="false"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public textVisibility = true;
-
-    /**
-     *Set the position that defines if the text should be aligned above the progress line. By default is set to false.
-     *```html
-     *<igx-linear-bar type="danger" [textTop]="true"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public textTop = false;
-
-    /**
-     *Set a custom text that is displayed according to the defined position.
-     * ```html
-     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public text: string;
-
-    /**
-     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `danger`.
-     *```html
-     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
-     *```
-     */
-    @Input()
-    public type = 'default';
 
     /**
      *Animation on progress `IgxLinearProgressBarComponent`. By default it is set to true.
@@ -408,6 +319,106 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         this.onProgressChanged.emit(changedValues);
     }
 
+    constructor() {
+        super();
+    }
+    @HostBinding('attr.aria-valuemin')
+    public valueMin = 0;
+
+    @HostBinding('class.igx-linear-bar')
+    public cssClass = 'igx-linear-bar';
+
+    /**
+     *Set `IgxLinearProgressBarComponent` to have striped style. By default it is set to false.
+     *```html
+     *<igx-linear-bar [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
+     *```
+     */
+    @HostBinding('class.igx-linear-bar--striped')
+    @Input()
+    public striped = false;
+
+    /**
+     *Set `IgxLinearProgressBarComponent` to have indeterminate. By default it is set to false.
+     *```html
+     *<igx-linear-bar [indeterminate]="true"></igx-linear-bar>
+     *```
+     */
+    @HostBinding('class.igx-linear-bar--indeterminate')
+    @Input()
+    public indeterminate = false;
+
+    /**An @Input property that sets the value of the `role` attribute. If not provided it will be automatically set to `progressbar`.
+     * ```html
+     *<igx-linear-bar role="progressbar"></igx-linear-bar>
+     * ```
+     */
+    @HostBinding('attr.role')
+    @Input()
+    public role = 'progressbar';
+
+    /**An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
+     * ```html
+     *<igx-linear-bar [id]="'igx-linear-bar-55'" [striped]="true" [max]="200" [value]="50"></igx-linear-bar>
+     * ```
+     */
+    @HostBinding('attr.id')
+    @Input()
+    public id = `igx-linear-bar-${NEXT_LINEAR_ID++}`;
+
+    /**
+     *Set the position that defines where the text is aligned.
+     Possible options - `IgxTextAlign.START` (default), `IgxTextAlign.CENTER`, `IgxTextAlign.END`.
+     *```typescript
+     *public positionCenter: IgxTextAlign;
+     *public ngOnInit() {
+     *    this.positionCenter = IgxTextAlign.CENTER;
+     *}
+     * //...
+     *```
+     * ```html
+     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
+     *```
+     */
+    @Input()
+    public textAlign: IgxTextAlign = IgxTextAlign.START;
+
+    /**
+     *Set the text to be visible. By default it is set to true.
+     * ```html
+     *<igx-linear-bar type="default" [textVisibility]="false"></igx-linear-bar>
+     *```
+     */
+    @Input()
+    public textVisibility = true;
+
+    /**
+     *Set the position that defines if the text should be aligned above the progress line. By default is set to false.
+     *```html
+     *<igx-linear-bar type="danger" [textTop]="true"></igx-linear-bar>
+     *```
+     */
+    @Input()
+    public textTop = false;
+
+    /**
+     *Set a custom text that is displayed according to the defined position.
+     * ```html
+     *<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [striped]="true"></igx-linear-bar>
+     *```
+     */
+    @Input()
+    public text: string;
+
+    /**
+     *Set type of the `IgxLinearProgressBarComponent`. Possible options - `default`, `success`, `info`, `warning`, and `danger`.
+     *```html
+     *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
+     *```
+     */
+    @Input()
+    public type = 'default';
+
     /**
      *An event, which is triggered after a progress is changed.
      *```typescript
@@ -422,8 +433,36 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      */
     @Output() public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
-    constructor() {
-        super();
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-linear-bar--danger')
+    public get danger() {
+        return this.type === IgxProgressType.DANGER;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-linear-bar--info')
+    public get info() {
+        return this.type === IgxProgressType.INFO;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-linear-bar--warning')
+    public get warning() {
+        return this.type === IgxProgressType.WARNING;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-linear-bar--success')
+    public get success() {
+        return this.type === IgxProgressType.SUCCESS;
     }
 }
 

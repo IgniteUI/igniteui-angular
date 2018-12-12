@@ -12,6 +12,12 @@ import { Common } from './common.spec';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
+const CIRCULAR_INNER_CLASS = 'igx-circular-bar__inner';
+const CIRCULAR_OUTER_CLASS = 'igx-circular-bar__outer';
+const CIRCULAR_TEXT_CLASS = 'igx-circular-bar__text';
+const CIRCULAR_HIDDEN_TEXT_CLASS = 'igx-circular-bar__text--hidden';
+const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
+
 describe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
@@ -277,7 +283,7 @@ describe('IgCircularBar', () => {
     });
 
     it(`when step value is not divisble to passed value the result returned from the
-    value getter should be as same as the passed one`, fakeAsync(() => {
+    value getter should be the same as the passed one`, fakeAsync(() => {
         const fix = TestBed.createComponent(InitCircularProgressBarComponent);
         fix.detectChanges();
 
@@ -309,19 +315,19 @@ describe('IgCircularBar', () => {
 
         const componentInstance = fixture.componentInstance;
         const progressBarElem = fixture.debugElement.nativeElement
-            .querySelector('.progress-circular');
+            .querySelector('.igx-circular-bar');
         fixture.detectChanges();
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
 
-        expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
-        expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
+        expect(progressBarElem.children[0].classList.value).toBe(CIRCULAR_INNER_CLASS);
+        expect(progressBarElem.children[1].classList.value).toBe(CIRCULAR_OUTER_CLASS);
         expect(progressBarElem.children[2].children.length).toBe(2);
         expect(progressBarElem.children[2].children[0].textContent.trim()).toBe('Value is:');
         expect(progressBarElem.children[2].children[1].textContent.trim()).toMatch('20');
 
         componentInstance.progressbar.textVisibility = false;
         fixture.detectChanges();
-        expect(progressBarElem.children[2].classList.value).toMatch('progress-circular__text--hidden');
+        expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
     });
 
     // UI TESTS
@@ -333,7 +339,7 @@ describe('IgCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.progress-circular');
+                .querySelector('.igx-circular-bar');
             let expectedTextContent = componentInstance.circularBar.value + '%';
 
             tick(tickTime);
@@ -342,9 +348,9 @@ describe('IgCircularBar', () => {
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
 
-            expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
-            expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
-            expect(progressBarElem.children[2].children[0].classList.value).toBe('progress-circular__text');
+            expect(progressBarElem.children[0].classList.value).toBe(CIRCULAR_INNER_CLASS);
+            expect(progressBarElem.children[1].classList.value).toBe(CIRCULAR_OUTER_CLASS);
+            expect(progressBarElem.children[2].children[0].classList.value).toBe(CIRCULAR_TEXT_CLASS);
             expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
 
             componentInstance.circularBar.text = 'No progress';
@@ -356,7 +362,7 @@ describe('IgCircularBar', () => {
             componentInstance.circularBar.textVisibility = false;
             fixture.detectChanges();
 
-            expect(progressBarElem.children[2].classList.value).toMatch('progress-circular__text--hidden');
+            expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
         }));
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
@@ -365,7 +371,7 @@ describe('IgCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.progress-circular');
+                .querySelector('.igx-circular-bar');
 
             tick(tickTime);
             fixture.detectChanges();
@@ -378,9 +384,6 @@ describe('IgCircularBar', () => {
             fixture.detectChanges();
 
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
-            expect(progressBarElem.children[0].classList.value).toBe('progress-circular__innercircle');
-            expect(progressBarElem.children[1].classList.value).toBe('progress-circular__circle');
-            expect(progressBarElem.children[2].children[0].classList.value).toBe('progress-circular__text');
         }));
 
         it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
@@ -397,8 +400,8 @@ describe('IgCircularBar', () => {
             fix.detectChanges();
 
             const progressRepresentation = Common.calcPercentage(val, maxVal);
-            const progressBarElem = fix.debugElement.query(By.css('.progress-circular'));
-            const valueInPercent = progressBarElem.query(By.css('.progress-circular__text')).nativeElement;
+            const progressBarElem = fix.debugElement.query(By.css('.igx-circular-bar'));
+            const valueInPercent = progressBarElem.query(By.css(`.${CIRCULAR_TEXT_CLASS}`)).nativeElement;
             expect(valueInPercent.textContent.trim()).toBe(`${progressRepresentation}%`);
         }));
 
@@ -416,10 +419,24 @@ describe('IgCircularBar', () => {
             tick(tickTime + tickTime); // enough time to exceed the progress update.
             fix.detectChanges();
 
-            const progressBarContainer = fix.debugElement.query(By.css('.progress-circular')).nativeElement;
+            const progressBarContainer = fix.debugElement.query(By.css('.igx-circular-bar')).nativeElement;
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
             expect(bar.value).toBe(value);
         }));
+
+        it('When enable indeterminate mode, then the appropriate class should be applied.', () => {
+            const fix = TestBed.createComponent(InitCircularProgressBarComponent);
+            fix.detectChanges();
+
+            const bar = fix.debugElement.nativeElement.querySelector('igx-circular-bar');
+            expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(false);
+
+            const barComponent = fix.componentInstance.circularBar;
+            barComponent.indeterminate = true;
+            fix.detectChanges();
+
+            expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(true);
+        });
     });
 });
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
