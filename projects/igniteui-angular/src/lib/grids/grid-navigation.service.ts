@@ -432,7 +432,8 @@ export class IgxGridNavigationService {
                 row.focus();
                 return;
             }
-            this.onKeydownEnd(rowIndex);
+            const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
+            this.onKeydownEnd(rowIndex, isSummary);
         } else {
             this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
@@ -443,7 +444,8 @@ export class IgxGridNavigationService {
                         row.focus();
                         return;
                     }
-                    this.onKeydownEnd(rowIndex);
+                    const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
+                    this.onKeydownEnd(rowIndex, isSummary);
                 });
         }
     }
