@@ -246,7 +246,6 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`enableSummaries(expressions: Array)`|Enable summaries for the columns and apply your `customSummary` if it is provided.|
 |`disableSummaries(fieldName: string)`|Disable summaries for the specified column.|
 |`disableSummaries(columns: string[])`|Disable summaries for the listed columns.|
-|`clearSummaryCache()`|Delete all cached summaries and force recalculation.|
 |`previousPage()`|Goes to the previous page if paging is enabled and the current page is not the first.|
 |`nextPage()`|Goes to the next page if paging is enabled and current page is not the last.|
 |`paginate(page: number)`|Goes to the specified page if paging is enabled. Page indices are 0 based.|
