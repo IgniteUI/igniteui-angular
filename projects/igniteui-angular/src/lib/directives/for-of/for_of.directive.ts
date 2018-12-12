@@ -1110,7 +1110,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private _getItemSize(item, dimension: string): number {
-        return parseInt(item[dimension], 10) || this.igxForItemSize;
+        const hasDimension = parseInt(item[dimension], 10) === NaN;
+        return hasDimension ? parseInt(item[dimension], 10) : this.igxForItemSize;
     }
 }
 
