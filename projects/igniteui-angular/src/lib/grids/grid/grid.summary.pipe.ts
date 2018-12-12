@@ -58,7 +58,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 for (let j = 0; j < groupRecords.length; j++) {
                     const groupRecord = groupRecords[j];
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
-                    const records = this.removeDeletedRecord(grid, groupRecord.records);
+                    const records = this.removeDeletedRecord(grid, groupRecord.records.slice());
                     const summaries = grid.summaryService.calculateSummaries(groupRecordId, records);
                     const summaryRecord: ISummaryRecord = {
                         summaries: summaries,
