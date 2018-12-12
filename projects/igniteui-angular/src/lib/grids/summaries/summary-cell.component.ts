@@ -84,10 +84,10 @@ export class IgxSummaryCellComponent {
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.isKeySupportedInCell(key)) { return; }
-        const shift = event.shiftKey;
-        const ctrl = event.ctrlKey;
         event.preventDefault();
         event.stopPropagation();
+        const shift = event.shiftKey;
+        const ctrl = event.ctrlKey;
 
         if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down'  || key === 'end' || key === 'home')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
@@ -190,7 +190,7 @@ export class IgxSummaryCellComponent {
 
     private isKeySupportedInCell(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'home', 'end', 'tab'].indexOf(key) !== -1;
+        'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
 
     }
 }
