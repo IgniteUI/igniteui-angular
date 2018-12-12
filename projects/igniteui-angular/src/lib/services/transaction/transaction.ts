@@ -61,7 +61,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * @param id Optional record id to get transactions for
      * @returns All transaction in the service or for the specified record
      */
-    getTransactionLog(id?: any): Transaction[];
+    getTransactionLog(id?: any): T[];
 
     /**
      * Remove the last transaction if any
