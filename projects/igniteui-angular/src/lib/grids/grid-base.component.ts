@@ -2274,7 +2274,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
         this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            this.summaryService.deleteOperation = true; this.clearSummaryCache(args); });
+            this.summaryService.deleteOperation = true;
+            this.summaryService.clearSummaryCache(args);
+        });
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
@@ -3017,7 +3019,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
-        this._summaryPipeTrigger++;
         this.cdr.markForCheck();
 
         this.refreshSearch();
@@ -3073,7 +3074,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
-        this._summaryPipeTrigger++;
         this.cdr.markForCheck();
 
         this.refreshSearch();
