@@ -3,20 +3,15 @@ import { OnInit, EventEmitter, ElementRef } from '@angular/core';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase } from '../combo/combo.common';
+import { DropDownActionKeys } from './drop-down-navigation.directive';
 
-export interface ListNavigationDirective {
+export interface DropDownNavigationDirective {
     target: any;
     handleKeyDown(event: KeyboardEvent): void;
     onArrowDownKeyDown(event?: KeyboardEvent): void;
     onArrowUpKeyDown(event?: KeyboardEvent): void;
     onEndKeyDown(event?: KeyboardEvent): void;
     onHomeKeyDown(event?: KeyboardEvent): void;
-}
-export interface DropDownNavigationDirective extends ListNavigationDirective {
-    target: IDropDownBase;
-    onEscapeKeyDown(event?: KeyboardEvent): void;
-    onEnterKeyDown(event?: KeyboardEvent): void;
-    onSpaceKeyDown(event?: KeyboardEvent): void;
 }
 
 export interface IDropDownList extends IToggleView, OnInit {
@@ -54,6 +49,7 @@ export interface IDropDownBase extends IDropDownList {
     headers: IDropDownItem[];
     setSelectedItem(index: number): void;
     selectItem(item: IDropDownItem, event?: Event): void;
+    handleKeyDown(key: DropDownActionKeys);
 }
 
 export interface IDropDownItem {

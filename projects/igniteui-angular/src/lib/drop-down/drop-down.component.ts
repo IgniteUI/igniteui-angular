@@ -17,7 +17,7 @@ import {
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemNavigationDirective } from './drop-down-navigation.directive';
+import { IgxDropDownItemNavigationDirective, DropDownActionKeys } from './drop-down-navigation.directive';
 import { IDropDownItem, IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
@@ -238,6 +238,18 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      */
     public getFirstSelectableItem() {
         return this.children.find(child => !child.isHeader && !child.disabled);
+    }
+
+    public handleKeyDown(key: DropDownActionKeys) {
+        switch (key) {
+            case DropDownActionKeys.ENTER:
+            case DropDownActionKeys.SPACE:
+            case DropDownActionKeys.TAB:
+                this.selectItem(this.focusedItem);
+                break;
+            case DropDownActionKeys.ESCAPE:
+                this.close();
+        }
     }
 
     constructor(

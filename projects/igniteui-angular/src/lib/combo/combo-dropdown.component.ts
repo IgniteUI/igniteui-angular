@@ -11,6 +11,7 @@ import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
 
 /** @hidden */
 @Component({
@@ -378,6 +379,31 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
+    }
+
+    /**
+     * @hidden
+     */
+    public handleKeyDown(key: DropDownActionKeys) {
+        switch (key) {
+            case DropDownActionKeys.ENTER:
+                this.handleEnter();
+                break;
+            case DropDownActionKeys.SPACE:
+                this.selectItem(this.focusedItem);
+                break;
+            case DropDownActionKeys.TAB:
+            case DropDownActionKeys.ESCAPE:
+                this.close();
+        }
+    }
+
+    private handleEnter() {
+        if (this.focusedItem.value === 'ADD VALUE') {
+            this.combo.addItemToCollection();
+        } else {
+            this.close();
+        }
     }
 
     public ngAfterViewInit() {
