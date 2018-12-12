@@ -41,7 +41,7 @@ export class IgxSummaryCellComponent {
             'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
             'igx-grid-summary--pinned': this.column.pinned,
             'igx-grid-summary--pinned-last': this.column.isLastPinned,
-            'igx_grid__cell--active': this.focused
+            'igx-grid-summary--active': this.focused
         };
         Object.entries(classList).forEach(([className, value]) => {
             if (value) {
