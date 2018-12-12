@@ -266,21 +266,23 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         let childRowContainer = this.getChildGridRowContainer();
         const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
         let next = childRowContainer.nextElementSibling || parentContainer.nextElementSibling;
+        const verticalScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll();
         if (next) {
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, this.grid.parent);
             } else {
                 this.focusNextRow(next, visibleColumnIndex, this.grid.parent);
             }
-        } else {
-            this.scrollGrid(this.grid.parent, 'prev',
+        } else if (verticalScroll.scrollTop !==
+            verticalScroll.scrollHeight - this.grid.parent.verticalScrollContainer.igxForContainerSize ) {
+            this.scrollGrid(this.grid.parent, 'next',
             () => {
                 parentContainer = this.getChildContainer();
                 childRowContainer = this.getChildGridRowContainer();
-                next = childRowContainer.previousElementSibling || parentContainer.previousElementSibling;
-                if (nextIsSiblingChild) {
+                next = childRowContainer.nextElementSibling || parentContainer.nextElementSibling;
+                if (next && nextIsSiblingChild) {
                     this.focusNextChild(next, visibleColumnIndex, this.grid.parent);
-                } else {
+                } else if (next) {
                     this.focusNextRow(next, visibleColumnIndex, this.grid.parent);
                 }
             });
