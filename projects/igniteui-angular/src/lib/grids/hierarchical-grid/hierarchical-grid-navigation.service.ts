@@ -181,6 +181,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
+    public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
+        if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent) {
+            this.navigateDown(currentRowEl, rowIndex, 0);
+        } else {
+            super.performTab(currentRowEl, rowIndex, visibleColumnIndex);
+        }
+    }
+
     private _focusScrollCellInView(visibleColumnIndex) {
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         const cells = this.grid.nativeElement.querySelectorAll(

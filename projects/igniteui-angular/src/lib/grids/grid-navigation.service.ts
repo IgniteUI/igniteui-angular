@@ -433,7 +433,8 @@ export class IgxGridNavigationService {
                         this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
                 }
         } else {
-            const cell = currentRowEl.querySelector(`igx-grid-cell[data-visibleIndex="${visibleColumnIndex}"]`);
+            const cellSelector = this.getCellSelector();
+            const cell = currentRowEl.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             if (cell) {
                 if (this.grid.rowEditable && this.isRowInEditMode(rowIndex)) {
                     this.movePreviousEditable( rowIndex, visibleColumnIndex);
