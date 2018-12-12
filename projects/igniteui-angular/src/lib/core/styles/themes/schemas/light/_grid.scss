@@ -28,7 +28,8 @@
 /// @prop {Number} pinned-border-width [2px] - The border width of the pinned border.
 /// @prop {String} pinned-border-style [solid] - The CSS border style of the pinned border.
 /// @prop {Map} pinned-border-color [igx-color: ('grays', 400)] - The color of the pinned border.
-/// @prop {Map} cell-selected-background [igx-color: ('grays', 200), hexrgba: #fff] - The selected cell background color.
+/// @prop {Map} cell-active-border-color [igx-color: ('secondary', 500)] - The active(focused) cell border color.
+/// @prop {Map} cell-selected-background [igx-color: ('grays', 200)] - The selected cell background color.
 /// @prop {Map} cell-selected-text-color [igx-contrast-color: ('grays', 200)] - The selected cell text color.
 /// @prop {Map} resize-line-color [igx-color: ('secondary', 500)] - The table header resize line color.
 /// @prop {Map} grouparea-background [igx-color: ('grays', 100), hexrgba: #fff] - The grid group area background color.
@@ -122,6 +123,10 @@ $_light-grid: (
 
     pinned-border-color: (
         igx-color: ('grays', 400)
+    ),
+
+    cell-active-border-color: (
+        igx-color: ('secondary', 500)
     ),
 
     cell-selected-background: (
