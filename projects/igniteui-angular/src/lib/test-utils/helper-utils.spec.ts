@@ -5,8 +5,8 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
 import { take } from 'rxjs/operators';
 import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 
-const CELL_ACTIVE_CSS_CLASS = 'igx_grid__cell--active';
-const DEBOUNCETIME = 30;
+const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
+const DEBOUNCETIME = 50;
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
@@ -226,7 +226,7 @@ export class HelperUtils {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
             summaryCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: key, shiftKey: shift, ctrlKey: ctrl }));
-            await wait(50);
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
         })
@@ -237,7 +237,7 @@ export class HelperUtils {
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
             summaryCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
-            await wait(50);
+            await wait(DEBOUNCETIME);
             resolve();
         })
 }
