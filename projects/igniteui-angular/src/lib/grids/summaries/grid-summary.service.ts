@@ -15,11 +15,17 @@ export class IgxGridSummaryService {
     public retriggerRootPipe = 0;
     public deleteOperation = false;
 
+    public recalculateSummaries() {
+        this.resetSummaryHeight();
+        this.grid.calculateGridHeight();
+        this.grid.cdr.detectChanges();
+    }
+
     public clearSummaryCache(args?) {
         if (!this.summaryCacheMap.size) { return; }
         if (!args) {
             this.summaryCacheMap.clear();
-            if (this.grid.rootSummariesEnabled) {
+            if (this.grid && this.grid.rootSummariesEnabled) {
                 this.retriggerRootPipe++;
             }
             return;
