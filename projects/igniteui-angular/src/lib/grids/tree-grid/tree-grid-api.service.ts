@@ -5,12 +5,14 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../column.component';
 import { first } from 'rxjs/operators';
+import { TransactionType } from '../../services';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
-        return data ? data : [];
+        let data = grid.flatData ? grid.flatData : [];
+        data = transactions ? grid.аddTransactionRowsToData(data) : data;
+        return data;
     }
 
     public expand_row(id: string, rowID: any) {
@@ -123,4 +125,37 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
+
+    public deleteRowFromData(gridID: string, rowID: any, index: number) {
+        const treeGrid = this.get(gridID);
+        if (treeGrid.primaryKey && treeGrid.foreignKey) {
+           super.deleteRowFromData(gridID, rowID, index);
+
+           if (treeGrid.cascadeOnDelete) {
+               const treeRecord = treeGrid.records.get(rowID);
+               if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
+                   for (let i = 0; i < treeRecord.children.length; i++) {
+                       const child = treeRecord.children[i];
+                       treeGrid.deleteRowById(child.rowID);
+                   }
+               }
+           }
+      } else {
+           const record = treeGrid.records.get(rowID);
+           const childData = record.parent ? record.parent.data[treeGrid.childDataKey] : treeGrid.data;
+           index = treeGrid.primaryKey ? childData.map(c => c[treeGrid.primaryKey]).indexOf(rowID) :
+               childData.indexOf(rowID);
+           if (treeGrid.transactions.enabled) {
+            treeGrid.transactions.add({
+                   id: rowID,
+                   type: TransactionType.DELETE,
+                   newValue: null,
+                   parentId: record.parent ? record.parent.rowID : undefined
+               },
+               treeGrid.data);
+           } else {
+               childData.splice(index, 1);
+           }
+       }
+   }
 }

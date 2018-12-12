@@ -25,7 +25,8 @@ import {
     IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand,
     IgxGridBaseComponent,
-    FilteringExpressionsTree
+    FilteringExpressionsTree,
+    IGridDataBindable
 } from '../../public_api';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { valToPxlsUsingRange } from '../core/utils';
@@ -846,7 +847,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
     /**
      *@hidden
      */

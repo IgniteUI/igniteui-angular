@@ -13,11 +13,13 @@ import {
     Inject,
     NgZone,
     forwardRef,
-    Optional
+    Optional,
+    OnInit,
+    TemplateRef
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
@@ -56,7 +58,7 @@ let NEXT_ID = 0;
     providers: [ IgxTreeGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
 
     /**
@@ -77,6 +79,47 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             this._id = value;
             this._gridAPI.reset(oldId, this._id);
         }
+    }
+
+    /**
+     * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
+     * ```html
+     * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    @Input()
+    public data: any[];
+
+    /**
+     * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * let filteredData = this.grid.filteredData;
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    get filteredData() {
+        return this._filteredData;
+    }
+
+    /**
+     * Sets an array of objects containing the filtered data in the `IgxGridComponent`.
+     * ```typescript
+     * this.grid.filteredData = [{
+     *       ID: 1,
+     *       Name: "A"
+     * }];
+     * ```
+	 * @memberof IgxTreeGridComponent
+     */
+    set filteredData(value) {
+        this._filteredData = value;
+
+        if (this.rowSelectable) {
+            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
+        }
+
+        this.restoreHighlight();
     }
 
     /**
@@ -235,9 +278,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     private _gridAPI: IgxTreeGridAPIService;
+    private _filteredData = null;
 
     constructor(
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
@@ -253,6 +297,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
+    }
+
+    public ngOnInit() {
+        this._gridAPI.register(this);
+        super.ngOnInit();
     }
 
     /**
@@ -412,41 +461,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    protected deleteRowFromData(rowID: any, index: number) {
-         if (this.primaryKey && this.foreignKey) {
-            super.deleteRowFromData(rowID, index);
-
-            if (this.cascadeOnDelete) {
-                const treeRecord = this.records.get(rowID);
-                if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
-                    for (let i = 0; i < treeRecord.children.length; i++) {
-                        const child = treeRecord.children[i];
-                        super.deleteRowById(child.rowID);
-                    }
-                }
-            }
-       } else {
-            const record = this.records.get(rowID);
-            const childData = record.parent ? record.parent.data[this.childDataKey] : this.data;
-            index = this.primaryKey ? childData.map(c => c[this.primaryKey]).indexOf(rowID) :
-                childData.indexOf(rowID);
-            if (this.transactions.enabled) {
-                this.transactions.add({
-                    id: rowID,
-                    type: TransactionType.DELETE,
-                    newValue: null,
-                    parentId: record.parent ? record.parent.rowID : undefined
-                },
-                this.data);
-            } else {
-                childData.splice(index, 1);
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
     protected calcMaxSummaryHeight() {
         return 0;
     }
@@ -506,6 +520,19 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             $implicit: rowData,
             templateID: 'dataRow'
         };
+    }
+
+    /**
+    * @hidden
+    */
+    public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.dataLength === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
     }
 
     protected writeToData(rowIndex: number, value: any) {
