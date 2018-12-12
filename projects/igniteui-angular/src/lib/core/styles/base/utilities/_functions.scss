@@ -113,11 +113,14 @@
 /// @param {Map} $palette - The source palette map.
 /// @param {string} $color - The target color from the color palette.
 /// @param {number|variant} $variant - The target color shade from the color palette.
+/// @requires igx-color
+/// @requires text-contrast
+/// @requires hexrgba
 /// @returns {Color} [#fff] - Returns white if now palette, color and/or variant matches found.
 @function igx-contrast-color($palette, $color, $variant: 500) {
     $_color: igx-color($palette, $color, $variant);
     @if $_color {
-        @return text-contrast($_color);
+        @return text-contrast(hexrgba($_color));
     }
     @return #fff;
 }
