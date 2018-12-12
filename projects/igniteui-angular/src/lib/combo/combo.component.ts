@@ -38,7 +38,6 @@ import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sor
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
-import { IgxComboItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { IgxDropDownSelectionService } from '../core/drop-down.selection';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
@@ -1563,14 +1562,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
  */
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboItemNavigationDirective,
+        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboItemNavigationDirective,
+    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,

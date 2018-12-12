@@ -2,6 +2,12 @@ import { Directive, Optional, Self, Input, HostListener } from '@angular/core';
 import { DropDownNavigationDirective, IDropDownBase } from './drop-down-utils';
 import { IgxDropDownBase } from './drop-down.base';
 
+export enum DropDownActionKeys {
+    ESCAPE = 'escape',
+    ENTER = 'enter',
+    SPACE = 'space',
+    TAB = 'tab'
+}
 @Directive({
     selector: '[igxDropDownItemNavigation]'
 })
@@ -47,16 +53,16 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
             switch (key) {
                 case 'esc':
                 case 'escape':
-                    this.onEscapeKeyDown();
+                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE);
                     break;
                 case 'enter':
                 case 'tab':
-                    this.onEnterKeyDown(event);
+                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE);
                     break;
                 case 'space':
                 case 'spacebar':
                 case ' ':
-                    this.onSpaceKeyDown(event);
+                    this.target.handleKeyDown(DropDownActionKeys.SPACE);
                     break;
                 case 'arrowup':
                 case 'up':
@@ -76,27 +82,6 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
                     return;
             }
         }
-    }
-
-    /**
-     * @hidden
-     */
-    onEscapeKeyDown() {
-        this.target.close();
-    }
-
-    /**
-     * @hidden
-     */
-    onSpaceKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem, event);
-    }
-
-    /**
-     * @hidden
-     */
-    onEnterKeyDown(event) {
-        this.target.selectItem(this.target.focusedItem, event);
     }
 
     /**
@@ -125,33 +110,5 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
      */
     onHomeKeyDown() {
         this.target.navigateFirst();
-    }
-}
-
-@Directive({
-    selector: '[igxComboItemNavigation]'
-})
-export class IgxComboItemNavigationDirective extends IgxDropDownItemNavigationDirective implements DropDownNavigationDirective {
-
-    get target() {
-        return this._target;
-    }
-    /**
-     * @hidden
-     */
-    @Input('igxComboItemNavigation')
-    set target(target: IDropDownBase) {
-        this._target = target ? target : this.dropdown;
-    }
-    onEnterKeyDown() {
-        if (this.target.focusedItem.value === 'ADD ITEM') {
-            this.target.combo.addItemToCollection();
-        } else {
-            this.target.close();
-        }
-    }
-
-    onSpaceKeyDown() {
-        this.target.selectItem(this.target.focusedItem, null);
     }
 }
