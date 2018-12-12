@@ -12,10 +12,16 @@ export class IgxGridSummaryService {
     public groupingExpressions = [];
     public retriggerRootPipe = false;
 
+    public recalculateSummaries() {
+        this.resetSummaryHeight();
+        this.grid.calculateGridHeight();
+        this.grid.cdr.detectChanges();
+    }
+
     public clearSummaryCache(args?) {
         if (!args) {
             this.summaryCacheMap.clear();
-            if (this.grid.rootSummariesEnabled) {
+            if (this.grid && this.grid.rootSummariesEnabled) {
                 this.retriggerRootPipe = !this.retriggerRootPipe;
             }
             return;
