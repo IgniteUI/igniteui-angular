@@ -298,23 +298,22 @@ describe('igxMask', () => {
     it('Apply display and input pipes on blur and focus.', fakeAsync(() => {
         const fixture = TestBed.createComponent(PipesMaskComponent);
         fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
-        input.nativeElement.focus();
+        input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('SSS');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('sss');
-
-        input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
-
-        expect(input.nativeElement.value).toEqual('SSS');
     }));
 
     it('Apply placehodler when value is not defined.', fakeAsync(() => {

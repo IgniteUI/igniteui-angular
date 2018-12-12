@@ -320,6 +320,12 @@ export class IgxTimePickerComponent implements
     }
 
     /**
+     *@hidden
+     */
+    @Input()
+    public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
      * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date`, `newValue`: `Date`}.
      *```typescript
      * @ViewChild("toast")
@@ -440,12 +446,6 @@ export class IgxTimePickerComponent implements
      */
     @ViewChild('dropdownInputTemplate', { read: TemplateRef })
     private dropdownInputTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('outlet', { read: IgxOverlayOutletDirective })
-    private outlet: IgxOverlayOutletDirective;
 
     /**
      * @hidden
@@ -619,9 +619,17 @@ export class IgxTimePickerComponent implements
     public openDialog(timePicker: IgxTimePickerComponent = this): void {
         if (this.mode === InteractionMode.dialog) {
             this.collapsed = false;
+            if (this.outlet) {
+                this._dialogOverlaySettings.outlet = this.outlet;
+            }
             this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
-        } else if (this.mode === InteractionMode.dropdown && this.collapsed) {
+        }
+
+        if (this.mode === InteractionMode.dropdown && this.collapsed) {
             this.collapsed = false;
+            if (this.outlet) {
+                this._dropDownOverlaySettings.outlet = this.outlet;
+            }
             this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
             this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
         }

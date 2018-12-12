@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Pipe, PipeTransform } from '@angular/core';
 
 interface IPerson {
   name: string;
@@ -14,6 +14,12 @@ interface IPerson {
 })
 export class MaskSampleComponent {
     person: IPerson;
+
+    value = '1255';
+    mask = '##.##';
+    placeholder = '-##.## %';
+    displayFormat = new DisplayFormatPipe();
+    inputFormat = new InputFormatPipe();
 
     constructor() {
         this.person = {
@@ -52,3 +58,44 @@ export class MaskSampleComponent {
       }
 }
 
+@Pipe({ name: 'displayFormat' })
+export class DisplayFormatPipe implements PipeTransform {
+    transform(value: any): string {
+        let val = value;
+
+        if (val === '__.__') {
+          val = '';
+        }
+
+        if (val && val.indexOf('%') === -1) {
+          val += ' %';
+        }
+
+        if (val && val.indexOf('-') === -1) {
+          val = val.substring(0, 0) + '-' + val.substring(0);
+        }
+
+        return val;
+    }
+}
+
+@Pipe({ name: 'inputFormat' })
+export class InputFormatPipe implements PipeTransform {
+    transform(value: any): string {
+        let val = value;
+
+        if (!val) {
+          val = '__.__';
+        }
+
+        if (val.indexOf(' %') !== -1) {
+          val = val.replace(new RegExp(' %', 'g'), '');
+        }
+
+        if (val.indexOf('-') !== -1) {
+          val = val.replace(new RegExp('-', 'g'), '');
+        }
+
+        return val;
+    }
+}
