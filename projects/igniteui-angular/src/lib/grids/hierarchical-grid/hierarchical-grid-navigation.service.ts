@@ -181,6 +181,45 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
+    public onKeydownEnd(rowIndex) {
+        if (this.grid.parent) {
+            // handle scenario where last child row might not be in view
+            // parent should scroll to child grid end
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+            const endIsVisible = diff < 0;
+            if (!endIsVisible) {
+                this.scrollGrid(this.grid.parent, diff, () => super.onKeydownEnd(rowIndex));
+            } else {
+                super.onKeydownEnd(rowIndex);
+            }
+        } else {
+            super.onKeydownEnd(rowIndex);
+        }
+
+    }
+
+    public goToFirstCell() {
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
+        if (verticalScroll.scrollTop === 0 && this.grid.parent) {
+            // scroll parent so that current child is in view
+            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
+                this.navigateTop(0);
+            } else {
+                this.horizontalScroll(this.grid.dataRowList.first.index).scrollTo(0);
+                this.grid.parentVirtDir.onChunkLoad
+                    .pipe(first())
+                    .subscribe(() => {
+                        this.navigateTop(0);
+                    });
+            }
+        } else {
+            super.goToFirstCell();
+        }
+    }
+
     public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
         if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent) {
             this.navigateDown(currentRowEl, rowIndex, 0);
@@ -202,8 +241,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             // scroll parent so that cell is in view
             const dc = childContainer.parentNode.parentNode;
-            const scrWith = childContainer.getBoundingClientRect().top
-            + parseInt(dc.style.top, 10);
+            const scrWith = parseInt(dc.style.top, 10);
             this.scrollGrid(this.grid.parent, scrWith , () => cell.focus({preventScroll: true}));
         }
     }
