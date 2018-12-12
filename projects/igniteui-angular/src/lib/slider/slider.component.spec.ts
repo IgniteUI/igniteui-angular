@@ -152,7 +152,7 @@ describe('IgxSlider', () => {
 
             slider.value = 45;
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toBe(20);
+            expect(fixture.componentInstance.slider.value).toBe(40);
         });
 
         it('should not set upper value to outside bounds slider when slider is RANGE', () => {
@@ -178,7 +178,7 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
             expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect(slider.value.upper).toBe(40);
         });
 
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
@@ -227,7 +227,7 @@ describe('IgxSlider', () => {
                 upper: 30
             };
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
+            expect(slider.value.lower).toBe(10);
             expect(slider.value.upper).toBe(30);
         });
 
@@ -321,7 +321,7 @@ describe('IgxSlider', () => {
             expect(Math.round(slider.value as number)).toBe(60);
         }));
 
-        fit('Value should remain to the max one if it exceeds.', () => {
+        it('Value should remain to the max one if it exceeds.', () => {
             const fix = TestBed.createComponent(SliderMinMaxComponent);
             fix.detectChanges();
 
@@ -650,7 +650,7 @@ describe('IgxSlider', () => {
         expect((slider.value as IRangeSliderValue).upper).toBe(7);
     });
 
-    fit('Lower and upper bounds should not exceed min and max values', () => {
+    it('Lower and upper bounds should not exceed min and max values', () => {
         const fix = TestBed.createComponent(SliderTestComponent);
         fix.detectChanges();
 
