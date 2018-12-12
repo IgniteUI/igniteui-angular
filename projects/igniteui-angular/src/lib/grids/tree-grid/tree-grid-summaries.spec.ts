@@ -252,10 +252,10 @@ describe('IgxTreeGrid - Summaries', () => {
             });
 
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 4);
-            HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '29', '43', '103', '34.333']);
 
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
-            HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '19', '847', '207', '51.75']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
         });
 
         it('should be able to change summary operant at runtime', () => {
