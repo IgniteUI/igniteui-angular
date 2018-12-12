@@ -162,7 +162,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._hasSummary = value;
 
         if (this.grid) {
-            this.grid.recalculateSummaries();
+            this.grid.summaryService.recalculateSummaries();
         }
     }
     /**
@@ -468,7 +468,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
             (this.grid as any)._summaryPipeTrigger++;
-            this.grid.recalculateSummaries();
+            this.grid.summaryService.recalculateSummaries();
         }
     }
     /**
