@@ -134,7 +134,7 @@ describe('IgxGrid - Summaries', () => {
             const filterResult = gridComp.rowList.length;
             expect(filterResult).toEqual(0);
 
-            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['0', '', '']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['0', '0', '0']);
         });
 
         it(`Should update summary section when the column is outside of the
@@ -358,10 +358,10 @@ describe('IgxGrid - Summaries', () => {
                 expect(typeof emptySummaries[3].summaryResult).not.toEqual(null);
                 expect(typeof emptySummaries[4].summaryResult).not.toEqual(null);
 
-                expect(emptySummaries[1].summaryResult.length === 0).toBeTruthy();
-                expect(emptySummaries[2].summaryResult.length === 0).toBeTruthy();
-                expect(emptySummaries[3].summaryResult.length === 0).toBeTruthy();
-                expect(emptySummaries[4].summaryResult.length === 0).toBeTruthy();
+                expect(emptySummaries[1].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[2].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[3].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[4].summaryResult === 0).toBeTruthy();
             });
 
 
@@ -456,7 +456,7 @@ describe('IgxGrid - Summaries', () => {
                 HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
                 HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['0']);
-                HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '', '', '', '']);
+                HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '0', '0', '0', '0']);
                 HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
 
                 grid.clearFilter();
@@ -1156,7 +1156,7 @@ describe('IgxGrid - Summaries', () => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['0']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
-            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '', '', '', '']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '0', '0', '0', '0']);
 
             grid.clearFilter();
             fix.detectChanges();
@@ -1320,7 +1320,7 @@ describe('IgxGrid - Summaries', () => {
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['0']);
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
-            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '', '', '', '']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '0', '0', '0', '0']);
             expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
         });
 

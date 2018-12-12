@@ -725,7 +725,7 @@ describe('IgxTreeGrid - Summaries', () => {
         HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
         HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
         HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['0', '', '']);
-        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '', '', '', '']);
+        HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['0', '0', '0', '0', '0']);
         HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
     }
 
