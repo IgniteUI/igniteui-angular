@@ -206,7 +206,7 @@ export class IgxGridNavigationService {
     public onKeydownEnd(rowIndex) {
         const index = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex;
         const rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex).nativeElement;
-        const allCells = rowElement.querySelectorAll('igx-grid-cell');
+        const allCells = rowElement.querySelectorAll(this.getCellSelector());
         const lastCell = allCells[allCells.length - 1];
         if (this.isColumnFullyVisible(index)) {
             lastCell.focus();

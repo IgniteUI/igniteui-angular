@@ -579,6 +579,18 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
+     * Returns the scroll offset of the element at the specified index.
+     * ```typescript
+     * this.parentVirtDir.getScrollForIndex(1);
+     * ```
+     */
+    public getScrollForIndex(index: number, bottom?: boolean) {
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const scroll = bottom ? this.sizesCache[index + 1] - containerSize : this.sizesCache[index];
+        return scroll;
+    }
+
+    /**
      * @hidden
      * Function that is called when scrolling vertically
      */
