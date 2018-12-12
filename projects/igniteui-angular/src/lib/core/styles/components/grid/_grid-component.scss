@@ -221,6 +221,10 @@
         @extend %grid-cell--fixed-width !optional;
     }
 
+    @include e(td, $mods: (pinned, selected)) {
+        @extend %grid-cell--pinned-selected !optional;
+    }
+
     @include e(td-text) {
         @extend %grid-cell-text !optional;
     }
