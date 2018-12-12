@@ -27,7 +27,7 @@ export class IgxSummaryOperand {
      * ```
      * @memberof IgxSummaryOperand
      */
-    public static count(data: any[]): any {
+    public static count(data: any[]): number {
         return data.length;
     }
     /**
@@ -78,8 +78,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public static min(data: any[]): any {
-        return data.length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : [];
+    public static min(data: any[]): number {
+        return data.length ? data.filter(clear).reduce((a, b) => Math.min(a, b)) : 0;
     }
     /**
      * Returns the maximum numeric value in the provided data records.
@@ -89,8 +89,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public static max(data: any[]): any {
-        return data.length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : [];
+    public static max(data: any[]): number {
+        return data.length ? data.filter(clear).reduce((a, b) => Math.max(a, b)) : 0;
     }
     /**
      * Returns the sum of the numeric values in the provided data records.
@@ -100,8 +100,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public static sum(data: any[]): any {
-        return data.length ? data.filter(clear).reduce((a, b) => +a + +b) : [];
+    public static sum(data: any[]): number {
+        return data.length ? data.filter(clear).reduce((a, b) => +a + +b) : 0;
     }
     /**
      * Returns the average numeric value in the data provided data records.
@@ -111,8 +111,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public static average(data: any[]): any {
-        return data.length ? this.sum(data) / this.count(data) : [];
+    public static average(data: any[]): number {
+        return data.length ? this.sum(data) / this.count(data) : 0;
     }
     /**
      * Executes the static methods and returns `IgxSummaryResult[]`.
