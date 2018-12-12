@@ -10,7 +10,7 @@ export class IgxSummaryDataPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
 
-    transform(id: string, trigger: boolean = false) {
+    transform(id: string, trigger: number = 0) {
         const summaryService = this.gridAPI.get(id).summaryService;
         return summaryService.calculateSummaries(
             summaryService.rootSummaryID,
