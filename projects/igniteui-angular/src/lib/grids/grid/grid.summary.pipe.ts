@@ -73,7 +73,8 @@ export class IgxGridSummaryPipe implements PipeTransform {
             }
 
             if (summaryPosition === GridSummaryPosition.top) {
-                const summaries = grid.summaryService.calculateSummaries(recordId, groupByRecord.records);
+                const records = this.removeDeletedRecord(grid, groupByRecord.records.slice());
+                const summaries = grid.summaryService.calculateSummaries(recordId, records);
                 const summaryRecord: ISummaryRecord = {
                     summaries: summaries,
                     max:  maxSummaryHeight

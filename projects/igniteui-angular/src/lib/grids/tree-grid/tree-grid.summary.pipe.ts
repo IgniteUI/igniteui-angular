@@ -67,7 +67,8 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
                     }
                 }
             } else if (summaryPosition === GridSummaryPosition.top && isExpanded) {
-                const childData = record.children.map(r => r.data);
+                let childData = record.children.map(r => r.data);
+                childData = this.removeDeletedRecord(grid, record.rowID, childData);
                 const summaries = grid.summaryService.calculateSummaries(record.rowID, childData);
                 const summaryRecord: ISummaryRecord = {
                     summaries: summaries,
