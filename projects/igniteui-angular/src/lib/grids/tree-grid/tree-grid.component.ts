@@ -351,7 +351,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-
+            this.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
             if (this.primaryKey && this.foreignKey) {
                 data[this.foreignKey] = parentRowID;
                 super.addRow(data);
@@ -377,7 +377,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     }
                     parentData[childKey].push(data);
                 }
-
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
