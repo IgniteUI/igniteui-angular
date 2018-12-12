@@ -321,6 +321,28 @@ describe('IgxSlider', () => {
             expect(Math.round(slider.value as number)).toBe(60);
         }));
 
+        fit('Value should remain to the max one if it exceeds.', () => {
+            const fix = TestBed.createComponent(SliderMinMaxComponent);
+            fix.detectChanges();
+
+            const slider = fix.componentInstance.slider;
+            let expectedVal = 150;
+            let expectedMax = 300;
+
+            expect(slider.value).toEqual(expectedVal);
+            expect(slider.maxValue).toEqual(expectedMax);
+
+            expectedVal = 250;
+            expectedMax = 200;
+            slider.maxValue = expectedMax;
+            slider.value = expectedVal;
+            fix.detectChanges();
+
+            expect(slider.value).not.toEqual(expectedVal);
+            expect(slider.value).toEqual(expectedMax);
+            expect(slider.maxValue).toEqual(expectedMax);
+        });
+
         function panRight(element, elementHeight, elementWidth, duration) {
             const panOptions = {
                 deltaX: elementWidth * 0.6,
@@ -627,6 +649,27 @@ describe('IgxSlider', () => {
         expect((slider.value as IRangeSliderValue).lower).toBe(5);
         expect((slider.value as IRangeSliderValue).upper).toBe(7);
     });
+
+    fit('Lower and upper bounds should not exceed min and max values', () => {
+        const fix = TestBed.createComponent(SliderTestComponent);
+        fix.detectChanges();
+
+        const componentInst = fix.componentInstance;
+        const slider = componentInst.slider;
+        const expectedMinVal = 0;
+        const expectedMaxVal = 10;
+
+        expect(slider.minValue).toEqual(expectedMinVal);
+        expect(slider.maxValue).toEqual(expectedMaxVal);
+
+        const expectedLowerBound = -1;
+        const expectedUpperBound = 11;
+        slider.lowerBound = expectedLowerBound;
+        slider.upperBound = expectedUpperBound;
+
+        expect(slider.lowerBound).toEqual(expectedMinVal);
+        expect(slider.upperBound).toEqual(expectedMaxVal);
+    })
 
     describe('EditorProvider', () => {
         it('Should return correct edit element (single)', () => {
