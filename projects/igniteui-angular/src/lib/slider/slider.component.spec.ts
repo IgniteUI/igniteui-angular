@@ -24,7 +24,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-        configureTestSuite();
+    configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -325,22 +325,22 @@ describe('IgxSlider', () => {
             const fix = TestBed.createComponent(SliderMinMaxComponent);
             fix.detectChanges();
 
-            const slider = fix.componentInstance.slider;
+            const sliderRef = fix.componentInstance.slider;
             let expectedVal = 150;
             let expectedMax = 300;
 
-            expect(slider.value).toEqual(expectedVal);
-            expect(slider.maxValue).toEqual(expectedMax);
+            expect(sliderRef.value).toEqual(expectedVal);
+            expect(sliderRef.maxValue).toEqual(expectedMax);
 
             expectedVal = 250;
             expectedMax = 200;
-            slider.maxValue = expectedMax;
-            slider.value = expectedVal;
+            sliderRef.maxValue = expectedMax;
+            sliderRef.value = expectedVal;
             fix.detectChanges();
 
-            expect(slider.value).not.toEqual(expectedVal);
-            expect(slider.value).toEqual(expectedMax);
-            expect(slider.maxValue).toEqual(expectedMax);
+            expect(sliderRef.value).not.toEqual(expectedVal);
+            expect(sliderRef.value).toEqual(expectedMax);
+            expect(sliderRef.maxValue).toEqual(expectedMax);
         });
 
         function panRight(element, elementHeight, elementWidth, duration) {
@@ -669,7 +669,7 @@ describe('IgxSlider', () => {
 
         expect(slider.lowerBound).toEqual(expectedMinVal);
         expect(slider.upperBound).toEqual(expectedMaxVal);
-    })
+    });
 
     describe('EditorProvider', () => {
         it('Should return correct edit element (single)', () => {
