@@ -180,7 +180,7 @@ describe('IgxGrid - Summaries', () => {
             }).not.toThrow();
         });
 
-        it('should change custom summaries at runtime', fakeAsync(() => {
+        fit('should change custom summaries at runtime', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomSummariesComponent);
             const grid = fixture.componentInstance.grid1;
             fixture.detectChanges();
@@ -188,10 +188,12 @@ describe('IgxGrid - Summaries', () => {
             const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+            HelperUtils.verifyVisbleSummariesHeight(fixture, 3, grid.defaultRowHeight);
             grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.dealsSummaryMinMax;
             tick(100);
             fixture.detectChanges();
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '20,000']);
+            HelperUtils.verifyVisbleSummariesHeight(fixture, 2, grid.defaultRowHeight);
         }));
 
         it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', (async () => {
@@ -272,7 +274,7 @@ describe('IgxGrid - Summaries', () => {
                 expect(grid.hasSummarizedColumns).toBe(false);
             });
 
-            it('should change summary operand through grid API ', (async () => {
+            fit('should change summary operand through grid API ', (async () => {
                 grid.enableSummaries([{ fieldName: 'UnitsInStock', customSummary: fix.componentInstance.dealsSummaryMinMax }]);
                 // grid.recalculateSummaries();
                 await wait(200);
@@ -280,6 +282,7 @@ describe('IgxGrid - Summaries', () => {
 
                 const summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '20,000']);
+                HelperUtils.verifyVisbleSummariesHeight(fix, 3, grid.defaultRowHeight);
             }));
 
             it('should have summary per each column that \'hasSummary\'= true', () => {
@@ -1469,13 +1472,16 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
     }
 
     public operate(summaries?: any[]): IgxSummaryResult[] {
-        const result = super.operate(summaries);
-        result.push({
-            key: 'test',
-            label: 'Test',
-            summaryResult: summaries.filter(rec => rec > 10 && rec < 30).length
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'min' || obj.key === 'max') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
         });
-
         return result;
     }
 }
