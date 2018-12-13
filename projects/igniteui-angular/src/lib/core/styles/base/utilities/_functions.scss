@@ -115,8 +115,9 @@
 /// @param {number|variant} $variant - The target color shade from the color palette.
 /// @returns {Color} [#fff] - Returns white if now palette, color and/or variant matches found.
 @function igx-contrast-color($palette, $color, $variant: 500) {
-    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
-        @return map-get(map-get(map-get($palette, $color), 'contrast'), $variant);
+    $_color: igx-color($palette, $color, $variant);
+    @if $_color {
+        @return text-contrast($_color);
     }
     @return #fff;
 }
@@ -191,16 +192,17 @@
 /// @access public
 /// @requires {function} to-string
 /// @param {Color} $rgba - The rgba color to convert.
+/// @param {Color} $background - The background color to convert against.
 /// @return {Color} - The hexidecimal representation of the rgba value.
-@function hexrgba($rgba) {
+@function hexrgba($rgba, $background: #fff) {
     @if type-of($rgba) == color {
         $red: red($rgba);
         $green: green($rgba);
         $blue: blue($rgba);
         $a: alpha($rgba);
-        $r: floor($a * $red + (1 - $a) * 255);
-        $g: floor($a * $green + (1 - $a) * 255);
-        $b: floor($a * $blue + (1 - $a) * 255);
+        $r: floor($a * $red + (1 - $a) * red($background));
+        $g: floor($a * $green + (1 - $a) * green($background));
+        $b: floor($a * $blue + (1 - $a) * blue($background));
         @return rgb($r, $g, $b);
     }
     @return $rgba;
@@ -240,17 +242,12 @@
 /// @returns {Map} - A map consisting of 14 color variations and 14
 /// text contrast colors for each variation.
 @function generate-palette($color, $saturations) {
-    $shades: ();
-    $contrasts: ();
-
+    $result: ();
     @each $saturation in $saturations {
         $shade: gen-color($color, $saturation);
-        $contrast: text-contrast($shade);
-
-        $shades: map-merge($shades, ($saturation: $shade));
-        $contrasts: map-merge($contrasts, ($saturation: $contrast));
+        $result: map-merge($result, ($saturation: $shade));
     }
-    @return extend($shades, (contrast: $contrasts));
+    @return $result;
 }
 
 /// Generates grayscale color palette from a color.
@@ -264,18 +261,12 @@
 /// @returns {Map} - A map consisting of 10 grayscale color variations and 10
 /// text contrast colors for each variation.
 @function grayscale-palette($color, $shades) {
-    $colors: ();
-    $contrasts: ();
-
+    $result: ();
     @each $saturation, $opacity in $shades {
         $shade: rgba(grayscale($color), $opacity);
-        $contrast: text-contrast(hexrgba($shade));
-
-        $colors: map-merge($colors, ($saturation: $shade));
-        $contrasts: map-merge($contrasts, ($saturation: $contrast));
+        $result: map-merge($result, ($saturation: $shade));
     }
-
-    @return extend($colors, (contrast: $contrasts));
+    @return $result;
 }
 
 /// Generates a color palette.
@@ -389,17 +380,90 @@
     @return $split-arr;
 }
 
-// @ignore
-@function get-theme($themes, $theme)  {
-    @if type-of($themes) == 'map' and map-has-key($themes, $theme) {
-        @return map-get($themes, $theme);
+/// Returns a value for a given instruction map, where the
+/// keys of the map are the names of the functions to be called,
+/// and the value for a given key is the arguments the function
+/// should be called with.
+/// The instruction set is executed left-to-right. The output of
+/// the first instruction is then passed as input to the next, and so on.
+/// @access private
+/// @param {Map} $ctx - The instruction map to be used.
+/// @param {List | Map} $extra [null] - Additional arguments to be passed during function calls.
+/// Will only be applied for `igx-color` and `igx-contrast-color` functions.
+/// @example scss Resolve `igx-color` and apply 80% opacity
+/// $instructions: (
+///   igx-color: ('primary', 500),
+///   rgba: .2
+/// );
+/// // $some-palette is a palette we pass as extra arguments
+/// $resolved-color: resolve-value($instructions, $some-palette);
+///
+@function resolve-value($ctx, $extra: null) {
+    $result: null;
+    @each $fn, $args in $ctx {
+        @if function-exists($fn) {
+            @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
+                $result: call(get-function($fn), $extra, $args...);
+            } @else if $result != null {
+                $result: call(get-function($fn), $result, $args...)
+            } @else {
+                $result: call(get-function($fn), $args...)
+            }
+        }
     }
+    @return $result;
+}
 
-    @if (function-exists('get-function')) {
-        @return call(get-function(#{$theme}-theme));
-    } @else {
-        @return call((#{$theme}-theme));
+/// Applies an `igx-palette` to a given theme schema.
+/// @access private
+/// @param {Map} $schema - A theme schema.
+/// @param {Map} $palette - An igx-palette map.
+/// @requires {function} resolve-value
+/// @example scss Apply an `igx-palette` to theme schema
+///   $custom-palette: igx-palette($primary: red, $secondary: blue);
+///   $custom-schema: (
+///     my-color: (
+///        igx-color: ('primary', 800),
+///        rgba: .5
+///     ),
+///     roundness: 5px
+///   );
+///   $theme: apply-palette($custom-schema, $custom-palette); // A map with palette values resolved.
+/// @returns {Map} - A map with the resolved palette values.
+@function apply-palette($schema, $palette) {
+    $result: ();
+    @each $key, $value in $schema {
+        @if type-of($value) == 'map' {
+            $result: extend($result, (#{$key}: resolve-value($value, $palette)));
+        } @else {
+            $result: extend($result, (#{$key}: $value));
+        }
     }
+    @return $result;
+}
+
+/// Returns true if the scope where it's called
+/// is the root of the document.
+/// @access private
+/// @example scss Check if the current scope is root
+///   @mixin smart-mixin() {
+///     $scope: if(is-root(), ':root', '&');
+///
+///     #{$scope} {
+///       /* style rules here */
+///     }
+///   }
+///
+@function is-root() {
+    @each $selector in & {
+        @return if($selector == null, true, false);
+    }
+}
+
+/// Returns a random color.
+/// @access private
+@function random-color {
+    @return hsl(random(360), 100%, 50%);
 }
 
 /// Returns a value for a given instruction map, where the

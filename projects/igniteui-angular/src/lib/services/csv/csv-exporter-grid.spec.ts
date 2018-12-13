@@ -159,7 +159,7 @@ describe('CSV Grid Exporter', () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
 
         const wrapper = await getExportedData(grid, options);
@@ -171,18 +171,18 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedSimpleGridData);
 
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: true});
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.sortedDescSimpleGridData);
 
         grid.clearSort();
-        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+        grid.sort({fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
         fix.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData);

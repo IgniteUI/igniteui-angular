@@ -32,6 +32,7 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CLASS = '.igx-grid__td';
     const ROW_CLASS = '.igx-grid__tr';
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
@@ -752,55 +753,6 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - keyboard navigation tests', () => {
-        configureTestSuite();
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxGridDefaultRenderingComponent
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxGridModule.forRoot()]
-            }).compileComponents();
-        }));
-
-        it('should allow pageup/pagedown navigation when the grid is focused', async () => {
-            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-            fix.detectChanges();
-            const grid = fix.componentInstance.grid;
-            const pageDownKeyEvent = new KeyboardEvent('keydown', {
-                code: 'PageDown',
-                key: 'PageDown'
-            });
-            const pageUpKeyEvent = new KeyboardEvent('keydown', {
-                code: 'PageUp',
-                key: 'PageUp'
-            });
-            let currScrollTop;
-            grid.width = '800px';
-            grid.height = '500px';
-            fix.componentInstance.initColumnsRows(25, 25);
-            await wait();
-            fix.detectChanges();
-            grid.nativeElement.dispatchEvent(new Event('focus'));
-
-            // testing the pagedown key
-            grid.nativeElement.dispatchEvent(pageDownKeyEvent);
-            grid.cdr.detectChanges();
-
-            await wait();
-            currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
-            expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
-
-            // testing the pageup key
-            grid.nativeElement.dispatchEvent(pageUpKeyEvent);
-            grid.cdr.detectChanges();
-            await wait();
-            currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
-            expect(currScrollTop).toEqual(0);
-        });
-    });
-
     describe('IgxGrid - API methods', () => {
         configureTestSuite();
         beforeEach(async(() => {
@@ -1147,7 +1099,6 @@ describe('IgxGrid Component Tests', () => {
             it(`Should jump from first editable columns to overlay buttons`, fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
-                const grid = fixture.componentInstance.grid;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 const firstCellElement = targetCell.nativeElement;
                 fixture.detectChanges();
@@ -1666,7 +1617,7 @@ describe('IgxGrid Component Tests', () => {
                 tick();
 
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 fix.detectChanges();
 
                 // expect(gridAPI.submit_value).toHaveBeenCalled();
@@ -2018,6 +1969,23 @@ describe('IgxGrid Component Tests', () => {
                 expect(overlayContent).toBeFalsy();
                 expect(rowEditingBannerElement).toBeTruthy(); // banner is still present in grid template, just not visible
             }));
+
+            it(`Should exit edit mode when edited row is being deleted`, () => {
+                const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                const row = grid.getRowByKey(0);
+                const targetCell = grid.getCellByKey(0, 'Downloads');
+                spyOn(grid, 'endEdit').and.callThrough();
+                targetCell.inEditMode = true;
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
+                row.delete();
+                fixture.detectChanges();
+                expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
+                expect(grid.endEdit).toHaveBeenCalledTimes(1);
+                expect(grid.endEdit).toHaveBeenCalledWith(true);
+            });
         });
 
         describe('Row Editing - Filtering', () => {
@@ -2113,7 +2081,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.inEditMode = true;
                 tick();
 
-                grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true,
+                 grid.groupBy({ fieldName: 'OrderDate', dir: SortingDirection.Desc, ignoreCase: true,
                     strategy: DefaultSortingStrategy.instance() });
 
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
@@ -2163,7 +2131,7 @@ describe('IgxGrid Component Tests', () => {
                 cell.update(newValue);
 
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 tick();
                 fix.detectChanges();
 
@@ -2326,13 +2294,13 @@ describe('IgxGrid Component Tests', () => {
                 column.resizable = true;
                 fix.detectChanges();
 
-                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
-                const headerResArea = headers[2].nativeElement.children[2];
+                const headers: DebugElement[] = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
+                const headerResArea = headers[2].children[1].nativeElement;
                 UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
                 tick();
                 fix.detectChanges();
 
-                const resizer = headers[2].nativeElement.children[2].children[0];
+                const resizer = headers[2].children[1].children[0].nativeElement;
                 expect(resizer).toBeDefined();
                 UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
                 tick();
@@ -2537,7 +2505,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // On sort
                 grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: true,
-                    strategy: DefaultSortingStrategy.instance() });
+                strategy: DefaultSortingStrategy.instance() });
                 fixture.detectChanges();
                 expect(grid.onRowEdit.emit).toHaveBeenCalled();
                 expect(grid.onRowEdit.emit).toHaveBeenCalledWith({
@@ -2934,7 +2902,7 @@ describe('IgxGrid Component Tests', () => {
                     grid.primaryKey = 'ID';
                     fix.detectChanges();
                     grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false,
-                        strategy: DefaultSortingStrategy.instance() });
+                    strategy: DefaultSortingStrategy.instance() });
                     tick();
                     fix.detectChanges();
                     let row: HTMLElement;

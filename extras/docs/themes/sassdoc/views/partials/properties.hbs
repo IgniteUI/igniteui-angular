@@ -1,0 +1,41 @@
+{{#with property}}
+    <article class="parameters-table container">
+        <h4 class="parameters-table__title">{{#localize}}Properties{{/localize}}</h4>
+        <header class="parameters-table__header row">
+            <div class="col-xs-3 parameters-table__header-cell">
+                <h5>{{#localize}}Name{{/localize}}</h5>
+            </div>
+            <div class="col-xs-3 parameters-table__header-cell">
+                <h5>{{#localize}}Description{{/localize}}</h5>
+            </div>
+            <div class="col-xs-3 parameters-table__header-cell">
+                <h5>{{#localize}}Type{{/localize}}</h5>
+            </div>
+            <div class="col-xs-3 parameters-table__header-cell">
+                <h5>{{#localize}}Default Value{{/localize}}</h5>
+            </div>
+        </header>
+
+        {{#each this}}
+            <section class="parameters-table__row row">
+                <div class="parameters-table__row-cell parameters-table__row-cell--name col-xs-3">
+                    {{name}}
+                </div>
+                <div class="parameters-table__row-cell parameters-table__row-cell--description col-xs-3">
+                    {{{description}}}
+                </div>
+                <div class="parameters-table__row-cell parameters-table__row-cell--type col-xs-3">
+                    {{type}}
+                </div>
+                <div class="parameters-table__row-cell parameters-table__value col-xs-3">
+                    {{! TODO: This should be a helper that determines the value type as well}}
+                    {{#if default}}
+                        {{default}}
+                    {{^}}
+                        none
+                    {{/if}}
+                </div>
+            </section>
+        {{/each}}
+    </article>
+{{/with}}

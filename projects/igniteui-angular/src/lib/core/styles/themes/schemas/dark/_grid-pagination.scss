@@ -1,0 +1,16 @@
+@import '../light/grid-pagination';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark grid pagination schema.
+/// @type {Map}
+/// @requires extend
+/// @prop {Map} background-color [#222] - The background color of the paging panel.
+/// @requires $_light-grid-pagination
+/// @see $default-palette
+$_dark-grid-pagination: extend($_light-grid-pagination, (
+    background-color: #222
+));

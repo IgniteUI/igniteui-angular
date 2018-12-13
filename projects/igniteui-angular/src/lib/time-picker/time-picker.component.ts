@@ -16,7 +16,8 @@ import {
     ViewChild,
     AfterViewInit,
     DoCheck,
-    ContentChild
+    ContentChild,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -33,8 +34,12 @@ import {
 } from './time-picker.directives';
 import { Subscription } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
+@Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -62,15 +67,29 @@ export interface IgxTimePickerValidationFailedEventArgs {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: TimePickerHammerConfig
+        },
+        {
+            provide: IGX_TIME_PICKER_COMPONENT,
+            useExisting: IgxTimePickerComponent
         }
     ],
     selector: 'igx-time-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'time-picker.component.html'
 })
-export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy, DoCheck, AfterViewInit {
+export class IgxTimePickerComponent implements
+    IgxTimePickerBase,
+    ControlValueAccessor,
+    EditorProvider,
+    OnInit,
+    OnDestroy,
+    DoCheck,
+    AfterViewInit {
 
     private _value: Date;
+    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    private _okButtonLabel = null;
+    private _cancelButtonLabel = null;
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -129,13 +148,38 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
     public disabled = false;
 
     /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+    */
+    @Input()
+    set resourceStrings(value: ITimePickerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+    */
+    get resourceStrings(): ITimePickerResourceStrings {
+        return this._resourceStrings;
+    }
+
+    /**
      * An @Input property that renders OK button with custom text. By default `okButtonLabel` is set to OK.
      * ```html
      * <igx-time-picker okButtonLabel='SET' [value]="date" format="h:mm tt"></igx-time-picker>
      * ```
      */
     @Input()
-    public okButtonLabel = 'OK';
+    set okButtonLabel(value: string) {
+        this._okButtonLabel = value;
+    }
+
+    /**
+     * An accessor that returns the label of ok button.
+    */
+    get okButtonLabel(): string {
+        return this._okButtonLabel || this.resourceStrings.igx_time_picker_ok;
+    }
 
     /**
      * An @Input property that renders cancel button with custom text.
@@ -145,7 +189,16 @@ export class IgxTimePickerComponent implements ControlValueAccessor, EditorProvi
      * ```
      */
     @Input()
-    public cancelButtonLabel = 'Cancel';
+    set cancelButtonLabel(value: string) {
+         this._cancelButtonLabel = value;
+    }
+
+     /**
+     * An accessor that returns the label of cancel button.
+    */
+    get cancelButtonLabel(): string {
+        return this._cancelButtonLabel || this.resourceStrings.igx_time_picker_cancel;
+    }
 
     /**
      * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>

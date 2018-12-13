@@ -149,6 +149,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Performance'
         },
         {
+            link: '/gridPercentage',
+            icon: 'view_column',
+            name: 'Grid Percentage'
+        },
+        {
             link: '/gridRemoteVirtualization',
             icon: 'view_column',
             name: 'Grid Remote Virtualization'
@@ -172,6 +177,11 @@ export class AppComponent implements OnInit {
             link: '/gridToolbar',
             icon: 'view_column',
             name: 'Grid Toolbar'
+        },
+        {
+            link: '/gridToolbarCustom',
+            icon: 'view_column',
+            name: 'Grid Toolbar Custom Content'
         },
         {
             link: '/treeGrid',

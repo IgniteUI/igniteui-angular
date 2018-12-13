@@ -12,6 +12,7 @@ import { IgxGridComponent, IgxGridModule } from '../grids/grid/index';
 import { IgxListModule } from '../list';
 import { IgxExpansionPanelTitleDirective } from './expansion-panel.directives';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { By } from '@angular/platform-browser';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
@@ -732,7 +733,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
-            const panelElement = panel.elementRef.nativeElement;
+            const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const header = fixture.componentInstance.header;
             const headerElement = header.elementRef.nativeElement;
             const title = fixture.componentInstance.expansionPanel.header;
@@ -769,7 +770,7 @@ describe('igxExpansionPanel', () => {
             fixture.componentInstance.showTitle = false;
             fixture.detectChanges();
             const panel = fixture.componentInstance.panel;
-            const panelElement = panel.elementRef.nativeElement;
+            const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const header = fixture.componentInstance.header;
             expect(header).toBeFalsy();
             const title = fixture.componentInstance.title;
@@ -792,7 +793,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
-            const panelElement = panel.elementRef.nativeElement;
+            const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const header = fixture.componentInstance.header;
             const headerElement = header.elementRef.nativeElement;
             const title = panel.header;
@@ -822,7 +823,7 @@ describe('igxExpansionPanel', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
-            const panelElement = panel.elementRef.nativeElement;
+            const panelElement = fixture.debugElement.query(By.css('igx-expansion-panel')).nativeElement;
             const title = fixture.componentInstance.expansionPanel.header;
             panel.expand();
             tick();

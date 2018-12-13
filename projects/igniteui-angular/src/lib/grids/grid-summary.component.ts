@@ -6,6 +6,8 @@ import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxSummaryResult } from './grid-summary';
+import { DisplayDensity } from '../core/displayDensity';
 /**
  *@hidden
  */
@@ -58,17 +60,17 @@ export class IgxGridSummaryComponent implements DoCheck {
 
     @HostBinding('class.igx-grid-summary--compact')
     get compactCSS() {
-        return this.gridAPI.get(this.gridID).isCompact();
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.compact;
     }
 
     @HostBinding('class.igx-grid-summary--cosy')
     get cosyCSS() {
-        return this.gridAPI.get(this.gridID).isCosy();
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.cosy;
     }
 
     @HostBinding('class.igx-grid-summary')
     get defaultCSS() {
-        return this.gridAPI.get(this.gridID).isComfortable();
+        return this.gridAPI.get(this.gridID).displayDensity === DisplayDensity.comfortable;
     }
 
     get dataType(): DataType {
@@ -82,6 +84,10 @@ export class IgxGridSummaryComponent implements DoCheck {
     ngDoCheck() {
         this.summaryItemHeight = this.gridAPI.get(this.gridID).defaultRowHeight;
         this.cdr.detectChanges();
+    }
+
+    public translateSummary(summary: IgxSummaryResult): string {
+        return this.gridAPI.get(this.gridID).resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
     get resolveSummaries(): any[] {

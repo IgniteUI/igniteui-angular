@@ -4,7 +4,6 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -15,6 +14,8 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { IgxDropDownBase } from '../drop-down/drop-down.base';
+import { Navigate } from '../drop-down/drop-down.common';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -382,7 +383,6 @@ describe('igxCombo', () => {
             spyOn(combo.dropdown, 'onToggleOpened').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosing').and.callThrough();
             spyOn(combo.dropdown, 'onToggleClosed').and.callThrough();
-            spyOn<any>(combo, 'cdr').and.callThrough();
             expect(combo.dropdown.collapsed).toEqual(true);
             combo.dropdown.toggle();
             tick();
@@ -881,6 +881,22 @@ describe('igxCombo', () => {
                 });
             });
         });
+
+        it('Should properly get the first focusable item when focusing the component list', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboInputTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            spyOn(combo.dropdown, 'getFirstSelectableItem').and.callThrough();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            combo.searchInput.nativeElement.dispatchEvent(new KeyboardEvent('keypress', { key: 'Tab'}));
+            (<HTMLElement>document.getElementsByClassName('igx-combo__content')[0]).dispatchEvent(new Event('focus'));
+            tick();
+            fixture.detectChanges();
+            expect(combo.dropdown.getFirstSelectableItem).toHaveBeenCalledTimes(1);
+            expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
+        }));
     });
 
 
@@ -1545,18 +1561,16 @@ describe('igxCombo', () => {
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-placeholder').nodeValue).toEqual('Items');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-data').nodeValue).toEqual('Item 1,Item 2,Item 3');
             expect(comboWrapper.attributes.getNamedItem('ng-reflect-filterable')).toBeTruthy();
-            expect(comboWrapper.childElementCount).toEqual(1);
+            expect(comboWrapper.childElementCount).toEqual(2); // Input Group + Dropdown
+            expect(comboWrapper.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
+            expect(comboWrapper.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
+            expect(comboWrapper.style.width).toEqual(defaultComboWidth);
+            expect(comboWrapper.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
+            expect(comboWrapper.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
+            expect(comboWrapper.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
+            expect(comboWrapper.childElementCount).toEqual(2);
 
-            const comboElement = comboWrapper.children[0];
-            expect(comboElement.attributes.getNamedItem('class').nodeValue).toEqual(CSS_CLASS_COMBO);
-            expect(comboElement.attributes.getNamedItem('role').nodeValue).toEqual('combobox');
-            expect(comboElement.style.width).toEqual(defaultComboWidth);
-            expect(comboElement.attributes.getNamedItem('aria-haspopup').nodeValue).toEqual('listbox');
-            expect(comboElement.attributes.getNamedItem('aria-expanded').nodeValue).toEqual('false');
-            expect(comboElement.attributes.getNamedItem('aria-owns').nodeValue).toEqual(fix.componentInstance.combo.dropdown.id);
-            expect(comboElement.childElementCount).toEqual(2);
-
-            const inputGroupElement = comboElement.children[0];
+            const inputGroupElement = comboWrapper.children[0];
             expect(inputGroupElement.attributes.getNamedItem('ng-reflect-type').nodeValue).toEqual('box');
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
@@ -1590,7 +1604,7 @@ describe('igxCombo', () => {
             expect(inputGroupBorder.classList.contains(CSS_CLASS_INPUTGROUP_BORDER)).toBeTruthy();
             expect(inputGroupBorder.childElementCount).toEqual(0);
 
-            const dropDownElement = comboElement.children[1];
+            const dropDownElement = comboWrapper.children[1];
             expect(dropDownElement.classList.contains(CSS_CLASS_COMBO_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.classList.contains(CSS_CLASS_DROPDOWN)).toBeTruthy();
             expect(dropDownElement.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(defaultComboDDWidth);
@@ -1837,6 +1851,7 @@ describe('igxCombo', () => {
             expect(focusedItem_2.classList.contains(CSS_CLASS_FOCUSED)).toBeTruthy();
             expect(focusedItem_1.classList.contains(CSS_CLASS_FOCUSED)).toBeFalsy();
         }));
+
         it('Should adjust combo width to the container element width when set to 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
@@ -1853,7 +1868,7 @@ describe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-
+            tick();
             const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_WRAPPER)).nativeElement;
             const dropDownElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             containerElementWidth = containerElement.getBoundingClientRect().width;
@@ -1864,6 +1879,7 @@ describe('igxCombo', () => {
             expect(dropDownWidth).toEqual(containerElementWidth);
             expect(inputWidth).toEqual(containerElementWidth);
         }));
+
         it('Should render combo width properly when placed in container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerFixedWidthComponent);
             fixture.detectChanges();
@@ -1916,6 +1932,19 @@ describe('igxCombo', () => {
             expect(wrapperWidth).toEqual(comboWidth);
             expect(dropDownWidth).toEqual(comboWidth);
             expect(inputWidth).toEqual(comboWidth);
+        }));
+
+        it(`Should not render a search input if both 'allowCustomValues' and 'filterable' are false`, fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            combo.allowCustomValues = false;
+            combo.filterable = false;
+            expect(combo.displaySearchInput).toBeFalsy();
+            combo.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(combo.searchInput).toBeFalsy();
         }));
     });
 
@@ -2863,7 +2892,7 @@ describe('igxCombo', () => {
             expect(combo.value).toEqual('My New Custom Item');
         }));
 
-        it('Disable/Enable filtering at runtime', fakeAsync(() => {
+       it('Disable/Enable filtering at runtime', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2887,8 +2916,8 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
-            combo.searchInput.nativeElement.value = 'Not-available item';
-            combo.searchInput.nativeElement.dispatchEvent(new Event('input', {}));
+            combo.searchValue = 'Not-available item';
+            combo.handleInputChange();
             tick();
             fix.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
