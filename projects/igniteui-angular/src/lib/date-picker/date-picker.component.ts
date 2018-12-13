@@ -33,7 +33,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services';
-import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 
@@ -73,11 +72,10 @@ let NEXT_ID = 0;
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
-    selector: 'igx-datePicker, igx-date-picker',
+    selector: 'igx-date-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
-@DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.

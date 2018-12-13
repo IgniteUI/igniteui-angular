@@ -1,13 +1,3 @@
-
-/**
- * @hidden
- */
-export function DeprecateClass(message: string): ClassDecorator {
-    return (constructor: any) => {
-        console.warn(constructor.name + ': ' + message);
-    };
-}
-
 /**
  * @hidden
  */
