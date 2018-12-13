@@ -8,6 +8,7 @@ import { OverlaySettings } from '../services';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { Navigate } from './drop-down.common';
 import { IDropDownItem, IDropDownList } from './drop-down-utils';
+import { DropDownActionKeys } from './drop-down-navigation.directive';
 
 let NEXT_ID = 0;
 
@@ -245,6 +246,13 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     }
 
     /**
+     * Keydown Handler
+     */
+    public handleKeyDown(key: DropDownActionKeys) {
+        return;
+    }
+
+    /**
      * @hidden
      */
     public get focusedItem(): IDropDownItem {
@@ -272,12 +280,13 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
 
     protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
         let index = startIndex;
-        while (this.items[index + direction] && this.items[index + direction].disabled) {
+        const items = this.items;
+        while (items[index + direction] && items[index + direction].disabled) {
             index += direction;
         }
 
         index += direction;
-        if (index >= 0 && index < this.items.length) {
+        if (index >= 0 && index < items.length) {
             return index;
         } else {
             return -1;

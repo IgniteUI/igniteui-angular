@@ -36,6 +36,7 @@ export interface IDropDownList extends IToggleView, OnInit {
     onToggleClosing(e: CancelableEventArgs): void;
     onToggleClosed(): void;
     navigateItem(newIndex: number, direction?: Navigate): void;
+    handleKeyDown(key: DropDownActionKeys);
 }
 
 
@@ -43,13 +44,12 @@ export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 export interface IDropDownBase extends IDropDownList {
     onSelection: EventEmitter<ISelectionEventArgs>;
     combo?: IgxComboBase;
-    allowItemsFocus: boolean;
+    allowItemsFocus?: boolean;
     selectedItem: any;
     items: IDropDownItem[];
     headers: IDropDownItem[];
     setSelectedItem(index: number): void;
     selectItem(item: IDropDownItem, event?: Event): void;
-    handleKeyDown(key: DropDownActionKeys);
 }
 
 export interface IDropDownItem {
@@ -62,7 +62,7 @@ export interface IDropDownItem {
     isFocused: boolean;
     isHeader: boolean;
     disabled: boolean;
-    setTabIndex: number;
+    setTabIndex?: number;
     index: number;
     elementHeight: number;
     element: ElementRef;

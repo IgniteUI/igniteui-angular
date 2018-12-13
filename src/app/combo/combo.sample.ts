@@ -36,8 +36,8 @@ export class ComboSampleComponent implements OnInit {
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
-    public filterableFlag = false;
-    public customValuesFlag = false;
+    public filterableFlag = true;
+    public customValuesFlag = true;
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';

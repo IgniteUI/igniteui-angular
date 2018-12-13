@@ -22,23 +22,25 @@ import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-o
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxIconModule } from '../icon/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
-import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
-import { IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
+import { takeUntil } from 'rxjs/operators';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -149,6 +151,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     private _headerItemTemplate: TemplateRef<any>;
     private _itemTemplate: TemplateRef<any>;
     private _dataType = '';
+    private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
     private _children: QueryList<IDropDownItem>;
@@ -156,7 +159,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
     private _valid = IgxComboState.INITIAL;
-    private _statusChanges$: Subscription;
     private _width = '100%';
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
@@ -187,12 +189,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     @ViewChild(IgxComboDropDownComponent, { read: IgxComboDropDownComponent })
     public dropdown: IgxComboDropDownComponent;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('selectAllCheckbox', { read: IgxCheckboxComponent })
-    public selectAllCheckbox: IgxCheckboxComponent;
 
     /**
      * @hidden
@@ -427,7 +423,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter();
+    public onOpened = new EventEmitter<void>();
 
     /**
      * Emitted before the dropdown is closed
@@ -447,7 +443,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter();
+    public onClosed = new EventEmitter<void>();
 
     /**
      * Emitted when an item is being added to the data collection
@@ -1356,7 +1352,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         this.filteredData = [...this.data];
 
         if (this.ngControl) {
-            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
         }
     }
 
@@ -1364,9 +1360,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * @hidden
      */
     public ngOnDestroy() {
-        if (this._statusChanges$) {
-            this._statusChanges$.unsubscribe();
-        }
+        this.destroy$.complete();
     }
 
     /**
@@ -1492,7 +1486,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * ```
      */
     public selectedItems() {
-        const items = this.dropdown.selectedItem;
+        const items = Array.from(this.selection.get());
         return this.isRemote ? items.map(item => this._parseItemID(item)) : items;
     }
 
@@ -1562,14 +1556,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
  */
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,
+        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective],
-    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent,
+    exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,

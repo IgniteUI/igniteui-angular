@@ -1,6 +1,6 @@
-import { IDropDownItem, IDropDownBase } from './drop-down-utils';
-import { Input, HostBinding, HostListener, ElementRef, Output, EventEmitter, Optional } from '@angular/core';
-import { IDropDownServiceArgs, IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
+import { Input, HostBinding, HostListener, ElementRef, Optional, Inject } from '@angular/core';
+import { IDropDownServiceArgs, IgxDropDownSelectionService } from './drop-down.selection';
 /**
  * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
@@ -48,21 +48,22 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
     }
 
     /**
-     * Gets if the item is the currently selected one in the dropdown
+     * Sets/Gets if the item is the currently selected one in the dropdown
      *
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
      *  let isMyItemSelected = mySelectedItem.isSelected; // true
      * ```
      */
+    @Input()
     get isSelected(): boolean {
         return this._isSelected;
     }
 
-    /**
-     * @hidden
-     */
     set isSelected(value: boolean) {
+        if (this.isHeader || this.disabled) {
+            return;
+        }
         this._isSelected = value;
     }
 
@@ -143,19 +144,6 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
     public disabled = false;
 
     /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    get setTabIndex(): number {
-        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
-        if (shouldSetTabIndex) {
-            return 0;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Gets item index
      * @hidden
      */
@@ -180,7 +168,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
     }
 
     constructor(
-        public dropDown: IDropDownBase,
+        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
         @Optional() protected selection?: IgxDropDownSelectionService
     ) { }
