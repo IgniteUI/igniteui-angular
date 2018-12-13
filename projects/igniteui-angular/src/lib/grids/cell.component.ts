@@ -841,13 +841,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownExitEditMode(event) {
-        if (this.column.editable) {
-            const editableCell = this;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (this.column.editable && editableCell) {
             const args: IGridEditEventArgs = {
                 cellID: editableCell.cellID,
                 rowID: editableCell.cellID.rowID,
-                oldValue: editableCell.value,
-                newValue: editableCell.editValue,
+                oldValue: editableCell.cell.value,
+                newValue: editableCell.cell.editValue,
                 cancel: false
             };
             this.grid.onCellEditCancel.emit(args);
