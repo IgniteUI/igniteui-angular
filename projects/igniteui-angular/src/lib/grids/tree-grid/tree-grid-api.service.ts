@@ -86,29 +86,10 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         visibleColumnIndex = visibleColumnIndex ? visibleColumnIndex : 0;
-        const groupRowIndex = super.get_row_by_key(id, row.rowID).index;
-        const shouldScroll = !(grid.unpinnedWidth - grid.totalWidth >= 0);
-        const isScrolledToBottom = grid.rowList.length > 0 && grid.rowList.last.index ===
-        grid.verticalScrollContainer.igxForOf.length - 1;
         const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
 
-        if (isScrolledToBottom) {
-            grid.nativeElement.focus({preventScroll: true});
-            grid.verticalScrollContainer.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    grid.nativeElement.querySelector(
-                        `[data-rowIndex="${groupRowIndex}"][data-visibleindex="${visibleColumnIndex}"]`).focus();
-                });
-        }
-        if (expanded || (!expanded && isScrolledToBottom)) {
-            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
-            if (shouldScroll) {
-                grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            }
-        }
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
