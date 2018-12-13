@@ -697,19 +697,21 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
      */
     public updateProgressSmoothly(val: number, step: number) {
         // Set frames for the animation
-        const FRAMES = [{
-            strokeDashoffset: this.getProgress(this._value),
-            strokeOpacity: (this._value / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
-        }, {
-            strokeDashoffset: this.getProgress(this.valueInPercent),
-            strokeOpacity: (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
-        }];
-        this._svgCircle.nativeElement.animate(FRAMES, {
-            easing: 'ease-out',
-            fill: 'forwards'
-        });
+        if (!this.indeterminate) {
+            const FRAMES = [{
+                strokeDashoffset: this.getProgress(this._value),
+                strokeOpacity: (this._value / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+            }, {
+                strokeDashoffset: this.getProgress(this.valueInPercent),
+                strokeOpacity: (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+            }];
+            this._svgCircle.nativeElement.animate(FRAMES, {
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
 
-        super.updateProgressSmoothly(val, step);
+            super.updateProgressSmoothly(val, step);
+        }
     }
 
     /**
