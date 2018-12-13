@@ -333,6 +333,26 @@ describe('IgLinearBar', () => {
             expect(bar.valueInPercent).toBe(valueInPercent);
     }));
 
+    it('When indeterminate mode is on value should not be updated', () => {
+        const fix = TestBed.createComponent(InitLinearProgressBarComponent);
+        fix.detectChanges();
+
+        const progressbar = fix.componentInstance.linearBar;
+        expect(progressbar.value).toEqual(0);
+
+        progressbar.indeterminate = true;
+        progressbar.value = 30;
+        fix.detectChanges();
+
+        expect(progressbar.value).toEqual(0);
+
+        progressbar.animate = false;
+        progressbar.value = 20;
+        fix.detectChanges();
+
+        expect(progressbar.value).toEqual(0);
+    });
+
     // UI Tests
     describe('UI tests linear bar', () => {
         configureTestSuite();

@@ -271,57 +271,10 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
         this._step = Number(val);
     }
 
-    /**
-     *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
-     *```typescript
-     *@ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent;
-     *public getValue(event) {
-     *    let value = this.progressBar.value;
-     *    alert(value);
-     *}
-     *```
-     */
-    @HostBinding('attr.aria-valuenow')
-    @Input()
-    get value(): number {
-        return this._value;
-    }
-
-    /**
-     *Set value that indicates the current `IgxLinearProgressBarComponent` position.
-     *```html
-     *<igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
-     *```
-     */
-    set value(val) {
-        val = Number(val);
-        if (this._value === val) {
-            return;
-        }
-
-        const valueInRange = getValueInProperRange(val, this.max);
-        if (isNaN(valueInRange)) {
-            return;
-        }
-        const changedValues = {
-            currentValue: valueInRange,
-            previousValue: this._value
-        };
-
-        const updateValue = super.directionFlow(this._value, val, this.step);
-        if (this._animate && val >= this.step) {
-            super.runAnimation(valueInRange, updateValue);
-        } else {
-            super.updateProgressDirectly(valueInRange);
-        }
-
-        this.onProgressChanged.emit(changedValues);
-    }
-
     constructor() {
         super();
     }
+
     @HostBinding('attr.aria-valuemin')
     public valueMin = 0;
 
@@ -416,8 +369,57 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
      *<igx-linear-bar [striped]="false" [max]="100" [value]="0" type="danger"></igx-linear-bar>
      *```
      */
+
     @Input()
     public type = 'default';
+
+     /**
+     *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+     *```typescript
+     *@ViewChild("MyProgressBar")
+     *public progressBar: IgxLinearProgressBarComponent;
+     *public getValue(event) {
+     *    let value = this.progressBar.value;
+     *    alert(value);
+     *}
+     *```
+     */
+    @HostBinding('attr.aria-valuenow')
+    @Input()
+    get value(): number {
+        return this._value;
+    }
+
+    /**
+     *Set value that indicates the current `IgxLinearProgressBarComponent` position.
+     *```html
+     *<igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
+     *```
+     */
+    set value(val) {
+        val = Number(val);
+        if (this._value === val || this.indeterminate) {
+            return;
+        }
+
+        const valueInRange = getValueInProperRange(val, this.max);
+        if (isNaN(valueInRange)) {
+            return;
+        }
+        const changedValues = {
+            currentValue: valueInRange,
+            previousValue: this._value
+        };
+
+        const updateValue = super.directionFlow(this._value, val, this.step);
+        if (this._animate && val >= this.step) {
+            super.runAnimation(valueInRange, updateValue);
+        } else {
+            super.updateProgressDirectly(valueInRange);
+        }
+
+        this.onProgressChanged.emit(changedValues);
+    }
 
     /**
      *An event, which is triggered after a progress is changed.
@@ -659,7 +661,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
      */
     set value(val: number) {
         val = Number(val);
-        if (this._value === val) {
+        if (this._value === val || this.indeterminate) {
             return;
         }
 
@@ -697,21 +699,19 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
      */
     public updateProgressSmoothly(val: number, step: number) {
         // Set frames for the animation
-        if (!this.indeterminate) {
-            const FRAMES = [{
-                strokeDashoffset: this.getProgress(this._value),
-                strokeOpacity: (this._value / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
-            }, {
-                strokeDashoffset: this.getProgress(this.valueInPercent),
-                strokeOpacity: (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
-            }];
-            this._svgCircle.nativeElement.animate(FRAMES, {
-                easing: 'ease-out',
-                fill: 'forwards'
-            });
+        const FRAMES = [{
+            strokeDashoffset: this.getProgress(this._value),
+            strokeOpacity: (this._value / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+        }, {
+            strokeDashoffset: this.getProgress(this.valueInPercent),
+            strokeOpacity: (this.valueInPercent / this.STROKE_OPACITY_DVIDER) + this.STROKE_OPACITY_ADDITION
+        }];
+        this._svgCircle.nativeElement.animate(FRAMES, {
+            easing: 'ease-out',
+            fill: 'forwards'
+        });
 
-            super.updateProgressSmoothly(val, step);
-        }
+        super.updateProgressSmoothly(val, step);
     }
 
     /**

@@ -327,6 +327,26 @@ describe('IgCircularBar', () => {
         expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
     });
 
+    it('When indeterminate mode is on value should not be updated', () => {
+        const fix = TestBed.createComponent(InitCircularProgressBarComponent);
+        fix.detectChanges();
+
+        const progressbar = fix.componentInstance.circularBar;
+        expect(progressbar.value).toEqual(0);
+
+        progressbar.indeterminate = true;
+        progressbar.value = 20;
+        fix.detectChanges();
+
+        expect(progressbar.value).toEqual(0);
+
+        progressbar.animate = false;
+        progressbar.value = 30;
+        fix.detectChanges();
+
+        expect(progressbar.value).toEqual(0);
+    });
+
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
         configureTestSuite();
