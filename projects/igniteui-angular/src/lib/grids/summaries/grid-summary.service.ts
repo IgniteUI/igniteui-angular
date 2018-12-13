@@ -1,5 +1,7 @@
 import { Injectable} from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
+import { DataUtil } from '../../data-operations/data-util';
+import { cloneArray } from '../../core/utils';
 
 /** @hidden */
 @Injectable()
@@ -10,7 +12,8 @@ export class IgxGridSummaryService {
     public summaryHeight = 0;
     public maxSummariesLenght = 0;
     public groupingExpressions = [];
-    public retriggerRootPipe = false;
+    public retriggerRootPipe = 0;
+    public deleteOperation = false;
 
     public recalculateSummaries() {
         this.resetSummaryHeight();
@@ -19,10 +22,11 @@ export class IgxGridSummaryService {
     }
 
     public clearSummaryCache(args?) {
+        if (!this.summaryCacheMap.size) { return; }
         if (!args) {
             this.summaryCacheMap.clear();
             if (this.grid && this.grid.rootSummariesEnabled) {
-                this.retriggerRootPipe = !this.retriggerRootPipe;
+                this.retriggerRootPipe++;
             }
             return;
         }
@@ -33,7 +37,7 @@ export class IgxGridSummaryService {
             }
             this.removeSummaries(rowID);
         }
-        if (args.rowID) {
+        if (args.rowID !== undefined && args.rowID !== null) {
             const columnName = args.cellID ? this.grid.columnList.find(col => col.index === args.cellID.columnID).field : undefined;
             this.removeSummaries(args.rowID, columnName);
         }
@@ -44,6 +48,12 @@ export class IgxGridSummaryService {
         this.deleteSummaryCache(this.rootSummaryID, columnName);
         if (this.summaryCacheMap.size === 1 && this.summaryCacheMap.has(this.rootSummaryID)) { return; }
         if (this.isTreeGrid) {
+            if (this.grid.transactions.enabled && this.deleteOperation) {
+                this.deleteOperation = false;
+                // TODO: this.removeChildRowSummaries(rowID, columnName);
+                this.summaryCacheMap.clear();
+                return;
+            }
             this.removeAllTreeGridSummaries(rowID, columnName);
         } else {
            const summaryIds = this.getSummaryID(rowID, this.grid.groupingExpressions);
@@ -59,7 +69,7 @@ export class IgxGridSummaryService {
                 cache.delete(columnName);
             }
         });
-        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe = !this.retriggerRootPipe; }
+        if (this.grid.rootSummariesEnabled) {  this.retriggerRootPipe++; }
     }
 
     public calcMaxSummaryHeight() {
@@ -100,8 +110,9 @@ export class IgxGridSummaryService {
 
     public resetSummaryHeight() {
         this.summaryHeight = 0;
+        (this.grid as any)._summaryPipeTrigger++;
         if (this.grid.rootSummariesEnabled) {
-            this.retriggerRootPipe = !this.retriggerRootPipe;
+            this.retriggerRootPipe++;
         }
     }
 
@@ -133,7 +144,7 @@ export class IgxGridSummaryService {
                 this.summaryCacheMap.delete(id);
             }
             if (id === this.rootSummaryID && this.grid.rootSummariesEnabled) {
-                this.retriggerRootPipe = !this.retriggerRootPipe;
+                this.retriggerRootPipe++;
             }
         }
     }
@@ -141,7 +152,15 @@ export class IgxGridSummaryService {
     private getSummaryID(rowID, groupingExpressions) {
         if (groupingExpressions.length === 0) { return []; }
         const summaryIDs = [];
-        const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
+        let data = this.grid.data;
+        if (this.grid.transactions.enabled) {
+            data = DataUtil.mergeTransactions(
+                cloneArray(this.grid.data),
+                this.grid.transactions.getAggregatedChanges(true),
+                this.grid.primaryKey
+            );
+        }
+        const rowData = this.grid.primaryKey ? data.find(rec => rec[this.grid.primaryKey] === rowID) : rowID;
         let id = '{ ';
         groupingExpressions.forEach(expr => {
                 id += `'${expr.fieldName}': '${rowData[expr.fieldName]}'`;
@@ -160,6 +179,10 @@ export class IgxGridSummaryService {
             this.deleteSummaryCache(rowID, columnName);
             row = row.parent;
         }
+    }
+
+    // TODO: remove only deleted rows
+    private removeChildRowSummaries(rowID, columnName?) {
     }
 
     private compareGroupingExpressions(current, groupingArgs) {

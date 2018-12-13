@@ -753,6 +753,17 @@ export class SummarieGroupByComponent extends BasicGridComponent {
     public ageSummaryTest = AgeSummaryTest;
 }
 
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="800px"  width="400px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.summariesGoupByColumns)}`
+})
+export class SummarieGroupByWithScrollsComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
 class AgeSummary extends IgxNumberSummaryOperand {
     constructor() {
         super();
