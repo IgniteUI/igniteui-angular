@@ -158,7 +158,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         rowCurrentValue: any,
         rowNewValue: {[x: string]: any}) {
         if (grid.transactions.enabled) {
-            const path = grid.generateRowPath(rowID).reverse();
+            const path = grid.generateRowPath(rowID);
             const transaction: HierarchicalTransaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
