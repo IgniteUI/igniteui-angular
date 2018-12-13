@@ -67,6 +67,10 @@ export class DisplayFormatPipe implements PipeTransform {
           val = '';
         }
 
+        if (val && val.indexOf('_') !== -1) {
+          val = val.replace(new RegExp('_', 'g'), '0');
+        }
+
         if (val && val.indexOf('%') === -1) {
           val += ' %';
         }
