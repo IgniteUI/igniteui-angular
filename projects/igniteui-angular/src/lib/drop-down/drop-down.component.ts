@@ -25,7 +25,7 @@ import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { IgxDropDownSelectionService } from './drop-down.selection';
 
 
 /**

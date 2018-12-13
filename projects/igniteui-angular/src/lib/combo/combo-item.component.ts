@@ -10,7 +10,7 @@ import {
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
-import { IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 
 /** @hidden */
 @Component({
@@ -35,8 +35,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     }
 
     constructor(
-        @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
-        @Inject(IGX_DROPDOWN_BASE) public dropDown: IDropDownBase,
+        @Inject(IGX_COMBO_COMPONENT) protected combo: IgxComboBase,
+        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
         protected selection: IgxDropDownSelectionService
     ) {

@@ -56,12 +56,12 @@
             <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
             </ng-container>
         </div>
-        <igx-combo-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-            class="igx-combo__add-item" igxRipple (keypress)="addItemToCollection()" [isHeader]="false" [disabled]="false"
+        <igx-combo-add-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
+            class="igx-combo__add-item" igxRipple (keypress)="addItemToCollection()"
             [value]="'ADD ITEM'" role="button" aria-label="Add Item">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
             </ng-container>
-        </igx-combo-item>
+        </igx-combo-add-item>
     </div>
     <ng-container *ngTemplateOutlet="footerTemplate; context: {$implicit: this}">
     </ng-container>

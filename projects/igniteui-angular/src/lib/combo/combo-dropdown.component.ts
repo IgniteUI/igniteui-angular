@@ -4,20 +4,20 @@ import {
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxDropDownSelectionService } from '../core/drop-down.selection';
+import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
+import { IgxComboAPIService } from './combo.api';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: 'combo-dropdown.component.html',
-    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }, IgxDropDownSelectionService]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     private _children: QueryList<IDropDownItem>;
