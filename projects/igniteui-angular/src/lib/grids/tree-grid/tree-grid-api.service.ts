@@ -112,6 +112,16 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
+
+        requestAnimationFrame(() => {
+            const cellID = grid.selection.first_item(`${id}-cell`);
+            if (cellID) {
+                const cell = this.get_cell_by_index(id, cellID.rowIndex, cellID.columnID);
+                if (cell) {
+                    cell.nativeElement.focus();
+                }
+            }
+        });
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
