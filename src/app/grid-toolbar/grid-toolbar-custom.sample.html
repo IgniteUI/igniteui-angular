@@ -7,20 +7,18 @@
         <article class="grid-sample">
             <h4 class="sample-title">Toolbar</h4>
 
-            <igx-grid [data]="data" [autoGenerate]="true" height="400px" width="900px" [allowFiltering]="true" (onColumnInit)="initColumns($event)"
+            <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="900px" [allowFiltering]="true" (onColumnInit)="initColumns($event)"
 
                     [showToolbar]="true"
                     toolbarTitle="Grid Toolbar"
 
                     [columnHiding]="true"
-                    hiddenColumnsText="Hidden"
                     columnHidingTitle="Column Hiding"
 
                     [columnPinning]="true"
 
                     [exportExcel]="true"
                     [exportCsv]="true"
-                    exportText="Export"
                     exportExcelText="Export to Excel"
                     exportCsvText="Export to CSV">
 
@@ -36,6 +34,14 @@
                 </ng-template>
 
             </igx-grid>
+
+            <br><igx-switch [(ngModel)]="grid1.showToolbar">Toolbar</igx-switch>
+            <br><igx-switch [(ngModel)]="grid1.columnHiding">Column Hiding</igx-switch>
+            <br><igx-switch [(ngModel)]="grid1.columnPinning">Column Pinning</igx-switch>
+            <br><igx-switch [(ngModel)]="grid1.exportExcel">Export Excel</igx-switch>
+            <br><igx-switch [(ngModel)]="grid1.exportCsv">Export CSV</igx-switch>
+            <br><input type="text" placeholder="" [(ngModel)]="grid1.toolbarTitle" />
+
         </article>
     </section>
 </div>

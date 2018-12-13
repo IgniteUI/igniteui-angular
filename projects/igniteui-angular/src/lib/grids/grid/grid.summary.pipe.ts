@@ -23,7 +23,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         hasSummary: boolean,
         summaryCalculationMode: GridSummaryCalculationMode,
         summaryPosition: GridSummaryPosition,
-        id: string, pipeTrigger: number): any[] {
+        id: string, pipeTrigger: number, summaryPipeTrigger: number): any[] {
 
         if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
@@ -36,6 +36,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
         const recordsWithSummary = [];
         const lastChildMap = new Map<any, IGroupByRecord[]>();
         const grid: IgxGridComponent = this.gridAPI.get(gridId);
+        const maxSummaryHeight = grid.summaryService.calcMaxSummaryHeight();
 
         for (let i = 0; i < collection.length; i++) {
             const record = collection[i];
@@ -57,9 +58,11 @@ export class IgxGridSummaryPipe implements PipeTransform {
                 for (let j = 0; j < groupRecords.length; j++) {
                     const groupRecord = groupRecords[j];
                     const groupRecordId = this.gridAPI.get_groupBy_record_id(groupRecord);
-                    const summaries = grid.summaryService.calculateSummaries(groupRecordId, groupRecord.records);
+                    const records = this.removeDeletedRecord(grid, groupRecord.records.slice());
+                    const summaries = grid.summaryService.calculateSummaries(groupRecordId, records);
                     const summaryRecord: ISummaryRecord = {
-                        summaries: summaries
+                        summaries: summaries,
+                        max: maxSummaryHeight
                     };
                     recordsWithSummary.push(summaryRecord);
                 }
@@ -70,9 +73,11 @@ export class IgxGridSummaryPipe implements PipeTransform {
             }
 
             if (summaryPosition === GridSummaryPosition.top) {
-                const summaries = grid.summaryService.calculateSummaries(recordId, groupByRecord.records);
+                const records = this.removeDeletedRecord(grid, groupByRecord.records.slice());
+                const summaries = grid.summaryService.calculateSummaries(recordId, records);
                 const summaryRecord: ISummaryRecord = {
-                    summaries: summaries
+                    summaries: summaries,
+                    max:  maxSummaryHeight
                 };
                 recordsWithSummary.push(summaryRecord);
             } else if (summaryPosition === GridSummaryPosition.bottom) {
@@ -99,5 +104,20 @@ export class IgxGridSummaryPipe implements PipeTransform {
     }
 
         return recordsWithSummary;
+    }
+
+    private removeDeletedRecord(grid, data) {
+        if (!grid.transactions.enabled) {
+            return data;
+        }
+        const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === 'delete').map(t => t.id);
+        deletedRows.forEach(rowID => {
+            const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+            const index = tempData.indexOf(rowID);
+            if (index !== -1) {
+                data.splice(index, 1);
+            }
+        });
+        return data;
     }
 }
