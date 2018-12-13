@@ -32,7 +32,7 @@ describe('IgCircularBar', () => {
                 IgxProgressBarModule
             ]
         })
-        .compileComponents();
+            .compileComponents();
     }));
 
     it('Initialize circularProgressbar with default values', () => {
@@ -41,12 +41,9 @@ describe('IgCircularBar', () => {
         fixture.detectChanges();
 
         const progress = fixture.componentInstance.circularBar;
-        const domProgress = fixture.debugElement.query(By.css('igx-circular-bar')).nativeElement;
-        const value = 0;
         const defaultMaxValue = 100;
 
         expect(progress.id).toContain('igx-circular-bar-');
-        expect(domProgress.id).toContain('igx-circular-bar-');
         expect(progress.max).toBe(defaultMaxValue);
         expect(progress.value).toBe(0);
     });
@@ -314,8 +311,8 @@ describe('IgCircularBar', () => {
         fixture.detectChanges();
 
         const componentInstance = fixture.componentInstance;
-        const progressBarElem = fixture.debugElement.nativeElement
-            .querySelector('.igx-circular-bar');
+        const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
+
         fixture.detectChanges();
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
 
@@ -338,8 +335,7 @@ describe('IgCircularBar', () => {
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
-            const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.igx-circular-bar');
+            const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
             let expectedTextContent = componentInstance.circularBar.value + '%';
 
             tick(tickTime);
@@ -370,8 +366,7 @@ describe('IgCircularBar', () => {
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
-            const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.igx-circular-bar');
+            const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
 
             tick(tickTime);
             fixture.detectChanges();
@@ -400,7 +395,7 @@ describe('IgCircularBar', () => {
             fix.detectChanges();
 
             const progressRepresentation = Common.calcPercentage(val, maxVal);
-            const progressBarElem = fix.debugElement.query(By.css('.igx-circular-bar'));
+            const progressBarElem = fix.debugElement.query(By.css('svg'));
             const valueInPercent = progressBarElem.query(By.css(`.${CIRCULAR_TEXT_CLASS}`)).nativeElement;
             expect(valueInPercent.textContent.trim()).toBe(`${progressRepresentation}%`);
         }));
@@ -414,12 +409,12 @@ describe('IgCircularBar', () => {
             const value = 2.55;
             bar.step = 0.634;
             bar.max = maxVal;
-            bar.value  = value;
+            bar.value = value;
 
             tick(tickTime + tickTime); // enough time to exceed the progress update.
             fix.detectChanges();
 
-            const progressBarContainer = fix.debugElement.query(By.css('.igx-circular-bar')).nativeElement;
+            const progressBarContainer = fix.debugElement.query(By.css('svg')).nativeElement;
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
             expect(bar.value).toBe(value);
         }));
