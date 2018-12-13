@@ -9,7 +9,7 @@ import { IgxAvatarComponent, AvatarType, Size } from './avatar.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 
-fdescribe('Avatar', () => {
+describe('Avatar', () => {
     configureTestSuite();
     const baseClass = 'igx-avatar';
 
