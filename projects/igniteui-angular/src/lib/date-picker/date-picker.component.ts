@@ -16,7 +16,8 @@ import {
     HostListener,
     ElementRef,
     TemplateRef,
-    Directive
+    Directive,
+    isDevMode
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -33,7 +34,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services';
-import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 
@@ -77,7 +77,6 @@ let NEXT_ID = 0;
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
-@DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -484,6 +483,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *@hidden
      */
     public ngOnInit(): void {
+        if (isDevMode()) {
+            console.log('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.');
+        }
+
         this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
         this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
     }
