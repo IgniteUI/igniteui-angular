@@ -150,7 +150,7 @@
     %igx-grid-toolbar {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         padding: map-get($grid-toolbar-padding, 'cosy');
