@@ -1,19 +1,17 @@
+<ng-template #defaultTemplate>
+    <ng-content></ng-content>
+</ng-template>
+
 <ng-template #imageTemplate>
-    <div #image [style.backgroundImage]="getSrcUrl()" class="igx-avatar__image" [style.backgroundColor]="bgColor" [attr.aria-roledescription]="roleDescription"
-    ></div>
+    <div #image class="igx-avatar__image" [style.backgroundImage]="getSrcUrl()"></div>
 </ng-template>
 
 <ng-template #initialsTemplate>
-    <div class="igx-avatar__initials" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
-        <span>{{initials.substring(0, 2)}}</span>
-    </div>
+    <span>{{initials.substring(0, 2)}}</span>
 </ng-template>
 
 <ng-template #iconTemplate>
-    <span class="igx-avatar__icon" [style.backgroundColor]="bgColor" [style.color]="color" [attr.aria-roledescription]="roleDescription">
-        <igx-icon>{{icon}}</igx-icon>
-    </span>
+     <igx-icon>{{icon}}</igx-icon>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template"></ng-container>
-<ng-content></ng-content>
