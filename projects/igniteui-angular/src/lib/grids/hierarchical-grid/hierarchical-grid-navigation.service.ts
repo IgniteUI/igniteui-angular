@@ -51,6 +51,13 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return this.grid.isChildGridRecord(this.grid.verticalScrollContainer.igxForOf[index]);
     }
 
+    public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex) {
+        const cellSelector = this.getCellSelector(visibleColumnIndex);
+        const row = this.getRowByIndex(rowIndex);
+        return row.querySelector(
+            `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+    }
+
     public navigateUp(rowElement, currentRowIndex, visibleColumnIndex) {
         const prevElem = rowElement.previousElementSibling;
         if (prevElem) {
