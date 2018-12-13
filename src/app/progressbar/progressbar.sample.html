@@ -68,32 +68,32 @@
             <h4 class="sample-title">Circular progress indicator</h4>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar [value]="currentValue"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [value]="currentValue"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar [value]="24"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [value]="24"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar [value]="32"></igx-circular-bar>
-                </div>
-            </div>
-            <div class="circular-samples">
-                <div class="circular-container">
-                    <igx-circular-bar [value]="43"></igx-circular-bar>
-                </div>
-                <div class="circular-container">
-                    <igx-circular-bar [value]="53"></igx-circular-bar>
-                </div>
-                <div class="circular-container">
-                    <igx-circular-bar [value]="30"></igx-circular-bar>
-                </div>
-                <div class="circular-container">
-                    <igx-circular-bar [indeterminate]="true"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [value]="32"></igx-circular-bar>
                 </div>
             </div>
             <div class="circular-samples">
                 <div class="circular-container">
-                     <igx-circular-bar [value]="currentValue" [textVisibility]="true">
+                    <igx-circular-bar class="circular-sample" [value]="43"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar class="circular-sample" [value]="53"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar class="circular-sample" [value]="30"></igx-circular-bar>
+                </div>
+                <div class="circular-container">
+                    <igx-circular-bar class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+                </div>
+            </div>
+            <div class="circular-samples">
+                <div class="circular-container">
+                     <igx-circular-bar class="circular-sample" [value]="currentValue" [textVisibility]="true">
                         <ng-template igxProcessBarText let-process>
                             <svg:tspan x="50" dy="-25" >Value is:</tspan>
                             <svg:tspan x="50" dy="25" font-weight="bold" font-size="30">{{process.value}}</tspan>
@@ -101,10 +101,10 @@
                     </igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar [value]="77" [text]="'Test'"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar [value]="44"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [value]="44"></igx-circular-bar>
                 </div>
             </div>
         </article>

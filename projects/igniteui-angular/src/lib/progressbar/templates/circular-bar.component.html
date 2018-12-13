@@ -1,5 +1,11 @@
-<svg #svg class="igx-circular-bar" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-    viewBox="0 0 100 100" preserveAspectRatio="none" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="max" [attr.aria-valuenow]="value">
+<svg #svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="xMidYMid meet"
+    role="progressbar"
+    aria-valuemin="0"
+    [attr.aria-valuemax]="max"
+    [attr.aria-valuenow]="value"
+>
     <circle class="igx-circular-bar__inner" cx="50" cy="50" r="46" />
     <circle #circle class="igx-circular-bar__outer" cx="50" cy="50" r="46" />
     <text #text [class.igx-circular-bar__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">

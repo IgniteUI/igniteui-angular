@@ -475,6 +475,10 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
 
+    /** @hidden */
+    @HostBinding('class.igx-circular-bar')
+    public cssClass = 'igx-circular-bar';
+
     /**
      *An event, which is triggered after a progress is changed.
      *```typescript
