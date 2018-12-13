@@ -315,7 +315,7 @@ describe('IgCircularBar', () => {
 
         const componentInstance = fixture.componentInstance;
         const progressBarElem = fixture.debugElement.nativeElement
-            .querySelector('.igx-circular-bar');
+            .querySelector('.igx-circular-bar').firstChild;
         fixture.detectChanges();
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
 
@@ -339,7 +339,7 @@ describe('IgCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.igx-circular-bar');
+                .querySelector('.igx-circular-bar').firstChild;
             let expectedTextContent = componentInstance.circularBar.value + '%';
 
             tick(tickTime);
@@ -371,7 +371,7 @@ describe('IgCircularBar', () => {
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.nativeElement
-                .querySelector('.igx-circular-bar');
+                .querySelector('.igx-circular-bar').firstChild;
 
             tick(tickTime);
             fixture.detectChanges();
@@ -419,7 +419,7 @@ describe('IgCircularBar', () => {
             tick(tickTime + tickTime); // enough time to exceed the progress update.
             fix.detectChanges();
 
-            const progressBarContainer = fix.debugElement.query(By.css('.igx-circular-bar')).nativeElement;
+            const progressBarContainer = fix.debugElement.query(By.css('.igx-circular-bar')).nativeElement.firstChild;
             expect(parseFloat(progressBarContainer.attributes['aria-valuenow'].textContent)).toBe(value);
             expect(bar.value).toBe(value);
         }));
