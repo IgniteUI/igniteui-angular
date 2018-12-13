@@ -176,6 +176,10 @@
         @extend %igx-grid__td--tree-cell !optional;
     }
 
+    @include e(td, $m: active) {
+        @extend %grid-cell--active !optional;
+    }
+
     @include e(td, $m: selected) {
         @extend %grid-cell--selected !optional;
     }
@@ -219,6 +223,10 @@
 
     @include e(td, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(td, $mods: (pinned, selected)) {
+        @extend %grid-cell--pinned-selected !optional;
     }
 
     @include e(td-text) {

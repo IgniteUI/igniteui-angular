@@ -376,7 +376,6 @@ export class GridSummaryComponent implements OnInit {
     updateData() {
         const d = [].concat(this.data).concat(this.data.slice(0, 15));
         this.data = d;
-        this.grid1.clearSummaryCache();
     }
 
     viewRecord(aRecord) { }

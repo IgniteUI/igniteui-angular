@@ -75,7 +75,7 @@
     | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
     | gridPaging:page:perPage:id:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
-    | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:summaryPipeTrigger"
+    | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>

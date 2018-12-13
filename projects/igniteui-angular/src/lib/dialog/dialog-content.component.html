@@ -10,11 +10,11 @@
         <ng-content *ngIf="!message"></ng-content>
 
         <div *ngIf="leftButtonLabel || rightButtonLabel" class="igx-dialog__window-actions">
-            <button *ngIf="leftButtonLabel" type="button" igxButton="{{ leftButtonType }}" igxButtonColor="{{ leftButtonColor }}" igxButtonBackground="{{ leftButtonBackgroundColor }}"
+            <button *ngIf="leftButtonLabel" type="button" [igxFocus]="isOpen" igxButton="{{ leftButtonType }}" igxButtonColor="{{ leftButtonColor }}" igxButtonBackground="{{ leftButtonBackgroundColor }}"
                 igxRipple="{{ leftButtonRipple }}" (click)="onInternalLeftButtonSelect($event)">
                 {{ leftButtonLabel }}
             </button>
-            <button *ngIf="rightButtonLabel" type="button" igxButton="{{ rightButtonType }}" igxButtonColor="{{ rightButtonColor }}" igxButtonBackground="{{ rightButtonBackgroundColor }}"
+            <button *ngIf="rightButtonLabel" type="button" [igxFocus]="isOpen" igxButton="{{ rightButtonType }}" igxButtonColor="{{ rightButtonColor }}" igxButtonBackground="{{ rightButtonBackgroundColor }}"
                 igxRipple="{{ rightButtonRipple }}" (click)="onInternalRightButtonSelect($event)">
                 {{ rightButtonLabel }}
             </button>
