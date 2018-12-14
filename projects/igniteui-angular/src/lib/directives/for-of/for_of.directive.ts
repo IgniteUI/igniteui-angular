@@ -22,10 +22,10 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    ViewRef
 } from '@angular/core';
 
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
@@ -161,6 +161,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _trackByFn: TrackByFunction<T>;
     protected heightCache = [];
     private _adjustToIndex;
+    private MAX_PERF_SCROLL_DIFF = 4;
 
     private get _isScrolledToBottom() {
         if (!this.getVerticalScroll()) {
@@ -176,7 +177,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private get _isAtBottomIndex() {
         return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
     }
-    private extraRowApplied = false;
 
     // Start properties related to virtual height handling due to browser limitation
     /** Maximum height for an element of the browser. */
@@ -197,12 +197,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /** If the next onScroll event is triggered due to internal setting of scrollTop */
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
-
-    @ViewChild(DisplayContainerComponent)
-    private displayContiner: DisplayContainerComponent;
-
-    @ViewChild(VirtualHelperComponent)
-    private virtualHelper: VirtualHelperComponent;
 
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
@@ -689,41 +683,118 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @hidden
      */
     protected fixedUpdateAllRows(inScrollTop: number): number {
-        const embeddedViewCopy = Object.assign([], this._embeddedViews);
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-
-        const ind = this.getIndexAt(
+        let newStart = this.getIndexAt(
             inScrollTop,
             this.sizesCache,
             0
         );
         // floating point number calculations are flawed so we need to handle rounding errors.
-        let currIndex = ind % 1 > 0.999 ? Math.round(ind) : Math.floor(ind);
-        const endingIndex = this.state.chunkSize + currIndex;
-        if (endingIndex > count) {
-            currIndex = count - this.state.chunkSize;
+        newStart = newStart % 1 > 0.999 ?
+            Math.round(newStart) : Math.floor(newStart);
+        if (newStart + this.state.chunkSize > count) {
+            newStart = count - this.state.chunkSize;
         }
+        const prevStart = this.state.startIndex;
+        const diff = newStart - this.state.startIndex;
+        this.state.startIndex = newStart;
+        if (diff) {
+            this.onChunkPreload.emit(this.state);
+            if (!this.isRemote) {
+                /*recalculate and apply page size.*/
+                if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
+                    this.moveApplyScrollNext(prevStart);
+                } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+                    this.moveApplyScrollPrev(prevStart);
+                } else {
+                    this.fixedApplyScroll();
+                }
+            }
+        }
+        return inScrollTop - this.sizesCache[this.state.startIndex];
+    }
 
-        // We update the startIndex before recalculating the chunkSize.
-        const bUpdatedStart = this.state.startIndex !== currIndex;
-        this.state.startIndex = currIndex;
-
-        if (bUpdatedStart) {
+    /**
+     * @hidden
+     */
+    protected fixedUpdateAllCols(inScrollLeft) {
+        let newStart = this.getIndexAt(
+            inScrollLeft,
+            this.sizesCache,
+            0
+        );
+        if (newStart + this.state.chunkSize > this.igxForOf.length) {
+            newStart = this.igxForOf.length - this.state.chunkSize;
+        }
+        const prevStart = this.state.startIndex;
+        const diff = newStart - this.state.startIndex;
+        this.state.startIndex = newStart;
+        if (diff) {
             this.onChunkPreload.emit(this.state);
         }
-        if (this.isRemote) {
-            return inScrollTop - this.sizesCache[this.state.startIndex];
+
+        /*recalculate and apply page size.*/
+        if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
+            this.moveApplyScrollNext(prevStart);
+        } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
+            this.moveApplyScrollPrev(prevStart);
+        } else {
+            this.fixedApplyScroll();
         }
 
-        for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
+        const scrOffset = inScrollLeft - this.sizesCache[this.state.startIndex];
+        return scrOffset;
+    }
+
+    /**
+     * @hidden
+     * The function applies an optimized state change for scrolling down/right employing context change with view rearrangement
+     */
+    protected moveApplyScrollNext(prevIndex: number): void {
+        const start = prevIndex + this.state.chunkSize;
+        for (let i = start; i < start + this.state.startIndex - prevIndex && this.igxForOf[i] !== undefined; i++) {
             const input = this.igxForOf[i];
-            const embView = embeddedViewCopy.shift();
+            const embView = this._embeddedViews.shift();
+            const cntx = embView.context;
+            cntx.$implicit = input;
+            cntx.index = this.igxForOf.indexOf(input);
+            const view: ViewRef = this.dc.instance._vcr.detach(0);
+            this.dc.instance._vcr.insert(view);
+            this._embeddedViews.push(embView);
+        }
+    }
+
+    /**
+     * @hidden
+     * The function applies an optimized state change for scrolling up/left employing context change with view rearrangement
+     */
+    protected moveApplyScrollPrev(prevIndex: number): void {
+        for (let i = prevIndex - 1; i >= this.state.startIndex  && this.igxForOf[i] !== undefined; i--) {
+            const input = this.igxForOf[i];
+            const embView = this._embeddedViews.pop();
+            const cntx = embView.context;
+            cntx.$implicit = input;
+            cntx.index = this.igxForOf.indexOf(input);
+            const view: ViewRef = this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
+            this.dc.instance._vcr.insert(view, 0);
+            this._embeddedViews.unshift(embView);
+        }
+    }
+
+    /**
+     * @hidden
+     * The function applies an optimized state change through context change for each view
+     */
+    protected fixedApplyScroll(): void {
+        let j = 0;
+        const endIndex = this.state.startIndex + this.state.chunkSize;
+        for (let i = this.state.startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
+            const input = this.igxForOf[i];
+            const embView = this._embeddedViews[j++];
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.igxForOf.indexOf(input);
         }
-        const scrOffset = inScrollTop - this.sizesCache[this.state.startIndex];
-        return scrOffset;
     }
 
     /**
@@ -745,40 +816,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (prevStartIndex !== this.state.startIndex) {
             this.onChunkLoad.emit(this.state);
         }
-    }
-
-    /**
-     * @hidden
-     */
-    protected fixedUpdateAllCols(inScrollLeft) {
-        const startIndex = this.getIndexAt(
-            inScrollLeft,
-            this.sizesCache,
-            0
-        );
-        const bUpdatedStart = this.state.startIndex !== startIndex;
-        if (bUpdatedStart) {
-            this.onChunkPreload.emit(this.state);
-        }
-        /*recalculate and apply page size.*/
-        if (startIndex + this.state.chunkSize > this.igxForOf.length) {
-            this.state.startIndex = this.igxForOf.length - this.state.chunkSize;
-        } else {
-            this.state.startIndex = startIndex;
-        }
-        const embeddedViewCopy = Object.assign([], this._embeddedViews);
-        const endingIndex = this.state.chunkSize + this.state.startIndex;
-        for (let i = this.state.startIndex; i < endingIndex && this.igxForOf[i] !== undefined; i++) {
-            const input = this.igxForOf[i];
-            const embView = embeddedViewCopy.shift();
-            const cntx = (embView as EmbeddedViewRef<any>).context;
-            cntx.$implicit = input;
-            cntx.index = this.igxForOf.indexOf(input);
-        }
-        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
-        const scrollWidth = parseInt(this.hScroll.children[0].style.width, 10);
-        const scrOffset = inScrollLeft - this.sizesCache[this.state.startIndex];
-        return scrOffset;
     }
 
     /**
@@ -1295,12 +1332,15 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const inScrollTop = this.igxForScrollOrientation === 'horizontal' ?
                     this.hScroll.scrollLeft :
                     this.vh.instance.elementRef.nativeElement.scrollTop;
-                this.state.startIndex = this.getIndexAt(
+                startIndex = this.getIndexAt(
                     inScrollTop,
                     this.sizesCache,
                     0
                 );
-                startIndex = this.state.startIndex;
+                if (startIndex + this.state.chunkSize > this.igxForOf.length) {
+                    startIndex = this.igxForOf.length - this.state.chunkSize;
+                }
+                this.state.startIndex = startIndex;
                 endIndex = this.state.chunkSize + this.state.startIndex;
             }
 
