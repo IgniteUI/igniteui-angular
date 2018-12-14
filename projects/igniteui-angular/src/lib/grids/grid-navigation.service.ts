@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridRowComponent } from './grid/grid-row.component';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -424,6 +423,33 @@ export class IgxGridNavigationService {
         }
     }
 
+    public goToLastBodyElement() {
+        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+            if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                row.focus();
+                return;
+            }
+            const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
+            this.onKeydownEnd(rowIndex, isSummary);
+        } else {
+            this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+                    if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                        row.focus();
+                        return;
+                    }
+                    const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
+                    this.onKeydownEnd(rowIndex, isSummary);
+                });
+        }
+    }
+
     public performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow = false) {
         if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             if (this.isRowInEditMode(rowIndex)) {
@@ -433,6 +459,10 @@ export class IgxGridNavigationService {
             const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
                 this.grid.rowList.find(row => row.index === rowIndex + 1) :
                 this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
+            if (rowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+                this.onKeydownHome(0, true);
+                return;
+            }
             if (rowEl) {
                 this.navigateDown(currentRowEl, rowIndex, 0);
             }
@@ -449,7 +479,6 @@ export class IgxGridNavigationService {
     }
 
     public moveFocusToFilterCell() {
-        this.grid.rowList.find(row => row instanceof IgxGridRowComponent).cells.first._clearCellSelection();
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         if (this.isColumnFullyVisible(columns.length - 1)) {
             this.grid.filteringService.focusFilterCellChip(columns[columns.length - 1], false);
