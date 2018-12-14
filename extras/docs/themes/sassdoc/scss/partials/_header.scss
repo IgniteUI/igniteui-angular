@@ -15,8 +15,12 @@
     @include e(logo) {
         display: flex;
         align-items: center;
-        color: #fff;
         font-size: rem(18);
+    }
+
+    @include e(logo-name) {
+        color: #fff;
+        text-decoration: none;
     }
 
     @include e(logo-version) {

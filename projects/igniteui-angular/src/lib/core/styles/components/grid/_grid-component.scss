@@ -176,6 +176,10 @@
         @extend %igx-grid__td--tree-cell !optional;
     }
 
+    @include e(td, $m: active) {
+        @extend %grid-cell--active !optional;
+    }
+
     @include e(td, $m: selected) {
         @extend %grid-cell--selected !optional;
     }

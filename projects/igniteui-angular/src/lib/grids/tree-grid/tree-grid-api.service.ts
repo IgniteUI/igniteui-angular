@@ -19,6 +19,16 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         const grid = this.get(id);
         const data = grid.processedRootRecords.filter(row => row.isFilteredOutParent === undefined || row.isFilteredOutParent === false)
             .map(rec => rec.data);
+        if (grid.transactions.enabled) {
+            const deletedRows = grid.transactions.getTransactionLog().filter(t => t.type === TransactionType.DELETE).map(t => t.id);
+            deletedRows.forEach(rowID => {
+                const tempData = grid.primaryKey ? data.map(rec => rec[grid.primaryKey]) : data;
+                const index = tempData.indexOf(rowID);
+                if (index !== -1) {
+                    data.splice(index, 1);
+                }
+            });
+        }
         return data;
     }
 
@@ -76,32 +86,23 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         visibleColumnIndex = visibleColumnIndex ? visibleColumnIndex : 0;
-        const groupRowIndex = super.get_row_by_key(id, row.rowID).index;
-        const shouldScroll = !(grid.unpinnedWidth - grid.totalWidth >= 0);
-        const isScrolledToBottom = grid.rowList.length > 0 && grid.rowList.last.index ===
-        grid.verticalScrollContainer.igxForOf.length - 1;
         const expandedStates = grid.expansionStates;
         expandedStates.set(row.rowID, expanded);
         grid.expansionStates = expandedStates;
 
-        if (isScrolledToBottom) {
-            grid.nativeElement.focus({preventScroll: true});
-            grid.verticalScrollContainer.onChunkLoad
-                .pipe(first())
-                .subscribe(() => {
-                    grid.nativeElement.querySelector(
-                        `[data-rowIndex="${groupRowIndex}"][data-visibleindex="${visibleColumnIndex}"]`).focus();
-                });
-        }
-        if (expanded || (!expanded && isScrolledToBottom)) {
-            grid.verticalScrollContainer.getVerticalScroll().dispatchEvent(new Event('scroll'));
-            if (shouldScroll) {
-                grid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
-            }
-        }
         if (grid.rowEditable) {
             grid.endEdit(true);
         }
+
+        requestAnimationFrame(() => {
+            const cellID = grid.selection.first_item(`${id}-cell`);
+            if (cellID) {
+                const cell = this.get_cell_by_index(id, cellID.rowIndex, cellID.columnID);
+                if (cell) {
+                    cell.nativeElement.focus();
+                }
+            }
+        });
     }
 
     public get_row_expansion_state(id: string, rowID: any, indentationLevel: number): boolean {
@@ -148,7 +149,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         rowCurrentValue: any,
         rowNewValue: {[x: string]: any}) {
         if (grid.transactions.enabled) {
-            const path = grid.generateRowPath(rowID).reverse();
+            const path = grid.generateRowPath(rowID);
             const transaction: HierarchicalTransaction = {
                 id: rowID,
                 type: TransactionType.UPDATE,
