@@ -2184,6 +2184,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.clearSummaryCache();
             this._pipeTrigger++;
             this.markForCheck();
+            if (this.transactions.getAggregatedChanges(false).length === 0) {
+                // Needs better check, calling 'transactions.clear()' will also trigger this
+                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+                    this.page--;
+                }
+            }
         });
     }
 
@@ -2965,13 +2971,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.checkHeaderCheckboxStatus();
         }
 
+        const addedRowsDif = this.dataWithAddedInTransactionRows.length - this.data.length;
         this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
 
         this.refreshSearch();
-        if (data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-            this.page--;
+        if (this.isLastPage && this.page !== 0) {
+            let pageSwitch = 0;
+            if (!this.transactions.enabled) {
+                pageSwitch = this.data.length % this.perPage === 0 ? 1 : 0;
+            } else {
+                if (addedRowsDif) {
+                    pageSwitch = this.dataWithAddedInTransactionRows.length % this.perPage === 0 ? 1 : 0;
+                }
+            }
+            this.page -= pageSwitch;
         }
     }
 
