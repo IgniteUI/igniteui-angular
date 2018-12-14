@@ -7,7 +7,7 @@ import {
     ComponentRef,
     HostBinding
 } from '@angular/core';
-import { async as asyncWrapper, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
+import { async as asyncWrapper, TestBed, fakeAsync, tick, async, ComponentFixture } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
@@ -114,8 +114,38 @@ function getExpectedLeftPosition(horizontalAlignment: HorizontalAlignment, eleme
     return expectedLeft;
 }
 
+function getOverlayWrapperPosition(
+    positionSettings: PositionSettings,
+    targetRect: ClientRect,
+    wrapperRect: ClientRect,
+    screenRect: ClientRect): Point {
+    const location: Point = new Point(0, 0);
+
+    location.x =
+        targetRect.left +
+        targetRect.width * (1 + positionSettings.horizontalStartPoint) +
+        wrapperRect.width * positionSettings.horizontalDirection;
+    if (location.x < screenRect.left) {
+        location.x = targetRect.right;
+    } else if (location.x > screenRect.right) {
+        location.x = targetRect.left - wrapperRect.width;
+    }
+
+    location.y =
+        targetRect.top +
+        targetRect.height * (1 + positionSettings.verticalStartPoint) +
+        wrapperRect.height * positionSettings.verticalDirection;
+    if (location.y < screenRect.top) {
+        location.y = targetRect.bottom;
+    } else if (location.y > screenRect.bottom) {
+        location.y = targetRect.top - wrapperRect.height;
+    }
+
+    return location;
+}
+
 describe('igxOverlay', () => {
-        beforeEach(async(() => {
+    beforeEach(async(() => {
         UIInteractions.clearOverlay();
     }));
 
@@ -1498,115 +1528,146 @@ describe('igxOverlay', () => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
                 const button = fix.componentInstance.buttonElement.nativeElement;
-                const positionSettings: PositionSettings = {
-                    target: button
-                };
-                const overlaySettings: OverlaySettings = {
-                    positionStrategy: new AutoPositionStrategy(positionSettings),
-                    modal: false,
-                    closeOnOutsideClick: false
-                };
+
                 const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
                 const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-                vAlignmentArray.forEach(function (vAlignment) {
-                    verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Bottom,
-                        HorizontalAlignment.Right, VerticalAlignment[vAlignment]);
-                    hAlignmentArray.forEach(function (hAlignment) {
-                        verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Bottom,
-                            HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
+                hAlignmentArray.forEach(function (horizontalStartPoint) {
+                    vAlignmentArray.forEach(function (verticalStartPoint) {
+                        hAlignmentArray.forEach(function (horizontalDirection) {
+                            //  do not check Center as we do nothing here
+                            if (horizontalDirection === 'Center') { return; }
+                            vAlignmentArray.forEach(function (verticalDirection) {
+                                //  do not check Middle as we do nothing here
+                                if (verticalDirection === 'Middle') { return; }
+                                const positionSettings: PositionSettings = {
+                                    target: button
+                                };
+                                positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+
+                                const overlaySettings: OverlaySettings = {
+                                    positionStrategy: new AutoPositionStrategy(positionSettings),
+                                    modal: false,
+                                    closeOnOutsideClick: false
+                                };
+
+                                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                                tick();
+                                fix.detectChanges();
+
+                                const targetRect: ClientRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
+                                const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                                const overlayWrapperRect: ClientRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                const screenRect: ClientRect = {
+                                    left: 0,
+                                    top: 0,
+                                    right: window.innerWidth,
+                                    bottom: window.innerHeight,
+                                    width: window.innerWidth,
+                                    height: window.innerHeight,
+                                };
+
+                                const location = getOverlayWrapperPosition(positionSettings, targetRect, overlayWrapperRect, screenRect);
+                                expect(overlayWrapperRect.top.toFixed(1)).toEqual(location.y.toFixed(1));
+                                expect(overlayWrapperRect.left.toFixed(1)).toEqual(location.x.toFixed(1));
+                                expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+                                fix.componentInstance.overlay.hideAll();
+                                tick();
+                                fix.detectChanges();
+                            });
+                        });
                     });
                 });
-
-                // TODO: refactor this function and use it in all tests when needed
-                function verifyOverlayBoundingSizeAndPosition(horizontalDirection, verticalDirection,
-                    horizontalAlignment, verticalAlignment) {
-                    positionSettings.horizontalDirection = horizontalDirection;
-                    positionSettings.verticalDirection = verticalDirection;
-                    positionSettings.horizontalStartPoint = horizontalAlignment;
-                    positionSettings.verticalStartPoint = verticalAlignment;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    const buttonRect = button.getBoundingClientRect();
-                    const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    const overlayRect = overlayElement.getBoundingClientRect();
-                    const expectedTop = getExpectedTopPosition(verticalAlignment, buttonRect);
-                    const expectedLeft = horizontalDirection === HorizontalAlignment.Left ?
-                        buttonRect.right - overlayRect.width :
-                        getExpectedLeftPosition(horizontalAlignment, buttonRect);
-                    expect(overlayRect.top.toFixed(1)).toEqual(expectedTop.toFixed(1));
-                    expect(overlayRect.bottom.toFixed(1)).toEqual((overlayRect.top + overlayRect.height).toFixed(1));
-                    expect(overlayRect.left.toFixed(1)).toEqual(expectedLeft.toFixed(1));
-                    expect(overlayRect.right.toFixed(1)).toEqual((overlayRect.left + overlayRect.width).toFixed(1));
-                    fix.componentInstance.overlay.hideAll();
-                }
             }));
 
-        it(`Should reposition the component and render it correctly in the window, even when the rendering options passed
+
+        // TODO: refactor this function and use it in all tests when needed
+        function verifyOverlayBoundingSizeAndPosition(positionSettings: PositionSettings, fix) {
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new AutoPositionStrategy(positionSettings),
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
+            fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+            tick();
+            const buttonRect: DOMRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as DOMRect;
+            const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            const overlayRect = overlayElement.getBoundingClientRect();
+            const expectedTop = positionSettings.verticalStartPoint === VerticalAlignment.Top ?
+                buttonRect.top + buttonRect.height :
+                getExpectedTopPosition(positionSettings.verticalStartPoint, buttonRect);
+            const expectedLeft = positionSettings.horizontalDirection === HorizontalAlignment.Left ?
+                buttonRect.right - overlayRect.width :
+                getExpectedLeftPosition(positionSettings.horizontalStartPoint, buttonRect);
+            expect(overlayRect.top.toFixed(1)).toEqual(expectedTop.toFixed(1));
+            expect(overlayRect.bottom.toFixed(1)).toEqual((overlayRect.top + overlayRect.height).toFixed(1));
+            expect(overlayRect.left.toFixed(1)).toEqual(expectedLeft.toFixed(1));
+            expect(overlayRect.right.toFixed(1)).toEqual((overlayRect.left + overlayRect.width).toFixed(1));
+            expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+            fix.componentInstance.overlay.hideAll();
+        }
+
+        fit(`Should reposition the component and render it correctly in the window, even when the rendering options passed
             should result in otherwise a partially hidden component. No scrollbars should appear.`,
             fakeAsync(() => {
                 const fix = TestBed.createComponent(EmptyPageComponent);
                 fix.detectChanges();
                 const button = fix.componentInstance.buttonElement.nativeElement;
-                const positionSettings: PositionSettings = {
-                    target: button
-                };
-                const overlaySettings: OverlaySettings = {
-                    positionStrategy: new AutoPositionStrategy(positionSettings),
-                    modal: false,
-                    closeOnOutsideClick: false
-                };
                 const hAlignmentArray = Object.keys(HorizontalAlignment).filter(key => !isNaN(Number(HorizontalAlignment[key])));
                 const vAlignmentArray = Object.keys(VerticalAlignment).filter(key => !isNaN(Number(VerticalAlignment[key])));
-                hAlignmentArray.forEach(function (hAlignment) {
-                    vAlignmentArray.forEach(function (vAlignment) {
-                        if (hAlignment === 'Center') {
-                            verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Bottom,
-                                HorizontalAlignment.Center, VerticalAlignment[vAlignment]);
-                        }
-                        if (vAlignment !== 'Top') {
-                            verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Right, VerticalAlignment.Top,
-                                HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
-                            if (hAlignment !== 'Left') {
-                                verifyOverlayBoundingSizeAndPosition(HorizontalAlignment.Left, VerticalAlignment.Top,
-                                    HorizontalAlignment[hAlignment], VerticalAlignment[vAlignment]);
-                            }
-                        }
+                hAlignmentArray.forEach(function (horizontalStartPoint) {
+                    vAlignmentArray.forEach(function (verticalStartPoint) {
+                        hAlignmentArray.forEach(function (horizontalDirection) {
+                            //  do not check Center as we do nothing here
+                            if (horizontalDirection === 'Center') { return; }
+                            vAlignmentArray.forEach(function (verticalDirection) {
+                                //  do not check Middle as we do nothing here
+                                if (verticalDirection === 'Middle') { return; }
+
+                                const positionSettings: PositionSettings = {
+                                    target: button
+                                };
+                                positionSettings.horizontalStartPoint = HorizontalAlignment[horizontalStartPoint];
+                                positionSettings.verticalStartPoint = VerticalAlignment[verticalStartPoint];
+                                positionSettings.horizontalDirection = HorizontalAlignment[horizontalDirection];
+                                positionSettings.verticalDirection = VerticalAlignment[verticalDirection];
+
+                                const overlaySettings: OverlaySettings = {
+                                    positionStrategy: new AutoPositionStrategy(positionSettings),
+                                    modal: false,
+                                    closeOnOutsideClick: false
+                                };
+
+                                fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
+                                tick();
+                                fix.detectChanges();
+
+                                const targetRect: ClientRect = (<HTMLElement>positionSettings.target).getBoundingClientRect() as ClientRect;
+                                const overlayWrapperElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+                                const overlayWrapperRect: ClientRect = overlayWrapperElement.getBoundingClientRect() as ClientRect;
+                                const screenRect: ClientRect = {
+                                    left: 0,
+                                    top: 0,
+                                    right: window.innerWidth,
+                                    bottom: window.innerHeight,
+                                    width: window.innerWidth,
+                                    height: window.innerHeight,
+                                };
+
+                                const location = getOverlayWrapperPosition(positionSettings, targetRect, overlayWrapperRect, screenRect);
+                                expect(overlayWrapperRect.top.toFixed(1)).toEqual(location.y.toFixed(1));
+                                expect(overlayWrapperRect.left.toFixed(1)).toEqual(location.x.toFixed(1));
+                                expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
+                                fix.componentInstance.overlay.hideAll();
+                                tick();
+                                fix.detectChanges();
+                            });
+                        });
                     });
                 });
-
-                // TODO: refactor this function and use it in all tests when needed
-                function verifyOverlayBoundingSizeAndPosition(horizontalDirection, verticalDirection,
-                    horizontalAlignment, verticalAlignment) {
-                    positionSettings.horizontalDirection = horizontalDirection;
-                    positionSettings.verticalDirection = verticalDirection;
-                    positionSettings.horizontalStartPoint = horizontalAlignment;
-                    positionSettings.verticalStartPoint = verticalAlignment;
-                    overlaySettings.positionStrategy = new AutoPositionStrategy(positionSettings);
-                    fix.componentInstance.overlay.show(SimpleDynamicComponent, overlaySettings);
-                    tick();
-                    fix.detectChanges();
-                    const buttonRect = button.getBoundingClientRect();
-                    const overlayElement = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
-                    const overlayRect = overlayElement.getBoundingClientRect();
-                    const expectedTop = verticalDirection === VerticalAlignment.Top ?
-                        buttonRect.top + buttonRect.height :
-                        getExpectedTopPosition(verticalAlignment, buttonRect);
-                    const expectedLeft = (horizontalDirection === HorizontalAlignment.Left &&
-                        verticalDirection === VerticalAlignment.Top &&
-                        horizontalAlignment === HorizontalAlignment.Right) ?
-                        buttonRect.right - overlayRect.width :
-                        (horizontalDirection === HorizontalAlignment.Right &&
-                            verticalDirection === VerticalAlignment.Top) ?
-                            getExpectedLeftPosition(horizontalAlignment, buttonRect) :
-                            buttonRect.right;
-                    expect(overlayRect.top.toFixed(1)).toEqual(expectedTop.toFixed(1));
-                    expect(overlayRect.bottom.toFixed(1)).toEqual((overlayRect.top + overlayRect.height).toFixed(1));
-                    expect(overlayRect.left.toFixed(1)).toEqual(expectedLeft.toFixed(1));
-                    expect(overlayRect.right.toFixed(1)).toEqual((overlayRect.left + overlayRect.width).toFixed(1));
-                    expect(document.body.scrollHeight > document.body.clientHeight).toBeFalsy(); // check scrollbar
-                    fix.componentInstance.overlay.hideAll();
-                }
             }));
 
         it('Should render margins correctly.', fakeAsync(() => {
