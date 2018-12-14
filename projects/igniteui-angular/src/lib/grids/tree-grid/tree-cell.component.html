@@ -30,7 +30,7 @@
         <div #indentationDiv class="igx-grid__tree-cell--padding-level-{{indentation}}"></div>
     </ng-container>
     <div #indicator class="igx-grid__tree-grouping-indicator" [ngStyle]="{'visibility': hasChildren ? 'visible' : 'hidden'}"
-         (click)="toggle($event)" (focus)="onIndicatorFocus($event)" tabindex="-1">
+         (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
         <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
         <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
     </div>
