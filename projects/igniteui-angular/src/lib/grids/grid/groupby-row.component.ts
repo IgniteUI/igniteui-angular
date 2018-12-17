@@ -223,6 +223,10 @@ export class IgxGridGroupByRowComponent {
                             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
                     }
                 } else {
+                    if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+                        this.grid.navigation.onKeydownHome(0, true);
+                        return;
+                    }
                     this.grid.navigation.navigateDown(this.nativeElement, this.index, 0);
                 }
                 break;

@@ -18,7 +18,6 @@ import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
-import { first } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -388,7 +387,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
         if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
+            let cellWidth = this.isLastUnpinned && hasVerticalScroll &&
+            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
                 parseInt(colWidth, 10) - 18 + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
@@ -504,7 +504,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @memberof IgxGridCellComponent
      */
     public get editValue() {
-        return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
+        if (this.gridAPI.get_cell_inEditMode(this.gridID)) {
+            return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
+        }
     }
     public focused = false;
     protected isSelected = false;
@@ -841,12 +843,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
 
     public onKeydownExitEditMode(event) {
         if (this.column.editable) {
-            const editableCell = this;
+            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
             const args: IGridEditEventArgs = {
                 cellID: editableCell.cellID,
                 rowID: editableCell.cellID.rowID,
-                oldValue: editableCell.value,
-                newValue: editableCell.editValue,
+                oldValue: editableCell.cell.value,
+                newValue: editableCell.cell.editValue,
                 cancel: false
             };
             this.grid.onCellEditCancel.emit(args);
@@ -903,11 +905,11 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         }
 
         const classList = {
-            'igx_grid__cell--edit': this.inEditMode,
+            'igx-grid__td--active': this.focused,
             'igx-grid__td--number': this.gridAPI.should_apply_number_style(this.column),
             'igx-grid__td--editing': this.inEditMode,
-            'igx-grid__th--pinned': this.column.pinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
+            'igx-grid__td--pinned': this.column.pinned,
+            'igx-grid__td--pinned-last': this.isLastPinned,
             'igx-grid__td--selected': this.selected,
             'igx-grid__td--edited': this.dirty
         };

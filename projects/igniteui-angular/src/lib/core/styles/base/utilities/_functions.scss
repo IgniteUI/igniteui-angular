@@ -113,10 +113,14 @@
 /// @param {Map} $palette - The source palette map.
 /// @param {string} $color - The target color from the color palette.
 /// @param {number|variant} $variant - The target color shade from the color palette.
+/// @requires igx-color
+/// @requires text-contrast
+/// @requires hexrgba
 /// @returns {Color} [#fff] - Returns white if now palette, color and/or variant matches found.
 @function igx-contrast-color($palette, $color, $variant: 500) {
-    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
-        @return map-get(map-get(map-get($palette, $color), 'contrast'), $variant);
+    $_color: igx-color($palette, $color, $variant);
+    @if $_color {
+        @return text-contrast(hexrgba($_color));
     }
     @return #fff;
 }
@@ -241,17 +245,12 @@
 /// @returns {Map} - A map consisting of 14 color variations and 14
 /// text contrast colors for each variation.
 @function generate-palette($color, $saturations) {
-    $shades: ();
-    $contrasts: ();
-
+    $result: ();
     @each $saturation in $saturations {
         $shade: gen-color($color, $saturation);
-        $contrast: text-contrast($shade);
-
-        $shades: map-merge($shades, ($saturation: $shade));
-        $contrasts: map-merge($contrasts, ($saturation: $contrast));
+        $result: map-merge($result, ($saturation: $shade));
     }
-    @return extend($shades, (contrast: $contrasts));
+    @return $result;
 }
 
 /// Generates grayscale color palette from a color.
@@ -265,18 +264,12 @@
 /// @returns {Map} - A map consisting of 10 grayscale color variations and 10
 /// text contrast colors for each variation.
 @function grayscale-palette($color, $shades) {
-    $colors: ();
-    $contrasts: ();
-
+    $result: ();
     @each $saturation, $opacity in $shades {
         $shade: rgba(grayscale($color), $opacity);
-        $contrast: text-contrast(hexrgba($shade));
-
-        $colors: map-merge($colors, ($saturation: $shade));
-        $contrasts: map-merge($contrasts, ($saturation: $contrast));
+        $result: map-merge($result, ($saturation: $shade));
     }
-
-    @return extend($colors, (contrast: $contrasts));
+    @return $result;
 }
 
 /// Generates a color palette.
@@ -499,11 +492,11 @@
     @each $fn, $args in $ctx {
         @if function-exists($fn) {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call(get-function($fn), $extra, $args...);
+                $result: call($fn, $extra, $args...);
             } @else if $result != null {
-                $result: call(get-function($fn), $result, $args...)
+                $result: call($fn, $result, $args...)
             } @else {
-                $result: call(get-function($fn), $args...)
+                $result: call($fn, $args...)
             }
         }
     }

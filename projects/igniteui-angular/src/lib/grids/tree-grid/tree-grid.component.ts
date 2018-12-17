@@ -351,7 +351,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-
+            this.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
             if (this.primaryKey && this.foreignKey) {
                 data[this.foreignKey] = parentRowID;
                 super.addRow(data);
@@ -361,9 +361,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
                     const path: any[] = [];
-                    path.push(parentRowID);
                     path.push(...this.generateRowPath(parentRowID));
-                    path.reverse();
+                    path.push(parentRowID);
                     this.transactions.add({
                         id: rowId,
                         path: path,
@@ -377,7 +376,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                     }
                     parentData[childKey].push(data);
                 }
-
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
@@ -385,6 +383,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 this.refreshSearch();
             }
         } else {
+            if (this.primaryKey && this.foreignKey) {
+                const rowID = data[this.foreignKey];
+                this.summaryService.clearSummaryCache({rowID: rowID});
+            }
             super.addRow(data);
         }
     }
@@ -464,7 +466,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             record = record.parent;
         }
 
-        return path;
+        return path.reverse();
     }
 
     /**
