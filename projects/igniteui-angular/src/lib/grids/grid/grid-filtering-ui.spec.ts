@@ -2690,6 +2690,48 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         });
     }));
 
+    it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+    }));
+
+    it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        const head = grid.nativeElement.querySelector('.igx-grid__thead');
+        const body = grid.nativeElement.querySelector('.igx-grid__tbody');
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(false);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+
+        fix.componentInstance.activateFiltering(true);
+        fix.detectChanges();
+
+        expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
+      }));
+
     it('Should remove FilterRow, when allowFiltering is set to false.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         const grid = fix.componentInstance.grid;
@@ -2751,7 +2793,7 @@ export class IgxGridFilteringComponent {
 
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    public customFilter = CustomFilter;
+    public customFilter = CustomFilter.instance();
     public resizable = false;
 
     public data = [
@@ -2822,6 +2864,11 @@ export class IgxGridFilteringComponent {
     ];
 
     @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
 }
 
 @Component({
@@ -2858,7 +2905,15 @@ export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
         </igx-column>
     </igx-grid>`
 })
-export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {
+
+    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+ }
 
 const expectedResults = [];
 

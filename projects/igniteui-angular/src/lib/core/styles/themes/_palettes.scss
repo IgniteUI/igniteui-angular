@@ -71,4 +71,5 @@ $elevations: igx-elevations(
 
 /// Green palette
 /// @type {Map}
+/// @group palettes
 $green-palette: igx-palette($primary: #09f, $secondary: #72da67) !default;

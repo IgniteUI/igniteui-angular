@@ -24,13 +24,11 @@ export function cloneHierarchicalArray(array: any[], childDataKey: any): any[] {
     }
 
     for (const item of array) {
+        const clonedItem = cloneValue(item);
         if (Array.isArray(item[childDataKey])) {
-            const clonedItem = cloneValue(item);
             clonedItem[childDataKey] = cloneHierarchicalArray(clonedItem[childDataKey], childDataKey);
-            result.push(clonedItem);
-        } else {
-            result.push(item);
         }
+        result.push(clonedItem);
     }
     return result;
 }
