@@ -1,0 +1,166 @@
+import { configureTestSuite } from '../../test-utils/configure-suite';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxHierarchicalGridModule } from './index';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
+    OnInit, ViewChild, ViewChildren, QueryList, TemplateRef } from '@angular/core';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+
+fdescribe('IgxHierarchicalGrid Navigation', () => {
+    configureTestSuite();
+    let fixture;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridTestBaseComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(async(() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        fixture.detectChanges();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+    }));
+
+    // simple tests
+    it('should allow navigating down from parent row into child grid.', () => {
+        const fCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0].nativeElement;
+        fCell.focus();
+        fixture.detectChanges();
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowDown',
+            key: 'ArrowDown'
+        });
+        fCell.dispatchEvent(keyboardEvent);
+        fixture.detectChanges();
+
+        const childGrid = hierarchicalGrid.getChildGrids(false)[0];
+        const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+
+        expect(childFirstCell.selected).toBe(true);
+        expect(childFirstCell.focused).toBe(true);
+    });
+
+    it('should allow navigating up from child row into parent grid.', () => {
+        const childGrid = hierarchicalGrid.getChildGrids(false)[0];
+        const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        childFirstCell.nativeElement.focus();
+        childGrid.cdr.detectChanges();
+
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowUp',
+            key: 'ArrowUp'
+        });
+        childFirstCell.nativeElement.dispatchEvent(keyboardEvent);
+        fixture.detectChanges();
+
+        const parentFirstCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(parentFirstCell.selected).toBe(true);
+        expect(parentFirstCell.focused).toBe(true);
+    });
+
+    it('should allow navigating down in child grid when child grid selected cell moves outside the parent view port.',(async () => {
+        const childGrid = hierarchicalGrid.getChildGrids(false)[0];
+        const childCell =  childGrid.dataRowList.toArray()[3].cells.toArray()[0];
+        childCell.nativeElement.focus();
+        fixture.detectChanges();
+        const keyboardEvent = new KeyboardEvent('keydown', {
+            code: 'ArrowDown',
+            key: 'ArrowDown'
+        });
+        childCell.nativeElement.dispatchEvent(keyboardEvent);
+        hierarchicalGrid.cdr.detectChanges();
+        fixture.detectChanges();
+
+        await wait(10);
+        fixture.detectChanges();
+        // parent should scroll down so that cell in child is in view.
+        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop)
+        .toBeGreaterThanOrEqual(childCell.nativeElement.offsetHeight);
+    }));
+
+    it('should allow navigating up in child grid when child grid selected cell moves outside the parent view port.', () => {
+
+    });
+
+    it('should allow navigation with Tab from parent into child.', () => {
+    });
+
+    it('should allow navigation with Tab from child into parent row.', () => {
+    });
+
+    it('should allow navigation with Shift+Tab from child into parent grid.', () => {
+
+    });
+
+    it('should allow navigation with Shift+Tab from parent into child grid.', () => {
+
+    });
+
+    it('should allow navigating to start/end in child grid when child grid target row moves outside the parent view port.', () => {
+
+    });
+
+    it('should allow navigating to bottom/top in child grid when child grid target row moves outside the parent view port.', () => {
+
+    });
+
+    it('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', () => {
+
+    });
+
+    it('when navigating up from parent into child should scroll child grid to bottom and start navigation from last row.', () => {
+    });
+
+    it('should horizontally scroll first/last cell in view when navigating from parent into child with Tab/Shift+Tab', () => {
+
+    });
+    // complex tests
+    it('should allow navigating up/down between sibling child grids.', () => {
+
+    });
+    it('in case next cell is not in view port should scroll the closest scrollable parent so that cell comes view.', () => {
+    });
+    it('should allow navigating from start to end and back using arrow keys when all child levels are expanded.', () => {
+    });
+    it('should allow navigating from start to end and back using tab/shift+tab keys when all child levels are expanded.', () => {
+    });
+});
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [childrenExpanded]='true'>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true">
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridTestBaseComponent {
+    public data;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
+
+    constructor() {
+        // 3 level hierarchy
+        this.data = this.generateData(10, 2);
+    }
+    generateData(count: number, level: number) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+           if (level > 0 ) {
+               children = this.generateData(count / 2 , currLevel - 1);
+           }
+           prods.push({
+            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+            'Col2': i, 'Col3': i, childData: children, childData2: children });
+        }
+        return prods;
+    }
+}

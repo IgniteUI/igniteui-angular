@@ -228,7 +228,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public performTab(currentRowEl, rowIndex, visibleColumnIndex) {
-        if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent) {
+        if (!this.grid.rowList.find(row => row.index === rowIndex + 1) && this.grid.parent &&
+        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             this.navigateDown(currentRowEl, rowIndex, 0);
         } else {
             super.performTab(currentRowEl, rowIndex, visibleColumnIndex);
@@ -285,14 +286,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
         if (vScrollState.startIndex + vScrollState.chunkSize  < lastIndex) {
             // scroll to end
-            this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, grid));
+            this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, childGrid));
         } else {
             const lastRowInChild = childGrid.getRowByIndex(lastIndex);
             const isChildGrid = lastRowInChild.nativeElement.nodeName.toLowerCase() === 'igx-child-grid-row';
             if (isChildGrid) {
                 this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, grid);
             } else {
-                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, grid);
+                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid);
             }
         }
     }
@@ -306,7 +307,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (prevIsSiblingChild) {
                 this.focusPrevChild(prev, visibleColumnIndex, this.grid.parent);
             } else {
-                this.focusPrevRow(prev, visibleColumnIndex, this.grid);
+                this.focusPrevRow(prev, visibleColumnIndex, this.grid.parent);
             }
         } else {
             this.scrollGrid(this.grid.parent, 'prev',
@@ -317,7 +318,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (prevIsSiblingChild) {
                 this.focusPrevChild(prev, visibleColumnIndex, this.grid.parent);
             } else {
-                this.focusPrevRow(prev, visibleColumnIndex, this.grid);
+                this.focusPrevRow(prev, visibleColumnIndex, this.grid.parent);
             }
             });
         }
