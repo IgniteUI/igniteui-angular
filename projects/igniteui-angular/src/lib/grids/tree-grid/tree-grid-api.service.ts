@@ -5,7 +5,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../column.component';
 import { first } from 'rxjs/operators';
-import { HierarchicalTransaction, TransactionType } from '../../services';
+import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
 
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
@@ -173,5 +173,24 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             }
             this.get_selected_children(id, child, selectedRowIDs);
         }
+    }
+
+    public row_deleted_transaction(id: string, rowID: any): boolean {
+        return this.row_deleted_parent(id, rowID) || super.row_deleted_transaction(id, rowID);
+    }
+
+    public row_deleted_parent(id: string, rowID: any): boolean {
+        const grid = this.get(id);
+        if ((grid.cascadeOnDelete && grid.foreignKey) || grid.childDataKey) {
+            let node = grid.records.get(rowID);
+            while (node) {
+                const state: State = grid.transactions.getState(node.rowID);
+                if (state && state.type === TransactionType.DELETE) {
+                    return true;
+                }
+                node = node.parent;
+            }
+        }
+        return false;
     }
 }

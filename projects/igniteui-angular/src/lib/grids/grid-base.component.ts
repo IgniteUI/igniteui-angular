@@ -3315,8 +3315,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public refreshGridState(args?) {
-            this.endEdit(true);
-            this.summaryService.clearSummaryCache(args);
+        this.endEdit(true);
+        this.summaryService.clearSummaryCache(args);
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -3795,7 +3795,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _disableMultipleSummaries(expressions) {
         expressions.forEach((column) => {
             const columnName = column && column.fieldName ? column.fieldName : column;
-            this._summaries(columnName, false); });
+            this._summaries(columnName, false);
+        });
     }
 
     /**
@@ -4023,9 +4024,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let newSelection: Set<any>;
         let selectableRows = [];
         if (this.transactions.enabled) {
-            for (let i = 0; i < rowIDs.length; i++) {
-                selectableRows = rowIDs.filter( e => !this.gridAPI.row_deleted_transaction(this.id, e));
-            }
+            selectableRows = rowIDs.filter(e => !this.gridAPI.row_deleted_transaction(this.id, e));
         } else {
             selectableRows = rowIDs;
         }
