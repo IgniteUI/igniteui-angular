@@ -322,11 +322,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent> implements DoCheck 
     }
 
     protected isRowDeleted(): boolean {
-        const state: State = this.grid.transactions.getState(this.rowID);
-        if (state) {
-            return state.type === TransactionType.DELETE;
-        }
-
-        return false;
+        return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
     }
 }

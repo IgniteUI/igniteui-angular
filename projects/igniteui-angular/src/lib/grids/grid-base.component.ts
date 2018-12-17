@@ -4021,7 +4021,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         let newSelection: Set<any>;
-        newSelection = this.selection.add_items(this.id, rowIDs, clearCurrentSelection);
+        let selectableRows = [];
+        if (this.transactions.enabled) {
+            for (let i = 0; i < rowIDs.length; i++) {
+                selectableRows = rowIDs.filter( e => !this.gridAPI.row_deleted_transaction(this.id, e));
+            }
+        } else {
+            selectableRows = rowIDs;
+        }
+        newSelection = this.selection.add_items(this.id, selectableRows, clearCurrentSelection);
         this.triggerRowSelectionChange(newSelection);
     }
 

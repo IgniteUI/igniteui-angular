@@ -2865,6 +2865,22 @@ describe('IgxGrid Component Tests', () => {
                 expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
                 expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
             }));
+
+            it('Should not allow selecting rows that are deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.rowSelectable = true;
+                fixture.detectChanges();
+
+                grid.deleteRowById(2);
+                grid.deleteRowById(3);
+
+                fixture.detectChanges();
+                grid.selectRows([2, 3, 4]);
+                fixture.detectChanges();
+                expect(grid.selectedRows()).toEqual([4]);
+            }));
         });
 
         describe('Row Editing - Grouping',  () => {
