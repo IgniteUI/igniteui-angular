@@ -2942,7 +2942,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public deleteRowById(rowId: any) {
         let index: number;
-        const data = this.gridAPI.get_all_data(this.id);
+        const data = this.gridAPI.get_all_data(this.id, this.transactions.enabled);
         if (this.primaryKey) {
             index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
         } else {
@@ -2971,22 +2971,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.checkHeaderCheckboxStatus();
         }
 
-        const addedRowsDif = this.dataWithAddedInTransactionRows.length - this.data.length;
         this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
-
+        const dataAfterDelete = !this.transactions.enabled ? data : this.dataWithAddedInTransactionRows;
         this.refreshSearch();
-        if (this.isLastPage && this.page !== 0) {
-            let pageSwitch = 0;
-            if (!this.transactions.enabled) {
-                pageSwitch = this.data.length % this.perPage === 0 ? 1 : 0;
-            } else {
-                if (addedRowsDif) {
-                    pageSwitch = this.dataWithAddedInTransactionRows.length % this.perPage === 0 ? 1 : 0;
-                }
+        if (dataAfterDelete.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+            const currentPage = Math.ceil(dataAfterDelete.length / this.perPage) - 1;
+            if (this.page !== currentPage) {
+                this.page = currentPage;
             }
-            this.page -= pageSwitch;
         }
     }
 
