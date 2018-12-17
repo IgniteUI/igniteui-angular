@@ -887,7 +887,7 @@ describe('IgxGrid - search API', () => {
             expect(highlight).toBe(spans[4]);
         });
 
-        xit('Should be able to react to changes in grouping', async () => {
+        it('Should be able to react to changes in grouping', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
@@ -943,7 +943,7 @@ describe('IgxGrid - search API', () => {
             expect(highlight !== null).toBeTruthy();
         });
 
-        xit('Should be able to navigate through highlights with grouping and paging enabled', async () => {
+        it('Should be able to navigate through highlights with grouping and paging enabled', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
@@ -988,7 +988,7 @@ describe('IgxGrid - search API', () => {
             expect(grid.page).toBe(1);
         });
 
-        xit('Should be able to properly handle perPage changes with gouping and paging', async () => {
+        it('Should be able to properly handle perPage changes with gouping and paging', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,

@@ -361,9 +361,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
                     const path: any[] = [];
-                    path.push(parentRowID);
                     path.push(...this.generateRowPath(parentRowID));
-                    path.reverse();
+                    path.push(parentRowID);
                     this.transactions.add({
                         id: rowId,
                         path: path,
@@ -467,7 +466,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
             record = record.parent;
         }
 
-        return path;
+        return path.reverse();
     }
 
     /**
