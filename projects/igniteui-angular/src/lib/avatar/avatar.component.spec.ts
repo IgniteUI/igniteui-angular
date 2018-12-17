@@ -70,7 +70,7 @@ describe('Avatar', () => {
         expect(hostEl.classList).not.toContain(classes.round);
     });
 
-    it('Initializes small, medium, and large avatar', () => {
+    it('Can change its size', () => {
         const fixture = TestBed.createComponent(AvatarWithAttribsComponent);
         fixture.detectChanges();
         const instance = fixture.componentInstance.avatar;
