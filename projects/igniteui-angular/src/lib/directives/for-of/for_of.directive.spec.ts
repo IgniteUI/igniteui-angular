@@ -991,7 +991,7 @@ describe('IgxForOf directive -', () => {
             }
         });
     });
-    describe('igx forOf', () => {
+    describe('no width and height component', () => {
         configureTestSuite();
         let fix: ComponentFixture<NoWidthAndHeightComponent>;
 
@@ -1466,19 +1466,15 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
 
 @Component({
     template: `
-    <div
-    #container
-    class="container">
-        <div
-        #childContainer
-        *igxFor="
-        let item of items;
-        scrollOrientation: 'horizontal';
-        containerSize: 300;
-        itemSize: itemSize;"
-        class="forOfElement">
-            {{ item.text }}
-        </div>
+    <div class="container">
+        <ng-template igxForTest
+            let-item [igxForOf]="items"
+            [igxForScrollOrientation]="'horizontal'"
+            [igxForScrollContainer]="parentVirtDir"
+            [igxForContainerSize]='width'
+            [igxForItemSize]='itemSize'>
+                <div class="forOfElement" #child>{{item.text}}</div>
+        </ng-template>
     </div>
     `,
     styles: [`.container {
@@ -1490,7 +1486,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         overflow: hidden;
         border: 1px solid #000;
     }`, `.forOfElement {
-        width: 60px;
         flex: 0 0 60px;
         border-right: 1px solid #888;
     }`]
@@ -1502,11 +1497,11 @@ export class NoWidthAndHeightComponent {
     public itemSize = 60;
     public height = '300px';
 
-    @ViewChildren('childContainer')
+    @ViewChildren('child')
     public childVirtDirs: QueryList<any>;
 
     constructor() {
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 100; i++) {
             this.items.push({text: i + ''});
         }
     }
