@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../../chips';
 const FILTERING_TOGGLE_CLASS = 'igx-filtering__toggle';
 const FILTERING_TOGGLE_FILTERED_CLASS = 'igx-filtering__toggle--filtered';
 
-fdescribe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -753,7 +753,9 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     // day + 15
     if (!dateItem0.isThisYear) {
         thisYearCountItems--;
-    } else if (dateItem0.isNextYear) {
+    }
+
+    if (dateItem0.isNextYear) {
         nextYearCountItems++;
     }
 
