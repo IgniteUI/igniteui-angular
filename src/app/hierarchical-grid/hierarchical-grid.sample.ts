@@ -29,7 +29,7 @@ export class HierarchicalGridSampleComponent {
         //     this.localData.push({ ID: i, Name: 'A' + i, Products: prods});
         // }
 
-        this.localData = this.generateData(100, 3);
+        this.localData = this.generateDataUneven(100, 3);
     }
 
     generateData(count: number, level: number) {
@@ -43,6 +43,23 @@ export class HierarchicalGridSampleComponent {
            prods.push({
             ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
             'Col2': i, 'Col3': i, childData: children, childData2: children });
+        }
+        return prods;
+    }
+
+    generateDataUneven(count: number, level: number, parendID: string = null) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+            if (level > 0 ) {
+               // Have child grids for row with even id less rows by not multiplying by 2
+               children = this.generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
+            }
+            prods.push({
+                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+                'Col2': i, 'Col3': i, childData: children, childData2: children });
         }
         return prods;
     }
