@@ -42,10 +42,15 @@ export class IgxTemplateOutletDirective implements OnChanges {
            // if view exists, but template has been changed and there is a view in the cache with the related template
            // then detach old view and insert the stored one with the matching template
            // after that update its context.
-            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
-            this._viewRef = cachedView;
-            this._viewContainerRef.insert(this._viewRef, 0);
-            this._updateExistingContext(this.igxTemplateOutletContext);
+           this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+           if (!cachedView.destroyed) {
+             this._viewRef = cachedView;
+           } else {
+             this._recreateView();
+             return;
+           }
+           this._viewContainerRef.insert(this._viewRef, 0);
+           this._updateExistingContext(this.igxTemplateOutletContext);
         }
     } else {
         // view should not be re-created. Check if it exists and if context exists and just update it.
@@ -58,7 +63,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
   private _recreateView() {
      // remove and recreate
      if (this._viewRef) {
-         this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+         this._viewContainerRef.remove(this._viewContainerRef.indexOf(this._viewRef));
       }
       if (this.igxTemplateOutlet) {
         this._viewRef = this._viewContainerRef.createEmbeddedView(
