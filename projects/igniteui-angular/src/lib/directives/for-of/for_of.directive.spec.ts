@@ -991,6 +991,31 @@ describe('IgxForOf directive -', () => {
             }
         });
     });
+    describe('igx forOf', () => {
+        configureTestSuite();
+        let fix: ComponentFixture<NoWidthAndHeightComponent>;
+
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    NoWidthAndHeightComponent
+                ],
+                imports: [IgxForOfModule]
+            }).compileComponents();
+        }));
+
+        it('should use itemSize when no width or height are provided', () => {
+            fix = TestBed.createComponent(NoWidthAndHeightComponent);
+            fix.componentRef.hostView.detectChanges();
+            fix.detectChanges();
+
+            const children = fix.componentInstance.childVirtDirs;
+            const instance = fix.componentInstance;
+            const expectedElementsLength = (parseInt(instance.width, 10) / instance.itemSize) + 2;
+            expect(children.length).toEqual(expectedElementsLength);
+        });
+    });
 });
 
 class DataGenerator {
@@ -1436,5 +1461,53 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         this.localService.getData(evt, () => {
             this.parentVirtDir.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: `
+    <div
+    #container
+    class="container">
+        <div
+        #childContainer
+        *igxFor="
+        let item of items;
+        scrollOrientation: 'horizontal';
+        containerSize: 300;
+        itemSize: itemSize;"
+        class="forOfElement">
+            {{ item.text }}
+        </div>
+    </div>
+    `,
+    styles: [`.container {
+        display: flex;
+        flex-flow: column;
+        position: relative;
+        width: 300px;
+        height: 300px;
+        overflow: hidden;
+        border: 1px solid #000;
+    }`, `.forOfElement {
+        width: 60px;
+        flex: 0 0 60px;
+        border-right: 1px solid #888;
+    }`]
+})
+
+export class NoWidthAndHeightComponent {
+    public items = [];
+    public width = '300px';
+    public itemSize = 60;
+    public height = '300px';
+
+    @ViewChildren('childContainer')
+    public childVirtDirs: QueryList<any>;
+
+    constructor() {
+        for (let i = 0; i < 10000; i++) {
+            this.items.push({text: i + ''});
+        }
     }
 }
