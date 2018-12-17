@@ -25,6 +25,7 @@ import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.dir
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
+import { IgxFocusModule } from '../directives/focus/focus.directive';
 
 let DIALOG_ID = 0;
 /**
@@ -485,6 +486,6 @@ export interface IDialogEventArgs {
 @NgModule({
     declarations: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
     exports: [IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective],
-    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxToggleModule, IgxButtonModule, IgxRippleModule, IgxFocusModule]
 })
 export class IgxDialogModule { }

@@ -70,7 +70,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostBinding('style.min-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.column.width;
+        return this.grid.getHeaderGroupWidth(this.column);
     }
 
     /**
