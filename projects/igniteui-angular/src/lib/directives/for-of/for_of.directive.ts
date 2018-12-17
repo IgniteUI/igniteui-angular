@@ -922,7 +922,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let sum = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             'width' : 'height';
-            const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
+        const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         const availableSize = parseInt(this.igxForContainerSize, 10);
         for (i; i < this.igxForOf.length; i++) {
             let item = this.igxForOf[i];
