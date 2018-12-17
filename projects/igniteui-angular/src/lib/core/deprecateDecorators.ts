@@ -4,7 +4,7 @@ import { isDevMode } from '@angular/core';
  * @hidden
  */
 export function DeprecateMethod(message: string): MethodDecorator {
-    var isMessageShown = false;
+    let isMessageShown = false;
 
     return function (target: any, key: string, descriptor: PropertyDescriptor) {
         if (descriptor && descriptor.value) {
@@ -12,7 +12,7 @@ export function DeprecateMethod(message: string): MethodDecorator {
 
             descriptor.value = function () {
                 if (!isMessageShown && isDevMode()) {
-                    const targetName = typeof target === "function" ? target.name : target.constructor.name;
+                    const targetName = typeof target === 'function' ? target.name : target.constructor.name;
                     isMessageShown = true;
 
                     console.warn(`${targetName}.${key}: ${message}`);
@@ -23,7 +23,7 @@ export function DeprecateMethod(message: string): MethodDecorator {
 
             return descriptor;
         }
-    }
+    };
 }
 
 /**
@@ -31,7 +31,7 @@ export function DeprecateMethod(message: string): MethodDecorator {
  */
 export function DeprecateProperty(message: string): PropertyDecorator {
     return function(target: any, key: string) {
-        var isMessageShown = false;
+        let isMessageShown = false;
 
         // use backing field to set/get the value of the property to ensure there won't be infinite recursive calls
         const newKey = generateUniqueKey(target, key);
@@ -49,7 +49,7 @@ export function DeprecateProperty(message: string): PropertyDecorator {
                 return this[newKey];
             }
         });
-    }
+    };
 }
 
 /**
