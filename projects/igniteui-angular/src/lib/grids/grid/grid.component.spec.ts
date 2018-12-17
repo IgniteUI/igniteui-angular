@@ -2896,7 +2896,7 @@ describe('IgxGrid Component Tests', () => {
                 fixture.detectChanges();
                 // This is behaving incorrectly - if there is only 1 transaction and it is an ADD transaction on the last page
                 // Deleting the ADD transaction on the last page will trigger grid.page-- TWICE
-                expect(grid.page).toEqual(0); // Should be 1
+                expect(grid.page).toEqual(1); // Should be 1
                 expect(grid.totalPages).toEqual(2);
             }));
 
