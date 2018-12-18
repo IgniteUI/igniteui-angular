@@ -85,9 +85,4 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
         return `${classes} ${filteredClass}`;
     }
-
-    /** @hidden */
-    public get deleted(): boolean {
-        return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
-    }
 }
