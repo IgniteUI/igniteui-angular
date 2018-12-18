@@ -794,7 +794,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        fit('should not wrap around with scrollNext and scrollPrev', async () => {
+        it('should not wrap around with scrollNext and scrollPrev', async () => {
             const forOf = fix.componentInstance.parentVirtDir;
             forOf.scrollPrev();
             fix.detectChanges();
