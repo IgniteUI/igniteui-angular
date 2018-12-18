@@ -14,7 +14,7 @@ import { DataType } from '../data-operations/data-util';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
 import { IgxRowComponent } from './row.component';
 import {
     IgxCellEditorTemplateDirective,
@@ -28,7 +28,8 @@ import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+    IgxStringFilteringOperand,
+    IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -139,18 +140,31 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     public resizable = false;
     /**
-     * Enables/disables summary for the column.
-     * Default value is `false`.
+     * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
      * let hasSummary = this.column.hasSummary;
      * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get hasSummary() {
+        return this._hasSummary;
+    }
+    /**
+     * Sets a value indicating whether the summary for the column is enabled.
+     * Default value is `false`.
      * ```html
      * <igx-column [hasSummary] = "true"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input()
-    public hasSummary = false;
+    set hasSummary(value) {
+        this._hasSummary = value;
+
+        if (this.grid) {
+            this.grid.summaryService.recalculateSummaries();
+        }
+    }
     /**
      * Gets whether the column is hidden.
      * ```typescript
@@ -198,10 +212,7 @@ export class IgxColumnComponent implements AfterContentInit {
                         this.grid.refreshSearch();
                     }
                 }
-                if (this.hasSummary) {
-                    this.grid.summariesHeight = 0;
-                }
-
+                this.grid.summaryService.resetSummaryHeight();
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
             }
@@ -306,7 +317,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     public headerClasses = '';
-        /**
+    /**
      *@hidden
      */
     @Input()
@@ -453,6 +464,12 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set summaries(classRef: any) {
         this._summaries = new classRef();
+
+        if (this.grid) {
+            this.grid.summaryService.removeSummariesCachePerColumn(this.field);
+            (this.grid as any)._summaryPipeTrigger++;
+            this.grid.summaryService.recalculateSummaries();
+        }
     }
     /**
      * Sets/gets whether the column is `searchable`.
@@ -475,18 +492,18 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public get filters(): any {
+    public get filters(): IgxFilteringOperand {
         return this._filters;
     }
     /**
      * Sets the column `filters`.
      * ```typescript
-     * this.column.filters = IgxBooleanFilteringOperand.
+     * this.column.filters = IgxBooleanFilteringOperand.instance().
      * ```
      * @memberof IgxColumnComponent
      */
-    public set filters(classRef: any) {
-        this._filters = classRef;
+    public set filters(instance: IgxFilteringOperand) {
+        this._filters = instance;
     }
     /**
      * Gets the column `sortStrategy`.
@@ -724,6 +741,16 @@ export class IgxColumnComponent implements AfterContentInit {
         return lvl;
     }
 
+    get isLastPinned(): boolean {
+        const pinnedCols = this.grid.pinnedColumns;
+
+        if (pinnedCols.length === 0) {
+            return false;
+        }
+
+        return pinnedCols.indexOf(this) === pinnedCols.length - 1;
+    }
+
     /**
      * hidden
      */
@@ -825,6 +852,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _hasSummary = false;
+    /**
+     *@hidden
+     */
     @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
@@ -887,17 +918,17 @@ export class IgxColumnComponent implements AfterContentInit {
         if (!this.filters) {
             switch (this.dataType) {
                 case DataType.Boolean:
-                    this.filters = IgxBooleanFilteringOperand;
+                    this.filters = IgxBooleanFilteringOperand.instance();
                     break;
                 case DataType.Number:
-                    this.filters = IgxNumberFilteringOperand;
+                    this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
-                    this.filters = IgxDateFilteringOperand;
+                    this.filters = IgxDateFilteringOperand.instance();
                     break;
                 case DataType.String:
                 default:
-                    this.filters = IgxStringFilteringOperand;
+                    this.filters = IgxStringFilteringOperand.instance();
                     break;
             }
         }
@@ -1074,7 +1105,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
-    /**
+     /**
      * Returns a reference to the filter cell of the column.
      * ```typescript
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];

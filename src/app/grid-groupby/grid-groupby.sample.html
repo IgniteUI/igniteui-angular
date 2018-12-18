@@ -1,10 +1,13 @@
 <div class="wrapper">
     <igx-switch [(ngModel)]="hideGroupedColumns" (change)="toggleGroupedVisibility($event)">Toggle Hiding Of Grouped Columns</igx-switch>
     <div class="separator"></div>
+    <div class="density-chooser" style="margin-bottom: 16px">
+            <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)" style="display: block; width: 500px"></igx-buttongroup>
+        </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [width]="'1200px'" (onGroupingDone)="onGroupingDoneHandler($event)" [hideGroupedColumns]="hideGroupedColumns" [groupingExpressions]='groupingExpressions'
-    [height]="'700px'" [rowSelectable]='true'  [primaryKey]="'ID'" (onFocusChange)="changeFocus($event)">
+    [height]="'700px'" [rowSelectable]='true'  [summaryCalculationMode]="summaryMode">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned' [editable]="true" [filterable]="true">
+            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned' [editable]="true" [filterable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
         <!--<ng-template igxGroupByRow let-groupRow>
             <span>Total items with value:"{{ groupRow.value }}" are {{ groupRow.records.length }}</span>

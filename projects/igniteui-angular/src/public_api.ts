@@ -86,4 +86,6 @@ export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs } from './lib/core/utils';
-export { changei18n, getCurrentResourceStrings } from './lib/core/i18n/resources';
+export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
+export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';

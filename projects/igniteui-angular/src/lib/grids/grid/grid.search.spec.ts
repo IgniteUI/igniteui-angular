@@ -1069,7 +1069,7 @@ describe('IgxGrid - search API', () => {
             expect(grid.isExpandedGroup(grid.groupsRecords[0])).toBeTruthy();
         });
 
-        it('Should be able to properly handle navigating through collapsed rows with paging', async () => {
+        xit('Should be able to properly handle navigating through collapsed rows with paging', async () => {
             grid.groupBy({
                 fieldName: 'JobTitle',
                 dir: SortingDirection.Asc,
