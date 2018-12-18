@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent } from 'igniteui-angular';
+import { IgxComboComponent, DisplayDensity } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { NgModule } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,14 +36,21 @@ export class ComboSampleComponent implements OnInit {
     @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     public toggleItemState = false;
     private initData: any[] = [];
+    public filterableFlag = false;
+    public customValuesFlag = false;
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';
     @ViewChild('customItemTemplate', {read: TemplateRef})
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
-    constructor() {
 
+    comfortable = DisplayDensity.comfortable;
+    cosy = DisplayDensity.cosy;
+    compact = DisplayDensity.compact;
+
+
+    constructor() {
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -98,9 +105,11 @@ export class ComboSampleComponent implements OnInit {
 
         this.igxCombo.dropdown.onOpened.pipe(take(1)).subscribe(() => {
             console.log('Attaching');
-            this.igxCombo.searchInput.nativeElement.onchange = (e) => {
-                console.log(e);
-            };
+            if (this.igxCombo.searchInput) {
+                this.igxCombo.searchInput.nativeElement.onchange = (e) => {
+                    console.log(e);
+                };
+            }
         });
 
         this.igxCombo.dropdown.onClosing.subscribe(() => {
@@ -122,7 +131,7 @@ export class ComboSampleComponent implements OnInit {
         this.initialItemTemplate = comboTemplate;
     }
 
-    setDensity(density: string) {
+    setDensity(density: DisplayDensity) {
         this.igxCombo.displayDensity = density;
     }
 }
