@@ -794,6 +794,22 @@ describe('IgxForOf directive -', () => {
             }
         });
 
+        fit('should not wrap around with scrollNext and scrollPrev', async () => {
+            const forOf = fix.componentInstance.parentVirtDir;
+            forOf.scrollPrev();
+            fix.detectChanges();
+            await wait();
+            expect(forOf.state.startIndex).toEqual(0);
+            forOf.scrollTo(forOf.igxForOf.length - 1);
+            fix.detectChanges();
+            await wait();
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
+            forOf.scrollNext();
+            fix.detectChanges();
+            await wait();
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
+        });
+
         it('should prevent scrollTo() when called with numbers outside the scope of the data records.', () => {
             fix.componentInstance.parentVirtDir.testScrollTo(-1);
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
