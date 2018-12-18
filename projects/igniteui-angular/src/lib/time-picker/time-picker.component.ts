@@ -44,6 +44,7 @@ import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { KEYS } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -290,7 +291,7 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * Sets the character representing a fillable spot in the editable input mask.
+     * Sets the character used to prompt the user for input.
      * Default value is "'-'".
      * ```html
      * <igx-time-picker [promptChar] = "'_'">
@@ -1078,6 +1079,53 @@ export class IgxTimePickerComponent implements
         }
     }
 
+    private _spinHours(currentVal: Date, minVal: Date, maxVal: Date, hDelta: number, sign: number): Date {
+        let value = new Date();
+        const oldVal = new Date(currentVal);
+
+        currentVal.setMinutes(sign * hDelta);
+        if (currentVal.getDate() !== oldVal.getDate() && this.isSpinLoop) {
+            currentVal.setDate(oldVal.getDate());
+        }
+
+        let minutes = currentVal.getMinutes();
+        if (currentVal.getTime() > maxVal.getTime()) {
+            if (this.isSpinLoop) {
+                minutes = minutes < minVal.getMinutes() ? 60 + minutes : minutes;
+                minVal.setMinutes(sign * minutes);
+                value = minVal;
+            } else {
+                value = oldVal;
+            }
+        } else if (currentVal.getTime() < minVal.getTime()) {
+            if (this.isSpinLoop) {
+                minutes = minutes <= maxVal.getMinutes() ? minutes : minutes - 60;
+                maxVal.setMinutes(minutes);
+                value = maxVal;
+            } else {
+                value = oldVal;
+            }
+        } else {
+            value = currentVal;
+        }
+
+        return value;
+    }
+
+    private _spinMinutes(currentVal: Date, mDelta: number, sign: number) {
+        let value = new Date();
+        let minutes = currentVal.getMinutes() + (sign * mDelta);
+
+        if (minutes < 0 || minutes >= 60) {
+            minutes = this.isSpinLoop ? minutes - (sign * 60) : currentVal.getMinutes();
+        }
+
+        currentVal.setMinutes(minutes);
+        value = currentVal;
+
+        return value;
+    }
+
     private _onDropDownClosed(): void {
         const oldValue = this.value;
         const newVal = this._convertMinMaxValue(this.displayValue);
@@ -1370,16 +1418,14 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public onKeydown(event): void {
-        const alt = event.altKey;
-
-        switch (event.key.toLowerCase()) {
-            case 'arrowup':
-            case 'up':
+        switch (event.key) {
+            case KEYS.UP_ARROW:
+            case KEYS.UP_ARROW_IE:
                 this.spinOnEdit(event);
                 break;
-            case 'arrowdown':
-            case 'down':
-                if (alt) {
+            case KEYS.DOWN_ARROW:
+            case KEYS.DOWN_ARROW_IE:
+                if (event.altKey) {
                     this.openDialog();
                 } else {
                     this.spinOnEdit(event);
@@ -1421,6 +1467,7 @@ export class IgxTimePickerComponent implements
         if (!this.value || !val || val === this.parseMask(false)) {
             this.isNotEmpty = false;
             this.value.setHours(0, 0);
+            this.displayValue = val;
 
             newVal = new Date(this.value);
             if (oldVal.getTime() !== newVal.getTime()) {
@@ -1475,22 +1522,20 @@ export class IgxTimePickerComponent implements
 
         let sign: number;
         let displayVal: string;
+        const currentVal = new Date(this.value);
         const min = this.minValue ? this._convertMinMaxValue(this.minValue) : this._convertMinMaxValue('00:00');
         const max = this.maxValue ? this._convertMinMaxValue(this.maxValue) : this._convertMinMaxValue('24:00');
 
         const cursor = this._getCursorPosition();
 
         if (event.key) {
-            const key = event.key.toLowerCase();
-            sign = key === 'arrowdown' || key === 'down' ? -1 : 1;
+            const key = event.key;
+            sign = key === KEYS.DOWN_ARROW || key === KEYS.DOWN_ARROW_IE ? -1 : 1;
         }
 
         if (event.deltaY) {
             sign = event.deltaY < 0 ? 1 : -1;
         }
-
-        const oldVal = new Date(this.value);
-        const currentVal = new Date(this.value);
 
         if (!this.displayValue) {
             this.value = min;
@@ -1501,46 +1546,11 @@ export class IgxTimePickerComponent implements
             const sections = this.displayValue.split(/[\s:]+/);
 
             if (HOURS_POS.indexOf(cursor) !== -1) {
-
-                currentVal.setMinutes(sign * hDelta);
-
-                if (currentVal.getDate() !== oldVal.getDate() && this.isSpinLoop) {
-                    currentVal.setDate(oldVal.getDate());
-                }
-
-                if (currentVal.getTime() >= max.getTime()) {
-                    if (this.isSpinLoop) {
-                        const minutes = currentVal.getMinutes() < min.getMinutes() ?
-                            60 + currentVal.getMinutes() : currentVal.getMinutes();
-                        min.setMinutes(sign * minutes);
-                        this.value = min;
-                    } else {
-                        this.value = oldVal;
-                    }
-                } else if (currentVal.getTime() < min.getTime()) {
-                    if (this.isSpinLoop) {
-                        const minutes = currentVal.getMinutes() <= max.getMinutes() ?
-                            currentVal.getMinutes() : currentVal.getMinutes() - 60;
-                        max.setMinutes(minutes);
-                        this.value = max;
-                    } else {
-                        this.value = oldVal;
-                    }
-                } else {
-                    this.value = currentVal;
-                }
+                this.value = this._spinHours(currentVal, min, max, hDelta, sign);
             }
 
             if (MINUTES_POS.indexOf(cursor) !== -1) {
-                let minutes = this.value.getMinutes() + (sign * mDelta);
-                if (minutes >= 60) {
-                    minutes = this.isSpinLoop ? minutes - 60 : currentVal.getMinutes();
-                } else if (minutes < 0 ) {
-                    minutes = this.isSpinLoop ? minutes + 60 : currentVal.getMinutes();
-                }
-
-                currentVal.setMinutes(minutes);
-                this.value = currentVal;
+                this.value = this._spinMinutes(currentVal, mDelta, sign);
             }
 
             if (AMPM_POS.indexOf(cursor) !== -1 && this.format.indexOf('tt') !== -1) {

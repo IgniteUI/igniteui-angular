@@ -58,7 +58,7 @@ The TimePicker input group could be retemplated.
     </ng-template>
 </igx-time-picker>
 ```
-The TimePicker now supports one more interaction mode - and editable masked input and a dropdown. The user can enter or edit the time value that inside the text input or select a vlaue from a dropdown that is therefore applied on the text input.
+The TimePicker supports another interaction mode - an editable masked input and a dropdown. The user can enter or edit the time value inside the text input or select a vlaue from a dropdown, that will be applied on the text input.
 ```typescript
 mode = InteractionMode.dropdown;
 ```
@@ -92,8 +92,8 @@ List of time-flags:
 "mm": minutes field with leading zero
 "tt": 2 characters of string which represents AM/PM field |
 | `isSpinLoop` | boolean | Determines the spin behavior. By default `isSpinLoop` is set to true. |
-| `mode` | InteractionMode | Determines the interaction mode - a dialog picker or dropdown with editable masked input. Deafult is dialog picker.|
-| `promptChar` | string | Sets the character representing a fillable spot in the editable masked input. Only applicable for dropdown mode.
+| `mode` | InteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dialog picker.|
+| `promptChar` | string | Sets the character used to prompt the user for input. The default is a dash. Only applicable for dropdown mode.
 
 ### Outputs
 | Name | Description |

@@ -1238,7 +1238,7 @@ describe('IgxTimePicker', () => {
             const dropDown = dom.query(By.css('.igx-time-picker--dropdown'));
 
             // should open dropdown on alt + arrow down
-            input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'down', altKey: true }));
+            input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
             tick();
             fixture.detectChanges();
 
