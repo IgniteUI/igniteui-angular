@@ -179,8 +179,11 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return this.row_deleted_parent(id, rowID) || super.row_deleted_transaction(id, rowID);
     }
 
-    public row_deleted_parent(id: string, rowID: any): boolean {
+    private row_deleted_parent(id: string, rowID: any): boolean {
         const grid = this.get(id);
+        if (!grid) {
+            return false;
+        }
         if ((grid.cascadeOnDelete && grid.foreignKey) || grid.childDataKey) {
             let node = grid.records.get(rowID);
             while (node) {
