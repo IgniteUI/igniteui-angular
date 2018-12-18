@@ -92,7 +92,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
                 return;
             }
 
-            if (this.column.visibleIndex === this.filteringService.grid.columnList.length - 1) {
             if (nextIndex >= this.filteringService.unpinnedFilterableColumns.length) {
                 if (!this.filteringService.grid.filteredData || this.filteringService.grid.filteredData.length > 0) {
                     if (this.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
@@ -113,11 +112,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
-            if (this.column.visibleIndex > 0 && !this.navService.isColumnLeftFullyVisible(this.column.visibleIndex - 1)) {
-                eventArgs.preventDefault();
-                const prevIndex = this.column.visibleIndex - 1 - this.filteringService.grid.pinnedColumns.length;
-                this.ScrollToChip(prevIndex, false);
-            } else if (this.column.visibleIndex === 0) {
             const prevIndex = this.filteringService.unpinnedFilterableColumns.indexOf(this.column) - 1;
 
             if (prevIndex >= 0 && this.column.visibleIndex > 0 && !this.isColumnLeftVisible(prevIndex) && !this.column.pinned) {

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridRowComponent } from './grid';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -480,11 +479,6 @@ export class IgxGridNavigationService {
     }
 
     public moveFocusToFilterCell() {
-        this.grid.rowList.find(row => row instanceof  IgxGridRowComponent).cells.first._clearCellSelection();
-        const visColLength = this.grid.unpinnedColumns.length;
-        if (this.isColumnFullyVisible(visColLength - 1)) {
-            const lastFilterCellIndex = this.grid.filterCellList.length - 1;
-            this.grid.filteringService.focusFilterCellChip(this.grid.filterCellList[lastFilterCellIndex].column, false);
         const columns = this.grid.filteringService.unpinnedFilterableColumns;
         if (this.isColumnFullyVisible(columns.length - 1)) {
             this.grid.filteringService.focusFilterCellChip(columns[columns.length - 1], false);
