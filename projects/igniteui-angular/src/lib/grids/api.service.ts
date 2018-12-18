@@ -605,11 +605,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         if (!grid) {
             return false;
         }
-        const transactions = grid.transactions;
         if (!grid.transactions.enabled) {
             return false;
         }
-        const state = transactions.getState(rowID);
+        const state = grid.transactions.getState(rowID);
         if (state) {
             return state.type === TransactionType.DELETE;
         }
