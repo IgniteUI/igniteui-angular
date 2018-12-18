@@ -11,14 +11,10 @@ export function DeprecateMethod(message: string): MethodDecorator {
             const originalMethod = descriptor.value;
 
             descriptor.value = function () {
-                if (!isMessageShown && isDevMode()) {
-                    const targetName = typeof target === 'function' ? target.name : target.constructor.name;
-                    isMessageShown = true;
+                const targetName = typeof target === 'function' ? target.name : target.constructor.name;
+                isMessageShown = showMessage(`${targetName}.${key}: ${message}`, isMessageShown);
 
-                    console.warn(`${targetName}.${key}: ${message}`);
-                }
-
-                return originalMethod.apply(this, arguments);
+                return originalMethod.call(this, arguments);
             };
 
             return descriptor;
@@ -36,14 +32,30 @@ export function DeprecateProperty(message: string): PropertyDecorator {
         // use backing field to set/get the value of the property to ensure there won't be infinite recursive calls
         const newKey = generateUniqueKey(target, key);
 
-        Object.defineProperty(target, key, {
+        let getter, setter;
+        const orignalDescriptor = Object.getOwnPropertyDescriptor(target, key);
+        if (orignalDescriptor) {
+            getter = orignalDescriptor.get;
+            setter = orignalDescriptor.set;
+
+            delete target[key];
+        }
+
+        return Object.defineProperty(target, key, {
             set(value) {
-                this[newKey] = value;
+                isMessageShown = showMessage(`${target.constructor.name}.${key}: ${message}`, isMessageShown);
+
+                if (setter) {
+                    setter.call(this, value);
+                } else {
+                    this[newKey] = value;
+                }
             },
             get() {
-                if (!isMessageShown && isDevMode()) {
-                    isMessageShown = true;
-                    console.warn(`${target.constructor.name}.${key}: ${message}`);
+                isMessageShown = showMessage(`${target.constructor.name}.${key}: ${message}`, isMessageShown);
+
+                if (getter) {
+                    return getter.call(this);
                 }
 
                 return this[newKey];
@@ -62,4 +74,15 @@ function generateUniqueKey(target: any, key: string): string {
     }
 
     return newKey;
+}
+
+/**
+ * @hidden
+ */
+function showMessage(message: string, isMessageShown: boolean): boolean {
+    if (!isMessageShown && isDevMode()) {
+        console.warn(message);
+    }
+
+    return true;
 }
