@@ -389,7 +389,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.vh.instance.elementRef.nativeElement.scrollTop += addTop / this._virtHeightRatio;
         if (Math.abs(addTop / this._virtHeightRatio) < 1) {
             // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
-            const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
+            const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
             // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
             this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         }
@@ -592,7 +592,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._bScrollInternal = false;
         }
         const prevStartIndex = this.state.startIndex;
-        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
+        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
@@ -662,7 +662,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
-                    const scrollOffset = this.fixedUpdateAllRows(this._virtHeight - containerSize);
+                    const scrollOffset = this.fixedUpdateAllElements(this._virtHeight - containerSize);
                     this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
                     return;
                 }
@@ -682,16 +682,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * @hidden
      */
-    protected fixedUpdateAllRows(inScrollTop: number): number {
+    protected fixedUpdateAllElements(inScrollTop: number): number {
         const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
         let newStart = this.getIndexAt(
             inScrollTop,
             this.sizesCache,
             0
         );
-        // floating point number calculations are flawed so we need to handle rounding errors.
-        newStart = newStart % 1 > 0.999 ?
-            Math.round(newStart) : Math.floor(newStart);
         if (newStart + this.state.chunkSize > count) {
             newStart = count - this.state.chunkSize;
         }
@@ -712,38 +709,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
         }
         return inScrollTop - this.sizesCache[this.state.startIndex];
-    }
-
-    /**
-     * @hidden
-     */
-    protected fixedUpdateAllCols(inScrollLeft) {
-        let newStart = this.getIndexAt(
-            inScrollLeft,
-            this.sizesCache,
-            0
-        );
-        if (newStart + this.state.chunkSize > this.igxForOf.length) {
-            newStart = this.igxForOf.length - this.state.chunkSize;
-        }
-        const prevStart = this.state.startIndex;
-        const diff = newStart - this.state.startIndex;
-        this.state.startIndex = newStart;
-        if (diff) {
-            this.onChunkPreload.emit(this.state);
-        }
-
-        /*recalculate and apply page size.*/
-        if (diff > 0 && diff <= this.MAX_PERF_SCROLL_DIFF) {
-            this.moveApplyScrollNext(prevStart);
-        } else if (diff < 0 && Math.abs(diff) <= this.MAX_PERF_SCROLL_DIFF) {
-            this.moveApplyScrollPrev(prevStart);
-        } else {
-            this.fixedApplyScroll();
-        }
-
-        const scrOffset = inScrollLeft - this.sizesCache[this.state.startIndex];
-        return scrOffset;
     }
 
     /**
@@ -809,7 +774,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const curScrollLeft = event.target.scrollLeft;
         const prevStartIndex = this.state.startIndex;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllCols(curScrollLeft);
+        const scrollOffset = this.fixedUpdateAllElements(curScrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
 
         this.dc.changeDetectorRef.detectChanges();
@@ -1063,7 +1028,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.sizesCache && this.hScroll && this.hScroll.scrollLeft !== 0) {
             // Updating horizontal chunks and offsets based on the new scrollLeft
-            const scrollOffset = this.fixedUpdateAllCols(this.hScroll.scrollLeft);
+            const scrollOffset = this.fixedUpdateAllElements(this.hScroll.scrollLeft);
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
     }
@@ -1279,7 +1244,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             this._bScrollInternal = false;
         }
 
-        const scrollOffset = this.fixedUpdateAllRows(this._virtScrollTop);
+        const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         requestAnimationFrame(() => {
@@ -1294,7 +1259,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
 
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllCols(scrollAmount);
+        const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
 
