@@ -21,7 +21,7 @@
 
 ## Further Down the line
 
-1. Excel-style filter
+1. Advanced Filtering
 2. Row-pinning
 3. Column Groups expand/collapse, with column grouping templates
 4. Visual Cell merging 
