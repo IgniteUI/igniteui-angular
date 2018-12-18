@@ -590,10 +590,10 @@ export abstract class IgxDropDownItemBase {
     }
 
     /**
-     * The index of the drop down item.
+     * The data index of the dropdown item.
      *
      * ```typescript
-     * // get the index of the selected dropdown item
+     * // get the data index of the selected dropdown item
      * let selectedItemIndex = this.dropdown.selectedItem.index
      * ```
      */

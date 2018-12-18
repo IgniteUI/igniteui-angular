@@ -24,6 +24,15 @@ All notable changes for each version of this project will be documented in this 
     - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
     - You can now export the tree grid both to CSV and Excel. The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
     - Summaries feature is now supported in the tree grid. Summary results are calculated and displayed for the root level and each child level by default.
+- `IgxDropDown`:
+    - Added an input for the data index (such as the one coming from ngFor) of the `IgxDropDownItem` component.
+    ```html
+        <igx-drop-down>
+            <igx-drop-down-item *ngFor="let item of items; let i = index" [index]="i">
+                {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    ```
 
 ## 7.0.4
 ### Bug fixes

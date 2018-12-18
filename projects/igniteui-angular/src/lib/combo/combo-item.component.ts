@@ -4,6 +4,7 @@ import {
     HostListener,
     HostBinding,
     Inject,
+    Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
@@ -23,6 +24,17 @@ export class IgxComboItemComponent extends IgxDropDownItemBase {
     get itemHeight() {
         return this.combo.itemHeight;
     }
+
+    /**
+     * The data index of the combo dropdown item.
+     *
+     * ```typescript
+     * // get the data index of the second selected combo item
+     * let selectedItemIndex = this.combo.selectedItems()[1].index
+     * ```
+     */
+    @Input()
+    public index: number;
 
     /**
      * @hidden
