@@ -753,6 +753,7 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     if (!dateItem0.isThisYear) {
         thisYearCountItems--;
     }
+
     if (dateItem0.isNextYear) {
         nextYearCountItems++;
     }
