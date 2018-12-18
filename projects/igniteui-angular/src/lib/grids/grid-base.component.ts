@@ -2942,7 +2942,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public deleteRowById(rowId: any) {
         let index: number;
-        const data = this.gridAPI.get_all_data(this.id, this.transactions.enabled);
+        const data = this.gridAPI.get_all_data(this.id);
         if (this.primaryKey) {
             index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
         } else {
@@ -2974,13 +2974,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
-        const dataAfterDelete = !this.transactions.enabled ? data : this.dataWithAddedInTransactionRows;
+        // Data needs to be recalculated if transactions are in place
+        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
+        const dataAfterDelete = this.transactions.enabled ? this.dataWithAddedInTransactionRows : data;
         this.refreshSearch();
-        if (dataAfterDelete.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
-            const currentPage = Math.ceil(dataAfterDelete.length / this.perPage) - 1;
-            if (this.page !== currentPage) {
-                this.page = currentPage;
-            }
+        if (dataAfterDelete.length % this.perPage === 0 && dataAfterDelete.length / this.perPage - 1 < this.page && this.page !== 0) {
+            this.page--;
         }
     }
 
