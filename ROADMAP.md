@@ -4,11 +4,11 @@
 
 ## Milestone 5 (14.12.2018)
 
-1. TreeGrid summaries
-2. Grid GroupBy summaries
+1. **[DONE]** TreeGrid summaries
+2. **[DONE]** Grid GroupBy summaries
 3. Inline date and time pickers (with drop down/toggle)
-4. Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
-5. Toolbar Templatable and NavBar Templatable 
+4. **[DONE]** Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+5. **[DONE]** Toolbar Templatable and NavBar Templatable 
 
 ## Milestone 6 (28.02.2019)
 
