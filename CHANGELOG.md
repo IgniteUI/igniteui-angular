@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.4
+### Bug fixes
+- Fix(igx-grid): revert row editing styles ([#2672](https://github.com/IgniteUI/igniteui-angular/issues/2672))
+- Revert "fix(grid): set min width to header groups programmatically"  status: verified version: 7.0.x
+([#3357](https://github.com/IgniteUI/igniteui-angular/issues/3357))
+
 ## 7.0.3
 ### Bug fixes
 
