@@ -1,11 +1,9 @@
 import {
     Component,
     ElementRef,
-    forwardRef,
     HostListener,
     HostBinding,
     Inject,
-    Input
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';

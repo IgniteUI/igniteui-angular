@@ -11,7 +11,8 @@ import {
     Self,
     Optional,
     HostListener,
-    Directive
+    Directive,
+    ViewContainerRef
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';

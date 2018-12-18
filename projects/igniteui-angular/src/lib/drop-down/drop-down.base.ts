@@ -230,7 +230,11 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
     public get items(): IgxDropDownItemBase[] {
         const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
-            for (const child of this.children.toArray()) {
+            const sortedChildren = this.children.toArray()
+                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
+                    return a.index - b.index;
+                });
+            for (const child of sortedChildren) {
                 if (!child.isHeader) {
                     items.push(child);
                 }
@@ -298,7 +302,7 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
             return;
         }
 
-        const newSelection = this.items.find((item) => item.index === index);
+        const newSelection = this.items.find((item) => item.itemIndex === index);
         if (newSelection.isHeader) {
             return;
         }
@@ -562,7 +566,7 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
      * @hidden
      */
     public getFirstSelectableItem() {
-        return this.children.find(child => !child.isHeader && !child.disabled);
+        return this.items.find(child => !child.isHeader && !child.disabled);
     }
 }
 
@@ -584,6 +588,17 @@ export abstract class IgxDropDownItemBase {
     public get itemID() {
         return;
     }
+
+    /**
+     * The index of the drop down item.
+     *
+     * ```typescript
+     * // get the index of the selected dropdown item
+     * let selectedItemIndex = this.dropdown.selectedItem.index
+     * ```
+     */
+    @Input()
+    public index: number;
 
     /**
      * Gets/sets the value of the item if the item is databound
@@ -726,7 +741,7 @@ export abstract class IgxDropDownItemBase {
      * Gets item index
      * @hidden
      */
-    public get index(): number {
+    public get itemIndex(): number {
         return this.dropDown.items.indexOf(this);
     }
 
@@ -763,7 +778,7 @@ export abstract class IgxDropDownItemBase {
             }
             return;
         }
-        this.dropDown.navigateItem(this.index);
+        this.dropDown.navigateItem(this.itemIndex);
         this.dropDown.selectItem(this, event);
     }
 
@@ -771,7 +786,7 @@ export abstract class IgxDropDownItemBase {
      * @hidden
      */
     markItemSelected() {
-        this.dropDown.setSelectedItem(this.index);
+        this.dropDown.setSelectedItem(this.itemIndex);
         this.dropDown.close();
     }
 }
