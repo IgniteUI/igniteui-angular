@@ -1080,7 +1080,6 @@ export class IgxTimePickerComponent implements
     }
 
     private _spinHours(currentVal: Date, minVal: Date, maxVal: Date, hDelta: number, sign: number): Date {
-        let value = new Date();
         const oldVal = new Date(currentVal);
 
         currentVal.setMinutes(sign * hDelta);
@@ -1093,27 +1092,24 @@ export class IgxTimePickerComponent implements
             if (this.isSpinLoop) {
                 minutes = minutes < minVal.getMinutes() ? 60 + minutes : minutes;
                 minVal.setMinutes(sign * minutes);
-                value = minVal;
+                return minVal;
             } else {
-                value = oldVal;
+                return oldVal;
             }
         } else if (currentVal.getTime() < minVal.getTime()) {
             if (this.isSpinLoop) {
                 minutes = minutes <= maxVal.getMinutes() ? minutes : minutes - 60;
                 maxVal.setMinutes(minutes);
-                value = maxVal;
+                return maxVal;
             } else {
-                value = oldVal;
+                return oldVal;
             }
         } else {
-            value = currentVal;
+            return currentVal;
         }
-
-        return value;
     }
 
     private _spinMinutes(currentVal: Date, mDelta: number, sign: number) {
-        let value = new Date();
         let minutes = currentVal.getMinutes() + (sign * mDelta);
 
         if (minutes < 0 || minutes >= 60) {
@@ -1121,9 +1117,7 @@ export class IgxTimePickerComponent implements
         }
 
         currentVal.setMinutes(minutes);
-        value = currentVal;
-
-        return value;
+        return currentVal;
     }
 
     private _onDropDownClosed(): void {
