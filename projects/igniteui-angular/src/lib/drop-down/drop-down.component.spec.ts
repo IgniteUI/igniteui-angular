@@ -72,7 +72,7 @@ describe('IgxDropDown ', () => {
             tick();
             fixture.detectChanges();
             let currentItem = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED))[0];
-            expect(currentItem.componentInstance.index).toEqual(0);
+            expect(currentItem.componentInstance.itemIndex).toEqual(0);
             expect(list.collapsed).toEqual(false);
 
             targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_BASE))[0];
@@ -85,7 +85,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
-            expect(currentItem.componentInstance.index).toEqual(1);
+            expect(currentItem.componentInstance.itemIndex).toEqual(1);
             expect(list.selectedItem).toBeFalsy();
 
             mockObj.code = 'space';
@@ -162,7 +162,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
             expect(currentItem).toBeDefined();
-            expect(currentItem.componentInstance.index).toEqual(1);
+            expect(currentItem.componentInstance.itemIndex).toEqual(1);
 
             mockObj.code = 'space';
             mockObj.key = 'space';
@@ -181,7 +181,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
             expect(currentItem).toBeDefined();
-            expect(currentItem.componentInstance.index).toEqual(4);
+            expect(currentItem.componentInstance.itemIndex).toEqual(4);
 
             mockObj.code = 'Escape';
             mockObj.key = 'Escape';
@@ -581,28 +581,28 @@ describe('IgxDropDown ', () => {
             tick();
             fixture.detectChanges();
             let currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
-            expect(currentItem.componentInstance.index).toEqual(0);
+            expect(currentItem.componentInstance.itemIndex).toEqual(0);
             list.setSelectedItem(-4);
             tick();
 
             fixture.detectChanges();
             expect(listItems[0].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
-            expect(currentItem.componentInstance.index).toEqual(0);
+            expect(currentItem.componentInstance.itemIndex).toEqual(0);
             list.setSelectedItem(24);
             tick();
 
             fixture.detectChanges();
             expect(listItems[0].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
-            expect(currentItem.componentInstance.index).toEqual(0);
+            expect(currentItem.componentInstance.itemIndex).toEqual(0);
             list.setSelectedItem(5);
             tick();
 
             fixture.detectChanges();
             expect(listItems[5].isSelected).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
-            expect(currentItem.componentInstance.index).toEqual(5);
+            expect(currentItem.componentInstance.itemIndex).toEqual(5);
             // TODO: verify selecting the already selected element is not affecting selection
             list.setSelectedItem(5);
             tick();
@@ -637,7 +637,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             expect(listItems[1].isFocused).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-            expect(currentItem.componentInstance.index).toEqual(1);
+            expect(currentItem.componentInstance.itemIndex).toEqual(1);
         }));
 
         it('End key should select the last enabled item', fakeAsync(() => {
@@ -668,7 +668,7 @@ describe('IgxDropDown ', () => {
             fixture.detectChanges();
             expect(listItems[11].isFocused).toBeTruthy();
             currentItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOCUSED));
-            expect(currentItem.componentInstance.index).toEqual(11);
+            expect(currentItem.componentInstance.itemIndex).toEqual(11);
             mockObj.key = 'ArrowDown';
             mockObj.code = 'ArrowDown';
             currentItem.triggerEventHandler('keydown', mockObj);
