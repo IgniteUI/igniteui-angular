@@ -272,9 +272,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGrid = this.getChildGrid(childGridID, grid);
         if (childGrid.verticalScrollContainer.state.startIndex !== 0) {
             // scroll to top
-            this.scrollGrid(childGrid, 'top', () => this.focusNextRow(elem, visibleColumnIndex, grid));
+            this.scrollGrid(childGrid, 'top', () => this.focusNextRow(elem, visibleColumnIndex, childGrid));
         } else {
-            this.focusNextRow(elem, visibleColumnIndex, grid);
+            this.focusNextRow(elem, visibleColumnIndex, childGrid);
         }
     }
     private focusPrevChild(elem, visibleColumnIndex, grid) {
@@ -382,14 +382,20 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     private focusNextRow(elem, visibleColumnIndex, grid) {
         const cellSelector = this.getCellSelector(visibleColumnIndex);
-        const cell =
-        elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-        const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
-        const inView =  diff <= 0;
-        if (!inView) {
-            this.scrollGrid(grid, diff, () => cell.focus({ preventScroll: true }));
+        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
+            const cell =
+            elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
+            const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+            const inView =  diff <= 0;
+            if (!inView) {
+                this.scrollGrid(grid, diff, () => cell.focus({ preventScroll: true }));
+            } else {
+                cell.focus({ preventScroll: true });
+            }
         } else {
-            cell.focus({ preventScroll: true });
+            const cellElem = elem.querySelector(`${cellSelector}`);
+            const rowIndex = parseInt(cellElem.getAttribute('data-rowindex'), 10);
+            grid.navigation.performHorizontalScrollToCell(rowIndex, visibleColumnIndex);
         }
     }
 
@@ -404,18 +410,24 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;
             const top = containerTop ? parseInt(containerTop.style.top, 10) : 0;
             console.log(top);
-            debugger;
             if (scrTop !== 0 && top < 0 && !inChild) {
                 this.scrollGrid(scrGrid, top, () => cell.focus({ preventScroll: true }));
             } else {
                 cell.focus({ preventScroll: true });
             }
         } else {
-            const rowIndex = parseInt(elem.getAttribute('data-rowindex'), 10);
-            grid.navigation.performHorizontalScrollToCell(rowIndex, visibleColumnIndex);
+            this.horizontalScrollGridToIndex(grid, visibleColumnIndex, () => {
+                this.focusPrevRow(elem, visibleColumnIndex, grid, inChild);
+            });
         }
     }
-
+    private horizontalScrollGridToIndex(grid, visibleColumnIndex, callBackFunc) {
+        const unpinnedIndex = this.getColumnUnpinnedIndex(visibleColumnIndex);
+        grid.parentVirtDir.onChunkLoad
+            .pipe(first())
+            .subscribe(callBackFunc);
+        grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
+    }
     private scrollGrid(grid, target, callBackFunc) {
         grid.nativeElement.focus({preventScroll: true});
         requestAnimationFrame(() => {
