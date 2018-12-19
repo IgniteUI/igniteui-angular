@@ -184,6 +184,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`hideGroupedColumns`| boolean | Determines whether the grouped columns are hidden as well.  |
 |`rowEditable` | boolean | enables/disables row editing mode |
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
+|`locale`| string | Determines the locale of the grid. By default returns browser's language. |
 
 ### Outputs
 

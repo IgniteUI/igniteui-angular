@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.5
+### Features
+- `igx-grid`:
+    - `locale` property added. If not set, it returns browser's languge. All child components will use it as locale.
+
 ## 7.0.4
 ### Bug fixes
 - Fix(igx-grid): revert row editing styles ([#2672](https://github.com/IgniteUI/igniteui-angular/issues/2672))
