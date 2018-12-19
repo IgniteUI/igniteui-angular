@@ -2991,7 +2991,7 @@ fdescribe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridInsideIgxTabs
+                    IgxGridInsideIgxTabsComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule, IgxTabsModule]
@@ -2999,7 +2999,7 @@ fdescribe('IgxGrid Component Tests', () => {
         }));
 
         it('IgxTabs: should initialize a grid with correct width/height', fakeAsync(() => {
-            const fix = TestBed.createComponent(IgxGridInsideIgxTabs);
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
@@ -3007,8 +3007,8 @@ fdescribe('IgxGrid Component Tests', () => {
             tab.tabs.toArray()[2].select();
             tick(100);
             fix.detectChanges();
-            const gridHeader = fix.debugElement.query(By.css(".igx-grid__thead"));
-            const gridBody = fix.debugElement.query(By.css(".igx-grid__tbody"));
+            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
             expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(400);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(400);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(500);
@@ -3559,7 +3559,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
   </div>
     `
 })
-export class IgxGridInsideIgxTabs {
+export class IgxGridInsideIgxTabsComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
     public grid: IgxGridComponent;
@@ -3568,10 +3568,10 @@ export class IgxGridInsideIgxTabs {
     public tabs: IgxTabsComponent;
 
     public columns = [
-        { field: "id", width: 100},
-        { field: "1", width: 100},
-        { field: "2", width: 100},
-        { field: "3", width: 100}
+        { field: 'id', width: 100},
+        { field: '1', width: 100},
+        { field: '2', width: 100},
+        { field: '3', width: 100}
     ];
 
     public data = [];
