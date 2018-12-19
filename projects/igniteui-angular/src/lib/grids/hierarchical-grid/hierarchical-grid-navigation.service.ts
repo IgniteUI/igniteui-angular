@@ -286,14 +286,14 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
         if (vScrollState.startIndex + vScrollState.chunkSize  < lastIndex) {
             // scroll to end
-            this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, childGrid));
+            this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, childGrid, true));
         } else {
             const lastRowInChild = childGrid.getRowByIndex(lastIndex);
             const isChildGrid = lastRowInChild.nativeElement.nodeName.toLowerCase() === 'igx-child-grid-row';
             if (isChildGrid) {
                 this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, grid);
             } else {
-                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid);
+                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
             }
         }
     }
@@ -393,7 +393,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    private focusPrevRow(elem, visibleColumnIndex, grid) {
+    private focusPrevRow(elem, visibleColumnIndex, grid, inChild?) {
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
             const cellSelector = this.getCellSelector(visibleColumnIndex);
             const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
@@ -404,7 +404,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;
             const top = containerTop ? parseInt(containerTop.style.top, 10) : 0;
             console.log(top);
-            if (scrTop !== 0 && top < 0) {
+            debugger;
+            if (scrTop !== 0 && top < 0 && !inChild) {
                 this.scrollGrid(scrGrid, top, () => cell.focus({ preventScroll: true }));
             } else {
                 cell.focus({ preventScroll: true });
