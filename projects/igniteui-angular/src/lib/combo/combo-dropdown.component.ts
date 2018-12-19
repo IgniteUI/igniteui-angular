@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy, Input, HostListener
+    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -20,8 +20,6 @@ import { IgxComboAPIService } from './combo.api';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }, IgxDropDownSelectionService]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy {
-    private _children: QueryList<IDropDownItem>;
-    private _scrollPosition = 0;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -53,34 +51,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
-     *  Event emitter overrides
-     *
-     * @hidden
-     */
-    public onOpened = this.combo.onOpened;
-
-    /**
-     * @hidden
-     */
-    public onOpening = this.combo.onOpening;
-
-    /**
-     * @hidden
-     */
-    public onClosing = this.combo.onClosing;
-
-    /**
-     * @hidden
-     */
-    public onClosed = this.combo.onClosed;
-
-    /**
-     * @hidden
-     */
-    @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
-    public verticalScrollContainer: IgxForOfDirective<any>;
-
-    /**
      * @hidden
      */
     protected get children(): QueryList<IDropDownItem> {
@@ -90,6 +60,25 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     protected set children(value: QueryList<IDropDownItem>) {
         this._children = value;
     }
+
+    /**
+     * @hidden
+     */
+    public get selectedItem(): any[] {
+        const sel = this.selection.get(this.comboID);
+        return sel ? Array.from(sel) : [];
+    }
+    private _children: QueryList<IDropDownItem>;
+    private _scrollPosition = 0;
+
+    /**
+     * @hidden
+     */
+    @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
+    public verticalScrollContainer: IgxForOfDirective<any>;
+
+    @Input()
+    public comboID: string;
     /**
      * @hidden
      */
@@ -111,14 +100,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this._focusedItem.isFocused = false;
             this._focusedItem = null;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public get selectedItem(): any[] {
-        const sel = this.selection.get();
-        return sel ? Array.from(sel) : [];
     }
 
     /**
@@ -190,7 +171,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         if (item.value === 'ADD ITEM') {
             this.combo.addItemToCollection();
         } else {
-            this.combo.setSelectedItem(item.itemID, !item.isSelected);
+            this.selection.set_selected_item(this.comboID, item.itemID, !item.isSelected);
             this._focusedItem = item;
         }
     }
@@ -325,7 +306,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     protected scrollToHiddenItem(newItem: any): void { }
     protected _handleClick(event: any) {
-        this.combo.setSelectedItem(event.itemID, !event.item.isSelected);
+        this.selection.set_selected_item(this.comboID, event.itemID, !event.item.isSelected);
     }
 
     /**
@@ -338,38 +319,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    onToggleOpening(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false };
-        this.onOpening.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
-        if (eventArgs.cancel) {
-            return;
-        }
-        this.combo.handleInputChange();
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleOpened() {
-        this.combo.triggerCheck();
-        this.combo.focusSearchInput(true);
-        this.onOpened.emit();
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleClosed() {
-        this.combo.comboInput.nativeElement.focus();
-        this.onClosed.emit();
-    }
-
-    /**
-     * @hidden
-     */
     onToggleClosing(e: CancelableEventArgs) {
-        this.combo.searchValue = '';
         super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }

@@ -44,6 +44,7 @@ export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 export interface IDropDownBase extends IDropDownList {
     onSelection: EventEmitter<ISelectionEventArgs>;
     combo?: IgxComboBase;
+    comboID?: string;
     allowItemsFocus?: boolean;
     selectedItem: any;
     items: IDropDownItem[];

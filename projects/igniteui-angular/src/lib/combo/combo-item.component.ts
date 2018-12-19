@@ -7,10 +7,10 @@ import {
     DoCheck,
     Host
 } from '@angular/core';
-import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
+import { IgxComboAPIService } from './combo.api';
 
 /** @hidden */
 @Component({
@@ -31,11 +31,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     public get itemID() {
-        return this.combo.isRemote ? JSON.stringify(this.value) : this.value;
+        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
     }
 
     constructor(
-        @Inject(IGX_COMBO_COMPONENT) protected combo: IgxComboBase,
+        protected comboAPI: IgxComboAPIService,
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
         protected selection: IgxDropDownSelectionService
@@ -47,7 +47,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     get isSelected(): boolean {
-        return this.combo.isItemSelected(this.itemID);
+        return this.selection.is_item_selected(this.dropDown.comboID, this.itemID);
     }
 
     set isSelected(value: boolean) {
@@ -55,8 +55,5 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             return;
         }
         this._isSelected = value;
-    }
-
-    ngDoCheck(): void {
     }
 }

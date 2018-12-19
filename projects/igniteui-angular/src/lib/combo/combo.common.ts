@@ -29,7 +29,6 @@ export interface IgxComboBase {
     focusSearchInput(opening?: boolean): void;
     triggerCheck();
     setSelectedItem(itemID: any, select?: boolean);
-    isItemSelected(item: any): boolean;
     addItemToCollection();
     isAddButtonVisible(): boolean;
     handleInputChange(event?);
