@@ -382,7 +382,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.column.getCellWidth;
+        return this.column.getCellWidth();
     }
 
     /**

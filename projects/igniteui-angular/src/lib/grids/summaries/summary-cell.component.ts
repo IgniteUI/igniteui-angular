@@ -145,7 +145,7 @@ export class IgxSummaryCellComponent {
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        return this.column.getCellWidth;
+        return this.column.getCellWidth();
     }
 
     get nativeElement(): any {

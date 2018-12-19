@@ -1201,7 +1201,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    public get getCellWidth() {
+    public getCellWidth() {
         const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
