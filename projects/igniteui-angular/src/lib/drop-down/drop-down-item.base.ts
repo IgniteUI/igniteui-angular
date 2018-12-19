@@ -1,11 +1,11 @@
 import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
-import { Input, HostBinding, HostListener, ElementRef, Optional, Inject } from '@angular/core';
+import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IDropDownServiceArgs, IgxDropDownSelectionService } from './drop-down.selection';
 /**
  * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
-export abstract class IgxDropDownItemBase implements IDropDownItem {
+export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
     /**
      * @hidden
      */
@@ -190,7 +190,16 @@ export abstract class IgxDropDownItemBase implements IDropDownItem {
                 item: this,
                 itemID: this.itemID
             };
-            this.selection.onSelection.emit(args);
+            // this.selection.onSelection.emit(args);
+        }
+    }
+
+    ngDoCheck(): void {
+        if (this.isSelected) {
+            const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
+            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
+                this.selection.select_item(this.dropDown.id, this.itemID);
+            }
         }
     }
 }

@@ -24,7 +24,9 @@
         <igx-icon fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>
-<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'">
+<igx-combo-drop-down #igxComboDropDown (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)" 
+(onOpened)="handleOpened($event)" (onClosed)="handleClosed($event)"
+    class="igx-combo__drop-down" [width]="itemsWidth || '100%'">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
         <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue"
             (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)"

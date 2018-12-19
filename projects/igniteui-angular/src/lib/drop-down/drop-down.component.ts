@@ -92,8 +92,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
     set id(value: string) {
         this.toggleDirective.id = value;
+        this.selection.set(value, this.selection.get(this.id));
+        this.selection.clear(this.id);
         this._id = value;
-        this.selection.set(this.selection.get());
     }
 
     /**
@@ -104,12 +105,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * ```
      */
     public get selectedItem(): any {
-        const selectedItem = this.selection.first_item();
+        const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
             if (selectedItem.isSelected) {
                 return selectedItem;
             }
-            this.selection.clear();
+            this.selection.clear(this.id);
         }
         return null;
     }
@@ -189,11 +190,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     ngOnInit() {
         super.ngOnInit();
-        this.selection.clear();
+        this.selection.clear(this.id);
     }
 
     ngAfterViewInit() {
-        this.selection.onSelection.pipe(takeUntil(this.destroy$)).subscribe(e => this._handleClick(e));
+        // this.selection.onSelection.pipe(takeUntil(this.destroy$)).subscribe(e => this._handleClick(e));
     }
 
     ngOnDestroy() {
@@ -270,7 +271,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
         if (!args.cancel) {
-            this.selection.set(new Set([newSelection]));
+            this.selection.set(this.id, new Set([newSelection]));
         }
 
         if (!args.cancel) {
