@@ -2752,6 +2752,32 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
         expect(filteringRow).toBeNull();
     }));
+
+    it('should correctly apply locale to datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.locale = 'de-DE';
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const dateCellChip = initialChips[3].nativeElement;
+
+        dateCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const input = filteringRow.query(By.directive(IgxInputDirective));
+
+        input.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].innerText;
+
+        expect(sundayLabel).toEqual('So');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
