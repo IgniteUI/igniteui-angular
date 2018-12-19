@@ -409,7 +409,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const scrTop = scrGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
             const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;
             const top = containerTop ? parseInt(containerTop.style.top, 10) : 0;
-            console.log(top);
             if (scrTop !== 0 && top < 0 && !inChild) {
                 this.scrollGrid(scrGrid, top, () => cell.focus({ preventScroll: true }));
             } else {
