@@ -703,7 +703,7 @@ describe('IgxForOf directive -', () => {
             await wait(1500);
             fix.detectChanges();
             const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
-            expect(scrStepArray.length).toEqual(61);
+            expect(scrStepArray.length).toBeGreaterThan(55);
 
             // check if inertia first accelerates then decelerate
             const first = scrStepArray[0];
@@ -798,15 +798,15 @@ describe('IgxForOf directive -', () => {
             const forOf = fix.componentInstance.parentVirtDir;
             forOf.scrollPrev();
             fix.detectChanges();
-            await wait();
+            await wait(200);
             expect(forOf.state.startIndex).toEqual(0);
             forOf.scrollTo(forOf.igxForOf.length - 1);
             fix.detectChanges();
-            await wait();
+            await wait(200);
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
             forOf.scrollNext();
             fix.detectChanges();
-            await wait();
+            await wait(200);
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
 
