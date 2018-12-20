@@ -89,6 +89,10 @@ export class IgxGridSummaryComponent implements DoCheck {
         return this.gridAPI.get(this.gridID).resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 
+    public get grid() {
+        return (this.column.grid as any);
+    }
+
     get resolveSummaries(): any[] {
         if (this.fieldName) {
             const field = this.fieldName;

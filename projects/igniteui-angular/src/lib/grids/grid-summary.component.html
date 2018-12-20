@@ -3,7 +3,7 @@
         <div class="{{itemClass}}" [style.height.px]="summaryItemHeight">
             <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ translateSummary(summary) }}</span>
             <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">
-                {{ column.dataType === 'number' ? (summary.summaryResult | igxdecimal) : column.dataType === 'date' ? (summary.summaryResult | igxdate) : (summary.summaryResult) }}
+                {{ column.dataType === 'number' ? (summary.summaryResult | igxdecimal: grid.locale) : column.dataType === 'date' ? (summary.summaryResult | igxdate: grid.locale) : (summary.summaryResult) }}
             </span>
         </div>
     </ng-container>
