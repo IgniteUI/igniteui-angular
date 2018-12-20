@@ -1,5 +1,5 @@
 <ng-template #readOnlyDatePickerTemplate>
-    <igx-input-group (click)="openCalendar()">
+    <igx-input-group (click)="openCalendar($event)">
         <igx-prefix>
             <igx-icon>today</igx-icon>
         </igx-prefix>
@@ -11,13 +11,14 @@
 
 <ng-template #editableDatePickerTemplate>
     <igx-input-group #editableInputGroup>
-        <igx-prefix (click)="openCalendar()">
+        <igx-prefix (click)="openCalendar($event)">
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="displayData" (blur)="handleInput($event)"
-            (onclick)="closeCalendar()" />
-        <igx-suffix *ngIf="displayData !== ''" (click)="clear()">
+        <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
+            [igxMask]="mask" [placeholder]="format" [focusedValuePipe]="inputValue" [displayValuePipe]="displayValue"
+            (blur)="onBlur($event)" />
+        <igx-suffix *ngIf="transformedDate !== ''" (click)="clear()">
             <igx-icon>clear</igx-icon>
         </igx-suffix>
     </igx-input-group>
@@ -42,3 +43,5 @@
         </button>
     </div>
 </div>
+
+<div igxOverlayOutlet #datePickerOutlet></div>

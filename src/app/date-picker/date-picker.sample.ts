@@ -6,9 +6,12 @@ import { IgxDatePickerComponent } from 'igniteui-angular';
     styleUrls: ['date-picker.sample.css'],
     templateUrl: 'date-picker.sample.html'
 })
+
 export class DatePickerSampleComponent {
     @ViewChild('datePicker') datePicker: IgxDatePickerComponent;
-    date = new Date(Date.now());
+    date = new Date('10/3/2018');
+
+    date1 = new Date();
 
     formatter = (_: Date) => {
         return _.toDateString();

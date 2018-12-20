@@ -1,7 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
     Component,
-    ComponentRef,
     ContentChild,
     EventEmitter,
     HostBinding,
@@ -16,7 +15,9 @@ import {
     ElementRef,
     TemplateRef,
     Directive,
-    Inject
+    Inject,
+    Pipe,
+    PipeTransform
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -44,6 +45,8 @@ import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
+import { IgxMaskModule } from '../directives/mask/mask.directive';
+import { PREDEFINED_FORMAT_OPTIONS, PREDEFINED_FORMATS, PREDEFINED_MASKS, DateUtil, FORMAT_DESC, DATE_CHARS } from './date-picker.utils';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -51,7 +54,6 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 export class IgxDatePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) { }
 }
-
 export interface IFormatViews {
     day?: boolean;
     month?: boolean;
@@ -67,7 +69,7 @@ export interface IFormatOptions {
 
 let NEXT_ID = 0;
 
-export enum InteractionMode {
+export enum DatePickerInteractionMode {
     EDITABLE = 'editable',
     READONLY = 'readonly'
 }
@@ -91,6 +93,7 @@ export enum InteractionMode {
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
+
 @DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
@@ -127,6 +130,34 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      */
     public set formatOptions(formatOptions: IFormatOptions) {
         this._formatOptions = Object.assign(this._formatOptions, formatOptions);
+    }
+
+    /**
+     *Returns the edit mode date format of the `IgxDatePickerComponent`.
+     *```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *ngAfterViewInit(){
+     *    let format = this.datePicker.format;
+     *}
+     *```
+     */
+    @Input()
+    public get format(): string {
+        return (this._format === undefined) ? this.DEFAULT_DATE_FORMAT : this._format;
+    }
+
+    /**
+    *Sets the edit mode format of the `IgxDatePickerComponent`.
+    *```typescript
+    *@ViewChild("MyDatePicker")
+    *public datePicker: IgxDatePickerComponent;
+    *this.datePicker.format = 'yyyy-M-d';
+    *}
+    *```
+    */
+    public set format(format: string) {
+        this._format = format;
     }
 
     /**
@@ -234,6 +265,31 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         return '';
     }
 
+    /**
+     *Returns the transformed date.
+     *```typescript
+     *@ViewChild("MyDatePicker")
+     *public datePicker: IgxDatePickerComponent;
+     *public selection(event){
+     *    let transformedDate = this.datePicker.transformedDate;
+     *    alert(transformedDate);
+     *}
+     *```
+     *```html
+     *<igx-date-picker #MyDatePicker (onSelection)="selection()" todayButtonLabel="today"></igx-date-picker>
+     *```
+     */
+    public get transformedDate() {
+        if (this._value) {
+            return this.transformDate(this._value);
+        }
+        return '';
+    }
+
+    public set transformedDate(value: string) {
+        this._transformedDate = value;
+    }
+
     constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) { }
 
     /**
@@ -247,7 +303,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.datePickerTemplateDirective) {
             return this.datePickerTemplateDirective.template;
         }
-        return (this.mode === InteractionMode.READONLY) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
+        return (this.mode === DatePickerInteractionMode.READONLY) ? this.readOnlyDatePickerTemplate : this.editableDatePickerTemplate;
     }
 
     /**
@@ -258,7 +314,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         return {
             value: this.value,
             displayData: this.displayData,
-            openCalendar: () => { this.openCalendar(); }
+            openCalendar: (eventArgs) => { this.openCalendar(eventArgs); }
         };
     }
     /**
@@ -309,7 +365,31 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *```
      */
     @Input()
-    public value: Date;
+    public get value(): Date {
+        console.log('get value ' + this._value);
+        return this._value;
+    }
+
+    public set value(date: Date) {
+        switch (this.mode) {
+            case DatePickerInteractionMode.EDITABLE: {
+                if (date !== null) {
+                    this._value = date;
+                    console.log('set value ' + this._value);
+                    this._transformedDate = this.transformDate(date);
+                    console.log('set _transformedDate ' + this.transformDate(date));
+                } else {
+                    this._value = null;
+                    this._transformedDate = '';
+                }
+                break;
+            }
+            case DatePickerInteractionMode.READONLY: {
+                this._value = date;
+                break;
+            }
+        }
+    }
 
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
@@ -373,7 +453,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public cancelButtonLabel: string;
 
     @Input()
-    public mode = InteractionMode.READONLY;
+    public mode = DatePickerInteractionMode.READONLY;
+
+    /**
+    *@hidden
+    */
+    @Input()
+    public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      *An event that is emitted when the `IgxDatePickerComponent` calendar is opened.
@@ -444,7 +530,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     protected readonlyInput: ElementRef;
 
     @ViewChild('calendar')
-    protected calendar: IgxCalendarComponent;
+    public calendar: IgxCalendarComponent;
 
     /**
      *@hidden
@@ -470,25 +556,14 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @ViewChild('calendarContainer')
     public calendarContainer: ElementRef;
 
-    /**
-     *@hidden
-     */
-    public calendarRef: ComponentRef<IgxCalendarComponent>;
-
-    /**
-     *@hidden
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
-
-    /**
-     *@hidden
-     */
-    @Input()
-    public calendarOutlet: IgxOverlayOutletDirective | ElementRef;
+    public hasHeader = true;
+    public collapsed = true;
+    public mask;
+    public displayValue = new DisplayValuePipe(this);
+    public inputValue = new InputValuePipe(this);
+    public dateStruct = [];
 
     private _destroy$ = new Subject<boolean>();
-
     private _componentID;
 
     private _formatOptions = {
@@ -511,9 +586,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     private _dropDownOverlaySettings: OverlaySettings;
     private _modalOverlaySettings: OverlaySettings;
 
-    public inputDate = '';
-    public hasHeader = true;
-    public collapsed = true;
+    private _format;
+    private _value;
+    private _transformedDate;
+    private DEFAULT_DATE_FORMAT = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
 
     /**
      *Method that sets the selected date.
@@ -544,7 +620,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     /** @hidden */
     getEditElement() {
-        return ((this.mode === InteractionMode.READONLY) ? this.readonlyInput : this.editableInput).nativeElement;
+        return ((this.mode === DatePickerInteractionMode.READONLY) ? this.readonlyInput : this.editableInput).nativeElement;
     }
 
     /**
@@ -560,13 +636,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
             closeOnOutsideClick: true,
             modal: false,
             positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
-            // outlet: this.outlet
+            outlet: this.outlet
         };
 
         this._modalOverlaySettings = {
             closeOnOutsideClick: true,
             modal: true,
-            // outlet: this.outlet
+            outlet: this.outlet
         };
 
         this.overlayService.onOpened.pipe(
@@ -584,12 +660,18 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.calendarContainer) {
             this.calendarContainer.nativeElement.style.display = 'none';
         }
+
+        if (this.mode === DatePickerInteractionMode.EDITABLE) {
+            this.getFormatOptions(this.format);
+            this.dateStruct = DateUtil.parseDateFormat(this.format);
+        }
     }
 
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
+        this.overlayService.hideAll();
         this._destroy$.next(true);
         this._destroy$.complete();
     }
@@ -642,6 +724,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      */
     public deselectDate() {
         this.value = null;
+        this.calendar.deselectDate();
         this._onChangeCallback(null);
     }
 
@@ -650,25 +733,20 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *
      * @hidden
      */
-    public openCalendar(): void {
+    public openCalendar(eventArgs): void {
+        eventArgs.stopPropagation();
         switch (this.mode) {
-            case InteractionMode.READONLY: {
+            case DatePickerInteractionMode.READONLY: {
                 this.hasHeader = true;
-                requestAnimationFrame(() => {
-                    this._componentID = this.overlayService.show(this.calendarContainer, this._modalOverlaySettings);
-                });
-
+                this._componentID = this.overlayService.show(this.calendarContainer, this._modalOverlaySettings);
                 break;
             }
-            case InteractionMode.EDITABLE: {
+            case DatePickerInteractionMode.EDITABLE: {
                 if (this.collapsed) {
                     this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
                     this.hasHeader = false;
-                    requestAnimationFrame(() => {
-                        this._componentID = this.overlayService.show(this.calendarContainer, this._dropDownOverlaySettings);
-                    });
+                    this._componentID = this.overlayService.show(this.calendarContainer, this._dropDownOverlaySettings);
                 }
-
                 break;
             }
         }
@@ -679,21 +757,53 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     public clear() {
-        // TODO - clear selected date?
-        this.value = undefined;
+        this.deselectDate();
     }
 
     public calculateDate(data: string) {
-        const isValid = this.isDateValid(data);
-        if (isValid) {
-            this.value = new Date(data);
-        } else {
-            this.value = undefined;
-        }
+        // Remove underscore mask prompt char
+        const trimmedData = data.replace(/_/g, '');
+        // let day, month;
+        // let dayPart;
+        // let dayFormat;
+        // let monthPart;
+        // let dayPartPosition;
+        // let monthFormat;
+        // let monthPartPosition;
+
+        // dayPart = this.dateStruct.filter(part => part.type === DATE_PARTS.DAY);
+        // dayFormat = dayPart[0].formatType;
+        // dayPartPosition = dayPart[0].position;
+
+        // monthPart = this.dateStruct.filter(part => part.type === DATE_PARTS.MONTH);
+        // monthFormat = monthPart[0].formatType;
+        // monthPartPosition = monthPart[0].position;
+
+        // if (dayFormat === FORMAT_DESC.NUMERIC) {
+        //     day = this.trimUnderlines(data.substring(dayPartPosition[0], dayPartPosition[1] + 1));
+        // }
+
+        // if (monthFormat === FORMAT_DESC.NUMERIC) {
+        //     month = this.trimUnderlines(data.substring(monthPartPosition[0], monthPartPosition[1] + 1));
+        // }
+
+        // const dateData = new Date(trimmedData);
+        // const year = dateData.getFullYear();
+        // const modifiedDate = new Date();
+
+        // modifiedDate.setDate(day);
+        // modifiedDate.setMonth(month - 1);
+        // modifiedDate.setFullYear(year);
+
+        this.value = new Date(trimmedData);
     }
 
-    private isDateValid(data) {
-        return (new Date(data).toLocaleString(this.locale) !== 'Invalid Date');
+    private trimUnderlines(value: string) {
+        return value.replace(/_/g, '');
+    }
+
+    public isDateValid(data) {
+        return new Date(data.replace(/_/g, '')).toString() !== 'Invalid Date';
     }
 
     /**
@@ -714,6 +824,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
         this.value = date;
         this.calendar.viewDate = date;
+
         this._onChangeCallback(date);
 
         this.closeCalendar();
@@ -721,14 +832,19 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         this.onSelection.emit(date);
     }
 
-    public handleInput(eventArgs) {
+    public onBlur(eventArgs) {
         this.calculateDate(eventArgs.target.value);
+    }
+
+    public isOneDigit(char, index) {
+        const temp = (this.format.match(new RegExp(char, 'g')).length === 1 && index < 10);
+        return temp;
     }
 
     @HostListener('keydown.alt.arrowdown', ['$event'])
     public onAltArrowDownKeydown(event: KeyboardEvent) {
         this.calculateDate(this.editableInput.nativeElement.value);
-        this.openCalendar();
+        this.openCalendar(event);
     }
 
     // @HostListener('keydown.esc', ['$event'])
@@ -738,12 +854,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     //     event.stopPropagation();
     // }
 
-    @HostListener('keydown.spacebar', ['$event'])
-    @HostListener('keydown.space', ['$event'])
-    public onSpaceClick(event) {
-        this.openCalendar();
-        event.preventDefault();
-    }
+    // @HostListener('keydown.spacebar', ['$event'])
+    // @HostListener('keydown.space', ['$event'])
+    // public onSpaceClick(event) {
+    //     this.openCalendar();
+    //     event.preventDefault();
+    // }
 
     @HostListener('keydown.arrowdown', ['$event'])
     public onArrowDownKeydown(event) {
@@ -758,7 +874,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     private onOpened() {
-        // debugger;
         this.collapsed = false;
         this.calendarContainer.nativeElement.style.display = 'block';
 
@@ -776,7 +891,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     }
 
     private onClosed() {
-        // debugger;
         this.collapsed = true;
         this.calendarContainer.nativeElement.style.display = 'none';
         this.onClose.emit(this);
@@ -801,6 +915,36 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         return this.editableInput.nativeElement.selectionStart;
     }
 
+    private getFormatOptions(format) {
+        switch (format) {
+            case PREDEFINED_FORMAT_OPTIONS.SHORT_DATE: {
+                this.mask = PREDEFINED_MASKS.SHORT_DATE_MASK;
+                this.format = PREDEFINED_FORMATS.SHORT_DATE_FORMAT;
+                break;
+            }
+            case PREDEFINED_FORMAT_OPTIONS.MEDIUM_DATE: {
+                this.mask = PREDEFINED_MASKS.MEDIUM_DATE_MASK;
+                this.format = PREDEFINED_FORMATS.MEDIUM_DATE_FORMAT;
+                break;
+            }
+            case PREDEFINED_FORMAT_OPTIONS.LONG_DATE: {
+                this.mask = PREDEFINED_MASKS.LONG_DATE_MASK;
+                this.format = PREDEFINED_FORMATS.LONG_DATE_FORMAT;
+                break;
+            }
+            case PREDEFINED_FORMAT_OPTIONS.FULL_DATE: {
+                this.mask = PREDEFINED_MASKS.FULL_DATE_MASK;
+                this.format = PREDEFINED_FORMATS.FULL_DATE_FORMAT;
+                break;
+            }
+            default: {
+                this.mask = DateUtil.getFormatMask(format);
+                this.format = format;
+                break;
+            }
+        }
+    }
+
     /**
      * Apply custom user formatter upon date.
      * @param formatter custom formatter function.
@@ -813,10 +957,129 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     private _onTouchedCallback: () => void = () => { };
 
     private _onChangeCallback: (_: Date) => void = () => { };
+
+    public transformDate(date: Date) {
+        const formattedDate = new DateFormatPipe(Constants.DEFAULT_LOCALE_DATE).transform(date, this.format);
+        console.log('formattedDate ' + formattedDate);
+        return formattedDate;
+    }
 }
 
 class Constants {
     public static readonly DEFAULT_LOCALE_DATE = 'en';
+}
+
+@Pipe({
+    name: 'format'
+})
+
+export class DateFormatPipe extends DatePipe implements PipeTransform {
+    transform(value: any, args?: any): any {
+        return super.transform(value, args);
+    }
+}
+
+@Pipe({
+    name: 'displayValue'
+})
+export class DisplayValuePipe implements PipeTransform {
+    constructor(public datePicker: IgxDatePickerComponent) { }
+    // on blur
+    transform(value: any, args?: any): any {
+        if (value !== '') {
+            if (value === this.trimMask(this.datePicker.mask)) {
+                return '';
+            }
+
+            return value.replace(/_/g, '');
+        }
+
+        return '';
+    }
+
+    trimMask(mask) {
+        return mask.replace(/0|L/g, '_');
+    }
+}
+
+@Pipe({
+    name: 'inputValue'
+})
+export class InputValuePipe implements PipeTransform {
+    constructor(public datePicker: IgxDatePickerComponent) { }
+    // on focus
+    transform(value: any, args?: any): any {
+        if (this.datePicker.value !== null && this.datePicker.value !== undefined) {
+            let result;
+            let offset = 0;
+            const dateArray = Array.from(value);
+            const monthName = this.datePicker.value.toLocaleString('en', {
+                month: 'long'
+            });
+            const dayName = this.datePicker.value.toLocaleString('en', {
+                weekday: 'long'
+            });
+
+            const dateStruct = this.datePicker.dateStruct;
+
+            for (let i = 0; i < dateStruct.length; i++) {
+                if (dateStruct[i].type === 'weekday') {
+                    if (dateStruct[i].formatType === FORMAT_DESC.LONG) {
+                        offset += DateUtil.MAX_WEEKDAY_SYMBOLS - 4;
+                        for (let j = dayName.length; j < DateUtil.MAX_WEEKDAY_SYMBOLS; j++) {
+                            dateArray.splice(j, 0, '_');
+                        }
+                        dateArray.join('');
+                    }
+                }
+
+                if (dateStruct[i].type === 'month') {
+                    if (dateStruct[i].formatType === FORMAT_DESC.LONG) {
+                        const startPos = offset + dateStruct[i].initialPosition + monthName.length;
+                        const endPos = startPos + DateUtil.MAX_MONTH_SYMBOLS - monthName.length;
+                        offset += DateUtil.MAX_MONTH_SYMBOLS - 4;
+                        for (let j = startPos; j < endPos; j++) {
+                            dateArray.splice(j, 0, '_');
+                        }
+                        dateArray.join('');
+                    }
+                    if (dateStruct[i].formatType === FORMAT_DESC.NUMERIC
+                        || dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) {
+                        const isOneDigit = this.datePicker.isOneDigit(DATE_CHARS.MONTH_CHAR, this.datePicker.value.getMonth() + 1);
+                        if (isOneDigit) {
+                            const startPos = offset + dateStruct[i].initialPosition;
+                            dateArray.splice(startPos, 0, '_');
+                        }
+                        offset += 1;
+                        dateArray.join('');
+                    }
+                }
+
+                if (dateStruct[i].type === 'day') {
+                    if (dateStruct[i].formatType === FORMAT_DESC.NUMERIC
+                        || dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) {
+                        const isOneDigit = this.datePicker.isOneDigit(DATE_CHARS.DAY_CHAR, this.datePicker.value.getDate());
+                        if (isOneDigit) {
+                            const startPos = offset + dateStruct[i].initialPosition;
+                            dateArray.splice(startPos, 0, '_');
+                        }
+                        offset += 1;
+                        dateArray.join('');
+                    }
+                }
+            }
+
+            result = dateArray.join('');
+
+            return result;
+        }
+
+        return this.trimMask(this.datePicker.mask);
+    }
+
+    trimMask(mask) {
+        return mask.replace(/0|L/g, '_');
+    }
 }
 
 /**
@@ -825,6 +1088,6 @@ class Constants {
 @NgModule({
     declarations: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule]
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxMaskModule]
 })
 export class IgxDatePickerModule { }

@@ -3,17 +3,19 @@
     <section class="sample-content">
         <article class="datepicker-column">
             <h4 class="sample-title">Default Date Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <label>Date: {{ datePicker.value }}</label>
             <div class="preview">
-                <igx-datePicker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+                <igx-datePicker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today" [value]="date"></igx-datePicker>
                 <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
             </div>
         </article>
 
         <article class="datepicker-column">
             <h4 class="sample-title">Editable Date Picker</h4>
-            <div class="preview" style="width: 300px">
-                <igx-datePicker [value]="date" [vertical]="true" mode="editable" [weekStart]="1"></igx-datePicker>
+            <label>Date: {{ editableDatePicker.value }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-datePicker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [value]="date1"
+                    format="fullDate"></igx-datePicker>
             </div>
         </article>
 
@@ -23,7 +25,7 @@
             <div class="preview">
                 <igx-date-picker [value]="date"></igx-date-picker>
             </div>
-        </article>
+        </article> -->
         <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
             <p class="sample-description">Detailed description to be added.</p>
@@ -38,7 +40,7 @@
                 <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
                         let-displayData="displayData">
-                        <igx-input-group (click)="openCalendar()">
+                        <igx-input-group (click)="openCalendar($event)">
                             <label igxLabel>Date</label>
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>
