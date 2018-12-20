@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
+import { DisplayDensity } from '../core/density';
 
 @Component({
     template: `
@@ -258,3 +259,36 @@ export class IgxTreeGridMultiColHeadersComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeSmallTreeData();
 }
+
+@Component({
+    template:
+        `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
+            <igx-tree-grid #treeGrid [data]="data" [displayDensity]="density"
+                childDataKey="Employees" primaryKey="ID">
+                <igx-column [field]="'ID'" dataType="number"></igx-column>
+                <igx-column [field]="'Name'" dataType="string"></igx-column>
+                <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+                <igx-column [field]="'Age'" dataType="number"></igx-column>
+        </igx-tree-grid>
+        </div>`
+})
+
+export class IgxTreeGridWrappedInContComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+
+    public height = null;
+    public density = DisplayDensity.comfortable;
+    public outerWidth = 800;
+    public outerHeight: number;
+
+    public isVerticalScrollbarVisible() {
+        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar && scrollbar.offsetHeight > 0) {
+            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+        }
+        return false;
+    }
+
+}
+
