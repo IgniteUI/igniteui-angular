@@ -5,7 +5,8 @@ import {
     Inject,
     Input,
     DoCheck,
-    Host
+    Host,
+    HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
@@ -31,7 +32,22 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     public get itemID() {
-        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
+        return this.comboAPI.isRemote(this.comboID) ? JSON.stringify(this.value) : this.value;
+    }
+
+    /**
+     * @hidden
+     */
+    public get comboID() {
+        return this.dropDown.comboID;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get disableTransitions() {
+        return this.dropDown.disableTransitions;
     }
 
     constructor(
@@ -47,7 +63,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     get isSelected(): boolean {
-        return this.selection.is_item_selected(this.dropDown.comboID, this.itemID);
+        return this.selection.is_item_selected(this.comboID, this.itemID);
     }
 
     set isSelected(value: boolean) {
@@ -55,5 +71,10 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             return;
         }
         this._isSelected = value;
+    }
+
+    @HostListener('click')
+    clicked() {
+        this.selection.set_selected_item(this.comboID, this.itemID);
     }
 }

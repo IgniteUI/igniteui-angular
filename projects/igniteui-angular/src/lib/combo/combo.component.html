@@ -25,7 +25,7 @@
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)" 
-(onOpened)="handleOpened($event)" (onClosed)="handleClosed($event)"
+(onOpened)="handleOpened()" (onClosed)="handleClosed()" [comboID]='id'
     class="igx-combo__drop-down" [width]="itemsWidth || '100%'">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
         <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue"
@@ -41,9 +41,6 @@
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
             (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
             <igx-combo-item  [itemHeight]='itemHeight' [value]="item" isHeader={{item.isHeader}} role="option">
-                <ng-container *ngIf="!item.isHeader">
-                    <igx-checkbox [checked]="isItemSelected(item)" disableRipple="true" [disableTransitions]="dropdown.disableTransitions" disabled="true" class="igx-combo__checkbox"></igx-checkbox>
-                </ng-container>
                 <ng-container *ngIf="item.isHeader">
                     <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
                 </ng-container>

@@ -49,6 +49,7 @@ export interface IDropDownBase extends IDropDownList {
     selectedItem: any;
     items: IDropDownItem[];
     headers: IDropDownItem[];
+    disableTransitions: boolean;
     setSelectedItem(index: number): void;
     selectItem(item: IDropDownItem, event?: Event): void;
 }

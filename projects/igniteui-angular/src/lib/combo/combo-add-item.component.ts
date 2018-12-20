@@ -7,13 +7,6 @@ import { Component, HostBinding, Input } from '@angular/core';
     providers: [{ provide: IgxComboItemComponent, useClass: IgxComboAddItemComponent}]
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-    /**
-     * Gets the height of a list item
-     * @hidden
-     */
-    @Input()
-    @HostBinding('style.height.px')
-    public itemHeight = '';
 
     get isSelected(): boolean {
         return false;
@@ -22,6 +15,6 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     }
 
     clicked() {
-        this.combo.addItemToCollection();
+        this.comboAPI.add_custom_item(this.dropDown.comboID);
     }
 }

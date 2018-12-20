@@ -178,20 +178,6 @@ export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
      */
     @HostListener('click')
     clicked() {
-        if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
-            if (this.dropDown.allowItemsFocus && focusedItem) {
-                focusedItem.element.nativeElement.focus({ preventScroll: true });
-            }
-            return;
-        }
-        if (this.selection) {
-            const args: IDropDownServiceArgs = {
-                item: this,
-                itemID: this.itemID
-            };
-            // this.selection.onSelection.emit(args);
-        }
     }
 
     ngDoCheck(): void {
