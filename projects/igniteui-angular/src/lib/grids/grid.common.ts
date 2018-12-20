@@ -562,9 +562,13 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(locale);
     }
-    transform(value: any): string {
+    transform(value: any, locale: string): string {
         if (value && value instanceof Date) {
-            return super.transform(value);
+            if (locale) {
+                return super.transform(value, 'mediumDate', undefined, locale);
+            } else {
+                return super.transform(value);
+            }
         } else {
             return value;
         }
@@ -581,9 +585,13 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(locale);
     }
-    transform(value: any): string {
+    transform(value: any, locale: string): string {
         if (value && typeof value === 'number') {
-            return super.transform(value);
+            if (locale) {
+                return super.transform(value, undefined, locale);
+            } else {
+                return super.transform(value);
+            }
         } else {
             return value;
         }

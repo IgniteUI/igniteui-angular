@@ -4,7 +4,7 @@
         <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
     </ng-container>
     <ng-template #default>
-        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
+        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal: grid.locale) : (value | igxdate: grid.locale) }}</div>
     </ng-template>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">
