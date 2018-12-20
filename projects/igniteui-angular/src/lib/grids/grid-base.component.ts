@@ -2200,8 +2200,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
-        this._derivePossibleHeight();
         this.markForCheck();
+        this._derivePossibleHeight();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
