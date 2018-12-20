@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
-import { InteractionMode } from './time-picker.common';
+import { IgxTimePickerComponent, IgxTimePickerModule, TimePickerInteractionMode } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -1111,7 +1110,7 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.placeholder).toBe('hh:mm tt');
         }));
 
-        it('should break on spinloop witn min and max value on arrow down', (() => {
+        it('should break on spinloop with min and max value on arrow down', (() => {
             fixture.detectChanges();
 
             const customValue = '07:07 AM';
@@ -1146,7 +1145,7 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on minutes');
         }));
 
-        it('should break on spinloop witn min and max value on arrow up', (() => {
+        it('should break on spinloop with min and max value on arrow up', (() => {
             fixture.detectChanges();
 
             const customValue = '08:07 AM';
@@ -1369,7 +1368,7 @@ describe('IgxTimePicker', () => {
 
             expect(timePicker.onValidationFailed.emit).toHaveBeenCalled();
 
-            // ininitial value should not be changed
+            // initial value should not be changed
             expect(fixture.componentInstance.date).toEqual(initVal);
         }));
 
@@ -1384,7 +1383,7 @@ describe('IgxTimePicker', () => {
 
             expect(dom.query(By.css('.igx-time-picker--dropdown'))).toBeDefined();
 
-            fixture.componentInstance.timePicker.mode = InteractionMode.dialog;
+            fixture.componentInstance.timePicker.mode = TimePickerInteractionMode.dialog;
             fixture.detectChanges();
 
             UIInteractions.clickElement(iconTime);
@@ -1540,7 +1539,7 @@ export class IgxTimePickerDropDownComponent {
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
-    mode = InteractionMode;
+    mode = TimePickerInteractionMode;
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
@@ -1556,7 +1555,7 @@ export class IgxTimePickerDropDownComponent {
 })
 export class IgxTimePickerDropDownSingleHourComponent {
     customDate = new Date(2018, 10, 27, 4, 5);
-    mode = InteractionMode.dropdown;
+    mode = TimePickerInteractionMode.dropdown;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }
@@ -1569,7 +1568,7 @@ export class IgxTimePickerDropDownSingleHourComponent {
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
-    mode = InteractionMode.dropdown;
+    mode = TimePickerInteractionMode.dropdown;
 
     @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
 }

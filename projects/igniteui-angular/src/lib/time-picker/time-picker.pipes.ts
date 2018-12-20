@@ -2,11 +2,14 @@ import { Pipe, PipeTransform, Inject} from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 
 
-/** @hidden */
+/**
+ * Formats `IgxTimePickerComponent` display value according to the `format` property,
+ * when the input element loses focus.
+ **/
 @Pipe({ name: 'displayFormat'})
 export class TimeDisplayFormatPipe implements PipeTransform {
 
-     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase) { }
+     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
      transform(value: any): string {
 
@@ -54,11 +57,14 @@ export class TimeDisplayFormatPipe implements PipeTransform {
     }
 }
 
-/** @hidden */
+/**
+ * Formats `IgxTimePickerComponent` display value according to the `format` property,
+ * when the input element gets focus.
+ **/
 @Pipe({ name: 'inputFormat' })
 export class TimeInputFormatPipe implements PipeTransform {
 
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase) { }
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     transform(value: any): string {
         const prompt = this.timePicker.promptChar;

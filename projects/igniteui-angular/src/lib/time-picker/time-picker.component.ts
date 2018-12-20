@@ -32,7 +32,7 @@ import {
 } from './time-picker.directives';
 import { Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, InteractionMode } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
@@ -51,6 +51,14 @@ let NEXT_ID = 0;
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
 const AMPM_POS = [6, 7, 8];
+
+/**
+ * Defines the posible values of the igxTimePicker's time selection mode.
+ */
+export enum TimePickerInteractionMode {
+    dialog,
+    dropdown
+}
 
 @Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -96,12 +104,6 @@ export class IgxTimePickerComponent implements
     OnInit,
     OnDestroy {
 
-    private _value: Date;
-    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
-    private _okButtonLabel = null;
-    private _cancelButtonLabel = null;
-    private _format: string;
-
     /**
      * An @Input property that sets the value of the `id` attribute.
      * ```html
@@ -123,15 +125,16 @@ export class IgxTimePickerComponent implements
     @Input()
     set value(value: Date) {
         if (this._isValueValid(value)) {
-            const args: IgxTimePickerValueChangedEventArgs = {
-                oldValue: this._value,
-                newValue: value
-            };
-            this.onValueChanged.emit(args);
+            const oldVal = this._value;
 
             this._value = value;
             this._onChangeCallback(value);
 
+            const args: IgxTimePickerValueChangedEventArgs = {
+                oldValue: oldVal,
+                newValue: value
+            };
+            this.onValueChanged.emit(args);
         } else {
             const args: IgxTimePickerValidationFailedEventArgs = {
                 timePicker: this,
@@ -287,7 +290,12 @@ export class IgxTimePickerComponent implements
      */
     @Input()
     get format() {
-        return this._format ? this._format : 'hh:mm tt';
+        return this._format || 'hh:mm tt';
+    }
+
+    set format(formatValue: string) {
+        this._format = formatValue;
+        this.mask = this._format.indexOf('tt') !== -1 ? '00:00 LL' : '00:00';
     }
 
     /**
@@ -306,19 +314,14 @@ export class IgxTimePickerComponent implements
      * a dialog picker or dropdown with editable masked input.
      * Deafult is dialog picker.
      *```html
-     *public mode = InteractionMode.dropdown;
+     *public mode = TimePickerInteractionMode.dropdown;
      *  //..
      *<igx-time-picker [mode]="mode"></igx-time-picker>
      *```
      * @memberof IgxTimePickerComponent
      */
     @Input()
-    public mode = InteractionMode.dialog;
-
-    set format(formatValue: string) {
-        this._format = formatValue;
-        this.mask = this._format.indexOf('tt') !== -1 ? '00:00 LL' : '00:00';
-    }
+    public mode = TimePickerInteractionMode.dialog;
 
     /**
      *@hidden
@@ -490,6 +493,25 @@ export class IgxTimePickerComponent implements
     */
     public inputFormat = new TimeInputFormatPipe(this);
 
+    /**
+     * @hidden
+     */
+    public selectedHour: string;
+    /**
+     * @hidden
+     */
+    public selectedMinute: string;
+    /**
+     * @hidden
+     */
+    public selectedAmPm: string;
+
+    private _value: Date;
+    private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
+    private _okButtonLabel = null;
+    private _cancelButtonLabel = null;
+    private _format: string;
+
     private _isHourListLoop = this.isSpinLoop;
     private _isMinuteListLoop = this.isSpinLoop;
 
@@ -504,22 +526,12 @@ export class IgxTimePickerComponent implements
     private _dropDownOverlaySettings: OverlaySettings;
     private _dialogOverlaySettings: OverlaySettings;
 
-    /**
-     * @hidden
-     */
-    public selectedHour: string;
-    /**
-     * @hidden
-     */
-    public selectedMinute: string;
-    /**
-     * @hidden
-     */
-    public selectedAmPm: string;
-
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
+
+    private _onTouchedCallback: () => void = () => { };
+    private _onChangeCallback: (_: Date) => void = () => { };
 
     /**
      * Returns the current time formatted as string using the `format` option.
@@ -565,7 +577,7 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     get isModal(): boolean {
-        return this.mode === InteractionMode.dialog;
+        return this.mode === TimePickerInteractionMode.dialog;
     }
 
     /**
@@ -608,78 +620,30 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * opens the dialog.
-     * ```html
-     *<igx-time-picker #tp></igx-time-picker>
-     * ```
+     * Gets the input group template.
      * ```typescript
-     * @ViewChild('tp', { read: IgxTimePickerComponent }) tp: IgxTimePickerComponent;
-     * tp.openDialog();
+     * let template = this.template();
      * ```
+     * @memberof IgxTimePickerComponent
      */
-    public openDialog(timePicker: IgxTimePickerComponent = this): void {
-        if (this.mode === InteractionMode.dialog) {
-            this.collapsed = false;
-            if (this.outlet) {
-                this._dialogOverlaySettings.outlet = this.outlet;
-            }
-            this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
+    get template(): TemplateRef<any> {
+        if (this.timePickerTemplateDirective) {
+            return this.timePickerTemplateDirective.template;
         }
+        return this.mode === TimePickerInteractionMode.dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
+    }
 
-        if (this.mode === InteractionMode.dropdown && this.collapsed) {
-            this.collapsed = false;
-            if (this.outlet) {
-                this._dropDownOverlaySettings.outlet = this.outlet;
-            }
-            this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-            this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
-        }
-
-        if (this.value) {
-            const foramttedTime = this._formatTime(this.value, this.format);
-            const sections = foramttedTime.split(/[\s:]+/);
-
-            this.selectedHour = sections[0];
-            this.selectedMinute = sections[1];
-
-            if (this._ampmItems !== null) {
-                this.selectedAmPm = sections[2];
-            }
-        }
-
-        if (this.selectedHour === undefined) {
-            this.selectedHour = `${this._hourItems[3]}`;
-        }
-        if (this.selectedMinute === undefined) {
-            this.selectedMinute = '0';
-        }
-        if (this.selectedAmPm === undefined && this._ampmItems !== null) {
-            this.selectedAmPm = this._ampmItems[3];
-        }
-
-        this._prevSelectedHour = this.selectedHour;
-        this._prevSelectedMinute = this.selectedMinute;
-        this._prevSelectedAmPm = this.selectedAmPm;
-
-        this._onTouchedCallback();
-
-        this._updateHourView(0, 7);
-        this._updateMinuteView(0, 7);
-        this._updateAmPmView(0, 7);
-
-        if (this.selectedHour) {
-            this.scrollHourIntoView(this.selectedHour);
-        }
-        if (this.selectedMinute) {
-            this.scrollMinuteIntoView(this.selectedMinute);
-        }
-        if (this.selectedAmPm) {
-            this.scrollAmPmIntoView(this.selectedAmPm);
-        }
-
-        requestAnimationFrame(() => {
-            this.hourList.nativeElement.focus();
-        });
+    /**
+     * Gets the context passed to the input group template.
+     * @memberof IgxTimePickerComponent
+     */
+    get context() {
+        return {
+            value: this.value,
+            displayTime: this.displayTime,
+            displayValue: this.displayValue,
+            openDialog: () => { this.openDialog(); }
+        };
     }
 
     constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
@@ -688,26 +652,26 @@ export class IgxTimePickerComponent implements
             filter(event => event.id === this._overlayId),
             takeUntil(this._destroy$)).subscribe(() => {
 
-            this.collapsed = true;
+                this.collapsed = true;
 
-            if (this._input) {
-                this._input.nativeElement.focus();
-            }
+                if (this._input) {
+                    this._input.nativeElement.focus();
+                }
 
-            if (this.mode === InteractionMode.dropdown) {
-                this._onDropDownClosed();
-            }
+                if (this.mode === TimePickerInteractionMode.dropdown) {
+                    this._onDropDownClosed();
+                }
 
-            this.onClose.emit(this);
-        });
+                this.onClose.emit(this);
+            });
 
         this.overlayService.onOpened.pipe(
             filter(event => event.id === this._overlayId),
             takeUntil(this._destroy$)).subscribe(() => {
 
-            this.collapsed = false;
-            this.onOpen.emit(this);
-        });
+                this.collapsed = false;
+                this.onOpen.emit(this);
+            });
     }
 
     /**
@@ -750,36 +714,12 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    public writeValue(value: Date) {
-        // use this falg to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
-        // against the real value when initializing the component and value is bound via ngModel
-        this._dateFromModel = value;
-
-        this.value = value;
-
-        if (this.mode === InteractionMode.dropdown) {
-            this.displayValue = this._formatTime(this.value, this.format);
-        }
+    @HostListener('keydown.spacebar', ['$event'])
+    @HostListener('keydown.space', ['$event'])
+    public onKeydownSpace(event) {
+        this.openDialog();
+        event.preventDefault();
     }
-
-    /**
-     * @hidden
-     */
-    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
-
-    /**
-     * @hidden
-     */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
-
-    /** @hidden */
-    getEditElement() {
-        return this._input.nativeElement;
-    }
-
-    private _onTouchedCallback: () => void = () => { };
-
-    private _onChangeCallback: (_: Date) => void = () => { };
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
         let itemIntoView;
@@ -1058,11 +998,7 @@ export class IgxTimePickerComponent implements
         const hour = parseInt(sections[0].replace(re, ''), 10);
         const minutes = parseInt(sections[1].replace(re, ''), 10);
 
-        if (this.validHourEntries.indexOf(hour) !== -1 && this.validMinuteEntries.indexOf(minutes) !== -1) {
-            return true;
-        }
-
-        return false;
+        return this.validHourEntries.indexOf(hour) !== -1 && this.validMinuteEntries.indexOf(minutes) !== -1;
     }
 
     private _getCursorPosition(): number {
@@ -1074,7 +1010,7 @@ export class IgxTimePickerComponent implements
     }
 
     private _updateEditableInput(): void {
-        if (this.mode === InteractionMode.dropdown) {
+        if (this.mode === TimePickerInteractionMode.dropdown) {
             this.displayValue = this._formatTime(this._getSelectedTime(), this.format);
         }
     }
@@ -1138,6 +1074,113 @@ export class IgxTimePickerComponent implements
             };
             this.onValidationFailed.emit(args);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    getEditElement() {
+        return this._input.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
+    public writeValue(value: Date) {
+        // use this flag to make sure that min/maxValue are checked (in _convertMinMaxValue() method)
+        // against the real value when initializing the component and value is bound via ngModel
+        this._dateFromModel = value;
+
+        this.value = value;
+
+        if (this.mode === TimePickerInteractionMode.dropdown) {
+            this.displayValue = this._formatTime(this.value, this.format);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /**
+     * @hidden
+     */
+    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /**
+     * opens the dialog.
+     * ```html
+     *<igx-time-picker #tp></igx-time-picker>
+     * ```
+     * ```typescript
+     * @ViewChild('tp', { read: IgxTimePickerComponent }) tp: IgxTimePickerComponent;
+     * tp.openDialog();
+     * ```
+     */
+    public openDialog(timePicker: IgxTimePickerComponent = this): void {
+        if (this.mode === TimePickerInteractionMode.dialog) {
+            this.collapsed = false;
+            if (this.outlet) {
+                this._dialogOverlaySettings.outlet = this.outlet;
+            }
+            this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
+        }
+
+        if (this.mode === TimePickerInteractionMode.dropdown && this.collapsed) {
+            this.collapsed = false;
+            if (this.outlet) {
+                this._dropDownOverlaySettings.outlet = this.outlet;
+            }
+            this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
+            this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
+        }
+
+        if (this.value) {
+            const foramttedTime = this._formatTime(this.value, this.format);
+            const sections = foramttedTime.split(/[\s:]+/);
+
+            this.selectedHour = sections[0];
+            this.selectedMinute = sections[1];
+
+            if (this._ampmItems !== null) {
+                this.selectedAmPm = sections[2];
+            }
+        }
+
+        if (this.selectedHour === undefined) {
+            this.selectedHour = `${this._hourItems[3]}`;
+        }
+        if (this.selectedMinute === undefined) {
+            this.selectedMinute = '0';
+        }
+        if (this.selectedAmPm === undefined && this._ampmItems !== null) {
+            this.selectedAmPm = this._ampmItems[3];
+        }
+
+        this._prevSelectedHour = this.selectedHour;
+        this._prevSelectedMinute = this.selectedMinute;
+        this._prevSelectedAmPm = this.selectedAmPm;
+
+        this._onTouchedCallback();
+
+        this._updateHourView(0, 7);
+        this._updateMinuteView(0, 7);
+        this._updateAmPmView(0, 7);
+
+        if (this.selectedHour) {
+            this.scrollHourIntoView(this.selectedHour);
+        }
+        if (this.selectedMinute) {
+            this.scrollMinuteIntoView(this.selectedMinute);
+        }
+        if (this.selectedAmPm) {
+            this.scrollAmPmIntoView(this.selectedAmPm);
+        }
+
+        requestAnimationFrame(() => {
+            this.hourList.nativeElement.focus();
+        });
     }
 
     /**
@@ -1317,16 +1360,6 @@ export class IgxTimePickerComponent implements
     }
 
     /**
-     * @hidden
-     */
-    @HostListener('keydown.spacebar', ['$event'])
-    @HostListener('keydown.space', ['$event'])
-    public onKeydownSpace(event) {
-        this.openDialog();
-        event.preventDefault();
-    }
-
-    /**
      * Returns an array of the hours currently in view.
      *```html
      *@ViewChild("MyChild")
@@ -1435,8 +1468,7 @@ export class IgxTimePickerComponent implements
      */
     public onInput(event): void {
         const val = event.target.value;
-        const oldVal = this.value;
-        let newVal = this._convertMinMaxValue(val);
+        const oldVal = new Date(this.value);
 
         this.isNotEmpty = val !== this.parseMask(false);
 
@@ -1444,6 +1476,7 @@ export class IgxTimePickerComponent implements
         // timepicker own value property if it is a valid Date
         if (val.indexOf(this.promptChar) === -1) {
             if (this._isEntryValid(val)) {
+                const newVal = this._convertMinMaxValue(val);
                 if (oldVal.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
@@ -1455,16 +1488,14 @@ export class IgxTimePickerComponent implements
                 };
                 this.onValidationFailed.emit(args);
             }
-        }
-
         // handle cases where the user deletes the display value (when pressing backspace or delete)
-        if (!this.value || !val || val === this.parseMask(false)) {
+        } else if (!this.value || !val || val === this.parseMask(false)) {
             this.isNotEmpty = false;
+
             this.value.setHours(0, 0);
             this.displayValue = val;
 
-            newVal = new Date(this.value);
-            if (oldVal.getTime() !== newVal.getTime()) {
+            if (oldVal.getTime() !== this.value.getTime()) {
                 const args: IgxTimePickerValueChangedEventArgs = {
                     oldValue: oldVal,
                     newValue: this.value
@@ -1486,7 +1517,6 @@ export class IgxTimePickerComponent implements
      */
     public onBlur(event): void {
         const value = event.target.value;
-        const oldVal = new Date(this.value);
 
         this.isNotEmpty = value !== '';
         this.displayValue = value;
@@ -1494,7 +1524,7 @@ export class IgxTimePickerComponent implements
         if (value && value !== this.parseMask()) {
             if (this._isEntryValid(value)) {
                 const newVal = this._convertMinMaxValue(value);
-                if (oldVal.getTime() !== newVal.getTime()) {
+                if (this.value.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
             } else {
@@ -1562,33 +1592,6 @@ export class IgxTimePickerComponent implements
         requestAnimationFrame(() => {
             this._setCursorPosition(cursor);
         });
-    }
-
-    /**
-     * Gets the input group template.
-     * ```typescript
-     * let template = this.template();
-     * ```
-     * @memberof IgxTimePickerComponent
-     */
-    get template(): TemplateRef<any> {
-        if (this.timePickerTemplateDirective) {
-            return this.timePickerTemplateDirective.template;
-        }
-        return this.mode === InteractionMode.dialog ? this.defaultTimePickerTemplate : this.dropdownInputTemplate;
-    }
-
-    /**
-     * Gets the context passed to the input group template.
-     * @memberof IgxTimePickerComponent
-     */
-    get context() {
-        return {
-            value: this.value,
-            displayTime: this.displayTime,
-            displayValue: this.displayValue,
-            openDialog: () => { this.openDialog(); }
-        };
     }
 }
 
