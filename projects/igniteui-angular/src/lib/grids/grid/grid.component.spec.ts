@@ -3063,7 +3063,7 @@ export class IgxGridTestComponent {
 
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (scrollbar) {
+        if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
         return false;
