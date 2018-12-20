@@ -7,8 +7,9 @@ export interface IDropDownServiceArgs {
     itemID: any;
 }
 export class IgxDropDownSelectionService extends IgxSelectionAPIService {
-    set_selected_item(componentID: string, itemID: any, selected = true) {
-        if (selected) {
+    set_selected_item(componentID: string, itemID: any) {
+        const selected = this.is_item_selected(componentID, itemID);
+        if (!selected) {
             this.select_item(componentID, itemID);
         } else {
             this.deselect_item(componentID, itemID);

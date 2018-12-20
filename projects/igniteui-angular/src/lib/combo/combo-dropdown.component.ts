@@ -171,7 +171,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         if (item.value === 'ADD ITEM') {
             this.combo.addItemToCollection();
         } else {
-            this.selection.set_selected_item(this.comboID, item.itemID, !item.isSelected);
+            this.selection.set_selected_item(this.comboID, item.itemID);
             this._focusedItem = item;
         }
     }
@@ -306,7 +306,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     protected scrollToHiddenItem(newItem: any): void { }
     protected _handleClick(event: any) {
-        this.selection.set_selected_item(this.comboID, event.itemID, !event.item.isSelected);
+        this.selection.set_selected_item(this.comboID, event.itemID);
     }
 
     /**
@@ -316,6 +316,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this.disableTransitions = true;
     }
 
+    /**
+     * @hidden
+     */
+    protected scrollToItem() {
+    }
     /**
      * @hidden
      */

@@ -41,6 +41,7 @@ import { IDropDownItem } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { takeUntil } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboAPIService } from './combo.api';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -167,13 +168,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         modal: false,
         closeOnOutsideClick: true
     };
-    protected selection = new IgxDropDownSelectionService();
     private _value = '';
     private _searchValue = '';
 
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
+        protected selection: IgxDropDownSelectionService,
+        protected comboAPI: IgxComboAPIService,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
@@ -1170,9 +1172,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
                 return;
             }
             if (select) {
-                this.changeSelectedItem(itemID, true);
-            } else {
-                this.changeSelectedItem(itemID, false);
+                this.selection.set_selected_item(this.id, itemID);
             }
             newItem.isSelected = select;
         } else {
@@ -1339,7 +1339,8 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         this._positionCallback = () => this.dropdown.updateScrollPosition();
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
-
+        this.comboAPI.register(this.id, this);
+        this.selection.set(this.id, new Set());
         if (this.ngControl && this.ngControl.value) {
             this.triggerSelectionChange(this.ngControl.value);
         }
@@ -1361,6 +1362,8 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public ngOnDestroy() {
         this.destroy$.complete();
+        this.comboAPI.clear(this.id);
+        this.selection.clear(this.id);
     }
 
     /**
