@@ -25,6 +25,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxVerticalHelperService } from './for_of.service';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -771,6 +772,7 @@ describe('IgxForOf directive -', () => {
             }).not.toThrow();
             await wait();
 
+
             let rowsRendered = displayContainer.querySelectorAll('igx-display-container');
             for (let i = 0; i < rowsRendered.length; i++) {
                 // Check only the second col, no need for the others
@@ -1109,8 +1111,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public differs: IterableDiffers,
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
-        public zone: NgZone) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone);
+        public zone: NgZone,
+        public vHelperService: IgxVerticalHelperService) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, vHelperService);
     }
     public scrStepArray = [];
     public scrTopArray = [];

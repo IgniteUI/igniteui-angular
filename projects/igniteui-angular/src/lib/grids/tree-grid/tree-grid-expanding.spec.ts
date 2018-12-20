@@ -226,7 +226,7 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
 
             treeGrid.expandAll();
             rows = TreeGridFunctions.getAllRows(fix);
-            expect(rows.length).toBe(12);
+            expect(rows.length).toBe(11);
 
             treeGrid.collapseAll();
             rows = TreeGridFunctions.getAllRows(fix);

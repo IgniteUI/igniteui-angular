@@ -78,7 +78,7 @@
     </igx-grid-summary-row>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>

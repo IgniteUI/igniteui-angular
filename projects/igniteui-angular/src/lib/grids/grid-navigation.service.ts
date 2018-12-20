@@ -52,6 +52,14 @@ export class IgxGridNavigationService {
             return true;
         }
         const index = this.getColumnUnpinnedIndex(visibleColumnIndex);
+
+        // if the grid is virtualized vertically, we need to add the width of the vertical scroll helper (18px)
+        // to the current calculations (as a consequence of adding that 18px to sizes cache in forOfDir in order to avoid
+        // last column overlap)
+        if (forOfDir.vScrollHelper.isVirtualized) {
+            return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) +
+                forOfDir.vScrollHelper.vhWidth - this.displayContainerScrollLeft;
+        }
         return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft;
     }
 

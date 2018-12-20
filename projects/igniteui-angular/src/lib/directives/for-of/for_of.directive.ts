@@ -30,6 +30,7 @@ import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
+import { IgxVerticalHelperService } from './for_of.service';
 
 @Directive({ selector: '[igxFor][igxForOf]' })
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
@@ -160,7 +161,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected heightCache = [];
-    private _adjustToIndex;
+    protected _adjustToIndex;
 
     private get _isScrolledToBottom() {
         if (!this.getVerticalScroll()) {
@@ -189,7 +190,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * Ratio for height that's being virtualizaed and the one visible
      * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxHeight > _virtHeight.
      */
-    private _virtHeightRatio = 1;
+    protected _virtHeightRatio = 1;
 
     /** Internal track for scroll top that is being virtualized */
     protected _virtScrollTop = 0;
@@ -212,7 +213,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         protected _differs: IterableDiffers,
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
-        protected _zone: NgZone) { }
+        protected _zone: NgZone,
+        public vScrollHelper: IgxVerticalHelperService) { }
 
     /**
      * @hidden
@@ -908,6 +910,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             totalSize += size;
             this.sizesCache.push(totalSize);
         }
+
         return totalSize;
     }
 
@@ -1169,6 +1172,45 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
+    /**
+     * Scrolls to the specified index.
+     * ```typescript
+     * this.parentVirtDir.scrollTo(5);
+     * ```
+     * @param index
+     */
+    public scrollTo(index) {
+        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
+            return;
+        }
+        const containerSize = parseInt(this.igxForContainerSize, 10);
+        const scr = this.igxForScrollOrientation === 'horizontal' ?
+            this.hScroll.scrollLeft : this.vh.instance.elementRef.nativeElement.scrollTop;
+        const isPrevItem = index < this.state.startIndex || scr > this.sizesCache[index];
+        let nextScroll = isPrevItem ? this.sizesCache[index] : this.sizesCache[index + 1] - containerSize;
+
+        if (this.igxForScrollOrientation === 'horizontal') {
+            if (!isPrevItem && this.vScrollHelper.isVirtualized && this.sizesCache.length - 1 > this.igxForOf.length &&
+                !(nextScroll + this.vScrollHelper.vhWidth < 0)) {
+                this.hScroll.scrollLeft = nextScroll + this.vScrollHelper.vhWidth;
+            } else if (nextScroll >= 0) {
+                this.hScroll.scrollLeft = nextScroll;
+            }
+        } else {
+            const maxVirtScrollTop = this._virtHeight - containerSize;
+            if (nextScroll > maxVirtScrollTop) {
+                nextScroll = maxVirtScrollTop;
+            }
+            this._bScrollInternal = true;
+            if (nextScroll < 0) {
+                return;
+            }
+            this._virtScrollTop = nextScroll;
+            this.vh.instance.elementRef.nativeElement.scrollTop = this._virtScrollTop / this._virtHeightRatio;
+            this._adjustToIndex = !isPrevItem ? index : null;
+        }
+    }
+
     protected initSizesCache(items: any[]): number {
         let totalSize = 0;
         let size = 0;
@@ -1187,11 +1229,17 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
                 this.heightCache.push(size);
             } else {
-                size = parseInt(items[i][dimension], 10) || 0;
+                size = parseFloat(items[i][dimension]) || 0;
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
         }
+
+        if (this.igxForScrollOrientation === 'horizontal' && this.vScrollHelper.isVirtualized) {
+            totalSize += this.vScrollHelper.vhWidth;
+            this.sizesCache.push(totalSize);
+        }
+
         return totalSize;
     }
 
@@ -1228,6 +1276,13 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
+            }
+
+            if (this.igxForScrollOrientation === 'vertical') {
+                this.vScrollHelper.isVirtualized =
+                    this.igxForOf && this.igxForOf.length * parseInt(this.igxForItemSize, 10) > parseInt(this.igxForContainerSize, 10);
+
+                this.vScrollHelper.vhWidth = this.vh.instance.elementRef.nativeElement.getBoundingClientRect().width;
             }
         }
     }

@@ -763,7 +763,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(rowDisplayContainer.style.left).toEqual('-25px');
+            expect(rowDisplayContainer.style.left).toEqual('-43px');
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('3');
         });

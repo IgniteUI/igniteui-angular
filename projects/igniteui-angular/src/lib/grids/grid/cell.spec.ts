@@ -622,7 +622,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual('182px');
+            expect(item.cells.last.width).toEqual('200px');
         });
     }));
 
@@ -681,7 +681,7 @@ describe('IgxGrid - Cell component', () => {
         });
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual('182px');
+            expect(item.cells.last.width).toEqual('200px');
         });
     }));
 
@@ -722,7 +722,7 @@ describe('IgxGrid - Cell component', () => {
         const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
         fix.detectChanges();
         lastColumnCells.forEach(function (item) {
-            expect(item.width).toEqual('482px');
+            expect(item.width).toEqual('500px');
         });
     });
 

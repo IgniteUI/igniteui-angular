@@ -205,13 +205,9 @@ describe('IgxGrid Component Tests', () => {
 
             gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
-            // The scrollbar is no longer visible
-            //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
-            // console.log(gridBodyHeight);
-            // console.log(window.getComputedStyle(gridBody.nativeElement).height);
-            // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
         }));
 
@@ -471,7 +467,7 @@ describe('IgxGrid Component Tests', () => {
                     }
                 });
 
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 expect(grid.rowList.length).toBeGreaterThan(0);
             });
 

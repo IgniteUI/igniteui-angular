@@ -10,8 +10,8 @@
                                 [igxColumnMovingDrag]="child"
                                 [attr.droppable]="true"
                                 [igxColumnMovingDrop]="child"
-                                [style.min-width.px]="child.width"
-                                [style.flex-basis.px]="child.width">
+                                [style.min-width.px]="grid.getHeaderGroupWidth(child)"
+                                [style.flex-basis.px]="grid.getHeaderGroupWidth(child)">
             </igx-grid-header-group>
         </ng-container>
     </div>

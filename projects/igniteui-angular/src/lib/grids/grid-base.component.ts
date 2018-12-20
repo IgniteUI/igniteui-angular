@@ -2762,6 +2762,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
     }
 
+    get isScrollHidden(): boolean {
+        let totalWidth = 0;
+        const isVirtualized = this.verticalScrollContainer.vScrollHelper.isVirtualized;
+        const cols = this.visibleColumns.filter(col => col.level === 0 && !col.pinned);
+
+        for (let i = 0; i < cols.length; i++) {
+            totalWidth += parseFloat(cols[i].width) || 0;
+        }
+
+        return !isVirtualized && this.unpinnedWidth - Math.floor(totalWidth) >= 0 ||
+            isVirtualized && this.unpinnedWidth - Math.floor(totalWidth) > 0;
+    }
+
     /**
      * @hidden
      */
@@ -3666,7 +3679,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
+            computedWidth -= this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
