@@ -64,7 +64,6 @@ describe('IgxTreeGrid Component Tests', () => {
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
             there are fewer than 10 records in the data view`, fakeAsync(() => {
-                fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
                 grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
                 tick();
@@ -78,7 +77,6 @@ describe('IgxTreeGrid Component Tests', () => {
 
         it(`should render 11 records if height is 100% and parent container\'s height is unset and
             display density is changed`, fakeAsync(() => {
-                fix = TestBed.createComponent(IgxTreeGridWrappedInContComponent);
                 grid.height = '100%';
                 fix.componentInstance.density = DisplayDensity.compact;
                 tick();
