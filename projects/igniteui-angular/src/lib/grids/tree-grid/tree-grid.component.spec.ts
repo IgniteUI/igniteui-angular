@@ -9,7 +9,7 @@ import { IgxTreeGridWrappedInContComponent } from '../../test-utils/tree-grid-co
 
 describe('IgxTreeGrid Component Tests', () => {
 
-    fdescribe('IgxTreeGrid - default rendering for rows and columns', () => {
+    describe('IgxTreeGrid - default rendering for rows and columns', () => {
         configureTestSuite();
         let fix;
         let grid: IgxTreeGridComponent;
