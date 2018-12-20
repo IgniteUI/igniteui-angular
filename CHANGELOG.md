@@ -2,6 +2,27 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.0.5
+
+### Bug Fixes
+
+* igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group. ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+* igx-slider max-value defaults to min-value ([#3418](https://github.com/IgniteUI/igniteui-angular/issues/3418))
+* Inconsistency in scrollNext and scrollPrev ([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
+* The header link in the api docs page should be to the product page ([#3423](https://github.com/IgniteUI/igniteui-angular/issues/3423))
+* Error thrown when edit primaryKey cell in Tree Grid ([#3329](https://github.com/IgniteUI/igniteui-angular/issues/3329))
+* IgxGridHeaderGroupComponent should have preset min width ([#3071](https://github.com/IgniteUI/igniteui-angular/issues/3071))
+* Pressing ESC on a cell in an editable column throws an error ([#3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
+* Cell foreground is white on hover with the default theme ([#3384](https://github.com/IgniteUI/igniteui-angular/issues/3384))
+* [IE] Grid toolbar's buttons and title are misaligned ([#3371](https://github.com/IgniteUI/igniteui-angular/issues/3371))
+* Dialog window does not hold the focus when opened ([#3199](https://github.com/IgniteUI/igniteui-angular/issues/3199))
+* refactor(themes): don't include contrast colors in the palettes ([#3166](https://github.com/IgniteUI/igniteui-angular/issues/3166))
+
+### Other
+* update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+* Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
+
 ## 7.0.4
 ### Bug fixes
 - Fix(igx-grid): revert row editing styles ([#2672](https://github.com/IgniteUI/igniteui-angular/issues/2672))
