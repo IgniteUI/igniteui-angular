@@ -170,7 +170,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        @Optional() protected selection?: IgxDropDownSelectionService
+        @Optional() @Inject(IgxDropDownSelectionService) protected selection?: IgxDropDownSelectionService
     ) { }
 
     /**

@@ -54,7 +54,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         protected comboAPI: IgxComboAPIService,
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        protected selection: IgxDropDownSelectionService
+        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService
     ) {
         super(dropDown, elementRef, selection);
     }
@@ -76,5 +76,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     @HostListener('click')
     clicked() {
         this.selection.set_selected_item(this.comboID, this.itemID);
+    }
+
+    ngDoCheck() {
     }
 }
