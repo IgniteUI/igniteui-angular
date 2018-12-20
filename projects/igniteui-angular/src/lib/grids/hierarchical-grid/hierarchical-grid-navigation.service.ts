@@ -404,7 +404,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const cellSelector = this.getCellSelector(visibleColumnIndex);
             const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             const cell = cells[cells.length - 1];
-            const scrollable = this.getNextScrollable(grid);
+            const scrollable = grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ?
+            {grid: grid, prev: grid} : this.getNextScrollable(grid);
             const scrGrid = scrollable.grid;
             const scrTop = scrGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
             const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;

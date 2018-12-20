@@ -177,5 +177,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             parendID: this.rowData.rowID,
             grid: this.hGrid
         });
+
+        this.hGrid.cdr.detectChanges();
     }
 }
