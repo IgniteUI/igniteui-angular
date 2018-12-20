@@ -2295,7 +2295,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public ngAfterContentInit() {
-        this._pipeTrigger++;
         if (this.autoGenerate) {
             this.autogenerateColumns();
         }
