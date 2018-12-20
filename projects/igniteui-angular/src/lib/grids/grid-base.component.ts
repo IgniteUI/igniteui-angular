@@ -2302,8 +2302,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
 
         this.columnListDiffer.diff(this.columnList);
-        this._derivePossibleHeight();
         this.markForCheck();
+        this._derivePossibleHeight();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
