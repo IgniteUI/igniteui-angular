@@ -30,7 +30,7 @@ import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid Component Tests', () => {
+describe('IgxGrid Component Tests', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
@@ -2986,7 +2986,7 @@ fdescribe('IgxGrid Component Tests', () => {
         });
     });
 
-    fdescribe('IgxGrid - Integration with other Igx Controls', () => {
+    describe('IgxGrid - Integration with other Igx Controls', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -3011,7 +3011,7 @@ fdescribe('IgxGrid Component Tests', () => {
             const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
             expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(400);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(400);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
         }));
     });
 });
@@ -3545,7 +3545,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
       <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
       <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
       <igx-tabs-group label="Tab 3">
-        <igx-grid #grid [data]="data" [primaryKey]="'id'" width="'null'">
+        <igx-grid #grid [data]="data" [primaryKey]="'id'">
           <igx-column
             *ngFor="let column of columns"
             [field]="column.field"
