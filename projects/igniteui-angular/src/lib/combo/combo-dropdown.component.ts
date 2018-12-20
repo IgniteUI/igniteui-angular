@@ -17,13 +17,13 @@ import { IgxComboAPIService } from './combo.api';
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: 'combo-dropdown.component.html',
-    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }, IgxDropDownSelectionService]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxDropDownSelectionService,
+        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
         super(elementRef, cdr, selection);
     }
