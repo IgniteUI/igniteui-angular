@@ -25,6 +25,8 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
+import { registerLocaleData } from '@angular/common';
+import localeDE from '@angular/common/locales/de';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -2755,6 +2757,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
     it('should correctly apply locale to datePicker.', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        registerLocaleData(localeDE);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
