@@ -279,7 +279,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
     private focusPrevChild(elem, visibleColumnIndex, grid) {
         const gridElems = elem.querySelectorAll('igx-hierarchical-grid');
-        const gridElem = gridElems[0];
+        const gridElem = gridElems[gridElems.length - 1];
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
         const vScrollState = childGrid.verticalScrollContainer.state;

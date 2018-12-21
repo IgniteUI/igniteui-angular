@@ -614,7 +614,24 @@ fdescribe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         expect(child2Cell.selected).toBe(true);
         expect(child2Cell.focused).toBe(true);
     }));
-    it('should navigate up from parent to the correct child that has siblings.', (async () => {}));
+    it('should navigate up from parent row to the correct child sibling.', (async () => {
+        const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
+        parentCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+
+        // Arrow Up into prev child grid
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp'}));
+        await wait(100);
+        fixture.detectChanges();
+
+        const child2 = hierarchicalGrid.getChildGrids(false)[3];
+
+        const child2Cell = child2.dataRowList.toArray()[1].cells.toArray()[0];
+        expect(child2Cell.selected).toBe(true);
+        expect(child2Cell.focused).toBe(true);
+        expect(child2Cell.rowIndex).toBe(9);
+    }));
 });
 
 @Component({
