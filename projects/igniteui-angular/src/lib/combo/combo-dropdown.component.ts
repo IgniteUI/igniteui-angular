@@ -12,6 +12,7 @@ import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
 import { IgxComboAPIService } from './combo.api';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
 
 /** @hidden */
 @Component({
@@ -168,7 +169,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     selectItem(item: IDropDownItem) {
-        if (item.value === 'ADD ITEM') {
+        if (item instanceof IgxComboAddItemComponent) {
             this.combo.addItemToCollection();
         } else {
             this.selection.set_selected_item(this.comboID, item.itemID);
@@ -354,7 +355,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     private handleEnter() {
-        if (this.focusedItem.value === 'ADD VALUE') {
+        if (this.focusedItem instanceof IgxComboAddItemComponent) {
             this.combo.addItemToCollection();
         } else {
             this.close();

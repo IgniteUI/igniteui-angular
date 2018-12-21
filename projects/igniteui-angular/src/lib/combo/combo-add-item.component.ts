@@ -14,6 +14,15 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     set isSelected(value: boolean) {
     }
 
+    @HostBinding('class.igx-drop-down__item--focused')
+    get isFocused(): boolean {
+        return (!this.isHeader && !this.disabled) && this._isFocused;
+    }
+
+    set isFocused(value: boolean) {
+        this._isFocused = value;
+    }
+
     clicked() {
         this.comboAPI.add_custom_item(this.dropDown.comboID);
     }

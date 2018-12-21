@@ -56,8 +56,7 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
                     this.target.handleKeyDown(DropDownActionKeys.ESCAPE);
                     break;
                 case 'enter':
-                case 'tab':
-                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE);
+                    this.target.handleKeyDown(DropDownActionKeys.ENTER);
                     break;
                 case 'space':
                 case 'spacebar':
