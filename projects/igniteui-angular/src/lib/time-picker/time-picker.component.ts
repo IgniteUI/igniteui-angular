@@ -32,7 +32,7 @@ import {
 } from './time-picker.directives';
 import { Subject } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
-import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimePickerInteractionMode } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
@@ -51,14 +51,6 @@ let NEXT_ID = 0;
 const HOURS_POS = [0, 1, 2];
 const MINUTES_POS = [3, 4, 5];
 const AMPM_POS = [6, 7, 8];
-
-/**
- * Defines the posible values of the igxTimePicker's time selection mode.
- */
-export enum TimePickerInteractionMode {
-    dialog,
-    dropdown
-}
 
 @Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
@@ -492,6 +484,10 @@ export class IgxTimePickerComponent implements
      * @hidden
     */
     public inputFormat = new TimeInputFormatPipe(this);
+    /**
+     * @hidden
+    */
+    public interactMode = TimePickerInteractionMode;
 
     /**
      * @hidden
@@ -571,13 +567,6 @@ export class IgxTimePickerComponent implements
      */
     get ampmView(): string[] {
         return this._ampmView;
-    }
-
-    /**
-     * @hidden
-     */
-    get isModal(): boolean {
-        return this.mode === TimePickerInteractionMode.dialog;
     }
 
     /**

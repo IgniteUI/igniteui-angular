@@ -35,8 +35,8 @@
 
 <div #container [hidden]="collapsed"
     [style.width.px]="dropDownWidth" class="igx-time-picker"
-    [ngClass]="{'igx-time-picker--dropdown': !isModal, 'igx-time-picker--vertical': vertical && isModal}">
-    <div *ngIf="isModal" class="igx-time-picker__header">
+    [ngClass]="{'igx-time-picker--dropdown': mode === interactMode.dropdown, 'igx-time-picker--vertical': vertical && mode === interactMode.dialog}">
+    <div *ngIf="mode === interactMode.dialog" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
             <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
@@ -54,7 +54,7 @@
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
-        <div *ngIf="isModal" class="igx-time-picker__buttons">
+        <div *ngIf="mode === interactMode.dialog" class="igx-time-picker__buttons">
             <button *ngIf="cancelButtonLabel.length" igxButton="flat" (click)="cancelButtonClick()">
                 {{cancelButtonLabel}}
             </button>

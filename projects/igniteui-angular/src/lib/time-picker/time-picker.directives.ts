@@ -12,7 +12,7 @@ import {
     Input,
     TemplateRef
 } from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase, TimePickerInteractionMode } from './time-picker.common';
 
 /** @hidden */
 @Directive({
@@ -155,7 +155,7 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
-        if (!this.timePicker.isModal) {
+        if (this.timePicker.mode === TimePickerInteractionMode.dropdown) {
             this.timePicker.hideOverlay();
             return;
         }

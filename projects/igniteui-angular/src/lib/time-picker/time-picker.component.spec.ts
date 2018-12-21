@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
-import { IgxTimePickerComponent, IgxTimePickerModule, TimePickerInteractionMode } from './time-picker.component';
+import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { TimePickerInteractionMode } from './time-picker.common';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
