@@ -17,7 +17,6 @@ import {
     Inject,
     ComponentFactoryResolver,
     AfterViewInit,
-    DoCheck,
     AfterContentInit,
     Optional
 } from '@angular/core';
@@ -30,12 +29,10 @@ import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
-import { Transaction, TransactionService, State } from '../../services/index';
+import { IgxHierarchicalTransactionService, HierarchicalTransaction, HierarchicalState } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 let NEXT_ID = 0;
@@ -318,7 +315,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxHierarchicalSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
+        @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
