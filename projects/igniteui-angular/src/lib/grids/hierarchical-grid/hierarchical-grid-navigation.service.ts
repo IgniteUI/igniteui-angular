@@ -284,7 +284,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGrid = this.getChildGrid(childGridID, grid);
         const vScrollState = childGrid.verticalScrollContainer.state;
         const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
-        if (vScrollState.startIndex + vScrollState.chunkSize  < lastIndex) {
+        if (vScrollState.startIndex + vScrollState.chunkSize  <= lastIndex) {
             // scroll to end
             this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, childGrid, true));
         } else {
