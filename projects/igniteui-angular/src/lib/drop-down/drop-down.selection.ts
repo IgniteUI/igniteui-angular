@@ -33,16 +33,14 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
             throw Error('Invalid value for component id!');
         }
         const oldSelection = this.get(componentID);
-        if (oldSelection !== null && oldSelection !== undefined) {
-            const selectionArgs: IDropDownSelectionServiceEvent = {
-                componentID,
-                selectionEvent: {
-                    oldSelection: Array.from(oldSelection),
-                    newSelection: Array.from(newSelection)
-                }
-            };
-            this.onSelection.next(selectionArgs);
-        }
+        const selectionArgs: IDropDownSelectionServiceEvent = {
+            componentID,
+            selectionEvent: {
+                oldSelection: Array.from(oldSelection || this.get_empty()),
+                newSelection: Array.from(newSelection || this.get_empty())
+            }
+        };
+        this.onSelection.next(selectionArgs);
         this.selection.set(componentID, newSelection);
     }
 

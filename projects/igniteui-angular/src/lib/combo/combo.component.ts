@@ -1254,7 +1254,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         // If you mutate the array, no pipe is invoked and the display isn't updated;
         // if you replace the array, the pipe executes and the display is updated.
         this.data = cloneArray(this.data);
-        this.selection.set_selected_item(this.id, newValue);
+        this.selection.set_selected_item(this.id, addedItem);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.handleInputChange();
