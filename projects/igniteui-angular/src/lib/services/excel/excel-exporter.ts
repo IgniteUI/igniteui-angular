@@ -75,6 +75,13 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
+        let maxLevel = 0;
+        data.forEach((r) => {
+            maxLevel = Math.max(maxLevel, r.originalRowData.level);
+        });
+        if (maxLevel > 7) {
+            throw Error('Can create an outline of up to eight levels!');
+        }
         const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
         this._xlsx = new JSZip();
 
