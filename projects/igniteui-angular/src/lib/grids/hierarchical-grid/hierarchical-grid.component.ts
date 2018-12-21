@@ -36,6 +36,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -46,7 +47,7 @@ let NEXT_ID = 0;
     templateUrl: 'hierarchical-grid.component.html',
     providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
-        IgxFilteringService ]
+        IgxFilteringService, IgxHierarchicalGridNavigationService ]
     })
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
@@ -100,6 +101,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record.childGridData !== undefined;
+    }
+
+    public trackChanges(index, rec) {
+        if (rec.childGridData !== undefined) {
+            // if is child rec
+            return rec.rowID;
+        }
+        return rec;
     }
 
     /**
@@ -157,6 +166,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public get childLayoutKeys() {
         const keys = this.childLayoutList.map((item) => item.key);
         return keys;
+    }
+
+    public get rootGrid() {
+        let currGrid = this;
+        while (currGrid.parent) {
+            currGrid = currGrid.parent;
+        }
+        return currGrid;
     }
 
     getChildGrid(path: Array<IPathSegment>) {
@@ -309,7 +326,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
+        navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(

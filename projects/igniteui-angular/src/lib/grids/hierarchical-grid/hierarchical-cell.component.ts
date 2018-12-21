@@ -37,23 +37,22 @@ export class IgxHirarchicalGridCellComponent extends IgxGridCellComponent implem
     protected _saveCellSelection(newSelection?: Set<any>) {
         super._saveCellSelection(newSelection);
         if (!newSelection) {
-            this.hSelection.add_sub_item(this._rootGrid.id, this);
+            this.hSelection.add_sub_item(this._rootGrid.id, this.grid.id, this);
         }
     }
 
-    protected _getLastSelectedCell() {
-        return this.hSelection.get_sub_item(this._rootGrid.id);
-    }
     public isCellSelected() {
-        return  super.isCellSelected() && this._getLastSelectedCell() === this;
+        const selection = this.hSelection.get_sub_item(this._rootGrid.id);
+        const isSelected = selection ? selection.gridID === this.grid.id : false;
+        return  super.isCellSelected() && isSelected;
     }
 
     protected _clearCellSelection() {
         super._clearCellSelection();
-        const currItem = this.hSelection.get_sub_item(this._rootGrid.id);
-        if (currItem) {
+        const sel = this.hSelection.get_sub_item(this._rootGrid.id);
+        if (sel) {
             this.hSelection.clear_sub_item(this._rootGrid.id);
-            currItem.cdr.markForCheck();
+            sel.cell.cdr.markForCheck();
         }
     }
 }

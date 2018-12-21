@@ -28,6 +28,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -52,7 +53,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [ IgxTreeGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
@@ -246,7 +247,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         resolver: ComponentFactoryResolver,
         differs: IterableDiffers,
         viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
+        navigation: IgxTreeGridNavigationService,
         filteringService: IgxFilteringService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,

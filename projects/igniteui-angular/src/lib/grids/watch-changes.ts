@@ -15,7 +15,7 @@ export function WatchChanges(): PropertyDecorator {
 
         propDesc.set = function (this: any, val: any) {
             const oldValue = this[key];
-            if (val !== oldValue) {
+            if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
                 originalSetter.call(this, val);
                 if (this.ngOnChanges) {
                     // in case wacthed prop changes trigger ngOnChanges manually

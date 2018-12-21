@@ -4,13 +4,16 @@ import {
     HostBinding,
     forwardRef,
     ElementRef,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +24,16 @@ import { IgxSelectionAPIService } from '../../core/selection';
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
 
+    /**
+     * The rendered cells in the row component.
+     *
+     * ```typescript
+     * // get the cells of the third selected row
+     * let selectedRowCells = this.grid.selectedRows[2].cells;
+     * ```
+     */
+    @ViewChildren(forwardRef(() => IgxHirarchicalGridCellComponent), { read: IgxHirarchicalGridCellComponent })
+    public cells: QueryList<IgxHirarchicalGridCellComponent>;
     /**
      * @hidden
      */

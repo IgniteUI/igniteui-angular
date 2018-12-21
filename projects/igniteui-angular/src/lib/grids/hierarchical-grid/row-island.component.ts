@@ -137,7 +137,6 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     }
 
     ngAfterViewInit() {
-        console.log('rowIsland width ID: ' + this.id + ' registered');
         this.hgridAPI.registerLayout(this);
     }
 
