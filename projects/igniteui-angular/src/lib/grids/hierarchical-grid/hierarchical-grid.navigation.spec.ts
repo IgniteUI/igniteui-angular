@@ -8,7 +8,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 
-fdescribe('IgxHierarchicalGrid Basic Navigation', () => {
+describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -404,10 +404,25 @@ fdescribe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childLastRowCell.rowIndex).toBe(9);
         expect(childLastRowCell.columnIndex).toBe(7);
     }));
+
+    it('should move focus to last data cell in grid when ctrl+end is used.', () => {});
+    it('if next child cell is not in view should scroll parent so that it is in view.', (async () => {
+        hierarchicalGrid.verticalScrollContainer.scrollTo(4);
+        await wait(100);
+        fixture.detectChanges();
+        const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        parentCell.nativeElement.focus();
+        fixture.detectChanges();
+        const prevScroll = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await wait(100);
+        fixture.detectChanges();
+        expect(  hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
+    }));
 });
 
 
-fdescribe('IgxHierarchicalGrid Complex Navigation', () => {
+describe('IgxHierarchicalGrid Complex Navigation', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -532,7 +547,7 @@ fdescribe('IgxHierarchicalGrid Complex Navigation', () => {
         });
 });
 
-fdescribe('IgxHierarchicalGrid Multi-layout Navigation', () => {
+describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

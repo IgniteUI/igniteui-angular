@@ -385,10 +385,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
             const cell =
             elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+            const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
             const inView =  diff <= 0;
             if (!inView) {
-                this.scrollGrid(grid, diff, () => cell.focus({ preventScroll: true }));
+                const closestScrollableGrid = this.getNextScrollable(grid).grid;
+                this.scrollGrid(closestScrollableGrid, diff, () => cell.focus({ preventScroll: true }));
             } else {
                 cell.focus({ preventScroll: true });
             }
