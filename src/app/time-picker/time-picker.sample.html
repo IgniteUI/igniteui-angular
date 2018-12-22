@@ -9,11 +9,11 @@
             <div class="preview" style="width: 200px">
                 <igx-time-picker #tp (onValueChanged)="valueChanged($event)"
                                      (onValidationFailed)="validationFailed($event)"
-                                     [mode]="mode"
+                                     [mode]="mode.dropdown"
                                      [isSpinLoop]="isSpinLoop"
                                      [(ngModel)]="date"
                                      [itemsDelta]="itemsDelta"
-                                     [format]="format" >
+                                     [format]="format">
                 </igx-time-picker>
             </div>
         </article>

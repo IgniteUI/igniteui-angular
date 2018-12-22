@@ -14,7 +14,7 @@ export class TimePickerSampleComponent {
     format="hh:mm tt";
     isSpinLoop = true;
     isVertical = true;
-    mode = TimePickerInteractionMode.dropdown;
+    mode = TimePickerInteractionMode;
 
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 

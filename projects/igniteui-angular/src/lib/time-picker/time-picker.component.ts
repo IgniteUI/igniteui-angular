@@ -122,6 +122,11 @@ export class IgxTimePickerComponent implements
             this._value = value;
             this._onChangeCallback(value);
 
+            const dispVal = this._formatTime(this.value, this.format);
+            if (this.mode === TimePickerInteractionMode.dropdown && this._displayValue !== dispVal) {
+                this.displayValue = dispVal;
+            }
+
             const args: IgxTimePickerValueChangedEventArgs = {
                 oldValue: oldVal,
                 newValue: value
@@ -463,10 +468,6 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
     */
-    public displayValue = '';
-    /**
-     * @hidden
-    */
     public cleared = false;
     /**
      * @hidden
@@ -507,6 +508,7 @@ export class IgxTimePickerComponent implements
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _format: string;
+    private _displayValue: string;
 
     private _isHourListLoop = this.isSpinLoop;
     private _isMinuteListLoop = this.isSpinLoop;
@@ -528,6 +530,20 @@ export class IgxTimePickerComponent implements
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
+
+    /**
+     * @hidden
+     */
+    get displayValue(): string {
+        if (this._displayValue === undefined) {
+            return this._formatTime(this.value, this.format);
+        }
+        return this._displayValue;
+    }
+
+    set displayValue(value: string) {
+        this._displayValue = value;
+    }
 
     /**
      * Returns the current time formatted as string using the `format` option.
@@ -1116,13 +1132,17 @@ export class IgxTimePickerComponent implements
             this._overlayId = this.overlayService.show(this.container, this._dialogOverlaySettings);
         }
 
-        if (this.mode === TimePickerInteractionMode.dropdown && this.collapsed) {
-            this.collapsed = false;
-            if (this.outlet) {
-                this._dropDownOverlaySettings.outlet = this.outlet;
+        if (this.mode === TimePickerInteractionMode.dropdown) {
+            if (this.collapsed) {
+                this.collapsed = false;
+                if (this.outlet) {
+                    this._dropDownOverlaySettings.outlet = this.outlet;
+                }
+                this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
+                this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
+            } else {
+                this._onDropDownClosed();
             }
-            this._dropDownOverlaySettings.positionStrategy.settings.target = this.group.element.nativeElement;
-            this._overlayId = this.overlayService.show(this.container, this._dropDownOverlaySettings);
         }
 
         if (this.value) {
