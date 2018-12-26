@@ -293,6 +293,10 @@ export class IgxTimePickerComponent implements
     set format(formatValue: string) {
         this._format = formatValue;
         this.mask = this._format.indexOf('tt') !== -1 ? '00:00 LL' : '00:00';
+
+        if (this.displayValue) {
+            this.displayValue = this._formatTime(this.value, this._format);
+        }
     }
 
     /**
@@ -1066,7 +1070,7 @@ export class IgxTimePickerComponent implements
         const newVal = this._convertMinMaxValue(this.displayValue);
 
         if (this._isValueValid(newVal)) {
-            if (oldValue.getTime() !== newVal.getTime()) {
+            if (!this.value || oldValue.getTime() !== newVal.getTime()) {
                 this.value = newVal;
             }
         } else {
@@ -1533,7 +1537,7 @@ export class IgxTimePickerComponent implements
         if (value && value !== this.parseMask()) {
             if (this._isEntryValid(value)) {
                 const newVal = this._convertMinMaxValue(value);
-                if (this.value.getTime() !== newVal.getTime()) {
+                if (!this.value || this.value.getTime() !== newVal.getTime()) {
                     this.value = newVal;
                 }
             } else {

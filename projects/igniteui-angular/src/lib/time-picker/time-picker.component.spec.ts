@@ -894,36 +894,32 @@ describe('IgxTimePicker', () => {
         const fixture = TestBed.createComponent(IgxTimePickerDropDownSingleHourComponent);
         fixture.detectChanges();
 
-        const iconTime = fixture.debugElement.queryAll(By.css('.igx-icon'))[0];
         const input = fixture.debugElement.query(By.directive(IgxInputDirective));
-
-        UIInteractions.clickElement(iconTime);
-        fixture.detectChanges();
-
-        expect(input.nativeElement.value).toBe('4:5');
-
-        input.nativeElement.dispatchEvent(new Event('blur'));
-        fixture.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toBe('04:05');
 
-        fixture.componentInstance.timePicker.format = 'h:m tt';
+        input.nativeElement.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
 
-        UIInteractions.clickElement(iconTime);
+        expect(input.nativeElement.value).toBe('4:5');
+
+        fixture.componentInstance.timePicker.format = 'h:m tt';
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toBe('4:5 AM');
-
-        input.nativeElement.dispatchEvent(new Event('blur'));
-        fixture.detectChanges();
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toBe('04:05 AM');
+
+        input.nativeElement.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toBe('4:5 AM');
     }));
 
     it('should correct spin (arrow buttons) on empty value (dropdown mode)', (() => {
