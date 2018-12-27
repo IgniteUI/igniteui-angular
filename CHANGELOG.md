@@ -8,6 +8,9 @@ All notable changes for each version of this project will be documented in this 
     - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
 - `igxGrid`
     - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+    - Summary results are now calculated and displayed by default for each row group when 'Group By' feature is enabled.
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are deprecated. The grid will clear the cache and recalculate the summaries automatically when needed.
+    - **Breaking change** `IgxSummaryOperand.operate()` method is called with empty data in order to calculate the necessary height for the summary row. For custom summary operands, the method should always return an array of `IgxSummaryResult` with proper length.
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
     - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
@@ -19,8 +22,8 @@ All notable changes for each version of this project will be documented in this 
     - `focusedValuePipe` input property is provided that allows developers to additionally transform the value on focus;
 - `IgxTreeGrid`:
     - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
-    - You can now export the tree grid both to CSV and Excel.
-    - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
+    - You can now export the tree grid both to CSV and Excel. The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
+    - Summaries feature is now supported in the tree grid. Summary results are calculated and displayed for the root level and each child level by default.
 
 ## 7.0.4
 ### Bug fixes
