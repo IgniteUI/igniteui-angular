@@ -41,7 +41,7 @@ export enum DATE_PARTS {
     WEEKDAY = 'weekday'
 }
 
-export abstract class DateUtil {
+export abstract class DatePickerUtil {
     public static MAX_MONTH_SYMBOLS = 9;
     public static MAX_WEEKDAY_SYMBOLS = 9;
 
@@ -51,17 +51,17 @@ export abstract class DateUtil {
 
         switch (occurences) {
             case 1: {
-                // y
+                // y (2020)
                 type = FORMAT_DESC.NUMERIC;
                 break;
             }
             case 4: {
-                // yyyy
+                // yyyy (2020)
                 type = FORMAT_DESC.NUMERIC;
                 break;
             }
             case 2: {
-                // yy
+                // yy (20)
                 type = FORMAT_DESC.TWO_DIGITS;
                 break;
             }
@@ -149,10 +149,10 @@ export abstract class DateUtil {
     public static parseDateFormat(format: string) {
         const dateStruct = [];
         const maskArray = Array.from(format);
-        const weekdayInitPosition = format.indexOf('E');
-        const monthInitPosition = format.indexOf('M');
-        const dayInitPosition = format.indexOf('d');
-        const yearInitPosition = format.indexOf('y');
+        const weekdayInitPosition = format.indexOf(DATE_CHARS.WEEKDAY_CHAR);
+        const monthInitPosition = format.indexOf(DATE_CHARS.MONTH_CHAR);
+        const dayInitPosition = format.indexOf(DATE_CHARS.DAY_CHAR);
+        const yearInitPosition = format.indexOf(DATE_CHARS.YEAR_CHAR);
 
         if (yearInitPosition !== -1) {
             dateStruct.push({
@@ -187,7 +187,7 @@ export abstract class DateUtil {
         }
 
         for (let i = 0; i < maskArray.length; i++) {
-            if (!DateUtil.isSpecialSymbol(maskArray[i])) {
+            if (!DatePickerUtil.isSpecialSymbol(maskArray[i])) {
                 dateStruct.push({
                     type: 'literal',
                     initialPosition: i,
@@ -197,7 +197,7 @@ export abstract class DateUtil {
         }
 
         dateStruct.sort((a, b) => a.initialPosition - b.initialPosition);
-        DateUtil.fillDatePartsPositions(dateStruct);
+        DatePickerUtil.fillDatePartsPositions(dateStruct);
 
         return dateStruct;
     }
@@ -207,30 +207,30 @@ export abstract class DateUtil {
 
         for (let i = 0; i < dateArray.length; i++) {
             if (dateArray[i].type === DATE_PARTS.DAY) {
-                dateArray[i].position = DateUtil.fillValues(offset, 2);
+                dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
                 offset += 2;
             }
 
             if (dateArray[i].type === DATE_PARTS.MONTH) {
                 switch (dateArray[i].formatType) {
                     case FORMAT_DESC.SHORT: {
-                        dateArray[i].position = DateUtil.fillValues(offset, 3);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 3);
                         offset += 3;
                         break;
                     }
                     case FORMAT_DESC.LONG: {
-                        dateArray[i].position = DateUtil.fillValues(offset, 9);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 9);
                         offset += 9;
                         break;
                     }
                     case FORMAT_DESC.NARROW: {
-                        dateArray[i].position = DateUtil.fillValues(offset, 1);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
                         offset++;
                         break;
                     }
                     default: {
                         // FORMAT_DESC.NUMERIC || FORMAT_DESC.TWO_DIGITS
-                        dateArray[i].position = DateUtil.fillValues(offset, 2);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
                         offset += 2;
                         break;
                     }
@@ -238,19 +238,19 @@ export abstract class DateUtil {
             }
 
             if (dateArray[i].type === 'literal') {
-                dateArray[i].position = DateUtil.fillValues(offset, 1);
+                dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
                 offset++;
             }
 
             if (dateArray[i].type === DATE_PARTS.YEAR) {
                 switch (dateArray[i].formatType) {
                     case FORMAT_DESC.NUMERIC: {
-                        dateArray[i].position = DateUtil.fillValues(offset, 4);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 4);
                         offset += 4;
                         break;
                     }
                     case FORMAT_DESC.TWO_DIGITS: {
-                        dateArray[i].position = DateUtil.fillValues(offset, 2);
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
                         offset += 2;
                         break;
                     }
@@ -277,7 +277,7 @@ export abstract class DateUtil {
 
     public static getFormatMask(format: string) {
         const mask = [];
-        const dateStruct = DateUtil.parseDateFormat(format);
+        const dateStruct = DatePickerUtil.parseDateFormat(format);
 
         for (let i = 0; i < dateStruct.length; i++) {
             if (dateStruct[i].type === DATE_PARTS.DAY) {
@@ -338,5 +338,33 @@ export abstract class DateUtil {
         }
 
         return mask.join('');
+    }
+
+    public static createDate(day, month, year) {
+        const date = new Date();
+        date.setDate(day);
+        date.setMonth(month);
+        date.setFullYear(year);
+        return date;
+    }
+
+    public static trimMaskSymbols(mask) {
+        return mask.replace(/0|L/g, '_');
+    }
+
+    public static trimUnderlines(value: string) {
+        return value.replace(/_/g, '');
+    }
+
+    public static getLongMonthName(value) {
+        return value.toLocaleString('en', {
+            month: 'long'
+        });
+    }
+
+    public static getLongDayName(value) {
+        return value.toLocaleString('en', {
+            weekday: 'long'
+        });
     }
 }
