@@ -1,17 +1,10 @@
 import * as JSZip from 'jszip/dist/jszip';
 
-import { CommonModule } from '@angular/common';
-import { Directive, EventEmitter, Injectable, NgModule, Output } from '@angular/core';
-
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-
-import {
-    IExcelFile,
-    IExcelFolder
-} from './excel-interfaces';
-
+import { IExcelFolder } from './excel-interfaces';
 import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
@@ -45,8 +38,6 @@ export interface IExcelExportEndedEventArgs {
 export class IgxExcelExporterService extends IgxBaseExporter {
 
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' };
-    private static DATA_URL_PREFIX = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,';
-
     private _xlsx: JSZip;
 
     /**
@@ -75,13 +66,16 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        let maxLevel = 0;
-        data.forEach((r) => {
-            maxLevel = Math.max(maxLevel, r.originalRowData.level);
-        });
-        if (maxLevel > 7) {
-            throw Error('Can create an outline of up to eight levels!');
+        if (this._isTreeGrid) {
+            let maxLevel = 0;
+            data.forEach((r) => {
+                maxLevel = Math.max(maxLevel, r.originalRowData.level);
+            });
+            if (maxLevel > 7) {
+                throw Error('Can create an outline of up to eight levels!');
+            }
         }
+
         const worksheetData = new WorksheetData(data, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
         this._xlsx = new JSZip();
 
