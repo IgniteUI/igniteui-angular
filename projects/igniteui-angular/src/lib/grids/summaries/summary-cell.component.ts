@@ -40,7 +40,8 @@ export class IgxSummaryCellComponent {
             'igx-grid-summary--compact': this.density === DisplayDensity.compact,
             'igx-grid-summary--cosy': this.density === DisplayDensity.cosy,
             'igx-grid-summary--pinned': this.column.pinned,
-            'igx-grid-summary--pinned-last': this.column.isLastPinned
+            'igx-grid-summary--pinned-last': this.column.isLastPinned,
+            'igx-grid-summary--active': this.focused
         };
         Object.entries(classList).forEach(([className, value]) => {
             if (value) {
@@ -67,30 +68,43 @@ export class IgxSummaryCellComponent {
         return `Summary_${this.column.field}`;
     }
 
-    get nativeElement(): any {
-        return this.element.nativeElement;
+    private focused;
+
+    @HostListener('focus')
+    public onFocus() {
+        this.focused = true;
+    }
+
+    @HostListener('blur')
+    public onBlur() {
+        this.focused = false;
     }
 
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.isKeySupportedInCell(key)) { return; }
-        const shift = event.shiftKey;
-        const ctrl = event.ctrlKey;
         event.preventDefault();
         event.stopPropagation();
-        if (this.rowIndex === 0 &&
-            this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
-                return;
+        const shift = event.shiftKey;
+        const ctrl = event.ctrlKey;
 
-        }
-        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down' || key === 'arrowdown')) { return; }
+        if (ctrl && (key === 'arrowup' || key === 'up' || key  === 'down'  || key === 'end' || key === 'home')) { return; }
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':
                 if (shift) {
+                    if (this.rowIndex === 0 && this.visibleColumnIndex === 0 && this.grid.data && this.grid.data.length) {
+                        this.grid.navigation.goToLastBodyElement();
+                        return;
+                    }
                     this.grid.navigation.performShiftTabKey(row, this.rowIndex, this.visibleColumnIndex, true);
                     break;
+                }
+                if (this.rowIndex === 0 &&
+                    this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === this.visibleColumnIndex) {
+                        return;
+
                 }
                 this.grid.navigation.performTab(row, this.rowIndex, this.visibleColumnIndex, true);
                 break;
@@ -114,11 +128,15 @@ export class IgxSummaryCellComponent {
                 break;
             case 'arrowup':
             case 'up':
-                this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                if (this.rowIndex !== 0) {
+                    this.grid.navigation.navigateUp(row, this.rowIndex, this.visibleColumnIndex);
+                }
                 break;
             case 'arrowdown':
             case 'down':
-                this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
+                if (this.rowIndex !== 0) {
+                    this.grid.navigation.navigateDown(row, this.rowIndex, this.visibleColumnIndex);
+                }
                 break;
         }
     }
@@ -145,6 +163,10 @@ export class IgxSummaryCellComponent {
         }
     }
 
+    get nativeElement(): any {
+        return this.element.nativeElement;
+    }
+
     get isLastUnpinned() {
         const unpinnedColumns = this.grid.unpinnedColumns;
         return unpinnedColumns[unpinnedColumns.length - 1] === this.column;
@@ -168,7 +190,7 @@ export class IgxSummaryCellComponent {
 
     private isKeySupportedInCell(key) {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'home', 'end', 'tab'].indexOf(key) !== -1;
+        'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
 
     }
 }
