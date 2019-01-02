@@ -20,6 +20,12 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected _id = `igx-drop-down-${NEXT_ID++}`;
     protected children: QueryList<IDropDownItem>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
+
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
 

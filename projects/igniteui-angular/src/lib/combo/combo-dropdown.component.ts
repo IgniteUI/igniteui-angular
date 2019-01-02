@@ -19,7 +19,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
     templateUrl: 'combo-dropdown.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy {
+export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
