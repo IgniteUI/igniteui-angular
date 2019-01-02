@@ -101,7 +101,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     onToggleOpened() {
-        this.onFocus();
         this.onOpened.emit();
     }
     /**
