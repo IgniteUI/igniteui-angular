@@ -24,7 +24,7 @@ describe('IgxSlider', () => {
     }));
 
     describe('Base tests', () => {
-        configureTestSuite();
+    configureTestSuite();
         let fixture: ComponentFixture<SliderInitializeTestComponent>;
         let slider: IgxSliderComponent;
 
@@ -152,7 +152,7 @@ describe('IgxSlider', () => {
 
             slider.value = 45;
             fixture.detectChanges();
-            expect(fixture.componentInstance.slider.value).toBe(20);
+            expect(fixture.componentInstance.slider.value).toBe(40);
         });
 
         it('should not set upper value to outside bounds slider when slider is RANGE', () => {
@@ -178,7 +178,7 @@ describe('IgxSlider', () => {
 
             fixture.detectChanges();
             expect(slider.value.lower).toBe(20);
-            expect(slider.value.upper).toBe(30);
+            expect(slider.value.upper).toBe(40);
         });
 
         it('should not set value upper when is less than lower value when slider is RANGE', () => {
@@ -227,7 +227,7 @@ describe('IgxSlider', () => {
                 upper: 30
             };
             fixture.detectChanges();
-            expect(slider.value.lower).toBe(20);
+            expect(slider.value.lower).toBe(10);
             expect(slider.value.upper).toBe(30);
         });
 
@@ -320,6 +320,28 @@ describe('IgxSlider', () => {
 
             expect(Math.round(slider.value as number)).toBe(60);
         }));
+
+        it('Value should remain to the max one if it exceeds.', () => {
+            const fix = TestBed.createComponent(SliderMinMaxComponent);
+            fix.detectChanges();
+
+            const sliderRef = fix.componentInstance.slider;
+            let expectedVal = 150;
+            let expectedMax = 300;
+
+            expect(sliderRef.value).toEqual(expectedVal);
+            expect(sliderRef.maxValue).toEqual(expectedMax);
+
+            expectedVal = 250;
+            expectedMax = 200;
+            sliderRef.maxValue = expectedMax;
+            sliderRef.value = expectedVal;
+            fix.detectChanges();
+
+            expect(sliderRef.value).not.toEqual(expectedVal);
+            expect(sliderRef.value).toEqual(expectedMax);
+            expect(sliderRef.maxValue).toEqual(expectedMax);
+        });
 
         function panRight(element, elementHeight, elementWidth, duration) {
             const panOptions = {
@@ -626,6 +648,27 @@ describe('IgxSlider', () => {
         expect(slider.upperBound).toBe(7);
         expect((slider.value as IRangeSliderValue).lower).toBe(5);
         expect((slider.value as IRangeSliderValue).upper).toBe(7);
+    });
+
+    it('Lower and upper bounds should not exceed min and max values', () => {
+        const fix = TestBed.createComponent(SliderTestComponent);
+        fix.detectChanges();
+
+        const componentInst = fix.componentInstance;
+        const slider = componentInst.slider;
+        const expectedMinVal = 0;
+        const expectedMaxVal = 10;
+
+        expect(slider.minValue).toEqual(expectedMinVal);
+        expect(slider.maxValue).toEqual(expectedMaxVal);
+
+        const expectedLowerBound = -1;
+        const expectedUpperBound = 11;
+        slider.lowerBound = expectedLowerBound;
+        slider.upperBound = expectedUpperBound;
+
+        expect(slider.lowerBound).toEqual(expectedMinVal);
+        expect(slider.upperBound).toEqual(expectedMaxVal);
     });
 
     describe('EditorProvider', () => {
