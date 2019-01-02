@@ -425,7 +425,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @param index
      */
     public scrollTo(index) {
-        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length)) {
+        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
             return;
         }
         const containerSize = parseInt(this.igxForContainerSize, 10);
