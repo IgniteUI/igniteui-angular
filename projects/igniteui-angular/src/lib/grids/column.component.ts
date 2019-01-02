@@ -1198,6 +1198,31 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
+    public getCellWidth() {
+        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (colWidth && !isPercentageWidth) {
+            const unpinnedColumns = this.grid.unpinnedColumns;
+            const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
+
+            let cellWidth = isLastUnpinned && hasVerticalScroll &&
+            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
+                parseInt(colWidth, 10) - 18 + '' : colWidth;
+
+            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
+                cellWidth += 'px';
+            }
+
+            return cellWidth;
+        } else {
+            return colWidth;
+        }
+    }
 }
 
 

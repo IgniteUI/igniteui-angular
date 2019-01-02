@@ -26,6 +26,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
@@ -3000,6 +3001,35 @@ describe('IgxGrid Component Tests', () => {
             }));
         });
     });
+
+    describe('IgxGrid - Integration with other Igx Controls', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridInsideIgxTabsComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
+            }).compileComponents();
+        }));
+
+        it('IgxTabs: should initialize a grid with correct width/height', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[2].select();
+            tick(100);
+            fix.detectChanges();
+            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(400);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(400);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
+        }));
+    });
 });
 
 @Component({
@@ -3049,7 +3079,7 @@ export class IgxGridTestComponent {
 
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (scrollbar) {
+        if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
         return false;
@@ -3521,5 +3551,58 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
+    }
+}
+
+@Component({
+    template: `
+    <div style="width: 400px; height: 400px;">
+    <igx-tabs #tabs>
+      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+      <igx-tabs-group label="Tab 3">
+        <igx-grid #grid [data]="data" [primaryKey]="'id'">
+          <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+            [width]="column.width"
+          >
+          </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+    </igx-tabs>
+  </div>
+    `
+})
+export class IgxGridInsideIgxTabsComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
+    public tabs: IgxTabsComponent;
+
+    public columns = [
+        { field: 'id', width: 100},
+        { field: '1', width: 100},
+        { field: '2', width: 100},
+        { field: '3', width: 100}
+    ];
+
+    public data = [];
+
+    constructor() {
+        const data = [];
+        for (let j = 1; j <= 10; j++) {
+          const item = {};
+          item['id'] = j;
+          for (let k = 2, len = this.columns.length; k <= len; k++) {
+            const field = this.columns[k - 1].field;
+            item[field] = `item${j}-${k}`;
+          }
+          data.push(item);
+        }
+        this.data = data;
     }
 }
