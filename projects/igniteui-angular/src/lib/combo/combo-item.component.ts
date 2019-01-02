@@ -75,8 +75,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
 
     @HostListener('click')
     clicked() {
-        this.isFocused = true;
-        this.dropDown.focusedItem = this;
+        this.dropDown.navigateItem(this.index);
         this.selection.set_selected_item(this.comboID, this.itemID);
     }
 

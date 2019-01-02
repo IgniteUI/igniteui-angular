@@ -28,7 +28,7 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
      * @param componentID ID of the component.
      * @param newSelection The new component selection to be set.
      */
-    public set(componentID: string, newSelection: Set<any>) {
+    public set(componentID: string, newSelection: Set<any>): void {
         if (!componentID) {
             throw Error('Invalid value for component id!');
         }
@@ -48,7 +48,7 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
         return this.onSelection.asObservable();
     }
 
-    public set_selected_item(componentID: string, itemID: any) {
+    public set_selected_item(componentID: string, itemID: any): void {
         const selected = this.is_item_selected(componentID, itemID);
         if (!selected) {
             this.select_item(componentID, itemID);

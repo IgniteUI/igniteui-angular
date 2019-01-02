@@ -1,5 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { IgxDropDownAPIService } from '../drop-down/drop-down.api';
+import { Injectable } from '@angular/core';
 import { IgxComboBase } from './combo.common';
 
 @Injectable({
