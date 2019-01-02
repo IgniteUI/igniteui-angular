@@ -36,7 +36,7 @@
     <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
-        [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        [igxDropDownItemNavigation]="dropdown" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <ng-template igxFor let-item [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
             (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
@@ -50,7 +50,7 @@
             </igx-combo-item>
         </ng-template>
     </div>
-    <div class="igx-combo__add" *ngIf="filteredData.length === 0 || isAddButtonVisible()">
+    <div class="igx-combo__add">
         <div class="igx-combo__empty" *ngIf="filteredData.length === 0">
             <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
             </ng-container>
