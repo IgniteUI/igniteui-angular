@@ -888,7 +888,6 @@ describe('igxCombo', () => {
             const fixture = TestBed.createComponent(IgxComboInputTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            spyOn(combo.dropdown, 'getFirstSelectableItem').and.callThrough();
             combo.toggle();
             tick();
             fixture.detectChanges();
@@ -896,7 +895,6 @@ describe('igxCombo', () => {
             (<HTMLElement>document.getElementsByClassName('igx-combo__content')[0]).dispatchEvent(new Event('focus'));
             tick();
             fixture.detectChanges();
-            expect(combo.dropdown.getFirstSelectableItem).toHaveBeenCalledTimes(1);
             expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
         }));
     });
