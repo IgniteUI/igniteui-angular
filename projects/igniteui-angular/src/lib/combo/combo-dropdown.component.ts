@@ -11,7 +11,6 @@ import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/dr
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
-import { IgxComboAPIService } from './combo.api';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 
 /** @hidden */
@@ -85,9 +84,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     @HostListener('focus')
     onFocus() {
-        this._focusedItem = this._focusedItem ?
-        this._focusedItem :
-        this.items.length ? this.items[0] : null;
+        this._focusedItem = this._focusedItem || this.items[0];
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         }
@@ -103,6 +100,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
     }
 
+    onToggleOpened() {
+        this.onFocus();
+        this.onOpened.emit();
+    }
     /**
      * @hidden
      */
