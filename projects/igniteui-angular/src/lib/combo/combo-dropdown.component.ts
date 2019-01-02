@@ -207,7 +207,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         const items = this.items;
         const children = this.children.toArray();
         if (focusedItem) {
-            if (focusedItem.value === 'ADD ITEM') { return; }
+            if (focusedItem instanceof IgxComboAddItemComponent) { return; }
             if (focusedItem.value === allData[allData.length - 1]) {
                 this.focusAddItemButton();
                 return;
