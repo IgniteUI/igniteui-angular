@@ -2180,8 +2180,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.columnListDiffer.diff(this.columnList);
         this.clearSummaryCache();
         this.summariesHeight = this.calcMaxSummaryHeight();
-        this._derivePossibleHeight();
         this.markForCheck();
+        this._derivePossibleHeight();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -3414,7 +3414,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if ((this._height && this._height.indexOf('%') === -1) || !this._height) {
             return;
         }
-        if (!this.nativeElement.parentNode.clientHeight) {
+        if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
             const viewPortHeight = document.documentElement.clientHeight;
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
@@ -3551,24 +3551,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected calculateGridWidth() {
+        let width;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const el = this.document.getElementById(this.nativeElement.id);
 
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
-            const width = computed.getPropertyValue('width').indexOf('%') === -1 ?
-                parseInt(computed.getPropertyValue('width'), 10) :
-                this.document.getElementById(this.nativeElement.id).offsetWidth;
-
-            if (Number.isFinite(width) && width !== this.calcWidth) {
-                this.calcWidth = width;
-
-                this.cdr.markForCheck();
-            }
+            width = computed.getPropertyValue('width').indexOf('%') === -1 ?
+                parseInt(computed.getPropertyValue('width'), 10) : null;
         } else {
-            this.calcWidth = parseInt(this._width, 10);
+            width = parseInt(this._width, 10);
+        }
+
+        if (!width && el) {
+            width = el.offsetWidth;
         }
 
         this._derivePossibleWidth();
+
+        if (!width) {
+            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
+        }
+
+        if (Number.isFinite(width) && width !== this.calcWidth) {
+            this.calcWidth = width;
+            this.cdr.markForCheck();
+        }
     }
 
     /**
@@ -4329,16 +4337,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private checkIfGridIsAdded(node): boolean {
         if (node === this.nativeElement) {
             return true;
-        } else {
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
+        }
 
+
+        if (!node.childNodes) {
             return false;
         }
+
+        for (const childNode of node.childNodes) {
+            const added = this.checkIfGridIsAdded(childNode);
+            if (added) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
