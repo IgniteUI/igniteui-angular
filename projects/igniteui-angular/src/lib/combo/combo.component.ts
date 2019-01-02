@@ -1257,6 +1257,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         this.selection.set_selected_item(this.id, addedItem);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
+        this.dropdown.focusedItem = null;
         this.handleInputChange();
     }
 
