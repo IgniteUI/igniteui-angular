@@ -47,7 +47,7 @@ import { IgxDropDownSelectionService } from './drop-down.selection';
 @Component({
     selector: 'igx-drop-down',
     templateUrl: './drop-down.component.html',
-    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }, IgxDropDownSelectionService]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy, AfterViewInit {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))

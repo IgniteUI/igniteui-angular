@@ -39,7 +39,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { IGX_COMBO_COMPONENT } from './combo.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 
@@ -102,7 +102,7 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxDropDownSelectionService]
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -174,7 +174,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxDropDownSelectionService,
+        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService,
         protected comboAPI: IgxComboAPIService,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -1149,16 +1149,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
     }
 
-    private changeSelectedItem(newItem: any, select?: boolean) {
-        if (!newItem && newItem !== 0) {
-            return;
-        }
-        const newSelection = select ?
-            this.selection.add_item(this.id, newItem) :
-            this.selection.delete_item(this.id, newItem);
-        this.triggerSelectionChange(newSelection);
-    }
-
     /**
      * @hidden
      */
@@ -1178,7 +1168,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         } else {
             const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
             if (target) {
-                this.changeSelectedItem(target, select);
+                this.selection.set_selected_item(this.id, target);
             }
         }
     }
@@ -1264,7 +1254,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         // If you mutate the array, no pipe is invoked and the display isn't updated;
         // if you replace the array, the pipe executes and the display is updated.
         this.data = cloneArray(this.data);
-        this.changeSelectedItem(addedItem, true);
+        this.selection.set_selected_item(this.id, addedItem);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.handleInputChange();
@@ -1355,6 +1345,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
         }
+        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter( e => e.componentID === this.id)).subscribe( (e) => {
+            this.onSelectionChange.emit(e.selectionEvent);
+            this.value = this.dataType !== DataTypes.PRIMITIVE ?
+                e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
+                e.selectionEvent.newSelection.join(', ');
+            // this.isHeaderChecked();
+            this._onChangeCallback(e.selectionEvent.newSelection);
+        });
     }
 
     /**
