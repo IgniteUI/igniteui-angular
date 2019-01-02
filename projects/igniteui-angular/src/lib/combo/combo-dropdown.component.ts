@@ -169,6 +169,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     selectItem(item: IDropDownItem) {
+        if (item === null || item === undefined) {
+            return;
+        }
         if (item instanceof IgxComboAddItemComponent) {
             this.combo.addItemToCollection();
         } else {
