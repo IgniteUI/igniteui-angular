@@ -405,7 +405,23 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         expect(childLastRowCell.columnIndex).toBe(7);
     }));
 
-    it('should move focus to last data cell in grid when ctrl+end is used.', () => {});
+    it('should move focus to last data cell in grid when ctrl+end is used.', (async () => {
+        const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        parentCell.nativeElement.focus();
+
+        await wait(100);
+        fixture.detectChanges();
+
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
+        await wait(100);
+        fixture.detectChanges();
+
+        const lastDataCell = hierarchicalGrid.getCellByKey(19, 'childData2');
+        expect(lastDataCell.selected).toBe(true);
+        expect(lastDataCell.focused).toBe(true);
+        expect(lastDataCell.rowIndex).toBe(38);
+        expect(lastDataCell.columnIndex).toBe(7);
+    }));
     it('if next child cell is not in view should scroll parent so that it is in view.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(4);
         await wait(100);
@@ -541,10 +557,6 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             expect(lastCell.rowIndex).toBe(4);
 
         }));
-        it('should allow navigating from start to end and back using arrow keys when all child levels are expanded.', () => {
-        });
-        it('should allow navigating from start to end and back using tab/shift+tab keys when all child levels are expanded.', () => {
-        });
 });
 
 describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
@@ -617,7 +629,6 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         const child1Cell = child1.dataRowList.toArray()[1].cells.toArray()[4];
 
         expect(child1Cell.selected).toBe(true);
-        expect(child1Cell.focused).toBe(true);
         expect(child1Cell.rowIndex).toBe(9);
         expect(child1Cell.columnIndex).toBe(7);
 
@@ -627,7 +638,6 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         fixture.detectChanges();
 
         expect(child2Cell.selected).toBe(true);
-        expect(child2Cell.focused).toBe(true);
     }));
     it('should navigate up from parent row to the correct child sibling.', (async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
@@ -647,11 +657,29 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         expect(child2Cell.focused).toBe(true);
         expect(child2Cell.rowIndex).toBe(9);
     }));
+    it('should navigate down from parent row to the correct child sibling.', (async () => {
+        const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        parentCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+
+        // Arrow down into next child grid
+        parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown'}));
+        await wait(100);
+        fixture.detectChanges();
+
+        const child1 = hierarchicalGrid.getChildGrids(false)[0];
+        const child1Cell = child1.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(child1Cell.selected).toBe(true);
+        expect(child1Cell.focused).toBe(true);
+        expect(child1Cell.rowIndex).toBe(0);
+    }));
 });
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+    <igx-hierarchical-grid #grid1 [data]="data"
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID">
         <igx-row-island [key]="'childData'" [autoGenerate]="true" [childrenExpanded]='true' #rowIsland>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
