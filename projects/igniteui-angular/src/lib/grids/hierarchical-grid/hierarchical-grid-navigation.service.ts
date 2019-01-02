@@ -44,9 +44,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return cgrid;
     }
 
-    private isAtBottom(grid) {
-        return grid.verticalScrollContainer.state.startIndex +
-         grid.verticalScrollContainer.state.chunkSize >= grid.verticalScrollContainer.igxForOf.length;
+    private _isScrolledToBottom(grid) {
+        const scrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const scrollHeight = grid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        return Math.round(scrollTop +  grid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
     }
     private getIsChildAtIndex(index) {
         return this.grid.isChildGridRecord(this.grid.verticalScrollContainer.igxForOf[index]);
@@ -278,26 +279,37 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
     private focusPrevChild(elem, visibleColumnIndex, grid) {
+        const grids = [];
         const gridElems = elem.querySelectorAll('igx-hierarchical-grid');
-        const gridElem = gridElems[gridElems.length - 1];
+        const childLevel = grid.childLayoutList.first.level;
+        gridElems.forEach((hg) => {
+            if (parseInt(hg.closest('igx-child-grid-row').getAttribute('data-level'), 10) === childLevel) {
+                grids.push(hg);
+            }
+        });
+        const gridElem = grids[grids.length - 1];
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
-        const vScrollState = childGrid.verticalScrollContainer.state;
+        const isScrolledToBottom = this._isScrolledToBottom(childGrid);
         const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
-        if (vScrollState.startIndex + vScrollState.chunkSize  <= lastIndex) {
+        if (!isScrolledToBottom) {
             // scroll to end
             this.scrollGrid(childGrid, 'bottom', () => this.focusPrevRow(elem, visibleColumnIndex, childGrid, true));
         } else {
             const lastRowInChild = childGrid.getRowByIndex(lastIndex);
             const isChildGrid = lastRowInChild.nativeElement.nodeName.toLowerCase() === 'igx-child-grid-row';
             if (isChildGrid) {
-                this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, grid);
+                this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, childGrid);
             } else {
-                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
+                if (grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0) {
+                    this.scrollGrid(grid, -lastRowInChild.nativeElement.offsetHeight,
+                         () => this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true));
+                } else {
+                    this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
+                }
             }
         }
     }
-
     private focusPrev(visibleColumnIndex) {
         let parentContainer = this.getChildContainer();
         let childRowContainer = this.getChildGridRowContainer();

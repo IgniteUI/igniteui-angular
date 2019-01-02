@@ -112,7 +112,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         return this.gridAPI.get(this.parentGridID);
     }
 
-
+    @HostBinding('attr.data-level')
     get level() {
         return this.layout.level;
     }
