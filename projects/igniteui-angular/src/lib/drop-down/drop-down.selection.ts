@@ -28,7 +28,7 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
      * @param componentID ID of the component.
      * @param newSelection The new component selection to be set.
      */
-    public set(componentID: string, newSelection: Set<any>): void {
+    public set(componentID: string, newSelection: Set<any>, event?: Event): void {
         if (!componentID) {
             throw Error('Invalid value for component id!');
         }
@@ -37,7 +37,8 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
             componentID,
             selectionEvent: {
                 oldSelection: Array.from(oldSelection || this.get_empty()),
-                newSelection: Array.from(newSelection || this.get_empty())
+                newSelection: Array.from(newSelection || this.get_empty()),
+                event
             }
         };
         this.onSelection.next(selectionArgs);
@@ -48,12 +49,14 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
         return this.onSelection.asObservable();
     }
 
-    public set_selected_item(componentID: string, itemID: any): void {
+    public set_selected_item(componentID: string, itemID: any, event?: Event): void {
         const selected = this.is_item_selected(componentID, itemID);
+        let newSelection;
         if (!selected) {
-            this.select_item(componentID, itemID);
+            newSelection = this.add_item(componentID, itemID);
         } else {
-            this.deselect_item(componentID, itemID);
+            newSelection = this.delete_item(componentID, itemID);
         }
+        this.set(componentID, newSelection, event);
     }
 }

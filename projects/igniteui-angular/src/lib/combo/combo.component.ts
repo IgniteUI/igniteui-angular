@@ -1154,13 +1154,13 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
                 return;
             }
             if (select) {
-                this.selection.set_selected_item(this.id, itemID);
+                this.selection.set_selected_item(this.id, itemID, event);
             }
             newItem.isSelected = select;
         } else {
             const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
             if (target) {
-                this.selection.set_selected_item(this.id, target);
+                this.selection.set_selected_item(this.id, target, event);
             }
         }
     }
@@ -1471,9 +1471,10 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.selectItems(["New York", "New Jersey"]);
      * ```
      */
-    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
+    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
         if (newItems) {
-            this.selection.select_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
+            this.selection.set(this.id, newSelection, event);
         }
     }
 
@@ -1485,9 +1486,10 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.deselectItems(["New York", "New Jersey"]);
      * ```
      */
-    public deselectItems(items: Array<any>) {
+    public deselectItems(items: Array<any>, event?: Event) {
         if (items) {
-            this.selection.deselect_items(this.id, items);
+            const newSelection = this.selection.delete_items(this.id, items);
+            this.selection.set(this.id, newSelection, event);
         }
     }
 
@@ -1499,9 +1501,10 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.selectAllItems();
      * ```
      */
-    public selectAllItems(ignoreFilter?: boolean) {
+    public selectAllItems(ignoreFilter?: boolean, event?: Event) {
         const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData);
-        this.selection.select_items(this.id, allVisible);
+        const newSelection = this.selection.add_items(this.id, allVisible);
+        this.selection.set(this.id, newSelection, event);
     }
 
     /**
@@ -1512,11 +1515,12 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.deselectAllItems();
      * ```
      */
-    public deselectAllItems(ignoreFilter?: boolean) {
+    public deselectAllItems(ignoreFilter?: boolean, event?: Event) {
         if (this.filteredData.length === this.data.length || ignoreFilter) {
-            this.selection.set(this.id, this.selection.get_empty());
+            this.selection.set(this.id, this.selection.get_empty(), event);
         } else {
-            this.selection.deselect_items(this.id, this.selection.get_all_ids(this.filteredData));
+            const newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
+            this.selection.set(this.id, newSelection, event);
         }
     }
     /**
