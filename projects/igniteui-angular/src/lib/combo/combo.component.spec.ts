@@ -957,19 +957,17 @@ fdescribe('igxCombo', () => {
             // Calling "SelectItems" through the writeValue accessor should clear the previous values;
             expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
         });
-        fit(`Should properly select/deselect items`, fakeAsync(() => {
+        it(`Should properly select/deselect items`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
             expect(combo.dropdown.items).toBeDefined();
 
-            // items are only accessible when the combo dropdown is opened;
             spyOn(combo.dropdown, 'selectItem').and.callThrough();
-            spyOn(combo.dropdown, 'navigateItem').and.callThrough();
-            //  removed after combo-dropdown refactoring
-            // spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
             spyOn(combo.dropdown, 'selectedItem').and.callThrough();
             spyOn(combo.onSelectionChange, 'emit');
+
+            // items are only accessible when the combo dropdown is opened;
             combo.dropdown.toggle();
             tick();
             fix.detectChanges();
@@ -980,8 +978,8 @@ fdescribe('igxCombo', () => {
             targetItem = combo.dropdown.items[5] as IDropDownItem;
             expect(targetItem).toBeDefined();
             expect(targetItem.index).toEqual(5);
-            combo.dropdown.selectItem(targetItem);
 
+            combo.dropdown.selectItem(targetItem);
             fix.detectChanges();
             expect(combo.dropdown.selectedItem).toEqual([targetItem.itemID]);
             expect(combo.dropdown.selectItem).toHaveBeenCalledTimes(1);
@@ -995,11 +993,6 @@ fdescribe('igxCombo', () => {
             expect(combo.dropdown.selectItem).toHaveBeenCalledWith(targetItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
-
-            spyOn(combo, 'addItemToCollection');
-            combo.dropdown.selectItem({ value: 'ADD ITEM' } as IgxComboAddItemComponent);
-            fix.detectChanges();
-            expect(combo.addItemToCollection).toHaveBeenCalledTimes(1);
         }));
         it(`Should properly select/deselect items using public methods selectItems and deselectItems`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
