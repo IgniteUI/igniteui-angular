@@ -36,7 +36,7 @@ import { Subject } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IGX_COMBO_COMPONENT } from './combo.common';
+import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { takeUntil, filter } from 'rxjs/operators';
@@ -104,7 +104,7 @@ const noop = () => { };
     templateUrl: 'combo.component.html',
     providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
 })
-export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
+export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
      * @hidden
      */
@@ -1024,7 +1024,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     public handleKeyUp(evt) {
         if (evt.key === 'ArrowDown' || evt.key === 'Down') {
             this.dropdown.focusedItem = this.dropdown.items[0];
-            this.dropdown.onFocus();
             this.dropdownContainer.nativeElement.focus();
         } else if (evt.key === 'Escape' || evt.key === 'Esc') {
             this.toggle();
@@ -1139,30 +1138,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
 
     private _parseItemID(itemID) {
         return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
-    }
-
-    /**
-     * @hidden
-     */
-    public setSelectedItem(itemID: any, select = true) {
-        if (itemID === undefined || itemID === null) {
-            return;
-        }
-        const newItem = this.dropdown.items.find((item) => item.itemID === itemID);
-        if (newItem) {
-            if (newItem.disabled || newItem.isHeader) {
-                return;
-            }
-            if (select) {
-                this.selection.set_selected_item(this.id, itemID, event);
-            }
-            newItem.isSelected = select;
-        } else {
-            const target = typeof itemID === 'object' ? itemID : this.getValueByValueKey(itemID);
-            if (target) {
-                this.selection.set_selected_item(this.id, target, event);
-            }
-        }
     }
 
     /**
@@ -1397,7 +1372,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * @hidden
      */
     public handleClearItems(event) {
-        this.deselectAllItems(true);
+        this.deselectAllItems(true, event);
         event.stopPropagation();
     }
 
@@ -1471,10 +1446,9 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.selectItems(["New York", "New Jersey"]);
      * ```
      */
-    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
+    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
         if (newItems) {
-            const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
-            this.selection.set(this.id, newSelection, event);
+            this.selection.select_items(this.id, newItems, clearCurrentSelection);
         }
     }
 
@@ -1486,10 +1460,9 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * this.combo.deselectItems(["New York", "New Jersey"]);
      * ```
      */
-    public deselectItems(items: Array<any>, event?: Event) {
+    public deselectItems(items: Array<any>) {
         if (items) {
-            const newSelection = this.selection.delete_items(this.id, items);
-            this.selection.set(this.id, newSelection, event);
+            this.selection.deselect_items(this.id, items);
         }
     }
 

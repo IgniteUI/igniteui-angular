@@ -73,10 +73,10 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         this._isSelected = value;
     }
 
-    @HostListener('click')
-    clicked() {
+    @HostListener('click', ['$event'])
+    clicked(event) {
         this.dropDown.navigateItem(this.index);
-        this.selection.set_selected_item(this.comboID, this.itemID);
+        this.selection.set_selected_item(this.comboID, this.itemID, event);
     }
 
     ngDoCheck() {

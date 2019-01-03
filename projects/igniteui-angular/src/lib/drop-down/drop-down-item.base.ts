@@ -176,8 +176,8 @@ export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
     /**
      * @hidden
      */
-    @HostListener('click')
-    clicked() {
+    @HostListener('click', ['$event'])
+    clicked(event) {
     }
 
     ngDoCheck(): void {

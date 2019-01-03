@@ -5,15 +5,14 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemBase } from './drop-down-item.base';
-import { IDropDownServiceArgs } from './drop-down.selection';
 
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
-    @HostListener('click')
-    clicked() {
+    @HostListener('click', ['$event'])
+    clicked(event) {
         if (this.disabled || this.isHeader) {
             const focusedItem = this.dropDown.items.find((item) => item.isFocused);
             if (this.dropDown.allowItemsFocus && focusedItem) {
@@ -22,7 +21,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             return;
         }
         if (this.selection) {
-            this.selection.set_selected_item(this.dropDown.id, this.itemID);
+            this.selection.set_selected_item(this.dropDown.id, this.itemID, event);
         }
     }
 }

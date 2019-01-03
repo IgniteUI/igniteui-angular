@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
     selector: 'igx-combo-add-item',
