@@ -470,6 +470,32 @@ describe('Excel Exporter', () => {
                 error = ex.message;
             }
             expect(error).toMatch('Can create an outline of up to eight levels!');
+
+            treeGrid.deleteRowById(9);
+            fix.detectChanges();
+            await wait(16);
+
+            error = '';
+            try {
+                exporter.export(treeGrid, options);
+                await wait();
+            } catch (ex) {
+                error = ex.message;
+            }
+            expect(error).toEqual('');
+
+            treeGrid.addRow({ ID: 9, ParentID: 8, Name: 'Test', JobTitle: '', Age: 49 });
+            fix.detectChanges();
+            await wait(16);
+
+            error = '';
+            try {
+                exporter.export(treeGrid, options);
+                await wait();
+            } catch (ex) {
+                error = ex.message;
+            }
+            expect(error).toMatch('Can create an outline of up to eight levels!');
         });
     });
 
