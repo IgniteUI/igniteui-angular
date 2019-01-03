@@ -1805,11 +1805,12 @@ describe('IgxGrid Component Tests', () => {
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.onFocus({});
-                tick();
+                tick(100);
                 fixture.detectChanges();
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
                 expect(targetCell.focused).toBeTruthy();
-                expect(firstCell.focused).toBeFalsy();
+                expect(targetCell.selected).toBeTruthy();
+                expect(firstCell.selected).toBeFalsy();
             }));
         });
 
@@ -2876,6 +2877,89 @@ describe('IgxGrid Component Tests', () => {
                 targetCellElement = targetRow.cells.toArray()[1].nativeElement;
                 expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
                 expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
+            }));
+
+            it('Should change pages when the only item on the last page is a pending added row that gets deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.addRow({
+                    ProductID: 123,
+                    ProductName: 'DummyItem',
+                    InStock: true,
+                    UnitsInStock: 1,
+                    OrderDate: new Date()
+                });
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(3);
+                grid.page = 2;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(2);
+                grid.deleteRowById(123);
+                tick();
+                fixture.detectChanges();
+                // This is behaving incorrectly - if there is only 1 transaction and it is an ADD transaction on the last page
+                // Deleting the ADD transaction on the last page will trigger grid.page-- TWICE
+                expect(grid.page).toEqual(1); // Should be 1
+                expect(grid.totalPages).toEqual(2);
+            }));
+
+            it('Should change pages when commiting deletes on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                for (let i = 0; i < grid.data.length / 2; i++) {
+                    grid.deleteRowById(grid.data.reverse()[i].ProductID);
+                }
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                grid.transactions.commit(grid.data);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(0);
+                expect(grid.totalPages).toEqual(1);
+            }));
+
+            it('Should NOT change pages when deleting a row on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                expect(grid.data.length).toEqual(10);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                grid.deleteRowById(grid.data[grid.data.length - 1].ProductID);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                expect(grid.totalPages).toEqual(2);
             }));
         });
 
