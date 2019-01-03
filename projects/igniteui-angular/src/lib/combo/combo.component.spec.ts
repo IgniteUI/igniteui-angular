@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboComponent, IgxComboModule, IgxComboState } from './combo.component';
+import { IgxComboComponent, IgxComboModule, IgxComboState, IComboSelectionChangeEventArgs } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
@@ -887,6 +887,7 @@ fdescribe('igxCombo', () => {
             });
         });
 
+        // dispatchEvent 'Tab' does not trigger default browser behaviour (focus)
         it('Should properly get the first focusable item when focusing the component list', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInputTestComponent);
             fixture.detectChanges();
@@ -897,6 +898,7 @@ fdescribe('igxCombo', () => {
             combo.dropdown.onFocus();
             tick();
             fixture.detectChanges();
+            (<HTMLElement>document.getElementsByClassName(CSS_CLASS_CONTENT)[0]).focus();
             expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
         }));
     });
@@ -1072,7 +1074,6 @@ fdescribe('igxCombo', () => {
             spyOn(combo, 'selectAllItems').and.callThrough();
             spyOn(combo, 'deselectAllItems').and.callThrough();
             spyOn(combo, 'handleSelectAll').and.callThrough();
-            spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
             spyOn(combo.onSelectionChange, 'emit');
             combo.dropdown.toggle();
             tick();
@@ -1347,24 +1348,28 @@ fdescribe('igxCombo', () => {
             expect(combo.selectedItems()[0]).toEqual(dropdown.items[7].value);
             expect(combo.selectedItems()[1]).toEqual(dropdown.items[1].value);
         }));
+
         it('Should trigger onSelectionChange event when selecting/deselecting item', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
             const dropdown = combo.dropdown;
+            let timesFired = 1;
+            const mockEvent = new MouseEvent('click');
             const eventParams = {
                 oldSelection: [],
                 newSelection: [],
-                event: undefined
+                event: mockEvent
             };
-            let timesFired = 1;
             spyOn(combo.onSelectionChange, 'emit').and.callThrough();
             combo.dropdown.toggle();
             tick();
             fixture.detectChanges();
             const dropdownList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
             const verifyOnSelectionChangeEventIsFired = function (itemIndex: number) {
-                clickItemCheckbox(dropdownList, itemIndex);
+                const dropdownItems =  fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+                const checkbox = dropdownItems[itemIndex];
+                checkbox.triggerEventHandler('click', mockEvent);
                 fixture.detectChanges();
                 expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(timesFired);
                 expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(eventParams);
@@ -1504,7 +1509,7 @@ fdescribe('igxCombo', () => {
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
             // override selection
-            fixture.componentInstance.onSelectionChange = (event) => {
+            fixture.componentInstance.onSelectionChange = (event: IComboSelectionChangeEventArgs) => {
                 event.newSelection = [];
             };
             combo.toggle();
@@ -2830,6 +2835,7 @@ fdescribe('igxCombo', () => {
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('My New Custom Item');
         }));
+
         it(`Should handle click on "Add Item" properly`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -2936,7 +2942,7 @@ fdescribe('igxCombo', () => {
     });
 
     describe('Form control tests: ', () => {
-        it('Should properly initialize when used as a form control', fakeAsync(() => {
+       it('Should properly initialize when used as a form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -3195,7 +3201,7 @@ class IgxComboSampleComponent {
         this.initData = this.items;
     }
 
-    onSelectionChange(ev) {
+    onSelectionChange(ev: IComboSelectionChangeEventArgs) {
     }
 }
 
