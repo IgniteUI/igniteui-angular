@@ -9,7 +9,7 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 
 /**
  *@hidden
@@ -41,7 +41,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 export class IgxGridPreGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -77,7 +77,7 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
 export class IgxGridPostGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -112,7 +112,7 @@ export class IgxGridPostGroupingPipe implements PipeTransform {
 })
 export class IgxGridPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
@@ -143,7 +143,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number) {

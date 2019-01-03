@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs } from '../grid-base.component';
+import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -10,6 +10,8 @@ import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
+import { cloneArray } from '../../core/utils';
+import { DataUtil } from '../../data-operations/data-util';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -47,14 +49,14 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    public get grid(): IgxGridBaseComponent {
+    public get grid(): IgxGridBaseComponent & IGridDataBindable {
         return this.gridAPI.get(this.gridId);
     }
 
@@ -287,6 +289,23 @@ export class IgxFilteringService implements OnDestroy {
         if (filterCell) {
             filterCell.focusChip(focusFirst);
         }
+    }
+
+    public resolveFilteredSortedData(): any[] {
+        let data: any[] = this.filteredData ? this.filteredData : this.grid.data;
+        if (!this.filteredData && this.grid.transactions.enabled) {
+            data = DataUtil.mergeTransactions(
+                cloneArray(data),
+                this.grid.transactions.getAggregatedChanges(true),
+                this.grid.primaryKey
+            );
+        }
+
+        return data;
+    }
+
+    public get filteredData() {
+        return this.grid.filteredData;
     }
 
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {

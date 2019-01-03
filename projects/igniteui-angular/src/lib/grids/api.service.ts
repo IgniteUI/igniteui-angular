@@ -6,17 +6,17 @@ import { IFilteringExpression } from '../data-operations/filtering-expression.in
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IGridEditEventArgs, IgxGridBaseComponent } from './grid-base.component';
+import { IGridEditEventArgs, IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
-import { Transaction, TransactionType } from '../services/index';
+import { Transaction, TransactionType, State } from '../services/index';
 import { ISortingStrategy } from '../data-operations/sorting-strategy';
 /**
  *@hidden
  */
 @Injectable()
-export class GridBaseAPIService <T extends IgxGridBaseComponent> {
+export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBindable> {
 
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, T> = new Map<string, T>();
@@ -191,7 +191,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent> {
+    public get_row_by_key(id: string, rowSelector: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
         const primaryKey = this.get(id).primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.get(id).dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -200,7 +200,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         }
     }
 
-    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IgxGridBaseComponent> {
+    public get_row_by_index(id: string, rowIndex: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
         return this.get(id).rowList.find((row) => row.index === rowIndex);
     }
 
@@ -299,7 +299,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
         if (rowIndex < 0 && grid.transactions.enabled) {
-            const dataWithTransactions = grid.dataWithAddedInTransactionRows;
+            const dataWithTransactions = grid.аddTransactionRowsToData(data);
             rowIndex = grid.primaryKey ?
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
@@ -596,12 +596,47 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
 
     public get_all_data(id: string, transactions?: boolean): any[] {
         const grid = this.get(id);
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.data;
-        return data ? data : [];
+        let data = grid.data ? grid.data : [];
+        data = transactions ? grid.аddTransactionRowsToData(data) : data;
+        return data;
+    }
+
+    public get_filtered_data(id: string): any[] {
+        return this.get(id).filteredData;
     }
 
     protected getSortStrategyPerColumn(id: string, fieldName: string) {
         return this.get_column_by_name(this.get(id).id, fieldName) ?
             this.get_column_by_name(id, fieldName).sortStrategy : undefined;
+    }
+
+    public addRowToData(gridID: string, rowData: any) {
+        // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
+        // If there is a row in edit - > commit and close
+        const grid = this.get(gridID);
+        if (grid.transactions.enabled) {
+            const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
+            grid.transactions.add(transaction);
+        } else {
+            grid.data.push(rowData);
+        }
+    }
+
+    public deleteRowFromData(gridID: string, rowID: any, index: number) {
+        //  if there is a row (index !== 0) delete it
+        //  if there is a row in ADD or UPDATE state change it's state to DELETE
+        const grid = this.get(gridID);
+        if (index !== -1) {
+            if (grid.transactions.enabled) {
+                const transaction: Transaction = { id: rowID, type: TransactionType.DELETE, newValue: null };
+                grid.transactions.add(transaction, grid.data[index]);
+            } else {
+                grid.data.splice(index, 1);
+            }
+        } else {
+            const state: State = grid.transactions.getState(rowID);
+            grid.transactions.add({ id: rowID, type: TransactionType.DELETE, newValue: null }, state && state.recordRef);
+        }
     }
 }

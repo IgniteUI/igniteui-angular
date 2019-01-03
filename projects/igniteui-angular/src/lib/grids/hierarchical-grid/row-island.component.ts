@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import { IgxColumnComponent } from '.././column.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction } from '../grid';
+import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction, IGridDataBindable } from '../grid';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { Transaction, TransactionService, State } from '../../services/index';
@@ -89,7 +89,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     }
 
     constructor(
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
