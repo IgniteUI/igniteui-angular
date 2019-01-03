@@ -894,7 +894,7 @@ fdescribe('igxCombo', () => {
             combo.toggle();
             tick();
             fixture.detectChanges();
-            combo.searchInput.nativeElement.dispatchEvent(new KeyboardEvent('keypress', { key: 'Tab'}));
+            combo.dropdown.onFocus();
             tick();
             fixture.detectChanges();
             expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
