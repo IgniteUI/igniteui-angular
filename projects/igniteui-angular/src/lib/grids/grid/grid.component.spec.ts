@@ -1816,11 +1816,12 @@ describe('IgxGrid Component Tests', () => {
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.onFocus({});
-                tick();
+                tick(100);
                 fixture.detectChanges();
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
                 expect(targetCell.focused).toBeTruthy();
-                expect(firstCell.focused).toBeFalsy();
+                expect(targetCell.selected).toBeTruthy();
+                expect(firstCell.selected).toBeFalsy();
             }));
         });
 
