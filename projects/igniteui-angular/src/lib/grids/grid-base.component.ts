@@ -2765,7 +2765,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].width, 10) || 0;
+            const colWidth = this.calcWidth > 0 && cols[i].width && cols[i].width.toString().indexOf('%') > -1 ?
+            parseInt(cols[i].width, 10) / 100 * this.calcWidth : parseInt(cols[i].width, 10) || 0;
+            totalWidth += colWidth;
         }
         return totalWidth;
     }

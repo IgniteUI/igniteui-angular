@@ -754,7 +754,7 @@ describe('IgxGrid Component Tests', () => {
             });
         });
 
-        it('Should calculate default column width when a column has width in %', () => {
+        it('Should calculate default column width when a column has width in %', async () => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
             fix.detectChanges();
@@ -762,6 +762,17 @@ describe('IgxGrid Component Tests', () => {
             const grid = fix.componentInstance.grid;
             expect(grid.columns[1].width).toEqual('150');
             expect(grid.columns[1].width).toEqual('150');
+
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            grid.columns[0].width = '70%';
+            fix.detectChanges();
+            await wait(16);
+
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            expect(header0.nativeElement.offsetWidth).toEqual(350);
+            expect(hScroll.nativeElement.hidden).toBe(false);
         });
     });
 

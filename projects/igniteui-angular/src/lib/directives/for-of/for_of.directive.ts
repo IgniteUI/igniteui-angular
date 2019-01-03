@@ -903,7 +903,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 size = parseInt(this.igxForItemSize, 10) || 0;
                 this.heightCache.push(size);
             } else {
-                size = parseInt(items[i][dimension], 10) || 0;
+                size = this._calcItemWidth(items[i][dimension], this.igxForContainerSize) || 0;
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
@@ -922,8 +922,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let sum = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             'width' : 'height';
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem[dimension], 10);
         const availableSize = parseInt(this.igxForContainerSize, 10);
+        const reducer = (accumulator, currentItem) => accumulator + this._calcItemWidth(currentItem[dimension], availableSize);
         for (i; i < this.igxForOf.length; i++) {
             let item = this.igxForOf[i];
             if (dimension === 'height') {
@@ -931,7 +931,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             const size = dimension === 'height' ?
                 this.heightCache[i] :
-                parseInt(item[dimension], 10);
+                this._calcItemWidth(item[dimension], availableSize);
             sum = arr.reduce(reducer, size);
             if (sum <= availableSize) {
                 arr.push(item);
@@ -945,7 +945,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                         const prevItem = this.igxForOf[prevIndex];
                         const prevSize = dimension === 'height' ?
                             this.heightCache[prevIndex] :
-                            parseInt(prevItem[dimension], 10);
+                            this._calcItemWidth(prevItem[dimension], availableSize);
                         sum = arr.reduce(reducer, prevSize);
                         arr.unshift(prevItem);
                         length = arr.length;
@@ -1107,6 +1107,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
             this.hScroll.scrollLeft - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+    }
+
+    protected _calcItemWidth(widthValue, availableSize) {
+        return widthValue && widthValue.toString().indexOf('%') > -1 ?
+        parseInt(widthValue, 10) / 100 * availableSize : parseInt(widthValue, 10);
     }
 }
 
