@@ -703,7 +703,7 @@ describe('IgxForOf directive -', () => {
             await wait(1500);
             fix.detectChanges();
             const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
-            expect(scrStepArray.length).toEqual(61);
+            expect(scrStepArray.length).toBeGreaterThan(55);
 
             // check if inertia first accelerates then decelerate
             const first = scrStepArray[0];
@@ -792,6 +792,22 @@ describe('IgxForOf directive -', () => {
                 expect(rowsRendered[i].children[1].textContent)
                     .toBe(fix.componentInstance.data[9 + i][1].toString());
             }
+        });
+
+        it('should not wrap around with scrollNext and scrollPrev', async () => {
+            const forOf = fix.componentInstance.parentVirtDir;
+            forOf.scrollPrev();
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(0);
+            forOf.scrollTo(forOf.igxForOf.length - 1);
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
+            forOf.scrollNext();
+            fix.detectChanges();
+            await wait(200);
+            expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
 
         it('should prevent scrollTo() when called with numbers outside the scope of the data records.', () => {
