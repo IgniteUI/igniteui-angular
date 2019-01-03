@@ -76,6 +76,7 @@ import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
+import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 
 const components = [
     AppComponent,
@@ -140,7 +141,8 @@ const components = [
     RadioSampleComponent,
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
-    HierarchicalGridRemoteSampleComponent
+    HierarchicalGridRemoteSampleComponent,
+    HierarchicalGridUpdatingSampleComponent
 ];
 
 @NgModule({

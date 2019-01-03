@@ -7,11 +7,11 @@ import {
 import { RemoteService } from '../shared/remote.service';
 
 @Component({
-    selector: 'app-hierarchical-grid-remote-sample',
-    templateUrl: 'hierarchical-grid-remote.sample.html',
+    selector: 'app-hierarchical-grid-updating-sample',
+    templateUrl: 'hierarchical-grid-updating.sample.html',
     providers: [RemoteService]
 })
-export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
+export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     isRowSelectable = false;
     remoteData = [];
@@ -58,14 +58,6 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
         this.remoteService.getData({ parentID: null, level: 0, key: 'Customers' }, (data) => {
             this.remoteData = data['value'];
         });
-    }
-
-    setterChange() {
-        this.rowIsland1.rowSelectable = !this.rowIsland1.rowSelectable;
-    }
-
-    setterBindingChange() {
-        this.isRowSelectable = !this.isRowSelectable;
     }
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {

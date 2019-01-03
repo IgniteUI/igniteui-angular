@@ -46,6 +46,7 @@ import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
+import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 
 const appRoutes = [
     {
@@ -239,6 +240,9 @@ const appRoutes = [
     }, {
         path: 'hierarhicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
+    }, {
+        path: 'hierarhicalGridUpdating',
+        component: HierarchicalGridUpdatingSampleComponent
     }
 ];
 
