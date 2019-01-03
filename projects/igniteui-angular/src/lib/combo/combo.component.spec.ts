@@ -985,14 +985,22 @@ fdescribe('igxCombo', () => {
             expect(combo.dropdown.selectItem).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.selectItem).toHaveBeenCalledWith(targetItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: [targetItem.itemID] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: [],
+                newSelection: [targetItem.itemID],
+                event: undefined
+            });
 
             combo.dropdown.selectItem(targetItem);
             expect(combo.dropdown.selectedItem).toEqual([]);
             expect(combo.dropdown.selectItem).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.selectItem).toHaveBeenCalledWith(targetItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: [targetItem.itemID],
+                newSelection: [],
+                event: undefined
+            });
         }));
         it(`Should properly select/deselect items using public methods selectItems and deselectItems`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
