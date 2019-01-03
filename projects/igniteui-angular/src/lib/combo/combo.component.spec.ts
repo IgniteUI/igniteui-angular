@@ -1017,7 +1017,11 @@ fdescribe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: oldSelection,
+                newSelection: newSelection,
+                event: undefined
+            });
 
             let newItem = combo.data[3];
             combo.selectItems([newItem]);
@@ -1026,7 +1030,11 @@ fdescribe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: oldSelection,
+                newSelection: newSelection,
+                event: undefined
+            });
 
             oldSelection = [...newSelection];
             newSelection = [combo.data[0]];
@@ -1034,7 +1042,11 @@ fdescribe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(newSelection.length);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: oldSelection,
+                newSelection: newSelection,
+                event: undefined
+            });
 
             oldSelection = [...newSelection];
             newSelection = [];
@@ -1044,7 +1056,11 @@ fdescribe('igxCombo', () => {
             expect(combo.selectedItems().length).toEqual(newSelection.length);
             expect(combo.selectedItems().length).toEqual(0);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(4);
-            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: oldSelection, newSelection: newSelection });
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
+                oldSelection: oldSelection,
+                newSelection: newSelection,
+                event: undefined
+            });
         }));
         it('Should properly select/deselect ALL items', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
@@ -1387,7 +1403,8 @@ fdescribe('igxCombo', () => {
             const dropdown = combo.dropdown;
             const eventParams = {
                 oldSelection: [],
-                newSelection: []
+                newSelection: [],
+                event: undefined
             };
             let timesFired = 1;
             spyOn(combo.onSelectionChange, 'emit').and.callThrough();
