@@ -1,5 +1,8 @@
 import { ISortingExpression } from './sorting-expression.interface';
 
+/**
+ * @hidden
+ */
 export class GroupedRecords extends Array<any> {}
 
 export interface IGroupByRecord {
