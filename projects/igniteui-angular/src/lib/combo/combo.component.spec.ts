@@ -17,6 +17,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownBase } from '../drop-down/drop-down.base';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownItem } from '../drop-down/drop-down-utils';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -43,7 +44,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -453,10 +454,13 @@ describe('igxCombo', () => {
             expect(virtualSpyDOWN).toHaveBeenCalled();
             expect(virtualSpyUP).toHaveBeenCalled();
         }));
-        it('Should handle handleKeyDown calls', () => {
+        it('Should handle handleKeyDown calls', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
+            combo.toggle();
+            tick();
+            fix.detectChanges();
             spyOn(combo, 'selectAllItems');
             spyOn(combo, 'toggle');
             spyOn(combo.dropdown, 'onFocus').and.callThrough();
@@ -474,7 +478,7 @@ describe('igxCombo', () => {
             expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
             combo.handleKeyUp({ key: 'Escape' });
             expect(combo.toggle).toHaveBeenCalledTimes(1);
-        });
+        }));
         it('Dropdown button should open/close dropdown list', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
@@ -888,15 +892,12 @@ describe('igxCombo', () => {
             const fixture = TestBed.createComponent(IgxComboInputTestComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
-            spyOn(combo.dropdown, 'getFirstSelectableItem').and.callThrough();
             combo.toggle();
             tick();
             fixture.detectChanges();
             combo.searchInput.nativeElement.dispatchEvent(new KeyboardEvent('keypress', { key: 'Tab'}));
-            (<HTMLElement>document.getElementsByClassName('igx-combo__content')[0]).dispatchEvent(new Event('focus'));
             tick();
             fixture.detectChanges();
-            expect(combo.dropdown.getFirstSelectableItem).toHaveBeenCalledTimes(1);
             expect((<HTMLElement>combo.dropdown.focusedItem.element.nativeElement).textContent.trim()).toEqual('Michigan');
         }));
     });
@@ -957,17 +958,17 @@ describe('igxCombo', () => {
             // Calling "SelectItems" through the writeValue accessor should clear the previous values;
             expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
         });
-        it(`Should properly select/deselect items`, fakeAsync(() => {
+        fit(`Should properly select/deselect items`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
             expect(combo.dropdown.items).toBeDefined();
 
             // items are only accessible when the combo dropdown is opened;
-            let targetItem: IDropDownItem;
-            spyOn(combo, 'setSelectedItem').and.callThrough();
+            spyOn(combo.dropdown, 'selectItem').and.callThrough();
             spyOn(combo.dropdown, 'navigateItem').and.callThrough();
-            spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
+            //  removed after combo-dropdown refactoring
+            // spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
             spyOn(combo.dropdown, 'selectedItem').and.callThrough();
             spyOn(combo.onSelectionChange, 'emit');
             combo.dropdown.toggle();
@@ -975,6 +976,8 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.dropdown.collapsed).toEqual(false);
             expect(combo.dropdown.items.length).toEqual(9); // Virtualization
+
+            let targetItem: IDropDownItem;
             targetItem = combo.dropdown.items[5] as IDropDownItem;
             expect(targetItem).toBeDefined();
             expect(targetItem.index).toEqual(5);
@@ -982,20 +985,20 @@ describe('igxCombo', () => {
 
             fix.detectChanges();
             expect(combo.dropdown.selectedItem).toEqual([targetItem.itemID]);
-            expect(combo.setSelectedItem).toHaveBeenCalledTimes(1);
-            expect(combo.setSelectedItem).toHaveBeenCalledWith(targetItem.itemID, true);
+            expect(combo.dropdown.selectItem).toHaveBeenCalledTimes(1);
+            expect(combo.dropdown.selectItem).toHaveBeenCalledWith(targetItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [], newSelection: [targetItem.itemID] });
 
             combo.dropdown.selectItem(targetItem);
             expect(combo.dropdown.selectedItem).toEqual([]);
-            expect(combo.setSelectedItem).toHaveBeenCalledTimes(2);
-            expect(combo.setSelectedItem).toHaveBeenCalledWith(targetItem.itemID, true);
+            expect(combo.dropdown.selectItem).toHaveBeenCalledTimes(2);
+            expect(combo.dropdown.selectItem).toHaveBeenCalledWith(targetItem);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({ oldSelection: [targetItem.itemID], newSelection: [] });
 
             spyOn(combo, 'addItemToCollection');
-            combo.dropdown.selectItem({ value: 'ADD ITEM' } as IgxComboItemComponent, new Event('click'));
+            combo.dropdown.selectItem({ value: 'ADD ITEM' } as IgxComboAddItemComponent);
             fix.detectChanges();
             expect(combo.addItemToCollection).toHaveBeenCalledTimes(1);
         }));
@@ -1090,7 +1093,7 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual([]);
             combo.setSelectedItem(undefined);
             expect(combo.selectedItems()).toEqual([]);
-            dropdown.setSelectedItem({ field: 'Connecticut', region: 'New England' });
+            dropdown.setSelectedItem(0);
             expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
             combo.deselectAllItems();
             expect(combo.selectedItems()).toEqual([]);
@@ -1098,19 +1101,19 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
             combo.deselectAllItems();
             expect(combo.selectedItems()).toEqual([]);
-            dropdown.setSelectedItem('Connecticut');
+            dropdown.setSelectedItem(0);
             expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
             combo.deselectAllItems();
             expect(combo.selectedItems()).toEqual([]);
-            dropdown.setSelectedItem('Connecticut', false);
+            dropdown.setSelectedItem(0);
             expect(combo.selectedItems()).toEqual([]);
             combo.deselectAllItems();
             expect(combo.selectedItems()).toEqual([]);
-            dropdown.setSelectedItem({ field: 'Connecticut', region: 'New England' }, true);
+            dropdown.setSelectedItem(0);
             expect(combo.selectedItems()).toEqual([{ field: 'Connecticut', region: 'New England' }]);
             spyOn(combo, 'setSelectedItem').and.callThrough();
             const selectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
-            dropdown.setSelectedItem(combo.selectedItems()[0], false);
+            dropdown.setSelectedItem(combo.selectedItems()[0].index);
             expect(combo.setSelectedItem).toHaveBeenCalledWith({ field: 'Connecticut', region: 'New England' }, false);
             expect(Array.from(selectionSpy.calls.mostRecent().args[0])).toEqual([]);
             expect(combo.selectedItems()).toEqual([]);
@@ -2282,16 +2285,16 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBeFalsy();
             expect(combo.dropdown.headers).toBeDefined();
             expect(combo.dropdown.headers.length).toEqual(2);
-            combo.dropdown.headers[0].clicked({});
+            combo.dropdown.headers[0].clicked(null);
             fix.detectChanges();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
             spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
-            combo.dropdown.headers[0].clicked({});
+            combo.dropdown.headers[0].clicked(null);
             fix.detectChanges();
             expect(mockObj.focus).toHaveBeenCalled();
 
-            combo.dropdown.items[0].clicked({});
+            combo.dropdown.items[0].clicked(null);
             fix.detectChanges();
             expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
         }));
@@ -2838,7 +2841,7 @@ describe('igxCombo', () => {
 
             tick();
             expect(combo.isAddButtonVisible()).toBeTruthy();
-            const dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
+            let dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
             combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
 
             tick();
@@ -2847,9 +2850,11 @@ describe('igxCombo', () => {
 
             tick();
             fixture.detectChanges();
-            // SPACE does not add item to collection
             expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('');
+            expect(combo.value).toEqual('My New Custom Item');
+            expect(combo.isAddButtonVisible()).toBeFalsy();
+
+            dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
             dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
 
             tick();

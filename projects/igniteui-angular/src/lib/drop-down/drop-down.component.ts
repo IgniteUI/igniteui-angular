@@ -234,13 +234,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.selectItem(event.itemID);
     }
 
-    /**
-     * @hidden
-     */
-    public getFirstSelectableItem() {
-        return this.children.find(child => !child.isHeader && !child.disabled);
-    }
-
     public handleKeyDown(key: DropDownActionKeys) {
         switch (key) {
             case DropDownActionKeys.ENTER:

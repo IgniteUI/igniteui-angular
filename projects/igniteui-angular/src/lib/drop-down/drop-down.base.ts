@@ -20,8 +20,21 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected _id = `igx-drop-down-${NEXT_ID++}`;
     protected children: QueryList<IDropDownItem>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
+
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
+
+    /**
+     * Get dropdown's html element of it scroll container
+     */
+    protected get scrollContainer() {
+        return this.toggleDirective.element;
+    }
 
     /**
      * Emitted before the dropdown is opened
@@ -195,19 +208,6 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
      */
     public get element() {
         return this.elementRef.nativeElement;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public disableTransitions = false;
-
-    /**
-     * Get dropdown's html element of it scroll container
-     */
-    protected get scrollContainer() {
-        return this.toggleDirective.element;
     }
 
     constructor(
