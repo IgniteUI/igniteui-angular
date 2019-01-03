@@ -301,12 +301,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             if (isChildGrid) {
                 this.focusPrevChild(lastRowInChild.nativeElement.parentNode, visibleColumnIndex, childGrid);
             } else {
-                if (grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0) {
-                    this.scrollGrid(grid, -lastRowInChild.nativeElement.offsetHeight,
-                         () => this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true));
-                } else {
-                    this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
-                }
+                this.focusPrevRow(lastRowInChild.nativeElement, visibleColumnIndex, childGrid, true);
             }
         }
     }
@@ -416,7 +411,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
             const cellSelector = this.getCellSelector(visibleColumnIndex);
             const cells =  elem.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            const cell = cells[cells.length - 1];
+            let cell = cells[cells.length - 1];
+            const rIndex = parseInt(elem.getAttribute('data-rowindex'), 10);
             const scrollable = grid.verticalScrollContainer.getVerticalScroll().scrollTop !== 0 ?
             {grid: grid, prev: grid} : this.getNextScrollable(grid);
             const scrGrid = scrollable.grid;
@@ -424,7 +420,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;
             const top = containerTop ? parseInt(containerTop.style.top, 10) : 0;
             if (scrTop !== 0 && top < 0 && !inChild) {
-                this.scrollGrid(scrGrid, top, () => cell.focus({ preventScroll: true }));
+                this.scrollGrid(scrGrid, top, () => {
+                    const el = grid.navigation.getRowByIndex(rIndex);
+                    cell = el.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`)[0];
+                    cell.focus({ preventScroll: true });
+                });
             } else {
                 cell.focus({ preventScroll: true });
             }
