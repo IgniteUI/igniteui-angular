@@ -155,7 +155,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
-    private _children: QueryList<IDropDownItem>;
+    private _children: QueryList<IgxComboItemComponent>;
     private _dropdownContainer: ElementRef = null;
     private _searchInput: ElementRef<HTMLInputElement> = null;
     private _comboInput: ElementRef<HTMLInputElement> = null;
@@ -386,14 +386,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      */
     @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    public set children(list: QueryList<IDropDownItem>) {
+    public set children(list: QueryList<IgxComboItemComponent>) {
         this._children = list;
     }
 
     /**
      * @hidden
      */
-    public get children(): QueryList<IDropDownItem> {
+    public get children(): QueryList<IgxComboItemComponent> {
         return this._children;
     }
 

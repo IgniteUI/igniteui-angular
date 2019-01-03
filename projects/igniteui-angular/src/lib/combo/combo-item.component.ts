@@ -48,7 +48,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @internal
      */
     public get disableTransitions() {
-        return this.dropDown.disableTransitions;
+        return this.comboAPI.disable_transitions(this.comboID);
     }
 
     constructor(

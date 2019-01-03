@@ -77,6 +77,12 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public disableTransitions = false;
+
     @Input()
     public comboID: string;
     /**

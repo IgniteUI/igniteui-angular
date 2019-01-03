@@ -29,6 +29,17 @@ export class IgxComboAPIService {
 
     public add_custom_item(componentID: string): void {
         const combo = this.get(componentID);
+        if (!combo) {
+            return;
+        }
         combo.addItemToCollection();
+    }
+
+    public disable_transitions(componentID: string): boolean {
+        const combo = this.get(componentID);
+        if (!combo) {
+            return false;
+        }
+        return combo.dropdown.disableTransitions;
     }
 }
