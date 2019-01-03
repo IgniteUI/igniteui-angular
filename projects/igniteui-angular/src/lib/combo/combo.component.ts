@@ -128,11 +128,11 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
-    protected _filteringExpressions: IFilteringExpression [] = [];
+    protected _filteringExpressions: IFilteringExpression[] = [];
     /**
      * @hidden
      */
-    protected _sortingExpressions: ISortingExpression [] = [];
+    protected _sortingExpressions: ISortingExpression[] = [];
     /**
      * @hidden
      */
@@ -178,7 +178,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         protected comboAPI: IgxComboAPIService,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
         if (this.ngControl) {
             // Note: we provide the value accessor through here, instead of
             // the `providers` to avoid running into a circular import.
@@ -836,19 +836,6 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
-    // @HostListener('keydown.ArrowUp', ['$event'])
-    // @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    onArrowUp(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        if (!this.dropdown.collapsed) {
-            this.toggle();
-        }
-    }
-
-    /**
-     * @hidden
-     */
     onInputClick(evt) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -936,14 +923,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
-    public get filteringExpressions(): IFilteringExpression [] {
+    public get filteringExpressions(): IFilteringExpression[] {
         return this.filterable ? this._filteringExpressions : [];
     }
 
     /**
      * @hidden
      */
-    public set filteringExpressions(value: IFilteringExpression []) {
+    public set filteringExpressions(value: IFilteringExpression[]) {
         this._filteringExpressions = value;
         this.cdr.markForCheck();
     }
@@ -951,14 +938,14 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
-    public get sortingExpressions(): ISortingExpression [] {
+    public get sortingExpressions(): ISortingExpression[] {
         return this._sortingExpressions;
     }
 
     /**
      * @hidden
      */
-    public set sortingExpressions(value: ISortingExpression []) {
+    public set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = value;
         this.cdr.markForCheck();
     }
@@ -1049,7 +1036,11 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public handleKeyDown(evt) {
         if (evt.key === 'ArrowUp' || evt.key === 'Up') {
-            this.onArrowUp(evt);
+            evt.preventDefault();
+            evt.stopPropagation();
+            if (!this.dropdown.collapsed) {
+                this.toggle();
+            }
         }
     }
 
@@ -1081,7 +1072,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      * @hidden
      */
     public sort(fieldName: string, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true,
-                strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
+        strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
         if (!fieldName) {
             return;
         }
@@ -1106,8 +1097,8 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
     /**
      * @hidden
      */
-    protected prepare_sorting_expression(state: ISortingExpression [], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
-                                         strategy: ISortingStrategy) {
+    protected prepare_sorting_expression(state: ISortingExpression[], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
+        strategy: ISortingStrategy) {
 
         if (dir === SortingDirection.None) {
             state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
@@ -1220,7 +1211,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
             [this.displayKey]: newValue
         } : newValue;
         if (this.groupKey) {
-            Object.assign(addedItem, { [this.groupKey] : this.defaultFallbackGroup});
+            Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
         const oldCollection = this.data;
         const newCollection = [...this.data];
@@ -1325,7 +1316,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
         }
-        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter( e => e.componentID === this.id)).subscribe( (e) => {
+        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter(e => e.componentID === this.id)).subscribe((e) => {
             this.onSelectionChange.emit(e.selectionEvent);
             this.value = this.dataType !== DataTypes.PRIMITIVE ?
                 e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
