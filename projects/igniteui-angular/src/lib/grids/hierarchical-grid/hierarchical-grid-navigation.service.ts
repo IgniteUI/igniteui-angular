@@ -392,7 +392,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) && grid.navigation.isColumnLeftFullyVisible(visibleColumnIndex)) {
             const cell =
             elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            // const diff = cell.getBoundingClientRect().bottom - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const containerGrid = grid.parent || grid.rootGrid;
+            const diff = cell.getBoundingClientRect().bottom - containerGrid.tbody.nativeElement.getBoundingClientRect().bottom;
             const inView =  diff <= 0;
             if (!inView) {
                 const closestScrollableGrid = this.getNextScrollable(grid).grid;
@@ -417,12 +419,16 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             {grid: grid, prev: grid} : this.getNextScrollable(grid);
             const scrGrid = scrollable.grid;
             const scrTop = scrGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
-            const containerTop = scrollable.prev ? scrollable.prev.nativeElement.parentNode.parentNode.parentNode.parentNode : null;
-            const top = containerTop ? parseInt(containerTop.style.top, 10) : 0;
-            if (scrTop !== 0 && top < 0 && !inChild) {
-                this.scrollGrid(scrGrid, top, () => {
+            const diff = cell.getBoundingClientRect().bottom -
+            cell.offsetHeight - grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
+            if (scrTop !== 0 && diff < 0 && !inChild) {
+                this.scrollGrid(scrGrid, diff, () => {
                     const el = grid.navigation.getRowByIndex(rIndex);
                     cell = el.querySelectorAll(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`)[0];
+                    cell.focus({ preventScroll: true });
+                });
+            } else if (diff < 0 && inChild) {
+                this.scrollGrid(grid.rootGrid, diff, () => {
                     cell.focus({ preventScroll: true });
                 });
             } else {
