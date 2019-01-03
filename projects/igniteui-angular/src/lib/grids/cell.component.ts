@@ -288,6 +288,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         if (this.column.editable && value) {
+            this.focused = true;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
@@ -841,13 +842,13 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownExitEditMode(event) {
-        if (this.column.editable) {
-            const editableCell = this;
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (this.column.editable && editableCell) {
             const args: IGridEditEventArgs = {
                 cellID: editableCell.cellID,
                 rowID: editableCell.cellID.rowID,
-                oldValue: editableCell.value,
-                newValue: editableCell.editValue,
+                oldValue: editableCell.cell.value,
+                newValue: editableCell.cell.editValue,
                 cancel: false
             };
             this.grid.onCellEditCancel.emit(args);
