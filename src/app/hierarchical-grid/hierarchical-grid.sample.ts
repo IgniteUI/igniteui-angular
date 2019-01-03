@@ -9,6 +9,7 @@ import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } fro
 export class HierarchicalGridSampleComponent {
     localData = [];
     isRowSelectable = false;
+    shouldExpand = false;
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
@@ -85,6 +86,7 @@ export class HierarchicalGridSampleComponent {
         console.log(this.hGrid.getChildGrids());
         console.log('Children of row island 1:');
         console.log(this.layout1.getGrids());
+        this.shouldExpand = !this.shouldExpand;
 
     }
 }
