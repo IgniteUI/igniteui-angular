@@ -2,7 +2,6 @@ import { IToggleView } from '../core/navigation/IToggleView';
 import { OnInit, EventEmitter, ElementRef } from '@angular/core';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
-import { IgxComboBase } from '../combo/combo.common';
 import { DropDownActionKeys } from './drop-down-navigation.directive';
 
 export interface DropDownNavigationDirective {
@@ -19,6 +18,7 @@ export interface IDropDownList extends IToggleView, OnInit {
     onOpened: EventEmitter<void>;
     onClosing: EventEmitter<CancelableEventArgs>;
     onClosed: EventEmitter<void>;
+    onSelection: EventEmitter<ISelectionEventArgs>;
     width: string;
     height: string;
     id: string;
@@ -42,14 +42,10 @@ export interface IDropDownList extends IToggleView, OnInit {
 
 export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 export interface IDropDownBase extends IDropDownList {
-    onSelection: EventEmitter<ISelectionEventArgs>;
-    combo?: IgxComboBase;
-    comboID?: string;
-    allowItemsFocus?: boolean;
     selectedItem: any;
+    allowItemsFocus?: boolean;
     items: IDropDownItem[];
     headers: IDropDownItem[];
-    disableTransitions: boolean;
     setSelectedItem(index: number): void;
     selectItem(item: IDropDownItem, event?: Event): void;
 }

@@ -14,7 +14,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     set isSelected(value: boolean) {
     }
 
-    clicked() {
+    clicked(event?) {
         this.comboAPI.add_custom_item(this.dropDown.comboID);
     }
 }

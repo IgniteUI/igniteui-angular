@@ -6,7 +6,7 @@ import {
 import { CancelableEventArgs } from '../core/utils';
 import { OverlaySettings } from '../services';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { Navigate } from './drop-down.common';
+import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownItem, IDropDownList } from './drop-down-utils';
 import { DropDownActionKeys } from './drop-down-navigation.directive';
 
@@ -20,12 +20,6 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected _id = `igx-drop-down-${NEXT_ID++}`;
     protected children: QueryList<IDropDownItem>;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public disableTransitions = false;
-
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
 
@@ -35,6 +29,16 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected get scrollContainer() {
         return this.toggleDirective.element;
     }
+
+    /**
+     * Emitted when item selection is changing, before the selection completes
+     *
+     * ```html
+     * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onSelection = new EventEmitter<ISelectionEventArgs>();
 
     /**
      * Emitted before the dropdown is opened

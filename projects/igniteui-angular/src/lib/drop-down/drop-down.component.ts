@@ -54,17 +54,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     protected children: QueryList<IDropDownItem>;
 
     protected destroy$ = new Subject<boolean>();
-
-    /**
-     * Emitted when item selection is changing, before the selection completes
-     *
-     * ```html
-     * <igx-drop-down (onSelection)='handleSelection()'></igx-drop-down>
-     * ```
-     */
-    @Output()
-    public onSelection = new EventEmitter<ISelectionEventArgs>();
-
     /**
      * Gets/sets whether items take focus. Disabled by default.
      * When enabled, drop down items gain tab index and are focused when active -

@@ -9,9 +9,10 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { IgxComboAPIService } from './combo.api';
+import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
 /** @hidden */
 @Component({
@@ -52,7 +53,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
 
     constructor(
         protected comboAPI: IgxComboAPIService,
-        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
+        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IgxComboDropDownComponent,
         protected elementRef: ElementRef,
         @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService
     ) {
