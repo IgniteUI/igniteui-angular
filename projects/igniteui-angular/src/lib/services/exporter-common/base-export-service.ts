@@ -211,6 +211,7 @@ export abstract class IgxBaseExporter {
             };
 
             if (this._isTreeGrid) {
+                this.flatRecords = [];
                 rootRecords = DataUtil.treeGridFilter(rootRecords, filteringState);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
@@ -225,6 +226,7 @@ export abstract class IgxBaseExporter {
             this._sort = cloneValue(grid.sortingExpressions[0]);
 
             if (this._isTreeGrid) {
+                this.flatRecords = [];
                 rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
