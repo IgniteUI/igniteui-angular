@@ -19,7 +19,7 @@ import {
     AbsoluteScrollStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning.component';
@@ -215,7 +215,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         }
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,

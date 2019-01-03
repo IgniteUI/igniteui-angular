@@ -28,7 +28,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent, IGridDataBindable } from '../grid';
 import { IgxHierarchicalTransactionService, HierarchicalTransaction, HierarchicalState } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxSummaryOperand } from './../grid-summary';
@@ -313,7 +313,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     constructor(
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        gridAPI: GridBaseAPIService<IgxGridComponent>,
         selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,

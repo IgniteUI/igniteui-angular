@@ -17,7 +17,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { isNavigationKey, valToPxlsUsingRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
+import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { DataType } from '../data-operations/data-util';
 /**
@@ -491,7 +491,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private previousCellEditMode = false;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef) { }
