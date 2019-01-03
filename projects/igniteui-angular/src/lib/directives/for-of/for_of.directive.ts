@@ -1187,7 +1187,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 }
                 this.heightCache.push(size);
             } else {
-                size = parseInt(items[i][dimension], 10) || 0;
+                size = this._calcItemWidth(items[i][dimension], this.igxForContainerSize);
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
