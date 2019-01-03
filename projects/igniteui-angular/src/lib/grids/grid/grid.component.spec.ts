@@ -305,6 +305,7 @@ describe('IgxGrid Component Tests', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
+                    IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent
                 ],
@@ -751,6 +752,16 @@ describe('IgxGrid Component Tests', () => {
                     expect(earliestValue).toBe('May 17, 1990');
                 }
             });
+        });
+
+        it('Should calculate default column width when a column has width in %', () => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[1].width).toEqual('150');
+            expect(grid.columns[1].width).toEqual('150');
         });
     });
 
@@ -3228,6 +3239,20 @@ export class IgxGridDefaultRenderingComponent {
                     }
                     break;
             }
+        }
+    }
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" [width]="'500px'" (onColumnInit)="initColumns($event)">
+        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
+    public initColumns(column) {
+        if (column.index === 0) {
+            column.width = '40%';
         }
     }
 }
