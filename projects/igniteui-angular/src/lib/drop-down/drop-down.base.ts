@@ -163,6 +163,7 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
      * ```
      */
     @Input()
+    @HostBinding('style.maxHeight')
     public maxHeight = null;
 
     /**

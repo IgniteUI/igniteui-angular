@@ -33,16 +33,20 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
             throw Error('Invalid value for component id!');
         }
         const oldSelection = this.get(componentID);
+        const selectionEvent: IComboSelectionChangeEventArgs = {
+            oldSelection: Array.from(oldSelection || this.get_empty()),
+            newSelection: Array.from(newSelection || this.get_empty())
+        };
+        if (event) {
+            selectionEvent.event = event;
+        }
         const selectionArgs: IDropDownSelectionServiceEvent = {
             componentID,
-            selectionEvent: {
-                oldSelection: Array.from(oldSelection || this.get_empty()),
-                newSelection: Array.from(newSelection || this.get_empty()),
-                event
-            }
+            selectionEvent
         };
         this.onSelection.next(selectionArgs);
-        this.selection.set(componentID, newSelection);
+        const newSet = this.add_items(componentID, selectionEvent.newSelection, true);
+        this.selection.set(componentID, newSet);
     }
 
     public get selectionEmitter(): Observable<IDropDownSelectionServiceEvent> {
@@ -52,6 +56,9 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
     public set_selected_item(componentID: string, itemID: any, event?: Event): void {
         const selected = this.is_item_selected(componentID, itemID);
         let newSelection;
+        if (itemID === null || itemID === undefined) {
+            return;
+        }
         if (!selected) {
             newSelection = this.add_item(componentID, itemID);
         } else {

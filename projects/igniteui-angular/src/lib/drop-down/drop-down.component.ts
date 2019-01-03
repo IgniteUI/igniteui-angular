@@ -145,6 +145,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
 
         const newSelection = this.items.find((item) => item.index === index);
+        if (!newSelection) {
+            return;
+        }
         if (newSelection.isHeader) {
             return;
         }
