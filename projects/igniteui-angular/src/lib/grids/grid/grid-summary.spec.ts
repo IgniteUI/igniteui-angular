@@ -39,7 +39,8 @@ describe('IgxGrid - Summaries', () => {
                 FilteringComponent,
                 ColumnGroupFourLevelTestComponent,
                 SummarieGroupByComponent,
-                SummarieGroupByWithScrollsComponent
+                SummarieGroupByWithScrollsComponent,
+                SummaryColumnsWithSpecificWidthsComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot(), NoopAnimationsModule]
         })
@@ -250,6 +251,26 @@ describe('IgxGrid - Summaries', () => {
                 expect(firstCellsText[i]).toEqual((expectedFirstCellNum + i).toString());
             }
         }));
+
+        it('Last column summary cell should be aligned according to its data cells', ((() => {
+            const fixture = TestBed.createComponent(SummaryColumnsWithSpecificWidthsComponent);
+            fixture.detectChanges();
+
+            // Get last cell of first data row
+            const dataRow = fixture.debugElement.queryAll(By.css('igx-grid-row'))[0];
+            const lastColumnNormalCell = dataRow.queryAll(By.css('igx-grid-cell'))[4];
+            const lastColumnNormalCellRect = (<HTMLElement>lastColumnNormalCell.nativeElement).getBoundingClientRect();
+
+            // Get last summary cell of the summary row
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fixture, 0);
+            const lastColumnSummaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, 4);
+            const lastColumnSummaryCellRect = (<HTMLElement>lastColumnSummaryCell.nativeElement).getBoundingClientRect();
+
+            expect(lastColumnSummaryCellRect.left).toBe(lastColumnNormalCellRect.left,
+                'summary cell and data cell are not left aligned');
+            expect(lastColumnSummaryCellRect.right).toBe(lastColumnNormalCellRect.right,
+                'summary cell and data cell are not right aligned');
+        })));
 
         describe('', () => {
             let fix;
@@ -1514,8 +1535,8 @@ class EarliestSummary extends IgxDateSummaryOperand {
             <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true"  [summaries]="dealsSummary">
             </igx-column>
             <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true"
-                [summaries]="earliest">
-            </igx-column>
+            [summaries]="earliest">
+        </igx-column>
         </igx-grid>
     `
 })
@@ -1527,4 +1548,28 @@ export class CustomSummariesComponent {
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
     public earliest = EarliestSummary;
+}
+
+@Component({
+    template: `
+        <igx-grid #grid1 [data]="data" width="900px" height="500px" [allowFiltering]="true">
+            <igx-column field="ProductID" header="Product ID" width="150px">
+            </igx-column>
+            <igx-column field="ProductName" width="150px">
+            </igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'" width="150px">
+            </igx-column>
+            <igx-column field="OrderDate" [dataType]="'date'" width="150px">
+            </igx-column>
+            <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true" width="150px">
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class SummaryColumnsWithSpecificWidthsComponent {
+
+    @ViewChild('grid1', { read: IgxGridComponent })
+    public grid1: IgxGridComponent;
+
+    public data = SampleTestData.foodProductData();
 }
