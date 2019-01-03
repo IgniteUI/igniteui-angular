@@ -516,7 +516,6 @@ describe('igxCombo', () => {
             const comboInput = combo.comboInput.nativeElement as HTMLElement;
             expect(comboInput).toBeDefined();
             spyOn(combo, 'onArrowDown').and.callThrough();
-            spyOn(combo, 'onArrowUp').and.callThrough();
             spyOn(combo.dropdown, 'toggle').and.callThrough();
             spyOn(combo.dropdown, 'open').and.callThrough();
             spyOn(combo.dropdown, 'close').and.callThrough();
@@ -531,12 +530,12 @@ describe('igxCombo', () => {
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.collapsed).toEqual(false);
             expect(combo.dropdown.open).toHaveBeenCalledTimes(1);
-            combo.onArrowUp(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowUp' }));
+            combo.handleKeyDown(new KeyboardEvent('keydown', { altKey: false, key: 'ArrowUp' }));
 
             fix.detectChanges();
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.close).toHaveBeenCalledTimes(1);
-            combo.onArrowUp(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' }));
+            combo.handleKeyDown(new KeyboardEvent('keydown', { altKey: true, key: 'ArrowUp' }));
 
             fix.detectChanges();
             expect(combo.dropdown.toggle).toHaveBeenCalledTimes(3);
