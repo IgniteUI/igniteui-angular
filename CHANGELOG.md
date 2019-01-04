@@ -3,6 +3,10 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 7.1.1
+### Features
+- `igxGrid`
+    - `locale` property added. If not set, it returns browser's languge. All child components will use it as locale.
+    
 ### Bug Fixes
 
 * onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
