@@ -1275,6 +1275,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
+        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter(e => e.componentID === this.id)).subscribe((e) => {
+            this.onSelectionChange.emit(e.selectionEvent);
+            this.value = this.dataType !== DataTypes.PRIMITIVE ?
+                e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
+                e.selectionEvent.newSelection.join(', ');
+            this._onChangeCallback(e.selectionEvent.newSelection);
+        });
         if (this.ngControl && this.ngControl.value) {
             this.selectItems(this.ngControl.value, true);
         }
@@ -1289,14 +1296,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
         }
-        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter(e => e.componentID === this.id)).subscribe((e) => {
-            this.onSelectionChange.emit(e.selectionEvent);
-            this.value = this.dataType !== DataTypes.PRIMITIVE ?
-                e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
-                e.selectionEvent.newSelection.join(', ');
-            // this.isHeaderChecked();
-            this._onChangeCallback(e.selectionEvent.newSelection);
-        });
     }
 
     /**
