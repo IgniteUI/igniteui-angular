@@ -1,11 +1,11 @@
-import { IDropDownItem } from './drop-down-utils';
 import { Injectable } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IComboSelectionChangeEventArgs } from '../combo/combo.component';
 import { Observable, Subject } from 'rxjs';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 export interface IDropDownServiceArgs {
-    item: IDropDownItem;
+    item: IgxDropDownItemBase;
     itemID: any;
 }
 

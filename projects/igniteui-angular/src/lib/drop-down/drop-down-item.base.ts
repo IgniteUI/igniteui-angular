@@ -1,11 +1,11 @@
-import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
-import { IDropDownServiceArgs, IgxDropDownSelectionService } from './drop-down.selection';
+import { IgxDropDownSelectionService } from './drop-down.selection';
 /**
  * The `<igx-drop-down-item>` is a container intended for row items in
  * a `<igx-drop-down>` container.
  */
-export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
+export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */

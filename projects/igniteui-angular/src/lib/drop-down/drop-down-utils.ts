@@ -3,6 +3,7 @@ import { OnInit, EventEmitter, ElementRef } from '@angular/core';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { DropDownActionKeys } from './drop-down-navigation.directive';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 export interface DropDownNavigationDirective {
     target: any;
@@ -25,8 +26,8 @@ export interface IDropDownList extends IToggleView, OnInit {
     cssClass: string;
     maxHeight: string;
     collapsed: boolean;
-    items: IDropDownItem[];
-    focusedItem: IDropDownItem;
+    items: IgxDropDownItemBase[];
+    focusedItem: IgxDropDownItemBase;
     navigateFirst(): void;
     navigateLast(): void;
     navigateNext(): void;
@@ -44,25 +45,8 @@ export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 export interface IDropDownBase extends IDropDownList {
     selectedItem: any;
     allowItemsFocus?: boolean;
-    items: IDropDownItem[];
-    headers: IDropDownItem[];
+    items: IgxDropDownItemBase[];
+    headers: IgxDropDownItemBase[];
     setSelectedItem(index: number): void;
-    selectItem(item: IDropDownItem, event?: Event): void;
-}
-
-export interface IDropDownItem {
-    itemID: any;
-    value: any;
-    itemStyle: boolean;
-    itemHeight?: string | number;
-    isSelected: boolean;
-    selectedStyle: boolean;
-    isFocused: boolean;
-    isHeader: boolean;
-    disabled: boolean;
-    setTabIndex?: number;
-    index: number;
-    elementHeight: number;
-    element: ElementRef;
-    clicked(event: Event): void;
+    selectItem(item: IgxDropDownItemBase, event?: Event): void;
 }

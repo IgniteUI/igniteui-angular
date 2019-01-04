@@ -7,12 +7,13 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
-import { IDropDownItem, IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
+import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 
 /** @hidden */
 @Component({
@@ -55,11 +56,11 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    protected get children(): QueryList<IDropDownItem> {
+    protected get children(): QueryList<IgxDropDownItemBase> {
         return this.combo.children;
     }
 
-    protected set children(value: QueryList<IDropDownItem>) {
+    protected set children(value: QueryList<IgxDropDownItemBase>) {
         this._children = value;
     }
 
@@ -70,7 +71,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         const sel = this.selection.get(this.comboID);
         return sel ? Array.from(sel) : [];
     }
-    private _children: QueryList<IDropDownItem>;
+    private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
 
     /**
@@ -170,7 +171,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    selectItem(item: IDropDownItem) {
+    selectItem(item: IgxDropDownItemBase) {
         if (item === null || item === undefined) {
             return;
         }

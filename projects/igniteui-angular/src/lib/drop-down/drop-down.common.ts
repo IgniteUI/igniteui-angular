@@ -1,5 +1,5 @@
 import { CancelableEventArgs } from '../core/utils';
-import { IDropDownItem } from './drop-down-utils';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 /** @hidden */
 export enum Navigate {
@@ -12,6 +12,6 @@ export enum Navigate {
  * @export
  */
 export interface ISelectionEventArgs extends CancelableEventArgs {
-    oldSelection: IDropDownItem;
-    newSelection: IDropDownItem;
+    oldSelection: IgxDropDownItemBase;
+    newSelection: IgxDropDownItemBase;
 }

@@ -7,8 +7,9 @@ import { CancelableEventArgs } from '../core/utils';
 import { OverlaySettings } from '../services';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
-import { IDropDownItem, IDropDownList } from './drop-down-utils';
+import { IDropDownList } from './drop-down-utils';
 import { DropDownActionKeys } from './drop-down-navigation.directive';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 let NEXT_ID = 0;
 
@@ -18,7 +19,7 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     protected _height;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
-    protected children: QueryList<IDropDownItem>;
+    protected children: QueryList<IgxDropDownItemBase>;
 
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
@@ -191,8 +192,8 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
      * let myDropDownItems = this.dropdown.items;
      * ```
      */
-    public get items(): IDropDownItem[] {
-        const items: IDropDownItem[] = [];
+    public get items(): IgxDropDownItemBase[] {
+        const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -266,14 +267,14 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
     /**
      * @hidden
      */
-    public get focusedItem(): IDropDownItem {
+    public get focusedItem(): IgxDropDownItemBase {
         return this._focusedItem;
     }
 
     /**
      * @hidden
      */
-    public set focusedItem(item: IDropDownItem) {
+    public set focusedItem(item: IgxDropDownItemBase) {
         this._focusedItem = item;
     }
 
@@ -396,7 +397,7 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
         this.onOpened.emit();
     }
 
-    protected scrollToHiddenItem(newItem: IDropDownItem) {
+    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
         if (parentRect.top > elementRect.top) {

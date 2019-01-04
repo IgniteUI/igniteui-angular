@@ -18,13 +18,14 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
 import { IgxDropDownItemNavigationDirective, DropDownActionKeys } from './drop-down-navigation.directive';
-import { IDropDownItem, IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownSelectionService } from './drop-down.selection';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 
 /**
@@ -50,7 +51,7 @@ import { IgxDropDownSelectionService } from './drop-down.selection';
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    protected children: QueryList<IDropDownItem>;
+    protected children: QueryList<IgxDropDownItemBase>;
 
     protected destroy$ = new Subject<boolean>();
     /**
@@ -110,8 +111,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * let myDropDownHeaderItems = this.dropdown.headers;
      * ```
      */
-    public get headers(): IDropDownItem[] {
-        const headers: IDropDownItem[] = [];
+    public get headers(): IgxDropDownItemBase[] {
+        const headers: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (child.isHeader) {
@@ -174,7 +175,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden
      */
-    protected scrollToItem(item: IDropDownItem) {
+    protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
         this.scrollContainer.scrollTop = (itemPosition);
     }
@@ -182,7 +183,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden
      */
-    protected calculateScrollPosition(item: IDropDownItem): number {
+    protected calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
         }
@@ -229,7 +230,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public selectItem(newSelection?: IDropDownItem, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
