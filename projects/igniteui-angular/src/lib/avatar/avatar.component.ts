@@ -19,6 +19,14 @@ export enum Size {
     MEDIUM = 'medium',
     LARGE = 'large'
 }
+
+export enum AvatarType {
+    DEFAULT = 'default',
+    INITIALS = 'initials',
+    IMAGE = 'image',
+    ICON = 'icon'
+}
+
 /**
  * **Ignite UI for Angular Avatar** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar.html)
@@ -38,7 +46,6 @@ export enum Size {
 })
 export class IgxAvatarComponent implements OnInit, AfterViewInit {
 
-
     /**
      * This is a reference to the avatar `image` element in the DOM.
      *
@@ -50,6 +57,11 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @ViewChild('image')
     public image: ElementRef;
 
+    /**
+     *@hidden
+     */
+    @ViewChild('defaultTemplate', { read: TemplateRef })
+    protected defaultTemplate: TemplateRef<any>;
 
     /**
      *@hidden
@@ -62,11 +74,13 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     @ViewChild('initialsTemplate', { read: TemplateRef })
     protected initialsTemplate: TemplateRef<any>;
+
     /**
      *@hidden
      */
     @ViewChild('iconTemplate', { read: TemplateRef })
     protected iconTemplate: TemplateRef<any>;
+
     /**
      * Returns the `aria-label` of the avatar.
      *
@@ -77,6 +91,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('attr.aria-label')
     public ariaLabel = 'avatar';
+
     /**
      * Returns the `role` attribute of the avatar.
      *
@@ -88,6 +103,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('attr.role')
     public role = 'img';
+
     /**
      * Returns the class of the avatar.
      *
@@ -99,6 +115,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      */
     @HostBinding('class.igx-avatar')
     public cssClass = 'igx-avatar';
+
     /**
      * Returns the type of the avatar.
      * The avatar can be: `"initials type avatar"`, `"icon type avatar"` or `"image type avatar"`.
@@ -109,6 +126,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
+
+    @HostBinding('attr.aria-roledescription')
     public roleDescription: string;
 
     /**
@@ -128,6 +147,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-avatar-${NEXT_ID++}`;
+
     /**
      * Sets a round shape to the avatar if `roundShape` is `"true"`.
      * By default the shape of the avatar is a square.
@@ -138,6 +158,7 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
+
     @HostBinding('class.igx-avatar--rounded')
     @Input()
     public roundShape = false;
@@ -151,6 +172,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
+
+    @HostBinding('style.color')
     @Input()
     public color: string;
 
@@ -163,6 +186,8 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
+
+    @HostBinding('style.background')
     @Input()
     public bgColor: string;
 
@@ -237,6 +262,32 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
                 this._size = 'small';
         }
     }
+
+    /**
+     * Returns the type of the avatar.
+     *
+     * ```typescript
+     * let avatarType = this.avatar.type;
+     * ```
+     *
+     * @memberof IgxAvatarComponent
+     */
+    get type(): AvatarType {
+        if (this.src) {
+            return AvatarType.IMAGE;
+        }
+
+        if (this.icon) {
+            return AvatarType.ICON;
+        }
+
+        if (this.initials) {
+            return AvatarType.INITIALS;
+        }
+
+        return AvatarType.DEFAULT;
+    }
+
     /**
      * Returns the template of the avatar.
      *
@@ -246,17 +297,17 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *
      * @memberof IgxAvatarComponent
      */
-    get template() {
-        if (this.src) {
-            return this.imageTemplate;
+    get template(): TemplateRef<any> {
+        switch (this.type) {
+            case AvatarType.IMAGE:
+                return this.imageTemplate;
+            case AvatarType.INITIALS:
+                return this.initialsTemplate;
+            case AvatarType.ICON:
+                return this.iconTemplate;
+            default:
+                return this.defaultTemplate;
         }
-
-        if (this.initials) {
-            return this.initialsTemplate;
-        }
-
-        return this.iconTemplate;
-
     }
 
     constructor(public elementRef: ElementRef) { }
@@ -272,18 +323,23 @@ export class IgxAvatarComponent implements OnInit, AfterViewInit {
      *@hidden
      */
     public ngAfterViewInit() {
-        this.elementRef.nativeElement.classList.add(`igx-avatar--${this._size}`);
+        this.elementRef.nativeElement.classList
+            .add(`igx-avatar--${this._size}`, `igx-avatar--${this.type}`);
     }
+
     /**
      * @hidden
      */
-    private getRole() {
-        if (this.initials) {
-            return 'initials type avatar';
-        } else if (this.src) {
-            return 'image type avatar';
-        } else {
-            return 'icon type avatar';
+    private getRole(): string {
+        switch (this.type) {
+            case AvatarType.IMAGE:
+                return 'image avatar';
+            case AvatarType.ICON:
+                return 'icon avatar';
+            case AvatarType.INITIALS:
+                return 'initials avatar';
+            default:
+                return 'custom avatar';
         }
     }
 
