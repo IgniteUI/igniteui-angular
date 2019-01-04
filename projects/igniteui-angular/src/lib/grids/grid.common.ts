@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    HostBinding,
     HostListener,
     Inject,
     Injectable,
@@ -23,7 +22,6 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
@@ -126,9 +124,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     }
 }
 
-/**
- * @hidden
- */
 @Directive({
     selector: '[igxCell]'
 })
@@ -136,9 +131,7 @@ export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-/**
- * @hidden
- */
+
 @Directive({
     selector: '[igxHeader]'
 })
@@ -157,9 +150,7 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-/**
- * @hidden
- */
+
 @Directive({
     selector: '[igxCellEditor]'
 })
