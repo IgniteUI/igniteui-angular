@@ -168,6 +168,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return keys;
     }
 
+    /**
+     * @hidden
+    */
     public get rootGrid() {
         let currGrid = this;
         while (currGrid.parent) {
@@ -176,14 +179,13 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return currGrid;
     }
 
-    getChildGrid(path: Array<IPathSegment>) {
+    protected getChildGrid(path: Array<IPathSegment>) {
         if (!path) {
             return;
         }
         return this.hgridAPI.getChildGrid(path);
     }
-
-    getChildGrids(inDeph?: boolean) {
+    protected getChildGrids(inDeph?: boolean) {
         return  this.hgridAPI.getChildGrids(inDeph);
     }
 
@@ -206,6 +208,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return inState && this.childLayoutList.length !== 0;
     }
 
+    /**
+     * @hidden
+     */
     public viewCreatedHandler(args) {
         if (this.isChildGridRecord(args.context.$implicit)) {
             const key = args.context.$implicit.rowID;
@@ -213,6 +218,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         }
     }
 
+    /**
+     * @hidden
+     */
     public viewMovedHandler(args) {
         if (this.isChildGridRecord(args.context.$implicit)) {
             // view was moved, update owner in cache
@@ -247,6 +255,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private hg_horizontalScrollHandler(event) {
         this._scrollLeft = event.target.scrollLeft;
     }
+
+    /**
+     * @hidden
+     */
     public createColumnsList(cols: Array<any>) {
         const columns = [];
         const topLevelCols = this.onlyTopLevel(cols);

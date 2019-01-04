@@ -158,7 +158,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         this.hgridAPI.unset(this.id);
     }
 
-    getGrids() {
+    protected getGrids() {
         return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 }
