@@ -20,7 +20,8 @@ describe('IgxGrid - Column Pinning ', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const FIXED_CELL_CSS = 'igx-grid__th--pinned';
+    const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
+    const FIXED_CELL_CSS = 'igx-grid__td--pinned';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -36,7 +37,7 @@ describe('IgxGrid - Column Pinning ', () => {
         }).compileComponents();
     }));
 
-   it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
+    it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         tick();
         fix.detectChanges();
@@ -58,7 +59,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[0].context.column.field).toEqual('CompanyName');
 
         expect(headers[1].context.column.field).toEqual('ContactName');
-        expect(headers[1].parent.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+        expect(headers[1].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
@@ -366,133 +367,6 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[3].parent.parent.name).toEqual('igx-display-container');
     }));
 
-    it('should allow horizontal keyboard navigation between start pinned area and unpinned area.', fakeAsync (() => {
-        const fix = TestBed.createComponent(GridPinningComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-
-        fix.detectChanges();
-        tick();
-
-        grid.getColumnByName('CompanyName').pinned = true;
-        grid.getColumnByName('ContactName').pinned = true;
-
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.triggerEventHandler('focus', {});
-        tick();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[1];
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        tick();
-
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-        cell = cells[2];
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell.triggerEventHandler('blur', {});
-        tick();
-        cell = cells[0];
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        cell = cells[1];
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true);
-        tick();
-        fix.detectChanges();
-        expect(fix.componentInstance.selectedCell.value).toEqual('ALFKI');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ID');
-    }));
-
-    it('should allow vertical keyboard navigation in pinned area.', fakeAsync (() => {
-        const fix = TestBed.createComponent(DefaultGridComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
-        fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.triggerEventHandler('focus', {});
-
-        tick();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true);
-
-        tick();
-        grid.cdr.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[6];
-
-        UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
-
-        tick();
-        grid.cdr.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Alfreds Futterkiste');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-    }));
-
-    it('should allow keyboard navigation to first/last cell with Ctrl when there are the pinned columns.', async () => {
-        const fix = TestBed.createComponent(GridPinningComponent);
-        fix.detectChanges();
-
-        await wait();
-        const grid = fix.componentInstance.instance;
-        grid.getColumnByName('CompanyName').pinned = true;
-        grid.getColumnByName('ContactName').pinned = true;
-        fix.detectChanges();
-        const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-        let cell = cells[0];
-
-        cell.triggerEventHandler('focus', {});
-        await wait();
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowright', ctrlKey: true }));
-        await wait(30);
-        fix.detectChanges();
-
-        expect(fix.componentInstance.selectedCell.value).toEqual('030-0076545');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('Fax');
-
-        cell = cells[cells.length - 1];
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'arrowleft', ctrlKey: true }));
-        await wait(30);
-        fix.detectChanges();
-
-        // It won't scroll left since the next selected cell will be in the pinned area
-        expect(fix.componentInstance.selectedCell.value).toEqual('Maria Anders');
-        expect(fix.componentInstance.selectedCell.column.field).toMatch('ContactName');
-    });
-
     it('should allow hiding/showing pinned column.', fakeAsync(() => {
         const fix = TestBed.createComponent(GridPinningComponent);
         fix.detectChanges();
@@ -514,7 +388,7 @@ describe('IgxGrid - Column Pinning ', () => {
         let headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('ID');
-        expect(headers[0].nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(false);
+        expect(headers[0].nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(false);
 
         col.hidden = false;
         tick();
@@ -526,7 +400,7 @@ describe('IgxGrid - Column Pinning ', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
         expect(headers[0].context.column.field).toEqual('CompanyName');
-        expect(headers[0].parent.nativeElement.classList.contains(FIXED_CELL_CSS)).toBe(true);
+        expect(headers[0].parent.nativeElement.classList.contains(FIXED_HEADER_CSS)).toBe(true);
     }));
 
     it('should allow pinning a hidden column.', fakeAsync(() => {
@@ -624,7 +498,7 @@ describe('IgxGrid - Column Pinning ', () => {
         fix.detectChanges();
         grid.columns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
-                    column.index === 6) {
+                column.index === 6) {
                 column.pinned = true;
             }
         });
@@ -692,32 +566,32 @@ describe('IgxGrid - Column Pinning ', () => {
     }));
 
     it('should unpin initially pinned column, child of a column group which group exceeds the minimum unpinned area width',
-    fakeAsync(() => {
-        const fix = TestBed.createComponent(InnerPinnedGroupsGridComponent);
-        fix.detectChanges();
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(InnerPinnedGroupsGridComponent);
+            fix.detectChanges();
 
-        const grid = fix.componentInstance.instance;
-        const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
-        const rowChildren = firstRow.nativeElement.children;
+            const grid = fix.componentInstance.instance;
+            const firstRow = fix.debugElement.query(By.directive(IgxGridRowComponent));
+            const rowChildren = firstRow.nativeElement.children;
 
-        expect(rowChildren[0].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[1].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[2].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
-        expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
+            expect(rowChildren[0].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[1].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[2].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
+            expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
 
-        expect(grid.columns[0].pinned).toBe(true);
-        expect(grid.columns[1].pinned).toBe(true);
-        expect(grid.columns[2].pinned).toBe(true);
-        expect(grid.columns[3].pinned).toBe(true);
-        expect(grid.columns[4].pinned).toBe(true);
-        expect(grid.columns[5].pinned).toBe(true);
-        expect(grid.columns[6].pinned).not.toBe(true);
-        expect(grid.columns[7].pinned).not.toBe(true);
-        expect(grid.columns[8].pinned).not.toBe(true);
+            expect(grid.columns[0].pinned).toBe(true);
+            expect(grid.columns[1].pinned).toBe(true);
+            expect(grid.columns[2].pinned).toBe(true);
+            expect(grid.columns[3].pinned).toBe(true);
+            expect(grid.columns[4].pinned).toBe(true);
+            expect(grid.columns[5].pinned).toBe(true);
+            expect(grid.columns[6].pinned).not.toBe(true);
+            expect(grid.columns[7].pinned).not.toBe(true);
+            expect(grid.columns[8].pinned).not.toBe(true);
 
-        expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
-    }));
+            expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
+        }));
 });
 
 /* tslint:disable */
@@ -931,7 +805,7 @@ export class OverPinnedGridComponent {
     public selectedCell;
     public data = companyData;
     public columns = [
-        { field: 'ID', width: '150px', hidden: true},
+        { field: 'ID', width: '150px', hidden: true },
         { field: 'CompanyName', width: '150px', pinned: true },
         { field: 'ContactName', width: '150px', pinned: true },
         { field: 'ContactTitle', width: '150px', pinned: true },

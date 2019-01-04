@@ -12,6 +12,11 @@
 
     @extend %igx-avatar-display !optional;
 
+    @include e(image) {
+        @extend %igx-avatar-inner !optional;
+        @extend %igx-avatar-image !optional;
+    }
+
     @include m(rounded) {
         @extend %igx-avatar-display !optional;
         @extend %igx-avatar--rounded !optional;
@@ -19,40 +24,30 @@
 
     @include m(small) {
         @extend %igx-avatar--small !optional;
-
-        @include e(initials) {
-            @extend %igx-avatar-initials--small !optional;
-        }
     }
 
     @include m(medium) {
         @extend %igx-avatar--medium !optional;
-
-        @include e(initials) {
-            @extend %igx-avatar-initials--medium !optional;
-        }
     }
 
     @include m(large) {
         @extend %igx-avatar--large !optional;
-
-        @include e(initials) {
-            @extend %igx-avatar-initials--large !optional;
-        }
     }
 
-    @include e(icon) {
-        @extend %igx-avatar-inner !optional;
+    @include m(icon) {
         @extend %igx-avatar-icon !optional;
     }
 
-    @include e(image) {
-        @extend %igx-avatar-inner !optional;
-        @extend %igx-avatar-image !optional;
+    @include m(initials) {
+        @extend %igx-avatar-initials !optional;
+        @extend %igx-avatar-initials--small !optional;
     }
 
-    @include e(initials) {
-        @extend %igx-avatar-inner !optional;
-        @extend %igx-avatar-initials !optional;
+    @include mx(medium, initials) {
+        @extend %igx-avatar-initials--medium !optional;
+    }
+
+    @include mx(large, initials) {
+        @extend %igx-avatar-initials--large !optional;
     }
 }

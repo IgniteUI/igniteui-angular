@@ -7,7 +7,6 @@ export interface ITreeGridRecord {
     level?: number;
     isFilteredOutParent?: boolean;
     expanded?: boolean;
-    path: any[];
 }
 
 export interface IRowToggleEventArgs {

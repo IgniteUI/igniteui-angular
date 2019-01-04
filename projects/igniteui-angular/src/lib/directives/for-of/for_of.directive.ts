@@ -159,7 +159,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected hvh: ComponentRef<HVirtualHelperComponent>;
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
-    private heightCache = [];
+    protected heightCache = [];
     private _adjustToIndex;
 
     private get _isScrolledToBottom() {
@@ -425,7 +425,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @param index
      */
     public scrollTo(index) {
-        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length)) {
+        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
             return;
         }
         const containerSize = parseInt(this.igxForContainerSize, 10);
@@ -625,7 +625,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const view = this._embeddedViews[i];
             const rNode = view.rootNodes.find((node) => node.nodeType === Node.ELEMENT_NODE);
             if (rNode) {
-                const h = Math.max(rNode.offsetHeight, rNode.clientHeight, parseInt(this.igxForItemSize, 10));
+                const h = Math.max(rNode.offsetHeight, parseInt(this.igxForItemSize, 10));
                 const index = this.state.startIndex + i;
                 if (!this.isRemote && !this.igxForOf[index]) {
                     continue;
@@ -1169,6 +1169,53 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
     }
 
+    protected initSizesCache(items: any[]): number {
+        let totalSize = 0;
+        let size = 0;
+        const dimension = this.igxForScrollOrientation === 'horizontal' ?
+            'width' : 'height';
+        let i = 0;
+        this.sizesCache = [];
+        this.heightCache = [];
+        this.sizesCache.push(0);
+        const count = this.isRemote ? this.totalItemCount : items.length;
+        for (i; i < count; i++) {
+            if (dimension === 'height') {
+                size = parseInt(this.igxForItemSize, 10) || 0;
+                if (items[i] && items[i].summaries) {
+                    size = items[i].max;
+                }
+                this.heightCache.push(size);
+            } else {
+                size = parseInt(items[i][dimension], 10) || 0;
+            }
+            totalSize += size;
+            this.sizesCache.push(totalSize);
+        }
+        return totalSize;
+    }
+
+    protected _updateSizeCache() {
+        if (this.igxForScrollOrientation === 'horizontal') {
+            this.initSizesCache(this.igxForOf);
+            return;
+        }
+        const scr = this.vh.instance.elementRef.nativeElement;
+
+        const oldHeight = this.heightCache.length > 0 ? this.heightCache.reduce((acc, val) => acc + val) : 0;
+        const newHeight =  this.initSizesCache(this.igxForOf);
+
+        const diff = oldHeight - newHeight;
+
+        // if data has been changed while container is scrolled
+        // should update scroll top/left according to change so that same startIndex is in view
+        if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
+            this.recalcUpdateSizes();
+            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+        }
+    }
+
     ngDoCheck() {
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
@@ -1177,7 +1224,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (!this.igxForOf) {
                     return;
                 }
-                this.initSizesCache(this.igxForOf);
+                this._updateSizeCache();
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
