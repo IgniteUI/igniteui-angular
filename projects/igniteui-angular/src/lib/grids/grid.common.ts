@@ -177,6 +177,12 @@ export class IgxColumnMovingService {
         rowID: any
     };
 
+    public activeElement: {
+        tag: string,
+        column: IgxColumnComponent,
+        rowIndex: number
+    };
+
     get column(): IgxColumnComponent {
         return this._column;
     }
@@ -274,6 +280,20 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
                 column: this.column.grid.columnList.toArray()[currSelection.columnID],
                 rowID: currSelection.rowID
             };
+        }
+        // tslint:disable-next-line:no-bitwise
+        if (document.activeElement.compareDocumentPosition(this.column.grid.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS) {
+            if (parseInt(document.activeElement.getAttribute('data-visibleIndex'), 10) !== this.column.visibleIndex) {
+                (document.activeElement as HTMLElement).blur();
+                return;
+            }
+            this.cms.activeElement = {
+                tag: document.activeElement.tagName.toLowerCase() === 'igx-grid-summary-cell' ?
+                        document.activeElement.tagName.toLowerCase() : '',
+                column: this.column,
+                rowIndex: parseInt(document.activeElement.getAttribute('data-rowindex'), 10)
+            };
+            (document.activeElement as HTMLElement).blur();
         }
 
         const args = {
@@ -528,12 +548,13 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                     rowID: this.cms.selection.rowID,
                     columnID: this.column.grid.columnList.toArray().indexOf(this.cms.selection.column)
                 }]));
-
-                const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
-
-                if (cell) {
-                    cell.nativeElement.focus();
-                }
+            }
+            if (this.cms.activeElement) {
+                const gridEl = this.column.grid.nativeElement;
+                const activeEl = gridEl.querySelector(`${this.cms.activeElement.tag}[data-rowindex="${this.cms.activeElement.rowIndex}"]` +
+                    `[data-visibleIndex="${this.cms.activeElement.column.visibleIndex}"]`);
+                if (activeEl) { activeEl.focus(); }
+                this.cms.activeElement = null;
             }
 
             this.column.grid.draggedColumn = null;
