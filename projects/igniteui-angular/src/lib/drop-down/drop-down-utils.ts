@@ -36,7 +36,7 @@ export interface IDropDownList extends IToggleView, OnInit {
     onToggleClosing(e: CancelableEventArgs): void;
     onToggleClosed(): void;
     navigateItem(newIndex: number): void;
-    handleKeyDown(key: DropDownActionKeys);
+    handleKeyDown(key: DropDownActionKeys, event?: Event);
 }
 
 
@@ -46,7 +46,6 @@ export interface IDropDownBase extends IDropDownList {
     allowItemsFocus?: boolean;
     items: IDropDownItem[];
     headers: IDropDownItem[];
-    changeSelectedItem(item: IDropDownItem, event?: Event): void;
     setSelectedItem(index: number): void;
     selectItem(item: IDropDownItem, event?: Event): void;
 }

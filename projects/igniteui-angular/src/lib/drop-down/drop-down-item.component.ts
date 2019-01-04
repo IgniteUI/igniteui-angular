@@ -2,7 +2,8 @@ import {
     Component,
     Input,
     DoCheck,
-    HostListener
+    HostListener,
+    HostBinding
 } from '@angular/core';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
@@ -11,6 +12,16 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
     templateUrl: 'drop-down-item.component.html'
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
+    @HostBinding('attr.tabindex')
+    get setTabIndex() {
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
+        if (shouldSetTabIndex) {
+            return 0;
+        } else {
+            return null;
+        }
+    }
+
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {
@@ -21,7 +32,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             return;
         }
         if (this.selection) {
-            this.dropDown.changeSelectedItem(this, event);
+            this.dropDown.selectItem(this, event);
         }
     }
 }

@@ -18,7 +18,7 @@ const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 
-fdescribe('IgxDropDown ', () => {
+describe('IgxDropDown ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -869,7 +869,8 @@ fdescribe('IgxDropDown ', () => {
             expect(dropdown.selectItem).toHaveBeenCalledTimes(0);
             expect(dropdown.collapsed).toEqual(true);
             expect(dropdown.focusedItem).toEqual(null);
-            inputElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            const mockEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            inputElement.dispatchEvent(mockEvent);
             tick();
             expect(dropdown.selectItem).toHaveBeenCalledTimes(0); // does not attempt to select item on keydown if DD is closed;
             expect(dropdown.selectedItem).toEqual(null);
@@ -879,11 +880,10 @@ fdescribe('IgxDropDown ', () => {
             expect(dropdown.collapsed).toEqual(false);
             expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
             const dropdownItem = dropdown.items[0];
-            const mockEvent = new KeyboardEvent('keydown', { key: 'Enter' });
             inputElement.dispatchEvent(mockEvent);
             tick();
             expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
-            expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, jasmine.any(Object));
+            expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, mockEvent);
             expect(dropdown.selectedItem).toEqual(dropdownItem);
             expect(dropdown.collapsed).toEqual(true);
         }));

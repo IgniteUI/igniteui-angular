@@ -184,7 +184,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
         if (this.isSelected) {
             const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
             if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
-                this.selection.select_item(this.dropDown.id, this.itemID);
+                this.dropDown.selectItem(this);
             }
         }
     }

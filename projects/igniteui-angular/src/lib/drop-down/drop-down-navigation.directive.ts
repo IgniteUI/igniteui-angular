@@ -53,15 +53,15 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
             switch (key) {
                 case 'esc':
                 case 'escape':
-                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE);
+                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE, event);
                     break;
                 case 'enter':
-                    this.target.handleKeyDown(DropDownActionKeys.ENTER);
+                    this.target.handleKeyDown(DropDownActionKeys.ENTER, event);
                     break;
                 case 'space':
                 case 'spacebar':
                 case ' ':
-                    this.target.handleKeyDown(DropDownActionKeys.SPACE);
+                    this.target.handleKeyDown(DropDownActionKeys.SPACE, event);
                     break;
                 case 'arrowup':
                 case 'up':

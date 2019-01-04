@@ -131,36 +131,15 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (index < 0 || index >= this.items.length) {
             return;
         }
-
         const newSelection = this.items[index];
-        if (!newSelection) {
-            return;
-        }
-        if (newSelection.isHeader) {
-            return;
-        }
-
-        this.changeSelectedItem(newSelection);
-    }
-
-    /**
-     * @hidden
-     */
-    public selectItem(item: IDropDownItem, event?) {
-        if (item === null) {
-            return;
-        }
-        if (item.isHeader) {
-            return;
-        }
-
-        this.changeSelectedItem(item, event);
+        this.selectItem(newSelection);
     }
 
     navigateItem(index: number) {
         super.navigateItem(index);
         if (this.allowItemsFocus && this.focusedItem) {
             this.focusedItem.element.nativeElement.focus();
+            this.cdr.markForCheck();
         }
     }
 
@@ -220,12 +199,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return Math.floor(scrollPosition);
     }
 
-    public handleKeyDown(key: DropDownActionKeys) {
+    public handleKeyDown(key: DropDownActionKeys, event?: Event) {
         switch (key) {
             case DropDownActionKeys.ENTER:
             case DropDownActionKeys.SPACE:
             case DropDownActionKeys.TAB:
-                this.selectItem(this.focusedItem);
+                this.selectItem(this.focusedItem, event);
                 this.close();
                 break;
             case DropDownActionKeys.ESCAPE:
@@ -250,10 +229,16 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public changeSelectedItem(newSelection?: IDropDownItem, event?: Event): boolean {
+    public selectItem(newSelection?: IDropDownItem, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
+        }
+        if (newSelection === null) {
+            return;
+        }
+        if (newSelection.isHeader) {
+            return;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
@@ -270,8 +255,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
                 this.toggleDirective.close();
             }
         }
-
-        return !args.cancel;
     }
 }
 
