@@ -27,7 +27,7 @@ import { IgxColumnResizingService } from './grid-column-resizing.service';
     selector: 'igx-grid-header',
     templateUrl: './grid-header.component.html'
 })
-export class IgxGridHeaderComponent implements OnInit, DoCheck {
+export class IgxGridHeaderComponent implements DoCheck {
 
     @Input()
     public column: IgxColumnComponent;
@@ -113,10 +113,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
         public filteringService: IgxFilteringService
     ) { }
 
-    public ngOnInit() {
-        this.column.columnGroup ? this.zone.runTask(() => this.cdr.markForCheck()) :
-            this.cdr.markForCheck();
-    }
 
     public ngDoCheck() {
         this.getSortDirection();
@@ -141,12 +137,6 @@ export class IgxGridHeaderComponent implements OnInit, DoCheck {
                 this.sortDirection = sortDir;
                 this.grid.sort({ fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
                     strategy: this.column.sortStrategy });
-                this.grid.onSortingDone.emit({
-                    dir: this.sortDirection,
-                    fieldName: this.column.field,
-                    ignoreCase: this.column.sortingIgnoreCase,
-                    strategy: this.column.sortStrategy
-                });
             }
         }
     }

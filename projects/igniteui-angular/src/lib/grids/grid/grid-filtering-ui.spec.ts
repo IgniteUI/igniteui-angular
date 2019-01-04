@@ -1293,7 +1293,7 @@ describe('IgxGrid - Filtering actions', () => {
         tick();
         fix.detectChanges();
 
-        const firstMonth = calendar.queryAll(By.css('.igx-calendar__month'))[0];
+        const firstMonth = calendar.queryAll(By.css(`[class*='igx-calendar__month']`))[0];
         firstMonth.nativeElement.click();
         tick();
         fix.detectChanges();
@@ -2988,7 +2988,9 @@ function fillExpectedResults(grid: IgxGridComponent, calendar: Calendar, today) 
     // day + 15
     if (!dateItem0.isThisYear) {
         thisYearCountItems--;
-    } else if (dateItem0.isNextYear) {
+    }
+
+    if (dateItem0.isNextYear) {
         nextYearCountItems++;
     }
 

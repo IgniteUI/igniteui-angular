@@ -30,6 +30,7 @@
 /// @param {String} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
 /// @param {Color} $pinned-border-color [null] - The color of the pinned border.
+/// @param {Color} $cell-active-border-color [null] - The border color for the currently active(focused) cell.
 /// @param {Color} $cell-selected-background [null] - The selected cell background color.
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
@@ -104,6 +105,7 @@
     $pinned-border-style: null,
     $pinned-border-color: null,
 
+    $cell-active-border-color: null,
     $cell-selected-background: null,
     $cell-selected-text-color: null,
     $cell-editing-background: null,
@@ -333,6 +335,7 @@
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
 
+        cell-active-border-color: $cell-active-border-color,
         cell-selected-background: $cell-selected-background,
         cell-editing-background: $cell-editing-background,
         cell-selected-text-color: $cell-selected-text-color,
@@ -843,9 +846,12 @@
     }
 
     %grid-cell--fixed-width {
-        // position: relative;
         flex-grow: 0;
         outline-style: none;
+    }
+
+    %grid-cell--active {
+        box-shadow: inset 0 0 0 1px --var($theme, 'cell-active-border-color');
     }
 
     %grid-cell--selected {
@@ -879,7 +885,7 @@
 
     %igx-grid__td--editing {
         background-color: --var($theme, 'cell-editing-background') !important;
-        border: rem(2px) solid --var($theme, 'edit-mode-color');
+        box-shadow: inset 0 0 0 rem(2px) --var($theme, 'edit-mode-color');
 
         igx-input-group {
             width: 100%;

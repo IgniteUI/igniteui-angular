@@ -406,7 +406,7 @@ describe('IgxGrid - Cell component', () => {
             configureTestSuite();
             let fixture;
             let grid;
-            const CELL_CLASS_IN_EDIT_MODE = 'igx_grid__cell--edit';
+            const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
             beforeEach(async() => {
                 fixture = TestBed.createComponent(CellEditingScrollTestComponent);
                 fixture.detectChanges();

@@ -67,6 +67,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
+import { DeprecateMethod } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -164,6 +165,7 @@ export enum GridSummaryCalculationMode {
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+    private _data: any[];
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -173,7 +175,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Input()
-    public data: any[];
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+    }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
@@ -278,7 +287,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
             this.filteringService.refreshExpressions();
-            this.clearSummaryCache();
+            this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
     }
@@ -831,7 +840,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set summaryCalculationMode(value) {
         this._summaryCalculationMode = value;
         if (this.gridAPI.get(this.id)) {
-            this.summaryService.summaryHeight = 0;
+            this.summaryService.resetSummaryHeight();
             this.endEdit(true);
             this.calculateGridHeight();
             this.cdr.markForCheck();
@@ -1082,7 +1091,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @Output()
-    public onSortingDone = new EventEmitter<ISortingExpression>();
+    public onSortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
 
     /**
      * Emitted when filtering is performed through the UI.
@@ -2264,7 +2273,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcRowCheckboxWidth = 0;
 
         this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe((args) => this.refreshGridState(args));
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => this.clearSummaryCache(args));
+        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            this.summaryService.deleteOperation = true;
+            this.summaryService.clearSummaryCache(args);
+        });
         this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.endEdit(true);
@@ -2273,9 +2285,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.clearSummaryCache();
+            this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.markForCheck();
+            if (this.transactions.getAggregatedChanges(false).length === 0) {
+                // Needs better check, calling 'transactions.clear()' will also trigger this
+                if (this.data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+                    this.page--;
+                }
+            }
         });
     }
 
@@ -2290,8 +2308,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
 
         this.columnListDiffer.diff(this.columnList);
-        this._derivePossibleHeight();
         this.markForCheck();
+        this._derivePossibleHeight();
 
         this.columnList.changes
             .pipe(takeUntil(this.destroy$))
@@ -2302,7 +2320,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     this.initColumns(this.columnList);
 
                     diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                        this.clearSummaryCache();
+                        this.summaryService.clearSummaryCache();
                         this.calculateGridSizes();
                         this.onColumnInit.emit(record.item);
                     });
@@ -2310,7 +2328,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     requestAnimationFrame(() => {
                         diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
                             // Recalculate Summaries
-                            this.clearSummaryCache();
+                            this.summaryService.clearSummaryCache();
                             this.calculateGridSizes();
 
                             // Clear Filtering
@@ -2595,9 +2613,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public getHeaderGroupWidth(column: IgxColumnComponent): string {
-
+        const colWidth = column.width;
         const minWidth = this.defaultHeaderGroupMinWidth;
-        if (parseInt(column.width, 10) < minWidth) {
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+
+        if (!isPercentageWidth && parseInt(column.width, 10) < minWidth) {
             return minWidth.toString();
         }
 
@@ -3061,9 +3081,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.deleteRowFromData(rowId, index);
         this._pipeTrigger++;
         this.cdr.markForCheck();
-
+        // Data needs to be recalculated if transactions are in place
+        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
+        const dataAfterDelete = this.transactions.enabled ? this.dataWithAddedInTransactionRows : data;
         this.refreshSearch();
-        if (data.length % this.perPage === 0 && this.isLastPage && this.page !== 0) {
+        if (dataAfterDelete.length % this.perPage === 0 && dataAfterDelete.length / this.perPage - 1 < this.page && this.page !== 0) {
             this.page--;
         }
     }
@@ -3159,6 +3181,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(this.id, expression);
         }
+        this.onSortingDone.emit(expression);
     }
 
     /**
@@ -3247,8 +3270,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], false);
         }
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
@@ -3294,8 +3315,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @DeprecateMethod('There is no need to call clearSummaryCache method.The summary cache is cleared automatically when needed.')
     public clearSummaryCache(args?) {
-        this.summaryService.clearSummaryCache(args);
     }
 
     /**
@@ -3303,7 +3324,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public refreshGridState(args?) {
             this.endEdit(true);
-            this.clearSummaryCache(args);
+            this.summaryService.clearSummaryCache(args);
     }
 
     // TODO: We have return values here. Move them to event args ??
@@ -3351,10 +3372,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    @DeprecateMethod('There is no need to call recalculateSummaries method. The summaries are recalculated automatically when needed.')
     public recalculateSummaries() {
-        this.summaryService.resetSummaryHeight();
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
@@ -3547,7 +3566,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if ((this._height && this._height.indexOf('%') === -1) || !this._height) {
             return;
         }
-        if (!this.nativeElement.parentNode.clientHeight) {
+        if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
             const viewPortHeight = document.documentElement.clientHeight;
             this._height = this.rowBasedHeight <= viewPortHeight ? null : viewPortHeight.toString();
         } else {
@@ -3668,7 +3687,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const columnsToSize = visibleChildColumns.length - columnsWithSetWidths.length;
 
         const sumExistingWidths = columnsWithSetWidths
-            .reduce((prev, curr) => prev + parseInt(curr.width, 10), 0);
+            .reduce((prev, curr) => {
+                const colWidth = curr.width;
+                const widthValue = parseInt(colWidth, 10);
+                const currWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1 ?
+                    widthValue / 100 * computedWidth :
+                    widthValue;
+                return prev + currWidth;
+            }, 0);
 
         const columnWidth = !Number.isFinite(sumExistingWidths) ?
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
@@ -3681,24 +3707,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected calculateGridWidth() {
+        let width;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const el = this.document.getElementById(this.nativeElement.id);
 
         if (this._width && this._width.indexOf('%') !== -1) {
             /* width in %*/
-            const width = computed.getPropertyValue('width').indexOf('%') === -1 ?
-                parseInt(computed.getPropertyValue('width'), 10) :
-                this.document.getElementById(this.nativeElement.id).offsetWidth;
-
-            if (Number.isFinite(width) && width !== this.calcWidth) {
-                this.calcWidth = width;
-
-                this.cdr.markForCheck();
-            }
+            width = computed.getPropertyValue('width').indexOf('%') === -1 ?
+                parseInt(computed.getPropertyValue('width'), 10) : null;
         } else {
-            this.calcWidth = parseInt(this._width, 10);
+            width = parseInt(this._width, 10);
+        }
+
+        if (!width && el) {
+            width = el.offsetWidth;
         }
 
         this._derivePossibleWidth();
+
+        if (!width) {
+            width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
+        }
+
+        if (Number.isFinite(width) && width !== this.calcWidth) {
+            this.calcWidth = width;
+            this.cdr.markForCheck();
+        }
     }
 
     /**
@@ -3764,7 +3798,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (column) {
             column.hasSummary = hasSummary;
             if (summaryOperand) {
-                if (this.rootSummariesEnabled) {this.summaryService.retriggerRootPipe = !this.summaryService.retriggerRootPipe; }
+                if (this.rootSummariesEnabled) { this.summaryService.retriggerRootPipe++; }
                 column.summaries = summaryOperand;
             }
         }
@@ -4450,16 +4484,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private checkIfGridIsAdded(node): boolean {
         if (node === this.nativeElement) {
             return true;
-        } else {
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
+        }
 
+
+        if (!node.childNodes) {
             return false;
         }
+
+        for (const childNode of node.childNodes) {
+            const added = this.checkIfGridIsAdded(childNode);
+            if (added) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
