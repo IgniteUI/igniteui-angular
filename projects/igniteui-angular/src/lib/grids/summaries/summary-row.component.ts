@@ -70,10 +70,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.element.nativeElement;
     }
 
-    get gridDensity(): string {
-        return this.grid.displayDensity || DisplayDensity.comfortable;
-    }
-
     public getColumnSummaries(columnName) {
         if (!this.summaries.get(columnName)) {
             return [];
