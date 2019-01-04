@@ -2241,6 +2241,7 @@ fdescribe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.dropdown.items[0].value).toEqual(combo.data[0]);
         }));
+
         it('Should properly handle click events on Disabled / Header items', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
@@ -2259,7 +2260,7 @@ fdescribe('igxCombo', () => {
             spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
             combo.dropdown.headers[0].clicked(null);
             fix.detectChanges();
-            expect(mockObj.focus).toHaveBeenCalled();
+            expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`
 
             combo.dropdown.items[0].clicked(null);
             fix.detectChanges();
@@ -2787,6 +2788,7 @@ fdescribe('igxCombo', () => {
             expect(addItem).toEqual(null);
             expect(combo.children.length).toBeTruthy();
         }));
+
         it(`Should handle enter keydown on "Add Item" properly`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
@@ -2816,8 +2818,8 @@ fdescribe('igxCombo', () => {
             tick();
             fixture.detectChanges();
             expect(combo.collapsed).toBeFalsy();
-            expect(combo.value).toEqual('My New Custom Item');
-            expect(combo.isAddButtonVisible()).toBeFalsy();
+            expect(combo.value).toEqual('');
+            expect(combo.isAddButtonVisible()).toBeTruthy();
 
             dropdownHandler = document.getElementsByClassName('igx-combo__content')[0] as HTMLElement;
             dropdownHandler.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
@@ -2907,6 +2909,7 @@ fdescribe('igxCombo', () => {
             tick();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
         }));
+
         it(`Should properly display "Add Item" button when filtering is off`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();

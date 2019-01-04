@@ -76,6 +76,13 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     @HostListener('click', ['$event'])
     clicked(event) {
         this.comboAPI.disableTransitions = false;
+        if (this.disabled || this.isHeader) {
+            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
+            if (this.dropDown.allowItemsFocus && focusedItem) {
+                focusedItem.element.nativeElement.focus({ preventScroll: true });
+            }
+            return;
+        }
         this.dropDown.navigateItem(this.index);
         this.selection.set_selected_item(this.comboID, this.itemID, event);
     }

@@ -15,7 +15,7 @@ import {
     IgxComboAddItemDirective
 } from './combo.directives';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
-import { IgxCheckboxComponent, IgxCheckboxModule } from '../checkbox/checkbox.component';
+import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';

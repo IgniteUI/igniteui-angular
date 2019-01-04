@@ -174,12 +174,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         if (item === null || item === undefined) {
             return;
         }
-        if (item instanceof IgxComboAddItemComponent) {
-            this.combo.addItemToCollection();
-        } else {
-            this.selection.set_selected_item(this.comboID, item.itemID);
-            this._focusedItem = item;
-        }
+        this.selection.set_selected_item(this.comboID, item.itemID);
+        this._focusedItem = item;
     }
 
     /**
@@ -209,7 +205,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         const items = this.items;
         const children = this.children.toArray();
         if (focusedItem) {
-            if (focusedItem instanceof IgxComboAddItemComponent) { return; }
+            if (this.isAddItemFocused()) { return; }
             if (focusedItem.value === allData[allData.length - 1]) {
                 this.focusAddItemButton();
                 return;
@@ -351,7 +347,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                 this.handleEnter();
                 break;
             case DropDownActionKeys.SPACE:
-                this.selectItem(this.focusedItem);
+                this.handleSpace();
                 break;
             case DropDownActionKeys.TAB:
             case DropDownActionKeys.ESCAPE:
@@ -360,11 +356,23 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     private handleEnter() {
-        if (this.focusedItem instanceof IgxComboAddItemComponent) {
+        if (this.isAddItemFocused()) {
             this.combo.addItemToCollection();
         } else {
             this.close();
         }
+    }
+
+    private handleSpace() {
+        if (this.isAddItemFocused()) {
+            return;
+        } else {
+            this.selectItem(this.focusedItem);
+        }
+    }
+
+    private isAddItemFocused(): boolean {
+        return this.focusedItem instanceof IgxComboAddItemComponent;
     }
 
     public ngAfterViewInit() {
