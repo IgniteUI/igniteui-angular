@@ -44,7 +44,7 @@ const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -2937,6 +2937,7 @@ fdescribe('igxCombo', () => {
     });
 
     describe('Form control tests: ', () => {
+
        it('Should properly initialize when used as a form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();
@@ -2955,6 +2956,7 @@ fdescribe('igxCombo', () => {
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
             expect(combo.valid).toEqual(IgxComboState.VALID);
         }));
+
         it('Should be possible to be enabled/disabled when used as a form control', () => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();

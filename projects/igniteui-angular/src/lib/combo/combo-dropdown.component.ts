@@ -307,9 +307,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     protected scrollToHiddenItem(newItem: any): void { }
-    protected _handleClick(event: any) {
-        this.selection.set_selected_item(this.comboID, event.itemID);
-    }
 
     /**
      * @hidden
@@ -376,7 +373,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     public ngAfterViewInit() {
-        super.ngAfterViewInit();
         this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.scrollHandler);
     }
 

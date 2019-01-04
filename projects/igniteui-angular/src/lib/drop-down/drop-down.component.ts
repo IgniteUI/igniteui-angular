@@ -24,7 +24,6 @@ import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { IgxDropDownSelectionService } from './drop-down.selection';
 
 
@@ -49,7 +48,7 @@ import { IgxDropDownSelectionService } from './drop-down.selection';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy, AfterViewInit {
+export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     protected children: QueryList<IDropDownItem>;
 
@@ -133,7 +132,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             return;
         }
 
-        const newSelection = this.items.find((item) => item.index === index);
+        const newSelection = this.items[index];
         if (!newSelection) {
             return;
         }
@@ -151,14 +150,17 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (item === null) {
             return;
         }
-        if (item.isHeader || item.disabled) {
+        if (item.isHeader) {
             return;
         }
 
-        this.changeSelectedItem(item);
+        this.changeSelectedItem(item, event);
+    }
 
-        if (event) {
-            this.toggleDirective.close();
+    navigateItem(index: number) {
+        super.navigateItem(index);
+        if (this.allowItemsFocus && this.focusedItem) {
+            this.focusedItem.element.nativeElement.focus();
         }
     }
 
@@ -182,16 +184,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     ngOnInit() {
         super.ngOnInit();
-        this.selection.clear(this.id);
-    }
-
-    ngAfterViewInit() {
-        // this.selection.onSelection.pipe(takeUntil(this.destroy$)).subscribe(e => this._handleClick(e));
     }
 
     ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
+        this.selection.clear(this.id);
     }
 
     /**
@@ -222,16 +220,13 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return Math.floor(scrollPosition);
     }
 
-    protected _handleClick(event: any) {
-        this.selectItem(event.itemID);
-    }
-
     public handleKeyDown(key: DropDownActionKeys) {
         switch (key) {
             case DropDownActionKeys.ENTER:
             case DropDownActionKeys.SPACE:
             case DropDownActionKeys.TAB:
                 this.selectItem(this.focusedItem);
+                this.close();
                 break;
             case DropDownActionKeys.ESCAPE:
                 this.close();
@@ -248,23 +243,31 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
-    protected changeSelectedItem(newSelection?: IDropDownItem): boolean {
+    /**
+     * Handles the `onSelection` emit and the drop down toggle when selection changes
+     * @hidden
+     * @internal
+     * @param newSelection
+     * @param event
+     */
+    public changeSelectedItem(newSelection?: IDropDownItem, event?: Event): boolean {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this._focusedItem;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
-        if (!args.cancel) {
-            this.selection.set(this.id, new Set([newSelection]));
-        }
 
         if (!args.cancel) {
+            this.selection.set(this.id, new Set([newSelection]));
             if (oldSelection) {
                 oldSelection.isSelected = false;
             }
             if (newSelection) {
                 newSelection.isSelected = true;
+            }
+            if (event) {
+                this.toggleDirective.close();
             }
         }
 

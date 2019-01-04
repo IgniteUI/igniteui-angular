@@ -46,7 +46,7 @@ export class IgxDropDownSelectionService extends IgxSelectionAPIService {
         };
         this.onSelection.next(selectionArgs);
         const newSet = this.add_items(componentID, selectionEvent.newSelection, true);
-        this.selection.set(componentID, newSet);
+        super.set(componentID, newSet);
     }
 
     public get selectionEmitter(): Observable<IDropDownSelectionServiceEvent> {

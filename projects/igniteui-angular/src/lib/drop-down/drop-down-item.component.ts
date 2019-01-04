@@ -21,7 +21,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             return;
         }
         if (this.selection) {
-            this.selection.set_selected_item(this.dropDown.id, this.itemID, event);
+            this.dropDown.changeSelectedItem(this, event);
         }
     }
 }

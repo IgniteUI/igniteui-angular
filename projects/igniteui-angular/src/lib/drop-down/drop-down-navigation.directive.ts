@@ -1,5 +1,5 @@
-import { Directive, Optional, Self, Input, HostListener } from '@angular/core';
-import { DropDownNavigationDirective, IDropDownBase } from './drop-down-utils';
+import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
+import { DropDownNavigationDirective, IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
 import { IgxDropDownBase } from './drop-down.base';
 
 export enum DropDownActionKeys {
@@ -15,7 +15,7 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
 
     protected _target;
 
-    constructor(@Self() @Optional() public dropdown: IgxDropDownBase) { }
+    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBase) { }
 
     /**
      * @hidden

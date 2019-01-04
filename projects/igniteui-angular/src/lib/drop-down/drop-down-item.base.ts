@@ -61,7 +61,7 @@ export abstract class IgxDropDownItemBase implements IDropDownItem, DoCheck {
     }
 
     set isSelected(value: boolean) {
-        if (this.isHeader || this.disabled) {
+        if (this.isHeader) {
             return;
         }
         this._isSelected = value;

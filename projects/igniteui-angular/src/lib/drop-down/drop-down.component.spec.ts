@@ -18,7 +18,7 @@ const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 
-describe('IgxDropDown ', () => {
+fdescribe('IgxDropDown ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -879,7 +879,8 @@ describe('IgxDropDown ', () => {
             expect(dropdown.collapsed).toEqual(false);
             expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
             const dropdownItem = dropdown.items[0];
-            inputElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            const mockEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+            inputElement.dispatchEvent(mockEvent);
             tick();
             expect(dropdown.selectItem).toHaveBeenCalledTimes(1);
             expect(dropdown.selectItem).toHaveBeenCalledWith(dropdownItem, jasmine.any(Object));
