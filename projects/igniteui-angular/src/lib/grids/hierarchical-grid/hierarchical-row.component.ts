@@ -6,7 +6,8 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ViewChildren,
-    QueryList
+    QueryList,
+    ViewChild
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
@@ -34,6 +35,10 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      */
     @ViewChildren(forwardRef(() => IgxHirarchicalGridCellComponent), { read: IgxHirarchicalGridCellComponent })
     public cells: QueryList<IgxHirarchicalGridCellComponent>;
+
+    @ViewChild('expander', { read: ElementRef })
+    public expander: ElementRef;
+
     /**
      * @hidden
      */
@@ -51,7 +56,14 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     public get hasChildren() {
-        return  this.grid.childLayoutKeys.length;
+        let hasChild = false;
+        this.grid.childLayoutKeys.forEach(key => {
+            if (this.rowData.hasOwnProperty(key)) {
+                hasChild = true;
+               return true;
+            }
+        });
+        return hasChild;
     }
 
     /**

@@ -73,6 +73,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     @ViewChild('group_template', { read: TemplateRef })
     protected grTemplate: TemplateRef<any>;
 
+    @ViewChild('headerHierarchyExpander', { read: ElementRef })
+    protected headerHierarchyExpander: ElementRef;
+
     @HostBinding('attr.id')
     @Input()
     public get id(): string {

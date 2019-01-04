@@ -1,4 +1,4 @@
-<div (click)="toggle()" class="igx-grid__grouping-indicator" [tabIndex]="tabindex" *ngIf="hasChildren">
+<div (click)="toggle()" class="igx-grid__grouping-indicator" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
     <div>
     <igx-icon *ngIf="!expanded" fontSet="material" name="chevron_right"></igx-icon>
     <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
