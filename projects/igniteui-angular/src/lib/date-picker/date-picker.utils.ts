@@ -44,8 +44,9 @@ export enum DATE_PARTS {
 export abstract class DatePickerUtil {
     public static MAX_MONTH_SYMBOLS = 9;
     public static MAX_WEEKDAY_SYMBOLS = 9;
+    public static SEPARATOR = 'separator';
 
-    public static getYearFormatType(format: string) {
+    public static getYearFormatType(format: string): string {
         let type;
         const occurences = format.match(new RegExp(DATE_CHARS.YEAR_CHAR, 'g')).length;
 
@@ -69,7 +70,7 @@ export abstract class DatePickerUtil {
 
         return type;
     }
-    public static getMonthFormatType(format: string) {
+    public static getMonthFormatType(format: string): string {
         let type;
         const occurences = format.match(new RegExp(DATE_CHARS.MONTH_CHAR, 'g')).length;
 
@@ -103,7 +104,7 @@ export abstract class DatePickerUtil {
 
         return type;
     }
-    public static getDayFormatType(format: string) {
+    public static getDayFormatType(format: string): string {
         let type;
         const occurences = format.match(new RegExp(DATE_CHARS.DAY_CHAR, 'g')).length;
 
@@ -122,7 +123,7 @@ export abstract class DatePickerUtil {
 
         return type;
     }
-    public static getWeekDayFormatType(format: string) {
+    public static getWeekDayFormatType(format: string): string {
         let type;
         const occurences = format.match(new RegExp(DATE_CHARS.WEEKDAY_CHAR, 'g')).length;
 
@@ -146,7 +147,7 @@ export abstract class DatePickerUtil {
 
         return type;
     }
-    public static parseDateFormat(format: string) {
+    public static parseDateFormat(format: string): any[] {
         const dateStruct = [];
         const maskArray = Array.from(format);
         const weekdayInitPosition = format.indexOf(DATE_CHARS.WEEKDAY_CHAR);
@@ -189,7 +190,7 @@ export abstract class DatePickerUtil {
         for (let i = 0; i < maskArray.length; i++) {
             if (!DatePickerUtil.isSpecialSymbol(maskArray[i])) {
                 dateStruct.push({
-                    type: 'literal',
+                    type: DatePickerUtil.SEPARATOR,
                     initialPosition: i,
                     value: maskArray[i]
                 });
@@ -202,7 +203,7 @@ export abstract class DatePickerUtil {
         return dateStruct;
     }
 
-    private static fillDatePartsPositions(dateArray) {
+    private static fillDatePartsPositions(dateArray: any[]) {
         let offset = 0;
 
         for (let i = 0; i < dateArray.length; i++) {
@@ -237,7 +238,7 @@ export abstract class DatePickerUtil {
                 }
             }
 
-            if (dateArray[i].type === 'literal') {
+            if (dateArray[i].type === DatePickerUtil.SEPARATOR) {
                 dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
                 offset++;
             }
@@ -268,14 +269,14 @@ export abstract class DatePickerUtil {
         return array;
     }
 
-    public static isSpecialSymbol(char: string) {
+    public static isSpecialSymbol(char: string): boolean {
         return (char !== DATE_CHARS.YEAR_CHAR
             && char !== DATE_CHARS.MONTH_CHAR
             && char !== DATE_CHARS.DAY_CHAR
             && char !== DATE_CHARS.WEEKDAY_CHAR) ? false : true;
     }
 
-    public static getFormatMask(format: string) {
+    public static getFormatMask(format: string): string {
         const mask = [];
         const dateStruct = DatePickerUtil.parseDateFormat(format);
 
@@ -332,7 +333,7 @@ export abstract class DatePickerUtil {
                     }
                 }
             }
-            if (dateStruct[i].type === 'literal') {
+            if (dateStruct[i].type === DatePickerUtil.SEPARATOR) {
                 mask.push(dateStruct[i].value);
             }
         }
@@ -340,7 +341,7 @@ export abstract class DatePickerUtil {
         return mask.join('');
     }
 
-    public static createDate(day, month, year) {
+    public static createDate(day: number, month: number, year: number): Date {
         const date = new Date();
         date.setDate(day);
         date.setMonth(month);
@@ -348,23 +349,90 @@ export abstract class DatePickerUtil {
         return date;
     }
 
-    public static trimMaskSymbols(mask) {
+    public static trimMaskSymbols(mask: string): string {
         return mask.replace(/0|L/g, '_');
     }
 
-    public static trimUnderlines(value: string) {
+    public static trimUnderlines(value: string): string {
         return value.replace(/_/g, '');
     }
 
-    public static getLongMonthName(value) {
+    public static getLongMonthName(value: Date): string {
         return value.toLocaleString('en', {
             month: 'long'
         });
     }
 
-    public static getLongDayName(value) {
+    public static getLongDayName(value: Date): string {
         return value.toLocaleString('en', {
             weekday: 'long'
         });
+    }
+
+    public static getNumericFormatPrefix(formatType: string): string {
+        return (formatType === FORMAT_DESC.TWO_DIGITS) ? '0' : '_';
+    }
+
+    public static getSpinnedDateInput(dateFormatParts: any[], inputValue: string, position: number, delta: number): string {
+        let datePart = DatePickerUtil.getDatePartOnPosition(dateFormatParts, position);
+        if ((datePart && datePart.length > 0 && datePart[0].type === DatePickerUtil.SEPARATOR)
+            || inputValue.length === position) {
+            datePart = this.getDatePartOnPosition(dateFormatParts, position - 1);
+        }
+
+        const positionsArray = datePart[0].position;
+        const startIdx = positionsArray[0];
+        const endIdx = positionsArray[0] + positionsArray.length;
+        const datePartType = datePart[0].type;
+        const datePartFormatType = datePart[0].formatType;
+
+        let newValue = parseInt(DatePickerUtil.trimUnderlines(inputValue.substring(startIdx, endIdx)), 10);
+
+        let maxValue, minValue = 1;
+        if (!isNaN(newValue)) {
+            switch (datePartType) {
+                case DATE_PARTS.MONTH: {
+                    // Max 12 months
+                    maxValue = 12;
+                    break;
+                }
+                case DATE_PARTS.DAY: {
+                    // Max 31 days
+                    maxValue = 31;
+                    break;
+                }
+                case DATE_PARTS.YEAR: {
+                    if (datePartFormatType === FORMAT_DESC.TWO_DIGITS) {
+                        minValue = 0;
+                        maxValue = 99;
+                    } else {
+                        // Infinite loop
+                        minValue = -1;
+                        maxValue = -1;
+                    }
+                    break;
+                }
+            }
+        }
+
+        let tempValue = newValue;
+        tempValue += delta;
+        if ((tempValue <= maxValue && tempValue >= minValue) || maxValue === -1 || minValue === -1) {
+            newValue = tempValue;
+        }
+
+        const start = inputValue.slice(0, startIdx);
+        const end = inputValue.slice(endIdx, inputValue.length);
+        let changedPart: string;
+
+        // Handling leading zero format
+        const prefix = DatePickerUtil.getNumericFormatPrefix(datePartFormatType);
+        changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
+
+        return `${start}${changedPart}${end}`;
+    }
+
+    private static getDatePartOnPosition(dateFormatParts: any[], position: number) {
+        return dateFormatParts.filter((element) => element.position.some(pos => pos === position));
     }
 }

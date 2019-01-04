@@ -52,9 +52,9 @@ import {
     PREDEFINED_MASKS,
     DatePickerUtil,
     FORMAT_DESC,
-    DATE_CHARS,
     DATE_PARTS
 } from './date-picker.utils';
+import { DisplayValuePipe, InputValuePipe, DateFormatPipe } from './date-picker.pipes';
 
 @Directive({
     selector: '[igxDatePickerTemplate]'
@@ -566,7 +566,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public mask;
     public displayValue = new DisplayValuePipe(this);
     public inputValue = new InputValuePipe(this);
-    public dateStruct = [];
+    public dateFormatParts = [];
     public rawData;
 
     private _destroy$ = new Subject<boolean>();
@@ -669,7 +669,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
         if (this.mode === DatePickerInteractionMode.EDITABLE) {
             this.getFormatOptions(this.format);
-            this.dateStruct = DatePickerUtil.parseDateFormat(this.format);
+            this.dateFormatParts = DatePickerUtil.parseDateFormat(this.format);
         }
     }
 
@@ -769,21 +769,21 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public calculateDate(data: string) {
         if (data !== '') {
             const trimmedData = DatePickerUtil.trimUnderlines(data);
-            const monthPart = this.dateStruct.filter(part => part.type === DATE_PARTS.MONTH);
+            const monthPart = this.dateFormatParts.filter(part => part.type === DATE_PARTS.MONTH);
 
             if (monthPart[0].formatType === FORMAT_DESC.NUMERIC
                 || monthPart[0].formatType === FORMAT_DESC.TWO_DIGITS) {
                 let fullYear;
 
-                const dayPartPosition = this.dateStruct.filter(part => part.type === DATE_PARTS.DAY)[0].position;
+                const dayPartPosition = this.dateFormatParts.filter(part => part.type === DATE_PARTS.DAY)[0].position;
                 const dayStartIdx = dayPartPosition[0];
                 const dayEndIdx = dayStartIdx + dayPartPosition.length;
 
                 const monthStartIdx = monthPart[0].position[0];
                 const monthEndIdx = monthStartIdx + monthPart[0].position.length;
 
-                const yearFormat = this.dateStruct.filter(part => part.type === DATE_PARTS.YEAR)[0].formatType;
-                const yearPartPosition = this.dateStruct.filter(part => part.type === DATE_PARTS.YEAR)[0].position;
+                const yearFormat = this.dateFormatParts.filter(part => part.type === DATE_PARTS.YEAR)[0].formatType;
+                const yearPartPosition = this.dateFormatParts.filter(part => part.type === DATE_PARTS.YEAR)[0].position;
                 const yearStartIdx = yearPartPosition[0];
                 const yearEndIdx = yearStartIdx + yearPartPosition.length;
 
@@ -803,9 +803,9 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         }
     }
 
-    public isDateValid(data) {
-        return new Date(DatePickerUtil.trimUnderlines(data)).toString() !== 'Invalid Date';
-    }
+    // public isDateValid(data) {
+    //     return new Date(DatePickerUtil.trimUnderlines(data)).toString() !== 'Invalid Date';
+    // }
 
     /**
      * Evaluates when @calendar.onSelection event was fired
@@ -864,15 +864,27 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     @HostListener('keydown.arrowdown', ['$event'])
     public onArrowDownKeydown(event) {
         event.preventDefault();
-        const cursor = this._getCursorPosition() - 1;
-        const datePart = this.dateStruct.filter(element => element.position.find(pos => pos === cursor));
+        event.stopPropagation();
+
+        const cursorPos = this._getCursorPosition();
+        const inputValue = event.target.value;
+        this.editableInput.nativeElement.value = DatePickerUtil.getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, -1);
+        requestAnimationFrame(() => {
+            this._setCursorPosition(cursorPos);
+        });
     }
 
     @HostListener('keydown.arrowup', ['$event'])
     public onArrowUpKeydown(event) {
         event.preventDefault();
-        const cursor = this._getCursorPosition() - 1;
-        const datePart = this.dateStruct.filter(element => element.position.find(pos => pos === cursor));
+        event.stopPropagation();
+
+        const cursorPos = this._getCursorPosition();
+        const inputValue = event.target.value;
+        this.editableInput.nativeElement.value = DatePickerUtil.getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, 1);
+        requestAnimationFrame(() => {
+            this._setCursorPosition(cursorPos);
+        });
     }
 
     private onOpened() {
@@ -915,6 +927,10 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     private _getCursorPosition(): number {
         return this.editableInput.nativeElement.selectionStart;
+    }
+
+    private _setCursorPosition(start: number, end: number = start): void {
+        this.editableInput.nativeElement.setSelectionRange(start, end);
     }
 
     private getFormatOptions(format) {
@@ -960,116 +976,13 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     private _onChangeCallback: (_: Date) => void = () => { };
 
-    public transformDate(date) {
+    private transformDate(date) {
         return new DateFormatPipe(Constants.DEFAULT_LOCALE_DATE).transform(date, this.format);
     }
 }
 
 class Constants {
     public static readonly DEFAULT_LOCALE_DATE = 'en';
-}
-
-@Pipe({
-    name: 'format'
-})
-
-export class DateFormatPipe extends DatePipe implements PipeTransform {
-    transform(value: any, args?: any): any {
-        return super.transform(value, args);
-    }
-}
-
-@Pipe({
-    name: 'displayValue'
-})
-export class DisplayValuePipe implements PipeTransform {
-    constructor(public datePicker: IgxDatePickerComponent) { }
-    // on blur
-    transform(value: any, args?: any): any {
-        if (value !== '') {
-            if (value === DatePickerUtil.trimMaskSymbols(this.datePicker.mask)) {
-                return '';
-            }
-            this.datePicker.rawData = value;
-            return DatePickerUtil.trimUnderlines(value);
-        }
-
-        return '';
-    }
-}
-
-@Pipe({
-    name: 'inputValue'
-})
-export class InputValuePipe implements PipeTransform {
-    constructor(public datePicker: IgxDatePickerComponent) { }
-    // on focus
-    transform(value: any, args?: any): any {
-        if (this.datePicker.value !== null && this.datePicker.value !== undefined) {
-            let result;
-            let offset = 0;
-            const dateArray = Array.from(value);
-            const monthName = DatePickerUtil.getLongMonthName(this.datePicker.value);
-            const dayName = DatePickerUtil.getLongDayName(this.datePicker.value);
-
-            const dateStruct = this.datePicker.dateStruct;
-
-            for (let i = 0; i < dateStruct.length; i++) {
-                if (dateStruct[i].type === DATE_PARTS.WEEKDAY) {
-                    if (dateStruct[i].formatType === FORMAT_DESC.LONG) {
-                        offset += DatePickerUtil.MAX_WEEKDAY_SYMBOLS - 4;
-                        for (let j = dayName.length; j < DatePickerUtil.MAX_WEEKDAY_SYMBOLS; j++) {
-                            dateArray.splice(j, 0, '_');
-                        }
-                        dateArray.join('');
-                    }
-                }
-
-                if (dateStruct[i].type === DATE_PARTS.MONTH) {
-                    if (dateStruct[i].formatType === FORMAT_DESC.LONG) {
-                        const startPos = offset + dateStruct[i].initialPosition + monthName.length;
-                        const endPos = startPos + DatePickerUtil.MAX_MONTH_SYMBOLS - monthName.length;
-                        offset += DatePickerUtil.MAX_MONTH_SYMBOLS - 4;
-                        for (let j = startPos; j < endPos; j++) {
-                            dateArray.splice(j, 0, '_');
-                        }
-                        dateArray.join('');
-                    }
-                    if (dateStruct[i].formatType === FORMAT_DESC.NUMERIC
-                        || dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) {
-                        const isOneDigit = this.datePicker.isOneDigit(DATE_CHARS.MONTH_CHAR, this.datePicker.value.getMonth() + 1);
-                        if (isOneDigit) {
-                            const symbol = (dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) ? '0' : '_';
-                            const startPos = offset + dateStruct[i].initialPosition;
-                            dateArray.splice(startPos, 0, symbol);
-                        }
-                        offset += 1;
-                        dateArray.join('');
-                    }
-                }
-
-                if (dateStruct[i].type === DATE_PARTS.DAY) {
-                    if (dateStruct[i].formatType === FORMAT_DESC.NUMERIC
-                        || dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) {
-                        const isOneDigit = this.datePicker.isOneDigit(DATE_CHARS.DAY_CHAR, this.datePicker.value.getDate());
-                        if (isOneDigit) {
-                            const symbol = (dateStruct[i].formatType === FORMAT_DESC.TWO_DIGITS) ? '0' : '_';
-                            const startPos = offset + dateStruct[i].initialPosition;
-                            dateArray.splice(startPos, 0, symbol);
-                        }
-                        offset += 1;
-                        dateArray.join('');
-                    }
-                }
-            }
-
-            result = dateArray.join('');
-
-            return result;
-        }
-
-        return DatePickerUtil.trimMaskSymbols(this.datePicker.mask);
-    }
 }
 
 /**
