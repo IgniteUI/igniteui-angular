@@ -161,6 +161,14 @@ describe('Utils', () => {
             expect(clone.Null).toBeNull();
             expect(clone.undefined).toBeUndefined();
         });
+
+        it('Should correctly handle null and undefined values', () => {
+            const nullClone = cloneValue(null);
+            expect(nullClone).toBeNull();
+
+            const undefinedClone = cloneValue(undefined);
+            expect(undefinedClone).toBeUndefined();
+        });
     });
 
     describe('Utils - mergeObjects() unit tests', () => {

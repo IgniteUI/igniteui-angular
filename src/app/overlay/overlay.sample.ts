@@ -9,7 +9,8 @@ import {
     BlockScrollStrategy,
     CloseScrollStrategy,
     NoOpScrollStrategy,
-    IgxInputGroupModule
+    IgxInputGroupModule,
+    ElasticPositionStrategy
 } from 'igniteui-angular';
 import { templateJitUrl } from '@angular/compiler';
 
@@ -49,7 +50,7 @@ export class OverlaySampleComponent {
     verticalStartPoints = ['Top', 'Middle', 'Bottom'];
     verticalStartPoint = 'Top';
 
-    positionStrategies = ['Auto', 'Connected', 'Global'];
+    positionStrategies = ['Auto', 'Connected', 'Global', 'Elastic'];
     positionStrategy = 'Auto';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
@@ -155,6 +156,22 @@ export class OverlaySampleComponent {
                         this.closeOnOutsideClick = true;
                         this.modal = true;
                         break;
+                    case 'Elastic':
+                        this._overlaySettings = {
+                            positionStrategy: new ElasticPositionStrategy({
+                                minSize: { width: 50, height: 50 }
+                            }),
+                            scrollStrategy: new NoOpScrollStrategy(),
+                            modal: true,
+                            closeOnOutsideClick: true
+                        };
+                        this.horizontalDirection = 'Right';
+                        this.verticalDirection = 'Bottom';
+                        this.horizontalStartPoint = 'Left';
+                        this.verticalStartPoint = 'Bottom';
+                        this.closeOnOutsideClick = true;
+                        this.modal = true;
+                        break;
                     default:
                         break;
                 }
@@ -182,35 +199,38 @@ export class OverlaySampleComponent {
     onChange2() { // WIP
         const stringMapping = {
             'ScrollStrategy': {
-                'Absolute' : new AbsoluteScrollStrategy(),
-                'Block' : new BlockScrollStrategy(),
-                'Close' : new CloseScrollStrategy(),
-                'NoOp' : new NoOpScrollStrategy()
+                'Absolute': new AbsoluteScrollStrategy(),
+                'Block': new BlockScrollStrategy(),
+                'Close': new CloseScrollStrategy(),
+                'NoOp': new NoOpScrollStrategy()
             },
-            'PositionStrategy' : {
-                'Auto' : new AutoPositionStrategy(),
-                'Connected' : new ConnectedPositioningStrategy(),
-                'Global' : new GlobalPositionStrategy()
+            'PositionStrategy': {
+                'Auto': new AutoPositionStrategy(),
+                'Connected': new ConnectedPositioningStrategy(),
+                'Global': new GlobalPositionStrategy(),
+                'Elastic': new ElasticPositionStrategy({
+                    minSize: { width: 50, height: 50 }
+                }),
             },
-            'VerticalDirection' : {
-                'Top' : -1,
-                'Middle' : -0.5,
-                'Bottom' : 0
+            'VerticalDirection': {
+                'Top': -1,
+                'Middle': -0.5,
+                'Bottom': 0
             },
-            'VerticalStartPoint' : {
-                'Top' : -1,
-                'Middle' : -0.5,
-                'Bottom' : 0
+            'VerticalStartPoint': {
+                'Top': -1,
+                'Middle': -0.5,
+                'Bottom': 0
             },
-            'HorizontalDirection' : {
-                'Left' : -1,
-                'Center' : -0.5,
-                'Right' : 0
+            'HorizontalDirection': {
+                'Left': -1,
+                'Center': -0.5,
+                'Right': 0
             },
-            'HorizontalStartPoint' : {
-                'Left' : -1,
-                'Center' : -0.5,
-                'Right' : 0
+            'HorizontalStartPoint': {
+                'Left': -1,
+                'Center': -0.5,
+                'Right': 0
             }
         };
 
@@ -221,13 +241,13 @@ export class OverlaySampleComponent {
             closeOnOutsideClick: this.closeOnOutsideClick
         };
         this._overlaySettings.positionStrategy.settings.verticalDirection =
-        stringMapping['VerticalDirection'][this.verticalDirection];
+            stringMapping['VerticalDirection'][this.verticalDirection];
         this._overlaySettings.positionStrategy.settings.verticalStartPoint =
-        stringMapping['VerticalStartPoint'][this.verticalStartPoint];
+            stringMapping['VerticalStartPoint'][this.verticalStartPoint];
         this._overlaySettings.positionStrategy.settings.horizontalDirection =
-        stringMapping['HorizontalDirection'][this.horizontalDirection];
+            stringMapping['HorizontalDirection'][this.horizontalDirection];
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
-        stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
+            stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
     }
 
     onSwitchChange(ev) {
