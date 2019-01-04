@@ -19,6 +19,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -448,6 +449,53 @@ describe('Excel Exporter', () => {
             treeGrid.collapseAll();
             fix.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataExpDepth(0));
+        });
+
+        it('should throw an exception when nesting level is greater than 8.', async () => {
+            const nestedData = SampleTestData.employeePrimaryForeignKeyTreeData();
+            for (let i = 1; i < 9; i++) {
+                nestedData[i - 1].ID = i;
+                nestedData[i - 1].ParentID = i - 1;
+            }
+            nestedData.push({ ID: 9, ParentID: 8, Name: 'Test', JobTitle: '', Age: 49 });
+            treeGrid.data = nestedData;
+            fix.detectChanges();
+            await wait(16);
+
+            let error = '';
+            try {
+                exporter.export(treeGrid, options);
+                await wait();
+            } catch (ex) {
+                error = ex.message;
+            }
+            expect(error).toMatch('Can create an outline of up to eight levels!');
+
+            treeGrid.deleteRowById(9);
+            fix.detectChanges();
+            await wait(16);
+
+            error = '';
+            try {
+                exporter.export(treeGrid, options);
+                await wait();
+            } catch (ex) {
+                error = ex.message;
+            }
+            expect(error).toEqual('');
+
+            treeGrid.addRow({ ID: 9, ParentID: 8, Name: 'Test', JobTitle: '', Age: 49 });
+            fix.detectChanges();
+            await wait(16);
+
+            error = '';
+            try {
+                exporter.export(treeGrid, options);
+                await wait();
+            } catch (ex) {
+                error = ex.message;
+            }
+            expect(error).toMatch('Can create an outline of up to eight levels!');
         });
     });
 
