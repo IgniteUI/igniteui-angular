@@ -1,45 +1,35 @@
-import { Injectable } from '@angular/core';
 import { IgxComboBase } from './combo.common';
 
-@Injectable({
-    providedIn: 'root'
-})
 export class IgxComboAPIService {
-    protected componentsMap: Map<string, IgxComboBase> = new Map<string, IgxComboBase>();
+    protected combo: IgxComboBase;
 
-    public get(componentID: string): IgxComboBase {
-        return this.componentsMap.get(componentID);
+    public disableTransitions = false;
+
+    public register(combo: IgxComboBase) {
+        this.combo = combo;
     }
 
-    public register(componentID: string, component: IgxComboBase): void {
-        this.componentsMap.set(componentID, component);
+
+    public clear(): void {
+        this.combo = null;
     }
 
-    public clear(componentID): void {
-        this.componentsMap.set(componentID, null);
-    }
 
     public get item_focusable(): boolean {
         return false;
     }
-    public isRemote(componentID: string): boolean {
-        const combo = this.get(componentID);
-        return combo.isRemote;
+    public get isRemote(): boolean {
+        return this.combo.isRemote;
     }
 
-    public add_custom_item(componentID: string): void {
-        const combo = this.get(componentID);
-        if (!combo) {
+    public add_custom_item(): void {
+        if (!this.combo) {
             return;
         }
-        combo.addItemToCollection();
+        this.combo.addItemToCollection();
     }
 
-    public disable_transitions(componentID: string): boolean {
-        const combo = this.get(componentID);
-        if (!combo) {
-            return false;
-        }
-        return combo.dropdown.disableTransitions;
+    public get comboID(): string {
+        return this.combo.id;
     }
 }

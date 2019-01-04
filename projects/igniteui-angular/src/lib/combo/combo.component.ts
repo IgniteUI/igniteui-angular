@@ -37,7 +37,6 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { IDropDownItem } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { takeUntil, filter } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -102,7 +101,7 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -170,7 +169,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     };
     private _value = '';
     private _searchValue = '';
-
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -184,6 +182,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+        this.comboAPI.register(this);
     }
 
     /**
@@ -1275,7 +1274,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this._positionCallback = () => this.dropdown.updateScrollPosition();
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
-        this.comboAPI.register(this.id, this);
         this.selection.set(this.id, new Set());
         if (this.ngControl && this.ngControl.value) {
             this.selectItems(this.ngControl.value, true);
@@ -1306,7 +1304,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnDestroy() {
         this.destroy$.complete();
-        this.comboAPI.clear(this.id);
+        this.comboAPI.clear();
         this.selection.clear(this.id);
     }
 

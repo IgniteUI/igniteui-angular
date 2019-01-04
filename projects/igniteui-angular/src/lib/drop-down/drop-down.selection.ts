@@ -1,8 +1,8 @@
 import { IDropDownItem } from './drop-down-utils';
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IComboSelectionChangeEventArgs } from '../combo/combo.component';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 export interface IDropDownServiceArgs {
     item: IDropDownItem;

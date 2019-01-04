@@ -15,6 +15,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     }
 
     clicked(event?) {
-        this.comboAPI.add_custom_item(this.dropDown.comboID);
+        this.comboAPI.disableTransitions = false;
+        this.comboAPI.add_custom_item();
     }
 }

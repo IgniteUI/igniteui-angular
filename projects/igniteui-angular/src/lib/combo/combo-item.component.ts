@@ -9,10 +9,9 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down-utils';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { IgxComboAPIService } from './combo.api';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
 
 /** @hidden */
 @Component({
@@ -33,14 +32,14 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     public get itemID() {
-        return this.comboAPI.isRemote(this.comboID) ? JSON.stringify(this.value) : this.value;
+        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
     }
 
     /**
      * @hidden
      */
     public get comboID() {
-        return this.dropDown.comboID;
+        return this.comboAPI.comboID;
     }
 
     /**
@@ -48,12 +47,12 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @internal
      */
     public get disableTransitions() {
-        return this.comboAPI.disable_transitions(this.comboID);
+        return this.comboAPI.disableTransitions;
     }
 
     constructor(
         protected comboAPI: IgxComboAPIService,
-        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IgxComboDropDownComponent,
+        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
         @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService
     ) {
@@ -76,6 +75,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
 
     @HostListener('click', ['$event'])
     clicked(event) {
+        this.comboAPI.disableTransitions = false;
         this.dropDown.navigateItem(this.index);
         this.selection.set_selected_item(this.comboID, this.itemID, event);
     }

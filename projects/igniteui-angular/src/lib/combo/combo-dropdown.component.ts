@@ -12,6 +12,7 @@ import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboAPIService } from './combo.api';
 
 /** @hidden */
 @Component({
@@ -24,7 +25,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService,
-        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
+        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
+        protected comboAPI: IgxComboAPIService) {
         super(elementRef, cdr, selection);
     }
 
@@ -76,12 +78,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      */
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public disableTransitions = false;
 
     @Input()
     public comboID: string;
@@ -323,7 +319,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     protected scrollHandler = () => {
-        this.disableTransitions = true;
+        this.comboAPI.disableTransitions = true;
     }
 
     /**
