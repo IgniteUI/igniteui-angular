@@ -989,8 +989,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: [],
-                newSelection: [targetItem.itemID],
-                event: undefined
+                newSelection: [targetItem.itemID]
             });
 
             combo.dropdown.selectItem(targetItem);
@@ -1000,8 +999,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: [targetItem.itemID],
-                newSelection: [],
-                event: undefined
+                newSelection: []
             });
         }));
         it(`Should properly select/deselect items using public methods selectItems and deselectItems`, fakeAsync(() => {
@@ -1021,8 +1019,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
-                newSelection: newSelection,
-                event: undefined
+                newSelection: newSelection
             });
 
             let newItem = combo.data[3];
@@ -1034,8 +1031,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
-                newSelection: newSelection,
-                event: undefined
+                newSelection: newSelection
             });
 
             oldSelection = [...newSelection];
@@ -1046,8 +1042,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
-                newSelection: newSelection,
-                event: undefined
+                newSelection: newSelection
             });
 
             oldSelection = [...newSelection];
@@ -1060,8 +1055,7 @@ fdescribe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(4);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
-                newSelection: newSelection,
-                event: undefined
+                newSelection: newSelection
             });
         }));
         it('Should properly select/deselect ALL items', fakeAsync(() => {
@@ -2713,14 +2707,12 @@ fdescribe('igxCombo', () => {
             expect(combo.value).toEqual('');
             expect(combo.comboInput.nativeElement.value).toEqual('');
 
-            const triggerSelectionSpy = spyOn<any>(combo, 'triggerSelectionChange').and.callThrough();
             const valueSetterSpy = spyOnProperty<any>(combo, 'value', 'set').and.callThrough();
             combo.selectItems([component.items[0], component.items[1]]);
             fix.detectChanges();
             tick();
             fix.detectChanges();
             expect(valueSetterSpy).toHaveBeenCalled();
-            expect(triggerSelectionSpy).toHaveBeenCalled();
             expect(combo.comboInput.nativeElement.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
             expect(combo.value).toEqual(component.items[0].field + ', ' + component.items[1].field);
             expect(combo.selectedItems()).toEqual([component.items[0], component.items[1]]);
