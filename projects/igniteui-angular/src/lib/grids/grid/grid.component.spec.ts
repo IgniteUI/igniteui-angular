@@ -762,7 +762,7 @@ describe('IgxGrid Component Tests', () => {
             const grid = fix.componentInstance.grid;
             expect(grid.columns[1].width).toEqual('150');
             expect(grid.columns[1].width).toEqual('150');
-        });
+    });
     });
 
     describe('IgxGrid - API methods', () => {
@@ -2960,6 +2960,22 @@ describe('IgxGrid Component Tests', () => {
                 tick();
                 expect(grid.page).toEqual(1);
                 expect(grid.totalPages).toEqual(2);
+            }));
+
+            it('Should not allow selecting rows that are deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.rowSelectable = true;
+                fixture.detectChanges();
+
+                grid.deleteRowById(2);
+                grid.deleteRowById(3);
+
+                fixture.detectChanges();
+                grid.selectRows([2, 3, 4]);
+                fixture.detectChanges();
+                expect(grid.selectedRows()).toEqual([4]);
             }));
         });
 
