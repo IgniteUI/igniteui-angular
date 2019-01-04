@@ -179,6 +179,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return currGrid;
     }
 
+    /**
+     * @hidden
+    */
+    toggleAllRows() {
+        const collapseAll =  this.hierarchicalState.length > 0;
+        if (collapseAll) {
+            this.hierarchicalState = [];
+        } else {
+            this.hierarchicalState = this.data.map((rec) => {
+                return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+            });
+        }
+    }
+
     protected getChildGrid(path: Array<IPathSegment>) {
         if (!path) {
             return;
