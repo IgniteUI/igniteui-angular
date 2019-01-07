@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "igniteui-angular-ng-add",
+    "title": "IgniteUI for Angular ng-add schematic",
+    "type": "object",
+    "properties": {
+        "polyfills": {
+            "type": "boolean",
+            "description": "Add polyfills for IE.",
+            "default": "false",
+            "x-prompt": "Would you like to add polyfills for IE?"
+        }
+    },
+    "required": []
+}
