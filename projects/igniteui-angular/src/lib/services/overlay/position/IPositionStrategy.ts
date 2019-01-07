@@ -16,9 +16,10 @@ export interface IPositionStrategy {
      * @param size Size of the element
      * @param document reference to the Document object
      * @param initialCall should be true if this is the initial call to the method
+     * @param minSize the size up to which element could be reduced
      * ```typescript
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void;
+     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, minSize?: Size): void;
 }

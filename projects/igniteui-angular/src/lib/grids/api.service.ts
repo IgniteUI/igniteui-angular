@@ -599,4 +599,20 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const grid = this.get(id);
         return grid.primaryKey ? rowData[grid.primaryKey] : rowData;
     }
+
+    public row_deleted_transaction(id: string, rowID: any): boolean {
+        const grid = this.get(id);
+        if (!grid) {
+            return false;
+        }
+        if (!grid.transactions.enabled) {
+            return false;
+        }
+        const state = grid.transactions.getState(rowID);
+        if (state) {
+            return state.type === TransactionType.DELETE;
+        }
+
+        return false;
+    }
 }
