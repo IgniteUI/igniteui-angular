@@ -198,8 +198,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     toggleAllRows() {
         const collapseAll =  this.hierarchicalState.length > 0;
         if (collapseAll) {
+            this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = [];
         } else {
+            this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = this.data.map((rec) => {
                 return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
