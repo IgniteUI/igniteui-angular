@@ -63,6 +63,7 @@
   "peerDependencies": {
     "@angular/common": "^7.0.3",
     "@angular/core": "^7.0.3",
+    "@angular/cli": "~7.0.5",
     "@angular/animations": "^7.0.3",
     "@angular/forms": "^7.0.3",
     "web-animations-js": "^2.3.1"

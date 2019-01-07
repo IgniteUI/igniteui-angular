@@ -3,6 +3,7 @@ import { chain, Rule, SchematicContext, Tree, SchematicsException } from '@angul
 import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 // tslint:disable-next-line:no-submodule-imports
 import { getWorkspace } from '@schematics/angular/utility/config';
+import { DependencyNotFoundException } from '@angular-devkit/core';
 
 export interface Options {
   [key: string]: any;
@@ -41,6 +42,7 @@ function addDependencies(options: Options): Rule {
     });
 
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
+    promptVersionMismatch(context, tree, pkgJson);
     return tree;
   };
 }
@@ -143,6 +145,45 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   }
 
   return tree;
+}
+
+function promptVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson) {
+  const ngKey = '@angular/core';
+  const ngCliKey = '@angular/cli';
+  const ngProjVer = getDependencyVersion(ngKey, tree);
+  const ngCliProjVer = getDependencyVersion(ngCliKey, tree);
+
+  const igAngularVer = igPackageJson.peerDependencies[ngKey];
+  const igAngularCliVer = igPackageJson.peerDependencies[ngCliKey];
+
+  if (ngProjVer < igAngularVer) {
+    context.logger.log('warn',
+      `Angular version mismatch. Installed version: ${ngProjVer} - igniteui-angular version: ${igAngularVer}`);
+  }
+  if (ngCliProjVer < igAngularCliVer) {
+    context.logger.log('warn',
+      `Angular CLI version mismatch. Installed version: ${ngCliProjVer} - igniteui-angular version: ${igAngularCliVer}`);
+  }
+}
+
+function getDependencyVersion(pkg: string, tree: Tree) {
+  const targetFile = 'package.json';
+  if (tree.exists(targetFile)) {
+    const sourceText = tree.read(targetFile).toString();
+    const json = JSON.parse(sourceText);
+
+    let targetDep;
+    if (json.dependencies[pkg]) {
+      targetDep = json.dependencies[pkg];
+    } else {
+      targetDep = json.devDependencies[pkg];
+    }
+    if (!targetDep) {
+      throw new DependencyNotFoundException();
+    }
+
+    return targetDep;
+  }
 }
 
 function installPackageJsonDependencies(options): Rule {
