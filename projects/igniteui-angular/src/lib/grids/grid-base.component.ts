@@ -57,7 +57,7 @@ import {
     IgxRowEditActionsDirective
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
@@ -1577,26 +1577,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        if (this.isCosy()) {
-            return 'igx-grid--cosy';
-        } else if (this.isCompact()) {
-            return 'igx-grid--compact';
-        } else {
-            return 'igx-grid';
-        }
+        return this.getComponentDensityClass('igx-grid');
     }
 
     get bannerClass(): string {
-        let bannerClass = '';
-        if (this.isCosy()) {
-            bannerClass = 'igx-banner--cosy';
-        } else if (this.isCompact()) {
-            bannerClass = 'igx-banner--compact';
-        } else {
-            bannerClass = 'igx-banner';
-        }
-        bannerClass += this.rowEditPositioningStrategy.isTop ? ' igx-banner__border-top' : ' igx-banner__border-bottom';
-        return bannerClass;
+        const position = this.rowEditPositioningStrategy.isTop ? 'igx-banner__border-top' : 'igx-banner__border-bottom';
+        return `${this.getComponentDensityClass('igx-banner')} ${position}`;
     }
 
     /**
@@ -2499,12 +2485,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get defaultRowHeight(): number {
-        if (this.isCosy()) {
-            return 40;
-        } else if (this.isCompact()) {
-            return 32;
-        } else {
-            return 50;
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 40;
+            case DisplayDensity.compact:
+                return 32;
+            default:
+                return 50;
         }
     }
 
@@ -2515,12 +2502,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get defaultHeaderGroupMinWidth(): number {
-        if (this.isCosy()) {
-            return 32;
-        } else if (this.isCompact()) {
-            return 24;
-        } else {
-            return 48;
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 32;
+            case DisplayDensity.compact:
+                return 24;
+            default:
+                return 48;
         }
     }
 

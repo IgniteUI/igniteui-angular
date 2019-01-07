@@ -5,6 +5,11 @@ All notable changes for each version of this project will be documented in this 
 - **Progress Indicators**:
     - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track. 
 
+
+## 7.1.2
+### Features
+- `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
+
 ## 7.1.1
 ### Bug Fixes
 
@@ -16,6 +21,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+
 
 ## 7.1.0
 ### Features
@@ -43,6 +49,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`:
     - `ElasticPositioningStrategy` added. This strategy positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view.
 
+
 ## 7.0.5
 
 ### Bug Fixes
@@ -62,6 +69,7 @@ All notable changes for each version of this project will be documented in this 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
 * Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
 
 ## 7.0.4
 ### Bug fixes
