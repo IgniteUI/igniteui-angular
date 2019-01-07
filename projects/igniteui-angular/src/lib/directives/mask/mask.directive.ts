@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KEYS, MaskHelper } from './mask-helper';
+import { isIE } from '../../core/utils';
 
 const noop = () => { };
 
@@ -170,6 +171,8 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     private _valOnPaste;
 
+    private _stopPropagation: boolean;
+
     /**
      *@hidden
      */
@@ -249,6 +252,11 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @HostListener('input', ['$event'])
     public onInputChanged(event): void {
+        if (isIE() && this._stopPropagation) {
+            this._stopPropagation = false;
+            return;
+        }
+
         if (this._paste) {
             this._paste = false;
 
@@ -283,6 +291,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     @HostListener('focus', ['$event.target.value'])
     public onFocus(value) {
         if (this.focusedValuePipe) {
+            if (isIE()) {
+                this._stopPropagation = true;
+            }
             this.value = this.focusedValuePipe.transform(value);
         } else {
             this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
