@@ -139,27 +139,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    protected _valueKey = '';
-    /**
-     * @hidden
-     */
     protected _displayKey: string;
-    private _addItemTemplate: TemplateRef<any>;
-    private _emptyTemplate: TemplateRef<any>;
-    private _footerTemplate: TemplateRef<any>;
-    private _headerTemplate: TemplateRef<any>;
-    private _headerItemTemplate: TemplateRef<any>;
-    private _itemTemplate: TemplateRef<any>;
     private _dataType = '';
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
-    private _children: QueryList<IgxComboItemComponent>;
-    private _dropdownContainer: ElementRef = null;
-    private _searchInput: ElementRef<HTMLInputElement> = null;
-    private _comboInput: ElementRef<HTMLInputElement> = null;
-    private _valid = IgxComboState.INITIAL;
-    private _width = '100%';
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
@@ -168,7 +152,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         closeOnOutsideClick: true
     };
     private _value = '';
-    private _searchValue = '';
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -194,24 +177,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    get searchInput() {
-        return this._searchInput;
-    }
-
-    /**
-     * @hidden
-     */
     @ViewChild('searchInput')
-    set searchInput(content: ElementRef<HTMLInputElement>) {
-        this._searchInput = content;
-    }
+    public searchInput: ElementRef<HTMLInputElement> = null;
 
     /**
      * @hidden
      */
-    get comboInput() {
-        return this._comboInput;
-    }
+    @ViewChild('comboInput')
+    public comboInput: ElementRef<HTMLInputElement> = null;
 
     /**
      * @hidden
@@ -220,68 +193,23 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         return this.filterable || this.allowCustomValues;
     }
 
-    /**
-     * @hidden
-     */
-    @ViewChild('comboInput')
-    set comboInput(content: ElementRef<HTMLInputElement>) {
-        this._comboInput = content;
-    }
-
     @ContentChild(IgxComboItemDirective, { read: TemplateRef })
-    public set itemTemplate(val: TemplateRef<any>) {
-        this._itemTemplate = val;
-    }
-
-    public get itemTemplate(): TemplateRef<any> {
-        return this._itemTemplate;
-    }
+    public itemTemplate: TemplateRef<any> = null;
 
     @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
-    public set headerTemplate(val: TemplateRef<any>) {
-        this._headerTemplate = val;
-    }
-
-    public get headerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
+    public headerTemplate: TemplateRef<any> = null;
 
     @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
-    public set footerTemplate(val: TemplateRef<any>) {
-        this._footerTemplate = val;
-    }
-
-    public get footerTemplate(): TemplateRef<any> {
-        return this._footerTemplate;
-    }
+    public footerTemplate: TemplateRef<any> = null;
 
     @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
-    public set headerItemTemplate(val: TemplateRef<any>) {
-        this._headerItemTemplate = val;
-    }
-
-    public get headerItemTemplate(): TemplateRef<any> {
-        return this._headerItemTemplate;
-    }
-
+    public headerItemTemplate: TemplateRef<any> = null;
 
     @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
-    public set addItemTemplate(val: TemplateRef<any>) {
-        this._addItemTemplate = val;
-    }
-
-    public get addItemTemplate(): TemplateRef<any> {
-        return this._addItemTemplate;
-    }
+    public addItemTemplate: TemplateRef<any> = null;
 
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
-    public set emptyTemplate(val: TemplateRef<any>) {
-        this._emptyTemplate = val;
-    }
-
-    public get emptyTemplate(): TemplateRef<any> {
-        return this._emptyTemplate;
-    }
+    public emptyTemplate: TemplateRef<any> = null;
     /**
      * @hidden
      */
@@ -370,31 +298,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      */
     @ViewChild('dropdownItemContainer')
-    protected set dropdownContainer(val: ElementRef) {
-        this._dropdownContainer = val;
-    }
-
-    /**
-     * @hidden
-     */
-    protected get dropdownContainer(): ElementRef {
-        return this._dropdownContainer;
-    }
+    protected dropdownContainer: ElementRef = null;
 
     /**
      * @hidden
      */
     @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    public set children(list: QueryList<IgxComboItemComponent>) {
-        this._children = list;
-    }
-
-    /**
-     * @hidden
-     */
-    public get children(): QueryList<IgxComboItemComponent> {
-        return this._children;
-    }
+    public children: QueryList<IgxComboItemComponent> = null;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -508,20 +418,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostBinding('style.width')
     @Input()
-    public get width() {
-        return this._width;
-    }
-
-    public set width(val) {
-        this._width = val;
-    }
+    public width = '100%';
 
     /**
      * @hidden
      */
     @HostBinding('class.igx-input-group--valid')
     public get validClass(): boolean {
-        return this._valid === IgxComboState.VALID;
+        return this.valid === IgxComboState.VALID;
     }
 
     /**
@@ -529,7 +433,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostBinding('class.igx-input-group--invalid')
     public get invalidClass(): boolean {
-        return this._valid === IgxComboState.INVALID;
+        return this.valid === IgxComboState.INVALID;
     }
 
     /**
@@ -699,12 +603,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get valueKey() {
-        return this._valueKey;
-    }
-    set valueKey(val: string) {
-        this._valueKey = val;
-    }
+    public valueKey: string;
 
     @Input()
     set displayKey(val: string) {
@@ -729,7 +628,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     get displayKey() {
-        return this._displayKey ? this._displayKey : this._valueKey;
+        return this._displayKey ? this._displayKey : this.valueKey;
     }
 
     /**
@@ -797,17 +696,36 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public type = 'box';
 
     /**
+     * Gets/Sets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // get
+     * let valid = this.combo.valid;
+     * ```
+     * ```typescript
+     * // set
+     * this.combo.valid = IgxComboState.INVALID;
+     * ```
+    */
+    public valid: IgxComboState = IgxComboState.INITIAL;
+
+    /**
+     * @hidden
+     */
+    public searchValue = '';
+
+    /**
      * @hidden
      */
     public onBlur(event) {
         if (this.dropdown.collapsed) {
-            this._valid = IgxComboState.INITIAL;
+            this.valid = IgxComboState.INITIAL;
             if (this.ngControl) {
                 if (!this.ngControl.valid) {
-                    this._valid = IgxComboState.INVALID;
+                    this.valid = IgxComboState.INVALID;
                 }
             } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
-                this._valid = IgxComboState.INVALID;
+                this.valid = IgxComboState.INVALID;
             }
         }
     }
@@ -860,7 +778,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.virtualizationState(state);
      * ```
      */
-    set virtualizationState(state) {
+    set virtualizationState(state: IForOfState) {
         this.dropdown.verticalScrollContainer.state = state;
     }
 
@@ -886,30 +804,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     set totalItemCount(count) {
         this.dropdown.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
-    }
-
-    /**
-     * Gets if control is valid, when used in a form
-     *
-     * ```typescript
-     * // get
-     * let valid = this.combo.valid;
-     * ```
-    */
-    public get valid(): IgxComboState {
-        return this._valid;
-    }
-
-    /**
-     * Sets valid state of the combo
-     *
-     * ```typescript
-     * // get
-     * this.combo.valid(IgxComboState.INVALID);
-     * ```
-     */
-    public set valid(value: IgxComboState) {
-        this._valid = value;
     }
 
     /**
@@ -975,20 +869,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     get value(): string {
         return this._value;
-    }
-
-    /**
-     * @hidden
-     */
-    get searchValue() {
-        return this._searchValue;
-    }
-
-    /**
-     * @hidden
-     */
-    set searchValue(val: string) {
-        this._searchValue = val;
     }
 
     /**
@@ -1120,7 +1000,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.dataType === DataTypes.COMPLEX;
     }
 
-    private _stringifyItemID(itemID) {
+    /**
+     * If the data source is remote, returns JSON.stringify(itemID)
+     * @hidden
+     * @internal
+     */
+    private _stringifyItemID(itemID: any) {
         return this.isRemote && typeof itemID === 'object' ? JSON.stringify(itemID) : itemID;
     }
 
@@ -1129,9 +1014,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
+     * Returns if the specified itemID is selected
      * @hidden
+     * @internal
      */
-    public isItemSelected(item) {
+    public isItemSelected(item: any): boolean {
         return this.selection.is_item_selected(this.id, this._stringifyItemID(item));
     }
 
@@ -1244,7 +1131,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged() {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this._valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
         }
     }
 
