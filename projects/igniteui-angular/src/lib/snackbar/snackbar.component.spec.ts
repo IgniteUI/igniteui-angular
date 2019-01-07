@@ -133,7 +133,7 @@ describe('Custom content', () => {
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
         expect(customContent).toBeTruthy('Custom content is not found');
 
-        //Verify the custom content element is on the left side of the button
+        // Verify the custom content element is on the left side of the button
         const button = fixture.debugElement.query(By.css('.igx-snackbar__button'));
         const buttonRect = (<HTMLElement>button.nativeElement).getBoundingClientRect();
         const customContentRect = (<HTMLElement>customContent.nativeElement).getBoundingClientRect();
