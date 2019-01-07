@@ -1,14 +1,7 @@
 # Roadmap - Ignite UI for Angular
 
 # Current Milestone
-
-## Milestone 5 (14.12.2018)
-
-1. **[DONE]** TreeGrid summaries
-2. **[DONE]** Grid GroupBy summaries
-3. Inline date and time pickers (with drop down/toggle)
-4. **[DONE]** Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
-5. **[DONE]** Toolbar Templatable and NavBar Templatable 
+ 
 
 ## Milestone 6 (28.02.2019)
 
@@ -17,6 +10,7 @@
 3. Auto-complete (inline editable)
 4. Excel Style Filtering  
 5. Multi-cell Selection 
+6. Inline date and time pickers (with drop down/toggle)
 
 
 ## Further Down the line
@@ -87,3 +81,10 @@
 8. **[Done]** Row Editing with transactions (Batch editing) [issue](https://github.com/IgniteUI/igniteui-angular/issues/566)
 9. **[Done]** Adding Disabled Dates and Special Dates options in igxCalander [issue](https://github.com/IgniteUI/igniteui-angular/issues/1980)
 10. **[Done]** Drag and Drop Directive
+
+## Milestone 5 (14.12.2018)
+
+1. **[DONE]** TreeGrid summaries
+2. **[DONE]** Grid GroupBy summaries
+3. **[DONE]** Banner Component [issue](https://github.com/IgniteUI/igniteui-angular/issues/2672)
+4. **[DONE]** Toolbar Templatable and NavBar Templatable
