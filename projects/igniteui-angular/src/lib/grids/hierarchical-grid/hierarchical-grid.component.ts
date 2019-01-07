@@ -52,11 +52,11 @@ let NEXT_ID = 0;
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
-    public dataInitialized = false;
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
     private _scrollLeft = 0;
     public parent = null;
+    public updateOnRender = false;
 
     /**
      * @hidden
@@ -254,8 +254,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const key = args.context.$implicit.rowID;
             const cachedData = this._childGridTemplates.get(key);
             cachedData.owner = args.owner;
+
+            this.childLayoutKeys.forEach((layoutKey) => {
+                const relatedGrid = this.hgridAPI.getChildGridByID(layoutKey, args.context.$implicit.rowID);
+                if (relatedGrid && relatedGrid.updateOnRender) {
+                    // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
+                    relatedGrid.cdr.detectChanges();
+                    relatedGrid.updateOnRender = false;
+                }
+            });
+
             const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid) => grid.updateScrollPosition());
+            childGrids.forEach((grid) => {
+                grid.updateScrollPosition();
+            });
         }
     }
 
@@ -266,7 +278,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     public ngAfterContentInit() {
-        const nestedColumns = this.allLayoutList.map((layout) => layout.allColumns.toArray());
+        const nestedColumns = this.allLayoutList.map((layout) => {
+            layout.rootGrid = this;
+            return layout.allColumns.toArray();
+        });
         const colsArray = [].concat.apply([], nestedColumns);
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => {
