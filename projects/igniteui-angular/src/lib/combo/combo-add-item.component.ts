@@ -4,10 +4,9 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'igx-combo-add-item',
     template: '<ng-content></ng-content>',
-    providers: [{ provide: IgxComboItemComponent, useClass: IgxComboAddItemComponent}]
+    providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent}]
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-
     get isSelected(): boolean {
         return false;
     }
