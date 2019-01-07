@@ -78,6 +78,8 @@ export * from './lib/tabbar/tabbar.component';
 export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
+export * from './lib/select/select.component';
+
 
 /**
  * Exporter services, classes, interfaces and enums

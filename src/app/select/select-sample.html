@@ -1,0 +1,12 @@
+<!-- <igx-drop-down #dropDown [width]="'160px'" (onSelection)="onSelection($event)">
+    <igx-drop-down-item *ngFor="let item of items" [value]="item.field">
+        {{ item.field }}
+    </igx-drop-down-item>
+</igx-drop-down> -->
+
+<igx-select #dropDown (onSelection)="onSelection($event)">
+    <igx-select-item *ngFor="let item of items" [value]="item.field">
+        {{ item.field }}
+    </igx-select-item>
+</igx-select>
+

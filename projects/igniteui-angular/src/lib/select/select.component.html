@@ -1,0 +1,43 @@
+<!-- <div class="sample-wrapper">
+    <igx-input-group #inputGroup class="input-group" [igxToggleAction]="dropDown">
+        <input #input class="input" type="text" igxInput [igxDropDownItemNavigation]="igxDropDown"
+            readonly= "true"
+            placeholder="choose an option"
+            [(ngModel)]="this.value"
+            (keydown.ArrowDown)="openDropDown()"/>
+
+        <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
+            <igx-icon *ngIf="igxDropDown.collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
+            <ng-template #toggleUp>
+                <igx-icon fontSet="material">arrow_drop_up</igx-icon>
+            </ng-template>
+        </igx-suffix>
+    </igx-input-group>
+
+    <igx-drop-down #dropDown [width]="'160px'" (onSelection)="onSelection($event)">
+        <igx-drop-down-item *ngFor="let item of items" [value]="item.field">
+            {{ item.field }}
+        </igx-drop-down-item>
+    </igx-drop-down>
+</div> -->
+
+<igx-input-group #inputGroup class="input-group" [igxToggleAction]="toggleDirective">
+    <input #input class="input" type="text" igxInput [igxDropDownItemNavigation]="this"
+        readonly= "true"
+        placeholder="choose an option"
+        [(ngModel)]="this.value"
+        (keydown.ArrowDown)="openDropDown()"/>
+    <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
+        <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
+        <ng-template #toggleUp>
+            <igx-icon fontSet="material">arrow_drop_up</igx-icon>
+        </ng-template>
+    </igx-suffix>
+</igx-input-group>
+<div class="igx-select__list" igxToggle [style.maxHeight]="maxHeight"
+    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
+    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
+    <ng-container *ngIf="!collapsed">
+        <ng-content selector="igx-select-item"></ng-content>
+    </ng-container>
+</div>
