@@ -4,29 +4,44 @@
     </app-page-header>
     <section class="sample-content">
         <article class="timepicker-column">
-            <h4 class="sample-title">Default Time Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Time Picker with Dropdown</h4>
+            <div class="sample-description">{{showDate()}}</div>
+            <div class="preview" style="width: 200px">
+                <igx-time-picker #tp (onValueChanged)="valueChanged($event)"
+                                     (onValidationFailed)="validationFailed($event)"
+                                     [mode]="mode.dropdown"
+                                     [isSpinLoop]="isSpinLoop"
+                                     [(ngModel)]="date"
+                                     [itemsDelta]="itemsDelta"
+                                     [format]="format">
+                </igx-time-picker>
+            </div>
+        </article>
+        <article class="timepicker-column">
+            <h4 class="sample-title">Horizontal Time Picker</h4>
+            <p class="sample-description">AM/PM Time format</p>
+            <p class="sample-description"> </p>
             <div class="preview">
                 <igx-time-picker format="h:mm tt" ></igx-time-picker>
             </div>
         </article>
         <article class="timepicker-column">
-            <h4 class="sample-title">Default Time Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Vertical Time Picker</h4>
+            <p class="sample-description">Vertical dialog</p>
             <div class="preview">
                 <igx-time-picker [vertical]="true" format="h:mm tt" ></igx-time-picker>
             </div>
         </article>
         <article class="timepicker-column">
-            <h4 class="sample-title">24h Time format.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">24h Time Picker</h4>
+            <p class="sample-description">24h Time Format</p>
             <div class="preview">
                 <igx-time-picker format="H:mm" ></igx-time-picker>
             </div>
         </article>
         <article class="timepicker-column">
-            <h4 class="sample-title">Templated time picker.</h4>
-            <p class="sample-description">Time picker with templated input group.</p>
+            <h4 class="sample-title">Templated Time Picker</h4>
+            <p class="sample-description">Time picker with templated input group</p>
             <div class="preview">
                 <igx-time-picker #templatedTimePicker format="h:mm tt" >
                     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">

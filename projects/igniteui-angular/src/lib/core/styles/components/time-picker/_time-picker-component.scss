@@ -1,90 +1,71 @@
 @include b(igx-time-picker) {
+    @extend %time-picker-display !optional;
 
     @include e(header) {
-        @extend %igx-time-picker__header !optional;
+        @extend %time-picker__header !optional;
     }
 
     @include e(header-ampm) {
-        @extend %igx-time-picker__header-ampm !optional;
+        @extend %time-picker__header-ampm !optional;
     }
 
     @include e(header-hour){
-        @extend %igx-time-picker__header-hour !optional;
+        @extend %time-picker__header-hour !optional;
+    }
+
+    @include e(main) {
+        @extend %time-picker__main !optional;
     }
 
     // COLUMN
     @include e(column) {
-        @extend %igx-time-picker__column !optional;
+        @extend %time-picker__column !optional;
     }
 
     @include e(item) {
-        @extend %igx-time-picker__item !optional;
+        @extend %time-picker__item !optional;
     }
 
     @include e(item, $mod: selected) {
-        @extend %igx-time-picker__item--selected !optional;
+        @extend %time-picker__item--selected !optional;
     }
 
     @include e(item, $m: active) {
-        @extend %igx-time-picker__item--active !optional;
+        @extend %time-picker__item--active !optional;
     }
 
     // HOUR
     @include e(hourList) {
-        @extend %igx-time-picker__hourList !optional;
+        @extend %time-picker__hourList !optional;
     }
-
 
     // MINUTE
     @include e(minuteList) {
-        @extend %igx-time-picker__minuteList !optional;
+        @extend %time-picker__minuteList !optional;
     }
 
     // AM PM
     @include e(ampmList) {
-        @extend %igx-time-picker__ampmList !optional;
+        @extend %time-picker__ampmList !optional;
     }
 
     @include e(body) {
-        @extend %igx-time-picker__body !optional;
+        @extend %time-picker__body !optional;
     }
 
-    .igx-dialog__window {
-        @extend %time-picker-display !optional;
+    @include e(buttons) {
+        @extend %time-picker__buttons !optional;
+    }
+
+    @include m(dropdown) {
+        @extend %time-picker--dropdown !optional;
     }
 
     @include m(vertical) {
-        .igx-dialog__window {
-            @extend %time-picker-display--vertical !optional;
+        @extend %time-picker-display--vertical !optional;
+
+        @include e(header) {
+            @extend %time-picker__header--vertical !optional;
         }
-
-        .igx-time-picker__wrapper {
-            @extend %igx-time-picker__wrapper !optional;
-        }
-
-        .igx-time-picker__header {
-            @extend %igx-time-picker__header--vertical !optional;
-
-            &::after {
-                @extend %igx-time-picker__header--vertical-after !optional;
-            }
-        }
-
-        .igx-time-picker__body {
-            @extend %igx-time-picker__body--vertical !optional;
-        }
-    }
-
-    .igx-dialog__window,
-    .igx-dialog__window-content {
-        @extend %time-picker-content !optional;
-    }
-
-    .igx-dialog__window-title {
-        @extend %time-picker-dialog-title !optional;
-    }
-
-    .igx-dialog__window-actions {
-        @extend %time-picker-dialog-actions !optional;
     }
 }
