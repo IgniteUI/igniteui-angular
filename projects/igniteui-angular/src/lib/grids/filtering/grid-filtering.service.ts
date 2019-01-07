@@ -38,7 +38,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
-    private datePipe = new IgxDatePipeComponent(window.navigator.language);
+    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
     public gridId: string;
@@ -74,6 +74,13 @@ export class IgxFilteringService implements OnDestroy {
 
     public get grid(): IgxGridBaseComponent {
         return this.gridAPI.get(this.gridId);
+    }
+
+    public get datePipe(): IgxDatePipeComponent {
+        if (!this._datePipe) {
+            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
+        }
+        return this._datePipe;
     }
 
     /**

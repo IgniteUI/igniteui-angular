@@ -26,6 +26,7 @@ import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 
+const DEFAULT_DATE_FORMAT = 'mediumDate';
 /**
  * @hidden
  */
@@ -556,7 +557,7 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
     transform(value: any, locale: string): string {
         if (value && value instanceof Date) {
             if (locale) {
-                return super.transform(value, 'mediumDate', undefined, locale);
+                return super.transform(value, DEFAULT_DATE_FORMAT, undefined, locale);
             } else {
                 return super.transform(value);
             }
