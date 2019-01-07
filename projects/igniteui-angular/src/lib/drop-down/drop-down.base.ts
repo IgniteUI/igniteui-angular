@@ -287,7 +287,7 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
             index = currentIndex ? currentIndex : this._focusedItem.index;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
-        this.navigateItem(newIndex);
+        this.navigateItem(newIndex, direction);
     }
 
     protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
@@ -309,7 +309,7 @@ export abstract class IgxDropDownBase implements IDropDownList, OnInit {
      * @hidden
      * @internal
      */
-    public navigateItem(newIndex: number) {
+    public navigateItem(newIndex: number, direction?: Navigate) {
         if (newIndex !== -1) {
             const oldItem = this._focusedItem;
             const newItem = this.items[newIndex];
