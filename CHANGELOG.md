@@ -1,6 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.1.1
+- **Progress Indicators**:
+    - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track. 
+
+
+## 7.1.2
+### Features
+- `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
 
 ## 7.1.1
 ### Features
@@ -17,6 +25,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+
 
 ## 7.1.0
 ### Features
@@ -38,8 +47,12 @@ All notable changes for each version of this project will be documented in this 
     - `focusedValuePipe` input property is provided that allows developers to additionally transform the value on focus;
 - `IgxTreeGrid`:
     - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
-    - You can now export the tree grid both to CSV and Excel. The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
+    - You can now export the tree grid both to CSV and Excel.
+    - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
     - Summaries feature is now supported in the tree grid. Summary results are calculated and displayed for the root level and each child level by default.
+- `IgxOverlayService`:
+    - `ElasticPositioningStrategy` added. This strategy positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view.
+
 
 ## 7.0.5
 
@@ -60,6 +73,7 @@ All notable changes for each version of this project will be documented in this 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
 * Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
 
 ## 7.0.4
 ### Bug fixes
