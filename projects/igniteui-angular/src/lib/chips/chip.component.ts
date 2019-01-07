@@ -303,14 +303,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     @HostBinding('attr.class')
     get hostClass(): string {
-        const classes = [];
-        if (this.isCosy()) {
-            classes.push('igx-chip--cosy');
-        } else if (this.isCompact()) {
-            classes.push('igx-chip--compact');
-        } else {
-            classes.push('igx-chip');
-        }
+        const classes = [this.getComponentDensityClass('igx-chip')];
         classes.push(this.disabled ? 'igx-chip--disabled' : '');
         // The custom classes should be at the end.
         classes.push(this.class);
@@ -359,13 +352,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      */
     public get ghostClass(): string {
-       if (this.isCosy()) {
-            return 'igx-chip__ghost--cosy';
-       } else if (this.isCompact()) {
-            return 'igx-chip__ghost--compact';
-       } else {
-            return 'igx-chip__ghost';
-       }
+        return this.getComponentDensityClass('igx-chip__ghost');
     }
 
     public get chipTabindex() {
