@@ -55,7 +55,7 @@ The service, should inform the combo for the total items that are on the server 
 
 ### Value Binding
 
-If we want to use a two-way data-binding, we could just use `ngModule` like this:
+If we want to use a two-way data-binding, we could just use `ngModel` like this:
 
 ```html
 <igx-combo #combo [(ngModel)]="values"></igx-combo>
@@ -210,7 +210,6 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |--------------------------|---------------------------------------------------|-----------------------------|
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
-|  `value`                 | combo value                                       | string                      |
 |  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
 |  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |
@@ -230,6 +229,11 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
+
+### Getters
+| Name                     | Description                                       | Type                        |
+|--------------------------|---------------------------------------------------|-----------------------------|
+|  `value`                    | the value of the combo text field                                          | string                      |
 
 ### Outputs
 

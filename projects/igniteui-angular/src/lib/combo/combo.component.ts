@@ -966,7 +966,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo value
+     * The text displayed in the combo input
      *
      * ```typescript
      * // get
@@ -975,17 +975,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     get value(): string {
         return this._value;
-    }
-    /**
-     * Combo value
-     *
-     * ```html
-     * <!--set-->
-     * <igx-combo [value]='newValue'></igx-combo>
-     * ```
-     */
-    set value(val) {
-        this._value = val;
     }
 
     /**
@@ -1277,7 +1266,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.selection.set(this.id, new Set());
         this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter(e => e.componentID === this.id)).subscribe((e) => {
             this.onSelectionChange.emit(e.selectionEvent);
-            this.value = this.dataType !== DataTypes.PRIMITIVE ?
+            this._value = this.dataType !== DataTypes.PRIMITIVE ?
                 e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 e.selectionEvent.newSelection.join(', ');
             this._onChangeCallback(e.selectionEvent.newSelection);

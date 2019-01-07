@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.2.0
+- `igxCombo`
+    - **Breaking Change** `combo.value` is now only a getter.
 
 ## 7.1.0
 ### Features
