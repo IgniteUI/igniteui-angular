@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.1.1
+- **Progress Indicators**:
+    - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track. 
 
 
 ## 7.1.2

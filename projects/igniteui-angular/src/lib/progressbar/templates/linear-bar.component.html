@@ -1,12 +1,15 @@
-<div class="progress-linear" [class.progress-linear--striped]="striped">
-    <div class="progress-linear__bar" #linearBar role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="max" [attr.aria-valuenow]="value">
-        <div class="progress-linear__bar-base"></div>
-        <div class="progress-linear__bar-progress{{type ? '--' + type : ''}}" [style.width.%]="valueInPercent"></div>
-    </div>
-    <span 
-        class="progress-linear__value{{textAlign ? '--' + textAlign : ''}}"
-        [class.progress-linear__value--top]="textTop"
-        [class.progress-linear__value--hidden]="!textVisibility">
-            {{text ? text : valueInPercent + '%'}}
-    </span>
+<div class="igx-linear-bar__base">
+    <div class="igx-linear-bar__indicator"
+    [style.width.%]="valueInPercent"></div>
 </div>
+
+<span
+    class="igx-linear-bar__value"
+    [ngClass]="{
+        'igx-linear-bar__value--start': textAlign === 'start',
+        'igx-linear-bar__value--end': textAlign === 'end',
+        'igx-linear-bar__value--top': textTop,
+        'igx-linear-bar__value--hidden': !textVisibility
+    }">
+        {{text ? text : valueInPercent + '%'}}
+</span>
