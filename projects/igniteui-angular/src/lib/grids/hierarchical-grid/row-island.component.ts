@@ -38,6 +38,12 @@ export interface IGridCreatedEventArgs {
     grid: IgxHierarchicalGridComponent;
 }
 
+export const enum IgxGridExpandState {
+    COLLAPSED = -1,
+    MIXED = 0,
+    EXPANDED = 1
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-row-island',
@@ -47,7 +53,11 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     private layout_id = `igx-row-island-`;
     private hgridAPI;
     private isInit = false;
+    private _expandChildren = false;
+    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
     public initialChanges;
+    public rootGrid = null;
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
@@ -65,7 +75,36 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
 
     @Input() public key: string;
 
-    @Input() public childrenExpanded = false;
+    @Input()
+    public set expandChildren(value) {
+        this._expandChildren = value;
+        this.childrenExpandState = value ? IgxGridExpandState.EXPANDED : IgxGridExpandState.COLLAPSED;
+        if (!this.parent && this.rootGrid) {
+            this.rootGrid.markForCheck();
+        } else if (this.parent) {
+            this.hgridAPI.getChildGridsForRowIsland(this.parent.key).forEach((grid) => {
+                if (document.body.contains(grid.nativeElement)) {
+                    // Detect changes right away if the grid is visible
+                    grid.markForCheck();
+                } else {
+                    // Else defer the detection on changes when the grid gets into view for performance.
+                    grid.updateOnRender = true;
+                }
+            });
+        }
+    }
+
+    public get expandChildren() {
+        return this._expandChildren;
+    }
+
+    public get shouldExpandAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.EXPANDED;
+    }
+
+    public get shouldCollapseAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
+    }
 
     public parent = null;
 
