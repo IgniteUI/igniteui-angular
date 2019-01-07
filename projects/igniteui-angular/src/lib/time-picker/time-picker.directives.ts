@@ -6,17 +6,13 @@
 import {
     Directive,
     ElementRef,
-    EventEmitter,
-    forwardRef,
-    Host,
     HostBinding,
     HostListener,
     Inject,
     Input,
-    Output,
     TemplateRef
 } from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase, TimePickerInteractionMode } from './time-picker.common';
 
 /** @hidden */
 @Directive({
@@ -159,6 +155,10 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
+        if (this.timePicker.mode === TimePickerInteractionMode.dropdown) {
+            this.timePicker.hideOverlay();
+            return;
+        }
         this.timePicker.okButtonClick();
     }
 
@@ -343,3 +343,4 @@ export class IgxAmPmItemDirective {
 export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
+
