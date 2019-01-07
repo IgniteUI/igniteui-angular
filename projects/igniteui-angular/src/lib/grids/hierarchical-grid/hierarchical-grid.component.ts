@@ -15,6 +15,7 @@ import {
     IterableDiffers,
     ViewContainerRef,
     Inject,
+    InjectionToken,
     ComponentFactoryResolver,
     AfterViewInit,
     AfterContentInit,
@@ -29,13 +30,20 @@ import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent, IGridDataBindable } from '../grid';
-import { IgxHierarchicalTransactionService, HierarchicalTransaction, HierarchicalState } from '../../services/index';
+import { IgxHierarchicalTransactionService, HierarchicalState, HierarchicalTransaction } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
 let NEXT_ID = 0;
+
+export const IgxHierarchicalTransactionServiceFactory = {
+    provide: IgxGridTransaction,
+    useFactory: () => {
+        return () => new IgxHierarchicalTransactionService()
+    }
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -315,7 +323,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     constructor(
         gridAPI: GridBaseAPIService<IgxGridComponent>,
         selection: IgxHierarchicalSelectionAPIService,
-        @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
+        @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -329,7 +337,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             super(
                 gridAPI,
                 selection,
-                _transactions,
+                transactionFactory(),
                 elementRef,
                 zone,
                 document,

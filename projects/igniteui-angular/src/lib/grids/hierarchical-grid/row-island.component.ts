@@ -26,7 +26,6 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction, IGridDataBindable } from '../grid';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { Transaction, TransactionService, State } from '../../services/index';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -91,7 +90,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
+        @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -105,7 +104,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         super(
             gridAPI,
             selection,
-            _transactions,
+            transactionFactory(),
             elementRef,
             zone,
             document,
