@@ -3,7 +3,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
 
-describe('schematics', () => {
+describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
   let tree: UnitTestTree;
