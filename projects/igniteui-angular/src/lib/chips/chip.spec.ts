@@ -235,8 +235,7 @@ describe('IgxChip', () => {
         const components = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         const firstComponent = components[0];
 
-        const isFirstChipComfortable = firstComponent.componentInstance.isComfortable();
-        expect(isFirstChipComfortable).toEqual(true);
+        expect(firstComponent.componentInstance.displayDensity).toEqual(DisplayDensity.comfortable);
 
         // Assert default css class is applied
         const comfortableComponents = fix.debugElement.queryAll(By.css('.igx-chip'));

@@ -70,17 +70,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
         return this.element.nativeElement;
     }
 
-    // TO DO: to be refactored when displayDensity refactoring is merged
-    get gridDensity(): string {
-        if (this.grid.isCosy()) {
-            return DisplayDensity.cosy;
-        } else if (this.grid.isCompact()) {
-            return DisplayDensity.compact;
-        } else {
-            return DisplayDensity.comfortable;
-        }
-    }
-
     public getColumnSummaries(columnName) {
         if (!this.summaries.get(columnName)) {
             return [];
