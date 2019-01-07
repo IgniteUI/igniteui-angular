@@ -8,7 +8,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 
-fdescribe('IgxHierarchicalGrid Basic Navigation', () => {
+describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
