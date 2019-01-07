@@ -9,7 +9,8 @@ import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } fro
 export class HierarchicalGridSampleComponent {
     localData = [];
     isRowSelectable = false;
-    shouldExpand = false;
+    firstLevelExpanded = false;
+    rootExpanded = false;
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
@@ -71,6 +72,14 @@ export class HierarchicalGridSampleComponent {
 
     setterBindingChange() {
         this.isRowSelectable = !this.isRowSelectable;
+    }
+
+    toggleRootLevel() {
+        this.rootExpanded = !this.rootExpanded;
+    }
+
+    toggleFirstIsland() {
+        this.firstLevelExpanded = !this.firstLevelExpanded;
     }
 
     testApis() {

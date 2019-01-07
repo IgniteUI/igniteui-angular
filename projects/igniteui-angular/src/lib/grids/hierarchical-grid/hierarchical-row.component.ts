@@ -15,6 +15,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,6 +79,8 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
                 return v.rowID !== this.rowID;
             });
         }
+        // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
+        grid.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
@@ -85,5 +88,5 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
             super(gridAPI, hselection, element, cdr);
-         }
+        }
 }
