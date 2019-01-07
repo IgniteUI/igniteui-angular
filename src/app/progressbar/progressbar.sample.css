@@ -5,15 +5,17 @@
 
 .circular-container {
     display: flex;
-    width: 84px;
-    height: 84px;
-    padding: 16px;
+    margin: 16px;
 }
 
-.linear-container + .linear-container{
+.circular-sample {
+    width: 54px;
+    height: 54px;
+}
+
+.linear-container+.linear-container {
     padding-top: 16px;
 }
-
 
 .button-container {
     position: fixed;
