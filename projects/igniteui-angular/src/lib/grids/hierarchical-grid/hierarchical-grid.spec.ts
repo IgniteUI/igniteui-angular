@@ -144,6 +144,16 @@ describe('Basic IgxHierarchicalGrid', () => {
         fixture.detectChanges();
         expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
     }));
+
+    it('should not show header expand/collapse button if grid has no expandable elements', () => {
+        fixture.componentInstance.data = [
+            {ID: 0, ProductName: 'Product: A0'}
+        ];
+        fixture.detectChanges();
+        const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__header-indentation'))[0];
+        const icon = headerExpanderElem.query(By.css('igx-icon'));
+        expect(icon).toBeNull();
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {
