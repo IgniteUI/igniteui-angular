@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input, ContentChildren
+    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input, ContentChildren, ViewChildren
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -54,7 +54,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
-    @ContentChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
+    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
     protected children: QueryList<IgxComboItemComponent> = null;
 
     /**

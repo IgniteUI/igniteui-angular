@@ -1,8 +1,6 @@
 import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs } from 'igniteui-angular';
+import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
-import { NgModule } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -44,8 +42,13 @@ export class ComboSampleComponent implements OnInit {
     @ViewChild('customItemTemplate', {read: TemplateRef})
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
-    constructor() {
 
+    comfortable = DisplayDensity.comfortable;
+    cosy = DisplayDensity.cosy;
+    compact = DisplayDensity.compact;
+
+
+    constructor() {
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -126,7 +129,7 @@ export class ComboSampleComponent implements OnInit {
         this.initialItemTemplate = comboTemplate;
     }
 
-    setDensity(density: string) {
+    setDensity(density: DisplayDensity) {
         this.igxCombo.displayDensity = density;
     }
 

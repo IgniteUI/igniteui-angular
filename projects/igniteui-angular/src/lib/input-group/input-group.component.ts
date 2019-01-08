@@ -222,7 +222,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--cosy')
     get isDisplayDensityCosy() {
-        return this.isCosy();
+        return this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
@@ -230,7 +230,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--comfortable')
     get isDisplayDensityComfortable() {
-        return this.isComfortable();
+        return this.displayDensity === DisplayDensity.comfortable;
     }
 
     /**
@@ -238,7 +238,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--compact')
     get isDisplayDensityCompact() {
-        return this.isCompact();
+        return this.displayDensity === DisplayDensity.compact;
     }
 
     /**

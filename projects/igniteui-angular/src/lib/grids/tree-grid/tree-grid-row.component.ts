@@ -3,7 +3,6 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { State, TransactionType } from '../../services';
 import { GridBaseAPIService } from '../api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 
@@ -85,28 +84,5 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
         return `${classes} ${filteredClass}`;
-    }
-
-    /** @hidden */
-    public get deleted(): boolean {
-        return this.hasDeletedParent() || super.isRowDeleted();
-    }
-
-    /**
-     * Checks if any of its parent rows are in deleted state
-     * @returns whether any of its parent rows are in deleted state
-     */
-    private hasDeletedParent(): boolean {
-        if ((this.grid.cascadeOnDelete && this.grid.foreignKey) || this.grid.childDataKey) {
-            let node = this.grid.records.get(this.rowID);
-            while (node) {
-                const state: State = this.grid.transactions.getState(node.rowID);
-                if (state && state.type === TransactionType.DELETE) {
-                    return true;
-                }
-                node = node.parent;
-            }
-        }
-        return false;
     }
 }
