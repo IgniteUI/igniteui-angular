@@ -72,7 +72,7 @@ let NEXT_ID = 0;
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
-    selector: 'igx-date-picker',
+    selector: 'igx-datePicker, igx-date-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
@@ -484,6 +484,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public ngOnInit(): void {
         this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
         this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
+
+        console.log('IgxDatePickerComponent: \'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.');
     }
 
     /**
