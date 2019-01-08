@@ -3,6 +3,27 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
 
+const polyfills =
+  `
+// import 'core-js/es6/symbol';
+// import 'core-js/es6/object';
+// import 'core-js/es6/function';
+// import 'core-js/es6/parse-int';
+// import 'core-js/es6/parse-float';
+// import 'core-js/es6/number';
+// import 'core-js/es6/math';
+// import 'core-js/es6/string';
+// import 'core-js/es6/date';
+// import 'core-js/es6/array';
+// import 'core-js/es6/regexp';
+// import 'core-js/es6/map';
+// import 'core-js/es6/weak-map';
+// import 'core-js/es6/set';
+// import 'core-js/es6/reflect';
+// import 'core-js/es7/object';
+// import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
+`;
+
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
@@ -19,15 +40,24 @@ describe('ng-add schematics', () => {
   };
 
   const pkgJsonConfig = {
-    dependencies: null,
-    devDependencies: null
+    dependencies: {},
+    devDependencies: {}
   };
 
   beforeEach(() => {
     tree = new UnitTestTree(new EmptyTree());
     tree.create('/angular.json', JSON.stringify(ngJsonConfig));
     tree.create('/package.json', JSON.stringify(pkgJsonConfig));
+    tree.create('src/polyfills.ts', polyfills);
+    populatePackageJson();
   });
+
+  function populatePackageJson() {
+    const pkgJson = JSON.parse(tree.read('/package.json').toString());
+    pkgJson.dependencies['@angular/cli'] = '~7.0.5';
+    pkgJson.dependencies['@angular/core'] = '^7.0.3';
+    tree.overwrite('/package.json', JSON.stringify(pkgJson));
+  }
 
   it('should create the needed files correctly', () => {
     expect(tree).toBeTruthy();
@@ -98,5 +128,11 @@ describe('ng-add schematics', () => {
 
     expect(Object.keys(pkgJsonData.devDependencies).filter(k => k.includes('igniteui-cli')).length).toBeGreaterThan(0);
     expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('igniteui-cli')).length).toBe(0);
+  });
+
+  it('should properly add polyfills', () => {
+    expect(tree.readContent('src/polyfills.ts')).toBe(polyfills);
+    runner.runSchematic('ng-add', {}, tree);
+    expect(tree.readContent('/polyfills.ts')).not.toBe(polyfills);
   });
 });
