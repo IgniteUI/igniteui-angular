@@ -1,5 +1,5 @@
 import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
-import { chain, Rule, SchematicContext, Tree, SchematicsException } from '@angular-devkit/schematics';
+import { chain, Rule, SchematicContext, Tree, SchematicsException, FileDoesNotExistException } from '@angular-devkit/schematics';
 import { NodePackageInstallTask, RunSchematicTask } from '@angular-devkit/schematics/tasks';
 // tslint:disable-next-line:no-submodule-imports
 import { getWorkspace } from '@schematics/angular/utility/config';
@@ -42,8 +42,8 @@ function addDependencies(options: Options): Rule {
     });
 
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
-    promptVersionMismatch(context, tree, pkgJson);
-    addPolyfills(tree, options);
+    displayVersionMismatch(context, tree, pkgJson);
+    promptAddPolyfills(tree, options);
     return tree;
   };
 }
@@ -52,7 +52,7 @@ function LogIncludingDependency(context: SchematicContext, pkg: string, version:
   context.logger.log('info', `Including ${pkg} - Version: ${version}`);
 }
 
-function addPolyfills(tree: Tree, options: Options) {
+function promptAddPolyfills(tree: Tree, options: Options) {
   if (options['polyfills']) {
     const targetFile = 'src/polyfills.ts';
     if (!tree.exists(targetFile)) {
@@ -167,7 +167,7 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   return tree;
 }
 
-function promptVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any) {
+function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any) {
   const ngKey = '@angular/core';
   const ngCliKey = '@angular/cli';
   const ngProjVer = getDependencyVersion(ngKey, tree);
@@ -204,6 +204,8 @@ function getDependencyVersion(pkg: string, tree: Tree) {
 
     return targetDep;
   }
+
+  throw new FileDoesNotExistException(`${tree.root.path}/package.json`);
 }
 
 function installPackageJsonDependencies(options): Rule {
