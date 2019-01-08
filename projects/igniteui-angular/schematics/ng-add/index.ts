@@ -59,17 +59,14 @@ function addPolyfills(tree: Tree, options: Options) {
       throw new Error(`${targetFile} not found in the src folder.`);
     }
 
-    const pattern = /\/{2}\s\w+\s\'\w+\-\w+\/(\w+)(6|7)\/.+/g;
-    const animationsPkg = '// import \'web-animations-js\';';
+    // Match all commented import statements that are core-js/es6/*; core-js/es7/*; web-animations-js
+    const pattern = /\/{2}\s{0,}\w+\s{0,}\'(\w+\-\w+\/(\w+)(6|7)\/.+|\w+\-\w+\-\w+\';)/g;
     let polyfillsData = tree.read(targetFile).toString();
-
     for (const match of polyfillsData.match(pattern)) {
-      polyfillsData = polyfillsData.replace(match, match.substring(3, match.length));
+      polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
     }
 
-    polyfillsData = polyfillsData.replace(animationsPkg, animationsPkg.substring(3, animationsPkg.length));
     tree.overwrite(targetFile, polyfillsData);
-
     return tree;
   }
 }
