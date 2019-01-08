@@ -3679,7 +3679,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
+            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);

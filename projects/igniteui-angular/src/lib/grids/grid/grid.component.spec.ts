@@ -1265,7 +1265,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.inEditMode).toEqual(true);
             }));
 
-            it(`Should skip non-editable columns when column hiding is enabled`, fakeAsync(() => {
+            it(`Should skip non-editable columns when column hiding is enabled`, async () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -1277,8 +1277,9 @@ describe('IgxGrid Component Tests', () => {
                 targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 targetCell.onKeydownEnterEditMode({});
                 fixture.detectChanges();
+
                 fixture.componentInstance.moveNext(false);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT focused cell to be 'Released'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1288,7 +1289,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT focused cell to be 'Items'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1298,7 +1299,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT edited cell to be 'Released'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1308,15 +1309,15 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT edited cell to be 'Downloads'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
-            }));
+            });
 
-            it(`Should skip non-editable columns when column pinning & hiding is enabled`, fakeAsync(() => {
+            it(`Should skip non-editable columns when column pinning & hiding is enabled`, async() => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
                 fixture.detectChanges();
                 const grid = fixture.componentInstance.grid;
@@ -1330,7 +1331,7 @@ describe('IgxGrid Component Tests', () => {
                 targetCell.onKeydownEnterEditMode({});
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT focused cell to be 'Released'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1340,7 +1341,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(false);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT focused cell to be 'Items'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1350,7 +1351,7 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT edited cell to be 'Released'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
@@ -1360,13 +1361,13 @@ describe('IgxGrid Component Tests', () => {
                 editedCell.nativeElement.focus();
                 fixture.detectChanges();
                 fixture.componentInstance.moveNext(true);
-                tick();
+                await wait(100);
                 fixture.detectChanges();
                 // EXPECT edited cell to be 'Downloads'
                 editedCell = fixture.componentInstance.getCurrentEditCell();
                 expect(editedCell.column.field).toEqual('Downloads');
                 expect(editedCell.inEditMode).toEqual(true);
-            }));
+            });
 
             it(`Should skip non-editable columns when column grouping is enabled`, (async () => {
                 const fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
