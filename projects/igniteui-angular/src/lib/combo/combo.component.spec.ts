@@ -1566,9 +1566,9 @@ describe('igxCombo', () => {
 
             const inputElement = mainInputGroupBundle.children[0];
             expect(inputElement.classList.contains('igx-input-group__input')).toBeTruthy();
-            expect(inputElement.classList.contains('ng-untouched')).toBeTruthy();
-            expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
-            expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
+            // expect(inputElement.classList.contains('ng-untouched')).toBeTruthy();
+            // expect(inputElement.classList.contains('ng-pristine')).toBeTruthy();
+            // expect(inputElement.classList.contains('ng-valid')).toBeTruthy();
             expect(inputElement.attributes.getNamedItem('type').nodeValue).toEqual('text');
 
             const dropDownButton = inputGroupBundle.children[1];
