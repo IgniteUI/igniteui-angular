@@ -5,6 +5,7 @@ import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxSelectionAPIService } from '../../core/selection';
+import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,

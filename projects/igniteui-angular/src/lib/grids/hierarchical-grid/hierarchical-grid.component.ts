@@ -24,7 +24,7 @@ import {
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { IgxRowIslandComponent } from './row-island.component';
+import { IgxRowIslandComponent, IgxGridExpandState } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -52,11 +52,12 @@ let NEXT_ID = 0;
 export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
-    public dataInitialized = false;
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
     private _scrollLeft = 0;
+    private _hierarchicalState = [];
     public parent = null;
+    public updateOnRender = false;
 
     /**
      * @hidden
@@ -87,7 +88,15 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 
 
     @Input()
-    public hierarchicalState = [];
+    public set hierarchicalState(value) {
+        // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
+        this.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
+        this._hierarchicalState = value;
+    }
+
+    public get hierarchicalState() {
+        return this._hierarchicalState;
+    }
 
     /**
      * @hidden
@@ -166,14 +175,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                     moveView: view,
                     owner: tmlpOutlet
                 };
+            } else {
+                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
+                // child rows contain unique grids, hence should have unique templates
+                return {
+                    $implicit: rowData,
+                    templateID: 'childRow-' + rowID
+                };
             }
+        } else {
+            return {
+                $implicit: rowData,
+                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            };
         }
-        return {
-            $implicit: rowData,
-            templateID: this.isChildGridRecord(rowData) ?
-            'childRow' :
-            this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
-        };
     }
 
     public get childLayoutKeys() {
@@ -198,8 +213,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     toggleAllRows() {
         const collapseAll =  this.hierarchicalState.length > 0;
         if (collapseAll) {
+            this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = [];
         } else {
+            this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = this.data.map((rec) => {
                 return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
@@ -254,8 +271,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const key = args.context.$implicit.rowID;
             const cachedData = this._childGridTemplates.get(key);
             cachedData.owner = args.owner;
+
+            this.childLayoutKeys.forEach((layoutKey) => {
+                const relatedGrid = this.hgridAPI.getChildGridByID(layoutKey, args.context.$implicit.rowID);
+                if (relatedGrid && relatedGrid.updateOnRender) {
+                    // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
+                    relatedGrid.cdr.detectChanges();
+                    relatedGrid.updateOnRender = false;
+                }
+            });
+
             const childGrids = this.getChildGrids(true);
-            childGrids.forEach((grid) => grid.updateScrollPosition());
+            childGrids.forEach((grid) => {
+                grid.updateScrollPosition();
+            });
         }
     }
 
@@ -266,7 +295,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     public ngAfterContentInit() {
-        const nestedColumns = this.allLayoutList.map((layout) => layout.allColumns.toArray());
+        const nestedColumns = this.allLayoutList.map((layout) => {
+            layout.rootGrid = this;
+            return layout.allColumns.toArray();
+        });
         const colsArray = [].concat.apply([], nestedColumns);
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => {

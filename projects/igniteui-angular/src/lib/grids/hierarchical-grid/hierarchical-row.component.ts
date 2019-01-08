@@ -15,6 +15,7 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,5 +86,5 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
             super(gridAPI, hselection, element, cdr);
-         }
+        }
 }
