@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, OnInit, ElementRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform } from '@angular/core';
 import {
   async,
   fakeAsync,
@@ -68,6 +68,7 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('555 55');
 
@@ -81,6 +82,7 @@ describe('igxMask', () => {
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('+359-884 19 08 54');
     }));
@@ -296,23 +298,22 @@ describe('igxMask', () => {
     it('Apply display and input pipes on blur and focus.', fakeAsync(() => {
         const fixture = TestBed.createComponent(PipesMaskComponent);
         fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
 
         const input = fixture.componentInstance.input;
 
-        input.nativeElement.focus();
+        input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('SSS');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
         tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('sss');
-
-        input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
-
-        expect(input.nativeElement.value).toEqual('SSS');
     }));
 
     it('Apply placehodler when value is not defined.', fakeAsync(() => {
@@ -325,13 +326,13 @@ describe('igxMask', () => {
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
-        tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('(__) (__)');
         expect(input.nativeElement.placeholder).toEqual('hello');
 
         input.nativeElement.dispatchEvent(new Event('blur'));
-        tick();
+        fixture.detectChanges();
 
         expect(input.nativeElement.value).toEqual('');
         expect(input.nativeElement.placeholder).toEqual('hello');
