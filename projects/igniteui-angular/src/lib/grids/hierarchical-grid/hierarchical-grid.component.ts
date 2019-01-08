@@ -337,7 +337,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             super(
                 gridAPI,
                 selection,
-                transactionFactory(),
+                typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
                 elementRef,
                 zone,
                 document,

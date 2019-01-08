@@ -97,7 +97,7 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     }
 
     logTransactionsIsland1() {
-        console.log(this.lastChildGrid.transactions.getTransactionLog());
+        console.log(this.rowIsland1.transactions.getTransactionLog());
     }
 
 }

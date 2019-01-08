@@ -30,6 +30,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { TransactionService, Transaction, State } from '../../services';
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
@@ -87,6 +88,15 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         return lvl + 1;
     }
 
+    /**
+     * Get transactions service for the children grid components.
+     * @experimental @hidden
+     */
+    get transactions(): TransactionService<Transaction, State> {
+        const grids = this.getGrids();
+        return grids.length ? grids[0].transactions : this._transactions;
+    }
+
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
@@ -104,7 +114,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         super(
             gridAPI,
             selection,
-            transactionFactory(),
+            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
             document,
@@ -157,7 +167,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         this.hgridAPI.unset(this.id);
     }
 
-    getGrids() {
+    getGrids(): IgxHierarchicalGridComponent[] {
         return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 }
