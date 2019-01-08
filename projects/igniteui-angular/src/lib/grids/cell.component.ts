@@ -287,6 +287,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         if (this.column.editable && value) {
+            this.focused = true;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
             if (this.highlight && this.grid.lastSearchInfo.searchText) {
                 this.highlight.observe();
@@ -382,23 +383,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const colWidth = this.column.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-
-        if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll &&
-            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
-
-            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
-                cellWidth += 'px';
-            }
-
-            return cellWidth;
-        } else {
-            return colWidth;
-        }
+        return this.column.getCellWidth();
     }
 
     /**
@@ -538,6 +523,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             this.selected = true;
             if (fireFocus) {
                 this.nativeElement.focus();
+            } else {
+                if (!this.focused) {
+                    this.focused = this.nativeElement === document.activeElement;
+                }
             }
             this.grid.onSelection.emit({ cell: this, event });
         }
@@ -842,8 +831,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownExitEditMode(event) {
-        if (this.column.editable) {
-            const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
+        if (this.column.editable && editableCell) {
             const args: IGridEditEventArgs = {
                 cellID: editableCell.cellID,
                 rowID: editableCell.cellID.rowID,

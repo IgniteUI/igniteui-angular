@@ -43,7 +43,8 @@ export class DisplayDensityBase implements DoCheck {
      */
     @Input()
     public get displayDensity(): DisplayDensity | string {
-        return this._displayDensity;
+        return this._displayDensity ||
+            ((this.displayDensityOptions && this.displayDensityOptions.displayDensity) || DisplayDensity.comfortable);
     }
 
     /**
@@ -51,66 +52,53 @@ export class DisplayDensityBase implements DoCheck {
      */
     public set displayDensity(val: DisplayDensity | string) {
         const currentDisplayDensity = this._displayDensity;
-        switch (val) {
-            case 'compact':
-                this._displayDensity = DisplayDensity.compact;
-                break;
-            case 'cosy':
-                this._displayDensity = DisplayDensity.cosy;
-                break;
-            case 'comfortable':
-                this._displayDensity = DisplayDensity.comfortable;
-        }
+        this._displayDensity = val as DisplayDensity;
+
         if (currentDisplayDensity !== this._displayDensity) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: currentDisplayDensity,
                 newDensity: this._displayDensity
             };
+
             this.onDensityChanged.emit(densityChangedArgs);
         }
     }
 
     @Output()
     public onDensityChanged = new EventEmitter<IDensityChangedEventArgs>();
+
     protected oldDisplayDensityOptions: IDisplayDensityOptions = { displayDensity: DisplayDensity.comfortable };
 
-    /**
-     *@hidden
-     */
-    public isCosy(): boolean {
-        return this._displayDensity === DisplayDensity.cosy ||
-            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.cosy);
-    }
 
-    /**
-     *@hidden
-     */
-    public isComfortable(): boolean {
-        return this._displayDensity === DisplayDensity.comfortable ||
-            (!this._displayDensity && (!this.displayDensityOptions ||
-             this.displayDensityOptions.displayDensity === DisplayDensity.comfortable));
-    }
-
-    /**
-     *@hidden
-     */
-    public isCompact(): boolean {
-        return this._displayDensity === DisplayDensity.compact ||
-            (!this._displayDensity && this.displayDensityOptions && this.displayDensityOptions.displayDensity === DisplayDensity.compact);
-    }
     constructor(protected displayDensityOptions: IDisplayDensityOptions) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
     }
 
     public ngDoCheck() {
-        if (this.oldDisplayDensityOptions && this.displayDensityOptions && !this._displayDensity &&
-            this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
+        if (!this._displayDensity && this.displayDensityOptions &&
+                this.oldDisplayDensityOptions.displayDensity !== this.displayDensityOptions.displayDensity) {
             const densityChangedArgs: IDensityChangedEventArgs = {
                 oldDensity: this.oldDisplayDensityOptions.displayDensity,
                 newDensity: this.displayDensityOptions.displayDensity
             };
+
             this.onDensityChanged.emit(densityChangedArgs);
             this.oldDisplayDensityOptions = Object.assign(this.oldDisplayDensityOptions, this.displayDensityOptions);
+        }
+    }
+
+    /**
+     * Given a style class of a component/element returns the modified version of it based
+     * on the current display density.
+     */
+    protected getComponentDensityClass(baseStyleClass: string): string {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return `${baseStyleClass}--${DisplayDensity.cosy}`;
+            case DisplayDensity.compact:
+                return `${baseStyleClass}--${DisplayDensity.compact}`;
+            default:
+                return baseStyleClass;
         }
     }
 }
