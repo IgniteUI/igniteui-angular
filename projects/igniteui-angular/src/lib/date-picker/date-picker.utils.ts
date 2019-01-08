@@ -202,80 +202,12 @@ export abstract class DatePickerUtil {
 
         return dateStruct;
     }
-
-    private static fillDatePartsPositions(dateArray: any[]) {
-        let offset = 0;
-
-        for (let i = 0; i < dateArray.length; i++) {
-            if (dateArray[i].type === DATE_PARTS.DAY) {
-                dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
-                offset += 2;
-            }
-
-            if (dateArray[i].type === DATE_PARTS.MONTH) {
-                switch (dateArray[i].formatType) {
-                    case FORMAT_DESC.SHORT: {
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 3);
-                        offset += 3;
-                        break;
-                    }
-                    case FORMAT_DESC.LONG: {
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 9);
-                        offset += 9;
-                        break;
-                    }
-                    case FORMAT_DESC.NARROW: {
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
-                        offset++;
-                        break;
-                    }
-                    default: {
-                        // FORMAT_DESC.NUMERIC || FORMAT_DESC.TWO_DIGITS
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
-                        offset += 2;
-                        break;
-                    }
-                }
-            }
-
-            if (dateArray[i].type === DatePickerUtil.SEPARATOR) {
-                dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
-                offset++;
-            }
-
-            if (dateArray[i].type === DATE_PARTS.YEAR) {
-                switch (dateArray[i].formatType) {
-                    case FORMAT_DESC.NUMERIC: {
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 4);
-                        offset += 4;
-                        break;
-                    }
-                    case FORMAT_DESC.TWO_DIGITS: {
-                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
-                        offset += 2;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    private static fillValues(start: number, offset: number) {
-        const array = [];
-        for (let i = start; i < start + offset; i++) {
-            array.push(i);
-        }
-
-        return array;
-    }
-
     public static isSpecialSymbol(char: string): boolean {
         return (char !== DATE_CHARS.YEAR_CHAR
             && char !== DATE_CHARS.MONTH_CHAR
             && char !== DATE_CHARS.DAY_CHAR
             && char !== DATE_CHARS.WEEKDAY_CHAR) ? false : true;
     }
-
     public static getFormatMask(format: string): string {
         const mask = [];
         const dateStruct = DatePickerUtil.parseDateFormat(format);
@@ -340,7 +272,6 @@ export abstract class DatePickerUtil {
 
         return mask.join('');
     }
-
     public static createDate(day: number, month: number, year: number): Date {
         const date = new Date();
         date.setDate(day);
@@ -348,31 +279,25 @@ export abstract class DatePickerUtil {
         date.setFullYear(year);
         return date;
     }
-
     public static trimMaskSymbols(mask: string): string {
         return mask.replace(/0|L/g, '_');
     }
-
     public static trimUnderlines(value: string): string {
         return value.replace(/_/g, '');
     }
-
     public static getLongMonthName(value: Date): string {
         return value.toLocaleString('en', {
             month: 'long'
         });
     }
-
     public static getLongDayName(value: Date): string {
         return value.toLocaleString('en', {
             weekday: 'long'
         });
     }
-
     public static getNumericFormatPrefix(formatType: string): string {
         return (formatType === FORMAT_DESC.TWO_DIGITS) ? '0' : '_';
     }
-
     public static getSpinnedDateInput(dateFormatParts: any[], inputValue: string, position: number, delta: number): string {
         let datePart = DatePickerUtil.getDatePartOnPosition(dateFormatParts, position);
         if ((datePart && datePart.length > 0 && datePart[0].type === DatePickerUtil.SEPARATOR)
@@ -431,8 +356,76 @@ export abstract class DatePickerUtil {
 
         return `${start}${changedPart}${end}`;
     }
-
+    public static isOneDigit(input: string, char: string, index: number): boolean {
+        return input.match(new RegExp(char, 'g')).length === 1 && index < 10;
+    }
+    public static daysInMonth(date: Date): number {
+        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    }
     private static getDatePartOnPosition(dateFormatParts: any[], position: number) {
         return dateFormatParts.filter((element) => element.position.some(pos => pos === position));
+    }
+    private static fillDatePartsPositions(dateArray: any[]): void {
+        let offset = 0;
+
+        for (let i = 0; i < dateArray.length; i++) {
+            if (dateArray[i].type === DATE_PARTS.DAY) {
+                dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
+                offset += 2;
+            }
+
+            if (dateArray[i].type === DATE_PARTS.MONTH) {
+                switch (dateArray[i].formatType) {
+                    case FORMAT_DESC.SHORT: {
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 3);
+                        offset += 3;
+                        break;
+                    }
+                    case FORMAT_DESC.LONG: {
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 9);
+                        offset += 9;
+                        break;
+                    }
+                    case FORMAT_DESC.NARROW: {
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
+                        offset++;
+                        break;
+                    }
+                    default: {
+                        // FORMAT_DESC.NUMERIC || FORMAT_DESC.TWO_DIGITS
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
+                        offset += 2;
+                        break;
+                    }
+                }
+            }
+
+            if (dateArray[i].type === DatePickerUtil.SEPARATOR) {
+                dateArray[i].position = DatePickerUtil.fillValues(offset, 1);
+                offset++;
+            }
+
+            if (dateArray[i].type === DATE_PARTS.YEAR) {
+                switch (dateArray[i].formatType) {
+                    case FORMAT_DESC.NUMERIC: {
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 4);
+                        offset += 4;
+                        break;
+                    }
+                    case FORMAT_DESC.TWO_DIGITS: {
+                        dateArray[i].position = DatePickerUtil.fillValues(offset, 2);
+                        offset += 2;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    private static fillValues(start: number, offset: number) {
+        const array = [];
+        for (let i = start; i < start + offset; i++) {
+            array.push(i);
+        }
+        return array;
     }
 }
