@@ -91,9 +91,43 @@
         $button-color: text-contrast($button-background);
     }
 
+    @if not($button-color) and $item-background {
+        $button-background: transparent;
+    }
+
     @if not($button-hover-color) and $button-hover-background {
         $button-hover-color: text-contrast($button-hover-background);
     }
+
+    @if not($button-hover-background) and $item-background {
+        $button-hover-color: text-contrast($item-background);
+    }
+
+    @if not($button-background) and $item-background {
+        @if (lightness($item-background) > 50) {
+            $button-background: transparent;
+        } @else {
+            $button-background: rgba(255, 255, 255 , .1);
+        }
+    }
+
+    @if not($button-hover-background) and $item-background {
+        @if (lightness($item-background) > 50) {
+            $button-hover-background: rgba(0, 0, 0, .05);
+        } @else {
+            $button-hover-background: rgba(255, 255, 255 , .14);
+        }
+    }
+
+    @if not($button-ripple-color) and $button-background {
+        @if (lightness($item-background) > 50) {
+            $button-ripple-color: rgba(0, 0, 0, .4);
+        } @else {
+            $button-ripple-color: rgba(255, 255, 255, .4);
+        }
+    }
+
+    // Button end
 
     @if not($tab-ripple-color) and $item-active-background {
         $tab-ripple-color: text-contrast($item-active-background);
@@ -139,6 +173,8 @@
 /// @requires --var
 @mixin igx-tabs($theme) {
     @include igx-root-css-vars($theme);
+    $item-min-width: 90px;
+    $item-max-width: 360px;
 
     $item-min-width-small-res: 74px;
     $item-min-width: 160px;
@@ -201,10 +237,8 @@
         justify-content: center;
         align-items: center;
         min-width: $item-min-width;
-        @media only screen and (max-width: 600px) {
-            min-width: $item-min-width-small-res;
-        }
         max-width: $item-max-width;
+        word-wrap: break-word;
         height: $tabs-height;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
@@ -272,6 +306,7 @@
         align-items: center;
 
         + %igx-tabs__item-label {
+            @include ellipsis();
             padding-top: $icon-label-space;
         }
     }
@@ -338,7 +373,7 @@
     }
 
     %igx-tabs__item-label {
-        @include ellipsis();
+        word-break: break-word;
         max-width: 100%;
         text-align: center;
 
