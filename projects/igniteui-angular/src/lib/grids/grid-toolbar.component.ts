@@ -208,13 +208,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
 
     @HostBinding('attr.class')
     get hostClass(): string {
-        if (this.isCosy()) {
-            return 'igx-grid-toolbar--cosy';
-        } else if (this.isCompact()) {
-            return 'igx-grid-toolbar--compact';
-        } else {
-            return 'igx-grid-toolbar';
-        }
+        return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,

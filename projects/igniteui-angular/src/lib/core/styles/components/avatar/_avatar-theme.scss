@@ -67,8 +67,13 @@
     $large-size: 88px;
 
     %igx-avatar-display {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
         user-select: none;
+        color: --var($theme, 'initials-color');
+        background: --var($theme, 'initials-background');
     }
 
     %igx-avatar--rounded {
@@ -94,15 +99,12 @@
     }
 
     %igx-avatar-inner {
-        width: inherit;
-        height: inherit;
+        width: 100%;
+        height: 100%;
         border-radius: inherit;
     }
 
     %igx-avatar-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         color: --var($theme, 'icon-color');
         background: --var($theme, 'icon-background');
     }
@@ -115,9 +117,6 @@
     }
 
     %igx-avatar-initials {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         text-transform: uppercase;
         color: --var($theme, 'initials-color');
         background-color: --var($theme, 'initials-background');

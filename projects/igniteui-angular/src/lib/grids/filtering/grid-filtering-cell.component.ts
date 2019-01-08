@@ -178,6 +178,13 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             this.expressionsList[0].isSelected = true;
         }
 
+        const index = this.filteringService.unpinnedFilterableColumns.indexOf(this.column);
+        if (index >= 0 && !this.isColumnRightVisible(index)) {
+            this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[index], true);
+        } else if (index >= 0 && !this.isColumnLeftVisible(index)) {
+            this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[index], false);
+        }
+
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
         this.filteringService.selectedExpression = expression;
@@ -357,7 +364,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             }
         }
         const width = this.filteringService.displayContainerWidth + this.filteringService.displayContainerScrollLeft;
-        return currentColumnRight <= width && this.isColumnLeftVisible(columnIndex);
+        return currentColumnRight <= width;
     }
 
     private isColumnLeftVisible(columnIndex: number): boolean {
