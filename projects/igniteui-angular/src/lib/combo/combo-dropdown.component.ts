@@ -7,9 +7,9 @@ import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
-import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
+import { DropDownActionKey } from '../drop-down/drop-down-navigation.directive';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
@@ -339,16 +339,15 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    public handleKeyDown(key: DropDownActionKeys) {
+    public handleKeyDown(key: DropDownActionKey) {
         switch (key) {
-            case DropDownActionKeys.ENTER:
+            case DropDownActionKey.ENTER:
                 this.handleEnter();
                 break;
-            case DropDownActionKeys.SPACE:
+            case DropDownActionKey.SPACE:
                 this.handleSpace();
                 break;
-            case DropDownActionKeys.TAB:
-            case DropDownActionKeys.ESCAPE:
+            case DropDownActionKey.ESCAPE:
                 this.close();
         }
     }

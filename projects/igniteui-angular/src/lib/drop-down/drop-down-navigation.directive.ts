@@ -1,26 +1,30 @@
 import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
-import { DropDownNavigationDirective, IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
+import { IGX_DROPDOWN_BASE } from './drop-down.common';
+import { IDropDownNavigationDirective } from './drop-down.common';
 import { IgxDropDownBase } from './drop-down.base';
 
-export enum DropDownActionKeys {
+/** Key actions that have designated handlers in IgxDropDownComponent */
+export enum DropDownActionKey {
     ESCAPE = 'escape',
     ENTER = 'enter',
-    SPACE = 'space',
-    TAB = 'tab'
+    SPACE = 'space'
 }
+/**
+ * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBase component
+ */
 @Directive({
     selector: '[igxDropDownItemNavigation]'
 })
-export class IgxDropDownItemNavigationDirective implements DropDownNavigationDirective {
+export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
 
-    protected _target;
+    protected _target: IgxDropDownBase = null;
 
     constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBase) { }
 
     /**
      * @hidden
      */
-    get target() {
+    get target(): IgxDropDownBase {
         return this._target;
     }
 
@@ -28,7 +32,7 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
      * @hidden
      */
     @Input('igxDropDownItemNavigation')
-    set target(target: IDropDownBase) {
+    set target(target: IgxDropDownBase) {
         this._target = target ? target : this.dropdown;
     }
 
@@ -40,7 +44,7 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
         if (event) {
             const key = event.key.toLowerCase();
             if (!this.target.collapsed) { // If dropdown is opened
-                const navKeys = ['esc', 'escape', 'enter', 'tab', 'space', 'spacebar', ' ',
+                const navKeys = ['esc', 'escape', 'enter', 'space', 'spacebar', ' ',
             'arrowup', 'up', 'arrowdown', 'down', 'home', 'end'];
                 if (navKeys.indexOf(key) === -1) { // If key has appropriate function in DD
                     return;
@@ -53,15 +57,15 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
             switch (key) {
                 case 'esc':
                 case 'escape':
-                    this.target.handleKeyDown(DropDownActionKeys.ESCAPE, event);
+                    this.target.handleKeyDown(DropDownActionKey.ESCAPE, event);
                     break;
                 case 'enter':
-                    this.target.handleKeyDown(DropDownActionKeys.ENTER, event);
+                    this.target.handleKeyDown(DropDownActionKey.ENTER, event);
                     break;
                 case 'space':
                 case 'spacebar':
                 case ' ':
-                    this.target.handleKeyDown(DropDownActionKeys.SPACE, event);
+                    this.target.handleKeyDown(DropDownActionKey.SPACE, event);
                     break;
                 case 'arrowup':
                 case 'up':
@@ -84,28 +88,28 @@ export class IgxDropDownItemNavigationDirective implements DropDownNavigationDir
     }
 
     /**
-     * @hidden
+     * Navigates to previous item
      */
     onArrowDownKeyDown() {
         this.target.navigateNext();
     }
 
     /**
-     * @hidden
+     * Navigates to previous item
      */
     onArrowUpKeyDown() {
         this.target.navigatePrev();
     }
 
     /**
-     * @hidden
+     * Navigates to target's last item
      */
     onEndKeyDown() {
         this.target.navigateLast();
     }
 
     /**
-     * @hidden
+     * Navigates to target's first item
      */
     onHomeKeyDown() {
         this.target.navigateFirst();

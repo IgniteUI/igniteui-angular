@@ -1,5 +1,8 @@
 import { IgxComboBase } from './combo.common';
 
+/**
+ * @hidden
+ */
 export class IgxComboAPIService {
     protected combo: IgxComboBase;
 

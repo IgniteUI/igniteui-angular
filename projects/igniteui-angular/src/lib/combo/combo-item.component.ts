@@ -9,7 +9,7 @@ import {
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
-import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down-utils';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
 import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
 

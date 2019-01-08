@@ -8,17 +8,14 @@ import {
     NgModule,
     QueryList,
     OnInit,
-    Output,
-    EventEmitter,
     Input,
     OnDestroy,
-    AfterViewInit,
 } from '@angular/core';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemNavigationDirective, DropDownActionKeys } from './drop-down-navigation.directive';
-import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down-utils';
+import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
@@ -104,26 +101,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
-     * Get all header items
-     *
-     * ```typescript
-     * let myDropDownHeaderItems = this.dropdown.headers;
-     * ```
-     */
-    public get headers(): IgxDropDownItemBase[] {
-        const headers: IgxDropDownItemBase[] = [];
-        if (this.children !== undefined) {
-            for (const child of this.children.toArray()) {
-                if (child.isHeader) {
-                    headers.push(child);
-                }
-            }
-        }
-
-        return headers;
-    }
-
-    /**
      * Select an item by index
      * @param index of the item to select
      */
@@ -199,15 +176,14 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return Math.floor(scrollPosition);
     }
 
-    public handleKeyDown(key: DropDownActionKeys, event?: Event) {
+    public handleKeyDown(key: DropDownActionKey, event?: Event) {
         switch (key) {
-            case DropDownActionKeys.ENTER:
-            case DropDownActionKeys.SPACE:
-            case DropDownActionKeys.TAB:
+            case DropDownActionKey.ENTER:
+            case DropDownActionKey.SPACE:
                 this.selectItem(this.focusedItem, event);
                 this.close();
                 break;
-            case DropDownActionKeys.ESCAPE:
+            case DropDownActionKey.ESCAPE:
                 this.close();
         }
     }
@@ -265,5 +241,3 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     providers: [IgxSelectionAPIService]
 })
 export class IgxDropDownModule { }
-
-export { ISelectionEventArgs } from './drop-down.common';

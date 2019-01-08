@@ -1,4 +1,4 @@
-import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down-utils';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 /**
