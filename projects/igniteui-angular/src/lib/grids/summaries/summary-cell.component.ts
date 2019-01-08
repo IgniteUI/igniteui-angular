@@ -178,4 +178,8 @@ export class IgxSummaryCellComponent {
         'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
 
     }
+
+    public translateSummary(summary: IgxSummaryResult): string {
+        return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
+    }
 }
