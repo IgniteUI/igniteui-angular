@@ -10,7 +10,7 @@
                     </div>
                 </ng-container>
 
-                <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ summary.label }}</span>
+                <span class="igx-grid-summary__label" title="{{ summary.label }}">{{ translateSummary(summary) }}</span>
                 <span class="igx-grid-summary__result" title="{{ summary.summaryResult }}">
                     {{ columnDatatype === 'number' ? (summary.summaryResult | igxdecimal) : columnDatatype === 'date' ? (summary.summaryResult | igxdate) : (summary.summaryResult) }}
                 </span>
