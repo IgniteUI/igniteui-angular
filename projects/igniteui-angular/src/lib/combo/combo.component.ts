@@ -869,11 +869,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    set value(val: string) {
-    }
-    /**
-     * @hidden
-     */
     public get filteredData(): any[] {
         return this.filterable ? this._filteredData : this.data;
     }
@@ -912,12 +907,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     private checkMatch(): void {
-        this.customValueFlag = this.displayKey ?
-            !this.filteredData
-                .some((e) => (e[this.displayKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
-            this.allowCustomValues :
-            !this.filteredData
-                .some((e) => e.toString().toLowerCase() === this.searchValue.trim().toLowerCase()) && this.allowCustomValues;
+        const displayKey = this.displayKey;
+        const matchFn = (e) => {
+            const value = displayKey ? e[displayKey] : e;
+            return value.toString().toLowerCase() === this.searchValue.trim().toLowerCase();
+        };
+        const itemMatch = this.filteredData.some(matchFn);
+        this.customValueFlag = this.allowCustomValues && !itemMatch;
     }
 
     /**

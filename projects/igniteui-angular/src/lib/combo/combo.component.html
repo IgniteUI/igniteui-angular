@@ -15,7 +15,7 @@
 </ng-template>
 
 <igx-input-group [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
-    <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" readonly [placeholder]="placeholder"
+    <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [placeholder]="placeholder"
         [disabled]="disabled"/>
     <igx-suffix *ngIf="value.length" class="clearButton" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
         <igx-icon fontSet="material">clear</igx-icon>

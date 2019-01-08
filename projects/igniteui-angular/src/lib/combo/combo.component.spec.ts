@@ -145,19 +145,10 @@ describe('igxCombo', () => {
             expect(combo.data.length).toEqual(0);
         });
         it('Combo`s input textbox should be read-only', fakeAsync(() => {
-            const inputText = 'text';
             const fixture = TestBed.createComponent(IgxComboTestComponent);
             fixture.detectChanges();
-            const combo = fixture.componentInstance.combo;
             const comboElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
-            const inputElement = comboElement.nativeElement;
             expect(comboElement.attributes['readonly']).toBeDefined();
-            UIInteractions.sendInput(comboElement, inputText, fixture);
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-            expect(inputElement.value).toEqual('');
-            expect(combo.value).toEqual('');
         }));
         it('Should properly handle getValueByValueKey calls', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
