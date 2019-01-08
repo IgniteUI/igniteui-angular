@@ -273,7 +273,7 @@ describe('IgxTabs', () => {
         tick(100);
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '400px';
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '200px';
         tick(100);
         fixture.detectChanges();
 
@@ -281,7 +281,7 @@ describe('IgxTabs', () => {
         window.dispatchEvent(new Event('resize'));
         rightScrollButton.dispatchEvent(new Event('click', { bubbles: true }));
 
-        tick(500);
+        tick(100);
         fixture.detectChanges();
         expect(tabs.offset).toBeGreaterThan(0);
 
@@ -322,13 +322,13 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
-        tick(100);
+        tick();
         fixture.detectChanges();
         expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
 
-        tick(100);
+        tick();
         fixture.detectChanges();
-        expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
+        expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(180px)');
     }));
 });
 
