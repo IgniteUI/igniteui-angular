@@ -112,7 +112,7 @@
     }
 
     @if not($button-color) and $item-background {
-        $button-background: rgba(text-contrast($item-background), 0);
+        $button-background: transparent;
     }
 
     @if not($button-hover-color) and $button-hover-background {
@@ -125,7 +125,7 @@
 
     @if not($button-background) and $item-background {
         @if (lightness($item-background) > 50) {
-            $button-background: rgba(0, 0, 0, 0);
+            $button-background: transparent;
         } @else {
             $button-background: rgba(255, 255, 255 , .1);
         }
@@ -193,6 +193,7 @@
 @mixin igx-tabs($theme) {
     @include igx-root-css-vars($theme);
     $item-min-width: 90px;
+    $item-max-width: 360px;
 
     $item-padding: 0 rem(16px);
     $tabs-height: rem(48px);
@@ -247,6 +248,8 @@
         justify-content: center;
         align-items: center;
         min-width: $item-min-width;
+        max-width: $item-max-width;
+        word-wrap: break-word;
         height: $tabs-height;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
@@ -314,6 +317,7 @@
         align-items: center;
 
         + %igx-tabs__item-label {
+            @include ellipsis();
             padding-top: $icon-label-space;
         }
     }
@@ -377,7 +381,7 @@
     }
 
     %igx-tabs__item-label {
-        @include ellipsis();
+        word-break: break-word;
         max-width: 100%;
         text-align: center;
 
