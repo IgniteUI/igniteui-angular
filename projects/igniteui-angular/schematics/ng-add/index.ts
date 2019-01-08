@@ -43,12 +43,35 @@ function addDependencies(options: Options): Rule {
 
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
     promptVersionMismatch(context, tree, pkgJson);
+    addPolyfills(tree, options);
     return tree;
   };
 }
 
 function LogIncludingDependency(context: SchematicContext, pkg: string, version: string) {
   context.logger.log('info', `Including ${pkg} - Version: ${version}`);
+}
+
+function addPolyfills(tree: Tree, options: Options) {
+  if (options['polyfills']) {
+    const targetFile = 'src/polyfills.ts';
+    if (!tree.exists(targetFile)) {
+      throw new Error(`${targetFile} not found in the src folder.`);
+    }
+
+    const pattern = /\/{2}\s\w+\s\'\w+\-\w+\/(\w+)(6|7)\/.+/g;
+    const animationsPkg = '// import \'web-animations-js\';';
+    let polyfillsData = tree.read(targetFile).toString();
+
+    for (const match of polyfillsData.match(pattern)) {
+      polyfillsData = polyfillsData.replace(match, match.substring(3, match.length));
+    }
+
+    polyfillsData = polyfillsData.replace(animationsPkg, animationsPkg.substring(3, animationsPkg.length));
+    tree.overwrite(targetFile, polyfillsData);
+
+    return tree;
+  }
 }
 
 function addHammerJsToWorkspace(tree: Tree): Tree {
@@ -147,7 +170,7 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   return tree;
 }
 
-function promptVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson) {
+function promptVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any) {
   const ngKey = '@angular/core';
   const ngCliKey = '@angular/cli';
   const ngProjVer = getDependencyVersion(ngKey, tree);
