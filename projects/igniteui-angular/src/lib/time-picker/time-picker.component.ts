@@ -47,7 +47,6 @@ import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes'
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS } from '../core/utils';
-import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 
 let NEXT_ID = 0;
 
