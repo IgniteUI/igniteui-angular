@@ -47,6 +47,7 @@ import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes'
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS } from '../core/utils';
+import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 
 let NEXT_ID = 0;
 
@@ -1617,8 +1618,8 @@ export class IgxTimePickerComponent implements
         }
 
         // minor hack for preventing cursor jumping in IE
-        const normalizedValue = this.inputFormat.transform(displayVal);
-        this._renderer.setElementProperty(this.input.nativeElement, 'value', normalizedValue);
+        this._displayValue = this.inputFormat.transform(displayVal);
+        this._renderer.setElementProperty(this.input.nativeElement, 'value', this._displayValue);
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
