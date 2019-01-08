@@ -5,7 +5,7 @@
             <h4 class="sample-title">Default Date Picker.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-datePicker>
+                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
                 <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
             </div>
         </article>
@@ -27,7 +27,7 @@
             <h4 class="sample-title">Date Picker with retemplated input group.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter">
+                <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
                         <igx-input-group (click)="openDialog()">
                             <label igxLabel>Date</label>
@@ -35,7 +35,7 @@
                         </igx-input-group>
                         <label>{{value}}</label>
                     </ng-template>
-               </igx-datePicker>
+               </igx-date-picker>
             </div>
         </article>
     </section>
