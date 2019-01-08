@@ -3,7 +3,11 @@
     <div class="tsd-header-content">
         <div class="tsd-header-group">
             <h1 class="tsd-header-logo">
-                <a href="https://www.infragistics.com/products/ignite-ui-angular" class="title">{{project.name}}</a>
+                {{#ifCond project.localization '==' 'jp'}}
+                    <a href="https://jp.infragistics.com/products/ignite-ui-angular" class="title">{{project.name}}</a>
+                {{else}}
+                    <a href="https://www.infragistics.com/products/ignite-ui-angular" class="title">{{project.name}}</a>
+                {{/ifCond}}
                 <span class="version">API ver. <strong>7.0.x</strong></span>
             </h1>
             <div class="tsd-nav-toggle">
