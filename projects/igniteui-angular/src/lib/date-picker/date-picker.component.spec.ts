@@ -435,14 +435,14 @@ export class IgxDatePickerNgModelComponent {
 
 @Component({
     template: `
-<igx-date-picker>
+<igx-datePicker>
     <ng-template igxDatePickerTemplate let-displayData="displayData">
         <igx-input-group>
             <label igxLabel>Date</label>
             <input igxInput [value]="displayData"/>
         </igx-input-group>
     </ng-template>
-</igx-date-picker>
+</igx-datePicker>
     `
 })
 export class IgxDatePickerRetemplatedComponent {}
