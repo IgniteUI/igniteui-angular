@@ -1,5 +1,6 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
@@ -47,18 +48,38 @@ describe('IgxHierarchicalGrid Integration', () => {
 
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(8);
     });
+
+    it('should enable filter-row for root and child grids', async () => {
+        let filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+
+        expect(filteringCells.length).toEqual(3);
+        filteringCells[0].query(By.css('igx-chip')).nativeElement.click();
+        fixture.detectChanges();
+        expect(document.querySelectorAll('igx-grid-filtering-row').length).toEqual(1);
+
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        // first child of the row should expand indicator
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+        expect(filteringCells.length).toEqual(6);
+        filteringCells[3].query(By.css('igx-chip')).nativeElement.click();
+        fixture.detectChanges();
+        expect(document.querySelectorAll('igx-grid-filtering-row').length).toEqual(2);
+    });
 });
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data"
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
      [height]="'400px'" [width]="'700px'" #hierarchicalGrid primaryKey="ID">
         <igx-column field="ID" [groupable]='true' ></igx-column>
         <igx-column-group header="Information">
                 <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
                 <igx-column field="ProductName" [groupable]='true' hasSummary='true'></igx-column>
         </igx-column-group>
-        <igx-row-island [key]="'childData'" #rowIsland>
+        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true">
             <igx-column field="ID" [groupable]='true' ></igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
