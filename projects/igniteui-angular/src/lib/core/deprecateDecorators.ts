@@ -28,36 +28,44 @@ export function DeprecateMethod(message: string): MethodDecorator {
 export function DeprecateProperty(message: string): PropertyDecorator {
     return function(target: any, key: string) {
         let isMessageShown = false;
+        const messageToDisplay = `${target.constructor.name}.${key}: ${message}`;
 
-        // use backing field to set/get the value of the property to ensure there won't be infinite recursive calls
-        const newKey = generateUniqueKey(target, key);
+        // if the target already has the property defined
+        const originalDescriptor = Object.getOwnPropertyDescriptor(target, key);
+        if (originalDescriptor) {
+            let getter, setter;
+            getter = originalDescriptor.get;
+            setter = originalDescriptor.set;
 
-        let getter, setter;
-        const orignalDescriptor = Object.getOwnPropertyDescriptor(target, key);
-        if (orignalDescriptor) {
-            getter = orignalDescriptor.get;
-            setter = orignalDescriptor.set;
-
-            delete target[key];
-        }
-
-        return Object.defineProperty(target, key, {
-            set(value) {
-                isMessageShown = showMessage(`${target.constructor.name}.${key}: ${message}`, isMessageShown);
-
-                if (setter) {
-                    setter.call(this, value);
-                } else {
-                    this[newKey] = value;
-                }
-            },
-            get() {
-                isMessageShown = showMessage(`${target.constructor.name}.${key}: ${message}`, isMessageShown);
-
-                if (getter) {
+            if (getter) {
+                originalDescriptor.get = function() {
+                    isMessageShown = showMessage(messageToDisplay, isMessageShown);
                     return getter.call(this);
                 }
+            }
 
+            if (setter) {
+                originalDescriptor.set = function (value) {
+                    isMessageShown = showMessage(messageToDisplay, isMessageShown);
+                    setter.call(this, value);
+                }
+            }
+
+            return originalDescriptor;
+        }
+
+        // the target doesn't contain a descriptor for that property, so create one
+        // use backing field to set/get the value of the property to ensure there won't be infinite recursive calls
+        const newKey = generateUniqueKey(target, key);
+        return Object.defineProperty(target, key, {
+            configurable: true,
+            enumerable: true,
+            set: function(value) {
+                isMessageShown = showMessage(messageToDisplay, isMessageShown);
+                this[newKey] = value;
+            },
+            get: function() {
+                isMessageShown = showMessage(messageToDisplay, isMessageShown);
                 return this[newKey];
             }
         });
