@@ -1,4 +1,11 @@
 <igx-input-group #inputGroup class="input-group" [igxToggleAction]="toggleDirective">
+    <ng-container ngProjectAs="[igxLabel]">
+        <ng-content select="[igxLabel]"></ng-content>
+    </ng-container>
+    <ng-container ngProjectAs="igx-prefix">
+        <ng-content select="igx-prefix"></ng-content>
+    </ng-container>
+
     <input #input class="input" type="text" igxInput [igxDropDownItemNavigation]="this"
         readonly= "true"
         [placeholder]="this.placeholder"
@@ -14,7 +21,5 @@
 <div class="igx-select__list" igxToggle [style.maxHeight]="maxHeight"
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-    <ng-container>
-        <ng-content selector="igx-select-item"></ng-content>
-    </ng-container>
+    <ng-content select="igx-select-item"></ng-content>
 </div>

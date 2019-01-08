@@ -5,10 +5,14 @@
 </igx-drop-down> -->
 
 <igx-select [width]="'260px'" [placeholder]="'Pick One'"  [(ngModel)]="value">
+    <label igxLabel>Sample Label</label>
+    <igx-prefix igxPrefix igxButton="icon" igxRipple>
+        <igx-icon fontSet="material">alarm</igx-icon>
+    </igx-prefix>
     <igx-select-item *ngFor="let item of items" [value]="item.field">
         {{ item.field }}
     </igx-select-item>
 </igx-select>
 
-<p>Selected: {{value}}</p>
+<span>Selected: {{value}}</span>
 

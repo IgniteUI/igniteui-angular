@@ -39,7 +39,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input() public value: any;
     @Input() public placeholder = '';
 
-
     //#region IMPLEMENT ControlValueAccessor METHODS
     private _onChangeCallback: (_: any) => void = noop;
     public writeValue = (value: any) => {
