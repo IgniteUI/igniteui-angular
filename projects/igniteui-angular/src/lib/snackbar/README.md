@@ -53,4 +53,4 @@ By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds
     <span>Custom content</span>
 </igx-snackbar>
 ```
-You can display custom content in the snackbar when there is no message. If a message is set, the custom content will not be displayed.
+You can display custom content by adding elements inside the snackbar.
