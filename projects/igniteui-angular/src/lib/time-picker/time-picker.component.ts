@@ -17,7 +17,6 @@ import {
     Inject,
     ContentChild,
     Injectable,
-    Renderer,
     AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -658,8 +657,7 @@ export class IgxTimePickerComponent implements
         };
     }
 
-    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService,
-                private _renderer: Renderer) {
+    constructor(@Inject(IgxOverlayService) private overlayService: IgxOverlayService) {
 
         this.overlayService.onClosed.pipe(
             filter(event => event.id === this._overlayId),
@@ -1618,7 +1616,7 @@ export class IgxTimePickerComponent implements
 
         // minor hack for preventing cursor jumping in IE
         this._displayValue = this.inputFormat.transform(displayVal);
-        this._renderer.setElementProperty(this.input.nativeElement, 'value', this._displayValue);
+        this.input.nativeElement.value = this._displayValue;
         this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
