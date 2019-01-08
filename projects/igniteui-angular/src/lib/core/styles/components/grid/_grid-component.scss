@@ -12,6 +12,22 @@
 
     @extend %grid-display !optional;
 
+    @include e(hierarchical-action-indent) {
+        @extend %igx-grid__hierarchical-action-indent !optional;
+    }
+
+    @include e(hierarchical-highlight) {
+        @extend %igx-grid__hierarchical-highlight !optional;
+    }
+
+    @include e(hierarchical-action-indent, $m: header) {
+        @extend %igx-grid__hierarchical-action-indent--header !optional;
+    }
+
+    @include e(hierarchical-indent) {
+        @extend %igx-grid__hierarchical-indent !optional;
+    }
+
     @include e(caption) {
         @extend %grid-caption !optional;
     }
@@ -352,6 +368,14 @@
     @include m(cosy) {
         @extend %grid-display !optional;
 
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--cosy !optional;
+        }
+
+        @include e(hierarchical-action-indent, $m: header) {
+            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
+        }
+
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
         }
@@ -423,6 +447,14 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
+
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--compact !optional;
+        }
+
+        @include e(hierarchical-action-indent, $m: header) {
+            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
+        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
