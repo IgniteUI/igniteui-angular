@@ -869,6 +869,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
+    set value(val: string) {
+    }
+    /**
+     * @hidden
+     */
     public get filteredData(): any[] {
         return this.filterable ? this._filteredData : this.data;
     }
@@ -1353,7 +1358,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
         let newSelection = this.selection.get_empty();
-        if (this.filteredData.length !== this.data.length && ignoreFilter) {
+        if (this.filteredData.length !== this.data.length && !ignoreFilter) {
             newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
         }
         this.setSelection(newSelection, event);
@@ -1386,8 +1391,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const oldSelectionEmit = Array.from(this.selection.get(this.id));
-        const newSelectionEmit = Array.from(newSelection);
+        const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
+        const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {
             newSelection: newSelectionEmit,
             oldSelection: oldSelectionEmit,
