@@ -6,6 +6,12 @@ import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxGridGroupByRowComponent } from '../grid';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -26,7 +32,7 @@ describe('IgxHierarchicalGrid Integration', () => {
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
-
+    // MCH
     it('should allow declaring column groups.', async () => {
         const expectedColumnGroups = 1;
         const expectedLevel = 1;
@@ -48,7 +54,175 @@ describe('IgxHierarchicalGrid Integration', () => {
 
         expect(document.querySelectorAll('igx-grid-header').length).toEqual(8);
     });
+    // Selection
+    it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
+        hierarchicalGrid.height = '500px';
+        hierarchicalGrid.reflow();
+        fixture.detectChanges();
 
+        let firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+        expect(firstRow.expanded).toBeTruthy();
+
+        let fCell = firstRow.cells.toArray()[0];
+
+        // select parent cell
+        fCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(fCell.selected).toBeTruthy();
+
+        const childGrid =  hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const firstChildRow = childGrid.dataRowList.toArray()[0];
+        const fChildCell =  firstChildRow.cells.toArray()[0];
+
+        // select child cell
+        fChildCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(fChildCell.selected).toBeTruthy();
+        expect(fCell.selected).toBeFalsy();
+
+        // select parent cell
+        firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        fCell = firstRow.cells.toArray()[0];
+        fCell.nativeElement.focus();
+        await wait(100);
+        fixture.detectChanges();
+        expect(fChildCell.selected).toBeFalsy();
+        expect(fCell.selected).toBeTruthy();
+    }));
+
+    // Sorting
+    it('should display correct child data for expanded row after sorting.', (async () => {
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        // expand 1st row
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+        hierarchicalGrid.sort({
+            fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+        });
+        fixture.detectChanges();
+
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrid =  hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(childGrid.data).toBe(fixture.componentInstance.data[0]['childData']);
+        expect(fChildCell.value).toBe('00');
+    }));
+
+    it('should allow sorting via headers in child grids', () => {
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        // expand 1st row
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+        // enable sorting
+        const childGrid =  hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        childGrid.columnList.toArray()[0].sortable = true;
+        fixture.detectChanges();
+
+        const childHeaders = fixture.debugElement.query(By.css('igx-child-grid-row')).queryAll(By.css('igx-grid-header'));
+        childHeaders[0].nativeElement.click();
+        fixture.detectChanges();
+        childHeaders[0].nativeElement.click();
+        fixture.detectChanges();
+
+        const fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(fChildCell.value).toBe('09');
+        const icon = childHeaders[0].query(By.css('.sort-icon'));
+        expect(icon).not.toBeNull();
+        expect(icon.nativeElement.textContent.toLowerCase()).toBe('arrow_downward');
+    });
+
+    // GroupBy
+
+    it('Data should be rendered correctly when children are expanded', () => {
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        // expand 1st row
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        hierarchicalGrid.groupBy({
+            fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+        });
+        fixture.detectChanges();
+        let rows = hierarchicalGrid.rowList.toArray();
+        expect(rows[0] instanceof IgxGridGroupByRowComponent).toBeTruthy();
+        expect(rows[1] instanceof IgxHierarchicalRowComponent).toBeTruthy();
+        expect(rows[2] instanceof IgxChildGridRowComponent).toBeTruthy();
+
+        hierarchicalGrid.clearGrouping('ID');
+        hierarchicalGrid.cdr.detectChanges();
+        fixture.detectChanges();
+        rows = hierarchicalGrid.rowList.toArray();
+        expect(rows[0] instanceof IgxHierarchicalRowComponent).toBeTruthy();
+        expect(rows[1] instanceof IgxChildGridRowComponent).toBeTruthy();
+        expect(rows[2] instanceof IgxHierarchicalRowComponent).toBeTruthy();
+    });
+
+    it('child grids data should be correct after grouping in parent grid.',  (async () => {
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        // expand 1st row
+        firstRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        const sRow = hierarchicalGrid.dataRowList.toArray()[1];
+        // expand 2nd row
+        sRow.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        hierarchicalGrid.groupBy({
+            fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+        });
+        fixture.detectChanges();
+
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const childGrid2 = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        expect(childGrid1.data).toBe(fixture.componentInstance.data[1]['childData']);
+        expect(childGrid2.data).toBe(fixture.componentInstance.data[0]['childData']);
+    }));
+
+    it('virtualization should work as expected when scrolling in grid with expanded children and grouped columns.',  (async () => {
+        // expand 1st row
+        hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+        fixture.detectChanges();
+        // expand 2nd row
+        hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        hierarchicalGrid.groupBy({
+            fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+        });
+        fixture.detectChanges();
+
+        hierarchicalGrid.verticalScrollContainer.scrollTo(5);
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid.data).toBe(fixture.componentInstance.data[1]['childData']);
+
+    }));
+
+    // Filtering
     it('should enable filter-row for root and child grids', async () => {
         let filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
 
@@ -105,16 +279,17 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateData(40, 3);
     }
-    generateData(count: number, level: number) {
+    generateData(count: number, level: number, parendID?) {
         const prods = [];
         const currLevel = level;
         let children;
         for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
            if (level > 0 ) {
-               children = this.generateData(count / 2 , currLevel - 1);
+                children = this.generateData(count / 2 , currLevel - 1, rowID);
            }
            prods.push({
-            ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
             'Col2': i, 'Col3': i, childData: children, childData2: children });
         }
         return prods;
