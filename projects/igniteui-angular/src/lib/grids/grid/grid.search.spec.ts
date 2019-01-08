@@ -10,6 +10,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxGrid - search API', () => {
     configureTestSuite();
@@ -24,7 +25,7 @@ describe('IgxGrid - search API', () => {
                 GroupableGridSearchComponent,
                 ScrollableGridSearchComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [IgxGridModule.forRoot(), NoopAnimationsModule]
         }).compileComponents();
     }));
 
