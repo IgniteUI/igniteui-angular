@@ -41,14 +41,14 @@ export function DeprecateProperty(message: string): PropertyDecorator {
                 originalDescriptor.get = function() {
                     isMessageShown = showMessage(messageToDisplay, isMessageShown);
                     return getter.call(this);
-                }
+                };
             }
 
             if (setter) {
                 originalDescriptor.set = function (value) {
                     isMessageShown = showMessage(messageToDisplay, isMessageShown);
                     setter.call(this, value);
-                }
+                };
             }
 
             return originalDescriptor;
