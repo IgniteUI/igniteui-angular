@@ -24,7 +24,7 @@ import {
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { IgxRowIslandComponent } from './row-island.component';
+import { IgxRowIslandComponent, IgxGridExpandState } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -55,6 +55,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private _childGridTemplates: Map<any, any> = new Map();
     private _scrollTop = 0;
     private _scrollLeft = 0;
+    private _hierarchicalState = [];
     public parent = null;
     public updateOnRender = false;
 
@@ -87,7 +88,15 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
 
 
     @Input()
-    public hierarchicalState = [];
+    public set hierarchicalState(value) {
+        // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
+        this.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
+        this._hierarchicalState = value;
+    }
+
+    public get hierarchicalState() {
+        return this._hierarchicalState;
+    }
 
     /**
      * @hidden
@@ -166,14 +175,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                     moveView: view,
                     owner: tmlpOutlet
                 };
+            } else {
+                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
+                // child rows contain unique grids, hence should have unique templates
+                return {
+                    $implicit: rowData,
+                    templateID: 'childRow-' + rowID
+                };
             }
+        } else {
+            return {
+                $implicit: rowData,
+                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            };
         }
-        return {
-            $implicit: rowData,
-            templateID: this.isChildGridRecord(rowData) ?
-            'childRow' :
-            this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
-        };
     }
 
     public get childLayoutKeys() {

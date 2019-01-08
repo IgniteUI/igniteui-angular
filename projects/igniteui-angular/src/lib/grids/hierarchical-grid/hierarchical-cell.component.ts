@@ -65,7 +65,6 @@ export class IgxHirarchicalGridCellComponent extends IgxGridCellComponent implem
                 state.push({ rowID: this.row.rowID });
                 grid.hierarchicalState = [...state];
             }
-            grid.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
             return;
         }
         super.dispatchEvent(event);
