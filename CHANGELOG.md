@@ -1,15 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-
-
 ## 7.1.2
 ### Features
 - `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
 
 ## 7.1.1
-### Bug Fixes
+### Features
+- **Progress Indicators**:
+    - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track. 
 
+### Bug Fixes
 * onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
 * igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
 * Preventing wrap-around for scrollNext and scrollPrev([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))

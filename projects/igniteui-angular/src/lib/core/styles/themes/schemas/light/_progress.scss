@@ -19,8 +19,6 @@
 /// @see $default-palette
 
 $_light-progress-linear: (
-    name: 'igx-progress-linear',
-
     track-color: (
         igx-color: ('grays', 300)
     ),
@@ -62,8 +60,6 @@ $_light-progress-linear: (
 /// @see $default-palette
 
 $_light-progress-circular: (
-    name: 'igx-progress-circular',
-
     base-circle-color: (
         igx-color: ('grays', 300)
     ),
