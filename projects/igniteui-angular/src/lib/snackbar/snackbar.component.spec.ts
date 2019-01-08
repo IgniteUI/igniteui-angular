@@ -113,7 +113,7 @@ describe('Custom content', () => {
         domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
     }));
 
-    it('should display a message without custom content', () => {
+    it('should display a message', () => {
         fixture.componentInstance.text = 'Undo';
         snackbar.message = 'Item shown';
         snackbar.isVisible = true;
@@ -121,8 +121,16 @@ describe('Custom content', () => {
 
         expect(domSnackbar.innerText).toContain('Item shown');
 
+        const messageEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
+        expect(messageEl).toBeTruthy('Message is not found');
+
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
-        expect(customContent).toBeNull('Custom content is found');
+        expect(customContent).toBeTruthy('Custom content is not found');
+
+        // Verify the message is displayed on the left side of the custom content
+        const messageElRect = (<HTMLElement>messageEl.nativeElement).getBoundingClientRect();
+        const customContentRect = (<HTMLElement>customContent.nativeElement).getBoundingClientRect();
+        expect(messageElRect.right <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
     });
 
     it('should dispay custom content on the left side of the action button', () => {
