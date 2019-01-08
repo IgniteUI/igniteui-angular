@@ -158,10 +158,13 @@ When deprecating selectors the following code should be placed inside `OnInit` m
 `
 import { isDevMode } from '@angular/core';
 ...
-if (isDevMode()) {
+constructor(..., private element: ElementRef) {}
+...
+if (isDevMode() && this.element.nativeElement.tagName === 'your deprecated selector in upper case') {
     console.log('your deprecation message');
 }
 `
+
 Write migrations.
 
 ## Deprecating methods
