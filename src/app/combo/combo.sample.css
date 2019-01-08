@@ -39,7 +39,7 @@
     flex-wrap: wrap;
 }
 
-.dropdownToggleButton {
+.igx-combo__clear-button {
     position: relative;
 }
 

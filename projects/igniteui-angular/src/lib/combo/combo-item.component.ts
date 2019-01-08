@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down-utils';
-import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { IgxComboAPIService } from './combo.api';
+import { IgxSelectionAPIService } from '../core/selection';
 
 /** @hidden */
 @Component({
@@ -54,7 +54,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         protected comboAPI: IgxComboAPIService,
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService
+        @Inject(IgxSelectionAPIService) protected selection: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef, selection);
     }
@@ -63,7 +63,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     get isSelected(): boolean {
-        return this.selection.is_item_selected(this.comboID, this.itemID);
+        return this.comboAPI.is_item_selected(this.itemID);
     }
 
     set isSelected(value: boolean) {
@@ -84,7 +84,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             return;
         }
         this.dropDown.navigateItem(this.index);
-        this.selection.set_selected_item(this.comboID, this.itemID, event);
+        this.comboAPI.set_selected_item(this.itemID, event);
     }
 
     ngDoCheck() {

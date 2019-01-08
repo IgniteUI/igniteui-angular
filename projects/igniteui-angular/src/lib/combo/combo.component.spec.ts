@@ -25,7 +25,7 @@ const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
-const CSS_CLASS_DROPDOWNBUTTON = 'dropdownToggleButton';
+const CSS_CLASS_DROPDOWNBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_CLEARBUTTON = 'clearButton';
 const CSS_CLASS_CHECK_GENERAL = 'igx-combo__checkbox';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
@@ -264,7 +264,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(mockObj.focus).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBeFalsy();
-            combo.handleKeyUp({ key: 'ArrowDown' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.index).toEqual(0);
@@ -274,7 +274,7 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(mockObj.focus).toHaveBeenCalledTimes(2);
-            combo.handleKeyUp({ key: 'ArrowDown' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
             fix.detectChanges();
             expect(dropdown.focusedItem).toBeTruthy();
             expect(dropdown.focusedItem.index).toEqual(0);
@@ -463,19 +463,19 @@ describe('igxCombo', () => {
             spyOn(combo, 'selectAllItems');
             spyOn(combo, 'toggle');
             spyOn(combo.dropdown, 'onFocus').and.callThrough();
-            combo.handleKeyUp({ key: 'A' });
-            combo.handleKeyUp({});
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'A'}));
+            combo.handleKeyUp(new KeyboardEvent('keyup', {}));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(0);
-            combo.handleKeyUp({ key: 'Enter' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter'}));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             spyOnProperty(combo, 'filteredData', 'get').and.returnValue([1]);
-            combo.handleKeyUp({ key: 'Enter' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Enter'}));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
-            combo.handleKeyUp({ key: 'ArrowDown' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'ArrowDown'}));
             expect(combo.selectAllItems).toHaveBeenCalledTimes(0);
             expect(combo.dropdown.onFocus).toHaveBeenCalledTimes(1);
-            combo.handleKeyUp({ key: 'Escape' });
+            combo.handleKeyUp(new KeyboardEvent('keyup', { key: 'Escape'}));
             expect(combo.toggle).toHaveBeenCalledTimes(1);
         }));
         it('Dropdown button should open/close dropdown list', fakeAsync(() => {
@@ -2417,12 +2417,12 @@ describe('igxCombo', () => {
             expect(combo.filter).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(0);
 
-            combo.handleInputChange({ key: 'Fake' });
+            combo.handleInputChange('Fake');
 
             fix.detectChanges();
             expect(combo.filter).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
-            expect(combo.onSearchInput.emit).toHaveBeenCalledWith({ key: 'Fake' });
+            expect(combo.onSearchInput.emit).toHaveBeenCalledWith('Fake');
 
             combo.handleInputChange('');
             fix.detectChanges();
@@ -2769,14 +2769,12 @@ describe('igxCombo', () => {
 
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem).toEqual(null);
-            expect(combo.children.length).toBeTruthy();
             UIInteractions.sendInput(combo.searchInput, 'New', fix);
             tick();
             fix.detectChanges();
             expect(combo.searchValue).toEqual('New');
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem === null).toBeFalsy();
-            expect(combo.children.length).toBeTruthy();
 
             UIInteractions.sendInput(combo.searchInput, 'New York', fix);
             tick();
@@ -2785,7 +2783,6 @@ describe('igxCombo', () => {
             fix.detectChanges();
             addItem = fix.debugElement.query(By.css('.igx-combo__add'));
             expect(addItem).toEqual(null);
-            expect(combo.children.length).toBeTruthy();
         }));
 
         it(`Should handle enter keydown on "Add Item" properly`, fakeAsync(() => {

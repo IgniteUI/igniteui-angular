@@ -10,7 +10,6 @@ export const IGX_COMBO_COMPONENT = 'IgxComboComponentToken';
 export interface IgxComboBase {
     id: string;
     dropdown: IgxComboDropDownComponent;
-    children: QueryList<IgxComboItemComponent>;
     data: any[];
     valueKey: string;
     groupKey: string;
@@ -28,8 +27,11 @@ export interface IgxComboBase {
     onClosing: EventEmitter<CancelableEventArgs>;
     onClosed: EventEmitter<void>;
     focusSearchInput(opening?: boolean): void;
-    triggerCheck();
-    addItemToCollection();
+    triggerCheck(): void;
+    addItemToCollection(): void;
     isAddButtonVisible(): boolean;
-    handleInputChange(event?);
+    handleInputChange(event?: string): void;
+    isItemSelected(itemID: any): boolean;
+    selectItems(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
+    deselectItems(itemIDs: any[], event?: Event): void;
 }

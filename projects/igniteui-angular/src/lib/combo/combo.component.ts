@@ -1,10 +1,8 @@
 import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChild,
-    ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, QueryList,
-    TemplateRef, ViewChild, ViewChildren, Optional, Self, Inject, Directive
+    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
+    HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Self, Inject
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -37,8 +35,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 
@@ -83,7 +80,7 @@ export enum IgxComboState {
     INVALID
 }
 
-export interface IComboSelectionChangeEventArgs {
+export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
     oldSelection: any[];
     newSelection: any[];
     event?: Event;
@@ -155,7 +152,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService,
+        protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -299,12 +296,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('dropdownItemContainer')
     protected dropdownContainer: ElementRef = null;
-
-    /**
-     * @hidden
-     */
-    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    public children: QueryList<IgxComboItemComponent> = null;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -452,7 +443,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      */
     @HostBinding('attr.aria-expanded')
-    public get ariaExpanded() {
+    public get ariaExpanded(): boolean {
         return !this.dropdown.collapsed;
     }
 
@@ -582,7 +573,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get data() {
+    get data(): any[] {
         return this._data;
     }
     set data(val: any[]) {
@@ -714,10 +705,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public searchValue = '';
 
-    /**
-     * @hidden
-     */
-    public onBlur(event) {
+    @HostListener('blur')
+    public onBlur(): void {
         if (this.dropdown.collapsed) {
             this.valid = IgxComboState.INITIAL;
             if (this.ngControl) {
@@ -742,9 +731,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    onArrowDown(evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
+    onArrowDown(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
         if (this.dropdown.collapsed) {
             this.toggle();
         }
@@ -753,9 +742,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    onInputClick(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
+    onInputClick(event: Event) {
+        event.stopPropagation();
+        event.preventDefault();
         this.toggle();
     }
 
@@ -790,7 +779,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let count = this.combo.totalItemCount;
      * ```
     */
-    get totalItemCount() {
+    get totalItemCount(): number {
         return this.dropdown.verticalScrollContainer.totalItemCount;
     }
     /**
@@ -801,7 +790,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.totalItemCount(remoteService.count);
      * ```
      */
-    set totalItemCount(count) {
+    set totalItemCount(count: number) {
         this.dropdown.verticalScrollContainer.totalItemCount = count;
         this.cdr.detectChanges();
     }
@@ -889,11 +878,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public handleKeyUp(evt) {
-        if (evt.key === 'ArrowDown' || evt.key === 'Down') {
+    public handleKeyUp(event: KeyboardEvent): void {
+        if (event.key === 'ArrowDown' || event.key === 'Down') {
             this.dropdown.focusedItem = this.dropdown.items[0];
             this.dropdownContainer.nativeElement.focus();
-        } else if (evt.key === 'Escape' || evt.key === 'Esc') {
+        } else if (event.key === 'Escape' || event.key === 'Esc') {
             this.toggle();
         }
     }
@@ -901,17 +890,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public handleKeyDown(evt) {
-        if (evt.key === 'ArrowUp' || evt.key === 'Up') {
-            evt.preventDefault();
-            evt.stopPropagation();
+    public handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'ArrowUp' || event.key === 'Up') {
+            event.preventDefault();
+            event.stopPropagation();
             if (!this.dropdown.collapsed) {
                 this.toggle();
             }
         }
     }
 
-    private checkMatch() {
+    private checkMatch(): void {
         this.customValueFlag = this.displayKey ?
             !this.filteredData
                 .some((e) => (e[this.displayKey]).toString().toLowerCase() === this.searchValue.trim().toLowerCase()) &&
@@ -923,7 +912,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public handleInputChange(event?) {
+    public handleInputChange(event?: string) {
         if (event !== undefined) {
             this.dropdown.verticalScrollContainer.scrollTo(0);
             this.onSearchInput.emit(event);
@@ -1074,7 +1063,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         // If you mutate the array, no pipe is invoked and the display isn't updated;
         // if you replace the array, the pipe executes and the display is updated.
         this.data = cloneArray(this.data);
-        this.selection.set_selected_item(this.id, addedItem);
+        this.selectItems([addedItem], false);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.dropdown.focusedItem = null;
@@ -1151,13 +1140,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
-        this.selection.selectionEmitter.pipe(takeUntil(this.destroy$), filter(e => e.componentID === this.id)).subscribe((e) => {
-            this.onSelectionChange.emit(e.selectionEvent);
-            this._value = this.dataType !== DataTypes.PRIMITIVE ?
-                e.selectionEvent.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
-                e.selectionEvent.newSelection.join(', ');
-            this._onChangeCallback(e.selectionEvent.newSelection);
-        });
         if (this.ngControl && this.ngControl.value) {
             this.selectItems(this.ngControl.value, true);
         }
@@ -1244,7 +1226,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public handleClearItems(event) {
+    public handleClearItems(event: Event): void {
         this.deselectAllItems(true, event);
         event.stopPropagation();
     }
@@ -1257,7 +1239,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *<igx-combo #combo></igx-combo>
      *```
      */
-    public toggle() {
+    public toggle(): void {
         this.dropdown.toggle(this.overlaySettings);
     }
 
@@ -1269,7 +1251,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *<igx-combo #combo></igx-combo>
      *```
      */
-    public open() {
+    public open(): void {
         this.dropdown.open(this.overlaySettings);
     }
 
@@ -1281,7 +1263,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *<igx-combo #combo></igx-combo>
      *```
      */
-    public close() {
+    public close(): void {
         this.dropdown.close();
     }
 
@@ -1293,7 +1275,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let state = this.combo.collapsed;
      * ```
     */
-    public get collapsed() {
+    public get collapsed(): boolean {
         return this.dropdown.collapsed;
     }
 
@@ -1319,9 +1301,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.selectItems(["New York", "New Jersey"]);
      * ```
      */
-    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean) {
+    public selectItems(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
         if (newItems) {
-            this.selection.select_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selection.add_items(this.id, newItems, clearCurrentSelection);
+            this.setSelection(newSelection, event);
         }
     }
 
@@ -1333,9 +1316,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.deselectItems(["New York", "New Jersey"]);
      * ```
      */
-    public deselectItems(items: Array<any>) {
+    public deselectItems(items: Array<any>, event?: Event) {
         if (items) {
-            this.selection.deselect_items(this.id, items);
+            const newSelection = this.selection.delete_items(this.id, items);
+            this.setSelection(newSelection, event);
         }
     }
 
@@ -1350,7 +1334,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public selectAllItems(ignoreFilter?: boolean, event?: Event) {
         const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData);
         const newSelection = this.selection.add_items(this.id, allVisible);
-        this.selection.set(this.id, newSelection, event);
+        this.setSelection(newSelection, event);
     }
 
     /**
@@ -1361,12 +1345,56 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * this.combo.deselectAllItems();
      * ```
      */
-    public deselectAllItems(ignoreFilter?: boolean, event?: Event) {
-        if (this.filteredData.length === this.data.length || ignoreFilter) {
-            this.selection.set(this.id, this.selection.get_empty(), event);
-        } else {
-            const newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
-            this.selection.set(this.id, newSelection, event);
+    public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
+        let newSelection = this.selection.get_empty();
+        if (this.filteredData.length !== this.data.length && ignoreFilter) {
+            newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
+        }
+        this.setSelection(newSelection, event);
+    }
+
+    /**
+     * Selects/Deselects an item using it's valueKey value
+     * @param itemID the valueKey of the specified item
+     * @param select If the item should be selected (true) or deselcted (false)
+     *
+     * ```typescript
+     * items: { field: string, region: string}[] = data;
+     * this.combo.setSelectedItem('Connecticut', true);
+     * // combo.valueKey === 'field'
+     * // items[n] === { field: 'Connecticut', state: 'New England'}
+     * ```
+     */
+    public setSelectedItem(itemID: any, select = true, event?: Event): void {
+        if (itemID === null || itemID === undefined) {
+            return;
+        }
+        const itemValue = this.getValueByValueKey(itemID);
+        if (itemValue !== null && itemValue !== undefined) {
+            if (select) {
+                this.selectItems([itemValue], false, event);
+            } else {
+                this.deselectItems([itemValue], event);
+            }
+        }
+    }
+
+    protected setSelection(newSelection: Set<any>, event?: Event): void {
+        const oldSelectionEmit = Array.from(this.selection.get(this.id));
+        const newSelectionEmit = Array.from(newSelection);
+        const args: IComboSelectionChangeEventArgs = {
+            newSelection: newSelectionEmit,
+            oldSelection: oldSelectionEmit,
+            event,
+            cancel: false
+        };
+        this.onSelectionChange.emit(args);
+        if (!args.cancel) {
+            this.selection.select_items(this.id, args.newSelection, true);
+            this._value = this.dataType !== DataTypes.PRIMITIVE ?
+                args.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
+                args.newSelection.join(', ');
+            this._onChangeCallback(args.newSelection);
         }
     }
     /**

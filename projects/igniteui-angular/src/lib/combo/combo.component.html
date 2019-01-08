@@ -15,12 +15,12 @@
 </ng-template>
 
 <igx-input-group [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
-    <input igxInput #comboInput name="comboInput" type="text" [(ngModel)]="value" readonly [placeholder]="placeholder"
-        [disabled]="disabled" (blur)="onBlur($event)" />
+    <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [placeholder]="placeholder"
+        [disabled]="disabled"/>
     <igx-suffix *ngIf="value.length" class="clearButton" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
         <igx-icon fontSet="material">clear</igx-icon>
     </igx-suffix>
-    <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
+    <igx-suffix igxButton="icon" class="igx-combo__clear-button" igxRipple>
         <igx-icon fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>

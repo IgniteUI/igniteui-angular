@@ -55,7 +55,7 @@ export class ComboSampleComponent implements OnInit {
             'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
             'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
             'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
-            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia', 'District of Columbia', 'West Virginia'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia'],
             'South Atlantic 03': ['District of Columbia', 'West Virginia'],
             'East South Central 01': ['Alabama', 'Kentucky'],
             'East South Central 02': ['Mississippi', 'Tennessee'],
@@ -86,7 +86,7 @@ export class ComboSampleComponent implements OnInit {
 
     toggleItem(itemID) {
         this.toggleItemState = !this.toggleItemState;
-        this.igxCombo.selectItems([itemID]);
+        this.igxCombo.setSelectedItem(itemID, this.toggleItemState);
     }
 
     ngOnInit() {

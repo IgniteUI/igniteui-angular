@@ -1,6 +1,6 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input
+    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input, ContentChildren
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -9,11 +9,12 @@ import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { Navigate } from '../drop-down/drop-down.common';
 import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down-utils';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxDropDownSelectionService } from '../drop-down/drop-down.selection';
 import { DropDownActionKeys } from '../drop-down/drop-down-navigation.directive';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IgxComboItemComponent } from './combo-item.component';
 
 /** @hidden */
 @Component({
@@ -25,7 +26,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        @Inject(IgxDropDownSelectionService) protected selection: IgxDropDownSelectionService,
+        protected selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
         protected comboAPI: IgxComboAPIService) {
         super(elementRef, cdr, selection);
@@ -53,16 +54,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
-    /**
-     * @hidden
-     */
-    protected get children(): QueryList<IgxDropDownItemBase> {
-        return this.combo.children;
-    }
-
-    protected set children(value: QueryList<IgxDropDownItemBase>) {
-        this._children = value;
-    }
+    @ContentChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
+    protected children: QueryList<IgxComboItemComponent> = null;
 
     /**
      * @hidden
@@ -71,7 +64,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         const sel = this.selection.get(this.comboID);
         return sel ? Array.from(sel) : [];
     }
-    private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
 
     /**
@@ -175,7 +167,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         if (item === null || item === undefined) {
             return;
         }
-        this.selection.set_selected_item(this.comboID, item.itemID);
+        this.comboAPI.set_selected_item(item.itemID);
         this._focusedItem = item;
     }
 

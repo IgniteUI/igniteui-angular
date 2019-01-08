@@ -24,7 +24,6 @@ import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
-import { IgxDropDownSelectionService } from './drop-down.selection';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
 
@@ -216,11 +215,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxDropDownSelectionService) {
+        protected selection: IgxSelectionAPIService) {
         super(elementRef, cdr);
-        if (!selection) {
-            this.selection = new IgxDropDownSelectionService();
-        }
     }
 
     /**
