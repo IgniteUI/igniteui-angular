@@ -281,7 +281,7 @@ describe('IgxTabs', () => {
         window.dispatchEvent(new Event('resize'));
         rightScrollButton.dispatchEvent(new Event('click', { bubbles: true }));
 
-        tick(100);
+        tick(500);
         fixture.detectChanges();
         expect(tabs.offset).toBeGreaterThan(0);
 
@@ -322,11 +322,11 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.groups.toArray()[2].isSelected).toBeTruthy();
 
-        tick();
+        tick(100);
         fixture.detectChanges();
         expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
     }));
