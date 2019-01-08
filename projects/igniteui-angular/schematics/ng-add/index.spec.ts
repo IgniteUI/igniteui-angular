@@ -133,6 +133,6 @@ describe('ng-add schematics', () => {
   it('should properly add polyfills', () => {
     expect(tree.readContent('src/polyfills.ts')).toBe(polyfills);
     runner.runSchematic('ng-add', {}, tree);
-    expect(tree.readContent('/polyfills.ts')).not.toBe(polyfills);
+    expect(tree.readContent('src/polyfills.ts')).not.toBe(polyfills);
   });
 });
