@@ -16,6 +16,10 @@
         @extend %igx-grid__hierarchical-action-indent !optional;
     }
 
+    @include e(hierarchical-highlight) {
+        @extend %igx-grid__hierarchical-highlight !optional;
+    }
+
     @include e(hierarchical-action-indent, $m: header) {
         @extend %igx-grid__hierarchical-action-indent--header !optional;
     }

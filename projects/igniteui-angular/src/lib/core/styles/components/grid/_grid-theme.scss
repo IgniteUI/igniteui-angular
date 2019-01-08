@@ -135,7 +135,8 @@
     $filtering-header-text-color: null,
     $filtering-row-background: null,
     $filtering-row-text-color: null,
-    $tree-filtered-text-color: null
+    $tree-filtered-text-color: null,
+    $hierarchical-highlight: null
 ) {
     $theme: apply-palette(map-get($schema, 'igx-grid'), $palette);
 
@@ -352,7 +353,9 @@
 
         tree-filtered-text-color: $tree-filtered-text-color,
         tree-selected-filtered-row-text-color: $tree-selected-filtered-row-text-color,
-        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color
+        tree-selected-filtered-cell-text-color: $tree-selected-filtered-cell-text-color,
+
+        hierarchical-highlight: $hierarchical-highlight
     ));
 }
 
@@ -471,16 +474,35 @@
         }
     }
 
+    %igx-grid__hierarchical-highlight {
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: --var($theme, 'hierarchical-highlight');
+            z-index: 3;
+        }
+    }
+
+
     %igx-grid__hierarchical-action-indent {
         user-select: none;
         background: inherit;
         padding-left: map-get($hierarchical-grid-indent, 'comfortable');
         padding-right: map-get($hierarchical-grid-indent, 'comfortable');
-        border-right: 1px solid --var($theme, 'header-border-color');
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        z-index: 3;
+
+        &:focus {
+            outline: none;
+        }
 
         igx-icon {
             max-width: $hierarchical-action-icon;
@@ -489,7 +511,11 @@
     }
 
     %igx-grid__hierarchical-action-indent--header {
+        background: inherit;
         align-items: flex-start;
+        border-right: 1px solid --var($theme, 'header-border-color');
+        z-index: 3;
+
         igx-icon {
             min-height: map-get($grid-header-height, 'comfortable');
             display: flex;
@@ -513,18 +539,21 @@
         margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'comfortable')} + #{$hierarchical-action-icon});
         margin-top: map-get($hierarchical-grid-indent, 'comfortable');
         margin-right: map-get($hierarchical-grid-indent, 'comfortable');
+        margin-bottom: map-get($hierarchical-grid-indent, 'comfortable');
     }
 
     %igx-grid__hierarchical-indent--cosy {
         margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'cosy')} + #{$hierarchical-action-icon});
         margin-top: map-get($hierarchical-grid-indent, 'cosy');
         margin-right: map-get($hierarchical-grid-indent, 'cosy');
+        margin-bottom: map-get($hierarchical-grid-indent, 'comfortable');
     }
 
     %igx-grid__hierarchical-indent--compact {
         margin-left: calc(2 * #{map-get($hierarchical-grid-indent, 'compact')} + #{$hierarchical-action-icon});
         margin-top: map-get($hierarchical-grid-indent, 'compact');
         margin-right: map-get($hierarchical-grid-indent, 'compact');
+        margin-bottom: map-get($hierarchical-grid-indent, 'comfortable');
     }
 
     %grid-caption {
