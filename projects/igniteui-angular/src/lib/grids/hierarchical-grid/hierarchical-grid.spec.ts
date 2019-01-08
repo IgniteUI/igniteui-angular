@@ -154,6 +154,16 @@ describe('Basic IgxHierarchicalGrid', () => {
         const icon = headerExpanderElem.query(By.css('igx-icon'));
         expect(icon).toBeNull();
     });
+
+    it('should render last cell of rows fully visible when columns does not have width specified and without scrollbar', () => {
+        const firstRowCell: HTMLElement = hierarchicalGrid.getRowByIndex(0).cells.last.nativeElement;
+        const cellLeftOffset = firstRowCell.offsetLeft + firstRowCell.parentElement.offsetLeft + firstRowCell.offsetWidth;
+        const gridWidth = hierarchicalGrid.nativeElement.offsetWidth;
+        expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
+
+        const hScroll = hierarchicalGrid.parentVirtDir.getHorizontalScroll();
+        expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {

@@ -1,5 +1,8 @@
 <div class="hgrid-sample">
-    <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
+    <div class="density-chooser" style="margin-bottom: 16px">
+        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+    </div>
+    <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [displayDensity]="density" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
         <igx-column field="ID" [groupable]='true' ></igx-column>
         <igx-column-group header="Information">
             <igx-column field="ChildLevels" [groupable]='true'></igx-column>
