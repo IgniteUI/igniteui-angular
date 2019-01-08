@@ -175,14 +175,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                     moveView: view,
                     owner: tmlpOutlet
                 };
+            } else {
+                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
+                // child rows contain unique grids, hence should have unique templates
+                return {
+                    $implicit: rowData,
+                    templateID: 'childRow-' + rowID
+                };
             }
+        } else {
+            return {
+                $implicit: rowData,
+                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            };
         }
-        return {
-            $implicit: rowData,
-            templateID: this.isChildGridRecord(rowData) ?
-            'childRow' :
-            this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
-        };
     }
 
     public get childLayoutKeys() {
