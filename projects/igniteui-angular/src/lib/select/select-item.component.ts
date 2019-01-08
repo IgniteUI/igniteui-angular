@@ -1,6 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
 import { Component, ElementRef, Input } from '@angular/core';
-import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownBase } from '../drop-down/drop-down.base';
 
@@ -9,7 +8,6 @@ import { IgxDropDownBase } from '../drop-down/drop-down.base';
     templateUrl: 'select-item.component.html'
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
-
 
     constructor(
         public dropDownBase: IgxDropDownBase,

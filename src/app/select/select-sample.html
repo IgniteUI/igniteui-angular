@@ -4,9 +4,11 @@
     </igx-drop-down-item>
 </igx-drop-down> -->
 
-<igx-select #dropDown (onSelection)="onSelection($event)">
+<igx-select [width]="'260px'" [placeholder]="'Pick One'"  [(ngModel)]="value">
     <igx-select-item *ngFor="let item of items" [value]="item.field">
         {{ item.field }}
     </igx-select-item>
 </igx-select>
+
+<p>Selected: {{value}}</p>
 

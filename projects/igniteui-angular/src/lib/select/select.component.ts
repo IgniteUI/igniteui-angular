@@ -1,5 +1,5 @@
 import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
@@ -14,12 +14,8 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services';
-import { Subscription } from 'rxjs';
-import { DeprecateProperty } from '../core/deprecateDecorators';
-import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IgxInputDirective } from 'igniteui-angular';
-
+import { IgxDropDownItemComponent } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 const noop = () => { };
@@ -27,30 +23,56 @@ const noop = () => { };
 @Component({
     selector: 'igx-select',
     templateUrl: './select.component.html',
-    providers: [{ provide: IgxDropDownBase, useExisting: IgxSelectComponent }]
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => IgxSelectComponent),
+            multi: true
+        },
+        {provide: IgxDropDownBase, useExisting: IgxSelectComponent}]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor {
     @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
-
+    @ViewChild('input', { read: IgxInputGroupComponent}) public input: HTMLInputElement;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
     protected children: QueryList<IgxSelectItemComponent>;
-    @Input() value: any;
-    //#region Implement ControlValueAccessor methods
+    @Input() public value: any;
+    @Input() public placeholder = '';
 
+
+    //#region IMPLEMENT ControlValueAccessor METHODS
     private _onChangeCallback: (_: any) => void = noop;
-    public writeValue(value: any): void {
-    // this.selectItems(value, true);
-    // this.cdr.markForCheck();
+    public writeValue = (value: any) => {
+        // 1. Select the new item from the drop down
+        // 2. Set the input value
+        if (value) {
+            const item = this.items.find((x) => x.value === value);
+            if (!item) {
+                return;
+            }
+            this.selectItem(item);
+         }
     }
 
     public registerOnChange(fn: any): void {
-    this._onChangeCallback = fn;
+        this._onChangeCallback = fn;
     }
     public registerOnTouched(fn: any): void { }
 
+    ngAfterContentInit() {
+    }
     //#endregion
 
-    //#region Items position management
+    //#region ITEMS POSITION MANAGEMENT
+    // Option1: OVERRIDE ITEMS POSITION METHODS IN drop-DownRightButtonComponent.base
+    scrollToItem(item: IgxDropDownItemBase) {
+        const itemPosition = this.calculateScrollPosition(item);
+        this.scrollContainer.scrollTop = (itemPosition);
+    }
+
+    // calculateScrollPosition(item: IgxDropDownItemBase): number {
+
+    // }
     public getSelectedItemPosition() {
 
     }
@@ -59,6 +81,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     }
     //#endregion
+
+
     public selectItem(item: IgxDropDownItemBase, event?) {
         super.selectItem(item, event);
         this.value = this.selectedItem.value;
@@ -73,6 +97,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             });
         }
     }
+
+    // TODO: Exists Only for the purposes of passing newSelection to _onChangeCallback
+    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent): boolean {
+        console.log(`changeSelectedItem: newSelection: ${newSelection.value}`);
+        this._onChangeCallback(newSelection.value);
+        return super.changeSelectedItem(newSelection);
+    }
 }
 
 @NgModule({
@@ -82,23 +113,4 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: []
 })
-
-// declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-//     IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent,
-//     IgxComboItemDirective,
-//     IgxComboEmptyDirective,
-//     IgxComboHeaderItemDirective,
-//     IgxComboHeaderDirective,
-//     IgxComboFooterDirective,
-//     IgxComboAddItemDirective],
-// exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent,
-//     IgxComboItemDirective,
-//     IgxComboEmptyDirective,
-//     IgxComboHeaderItemDirective,
-//     IgxComboHeaderDirective,
-//     IgxComboFooterDirective,
-//     IgxComboAddItemDirective],
-// imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-//     IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
-// providers: [IgxSelectionAPIService]
 export class IgxSelectModule { }
