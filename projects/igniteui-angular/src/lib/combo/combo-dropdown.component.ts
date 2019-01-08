@@ -14,7 +14,6 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxComboItemComponent } from './combo-item.component';
 
 /** @hidden */
 @Component({
@@ -54,8 +53,17 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
-    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    protected children: QueryList<IgxComboItemComponent> = null;
+    /**
+     * Combo-DropDown accesses its children children through the combo parent.
+     * ViewChildren and ContentChildren in the DD context get an incomplete set (Only AddItemComponent and empty, resp.)
+     * @hidden
+     * @internal
+     */
+    protected get children(): QueryList<IgxDropDownItemBase> {
+        return this.combo.children;
+    }
+    protected set children(val: QueryList<IgxDropDownItemBase>) {
+    }
 
     /**
      * @hidden

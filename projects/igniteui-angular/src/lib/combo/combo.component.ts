@@ -1,8 +1,8 @@
 import { ConnectedPositioningStrategy } from './../services/overlay/position/connected-positioning-strategy';
 import { CommonModule } from '@angular/common';
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter,
-    HostBinding, HostListener, Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Self, Inject
+    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Self, Inject, ViewChildren, QueryList
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -296,6 +296,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('dropdownItemContainer')
     protected dropdownContainer: ElementRef = null;
+
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
+    public children: QueryList<IgxComboItemComponent> = null;
 
     /**
      * Emitted when item selection is changing, before the selection completes

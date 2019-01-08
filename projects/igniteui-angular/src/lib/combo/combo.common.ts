@@ -10,6 +10,7 @@ export const IGX_COMBO_COMPONENT = 'IgxComboComponentToken';
 export interface IgxComboBase {
     id: string;
     dropdown: IgxComboDropDownComponent;
+    children: QueryList<IgxComboItemComponent>;
     data: any[];
     valueKey: string;
     groupKey: string;
