@@ -39,9 +39,9 @@ export interface IGridCreatedEventArgs {
 }
 
 export const enum IgxGridExpandState {
-    COLLAPSED = -1,
-    MIXED = 0,
-    EXPANDED = 1
+    COLLAPSED = -1, // Set when all rows to be collapsed through expandChildren option
+    MIXED = 0, // Should be set when rows are manually expanded/collapsed
+    EXPANDED = 1 // Set when all rows to be expanded through expandChildren option
 }
 
 @Component({

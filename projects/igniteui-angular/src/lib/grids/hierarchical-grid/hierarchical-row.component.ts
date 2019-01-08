@@ -79,8 +79,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
                 return v.rowID !== this.rowID;
             });
         }
-        // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
-        grid.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
