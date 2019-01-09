@@ -278,7 +278,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         //  if we have transactions and add row was edited look for old value and row data in added rows
         if (rowIndex < 0 && grid.transactions.enabled) {
-            const dataWithTransactions = grid.dataWithAddedInTransactionRows(data);
+            const dataWithTransactions = grid.dataWithAddedInTransactionRows;
             rowIndex = grid.primaryKey ?
             dataWithTransactions.map((record) => record[grid.primaryKey]).indexOf(rowID) :
             dataWithTransactions.indexOf(rowID);
@@ -588,7 +588,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     public get_all_data(id: string, includeTransactions = false): any[] {
         const grid = this.get(id);
         let data = grid.data ? grid.data : [];
-        data = includeTransactions ? grid.dataWithAddedInTransactionRows(data) : data;
+        data = includeTransactions ? grid.dataWithAddedInTransactionRows : data;
         return data;
     }
 
