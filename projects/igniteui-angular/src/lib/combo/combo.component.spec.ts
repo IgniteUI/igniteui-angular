@@ -1251,12 +1251,14 @@ describe('igxCombo', () => {
             fixture.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement.click();
             fixture.detectChanges();
             tick();
-            fixture.detectChanges();
             expect(inputElement.value).toEqual('');
+            expect(combo.selectedItems().length).toEqual(0);
+            // Drop down is closed after clicking on clear button, reopen and check boxes
+            combo.toggle();
+            tick();
             verifyItemIsUnselected(dropdownList, combo, 3);
             verifyItemIsUnselected(dropdownList, combo, 7);
             verifyItemIsUnselected(dropdownList, combo, 1);
-            expect(combo.selectedItems().length).toEqual(0);
         }));
         it('Should show/hide clear button after selecting/deselecting items', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboTestComponent);
