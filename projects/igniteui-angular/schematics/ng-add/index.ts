@@ -205,7 +205,7 @@ function getDependencyVersion(pkg: string, tree: Tree) {
     return targetDep;
   }
 
-  throw new FileDoesNotExistException(`${tree.root.path}/package.json`);
+  throw new FileDoesNotExistException(`${tree.root.path}/${targetFile}`);
 }
 
 function installPackageJsonDependencies(options): Rule {
