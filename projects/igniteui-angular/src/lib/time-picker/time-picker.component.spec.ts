@@ -922,7 +922,7 @@ describe('IgxTimePicker', () => {
         expect(input.nativeElement.value).toBe('4:5 AM');
     }));
 
-    it('should correct spin (arrow buttons) on empty value (dropdown mode)', (() => {
+    it('should correct spin (arrow buttons) on empty value (dropdown mode)', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxTimePickerDropDownNoValueComponent);
         fixture.detectChanges();
 
@@ -941,12 +941,11 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
-        fixture.detectChanges();
-
-        input.nativeElement.setSelectionRange(1, 1);
+        tick(100);
         fixture.detectChanges();
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+        tick(100);
         fixture.detectChanges();
 
         expect(input.nativeElement.value).toBe('01:00 AM', 'Hours spin failed');
@@ -1009,7 +1008,7 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toEqual(customValue);
         }));
 
-        it('should increase and decrease hours/minutes/AMPM, where the caret is, using arrows and mousewheel', (() => {
+        it('should increase and decrease hours/minutes/AMPM, where the caret is, using arrows and mousewheel', fakeAsync(() => {
             fixture.detectChanges();
 
             // initial input value is 05:45 PM
@@ -1022,16 +1021,14 @@ describe('IgxTimePicker', () => {
 
             // press arrow down
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('04:45 PM', 'ArrowDown on hours failed');
 
-            // position caret at the hours
-            input.nativeElement.setSelectionRange(1, 1);
-            fixture.detectChanges();
-
             // mousewheel up
             UIInteractions.simulateWheelEvent(input.nativeElement, 0, -10);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('05:45 PM', 'MouseWheel Up on hours dailed');
@@ -1040,14 +1037,14 @@ describe('IgxTimePicker', () => {
             // position caret at the minutes and mousewheel down
             input.nativeElement.setSelectionRange(3, 3);
             UIInteractions.simulateWheelEvent(input.nativeElement, 0, 10);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('05:44 PM', 'MouseWheel Down on minutes failed');
 
-            input.nativeElement.setSelectionRange(3, 3);
-            fixture.detectChanges();
             // press arrow up
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('05:45 PM', 'ArrowUp on minutes failed');
@@ -1056,23 +1053,25 @@ describe('IgxTimePicker', () => {
             // position caret at AMPM and arrow down
             input.nativeElement.setSelectionRange(7, 7);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('05:45 AM', 'ArrowDown on AMPM failed');
 
-            input.nativeElement.setSelectionRange(7, 7);
-            fixture.detectChanges();
             // mousewheel up
             UIInteractions.simulateWheelEvent(input.nativeElement, 0, -10);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('05:45 PM', 'MouseWheel Up on AMPM failed');
 
             // test full hours
             input.nativeElement.setSelectionRange(0, 0);
+            tick(100);
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('06:45 PM', 'MouseWheel Up on AMPM failed');
@@ -1185,7 +1184,7 @@ describe('IgxTimePicker', () => {
             expect(input.nativeElement.value).toBe(customValue, 'SpinLoop did not stop on AMPM');
         }));
 
-        it('should spinloop on correct time after max or min values', (() => {
+        it('should spinloop on correct time after max or min values', fakeAsync(() => {
             fixture.detectChanges();
 
             const customValue = '08:05 AM';
@@ -1207,6 +1206,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('11:05 AM', 'SpinLoop Down wrong time');
@@ -1224,6 +1224,7 @@ describe('IgxTimePicker', () => {
             fixture.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            tick(100);
             fixture.detectChanges();
 
             expect(input.nativeElement.value).toBe('09:03 AM', 'SpinLoop Up wrong time');
