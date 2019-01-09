@@ -24,11 +24,13 @@
             tabindex="0"
             [placeholder]="placeholder"
             autocomplete="off"
-            [(ngModel)]="value"
+            [value]="value"
+            (input)="onInput($event)"
             [type]="type"
             [readonly]="isUnaryCondition"
             (click)="onInputClick()"
-            (keydown)="onInputKeyDown($event)"/>
+            (keydown)="onInputKeyDown($event)"
+            (keyup)="onInputKeyUp($event)"/>
             <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
