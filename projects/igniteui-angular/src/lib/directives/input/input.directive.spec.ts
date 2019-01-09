@@ -193,7 +193,7 @@ describe('IgxInput', () => {
         testRequiredValidation(inputElement, fixture);
     });
 
-    fit('Should update style when required input\'s value is set.', () => {
+    it('Should update style when required input\'s value is set.', () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
 
@@ -212,6 +212,16 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.VALID);
+
+
+        igxInput.value = '';
+        fixture.detectChanges();
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
     });
 
     it('Should style required input with two-way databinding correctly.', () => {

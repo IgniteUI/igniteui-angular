@@ -52,6 +52,9 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
+        if (!this.ngControl && this._hasValidators) {
+            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
+        }
     }
     /**
      * Gets the `value` propery.
