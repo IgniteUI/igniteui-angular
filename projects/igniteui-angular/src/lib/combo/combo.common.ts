@@ -1,15 +1,12 @@
-import { ElementRef, EventEmitter, QueryList } from '@angular/core';
+import { ElementRef, EventEmitter } from '@angular/core';
 import { CancelableEventArgs } from '../core/utils';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboItemComponent } from './combo-item.component';
 
 export const IGX_COMBO_COMPONENT = 'IgxComboComponentToken';
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
     id: string;
-    children: QueryList<IgxComboItemComponent>;
     data: any[];
     valueKey: string;
     groupKey: string;

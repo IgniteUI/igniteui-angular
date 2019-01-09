@@ -298,12 +298,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected dropdownContainer: ElementRef = null;
 
     /**
-     * @hidden
-     */
-    @ViewChildren(IgxComboItemComponent, { read: IgxComboItemComponent })
-    public children: QueryList<IgxComboItemComponent> = null;
-
-    /**
      * Emitted when item selection is changing, before the selection completes
      *
      * ```html

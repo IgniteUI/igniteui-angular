@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, Input
+    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, Input, ContentChildren
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -13,6 +13,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
+import { IgxComboItemComponent } from './combo-item.component';
 
 /** @hidden */
 @Component({
@@ -58,11 +59,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      * @internal
      */
-    protected get children(): QueryList<IgxDropDownItemBase> {
-        return this.combo.children;
-    }
-    protected set children(val: QueryList<IgxDropDownItemBase>) {
-    }
+    @ContentChildren(IgxComboItemComponent, { descendants: true })
+    protected children: QueryList<IgxDropDownItemBase> = null;
 
     private _scrollPosition = 0;
 
