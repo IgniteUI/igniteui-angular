@@ -43,6 +43,7 @@ export class AppModule {}
 | `textVisibility` | boolean | Set the text to be visible. By default is set to `true`. |
 | `textTop` | boolean | Set the position that defene is text to be aligned above the progress line. By default is set to `false`. |
 | `text` | string | Set a custom text that is displayed according defined position. |
+| `indeterminate` | boolean | Display the indicator continually growing and shrinking along the track. |
 ## igx-circular-bar
 | Name   |       Type      |  Description |
 |:----------|:-------------:|:------|
@@ -51,6 +52,7 @@ export class AppModule {}
 | `value` |  number | Set value that indicates the completed bar position. |
 | `animate` |  boolean | animation on progress bar. |
 | `textVisibility` | boolean | Set the text to be visible. By default is set to `true`. |
+| `indeterminate` | boolean | Display the indicator continually growing and shrinking along the track. |
 ## Common
 | Name   |  Description |
 |:----------|:------|
