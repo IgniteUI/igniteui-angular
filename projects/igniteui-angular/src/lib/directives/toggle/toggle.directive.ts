@@ -20,6 +20,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs } from '../../core/utils';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
     exportAs: 'toggle',
@@ -334,6 +335,8 @@ export class IgxToggleActionDirective implements OnInit {
      * let closesOnOutsideClick = this.toggle.closeOnOutsideClick;
      * ```
      */
+    @Input()
+    @DeprecateProperty(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`)
     public get closeOnOutsideClick(): boolean {
         return this._closeOnOutsideClick;
     }
@@ -343,9 +346,7 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [closeOnOutsideClick]="'true'"></div>
      * ```
      */
-    @Input()
     public set closeOnOutsideClick(v: boolean) {
-        console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
         this._closeOnOutsideClick = v;
     }
 
