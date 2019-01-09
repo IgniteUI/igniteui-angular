@@ -215,6 +215,7 @@ export class IgxGridNavigationService {
         const rowList = isSummary ? this.grid.summariesRowList : this.grid.dataRowList;
         let rowElement = rowList.find((row) => row.index === rowIndex);
         if (!rowElement) { return; }
+        rowElement = rowElement.nativeElement;
         const allCells = rowElement.querySelectorAll(this.getCellSelector(-1, isSummary));
         const lastCell = allCells[allCells.length - 1];
         if (this.isColumnFullyVisible(index)) {
@@ -302,7 +303,8 @@ export class IgxGridNavigationService {
             const isSummaryRow = currentRowEl.previousElementSibling.tagName.toLowerCase() === 'igx-grid-summary-row';
             if (this.isColumnFullyVisible(visibleColumnIndex) && this.isColumnLeftFullyVisible(visibleColumnIndex)) {
                 const cellSelector = this.getCellSelector(visibleColumnIndex, isSummaryRow);
-                const cell = currentRowEl.previousElementSibling.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
+                const cell = currentRowEl.previousElementSibling
+                    .querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                 cell.focus();
                 return;
             }
