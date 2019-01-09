@@ -212,6 +212,10 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     public onKeydown(event): void {
         const key = event.keyCode || event.charCode;
 
+        if (isIE() && this._stopPropagation) {
+            this._stopPropagation = false;
+        }
+
         if (key === KEYS.Ctrl) {
             this._ctrlDown = true;
         }
