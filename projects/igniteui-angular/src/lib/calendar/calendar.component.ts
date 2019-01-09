@@ -10,12 +10,13 @@ import {
     OnInit,
     Output,
     QueryList,
-    ViewChildren
+    ViewChildren,
+    Injectable
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../animations/main';
-import { Calendar, ICalendarDate, range, WEEKDAYS } from './calendar';
+import { Calendar, ICalendarDate, range, WEEKDAYS, IGX_CALENDAR_COMPONENT } from './calendar';
 import {
     IgxCalendarDateDirective,
     IgxCalendarHeaderTemplateDirective,
@@ -38,6 +39,7 @@ export enum CalendarSelection {
     RANGE = 'range'
 }
 
+@Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
     public overrides = {
         pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
@@ -89,6 +91,10 @@ export class CalendarHammerConfig extends HammerGestureConfig {
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: CalendarHammerConfig
+        },
+        {
+            provide: IGX_CALENDAR_COMPONENT,
+            useExisting: IgxCalendarComponent
         }
     ],
     selector: 'igx-calendar',
@@ -861,6 +867,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         if (value === null || value === undefined) {
             this.selectedDates = this.selection === 'single' ? null : [];
+            this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
             return;
         }
@@ -975,6 +982,21 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     public onPan(event) {
         const delta = event.deltaY < 0 ? 1 : -1;
         this.generateYearRange(delta);
+    }
+
+    /**
+     *@hidden
+     */
+    public focusActiveDate() {
+        let date = this.dates.find((d) => d.selected);
+
+        if (!date) {
+            date = this.dates.find((d) => d.isToday);
+        }
+
+        if (date) {
+            date.nativeElement.focus();
+        }
     }
 
     /**
@@ -1259,6 +1281,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
         if (!(valueEnd < selectedDatesStart) && !(valueStart > selectedDatesEnd)) {
             this.selectedDates = [];
+            this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
     }

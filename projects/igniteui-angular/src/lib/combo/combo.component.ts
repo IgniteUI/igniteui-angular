@@ -25,7 +25,6 @@ import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directi
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
@@ -37,6 +36,8 @@ import { Subscription } from 'rxjs';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { IGX_COMBO_COMPONENT } from './combo.common';
+import { IgxDropDownItemBase } from '../drop-down/drop-down.base';
 
 /** Custom strategy to provide the combo with callback on initial positioning */
 class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
@@ -96,7 +97,8 @@ const noop = () => { };
 
 @Component({
     selector: 'igx-combo',
-    templateUrl: 'combo.component.html'
+    templateUrl: 'combo.component.html',
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -212,6 +214,13 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     get comboInput() {
         return this._comboInput;
+    }
+
+    /**
+     * @hidden
+     */
+    get displaySearchInput(): boolean {
+        return this.filterable || this.allowCustomValues;
     }
 
     /**
@@ -1238,7 +1247,7 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
      */
     public addItemToCollection() {
         if (!this.searchValue) {
-            return false;
+            return;
         }
         const newValue = this.searchValue.trim();
         const addedItem = this.displayKey ? {
@@ -1261,11 +1270,27 @@ export class IgxComboComponent extends DisplayDensityBase implements AfterViewIn
         this.data = cloneArray(this.data);
         this.changeSelectedItem(addedItem, true);
         this.customValueFlag = false;
-        if (this.searchInput) {
-            this.searchInput.nativeElement.focus();
-        }
+        this.searchInput.nativeElement.focus();
         this.handleInputChange();
     }
+
+    /**
+     * @hidden;
+     */
+    public focusSearchInput(opening?: boolean): void {
+        if (this.displaySearchInput && this.searchInput) {
+            this.searchInput.nativeElement.focus();
+        } else {
+            if (opening) {
+                this.dropdownContainer.nativeElement.focus();
+                this.dropdown.onFocus();
+            } else {
+                this.comboInput.nativeElement.focus();
+                this.toggle();
+            }
+        }
+    }
+
 
     /**
      * @hidden

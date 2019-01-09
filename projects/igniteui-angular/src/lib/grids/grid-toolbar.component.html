@@ -1,6 +1,11 @@
-<span class="igx-grid-toolbar__title">
+<span class="igx-grid-toolbar__title" *ngIf="getTitle()">
     {{ getTitle() }}
 </span>
+
+<div class="igx-grid-toolbar__custom-content" *ngIf="customContentTemplate != null">
+    <ng-container *ngTemplateOutlet="customContentTemplate; context: context">
+    </ng-container>
+</div>
 
 <div class="igx-grid-toolbar__actions">
     <div *ngIf="grid.columnHiding">
@@ -15,7 +20,7 @@
         </button>
         <igx-drop-down #columnHidingDropdown>
             <igx-column-hiding
-                [columns]="grid.columnList"
+                [columns]="grid.columns"
                 [title]="grid.columnHidingTitle"
                 [filterColumnsPrompt]="filterColumnsPrompt"
                 [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"
@@ -36,7 +41,7 @@
         </button>
         <igx-drop-down #columnPinningDropdown>
             <igx-column-pinning
-                [columns]="grid.columnList"
+                [columns]="grid.columns"
                 [title]="grid.columnPinningTitle"
                 [filterColumnsPrompt]="filterColumnsPrompt"
                 [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"></igx-column-pinning>

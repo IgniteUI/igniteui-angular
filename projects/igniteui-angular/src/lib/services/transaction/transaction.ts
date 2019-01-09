@@ -14,7 +14,7 @@ export interface Transaction {
 
 /** @experimental @hidden */
 export interface HierarchicalTransaction extends Transaction {
-    parentId: any;
+    path: any[];
 }
 
 export interface State {
@@ -25,14 +25,7 @@ export interface State {
 
 /** @experimental @hidden */
 export interface HierarchicalState extends State {
-    parentId: any;
-}
-
-/** @experimental @hidden */
-export interface HierarchicalTransactionNode {
-    id: any;
-    parentId?: any;
-    childNodes: HierarchicalTransactionNode[];
+    path: any[];
 }
 
 export interface TransactionService<T extends Transaction, S extends State> {
@@ -68,7 +61,7 @@ export interface TransactionService<T extends Transaction, S extends State> {
      * @param id Optional record id to get transactions for
      * @returns All transaction in the service or for the specified record
      */
-    getTransactionLog(id?: any): Transaction[];
+    getTransactionLog(id?: any): T[];
 
     /**
      * Remove the last transaction if any

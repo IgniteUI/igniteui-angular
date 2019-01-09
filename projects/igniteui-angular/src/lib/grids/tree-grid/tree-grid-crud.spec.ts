@@ -41,7 +41,7 @@ describe('IgxTreeGrid - CRUD', () => {
                 fix.detectChanges();
             });
 
-            it('should support adding root row through treeGrid API', () => {
+            fit('should support adding root row through treeGrid API', () => {
                 verifyRowsCount(fix, 3, 10);
                 verifyTreeGridRecordsCount(fix, 3, 10);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 10);

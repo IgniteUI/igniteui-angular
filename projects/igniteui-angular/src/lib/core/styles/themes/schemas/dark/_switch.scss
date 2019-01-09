@@ -1,0 +1,21 @@
+@import '../light/switch';
+
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light switch schema.
+/// @type {Map}
+/// @prop {map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #000] - The color of the thumb when the switch is disabled.
+/// @requires {function} extend
+/// @requires $_light-switch
+/// @see $default-palette
+
+$_dark-switch: extend($_light-switch, (
+    thumb-disabled-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #000
+    )
+));

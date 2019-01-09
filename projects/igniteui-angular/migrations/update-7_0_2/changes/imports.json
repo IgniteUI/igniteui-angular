@@ -1,0 +1,9 @@
+{
+    "$schema": "../../common/schema/imports.schema.json",
+    "changes": [
+        {
+            "name": "IgxIconModule.forRoot()",
+            "replaceWith": "IgxIconModule"
+        }
+    ]
+}

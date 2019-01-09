@@ -1,23 +1,24 @@
 import {
     ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy
+    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy, AfterViewInit
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
-import { IgxDropDownBase, Navigate } from '../drop-down/drop-down.component';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.component';
-import { IgxComboComponent } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
+import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
+import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
+import { Navigate } from '../drop-down/drop-down.common';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
-    templateUrl: '../drop-down/drop-down.component.html'
+    templateUrl: '../drop-down/drop-down.component.html',
+    providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDestroy {
+export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterViewInit, OnDestroy {
     private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
     private destroy$ = new Subject<boolean>();
@@ -25,8 +26,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Inject(forwardRef(() => IgxComboComponent))
-        public combo: IgxComboComponent) {
+        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
         super(elementRef, cdr, selection);
     }
 
@@ -124,7 +124,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
      */
     navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
-            this.combo.searchInput.nativeElement.focus();
+            this.combo.focusSearchInput(false);
         } else {
             super.navigatePrev();
         }
@@ -309,7 +309,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     }
 
     private focusComboSearch() {
-        this.combo.searchInput.nativeElement.focus();
+        this.combo.focusSearchInput(false);
         if (this.focusedItem) {
             this.focusedItem.isFocused = false;
         }
@@ -331,6 +331,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
     }
 
     protected scrollToHiddenItem(newItem: any): void {}
+
+    /**
+     * @hidden
+     */
+    protected scrollHandler = () => {
+        this.disableTransitions = true;
+    }
+
     /**
      * @hidden
      */
@@ -349,7 +357,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
      */
     onToggleOpened() {
         this.combo.triggerCheck();
-        this.combo.searchInput.nativeElement.focus();
+        this.combo.focusSearchInput(true);
         this.onOpened.emit();
     }
 
@@ -377,10 +385,15 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements OnDest
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
     }
 
+    public ngAfterViewInit() {
+        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.scrollHandler);
+    }
+
     /**
      *@hidden
      */
     public ngOnDestroy(): void {
+        this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.scrollHandler);
         this.destroy$.next(true);
         this.destroy$.complete();
     }

@@ -42,6 +42,7 @@ import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
+import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
@@ -57,6 +58,8 @@ import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
 
 const appRoutes = [
     {
@@ -71,6 +74,10 @@ const appRoutes = [
     {
         path: 'badge',
         component: BadgeSampleComponent
+    },
+    {
+        path: 'banner',
+        component: BannerSampleComponent
     },
     {
         path: 'buttons',
@@ -119,6 +126,10 @@ const appRoutes = [
     {
         path: 'icon',
         component: IconSampleComponent
+    },
+    {
+        path: 'lazyIconModule',
+        loadChildren: './icon/LazyModule/lazyIcon.module#LazyIconModule'
     },
     {
         path: 'inputs',
@@ -258,6 +269,10 @@ const appRoutes = [
         component: GridToolbarSampleComponent
     },
     {
+        path: 'gridToolbarCustom',
+        component: GridToolbarCustomSampleComponent
+    },
+    {
         path: 'gridRemoteVirtualization',
         component: GridVirtualizationSampleComponent
     },
@@ -294,6 +309,10 @@ const appRoutes = [
     }, {
         path: 'hierarhicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
+    },
+    {
+        path: 'gridPercentage',
+        component: GridColumnPercentageWidthsSampleComponent
     }
 ];
 

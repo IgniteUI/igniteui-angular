@@ -85,7 +85,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxGridCellComponent), { read: IgxGridCellComponent })
+    @ViewChildren(forwardRef(() => IgxGridCellComponent))
     public cells: QueryList<IgxGridCellComponent>;
 
     /**
@@ -131,8 +131,15 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get rowSelectable() {
+    public get rowSelectable(): boolean {
         return this.grid.rowSelectable;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showRowCheckboxes(): boolean {
+        return this.grid.showRowCheckboxes;
     }
 
     /**
@@ -153,7 +160,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /** @hidden */
     public get deleted(): boolean {
-        return this.isRowDeleted();
+        return this.gridAPI.row_deleted_transaction(this.gridID, this.rowID);
     }
 
     public get inEditMode(): boolean {
@@ -312,14 +319,5 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
         return `${this.defaultCssClass} ${indexClass} ${selectedClass} ${editClass} ${dirtyClass} ${deletedClass}`.trim();
-    }
-
-    protected isRowDeleted(): boolean {
-        const state: State = this.grid.transactions.getState(this.rowID);
-        if (state) {
-            return state.type === TransactionType.DELETE;
-        }
-
-        return false;
     }
 }

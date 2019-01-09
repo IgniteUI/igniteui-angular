@@ -1,6 +1,7 @@
 import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { IgxTreeGridComponent } from 'igniteui-angular';
+import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService,
+    IgxCsvExporterOptions, IgxExcelExporterOptions, CsvFileTypes } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -20,6 +21,9 @@ export class TreeGridSampleComponent implements OnInit {
     public density = '';
     public displayDensities;
 
+    constructor(private excelExporterService: IgxExcelExporterService,
+        private csvExporterService: IgxCsvExporterService) {
+}
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
@@ -409,7 +413,7 @@ export class TreeGridSampleComponent implements OnInit {
 
     public addRow() {
         this.grid1.addRow({
-            'ID': 'ASDFG',
+            'ID': `ADD${this.nextRow++}`,
             'CompanyName': 'Around the Horn',
             'ContactName': 'Thomas Hardy',
             'ContactTitle': 'Sales Representative',
@@ -447,6 +451,26 @@ export class TreeGridSampleComponent implements OnInit {
     }
 
     public deleteRow() {
-        this.grid1.deleteRowById(this.grid1.selectedRows()[0]);
+        this.grid1.deleteRow(this.grid1.selectedRows()[0]);
+    }
+
+    public undo() {
+        this.grid1.transactions.undo();
+    }
+
+    public redo() {
+        this.grid1.transactions.redo();
+    }
+
+    public commit() {
+        this.grid1.transactions.commit(this.data, this.grid1.primaryKey, this.grid1.childDataKey);
+    }
+
+    public exportToExcel() {
+        this.excelExporterService.export(this.grid1, new IgxExcelExporterOptions('TreeGrid'));
+    }
+
+    public exportToCSV() {
+        this.csvExporterService.export(this.grid1, new IgxCsvExporterOptions('TreeGrid', CsvFileTypes.CSV));
     }
 }

@@ -1,8 +1,24 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light progress-linear schema.
+/// @type {Map}
+///
+/// @property {map} track-color [igx-color: ('grays', 300)] - The main track color.
+/// @property {map} fill-color-default [igx-color: ('primary', 500)] - The track default fill color.
+/// @property {map} fill-color-danger [igx-color: ('error')] - The track danger fill color.
+/// @property {map} fill-color-warning [igx-color: ('warn')] - The track warning fill color.
+/// @property {map} fill-color-info [igx-color: ('info')] - The track info fill color.
+/// @property {map} fill-color-success [igx-color: ('success')] - The track success fill color.
+/// @property {color} stripes-color [rgba(#fff, .7)] - The track stripes color.
+/// @property {map} text-color [igx-color: ('grays', 700)] - The track value text color.
+///
+/// @see $default-palette
+
 $_light-progress-linear: (
-    name: 'igx-progress-linear',
-
-    stripes-color: rgba(#fff, .7),
-
     track-color: (
         igx-color: ('grays', 300)
     ),
@@ -27,14 +43,23 @@ $_light-progress-linear: (
         igx-color: ('success')
     ),
 
+    stripes-color: rgba(#fff, .7),
+
     text-color: (
         igx-color: ('grays', 700)
     )
 );
 
-$_light-progress-circular: (
-    name: 'igx-progress-circular',
+/// Generates a light progress-circular schema.
+/// @type {Map}
+///
+/// @property {map} base-circle-color [igx-color: ('grays', 300)] - The base circle fill color.
+/// @property {map} progress-circle-color [igx-color: ('primary', 500)] - The progress circle fill color.
+/// @property {map} text-color [igx-color: ('grays', 700)] - The value text color.
+///
+/// @see $default-palette
 
+$_light-progress-circular: (
     base-circle-color: (
         igx-color: ('grays', 300)
     ),

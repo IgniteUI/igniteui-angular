@@ -14,40 +14,42 @@
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $content-background [#fff] - The main content background color.
-/// @param {Color} $content-text-color [rgba(0, 0, 0, .87)] - The main content text color.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $content-background [null] - The main content background color.
+/// @param {Color} $content-text-color [null] - The main content text color.
 ///
-/// @param {Color} $header-background [secondary 500] - The header background color.
-/// @param {Color} $header-text-color [igx-contrast-color of secondary 500] - The header text color.
+/// @param {Color} $header-background [null] - The header background color.
+/// @param {Color} $header-text-color [null] - The header text color.
 ///
-/// @param {Color} $picker-arrow-color [rgba(0, 0, 0, .74)] - The idle picker arrow color.
-/// @param {Color} $picker-arrow-hover-color [secondary 500] - The picker hover arrow color.
+/// @param {Color} $picker-arrow-color [null] - The idle picker arrow color.
+/// @param {Color} $picker-arrow-hover-color [null] - The picker hover arrow color.
 ///
-/// @param {Color} $picker-text-color [rgba(0, 0, 0, .74)]- The idle picker month/year color.
-/// @param {Color} $picker-text-hover-color [secondary 500]-  The hover picker month/year color.
+/// @param {Color} $picker-text-color [null]- The idle picker month/year color.
+/// @param {Color} $picker-text-hover-color [null]-  The hover picker month/year color.
 ///
-/// @param {Color} $inactive-text-color [rgba(0, 0, 0, .24)] - The text color for weekday labels and other month dates.
-/// @param {Color} $weekend-text-color [rgba(0, 0, 0, .24)] - The text color for weekend days.
+/// @param {Color} $inactive-text-color [null] - The text color for weekday labels and other month dates.
+/// @param {Color} $weekend-text-color [null] - The text color for weekend days.
 ///
-/// @param {Color} $year-current-text-color [secondary 500] - The text color for the current/selected year.
-/// @param {Color} $month-current-text-color [secondary 500]- The text color for the current/selected month.
+/// @param {Color} $year-current-text-color [null] - The text color for the current/selected year.
+/// @param {Color} $month-current-text-color [null]- The text color for the current/selected month.
 ///
-/// @param {Color} $year-hover-text-color [secondary 500] - The year hover text color.
-/// @param {Color} $month-hover-text-color [secondary 500] - The month hover text color.
+/// @param {Color} $year-hover-text-color [null] - The year hover text color.
+/// @param {Color} $month-hover-text-color [null] - The month hover text color.
 ///
-/// @param {Color} $date-selected-background [secondary 500] - The background color for the selected date.
-/// @param {Color} $date-selected-text-color [igx-contrast-color of secondary 500] - The text color for the selected date.
+/// @param {Color} $date-selected-background [null] - The background color for the selected date.
+/// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
 ///
-/// @param {Color} $date-current-text-color [secondary 500] - The text color for the current date.
-/// @param {Color} $date-hover-background [rgba(0, 0, 0, .08)] - The hover date background color.
+/// @param {Color} $date-current-text-color [null] - The text color for the current date.
+/// @param {Color} $date-hover-background [null] - The hover date background color.
 ///
-/// @param {Color} $date-special-background [rgba(0, 0, 0, .87)] - The background color used for special dates.
-/// @param {Color} $date-special-text-color [rgba(0, 0, 0, .04] - The text color used for special dates.
+/// @param {Color} $date-special-background [null] - The background color used for special dates.
+/// @param {Color} $date-special-text-color [null] - The text color used for special dates.
 ///
-/// @param {Color} $date-disabled-text-color [rgba(0, 0, 0, .23)] - The text color for disabled dates.
+/// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
 ///
-/// @requires igx-color
-/// @requires igx-contrast-color
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
 /// @requires extend
 ///
@@ -94,7 +96,8 @@
 
     $date-disabled-text-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-calendar'), $palette);
+    $name: 'igx-calendar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($content-text-color) and $content-background {
         $content-text-color: text-contrast($content-background);
@@ -169,6 +172,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,
@@ -238,13 +242,6 @@
         background: --var($theme, 'content-background');
         overflow: hidden;
         outline: none;
-
-        &[dir='rtl'] {
-            .prev,
-            .next {
-                @extend %cal-picker-arrow--rtl;
-            }
-        }
     }
 
     %cal-display--vertical {
@@ -271,21 +268,13 @@
         display: flex;
         margin: $cal-header-date-margin;
 
-        .date-text {
+        > span {
             @include ellipsis();
         }
     }
 
     %cal-header-date--vertical {
         flex-flow: column nowrap;
-    }
-
-    %cal-header-date-el--hover {
-        &:hover,
-        &:focus {
-            color: --var($theme, 'picker-text-hover-color');
-            cursor: pointer;
-        }
     }
 
     %cal-picker-display {
@@ -307,15 +296,21 @@
         &:hover {
             color: --var($theme, 'picker-arrow-hover-color');
         }
-    }
 
-    %cal-picker-arrow--rtl {
-        transform: scaleX(-1);
+        [dir='rtl'] & {
+            transform: scaleX(-1);
+        }
     }
 
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;
+
+        &:hover,
+        &:focus {
+            color: --var($theme, 'picker-text-hover-color');
+            cursor: pointer;
+        }
     }
 
     %cal-body-display {

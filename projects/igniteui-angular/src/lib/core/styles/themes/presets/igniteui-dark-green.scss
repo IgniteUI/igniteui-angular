@@ -1,6 +1,4 @@
 @import '../index';
-@import '../schemas/dark-green/index';
 
-// Generate a palette
 @include igx-core();
-@include igx-theme($default-palette, $schema: $dark-green-theme);
+@include igx-dark-theme($green-palette);

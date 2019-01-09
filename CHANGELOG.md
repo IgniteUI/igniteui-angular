@@ -1,17 +1,268 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.1.2
+### Features
+- `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
+- `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
+
+## 7.1.1
+### Bug Fixes
+* onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
+* igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+* Preventing wrap-around for scrollNext and scrollPrev([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
+* IgxTreeGrid does not respect its parent container height ([#3467](https://github.com/IgniteUI/igniteui-angular/issues/3467))
+* Include grid's unpinnedWidth and totalWidth in cell width calculation ([#3465](https://github.com/IgniteUI/igniteui-angular/issues/3465))
+
+### Other
+* update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+
+
+## 7.1.0
+### Features
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+- `igxGrid`
+    - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+    - Summary results are now calculated and displayed by default for each row group when 'Group By' feature is enabled.
+    - `clearSummaryCache()` and `recalculateSummaries()` methods are deprecated. The grid will clear the cache and recalculate the summaries automatically when needed.
+    - **Breaking change** `IgxSummaryOperand.operate()` method is called with empty data in order to calculate the necessary height for the summary row. For custom summary operands, the method should always return an array of `IgxSummaryResult` with proper length.
+- `IgxIconModule`:
+    - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.
+    - **Breaking change** `glyphName` property of the `igxIconComponent` is deprecated.
+- `IgxColumnComponent`:
+    - **Breaking change** the `filters` input now expects `IgxFilteringOperand` instance, instead of class ref. This way custom `IgxFilteringOperands` no longer need to be singleton, with defined `instance` method.
+- `IgxMask`:
+    - `placeholder` input property is added to allow developers to specify the placeholder attribute of the host input element that the `igxMask` is applied on;
+    - `displayValuePipe` input property is provided that allows developers to additionally transform the value on blur;
+    - `focusedValuePipe` input property is provided that allows developers to additionally transform the value on focus;
+- `IgxTreeGrid`:
+    - Batch editing - an injectable transaction provider accumulates pending changes, which are not directly applied to the grid's data source. Those can later be inspected, manipulated and submitted at once. Changes are collected for individual cells or rows, depending on editing mode, and accumulated per data row/record.
+    - You can now export the tree grid both to CSV and Excel.
+    - The hierarchy and the records' expanded states would be reflected in the exported Excel worksheet.
+    - Summaries feature is now supported in the tree grid. Summary results are calculated and displayed for the root level and each child level by default.
+- `IgxOverlayService`:
+    - `ElasticPositioningStrategy` added. This strategy positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view.
+
+
+## 7.0.5
+
+### Bug Fixes
+
+* igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group. ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+* igx-slider max-value defaults to min-value ([#3418](https://github.com/IgniteUI/igniteui-angular/issues/3418))
+* Inconsistency in scrollNext and scrollPrev ([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
+* The header link in the api docs page should be to the product page ([#3423](https://github.com/IgniteUI/igniteui-angular/issues/3423))
+* Error thrown when edit primaryKey cell in Tree Grid ([#3329](https://github.com/IgniteUI/igniteui-angular/issues/3329))
+* IgxGridHeaderGroupComponent should have preset min width ([#3071](https://github.com/IgniteUI/igniteui-angular/issues/3071))
+* Pressing ESC on a cell in an editable column throws an error ([#3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
+* Cell foreground is white on hover with the default theme ([#3384](https://github.com/IgniteUI/igniteui-angular/issues/3384))
+* [IE] Grid toolbar's buttons and title are misaligned ([#3371](https://github.com/IgniteUI/igniteui-angular/issues/3371))
+* Dialog window does not hold the focus when opened ([#3199](https://github.com/IgniteUI/igniteui-angular/issues/3199))
+* refactor(themes): don't include contrast colors in the palettes ([#3166](https://github.com/IgniteUI/igniteui-angular/issues/3166))
+
+### Other
+* update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+* Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
+
+## 7.0.4
+### Bug fixes
+- Fix(igx-grid): revert row editing styles ([#2672](https://github.com/IgniteUI/igniteui-angular/issues/2672))
+- Revert "fix(grid): set min width to header groups programmatically"  status: verified version: 7.0.x
+([#3357](https://github.com/IgniteUI/igniteui-angular/issues/3357))
+
+
+## 7.0.3
+### Bug fixes
+- ng add igniteui-angular adds igniteui-cli package to both dependencies and devDependencies ([#3254](https://github.com/IgniteUI/igniteui-angular/issues/3254))
+- Group column header is not styled correctly when moving that column ([#3072](https://github.com/IgniteUI/igniteui-angular/issues/3072))
+- igx-grid: Filter row remains after disabling filtering feature ([#3255](https://github.com/IgniteUI/igniteui-angular/issues/3255))
+- [igxGrid] Keyboard navigation between cells and filtering row with MCH ([#3179](https://github.com/IgniteUI/igniteui-angular/issues/3179))
+- Argument $color of red($color) must be a color ([#3190](https://github.com/IgniteUI/igniteui-angular/issues/3190))
+- Shell strings localization ([#3237](https://github.com/IgniteUI/igniteui-angular/issues/3237))
+- Tabbing out of the combo search input not possible ([#3200](https://github.com/IgniteUI/igniteui-angular/issues/3200))
+- Localization (i18n) not available for inputs/buttons on the grid filtering dialog ([#2517](https://github.com/IgniteUI/igniteui-angular/issues/2517))
+- When in the tree grid are pinned columns and scroll horizontal the cells text is over the pinned text #3163
+- Request for update of shell strings in Japanese ([#3163](https://github.com/IgniteUI/igniteui-angular/issues/3163))
+- Refactor(themes): remove get-function calls ([#3327](https://github.com/IgniteUI/igniteui-angular/issues/3327))
+- Fix(grid): recalculate grid body size when changing allowFiltering dynamically ([#3321](https://github.com/IgniteUI/igniteui-angular/issues/3321))
+- Fix - Combo - Hide Search input when !filterable && !allowCustomValues - 7.0.x ([#3314](https://github.com/IgniteUI/igniteui-angular/issues/3314))
+- Fixing column chooser column updating - 7.0.x ([#3235](https://github.com/IgniteUI/igniteui-angular/issues/3235))
+- Disable combo checkbox animations on scroll ([#3303](https://github.com/IgniteUI/igniteui-angular/issues/3303))
+- Added validation if last column collides with grid's scroll. ([#3028](https://github.com/IgniteUI/igniteui-angular/issues/3028)) ([#3100](https://github.com/IgniteUI/igniteui-angular/issues/3100))
+- Use value instead of ngModel to update editValue for checkbox and calendar in igxCell ([#3225](https://github.com/IgniteUI/igniteui-angular/issues/3225))
+- Add @inheritdoc, create ScrollStrategy abstract class and fix method signatures 7.0.x ([#3222](https://github.com/IgniteUI/igniteui-angular/issues/3222))
+- When scroll with the mouse wheel the value in datePicker editor for edited cell is empty ([#2958](https://github.com/IgniteUI/igniteui-angular/issues/2958))
+- igxToolbar should have the option to add custom template ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+- fix(grid): mark grid for check inside NgZone when resizing ([#2792](https://github.com/IgniteUI/igniteui-angular/issues/2792)) ([#3277](https://github.com/IgniteUI/igniteui-angular/issues/3277))
+- IgxGridHeaderGroupComponent should have preset min width ([#3071](https://github.com/IgniteUI/igniteui-angular/issues/3071))
+- Tree grid selection ([#3334](https://github.com/IgniteUI/igniteui-angular/issues/3334))
+
+## 7.0.2
+### Features
+- `ng add igniteui-angular` support :tada:
+    - You can now add Ignite UI for Angular to existing Angular CLI projects - simply run `ng add igniteui-angular` in your project.
+    This will install the package and all needed dependencies, add Ignite UI CLI so you can even quickly add components.
+- **New component** `IgxBannerComponent`:
+    - Allows the developer to easily display a highly templateable message that requires minimal user interaction (1-2 actions) to be dismissed. Read up more information about the IgxBannerComponent in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/banner/README.md)
+- `igxNavbar`:
+    - Added a new `igx-action-icon` directive that can be used to provide a custom template to be used instead of the default action icon on the left-most part of the navbar.
+    (If `igx-action-icon` is provided, the default action icon will not be used.)
+
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
+
+## 7.0.1
+### Bug fixes
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+
+
+## 7.0.0
+- Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
+- Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
+
+## 6.2.4
+
+### Bug Fixes
+* onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
+* igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+* Preventing wrap-around for scrollNext and scrollPrev([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
+* IgxTreeGrid does not respect its parent container height ([#3467](https://github.com/IgniteUI/igniteui-angular/issues/3467))
+* The header link in the api docs page should be to the product page ([#3423](https://github.com/IgniteUI/igniteui-angular/issues/3423))
+* fix(dialog): dialog gets focus when is opened ([#3276](https://github.com/IgniteUI/igniteui-angular/issues/3276))
+* IgxTreeGrid - Add row editing + transactions to tree grid ([#2908](https://github.com/IgniteUI/igniteui-angular/issues/2908))
+* Regular highlight makes the highlighted text unreadable when the row is selected. ([#1852](https://github.com/IgniteUI/igniteui-angular/issues/1852))
+* Use value instead of ngModel to update editValue for checkbox and calendar in igxCell ([#3224](https://github.com/IgniteUI/igniteui-angular/issues/3224))
+* Disable combo checkbox animations on scroll ([#3300](https://github.com/IgniteUI/igniteui-angular/issues/3300))
+* "Select/Unselect All" checkbox is checked after deleting all rows ([#3068](https://github.com/IgniteUI/igniteui-angular/issues/3068))
+* Fixing column chooser column updating ([#3234](https://github.com/IgniteUI/igniteui-angular/issues/3234))
+* Fix - Combo - Hide Search input when !filterable && !allowCustomValues ([#3315](https://github.com/IgniteUI/igniteui-angular/issues/3315))
+* Add @inheritdoc ([#2943](https://github.com/IgniteUI/igniteui-angular/issues/2943))
+* refactor(displayDensity): Code cleanup in display density base class #3280
+* Calculating updated grid height when rebinding columns ([#3285](https://github.com/IgniteUI/igniteui-angular/issues/3285))
+* Fix - Combo, Drop Down - Fix TAB key navigation ([#3206](https://github.com/IgniteUI/igniteui-angular/issues/3206))
+* Added validation if last column collides with grid's scroll ([#3142](https://github.com/IgniteUI/igniteui-angular/issues/3142))
+* When in the tree grid are pinned columns and scroll horizontal the cells text is over the pinned text ([#3163](https://github.com/IgniteUI/igniteui-angular/issues/3163))
+* refactor(themes): don't include contrast colors in the palettes ([#3166](https://github.com/IgniteUI/igniteui-angular/issues/3166))
+
+### Code enhancements
+* Fix the logic calculating test results ([#3461](https://github.com/IgniteUI/igniteui-angular/issues/3461))
+* Update typedoc version and localize some shell strings ([#3237](https://github.com/IgniteUI/igniteui-angular/issues/3237))
+* fix(toolbar): including custom content in the show toolbar check ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+* docs(toolbar): adding more API docs ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
+
+### Other
+* update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+* Update contributing document with localization ([#3313](https://github.com/IgniteUI/igniteui-angular/issues/3313))
+* docs(*): add 6.2.3 missing changes and bug fixes to changelog ([#3251](https://github.com/IgniteUI/igniteui-angular/issues/3251))
+* Docs - Expansion Panel - Add comments and README([#3245](https://github.com/IgniteUI/igniteui-angular/issues/3245))
+* Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
+
+## 6.2.3
+- `igxGrid`
+    - `resourceStrings` property added, which allows changing/localizing strings for component. If a new instance is set,
+    the changes will be applied to the particular instance of the component:
+    ```typescript
+        this.grid.resourceStrings = {
+            igx_grid_filter: 'My filter',
+            igx_grid_filter_row_close: 'My close'
+        };
+    ```
+    If only a value is updated, all component instances will be updated:
+    ```typescript
+        this.grid.resourceStrings.igx_grid_filter = 'My filter';
+    ```
+- `igxTimePicker`:
+    - `resourceStrings` property added, which allows changing/localizing strings for component.
+- Localization
+    - Added an util function `changei18n` that takes `IResourceStrings` object as parameter. Its values will be used as resource strings for all components
+    in the application.
+    - Added an util function `getCurrentResourceStrings` that returns current resource strings for all components.
+- `ISortingEpression`:
+    - The `ignoreCase` and `strategy` properties are moved back to optional, and the `DefaultSortingStrategy` is now injected by the `IgxSorting`, instead of being mandatory to pass to expressions.
+
+### Bug fixes
+
+- `igxGrid`
+    - Filter row does not close when click button cancel, if the entered text is deleted ([#3198](https://github.com/IgniteUI/igniteui-angular/issues/3198))
+    - Prevent a potential memory leak ([#3033](https://github.com/IgniteUI/igniteui-angular/issues/3033))
+    - Filtering: Open dropdown on Alt+down, fixes input being populated on keyboard action ([#3202](https://github.com/IgniteUI/igniteui-angular/issues/3202))
+    - Row Selection: selected checkboxes are flickering on vertical scrolling ([#2523](https://github.com/IgniteUI/igniteui-angular/issues/2523))
+    - Row editing overlay animation should be bottom - top, when overlay is placed over the row ([#3184](https://github.com/IgniteUI/igniteui-angular/issues/3184))
+
+
+## 6.2.2
+- `igx-checkbox`:
+    - Added a new input property - `disableTransitions`. It allows disabling all CSS transitions on the `igx-checkbox` component for performance optimization.
+### Bug fixes
+- Removed the `GridHammerConfig` provider which broke touch events for other components. (Fixed #3185, Reopens #2538)
+
 
 ## 6.2.1
-- `igx-drop-down`:
-    - Added a new property `maxHeight`, defining the max height of the drop down.
+### Features
+- `igxGrid`, `igxChip`: Add display density DI token to igxGrid and igxChip ([#2804](https://github.com/IgniteUI/igniteui-angular/issues/2804))
+- `igxGrid`
+    - Quick filter auto close ([#2979](https://github.com/IgniteUI/igniteui-angular/issues/2979))
+    - Group By: Added title to chip in Group By area ([#3035](https://github.com/IgniteUI/igniteui-angular/issues/3035))
+    - Improve UX for boolean and date columns, ([#3092](https://github.com/IgniteUI/igniteui-angular/issues/3092))
+- `igxCombo`:
+    - Added a new input property - `displayDensity`. It allows configuring the `displayDensity` of the combo's `value` and `search` inputs. (PR [#3007](https://github.com/IgniteUI/igniteui-angular/pull/3007))
+- `igxDropDown`
+    - Added a new property `maxHeight`, defining the max height of the drop down. ([#3001](https://github.com/IgniteUI/igniteui-angular/issues/3001))
+- Added migrations for Sass theme properties changes in 6.2.0 ([#2994](https://github.com/IgniteUI/igniteui-angular/issues/2994))
+- Themes
+    - Introducing schemas for easier bootstrapping of component themes.
+    - **Breaking change** removed $variant from `igx-checkbox-theme`, `igx-ripple-theme`, `igx-switch-theme`, `igx-input-group-theme`, `igx-slider-theme`, and `igx-tooltip-theme`. Use the `$schema` prop, now available on all component themes to change the look for a specific theme. See the [Theming](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/schemas.html) documentation to learn more.
+
+
+### Bug fixes
+
+- `igxGrid`
+    - Filtering condition icon is not updated for boolean columns ([#2936](https://github.com/IgniteUI/igniteui-angular/issues/2936))
+    - Batch editing: Updating a cell with a value that evaluates to false does not mark it as dirty ([#2940](https://github.com/IgniteUI/igniteui-angular/issues/2940))
+    - Filtering input accepts value from calendar for unary conditions ([#2937](https://github.com/IgniteUI/igniteui-angular/issues/2937))
+    - When a number filter's value is deleted the grid is not refreshed ([#2945](https://github.com/IgniteUI/igniteui-angular/issues/2945))
+    - Improve keyboard navigation in filtering ([#2951](https://github.com/IgniteUI/igniteui-angular/issues/2951), [#2941](https://github.com/IgniteUI/igniteui-angular/issues/2941))
+    - Group By: Alt+ Arrow left/Right keys should not toggle the group row ([#2950](https://github.com/IgniteUI/igniteui-angular/issues/2950))
+    - Multi Column Header can be grouped ([#2944](https://github.com/IgniteUI/igniteui-angular/issues/2944))
+    - Group By: groupsRecords is not updated yet at the time of onGroupingDone event. ([#2967](https://github.com/IgniteUI/igniteui-angular/issues/2967))
+    - Paging: Blank space in rows area after vertical scrolling and navigating to next page ([#2957](https://github.com/IgniteUI/igniteui-angular/issues/2957))
+    - When date or boolean cell is in edit mode and press arrowUp or arrowDown key the page is scrolled ([#2507](https://github.com/IgniteUI/igniteui-angular/issues/2507))
+    - When deleting a row the Row Editing dialog should be closed ([#2977](https://github.com/IgniteUI/igniteui-angular/issues/2977))
+    - Group header with columns which width is defined as number throws an exception ([#3020](https://github.com/IgniteUI/igniteui-angular/issues/3020))
+    - Refactor header and filter cell components, Closes [#2972](https://github.com/IgniteUI/igniteui-angular/issues/2972), [#2926](https://github.com/IgniteUI/igniteui-angular/issues/2926), [#2923](https://github.com/IgniteUI/igniteui-angular/issues/2923), [#2917](https://github.com/IgniteUI/igniteui-angular/issues/2917), [#2783](https://github.com/IgniteUI/igniteui-angular/issues/2783), [#3027](https://github.com/IgniteUI/igniteui-angular/issues/3027), [#2938](https://github.com/IgniteUI/igniteui-angular/issues/2938)
+    - Filter's UI dropdown is hidden under the bottom level of the grid ([#2928](https://github.com/IgniteUI/igniteui-angular/issues/2928))
+    - Cell is not editable on iOS ([#2538](https://github.com/IgniteUI/igniteui-angular/issues/2538))
+- `IgxTreeGrid`
+    - Cell selection wrong behavior when collapsing rows ([#2935](https://github.com/IgniteUI/igniteui-angular/issues/2935))
+- `igxCombo`
+    - Keyboard doesn't scroll virtualized items ([#2999](https://github.com/IgniteUI/igniteui-angular/issues/2999))
+- `igxDatePicker`
+    - Error emitting when  value property is initialized with empty string. ([#3021](https://github.com/IgniteUI/igniteui-angular/issues/3021))
+- `igxOverlay`
+    - Drop-down flickers in IE and EDGE ([#2867](https://github.com/IgniteUI/igniteui-angular/issues/2867))
+- `igxTabs`
+    - Tabs don't not handle width change ([#3030](https://github.com/IgniteUI/igniteui-angular/issues/3030))
+- `igxCalendar`
+    - make all css class names unique ([#2287](https://github.com/IgniteUI/igniteui-angular/issues/2287))
+- Fixed runtime errors when using the package in applications targeting es2015(es6) and newer ([#3011](https://github.com/IgniteUI/igniteui-angular/pull/3011))
+
 
 ## 6.2.0
 - Updated typography following the Material guidelines. Type system is now also optional and can be applied via class to the desired containers. [#2112](https://github.com/IgniteUI/igniteui-angular/pull/2112)
   - **Breaking change:** Applications using Ignite UI for Angular now require the `igx-typography` class to be applied on wrapping element, like the body element for instance.
 
 - Display density can be specified by using the injection token `DisplayDensityToken` and providing a value (comfortable, cosy or compact) on an application or a component level.
-    
+
     Setting display density on a component level:
     ```typescript
     @Component({
@@ -25,7 +276,7 @@ All notable changes for each version of this project will be documented in this 
     <igx-input-group [displayDensity]="'cosy'"> ... </igx-input-group>
     ```
 - `igx-drop-down`:
-    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated. 
+    - Added a new boolean argument `cancel` to the `onSelection` `ISelectionEventArgs`. Its default value is false, in case it is set to true, the drop down selection is invalidated.
 - `igxIcon`:
     - **Breaking change** `glyphName` property is removed from `IgxIconComponent`. For `Material` icons the icon name should be explicitly defined between the opening and closing tags. `Font Awesome` icons should use the `name` property now.
     - Added support for custom SVG icons. Register the SVG icons with the `IgxIconService` and use `IgxIconComponent`'s `name` and `fontSet` properties to visualize the icon.
@@ -168,13 +419,16 @@ When you focus a specific cell and press one of the following key combinations, 
     - **Breaking change** cell selection is preserved when the focus is moved to group row.
     - Introduced `onFocusChange` event. The event is cancelable and output argument from type `IFocusChangeEventArgs`;
     - For more detailed information see the [official keyboard navigation specification](https://github.com/IgniteUI/igniteui-angular/wiki/igxGrid-Specification#kb-navigation).
-    
-## 6.1.8
+
+## 6.1.9
 
 ### General
 
-- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `SortingStrategy` class and override all or some of its public/protected members.
+- `sortStrategy` input exposed to provide custom sort strategy for the `IgxColumnComponent`. The custom strategy should implement the `ISortingStrategy` interface, or can extend the base `DefaultSortingStrategy` class and override all or some of its public/protected members.
+- The previously optional `ignoreCase` and `strategy` of the `ISortingExpression` interface are no longer optional. In order to use our default sorting strategy in expressions built programmatically, you need to pass `DefaultSortingStrategy.instance()` or any implementation of the `ISortingStrategy` interface.
 - `groupingComparer` input exposed to provide custom grouping compare function for the `IgxColumnComponent`. The function receives two values and should return `0` if they are to considered members of the same group.
+
+## 6.1.8
 
 ### Bug fixes
 
@@ -223,7 +477,7 @@ When you focus a specific cell and press one of the following key combinations, 
     - `igxGrid`
         - Adding inertia scrolling for touch devices.
     - `igxCombo`
-        - Adding inertia scrolling for touch devices. 
+        - Adding inertia scrolling for touch devices.
     - `IgxCalendar` - `deselectDate` method added that deselects date(s) (based on the selection type)
     - `IgxDatePicker` - `deselectDate` method added that deselects the calendar date.
 
@@ -364,10 +618,10 @@ When you focus a specific cell and press one of the following key combinations, 
 - Regular highlight makes the highlighted text unreadable when the row is selected. #1852
 - DatePicker focus is wrong on select date value #1965
 - add sass docs, grid document updates and input-group theme-related fixes #1993
-- DatePicker focus handler and AoT build #1994 
-- Change displayDensity runtime #1974 
-- Change IgxGrid display density runtime #1998 
-- Error is thrown when using igx-grid theme without $content-background #1996 
+- DatePicker focus handler and AoT build #1994
+- Change displayDensity runtime #1974
+- Change IgxGrid display density runtime #1998
+- Error is thrown when using igx-grid theme without $content-background #1996
 - Update npm deploy token #2002
 
 ## 6.1.0

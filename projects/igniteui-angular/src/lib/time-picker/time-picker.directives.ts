@@ -6,17 +6,13 @@
 import {
     Directive,
     ElementRef,
-    EventEmitter,
-    forwardRef,
-    Host,
     HostBinding,
     HostListener,
     Inject,
     Input,
-    Output,
     TemplateRef
 } from '@angular/core';
-import { IgxTimePickerComponent } from './time-picker.component';
+import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase, TimePickerInteractionMode } from './time-picker.common';
 
 /** @hidden */
 @Directive({
@@ -29,8 +25,8 @@ export class IgxItemListDirective {
 
     public isActive: boolean;
 
-    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
-                public timePicker: IgxTimePickerComponent,
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+                public timePicker: IgxTimePickerBase,
                 private elementRef: ElementRef) {}
 
     @HostBinding('attr.tabindex')
@@ -159,6 +155,10 @@ export class IgxItemListDirective {
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
 
+        if (this.timePicker.mode === TimePickerInteractionMode.dropdown) {
+            this.timePicker.hideOverlay();
+            return;
+        }
         this.timePicker.okButtonClick();
     }
 
@@ -238,8 +238,8 @@ export class IgxHourItemDirective {
         return this.timePicker.selectedHour === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
-                public timePicker: IgxTimePickerComponent,
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+                public timePicker: IgxTimePickerBase,
                 private itemList: IgxItemListDirective) {}
 
     @HostListener('click', ['value'])
@@ -280,8 +280,8 @@ export class IgxMinuteItemDirective {
         return this.timePicker.selectedMinute === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
-                public timePicker: IgxTimePickerComponent,
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+                public timePicker: IgxTimePickerBase,
                 private itemList: IgxItemListDirective) {}
 
     @HostListener('click', ['value'])
@@ -322,8 +322,8 @@ export class IgxAmPmItemDirective {
         return this.timePicker.selectedAmPm === this.value;
     }
 
-    constructor(@Host() @Inject(forwardRef(() => IgxTimePickerComponent))
-                public timePicker: IgxTimePickerComponent,
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+                public timePicker: IgxTimePickerBase,
                 private itemList: IgxItemListDirective) {}
 
     @HostListener('click', ['value'])
@@ -343,3 +343,4 @@ export class IgxAmPmItemDirective {
 export class IgxTimePickerTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
+

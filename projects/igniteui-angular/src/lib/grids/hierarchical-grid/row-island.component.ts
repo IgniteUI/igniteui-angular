@@ -31,6 +31,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
@@ -140,6 +141,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
             gridAPI,
@@ -154,6 +156,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
             viewRef,
             navigation,
             filteringService,
+            summaryService,
             _displayDensityOptions
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;

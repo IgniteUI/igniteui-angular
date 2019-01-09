@@ -10,16 +10,18 @@
 
 /// Checkbox Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $label-color [rgba(0, 0, 0, .87)]- The text color used for the label text.
-/// @param {Color} $empty-color [rgba(0, 0, 0, .54)] - The unchecked border color.
-/// @param {Color} $fill-color [secondary 500] - The checked border and fill colors.
-/// @param {Color} $tick-color [#fff] - The checked mark color.
-/// @param {Color} $disabled-color [rgba(0, 0, 0, .24)] - The disabled border and fill colors.
-/// @param {String} $variant ['dark'] - Determines the default color scheme - could be either 'dark' or 'light'.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $label-color [null]- The text color used for the label text.
+/// @param {Color} $empty-color [null] - The unchecked border color.
+/// @param {Color} $fill-color [null] - The checked border and fill colors.
+/// @param {Color} $tick-color [null] - The checked mark color.
+/// @param {Color} $disabled-color [null] - The disabled border and fill colors.
 /// Set to light when the surrounding area is dark.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 ///
 /// @example scss Change the checked fill color
 ///   $my-checkbox-theme: igx-checkbox-theme($fill-color: magenta);
@@ -33,42 +35,19 @@
     $empty-color: null,
     $fill-color: null,
     $tick-color: null,
-    $disabled-color: null,
-    $variant: 'dark'
+    $disabled-color: null
 ) {
     $name: 'igx-checkbox';
-
-    $dark-theme: (
-        name: $name,
-        label-color: igx-color($palette, 'grays', 900),
-        empty-color: igx-color($palette, 'grays', 600),
-        fill-color: igx-color($palette, 'secondary', 500),
-        tick-color: #fff,
-        disabled-color: igx-color($palette, 'grays', 400)
-    );
-
-    $light-theme: (
-        name: $name,
-        label-color: #fff,
-        empty-color: rgba(255, 255, 255, .7),
-        fill-color: igx-color($palette, 'secondary', 500),
-        tick-color: #000,
-        disabled-color: rgba(255, 255, 255, .3)
-    );
-
-    $theme: map-get((
-        dark: apply-palette(map-get($schema, 'igx-checkbox'), $palette),
-        light: $light-theme
-    ), $variant);
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
         tick-color: $tick-color,
-        disabled-color: $disabled-color,
-        variant: $variant
+        disabled-color: $disabled-color
     ));
 }
 
@@ -290,6 +269,15 @@
     %cbx-ripple--pressed {
         &::after {
             opacity: .12;
+        }
+    }
+
+    %cbx-display--plain {
+        %cbx-composite,
+        %cbx-composite::after,
+        %cbx-composite-mark,
+        %cbx-composite-mark--x {
+            transition: none;
         }
     }
 }
