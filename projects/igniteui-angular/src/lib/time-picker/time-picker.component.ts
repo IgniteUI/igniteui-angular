@@ -16,7 +16,8 @@ import {
     ViewChild,
     Inject,
     ContentChild,
-    Injectable
+    Injectable,
+    AfterViewInit
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
@@ -30,14 +31,14 @@ import {
     IgxMinuteItemDirective,
     IgxTimePickerTemplateDirective
 } from './time-picker.directives';
-import { Subject } from 'rxjs';
+import { Subject, fromEvent, interval, animationFrameScheduler } from 'rxjs';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT, TimePickerInteractionMode } from './time-picker.common';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { NoOpScrollStrategy } from '../services/overlay/scroll';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
 import { HorizontalAlignment, VerticalAlignment, PositionSettings, OverlaySettings } from '../services/overlay/utilities';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, throttle } from 'rxjs/operators';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
@@ -94,7 +95,8 @@ export class IgxTimePickerComponent implements
     ControlValueAccessor,
     EditorProvider,
     OnInit,
-    OnDestroy {
+    OnDestroy,
+    AfterViewInit {
 
     /**
      * An @Input property that sets the value of the `id` attribute.
@@ -706,6 +708,18 @@ export class IgxTimePickerComponent implements
         };
 
         this._dialogOverlaySettings = {};
+    }
+
+    /**
+     * @hidden
+     */
+    public ngAfterViewInit(): void {
+        if (this.mode === TimePickerInteractionMode.dropdown) {
+            fromEvent(this.input.nativeElement, 'keydown').pipe(
+                throttle(() => interval(0, animationFrameScheduler)),
+                takeUntil(this._destroy$)
+            ).subscribe((res) => this.onKeydown(res));
+        }
     }
 
     /**
@@ -1600,7 +1614,10 @@ export class IgxTimePickerComponent implements
             displayVal = this._formatTime(this.value, this.format);
         }
 
-        this.displayValue = this.inputFormat.transform(displayVal);
+        // minor hack for preventing cursor jumping in IE
+        this._displayValue = this.inputFormat.transform(displayVal);
+        this.input.nativeElement.value = this._displayValue;
+        this._setCursorPosition(cursor);
 
         requestAnimationFrame(() => {
             this._setCursorPosition(cursor);

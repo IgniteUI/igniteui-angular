@@ -39,7 +39,6 @@ import {
     PositionSettings,
     ConnectedPositioningStrategy
 } from '../services';
-import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -98,12 +97,11 @@ export enum DatePickerInteractionMode {
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
-    selector: 'igx-datePicker, igx-date-picker',
+    selector: 'igx-date-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
 
-@DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAccessor, EditorProvider, OnInit, OnDestroy, AfterViewInit {
     /**
      *Returns the format options of the `IgxDatePickerComponent`.

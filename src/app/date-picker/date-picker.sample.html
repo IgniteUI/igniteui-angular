@@ -5,7 +5,7 @@
             <h4 class="sample-title">Default Date Picker.</h4>
             <label>Date: {{ datePicker.value }}</label>
             <div class="preview">
-                <igx-datePicker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today" [value]="date"></igx-datePicker>
+                <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today"></igx-date-picker>
                 <button igxButton igxRipple type="raised" (click)="deselect()">Deselect date</button>
             </div>
         </article>
@@ -14,8 +14,9 @@
             <h4 class="sample-title">Editable Date Picker</h4>
             <label>Date: {{ editableDatePicker.value }}</label>
             <div class="preview" style="width: 500px">
-                <igx-datePicker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [value]="date1"
-                    format="fullDate"></igx-datePicker>
+                <igx-date-picker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [value]="date1"
+                    format="fullDate">
+                </igx-date-picker>
             </div>
         </article>
 
@@ -37,7 +38,7 @@
             <h4 class="sample-title">Date Picker with retemplated input group.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
-                <igx-datePicker [value]="date" [vertical]="true" [formatter]="formatter">
+                <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openCalendar="openCalendar" let-value="value"
                         let-displayData="displayData">
                         <igx-input-group (click)="openCalendar($event)">
@@ -45,7 +46,7 @@
                             <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
                         </igx-input-group>
                     </ng-template>
-                </igx-datePicker>
+                </igx-date-picker>
             </div>
         </article>
     </section>
