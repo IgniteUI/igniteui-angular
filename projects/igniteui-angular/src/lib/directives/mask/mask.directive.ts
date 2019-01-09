@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KEYS, MaskHelper } from './mask-helper';
+import { isIE } from '../../core/utils';
 
 const noop = () => { };
 
@@ -170,6 +171,8 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     private _valOnPaste;
 
+    private _stopPropagation: boolean;
+
     /**
      *@hidden
      */
@@ -208,6 +211,10 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     @HostListener('keydown', ['$event'])
     public onKeydown(event): void {
         const key = event.keyCode || event.charCode;
+
+        if (isIE() && this._stopPropagation) {
+            this._stopPropagation = false;
+        }
 
         if (key === KEYS.Ctrl) {
             this._ctrlDown = true;
@@ -249,6 +256,11 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
      */
     @HostListener('input', ['$event'])
     public onInputChanged(event): void {
+        if (isIE() && this._stopPropagation) {
+            this._stopPropagation = false;
+            return;
+        }
+
         if (this._paste) {
             this._paste = false;
 
@@ -283,6 +295,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
     @HostListener('focus', ['$event.target.value'])
     public onFocus(value) {
         if (this.focusedValuePipe) {
+            if (isIE()) {
+                this._stopPropagation = true;
+            }
             this.value = this.focusedValuePipe.transform(value);
         } else {
             this.value = this.maskHelper.parseValueByMaskOnInit(this.value, this._maskOptions);
@@ -323,8 +338,9 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
             this._maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
 
-        if (value) {
-            this.value = this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions);
+        this.value = value ? this.maskHelper.parseValueByMaskOnInit(value, this._maskOptions) : '';
+        if (this.displayValuePipe) {
+            this.value = this.displayValuePipe.transform(this.value);
         }
 
         this.dataValue = this.includeLiterals ? this.value : value;

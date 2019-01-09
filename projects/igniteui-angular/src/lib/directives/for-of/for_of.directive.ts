@@ -458,9 +458,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public scrollNext() {
-        const scr = this.igxForScrollOrientation === 'horizontal' ?
+        const scr = Math.ceil(this.igxForScrollOrientation === 'horizontal' ?
             this.hScroll.scrollLeft :
-            this.vh.instance.elementRef.nativeElement.scrollTop;
+            this.vh.instance.elementRef.nativeElement.scrollTop);
         const endIndex = this.getIndexAt(
             scr + parseInt(this.igxForContainerSize, 10),
             this.sizesCache,
@@ -903,7 +903,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 size = parseInt(this.igxForItemSize, 10) || 0;
                 this.heightCache.push(size);
             } else {
-                size = parseInt(items[i][dimension], 10) || 0;
+                size = this._getItemSize(items[i], dimension);
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
@@ -922,7 +922,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let sum = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             'width' : 'height';
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem[dimension], 10);
+        const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         const availableSize = parseInt(this.igxForContainerSize, 10);
         for (i; i < this.igxForOf.length; i++) {
             let item = this.igxForOf[i];
@@ -931,7 +931,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             const size = dimension === 'height' ?
                 this.heightCache[i] :
-                parseInt(item[dimension], 10);
+                this._getItemSize(item, dimension);
             sum = arr.reduce(reducer, size);
             if (sum <= availableSize) {
                 arr.push(item);
@@ -1107,6 +1107,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         scrollOffset = this.hScroll && parseInt(this.hScroll.children[0].style.width, 10) ?
             this.hScroll.scrollLeft - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
+    }
+
+    private _getItemSize(item, dimension: string): number {
+        const hasDimension = (item[dimension] !== null && item[dimension] !== undefined);
+        return hasDimension ? parseInt(item[dimension], 10) : this.igxForItemSize;
     }
 }
 

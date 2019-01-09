@@ -92,31 +92,35 @@
 
     $vertical-header-width: rem(168px);
 
-    %igx-time-picker__body {
-        display: flex;
-        padding: 10px 0;
-        justify-content: center;
-        background: --var($theme, 'background-color');
-    }
-
-    %igx-time-picker__body--vertical {
-        flex: 1 1 auto;
-    }
-
     %time-picker-display {
+        display: flex;
+        flex-flow: column nowrap;
         max-width: 340px;
         min-width: 320px;
-        padding: 0;
+        border-radius: rem(4px);
+        box-shadow: igx-elevation($elevations, 24);
+        overflow: hidden;
     }
 
     %time-picker-display--vertical {
-        width: 540px;
+        flex-flow: row nowrap;
+        min-width: 540px;
     }
 
-    // Take effect only in vertical mode
-    %igx-time-picker__wrapper {
+    %time-picker__main {
+        background: --var($theme, 'background-color');
+        flex: 1 1 auto;
+    }
+
+    %time-picker--dropdown {
+        min-width: 200px;
+        box-shadow: igx-elevation($elevations, 3);
+    }
+
+    %time-picker__body {
         display: flex;
-        flex-wrap: nowrap;
+        padding: 10px 0;
+        justify-content: center;
     }
 
     %time-picker-content {
@@ -134,21 +138,21 @@
         margin: 0;
     }
 
-    %igx-time-picker__hourList {
+    %time-picker__hourList {
         text-align: right;
     }
 
-    %igx-time-picker__minuteList {
+    %time-picker__minuteList {
         text-align: center;
     }
 
-    %igx-time-picker__ampmList {
+    %time-picker__ampmList {
         display: flex;
         flex-direction: column;
         padding-top: 48px;
     }
 
-    %igx-time-picker__column {
+    %time-picker__column {
         max-width: 64px;
         height: 325px;
         padding: 0;
@@ -166,7 +170,7 @@
         }
     }
 
-    %igx-time-picker__item {
+    %time-picker__item {
         width: 54px;
         padding: 5px 10px;
         border-radius: 15px;
@@ -185,47 +189,43 @@
         }
     }
 
-    %igx-time-picker__item--selected {
+    %time-picker__item--selected {
         font-size: rem(24px);
         color: --var($theme, 'selected-text-color');
     }
 
-    %igx-time-picker__item--active {
+    %time-picker__item--active {
         background: --var($theme, 'active-item-background');
     }
 
-    %igx-time-picker__header {
+    %time-picker__header {
         background: --var($theme, 'header-background');
         padding: rem(24px) rem(16px);
     }
 
-    %igx-time-picker__header-ampm {
+    %time-picker__header-ampm {
         color: --var($theme, 'header-time-period-color');
     }
 
-    %igx-time-picker__header--vertical {
+    %time-picker__header--vertical {
         width: $vertical-header-width;
-        position: relative;
     }
 
-    %igx-time-picker__header--vertical-after {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 100%;
-        height: 100%;
-        background: --var($theme, 'header-background');
-    }
-
-    %igx-time-picker__header-hour {
-        color: --var($theme, 'header-hour-text-color');
+    %time-picker__header-hour {
         display: flex;
+        color: --var($theme, 'header-hour-text-color');
     }
 
-    %igx-time-picker__header-ampm,
-    %igx-time-picker__header-hour {
+    %time-picker__header-ampm,
+    %time-picker__header-hour {
         margin: 0;
+    }
+
+    %time-picker__buttons {
+        display: flex;
+        justify-content: flex-end;
+        height: rem(52px);
+        padding: rem(8px);
     }
 }
 
@@ -246,15 +246,15 @@
     $content: map-get($categories, 'content');
 
     @include igx-scope('.igx-typography') {
-        %igx-time-picker__header-ampm {
+        %time-picker__header-ampm {
             @include igx-type-style($type-scale, $time-period);
         }
 
-        %igx-time-picker__header-hour {
+        %time-picker__header-hour {
             @include igx-type-style($type-scale, $header-hour);
         }
 
-        %igx-time-picker__column {
+        %time-picker__column {
             @include igx-type-style($type-scale, $content);
         }
     }
