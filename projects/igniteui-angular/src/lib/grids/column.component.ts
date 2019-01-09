@@ -1212,7 +1212,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
             let cellWidth = isLastUnpinned && hasVerticalScroll &&
             (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
+                parseInt(colWidth, 10) + '' : colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';
