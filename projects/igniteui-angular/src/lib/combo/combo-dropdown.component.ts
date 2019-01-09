@@ -1,6 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, OnDestroy, HostListener, AfterViewInit, Input, ContentChildren, ViewChildren
+    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, Input
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -65,13 +64,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     protected set children(val: QueryList<IgxDropDownItemBase>) {
     }
 
-    /**
-     * @hidden
-     */
-    public get selectedItem(): any[] {
-        const sel = this.selection.get(this.comboID);
-        return sel ? Array.from(sel) : [];
-    }
     private _scrollPosition = 0;
 
     /**
@@ -85,7 +77,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    @HostListener('focus')
     onFocus() {
         this._focusedItem = this._focusedItem || this.items[0];
         if (this._focusedItem) {
