@@ -166,7 +166,7 @@ export class IgxDropDownItemNavigationDirective {
 
 /**
  * **Ignite UI for Angular DropDown** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop-down.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/drop_down.html)
  *
  * The Ignite UI for Angular Drop Down displays a scrollable list of items which may be visually grouped and
  * supports selection of a single item. Clicking or tapping an item selects it and closes the Drop Down
