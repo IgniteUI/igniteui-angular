@@ -153,6 +153,33 @@ If the bug fix or new feature development requires changes to released public AP
 2. Add a `BREAKING CHANGE:` section to the commit message body or footer. See https://www.conventionalcommits.org
 3. Check if the change can be migrated by `ng update` schematics and add to the project migrations. See [Update Migrations wiki](https://github.com/IgniteUI/igniteui-angular/wiki/Update-Migrations) for available functionality and instructions.
 
+## Deprecating selectors
+When deprecating selectors the following code should be placed inside `OnInit` method of the class the selector belongs to:
+`
+import { isDevMode } from '@angular/core';
+...
+constructor(..., private element: ElementRef) {}
+...
+if (isDevMode() && this.element.nativeElement.tagName === 'your deprecated selector in upper case') {
+    console.log('your deprecation message');
+}
+`
+
+Write migrations.
+
+## Deprecating methods
+When a method is deprecated a few steps have to be done:
+1. Add deprecation warning message by decorating the method with `@DeprecateMethod` decorator from `deprecateDecorators.ts` file.
+2. Ensure that the deprecated method is no longer used in IgniteUI for Angular codebase, samples and documentation snippets.
+3. Write migrations.
+
+## Deprecating class properties
+When a class property is deprecated a few steps have to be done:
+1. Add deprecation warning message by decorating the property with `@DeprecateProperty` decorator from `deprecateDecorators.ts` file.
+2. Ensure that the deprecated property is no longer used in IgniteUI for Angular codebase, samples and documentation snippets.
+3. Write migrations.
+
+NOTE: TypeScript disallows decorating both the get and set accessor for a single member. Instead, all decorators for the member must be applied to the first accessor specified in document order. This is because decorators apply to a Property Descriptor, which combines both the get and set accessor, not each declaration separately.
 
 # Testing a PR
 In order to test a pull request that is awaiting test, perform the following actions.
