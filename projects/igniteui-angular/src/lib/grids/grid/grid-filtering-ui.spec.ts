@@ -28,7 +28,7 @@ import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
-fdescribe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1595,7 +1595,7 @@ fdescribe('IgxGrid - Filtering actions', () => {
     }));
 });
 
-fdescribe('IgxGrid - Filtering Row UI actions', () => {
+describe('IgxGrid - Filtering Row UI actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
