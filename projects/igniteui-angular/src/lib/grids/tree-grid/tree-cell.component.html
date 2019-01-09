@@ -22,7 +22,7 @@
         <igx-checkbox (change)="editValue = $event.checked" [value]="editValue" [checked]="editValue" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-datePicker (onSelection)="editValue = $event" [locale]="grid.locale" [value]="editValue" [labelVisibility]="false"></igx-datePicker>
+        <igx-date-picker (onSelection)="editValue = $event" [locale]="grid.locale" [value]="editValue" [labelVisibility]="false"></igx-date-picker>
     </ng-container>
 </ng-template>
 <ng-container *ngIf="!inEditMode">
