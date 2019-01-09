@@ -248,6 +248,60 @@ describe('IgxHierarchicalGrid Row Islands', () => {
             expect(col).not.toBeNull();
         }
     });
+    it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.', () => {
+        const ri1 = fixture.componentInstance.rowIsland1;
+
+        // test px
+        ri1.height = '200px';
+        ri1.width = '200px';
+
+        fixture.detectChanges();
+
+        let row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        // check sizes are applied
+        expect(childGrid.width).toBe(ri1.width);
+        expect(childGrid.height).toBe(ri1.height);
+        expect(childGrid.nativeElement.style.height).toBe(ri1.height);
+        expect(childGrid.nativeElement.style.width).toBe(ri1.width);
+        // check virtualization state
+        expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(4);
+        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(350);
+
+        let hVirt = childGrid.getRowByIndex(0).virtDirRow;
+        expect(hVirt.state.chunkSize).toBe(2);
+        expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+        // collapse row
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        // test %
+        ri1.height = '50%';
+        ri1.width = '50%';
+
+        fixture.detectChanges();
+        row = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+
+        childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+         // check sizes are applied
+         expect(childGrid.width).toBe(ri1.width);
+         expect(childGrid.height).toBe(ri1.height);
+         expect(childGrid.nativeElement.style.height).toBe(ri1.height);
+         expect(childGrid.nativeElement.style.width).toBe(ri1.width);
+         // check virtualization state
+         expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(11);
+         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(700);
+         hVirt = childGrid.getRowByIndex(0).virtDirRow;
+         expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+    });
 });
 
 @Component({

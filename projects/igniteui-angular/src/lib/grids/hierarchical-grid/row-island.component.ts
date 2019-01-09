@@ -55,7 +55,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     private isInit = false;
     private _expandChildren = false;
     public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
-    public initialChanges;
+    public initialChanges = [];
     public rootGrid = null;
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
@@ -182,7 +182,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     ngOnChanges(changes) {
         this.onLayoutChange.emit(changes);
         if (!this.isInit) {
-            this.initialChanges = changes;
+            this.initialChanges.push(changes);
         }
     }
 
