@@ -110,6 +110,18 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
+    /**
+     * Gets calculated width of the pinned area.
+     * ```typescript
+     * const pinnedWidth = this.grid.getPinnedWidth();
+     * ```
+     * @param takeHidden If we should take into account the hidden columns in the pinned area.
+     * @memberof IgxHierarchicalGridComponent
+     */
+    public getPinnedWidth(takeHidden = false) {
+        return super.getPinnedWidth(takeHidden) + this.headerHierarchyExpander.nativeElement.clientWidth;
+    }
+
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record.childGridData !== undefined;
@@ -175,14 +187,20 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                     moveView: view,
                     owner: tmlpOutlet
                 };
+            } else {
+                const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
+                // child rows contain unique grids, hence should have unique templates
+                return {
+                    $implicit: rowData,
+                    templateID: 'childRow-' + rowID
+                };
             }
+        } else {
+            return {
+                $implicit: rowData,
+                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            };
         }
-        return {
-            $implicit: rowData,
-            templateID: this.isChildGridRecord(rowData) ?
-            'childRow' :
-            this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
-        };
     }
 
     public get childLayoutKeys() {
@@ -378,6 +396,13 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         if (hScr) {
             hScr.scrollLeft = this._scrollLeft;
         }
+    }
+
+    protected getPossibleColumnWidth() {
+        let computedWidth = parseInt(
+            this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
+        computedWidth -= this.headerHierarchyExpander.nativeElement.clientWidth;
+        return super.getPossibleColumnWidth(computedWidth);
     }
 
     constructor(

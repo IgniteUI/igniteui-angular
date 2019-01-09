@@ -271,5 +271,9 @@ $_light-grid: (
         igx-color: ('grays', 300),
         hexrgba: #fff,
         text-contrast: ()
+    ),
+
+    hierarchical-highlight: (
+        igx-color: ('secondary', 500)
     )
 );
