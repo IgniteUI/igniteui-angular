@@ -28,7 +28,7 @@ import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
-describe('IgxGrid - Filtering actions', () => {
+fdescribe('IgxGrid - Filtering actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1595,7 +1595,7 @@ describe('IgxGrid - Filtering actions', () => {
     }));
 });
 
-describe('IgxGrid - Filtering Row UI actions', () => {
+fdescribe('IgxGrid - Filtering Row UI actions', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -2919,7 +2919,9 @@ const expectedResults = [];
 
 function sendInput(element, text, fix) {
     element.nativeElement.value = text;
+    element.nativeElement.dispatchEvent(new Event('keydown'));
     element.nativeElement.dispatchEvent(new Event('input'));
+    element.nativeElement.dispatchEvent(new Event('keyup'));
     fix.detectChanges();
 }
 
