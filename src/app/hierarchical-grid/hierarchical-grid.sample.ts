@@ -11,6 +11,8 @@ export class HierarchicalGridSampleComponent {
     isRowSelectable = false;
     firstLevelExpanded = false;
     rootExpanded = false;
+    density = '';
+    displayDensities;
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
@@ -31,6 +33,11 @@ export class HierarchicalGridSampleComponent {
         //     this.localData.push({ ID: i, Name: 'A' + i, Products: prods});
         // }
 
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
         this.localData = this.generateDataUneven(100, 3);
     }
 
@@ -83,5 +90,9 @@ export class HierarchicalGridSampleComponent {
     }
 
     testApis() {
+    }
+
+    selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }
