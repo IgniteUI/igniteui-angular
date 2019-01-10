@@ -163,11 +163,29 @@ export abstract class IgxDropDownBase implements IDropDownList {
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef) { }
 
+    /** Keydown Handler */
+    public onItemActionKey(key: DropDownActionKey, event?: Event) {
+        switch (key) {
+            case DropDownActionKey.ENTER:
+            case DropDownActionKey.SPACE:
+                this.selectItem(this.focusedItem, event);
+                break;
+            case DropDownActionKey.ESCAPE:
+        }
+    }
+
     /**
-     * Keydown Handler
+     * Emits onSelection with the target item & event
+     * @hidden
+     * @param newSelection the item selected
+     * @param event the event that triggered the call
      */
-    public onItemActionKey(key: DropDownActionKey, event?: KeyboardEvent) {
-        return;
+    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
+        this.onSelection.emit({
+            newSelection,
+            oldSelection: null,
+            cancel: false
+        });
     }
 
     /**

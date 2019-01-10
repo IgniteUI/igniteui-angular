@@ -15,7 +15,6 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownBase } from '../drop-down/drop-down.base';
-import { Navigate } from '../drop-down/drop-down.common';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 
 const CSS_CLASS_COMBO = 'igx-combo';
@@ -321,7 +320,7 @@ describe('igxCombo', () => {
             await wait(30);
             fix.detectChanges();
             expect(dropdown.focusedItem).toEqual(lastItem);
-            dropdown.navigateItem(-1, Navigate.Down);
+            dropdown.navigateNext();
             await wait(30);
             fix.detectChanges();
             expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
@@ -332,7 +331,7 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toEqual(lastItem);
             fix.detectChanges();
             expect(combo.customValueFlag && combo.searchValue !== '').toBeTruthy();
-            dropdown.navigateItem(-1, Navigate.Down);
+            dropdown.navigateNext();
             await wait(30);
             expect(virtualMockDOWN).toHaveBeenCalledTimes(2);
             lastItem.value = dropdown.verticalScrollContainer.igxForOf[dropdown.verticalScrollContainer.igxForOf.length - 1];
@@ -340,7 +339,7 @@ describe('igxCombo', () => {
             await wait(30);
             fix.detectChanges();
             expect(dropdown.focusedItem).toEqual(lastItem);
-            dropdown.navigateItem(-1, Navigate.Down);
+            dropdown.navigateNext();
             expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
 
             // TEST move from first item
@@ -354,15 +353,15 @@ describe('igxCombo', () => {
             expect(dropdown.focusedItem).toEqual(firstItem);
             expect(dropdown.focusedItem.index).toEqual(0);
             // spyOnProperty(dropdown, 'focusedItem', 'get').and.returnValue(firstItem);
-            dropdown.navigateItem(-1);
+            dropdown.navigateFirst();
             await wait(30);
             fix.detectChanges();
             expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
             spyOn(dropdown, 'onBlur').and.callThrough();
-            dropdown.navigateItem(-1, Navigate.Up);
+            dropdown.navigatePrev();
             await wait(30);
             fix.detectChanges();
-            expect(virtualMockUP).toHaveBeenCalledTimes(1);
+            expect(virtualMockUP).toHaveBeenCalledTimes(0);
             expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
         }));
         it('Should call toggle properly', fakeAsync(() => {
@@ -437,12 +436,13 @@ describe('igxCombo', () => {
             dropdown.navigateItem(0);
             fix.detectChanges();
             expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(1);
-            dropdown.navigateItem(-1, Navigate.Up);
+            dropdown.navigatePrev();
+            expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(1);
+            dropdown.navigateItem(dropdown.items.length - 1);
+            dropdown.navigateNext();
             expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(2);
-            dropdown.navigateItem(-1, Navigate.Down);
-            expect(IgxComboDropDownComponent.prototype.navigateItem).toHaveBeenCalledTimes(3);
             expect(virtualSpyDOWN).toHaveBeenCalled();
-            expect(virtualSpyUP).toHaveBeenCalled();
+            expect(virtualSpyUP).not.toHaveBeenCalled();
         }));
         it('Should handle handleKeyDown calls', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);

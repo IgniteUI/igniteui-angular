@@ -313,15 +313,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
-        switch (key) {
-            case DropDownActionKey.ENTER:
-            case DropDownActionKey.SPACE:
-                this.selectItem(this.focusedItem, event);
-                this.close();
-                break;
-            case DropDownActionKey.ESCAPE:
-                this.close();
-        }
+        super.onItemActionKey(key, event);
+        this.close();
     }
 
     /**
