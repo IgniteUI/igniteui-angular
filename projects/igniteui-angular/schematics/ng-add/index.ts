@@ -73,9 +73,21 @@ function promptEnablePolyfills(context: SchematicContext, tree: Tree, options: O
     polyfillsData = polyfillsData.replace(webAnimationsLine,
       webAnimationsLine.substring(2, webAnimationsLine.length));
 
+    polyfillsData = addIgxGridSupportForIe(polyfillsData);
     tree.overwrite(targetFile, polyfillsData);
     return tree;
   }
+}
+
+
+/**
+ * The import is needed so that the igxGrid can render under IE.
+ * - https://github.com/IgniteUI/igniteui-cli/issues/344
+ */
+function addIgxGridSupportForIe(polyfillsData: string): string {
+  const targetImport = 'import \'core-js/es6/set\';';
+  const lineToAdd = 'import \'core-js/es7/object\';';
+  return polyfillsData.replace(targetImport, `${targetImport}\n ${lineToAdd}`);
 }
 
 function addHammerJsToWorkspace(tree: Tree): Tree {
