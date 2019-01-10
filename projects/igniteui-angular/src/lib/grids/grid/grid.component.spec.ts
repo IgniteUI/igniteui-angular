@@ -799,21 +799,49 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             await wait(16);
 
-              // check UI
-              const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
-              const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
-              const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
-              expect(header0.nativeElement.offsetWidth).toEqual(700);
-              expect(header1.nativeElement.offsetWidth).toEqual(150);
-              expect(header2.nativeElement.offsetWidth).toEqual(150);
+            // check UI
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+            expect(header0.nativeElement.offsetWidth).toEqual(700);
+            expect(header1.nativeElement.offsetWidth).toEqual(150);
+            expect(header2.nativeElement.offsetWidth).toEqual(150);
 
-              expect(hScroll.nativeElement.hidden).toBe(true);
-              // check virtualization cache is valid
-              const virtDir = grid.getRowByIndex(0).virtDirRow;
-              expect(virtDir.getSizeAt(0)).toEqual(700);
-              expect(virtDir.getSizeAt(1)).toEqual(150);
-              expect(virtDir.getSizeAt(2)).toEqual(150);
+            expect(hScroll.nativeElement.hidden).toBe(true);
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(700);
+            expect(virtDir.getSizeAt(1)).toEqual(150);
+            expect(virtDir.getSizeAt(2)).toEqual(150);
         });
+       it('Should calculate column width when a column has width in % and row selectors are enabled.', async() => {
+        const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+        fix.componentInstance.initColumnsRows(5, 3);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+        grid.rowSelectable = true;
+        fix.detectChanges();
+        grid.columns[0].width = '70%';
+
+        fix.detectChanges();
+        await wait(16);
+        // check UI
+        const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+        const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+        const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+        expect(header0.nativeElement.offsetWidth).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(header1.nativeElement.offsetWidth).toEqual(136);
+        expect(header2.nativeElement.offsetWidth).toEqual(136);
+        expect(hScroll.nativeElement.hidden).toBe(false);
+
+        // check virtualization cache is valid
+        const virtDir = grid.getRowByIndex(0).virtDirRow;
+        expect(virtDir.getSizeAt(0)).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(virtDir.getSizeAt(1)).toEqual(136);
+        expect(virtDir.getSizeAt(2)).toEqual(136);
+
+       });
        it('Should render correct column widths when having mixed width setting - px, %, null', async() => {
             const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
             fix.componentInstance.initColumnsRows(5, 3);
