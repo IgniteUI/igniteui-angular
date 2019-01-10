@@ -265,6 +265,110 @@ describe('IgxHierarchicalGrid Integration', () => {
         fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
         expect(fChildCell.selected).toBe(true);
     });
+
+    // Summaries
+
+    it('should allow defining summaries for child grid and child should be sized correctly.', () => {
+        hierarchicalGrid.height = '600px';
+        hierarchicalGrid.reflow();
+        fixture.detectChanges();
+
+        hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const expander =  childGrid.dataRowList.toArray()[0].expander;
+
+        // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
+        const summaryRow = childGrid.summariesRowList.first.nativeElement;
+        expect(summaryRow.children.length).toEqual(2);
+        expect(summaryRow.children[0].tagName.toLowerCase()).toEqual('div');
+        expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
+        expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
+
+        const gridHeight = childGrid.nativeElement.offsetHeight;
+        const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
+        const elementsHeight = childElems.map(elem => elem.offsetHeight).reduce((total, height) => {
+            return total + height;
+        }, 0);
+
+        // Expect the combined height of all elements (header, body, footer etc) to equal the calculated height of the grid.
+        expect(elementsHeight).toEqual(gridHeight);
+    });
+
+    // Paging
+
+    it('should work on data records only when paging is enabled and should not be affected by child grid rows.', (async() => {
+        hierarchicalGrid.height = '600px';
+        hierarchicalGrid.paging = true;
+        hierarchicalGrid.reflow();
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(15);
+
+        hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+        fixture.detectChanges();
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(16);
+
+        hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+        fixture.detectChanges();
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
+
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.dataRowList.last.cells.first.value).toEqual('14');
+    }));
+
+    it('should preserve expansion states after changing pages.', () => {
+        hierarchicalGrid.height = '600px';
+        hierarchicalGrid.paging = true;
+        hierarchicalGrid.reflow();
+        fixture.detectChanges();
+
+        hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+        fixture.detectChanges();
+        hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
+        expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
+
+        let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrids.length).toEqual(2);
+        expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
+
+        // Go to next page
+        const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-paginator > button');
+        pagingButtons[2].dispatchEvent(new Event('click'));
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
+        expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeFalsy();
+        expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeFalsy();
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(15);
+
+        childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        expect(childGrids.length).toEqual(0);
+
+        // Return to previous page
+        pagingButtons[1].dispatchEvent(new Event('click'));
+        fixture.detectChanges();
+
+        expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
+        expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
+        expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
+
+        childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrids.length).toEqual(2);
+        expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
+    });
 });
 
 @Component({
@@ -274,10 +378,10 @@ describe('IgxHierarchicalGrid Integration', () => {
         <igx-column field="ID" [groupable]='true' ></igx-column>
         <igx-column-group header="Information">
                 <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
-                <igx-column field="ProductName" [groupable]='true' hasSummary='true'></igx-column>
+                <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
         </igx-column-group>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true">
-            <igx-column field="ID" [groupable]='true' ></igx-column>
+            <igx-column field="ID" [groupable]='true' [hasSummary]='true' ></igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
                     <igx-column field="ProductName" [groupable]='true'></igx-column>
@@ -286,7 +390,7 @@ describe('IgxHierarchicalGrid Integration', () => {
                 <igx-column field="ID" [groupable]='true' ></igx-column>
                 <igx-column-group header="Information">
                         <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
-                        <igx-column field="ProductName" [groupable]='true' hasSummary='true'></igx-column>
+                        <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>
