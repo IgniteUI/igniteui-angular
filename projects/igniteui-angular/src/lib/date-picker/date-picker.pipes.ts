@@ -1,5 +1,4 @@
 import { PipeTransform, Pipe, Inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { IGX_DATE_PICKER_COMPONENT, IgxDatePickerBase } from './date-picker.common';
 import {
     trimMaskSymbols,
@@ -17,17 +16,9 @@ import {
 } from './date-picker.utils';
 
 @Pipe({
-    name: 'format'
-})
-export class DateFormatPipe extends DatePipe implements PipeTransform {
-    transform(value: any, args?: any): any {
-        return super.transform(value, args);
-    }
-}
-@Pipe({
     name: 'displayValue'
 })
-export class DisplayValuePipe implements PipeTransform {
+export class DatePickerDisplayValuePipe implements PipeTransform {
     constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
     transform(value: any, args?: any): any {
         if (value !== '') {
@@ -44,7 +35,7 @@ export class DisplayValuePipe implements PipeTransform {
 @Pipe({
     name: 'inputValue'
 })
-export class InputValuePipe implements PipeTransform {
+export class DatePickerInputValuePipe implements PipeTransform {
     private PROMPT_CHAR = '_';
     constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
     transform(value: any, args?: any): any {

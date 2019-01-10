@@ -1,4 +1,13 @@
 /**
+ * This enumeration is used to configure whether the date picker has an editable input
+ * or is readonly - the date is selected only through a popup calendar.
+ */
+export enum DatePickerInteractionMode {
+    EDITABLE = 'editable',
+    READONLY = 'readonly'
+}
+
+/**
  *@hidden
  */
 export const enum PREDEFINED_FORMAT_OPTIONS {
@@ -59,9 +68,35 @@ export const enum DATE_PARTS {
     WEEKDAY = 'weekday'
 }
 
+/**
+ *@hidden
+ */
 export const MAX_MONTH_SYMBOLS = 9;
+/**
+ *@hidden
+ */
 export const MAX_WEEKDAY_SYMBOLS = 9;
+/**
+ *@hidden
+ */
 export const SEPARATOR = 'separator';
+/**
+ *@hidden
+ */
+export const DEFAULT_LOCALE_DATE = 'en';
+
+export interface IFormatViews {
+    day?: boolean;
+    month?: boolean;
+    year?: boolean;
+}
+
+export interface IFormatOptions {
+    day?: string;
+    month?: string;
+    weekday?: string;
+    year?: string;
+}
 
 /**
  *@hidden
@@ -371,16 +406,10 @@ export function getNumericFormatPrefix(formatType: string): string {
  *@hidden
  */
 export function getSpinnedDateInput(dateFormatParts: any[], inputValue: string, position: number, delta: number): string {
-    let datePart = getDatePartOnPosition(dateFormatParts, position);
-    if ((datePart && datePart.length > 0 && datePart[0].type === SEPARATOR)
-        || inputValue.length === position) {
-        datePart = getDatePartOnPosition(dateFormatParts, position - 1);
-    }
-
-    // TODO: change positions array
+    const datePart = getDatePartOnPosition(dateFormatParts, position);
     const positionsArray = datePart[0].position;
     const startIdx = positionsArray[0];
-    const endIdx = positionsArray[0] + positionsArray.length;
+    const endIdx = positionsArray[1];
     const datePartType = datePart[0].type;
     const datePartFormatType = datePart[0].formatType;
 
@@ -447,63 +476,70 @@ export function daysInMonth(date: Date): number {
 /**
  *@hidden
  */
-export function getDatePartOnPosition(dateFormatParts: any[], position: number) {
-    return dateFormatParts.filter((element) => element.position.some(pos => pos === position));
+function getDatePartOnPosition(dateFormatParts: any[], position: number) {
+    return dateFormatParts.filter((element) =>
+        element.position[0] <= position && position <= element.position[1] && element.type !== SEPARATOR);
 }
 
 /**
  *@hidden
  */
 function fillDatePartsPositions(dateArray: any[]): void {
-    let offset = 0;
+    let currentPos = 0;
 
     for (let i = 0; i < dateArray.length; i++) {
         if (dateArray[i].type === DATE_PARTS.DAY) {
-            dateArray[i].position = fillValues(offset, 2);
-            offset += 2;
+            // Offset 2 positions for number
+            dateArray[i].position = [currentPos, currentPos + 2];
+            currentPos += 2;
         }
 
         if (dateArray[i].type === DATE_PARTS.MONTH) {
             switch (dateArray[i].formatType) {
                 case FORMAT_DESC.SHORT: {
-                    dateArray[i].position = fillValues(offset, 3);
-                    offset += 3;
+                    // Offset 3 positions for short month name
+                    dateArray[i].position = [currentPos, currentPos + 3];
+                    currentPos += 3;
                     break;
                 }
                 case FORMAT_DESC.LONG: {
-                    dateArray[i].position = fillValues(offset, 9);
-                    offset += 9;
+                    // Offset 9 positions for long month name
+                    dateArray[i].position = [currentPos, currentPos + MAX_MONTH_SYMBOLS];
+                    currentPos += MAX_MONTH_SYMBOLS;
                     break;
                 }
                 case FORMAT_DESC.NARROW: {
-                    dateArray[i].position = fillValues(offset, 1);
-                    offset++;
+                    // Offset 1 positions for narrow month name
+                    dateArray[i].position = [currentPos, currentPos + 1];
+                    currentPos++;
                     break;
                 }
                 default: {
-                    // FORMAT_DESC.NUMERIC || FORMAT_DESC.TWO_DIGITS
-                    dateArray[i].position = fillValues(offset, 2);
-                    offset += 2;
+                    // FORMAT_DESC.NUMERIC || FORMAT_DESC.TWO_DIGITS - 2 positions
+                    dateArray[i].position = [currentPos, currentPos + 2];
+                    currentPos += 2;
                     break;
                 }
             }
         }
 
         if (dateArray[i].type === SEPARATOR) {
-            dateArray[i].position = fillValues(offset, 1);
-            offset++;
+            dateArray[i].position = [currentPos, currentPos + 1];
+            currentPos++;
         }
 
         if (dateArray[i].type === DATE_PARTS.YEAR) {
             switch (dateArray[i].formatType) {
                 case FORMAT_DESC.NUMERIC: {
-                    dateArray[i].position = fillValues(offset, 4);
-                    offset += 4;
+                    // Offset 4 positions for full year
+                    dateArray[i].position = [currentPos, currentPos + 4];
+                    currentPos += 4;
                     break;
                 }
                 case FORMAT_DESC.TWO_DIGITS: {
-                    dateArray[i].position = fillValues(offset, 2);
-                    offset += 2;
+                    // Offset 2 positions for short year
+                    dateArray[i].position = [currentPos, currentPos + 2];
+                    currentPos += 2;
                     break;
                 }
             }
@@ -511,14 +547,4 @@ function fillDatePartsPositions(dateArray: any[]): void {
     }
 }
 
-/**
- *@hidden
- */
-function fillValues(start: number, offset: number) {
-    const array = [];
-    for (let i = start; i < start + offset; i++) {
-        array.push(i);
-    }
-    return array;
-}
 
