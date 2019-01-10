@@ -7,7 +7,7 @@
         "polyfills": {
             "type": "boolean",
             "description": "Add polyfills for IE.",
-            "default": "false",
+            "default": false,
             "x-prompt": "Would you like to add polyfills for IE?"
         }
     },

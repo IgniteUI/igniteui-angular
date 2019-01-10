@@ -7,6 +7,7 @@ import { DependencyNotFoundException } from '@angular-devkit/core';
 
 export interface Options {
   [key: string]: any;
+  polyfills: boolean;
 }
 
 const extSchematicModule = 'igniteui-cli';
@@ -43,28 +44,34 @@ function addDependencies(options: Options): Rule {
 
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
     displayVersionMismatch(context, tree, pkgJson);
-    promptAddPolyfills(tree, options);
+    promptEnablePolyfills(context, tree, options);
     return tree;
   };
 }
 
 function LogIncludingDependency(context: SchematicContext, pkg: string, version: string) {
-  context.logger.log('info', `Including ${pkg} - Version: ${version}`);
+  context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
-function promptAddPolyfills(tree: Tree, options: Options) {
-  if (options['polyfills']) {
+function promptEnablePolyfills(context: SchematicContext, tree: Tree, options: Options) {
+  if (options.polyfills) {
     const targetFile = 'src/polyfills.ts';
     if (!tree.exists(targetFile)) {
-      throw new Error(`${targetFile} not found in the src folder.`);
+      context.logger.warn(`${targetFile} not found. You may need to tweak the polyfills manually.`);
+      return;
     }
 
-    // Match all commented import statements that are core-js/es6/*; core-js/es7/*; web-animations-js
-    const pattern = /\/{2}\s{0,}\w+\s{0,}\'(\w+\-\w+\/(\w+)(6|7)\/.+|\w+\-\w+\-\w+\';)/g;
+    // Match all commented import statements that are core-js/es6/*
+    const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
     let polyfillsData = tree.read(targetFile).toString();
     for (const match of polyfillsData.match(pattern)) {
       polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
     }
+
+    // Target the web-animations-js commented import statement and uncomment it.
+    const webAnimationsLine = '// import \'web-animations-js\';';
+    polyfillsData = polyfillsData.replace(webAnimationsLine,
+      webAnimationsLine.substring(2, webAnimationsLine.length));
 
     tree.overwrite(targetFile, polyfillsData);
     return tree;
@@ -169,20 +176,16 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
 
 function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any) {
   const ngKey = '@angular/core';
-  const ngCliKey = '@angular/cli';
+  const ngCommonKey = '@angular/common';
   const ngProjVer = getDependencyVersion(ngKey, tree);
-  const ngCliProjVer = getDependencyVersion(ngCliKey, tree);
-
+  const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
   const igAngularVer = igPackageJson.peerDependencies[ngKey];
-  const igAngularCliVer = igPackageJson.peerDependencies[ngCliKey];
+  const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
 
-  if (ngProjVer < igAngularVer) {
-    context.logger.log('warn',
-      `Angular version mismatch. Installed version: ${ngProjVer} - igniteui-angular version: ${igAngularVer}`);
-  }
-  if (ngCliProjVer < igAngularCliVer) {
-    context.logger.log('warn',
-      `Angular CLI version mismatch. Installed version: ${ngCliProjVer} - igniteui-angular version: ${igAngularCliVer}`);
+  if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
+    context.logger.warn(`
+    Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
+    This can be resolved by running the 'ng update' command.`);
   }
 }
 
