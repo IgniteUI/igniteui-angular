@@ -17,7 +17,6 @@ import {
     ElementRef,
     TemplateRef,
     Directive,
-    isDevMode,
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -446,7 +445,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
 
-    constructor(private resolver: ComponentFactoryResolver, private element: ElementRef, private cdr: ChangeDetectorRef) { }
+    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef) { }
 
     /**
      *Method that sets the selected date.
