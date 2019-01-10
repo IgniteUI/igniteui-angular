@@ -837,7 +837,7 @@ describe('IgxGrid Component Tests', () => {
 
         // check virtualization cache is valid
         const virtDir = grid.getRowByIndex(0).virtDirRow;
-        expect(virtDir.getSizeAt(0)).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(virtDir.getSizeAt(0)).toEqual(Math.floor(0.7 * grid.unpinnedWidth));
         expect(virtDir.getSizeAt(1)).toEqual(136);
         expect(virtDir.getSizeAt(2)).toEqual(136);
 
