@@ -107,5 +107,9 @@ $_dark-grid: extend($_light-grid, (
         igx-color: ('grays', 300),
         hexrgba: #222,
         text-contrast: ()
+    ),
+
+    hierarchical-highlight: (
+        igx-color: ('secondary', 500)
     )
 ));

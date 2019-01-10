@@ -1,6 +1,6 @@
 <div (click)="toggle()" class="igx-grid__hierarchical-action-indent" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
-    <igx-icon *ngIf="!expanded" fontSet="material" name="chevron_right"></igx-icon>
-    <igx-icon *ngIf="expanded" fontSet="material" name="expand_more"></igx-icon>
+    <igx-icon *ngIf="!expanded" fontSet="material">chevron_right</igx-icon>
+    <igx-icon *ngIf="expanded" fontSet="material">expand_more</igx-icon>
 </div>
 
 <div class="igx-grid__hierarchical-indent" *ngIf="!hasChildren"></div>

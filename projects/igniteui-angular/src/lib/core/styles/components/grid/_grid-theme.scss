@@ -1798,12 +1798,24 @@
         justify-content: center;
         cursor: pointer;
         z-index: 3;
+        color: --var($theme, 'expand-icon-color');
 
         &:focus {
             outline: none;
+
+            igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
+        }
+
+        &:hover {
+            igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
         }
 
         igx-icon {
+            color: --var($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
             min-width: $hierarchical-action-icon;
         }
