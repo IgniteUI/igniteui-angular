@@ -8,7 +8,7 @@
             "type": "boolean",
             "description": "Add polyfills for IE.",
             "default": false,
-            "x-prompt": "Would you like to enable polyfills for IE?"
+            "x-prompt": "Enable polyfills for IE, Edge and Safari?"
         }
     },
     "required": []

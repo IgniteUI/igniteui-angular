@@ -57,7 +57,7 @@ function promptEnablePolyfills(context: SchematicContext, tree: Tree, options: O
   if (options.polyfills) {
     const targetFile = 'src/polyfills.ts';
     if (!tree.exists(targetFile)) {
-      context.logger.warn(`${targetFile} not found. You may need to tweak the polyfills manually.`);
+      context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
       return;
     }
 
@@ -185,7 +185,7 @@ function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackage
   if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
     context.logger.warn(`
     Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
-    This can be resolved by running the 'ng update' command.`);
+    Running 'ng update' will prevent potential version conflicts.`);
   }
 }
 
