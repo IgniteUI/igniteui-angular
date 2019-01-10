@@ -12,7 +12,7 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -40,7 +40,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(window.navigator.language);
+    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
     public gridId: string;
@@ -76,6 +76,13 @@ export class IgxFilteringService implements OnDestroy {
 
     public get grid(): IgxGridBaseComponent & IGridDataBindable {
         return this.gridAPI.get(this.gridId);
+    }
+
+    public get datePipe(): IgxDatePipeComponent {
+        if (!this._datePipe) {
+            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
+        }
+        return this._datePipe;
     }
 
     /**
@@ -282,13 +289,13 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Genererate the label of a chip from a given filtering expression.
+     * Generate the label of a chip from a given filtering expression.
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal);
+            return this.datePipe.transform(expression.searchVal, this.grid.locale);
         } else {
             return expression.searchVal;
         }
