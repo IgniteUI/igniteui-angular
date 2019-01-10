@@ -9,8 +9,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe, DatePipe } from '@angular/common';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../grid';
+import { TitleCasePipe } from '@angular/common';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -38,7 +38,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(window.navigator.language);
+    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
     public gridId: string;
@@ -74,6 +74,13 @@ export class IgxFilteringService implements OnDestroy {
 
     public get grid(): IgxGridBaseComponent {
         return this.gridAPI.get(this.gridId);
+    }
+
+    public get datePipe(): IgxDatePipeComponent {
+        if (!this._datePipe) {
+            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
+        }
+        return this._datePipe;
     }
 
     /**
@@ -286,7 +293,7 @@ export class IgxFilteringService implements OnDestroy {
         if (expression.condition.isUnary) {
             return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal);
+            return this.datePipe.transform(expression.searchVal, this.grid.locale);
         } else {
             return expression.searchVal;
         }
