@@ -8,6 +8,21 @@ All notable changes for each version of this project will be documented in this 
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
 - `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
+- `IgxColumnComponent` now accepts its templates as input properties through the markup. This can reduce the amount of code one needs to write when applying a single template to multiple columns declaratively. The new exposed inputs are:
+    + `cellTemplate` - the template for the column cells
+    + `headerTemplate` - the template for the column header
+    + `cellEditorTemplate` - the template for the column cells when a cell is in edit mode
+    + ```html
+        <!-- Example -->
+
+        <igx-grid ...>
+            <igx-column *ngFor="let each of defs" [cellTemplate]="newTemplate" ...></igx-column>
+        </igx-grid>
+
+        <ng-template #newTemplate let-value>
+            {{ value }}
+        </ng-template>
+        ```
 
 ## 7.1.1
 ### Bug Fixes
@@ -29,6 +44,7 @@ All notable changes for each version of this project will be documented in this 
     - Added a new `igxToolbarCustomContent` directive which can be used to mark an `ng-template` which provides a custom content for the IgxGrid's toolbar ([#2983](https://github.com/IgniteUI/igniteui-angular/issues/2983))
     - Summary results are now calculated and displayed by default for each row group when 'Group By' feature is enabled.
     - `clearSummaryCache()` and `recalculateSummaries()` methods are deprecated. The grid will clear the cache and recalculate the summaries automatically when needed.
+	- `locale` property added. If not set, it returns browser's language. All child components will use it as locale.
     - **Breaking change** `IgxSummaryOperand.operate()` method is called with empty data in order to calculate the necessary height for the summary row. For custom summary operands, the method should always return an array of `IgxSummaryResult` with proper length.
 - `IgxIconModule`:
     - **Breaking change** `igxIconService` is now provided in root (providedIn: 'root') and `IgxIconModule.forRoot()` method is deprecated.

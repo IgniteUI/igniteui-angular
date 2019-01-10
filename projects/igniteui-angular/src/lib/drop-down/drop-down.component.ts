@@ -311,9 +311,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.toggleDirective.id = this.id;
     }
 
-    /**
-     * @hidden
-     */
+    /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
         switch (key) {
             case DropDownActionKey.ENTER:

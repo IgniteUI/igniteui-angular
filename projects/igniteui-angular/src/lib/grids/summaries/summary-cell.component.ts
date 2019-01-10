@@ -165,7 +165,10 @@ export class IgxSummaryCellComponent {
         return this.column.grid.defaultRowHeight;
     }
 
-    private get grid() {
+    /**
+    * @hidden
+    */
+    public get grid() {
         return (this.column.grid as any);
     }
 
