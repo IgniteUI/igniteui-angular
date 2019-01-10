@@ -579,6 +579,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @Input('cellTemplate')
     get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
@@ -600,7 +601,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
-        this.grid.markForCheck();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Returns a reference to the header template.
@@ -609,6 +612,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @Input()
     get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
@@ -630,7 +634,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
-        this.grid.markForCheck();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Returns a reference to the inline editor template.
@@ -639,6 +645,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @Input('cellEditorTemplate')
     get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
@@ -658,7 +665,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
-        this.grid.markForCheck();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Gets the cells of the column.
