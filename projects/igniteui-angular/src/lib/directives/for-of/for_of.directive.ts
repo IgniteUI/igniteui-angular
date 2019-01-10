@@ -1180,7 +1180,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            'width' : 'height';
+            this.igxForSizePropName : 'height';
         let i = 0;
         this.sizesCache = [];
         this.heightCache = [];
