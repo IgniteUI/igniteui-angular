@@ -425,7 +425,9 @@ export class GridFunctions {
 
         const input = filterUIRow.query(By.directive(IgxInputDirective));
         input.nativeElement.value = value;
+        input.nativeElement.dispatchEvent(new Event('keydown'));
         input.nativeElement.dispatchEvent(new Event('input'));
+        input.nativeElement.dispatchEvent(new Event('keyup'));
         fix.detectChanges();
 
         // Enter key to submit

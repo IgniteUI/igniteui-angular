@@ -142,7 +142,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
      * Gets the `locale` of the calendar.
-     * Default value is `"en"`.
+     * By default the browser's language is used.
      * ```typescript
      * let locale =  this.calendar.locale;
      * ```
@@ -156,7 +156,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      * Sets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
-     * Default value is `"en"`.
+     * By default the browser's language is used.
      * ```html
      * <igx-calendar [locale] = "de"></igx-calendar>
      * ```
@@ -613,7 +613,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
     *@hidden
     */
-    private _locale = 'en';
+    private _locale = window.navigator.language;
     /**
      *@hidden
      */
