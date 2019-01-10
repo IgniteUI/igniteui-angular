@@ -33,7 +33,6 @@ import {
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { noop } from 'rxjs';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -602,7 +601,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
-        this.grid ? this.grid.cdr.markForCheck() : noop();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Returns a reference to the header template.
@@ -633,7 +634,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
-        this.grid ? this.grid.cdr.markForCheck() : noop();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Returns a reference to the inline editor template.
@@ -662,7 +665,9 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
-        this.grid ? this.grid.cdr.markForCheck() : noop();
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
     }
     /**
      * Gets the cells of the column.
