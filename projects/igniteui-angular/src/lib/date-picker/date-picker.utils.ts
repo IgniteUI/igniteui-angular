@@ -41,7 +41,7 @@ export enum DATE_PARTS {
     WEEKDAY = 'weekday'
 }
 
-export abstract class DatePickerUtil {
+export class DatePickerUtil {
     public static MAX_MONTH_SYMBOLS = 9;
     public static MAX_WEEKDAY_SYMBOLS = 9;
     public static SEPARATOR = 'separator';

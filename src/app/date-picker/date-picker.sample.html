@@ -11,12 +11,21 @@
         </article>
 
         <article class="datepicker-column">
-            <h4 class="sample-title">Editable Date Picker</h4>
+            <h4 class="sample-title">Editable Date Picker bind with ngModel</h4>
             <label>Date: {{ editableDatePicker.value }}</label>
+            <label>Format: {{ editableDatePicker.format }}</label>
             <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [value]="date1"
-                    format="fullDate">
+                <igx-date-picker #editableDatePicker [vertical]="true" mode="editable" [weekStart]="1" [(ngModel)]="date1">
                 </igx-date-picker>
+            </div>
+        </article>
+
+        <article class="datepicker-column">
+            <h4 class="sample-title">Editable Date Picker</h4>
+            <label>Date: {{ editableDatePicker1.value }}</label>
+            <label>Format: {{ editableDatePicker1.format }}</label>
+            <div class="preview" style="width: 500px">
+                <igx-date-picker #editableDatePicker1 mode="editable" [value]="date1" format="longDate"></igx-date-picker>
             </div>
         </article>
 
@@ -26,7 +35,7 @@
             <div class="preview">
                 <igx-date-picker [value]="date"></igx-date-picker>
             </div>
-        </article> -->
+        </article>
         <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
             <p class="sample-description">Detailed description to be added.</p>
@@ -35,6 +44,14 @@
             </div>
         </article>
         <article class="datepicker-column">
+            <h4 class="sample-title">Vertical Date Picker</h4>
+            <p class="sample-description">Detailed description to be added.</p>
+            <div class="preview">
+                <igx-date-picker [vertical]="true"></igx-date-picker>
+            </div>
+        </article>
+
+        <!-- <article class="datepicker-column">
             <h4 class="sample-title">Date Picker with retemplated input group.</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <div class="preview">
@@ -48,6 +65,6 @@
                     </ng-template>
                 </igx-date-picker>
             </div>
-        </article>
+        </article> -->
     </section>
 </div>

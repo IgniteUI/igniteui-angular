@@ -16,7 +16,8 @@ import {
     Directive,
     Inject,
     NgZone,
-    AfterViewInit
+    AfterViewInit,
+    HostListener
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -320,6 +321,24 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             openCalendar: (eventArgs) => { this.openCalendar(eventArgs); }
         };
     }
+
+    /**
+     *An @Input property that sets the selected date.
+     *```typescript
+     *public date: Date = new Date();
+     *```
+     *```html
+     *<igx-date-picker [value]="date"></igx-date-picker>
+     *```
+     */
+    @Input()
+    public get value(): Date {
+        return this._value;
+    }
+
+    public set value(date: Date) {
+        this._value = date;
+    }
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *```html
@@ -357,24 +376,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     @Input()
     public disabled: boolean;
-
-    /**
-     *An @Input property that sets the selected date.
-     *```typescript
-     *public date: Date = new Date();
-     *```
-     *```html
-     *<igx-date-picker [value]="date"></igx-date-picker>
-     *```
-     */
-    @Input()
-    public get value(): Date {
-        return this._value;
-    }
-
-    public set value(date: Date) {
-        this._value = date;
-    }
 
     /**
      * An @Input property that sets the `IgxDatePickerComponent` label.
@@ -585,6 +586,26 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _value;
     private DEFAULT_DATE_FORMAT = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
 
+    // @HostListener('keydown.esc', ['$event'])
+    // public onEscKeydown(event) {
+    //     this.closeCalendar();
+    //         event.preventDefault();
+    //         event.stopPropagation();
+    // }
+
+    // @HostListener('keydown.spacebar', ['$event'])
+    // @HostListener('keydown.space', ['$event'])
+    // public onSpaceClick(event) {
+    //     this.openCalendar();
+    //     event.preventDefault();
+    // }
+
+
+    @HostListener('keyup', ['$event'])
+    public test(event) {
+        // debugger;
+    }
+
     /**
      *Method that sets the selected date.
      *```typescript
@@ -674,12 +695,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                         this.onKeydown(res);
                     });
 
-                fromEvent(this.getEditElement(), 'mousewheel').pipe(
-                    throttle(() => interval(0, animationFrameScheduler)),
-                    takeUntil(this._destroy$))
-                    .subscribe((res) => {
-                        this.onMouseWheel(res);
-                    });
+                // fromEvent(this.getEditElement(), 'mousewheel').pipe(
+                //     throttle(() => interval(0, animationFrameScheduler)),
+                //     takeUntil(this._destroy$))
+                //     .subscribe((res) => {
+                //         this.onMouseWheel(res);
+                //     });
             });
         }
     }
@@ -851,29 +872,20 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.calculateDate(eventArgs.target.value);
     }
 
-    // @HostListener('keydown.esc', ['$event'])
-    // public onEscKeydown(event) {
-    //     this.closeCalendar();
-    //         event.preventDefault();
-    //         event.stopPropagation();
-    // }
-
-    // @HostListener('keydown.spacebar', ['$event'])
-    // @HostListener('keydown.space', ['$event'])
-    // public onSpaceClick(event) {
-    //     this.openCalendar();
-    //     event.preventDefault();
-    // }
 
     private onKeydown(event) {
+        console.log('onKeydown 1 ');
+        event.preventDefault();
         event.stopPropagation();
         const cursorPos = this._getCursorPosition();
         const inputValue = event.target.value;
 
+        console.log('repeat ' + event.repeat);
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
                 this.editableInput.nativeElement.value = DatePickerUtil.getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, 1);
+                console.log('onKeydown 2 ');
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
@@ -892,7 +904,10 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this._setCursorPosition(cursorPos);
         requestAnimationFrame(() => {
             this._setCursorPosition(cursorPos);
+            console.log('onKeydown 4');
         });
+
+        console.log('onKeydown 3');
     }
 
     private onMouseWheel(event) {
