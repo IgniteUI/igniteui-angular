@@ -5,6 +5,21 @@ All notable changes for each version of this project will be documented in this 
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
 - `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
+- `IgxColumnComponent` now accepts its templates as input properties through the markup. This can reduce the amount of code one needs to write when applying a single template to multiple columns declaratively. The new exposed inputs are:
+    + `cellTemplate` - the template for the column cells
+    + `headerTemplate` - the template for the column header
+    + `cellEditorTemplate` - the template for the column cells when a cell is in edit mode
+    + ```html
+        <!-- Example -->
+
+        <igx-grid ...>
+            <igx-column *ngFor="let each of defs" [cellTemplate]="newTemplate" ...></igx-column>
+        </igx-grid>
+
+        <ng-template #newTemplate let-value>
+            {{ value }}
+        </ng-template>
+        ```
 
 ## 7.1.1
 ### Features
