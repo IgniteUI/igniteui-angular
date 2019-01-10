@@ -287,7 +287,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *<igx-date-picker #MyDatePicker (onSelection)="selection()" todayButtonLabel="today"></igx-date-picker>
      *```
      */
-    public get transformedDate() {
+    public get transformedDate(): string {
         if (this._value) {
             return this._transformDate(this._value);
         }
@@ -559,6 +559,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public dateFormatParts = [];
     public rawData;
 
+    private enDateFormatPipe = new DateFormatPipe(Constants.DEFAULT_LOCALE_DATE);
     private _destroy$ = new Subject<boolean>();
     private _componentID;
 
@@ -687,13 +688,21 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     public ngAfterViewInit(): void {
         if (this.mode === DatePickerInteractionMode.EDITABLE) {
-            this._zone.runOutsideAngular(() => {
-                fromEvent(this.getEditElement(), 'keydown').pipe(
-                    throttle(() => interval(0, animationFrameScheduler)),
-                    takeUntil(this._destroy$))
-                    .subscribe((res) => {
-                        this.onKeydown(res);
-                    });
+            // this._zone.runOutsideAngular(() => {
+            //     fromEvent(this.getEditElement(), 'keydown').pipe(
+            //         throttle(() => interval(0, animationFrameScheduler)),
+            //         takeUntil(this._destroy$))
+            //         .subscribe((res) => {
+            //             this.onKeydown(res);
+            //         });
+
+            // fromEvent(this.getEditElement(), 'keydown').pipe(
+            //     throttle(() => interval(0, animationFrameScheduler)),
+            //     takeUntil(this._destroy$))
+            //     .subscribe((res) => {
+            //         this.onKeydown(res);
+            //     });
+
 
                 // fromEvent(this.getEditElement(), 'mousewheel').pipe(
                 //     throttle(() => interval(0, animationFrameScheduler)),
@@ -701,7 +710,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 //     .subscribe((res) => {
                 //         this.onMouseWheel(res);
                 //     });
-            });
+            //});
         }
     }
 
@@ -875,8 +884,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     private onKeydown(event) {
         console.log('onKeydown 1 ');
-        event.preventDefault();
-        event.stopPropagation();
+        //event.preventDefault();
+        //event.stopPropagation();
         const cursorPos = this._getCursorPosition();
         const inputValue = event.target.value;
 
@@ -885,6 +894,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
                 this.editableInput.nativeElement.value = DatePickerUtil.getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, 1);
+                //this._value = DatePickerUtil.getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, 1);
                 console.log('onKeydown 2 ');
                 break;
             case KEYS.DOWN_ARROW:
@@ -901,11 +911,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 return;
         }
 
-        this._setCursorPosition(cursorPos);
-        requestAnimationFrame(() => {
-            this._setCursorPosition(cursorPos);
-            console.log('onKeydown 4');
-        });
+        // this._setCursorPosition(cursorPos);
+        // requestAnimationFrame(() => {
+        //     this._setCursorPosition(cursorPos);
+        //     console.log('onKeydown 4');
+        // });
 
         console.log('onKeydown 3');
     }
@@ -1007,8 +1017,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     private _onChangeCallback: (_: Date) => void = () => { };
 
-    private _transformDate(date) {
-        return new DateFormatPipe(Constants.DEFAULT_LOCALE_DATE).transform(date, this.format);
+    private _transformDate(date: string) {
+        //return new DateFormatPipe(Constants.DEFAULT_LOCALE_DATE).transform(date, this.format);
+        return this.enDateFormatPipe.transform(date, this.format);
     }
 }
 

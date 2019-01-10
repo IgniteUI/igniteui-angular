@@ -307,7 +307,8 @@ export class DatePickerUtil {
 
         const positionsArray = datePart[0].position;
         const startIdx = positionsArray[0];
-        const endIdx = positionsArray[0] + positionsArray.length;
+        //const endIdx = positionsArray[0] + positionsArray.length;
+        const endIdx = positionsArray[positionsArray.length - 1];
         const datePartType = datePart[0].type;
         const datePartFormatType = datePart[0].formatType;
 
