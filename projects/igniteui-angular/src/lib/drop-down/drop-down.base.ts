@@ -416,9 +416,6 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
         if (eventArgs.cancel) {
             return;
         }
-`    }
-
-    onTogglePosition() {
         this.scrollToItem(this.selectedItem);
     }
 

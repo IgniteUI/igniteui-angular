@@ -91,8 +91,6 @@ export class IgxOverlayService implements OnDestroy {
      */
     public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
 
-    public onPosition = new EventEmitter();
-
     constructor(
         private _factoryResolver: ComponentFactoryResolver,
         private _appRef: ApplicationRef,
@@ -179,7 +177,6 @@ export class IgxOverlayService implements OnDestroy {
                 document,
                 true,
                 settings.positionStrategy.settings.minSize);
-            this.onPosition.emit();
             settings.scrollStrategy.initialize(this._document, this, id);
             settings.scrollStrategy.attach();
         }
