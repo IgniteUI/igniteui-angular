@@ -23,6 +23,25 @@ function logSuccess(options: Options): Rule {
   };
 }
 
+function LogIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
+  context.logger.info(`Including ${pkg} - Version: ${version}`);
+}
+
+function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any): void {
+  const ngKey = '@angular/core';
+  const ngCommonKey = '@angular/common';
+  const ngProjVer = getDependencyVersion(ngKey, tree);
+  const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
+  const igAngularVer = igPackageJson.peerDependencies[ngKey];
+  const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
+
+  if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
+    context.logger.warn(`
+    Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
+    Running 'ng update' will prevent potential version conflicts.`);
+  }
+}
+
 function addDependencies(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const pkgJson = require('../../package.json');
@@ -44,41 +63,10 @@ function addDependencies(options: Options): Rule {
 
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
     displayVersionMismatch(context, tree, pkgJson);
-    promptEnablePolyfills(context, tree, options);
+    editPolyfills(context, tree, options);
     return tree;
   };
 }
-
-function LogIncludingDependency(context: SchematicContext, pkg: string, version: string) {
-  context.logger.info(`Including ${pkg} - Version: ${version}`);
-}
-
-function promptEnablePolyfills(context: SchematicContext, tree: Tree, options: Options) {
-  if (options.polyfills) {
-    const targetFile = 'src/polyfills.ts';
-    if (!tree.exists(targetFile)) {
-      context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
-      return;
-    }
-
-    // Match all commented import statements that are core-js/es6/*
-    const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
-    let polyfillsData = tree.read(targetFile).toString();
-    for (const match of polyfillsData.match(pattern)) {
-      polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
-    }
-
-    // Target the web-animations-js commented import statement and uncomment it.
-    const webAnimationsLine = '// import \'web-animations-js\';';
-    polyfillsData = polyfillsData.replace(webAnimationsLine,
-      webAnimationsLine.substring(2, webAnimationsLine.length));
-
-    polyfillsData = addIgxGridSupportForIe(polyfillsData);
-    tree.overwrite(targetFile, polyfillsData);
-    return tree;
-  }
-}
-
 
 /**
  * The import is needed so that the igxGrid can render under IE.
@@ -116,7 +104,7 @@ function addHammerJsToWorkspace(tree: Tree): Tree {
  * @param workspace Angular Workspace Schema (angular.json)
  * @param key Architect tool key to add option to
  */
-function addHammerToAngularWorkspace(workspace: WorkspaceSchema, key: string) {
+function addHammerToAngularWorkspace(workspace: WorkspaceSchema, key: string): boolean {
   const currentProjectName = workspace.defaultProject;
   if (currentProjectName) {
     if (!workspace.projects[currentProjectName].architect) {
@@ -186,28 +174,39 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   return tree;
 }
 
-function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any) {
-  const ngKey = '@angular/core';
-  const ngCommonKey = '@angular/common';
-  const ngProjVer = getDependencyVersion(ngKey, tree);
-  const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
-  const igAngularVer = igPackageJson.peerDependencies[ngKey];
-  const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
+function editPolyfills(context: SchematicContext, tree: Tree, options: Options): Tree {
+  if (options.polyfills) {
+    const targetFile = 'src/polyfills.ts';
+    if (!tree.exists(targetFile)) {
+      context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
+      return;
+    }
 
-  if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
-    context.logger.warn(`
-    Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
-    Running 'ng update' will prevent potential version conflicts.`);
+    // Match all commented import statements that are core-js/es6/*
+    const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
+    let polyfillsData = tree.read(targetFile).toString();
+    for (const match of polyfillsData.match(pattern)) {
+      polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
+    }
+
+    // Target the web-animations-js commented import statement and uncomment it.
+    const webAnimationsLine = '// import \'web-animations-js\';';
+    polyfillsData = polyfillsData.replace(webAnimationsLine,
+      webAnimationsLine.substring(2, webAnimationsLine.length));
+
+    polyfillsData = addIgxGridSupportForIe(polyfillsData);
+    tree.overwrite(targetFile, polyfillsData);
+    return tree;
   }
 }
 
-function getDependencyVersion(pkg: string, tree: Tree) {
+function getDependencyVersion(pkg: string, tree: Tree): string {
   const targetFile = 'package.json';
   if (tree.exists(targetFile)) {
     const sourceText = tree.read(targetFile).toString();
     const json = JSON.parse(sourceText);
 
-    let targetDep;
+    let targetDep: any;
     if (json.dependencies[pkg]) {
       targetDep = json.dependencies[pkg];
     } else {
@@ -223,7 +222,7 @@ function getDependencyVersion(pkg: string, tree: Tree) {
   throw new FileDoesNotExistException(`${tree.root.path}/${targetFile}`);
 }
 
-function installPackageJsonDependencies(options): Rule {
+function installPackageJsonDependencies(options: any): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const installTaskId = context.addTask(new NodePackageInstallTask());
     // Add Task for igniteu-cli schematic and wait for install task to finish
@@ -243,7 +242,7 @@ function installPackageJsonDependencies(options): Rule {
   };
 }
 
-export default function (options): Rule {
+export default function (options: any): Rule {
   return chain([
     addDependencies(options),
     installPackageJsonDependencies(options),
