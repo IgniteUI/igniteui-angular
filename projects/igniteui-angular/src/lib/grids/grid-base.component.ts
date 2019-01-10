@@ -187,6 +187,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
+    private _locale = null;
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -290,6 +291,26 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
+    }
+
+    /**
+     * Returns the locale of the grid.
+     * If not set, returns browser's language.
+     */
+    @Input()
+    get locale(): string {
+        if (this._locale) {
+            return this._locale;
+        } else {
+            return window.navigator.language;
+        }
+    }
+
+    /**
+     * Sets the locale of the grid.
+     */
+    set locale(value) {
+        this._locale = value;
     }
 
     /**

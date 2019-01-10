@@ -146,12 +146,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public labelVisibility = true;
 
     /**
-     *An @Input property that sets locales. Default locale is en.
+     *An @Input property that sets locales. By default the browser's language is used.
      *```html
      *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      *```
      */
-    @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
+    @Input() public locale: string = window.navigator.language;
 
     /**
      *An @Input property that sets on which day the week starts.
@@ -675,8 +675,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         });
     }
 
-    private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
-        return value.toLocaleDateString(locale);
+    private _setLocaleToDate(value: Date): string {
+        return value.toLocaleDateString(this.locale);
     }
 
     /**
@@ -685,16 +685,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      * @param date passed date
      */
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
-        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
+        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }
 
     private _onTouchedCallback: () => void = () => { };
 
     private _onChangeCallback: (_: Date) => void = () => { };
-}
-
-class Constants {
-    public static readonly DEFAULT_LOCALE_DATE = 'en';
 }
 
 /**
