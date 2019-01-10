@@ -20,6 +20,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs } from '../../core/utils';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
     exportAs: 'toggle',
@@ -35,6 +36,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
+    private _overlayPositionSub: Subscription;
 
     /**
      * Emits an event after the toggle container is opened.
@@ -112,6 +114,9 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     @Output()
     public onClosing = new EventEmitter<CancelableEventArgs>();
 
+    @Output()
+    public onPosition = new EventEmitter();
+
     private _collapsed = true;
     /**
      * @hidden
@@ -182,6 +187,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             this.cdr.detectChanges();
             return;
         }
+
+        this._overlayPositionSub = this.overlayService.onPosition
+            // .pipe(...this._overlaySubFilter)
+            .subscribe(() => {
+                this.onPosition.emit();
+            });
 
         if (this._overlayId) {
             this.overlayService.show(this._overlayId, overlaySettings);
@@ -281,6 +292,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.clearSubscription(this._overlayOpenedSub);
         this.clearSubscription(this._overlayClosingSub);
         this.clearSubscription(this._overlayClosedSub);
+        this.clearSubscription(this._overlayPositionSub);
     }
 
     private clearSubscription(subscription: Subscription) {
@@ -323,6 +335,8 @@ export class IgxToggleActionDirective implements OnInit {
      * let closesOnOutsideClick = this.toggle.closeOnOutsideClick;
      * ```
      */
+    @Input()
+    @DeprecateProperty(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`)
     public get closeOnOutsideClick(): boolean {
         return this._closeOnOutsideClick;
     }
@@ -332,9 +346,7 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [closeOnOutsideClick]="'true'"></div>
      * ```
      */
-    @Input()
     public set closeOnOutsideClick(v: boolean) {
-        console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
         this._closeOnOutsideClick = v;
     }
 
