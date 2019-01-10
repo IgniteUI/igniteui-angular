@@ -140,11 +140,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
         this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
 
-        if (this.column.dataType === DataType.Date) {
-            // TODO: revise usage of cdr.detectChanges() here
-            this.cdr.detectChanges();
-        }
-
         this.input.nativeElement.focus();
     }
 
