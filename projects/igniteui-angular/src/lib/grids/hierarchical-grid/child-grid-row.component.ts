@@ -159,7 +159,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this._handleLayoutChanges(ch);
         });
         const changes = this.layout.initialChanges;
-        this._handleLayoutChanges(changes);
+        changes.forEach(change => {
+            this._handleLayoutChanges(change);
+        });
         this.hGrid.parent = this.parentGrid;
 
     }

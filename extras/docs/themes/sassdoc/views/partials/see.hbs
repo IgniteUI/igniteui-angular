@@ -1,0 +1,19 @@
+{{#with see}}
+<article class="require">
+    <header role="group">
+        <h4 class="require__title">{{#localize}}See{{/localize}}</h4>
+    </header>
+    <section>
+        <ul class="require__list">
+        {{#each this}}
+            <li class="require__list-item">
+                <a class="require__list-link" href="#{{context.type}}-{{context.name}}">
+                    <span class="require__list-type{{typeClass context.type}}">{{trimType context.type}}</span>
+                    <span class="require__list-name">{{context.name}}</span>
+                </a>
+            </li>
+        {{/each}}
+        </ul>
+    </section>
+</article>
+{{/with}}

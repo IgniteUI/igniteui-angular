@@ -6,27 +6,15 @@
 /// @requires {mixin} bem-mod
 ////
 
+@include b(igx-grid-hierarchical) {
+    @extend %igx-grid-hierarchical !optional;
+}
+
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
     @extend %grid-display !optional;
-
-    @include e(hierarchical-action-indent) {
-        @extend %igx-grid__hierarchical-action-indent !optional;
-    }
-
-    @include e(hierarchical-highlight) {
-        @extend %igx-grid__hierarchical-highlight !optional;
-    }
-
-    @include e(hierarchical-action-indent, $m: header) {
-        @extend %igx-grid__hierarchical-action-indent--header !optional;
-    }
-
-    @include e(hierarchical-indent) {
-        @extend %igx-grid__hierarchical-indent !optional;
-    }
 
     @include e(caption) {
         @extend %grid-caption !optional;
@@ -102,6 +90,15 @@
         }
     }
 
+    @include e(summaries, $m: 'body') {
+        @extend %grid-summaries !optional;
+        @extend %grid-summaries--body !optional;
+
+        igx-display-container {
+            @extend %grid-display-container-tr !optional;
+        }
+    }
+
     @include e(summaries-patch) {
         @extend %grid-summaries-patch !optional;
     }
@@ -124,6 +121,11 @@
 
     @include e(tr, $m: deleted) {
         @extend %igx-grid__tr--deleted !optional;
+    }
+
+
+    @include e(tr, $m: highlighted) {
+        @extend %igx-grid__tr--highlighted !optional;
     }
 
     @include e(tr, $m: edit) {
@@ -183,6 +185,10 @@
         @extend %igx-grid__td--tree-cell !optional;
     }
 
+    @include e(td, $m: active) {
+        @extend %grid-cell--active !optional;
+    }
+
     @include e(td, $m: selected) {
         @extend %grid-cell--selected !optional;
     }
@@ -226,6 +232,10 @@
 
     @include e(td, $m: fw) {
         @extend %grid-cell--fixed-width !optional;
+    }
+
+    @include e(td, $mods: (pinned, selected)) {
+        @extend %grid-cell--pinned-selected !optional;
     }
 
     @include e(td-text) {
@@ -353,6 +363,22 @@
         @extend %igx-grid__filtering-scroll-end !optional;
     }
 
+    @include e(hierarchical-indent) {
+        @extend %igx-grid__hierarchical-indent !optional;
+    }
+
+    @include e(hierarchical-action-indent) {
+        @extend %igx-grid__hierarchical-action-indent !optional;
+    }
+
+    @include e(hierarchical-action-indent, $m: header) {
+        @extend %igx-grid__hierarchical-action-indent--header !optional;
+    }
+
+    @include e(hierarchical-indent, $m: scroll) {
+        @extend %igx-grid__hierarchical-indent--scroll !optional;
+    }
+
     @for $i from 1 through 10 {
         @include e(row-indentation, $m: level-#{$i}) {
             @extend %igx-grid__row-indentation--level-#{$i} !optional;
@@ -367,14 +393,6 @@
 
     @include m(cosy) {
         @extend %grid-display !optional;
-
-        @include e(hierarchical-indent) {
-            @extend %igx-grid__hierarchical-indent--cosy !optional;
-        }
-
-        @include e(hierarchical-action-indent, $m: header) {
-            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
-        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
@@ -432,6 +450,22 @@
             @extend %igx-grid__group-row--cosy !optional;
         }
 
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--cosy !optional;
+        }
+
+        @include e(hierarchical-indent, $m: scroll) {
+            @extend %igx-grid__hierarchical-indent--cosy--scroll !optional;
+        }
+
+        @include e(hierarchical-action-indent) {
+            @extend %igx-grid__hierarchical-action-indent--cosy !optional;
+        }
+
+        @include e(hierarchical-action-indent, $m: header) {
+            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
+        }
+
         @for $i from 1 through 10 {
             @include e(row-indentation, $m: level-#{$i}) {
                 @extend %igx-grid__row-indentation-cosy--level-#{$i} !optional;
@@ -447,14 +481,6 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
-
-        @include e(hierarchical-indent) {
-            @extend %igx-grid__hierarchical-indent--compact !optional;
-        }
-
-        @include e(hierarchical-action-indent, $m: header) {
-            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
-        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;
@@ -510,6 +536,22 @@
 
         @include e(group-row) {
             @extend %igx-grid__group-row--compact !optional;
+        }
+
+        @include e(hierarchical-indent) {
+            @extend %igx-grid__hierarchical-indent--compact !optional;
+        }
+
+        @include e(hierarchical-indent, $m: scroll) {
+            @extend %igx-grid__hierarchical-indent--compact--scroll !optional;
+        }
+
+        @include e(hierarchical-action-indent) {
+            @extend %igx-grid__hierarchical-action-indent--compact !optional;
+        }
+
+        @include e(hierarchical-action-indent, $m: header) {
+            @extend %igx-grid__hierarchical-action-indent--header--compact !optional;
         }
 
         @for $i from 1 through 10 {

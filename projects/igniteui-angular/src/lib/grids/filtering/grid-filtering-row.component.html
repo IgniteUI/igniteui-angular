@@ -5,7 +5,7 @@
         [value]="condition"
         [isSelected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
-        <span style="margin-left: 16px">{{ condition | filterCondition | titlecase }}</span>
+        <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
@@ -24,18 +24,21 @@
             tabindex="0"
             [placeholder]="placeholder"
             autocomplete="off"
-            [(ngModel)]="value"
+            [value]="value"
+            (input)="onInput($event)"
             [type]="type"
             [readonly]="isUnaryCondition"
-            (keydown)="onInputKeyDown($event)"/>
-            <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
+            (click)="onInputClick()"
+            (keydown)="onInputKeyDown($event)"
+            (keyup)="onInputKeyUp($event)"/>
+            <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
     </igx-input-group>
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker tabindex="0" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
+    <igx-date-picker tabindex="0" [(ngModel)]="value" [locale]="filteringService.grid.locale" (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
@@ -54,12 +57,12 @@
                        [value]="displayData | date"
                        [readonly]="true"
                        (keydown)="onInputKeyDown($event)"/>
-                <igx-suffix *ngIf="input.value.length > 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
+                <igx-suffix *ngIf="value" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                     <igx-icon>clear</igx-icon>
                 </igx-suffix>
             </igx-input-group>
             </ng-template>
-    </igx-datePicker>
+    </igx-date-picker>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>
@@ -94,8 +97,8 @@
                         <span>{{filteringService.getOperatorAsString(item.afterOperator)}}</span>
                     </button>
                     <igx-drop-down #operators (onSelection)="onLogicOperatorChanged($event, item)">
-                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">And</igx-drop-down-item>
-                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">Or</igx-drop-down-item>
+                            <igx-drop-down-item [value]="0" [isSelected]="item.afterOperator === 0">{{filteringService.grid.resourceStrings.igx_grid_filter_operator_and}}</igx-drop-down-item>
+                            <igx-drop-down-item [value]="1" [isSelected]="item.afterOperator === 1">{{filteringService.grid.resourceStrings.igx_grid_filter_operator_or}}</igx-drop-down-item>
                     </igx-drop-down>
                 </span>
             </ng-container>
@@ -108,6 +111,6 @@
 </button>
 
 <div #buttonsContainer class="igx-grid__filtering-row-editing-buttons">
-    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">Reset</button>
-    <button #closeButton igxButton igxRipple (click)="close()">Close</button>
+    <button igxButton igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">{{filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</button>
+    <button #closeButton igxButton igxRipple (click)="close()">{{filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</button>
 </div>

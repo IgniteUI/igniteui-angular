@@ -84,6 +84,25 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
+        it('when all items are selected and then some of the selected rows are deleted, still all the items should be selected', () => {
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            fix.detectChanges();
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            fix.detectChanges();
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
+            fix.detectChanges();
+             // When deleting the last selected row, header checkbox will be unchecked.
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
         it('should be able to select row of any level', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID], true);
             fix.detectChanges();
@@ -126,7 +145,7 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(4).rowID], true);
             fix.detectChanges();
 
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -288,7 +307,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.columnList.filter(c => c.field === 'Age')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'Age', dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
             // Verification indices are different since the sorting changes rows' positions.
@@ -533,7 +552,7 @@ describe('IgxTreeGrid - Selection', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(147);
 
-            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
+            treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);

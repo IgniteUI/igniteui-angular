@@ -142,7 +142,9 @@ export class ColumnDefinitions {
         <igx-column [field]="'ReleaseDate'" [resizable]="true" dataType="date"></igx-column>
         <igx-column [field]="'Category'" [width]="'150px'" [resizable]="true" dataType="string">
             <ng-template igxCell igxHeader>
-                <igx-avatar initials="JS"></igx-avatar>
+                <div>
+                    <igx-avatar initials="JS"></igx-avatar>
+                </div>
             </ng-template>
         </igx-column>
         <igx-column [field]="'Items'" [width]="'60px'" [hasSummary]="true" [resizable]="true" dataType="string"></igx-column>
@@ -216,13 +218,13 @@ export class ColumnDefinitions {
     `;
 
     public static productDefaultSummaries = `
-        <igx-column field="ProductID" header="Product ID">
+        <igx-column field="ProductID" width="150px" header="Product ID">
         </igx-column>
-        <igx-column field="ProductName" [hasSummary]="true">
+        <igx-column field="ProductName" width="150px" [hasSummary]="true">
         </igx-column>
-        <igx-column field="InStock" [dataType]="'boolean'" [hasSummary]="true">
+        <igx-column field="InStock" width="150px" [dataType]="'boolean'" [hasSummary]="true">
         </igx-column>
-        <igx-column field="UnitsInStock" [dataType]="'number'" [hasSummary]="true">
+        <igx-column field="UnitsInStock" width="150px" [dataType]="'number'" [hasSummary]="true">
         </igx-column>
         <igx-column field="OrderDate" width="200px" [dataType]="'date'" [sortable]="true" [hasSummary]="true">
         </igx-column>
@@ -389,6 +391,15 @@ export class ColumnDefinitions {
     </igx-column-group>
     <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
                 editable="true"></igx-column>
+    `;
+
+    public static summariesGoupByColumns = `
+    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
     `;
 }
 

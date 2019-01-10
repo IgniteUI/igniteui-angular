@@ -9,7 +9,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxGridHierarchicalPipe } from './hierarchical-grid.pipes';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 
 @NgModule({
@@ -18,14 +18,14 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
     IgxHierarchicalRowComponent,
     IgxRowIslandComponent,
     IgxChildGridRowComponent,
-    IgxHirarchicalGridCellComponent,
+    IgxHierarchicalGridCellComponent,
     IgxGridHierarchicalPipe
   ],
   exports: [
     IgxGridModule,
     IgxHierarchicalGridComponent,
     IgxHierarchicalRowComponent,
-    IgxHirarchicalGridCellComponent,
+    IgxHierarchicalGridCellComponent,
     IgxRowIslandComponent,
     IgxChildGridRowComponent
   ],

@@ -4,32 +4,38 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-/// @param {Color} $background-color [#fff] - The drop-down background color.
-/// @param {Color} $header-text-color [secondary 500] - The drop-down header text color.
-///
-/// @param {Color} $item-text-color [rgba(0, 0, 0, .74)] - The drop-down text color.
-/// @param {Color} $hover-item-text-color [rgba(0, 0, 0, .74)] - The drop-down hover text color.
-///
-/// @param {Color} $hover-item-background [rgba(0, 0, 0, .04)] - The drop-down hover item background color.
-///
-/// @param {Color} $focused-item-background [rgba(0, 0, 0, .04)] - The drop-down focused item background color.
-/// @param {Color} $focused-item-text-color [rgba(0, 0, 0, .74)] - The drop-down focused item text color.
-///
-/// @param {Color} $selected-item-background [secondary 500] - The drop-down selected item background color.
-/// @param {Color} $selected-item-text-color [igx-contrast-color of secondary 500] - The drop-down selected item text color.
-///
-/// @param {Color} $selected-hover-item-background [secondary 600] - The drop-down selected item hover background color.
-/// @param {Color} $selected-hover-item-text-color [igx-contrast-color of secondary 600] - The drop-down selected item hover text color.
-///
-/// @param {Color} $selected-focus-item-background [secondary 600] - The drop-down selected item focus background color.
-/// @param {Color} selected-focus-item-text-color [igx-contrast-color of secondary 600] - The drop-down selected item focus text color.
-///
-/// @param {Color} $disabled-item-background [transparent] - The drop-down disabled item background color.
-/// @param {Color} $disabled-item-text-color [rgba(0, 0, 0, .38)] - The drop-down disabled item text color.
 
+/// Generates a drop-down theme.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $background-color [null] - The drop-down background color.
+/// @param {Color} $header-text-color [null] - The drop-down header text color.
+///
+/// @param {Color} $item-text-color [null] - The drop-down text color.
+/// @param {Color} $hover-item-text-color [null] - The drop-down hover text color.
+///
+/// @param {Color} $hover-item-background [null] - The drop-down hover item background color.
+///
+/// @param {Color} $focused-item-background [null] - The drop-down focused item background color.
+/// @param {Color} $focused-item-text-color [null] - The drop-down focused item text color.
+///
+/// @param {Color} $selected-item-background [null] - The drop-down selected item background color.
+/// @param {Color} $selected-item-text-color [null] - The drop-down selected item text color.
+///
+/// @param {Color} $selected-hover-item-background [null] - The drop-down selected item hover background color.
+/// @param {Color} $selected-hover-item-text-color [null] - The drop-down selected item hover text color.
+///
+/// @param {Color} $selected-focus-item-background [null] - The drop-down selected item focus background color.
+/// @param {Color} selected-focus-item-text-color [null] - The drop-down selected item focus text color.
+///
+/// @param {Color} $disabled-item-background [null] - The drop-down disabled item background color.
+/// @param {Color} $disabled-item-text-color [null] - The drop-down disabled item text color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
 /// @requires text-contrast
-/// @requires igx-color
-/// @requires igx-contrast-color
 @function igx-drop-down-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -40,24 +46,25 @@
     $item-text-color: null,
     $hover-item-text-color: null,
 
-    $hover-item-background:null,
+    $hover-item-background: null,
 
-    $focused-item-background:null,
-    $focused-item-text-color:null,
+    $focused-item-background: null,
+    $focused-item-text-color: null,
 
-    $selected-item-background:null,
-    $selected-item-text-color:null,
+    $selected-item-background: null,
+    $selected-item-text-color: null,
 
-    $selected-hover-item-background:null,
-    $selected-hover-item-text-color:null,
+    $selected-hover-item-background: null,
+    $selected-hover-item-text-color: null,
 
-    $selected-focus-item-background:null,
-    $selected-focus-item-text-color:null,
+    $selected-focus-item-background: null,
+    $selected-focus-item-text-color: null,
 
-    $disabled-item-background:null,
-    $disabled-item-text-color:null
+    $disabled-item-background: null,
+    $disabled-item-text-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-drop-down'), $palette);
+    $name: 'igx-drop-down';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($item-text-color) and $background-color {
         $item-text-color: text-contrast($background-color);
@@ -111,8 +118,8 @@
         $header-text-color: rgba(text-contrast($background-color), .7);
     }
 
-    @return extend($theme,
-    (
+    @return extend($theme, (
+        name: $name,
         palette: $palette,
         background-color: $background-color,
         header-text-color: $header-text-color,

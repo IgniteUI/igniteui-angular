@@ -14,7 +14,7 @@ import { IgxRowComponent } from '../grid';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxGridExpandState } from './row-island.component';
 
 @Component({
@@ -34,8 +34,8 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxHirarchicalGridCellComponent), { read: IgxHirarchicalGridCellComponent })
-    public cells: QueryList<IgxHirarchicalGridCellComponent>;
+    @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
+    public cells: QueryList<IgxHierarchicalGridCellComponent>;
 
     @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef;

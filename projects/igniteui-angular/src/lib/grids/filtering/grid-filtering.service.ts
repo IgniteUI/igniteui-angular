@@ -12,6 +12,7 @@ import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -23,6 +24,7 @@ export class ExpressionUI {
     public beforeOperator: FilteringLogic;
     public afterOperator: FilteringLogic;
     public isSelected = false;
+    public isVisible = true;
 }
 
 /**
@@ -38,14 +40,14 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private filterPipe = new IgxGridFilterConditionPipe();
     private titlecasePipe = new TitleCasePipe();
-    private datePipe = new DatePipe(window.navigator.language);
+    private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
     public gridId: string;
     public isFilterRowVisible = false;
-    public filteredColumn = null;
+    public filteredColumn: IgxColumnComponent = null;
     public selectedExpression: IFilteringExpression = null;
-    public columnToFocus = null;
+    public columnToFocus: IgxColumnComponent = null;
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
@@ -56,8 +58,31 @@ export class IgxFilteringService implements OnDestroy {
         this.destroy$.complete();
     }
 
+    public get displayContainerWidth() {
+        return parseInt(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth, 10);
+    }
+
+    public get displayContainerScrollLeft() {
+        return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
+    }
+
+    public get unpinnedFilterableColumns() {
+        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+    }
+
+    public get unpinnedColumns() {
+        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
+    }
+
     public get grid(): IgxGridBaseComponent & IGridDataBindable {
         return this.gridAPI.get(this.gridId);
+    }
+
+    public get datePipe(): IgxDatePipeComponent {
+        if (!this._datePipe) {
+            this._datePipe = new IgxDatePipeComponent(this.grid.locale);
+        }
+        return this._datePipe;
     }
 
     /**
@@ -68,7 +93,7 @@ export class IgxFilteringService implements OnDestroy {
             this.areEventsSubscribed = true;
 
             this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
-                this.updateFilteringCell(eventArgs.column.field);
+                this.updateFilteringCell(eventArgs.column);
             });
 
             this.grid.parentVirtDir.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
@@ -79,7 +104,7 @@ export class IgxFilteringService implements OnDestroy {
                     });
                 }
                 if (this.columnToFocus) {
-                    this.focusFilterCellChip(this.columnToFocus.field, false);
+                    this.focusFilterCellChip(this.columnToFocus, false);
                     this.columnToFocus = null;
                 }
             });
@@ -95,9 +120,10 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Execute filtering on the grid.
      */
-    public filter(field: string, expressionsTree: FilteringExpressionsTree): void {
+    public filter(field: string): void {
         this.isFiltering = true;
 
+        const expressionsTree = this.createSimpleFilteringTree(field);
         this.grid.filter(field, null, expressionsTree);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -171,7 +197,7 @@ export class IgxFilteringService implements OnDestroy {
                     this.columnsWithComplexFilter.add(key);
                 }
 
-                this.updateFilteringCell(key);
+                this.updateFilteringCell(column);
             });
         }
     }
@@ -255,17 +281,21 @@ export class IgxFilteringService implements OnDestroy {
      * Returns the string representation of the FilteringLogic operator.
      */
     public getOperatorAsString(operator: FilteringLogic): any {
-        return FilteringLogic[operator];
+        if (operator === 0) {
+            return this.grid.resourceStrings.igx_grid_filter_operator_and;
+        } else {
+            return this.grid.resourceStrings.igx_grid_filter_operator_or;
+        }
     }
 
     /**
-     * Genererate the label of a chip from a given filtering expression.
+     * Generate the label of a chip from a given filtering expression.
      */
     public getChipLabel(expression: IFilteringExpression): any {
         if (expression.condition.isUnary) {
-            return this.titlecasePipe.transform(this.filterPipe.transform(expression.condition.name));
+            return this.grid.resourceStrings[`igx_grid_filter_${expression.condition.name}`] || expression.condition.name;
         } else if (expression.searchVal instanceof Date) {
-            return this.datePipe.transform(expression.searchVal);
+            return this.datePipe.transform(expression.searchVal, this.grid.locale);
         } else {
             return expression.searchVal;
         }
@@ -274,8 +304,8 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Updates the content of a filterCell.
      */
-    public updateFilteringCell(columnId: string) {
-        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+    public updateFilteringCell(column: IgxColumnComponent) {
+        const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.updateFilterCellArea();
         }
@@ -284,8 +314,8 @@ export class IgxFilteringService implements OnDestroy {
     /**
      * Focus a chip in a filterCell.
      */
-    public focusFilterCellChip(columnId: string, focusFirst: boolean) {
-        const filterCell = this.grid.filterCellList.find(cell => cell.column.field === columnId);
+    public focusFilterCellChip(column: IgxColumnComponent, focusFirst: boolean) {
+        const filterCell = column.filterCell;
         if (filterCell) {
             filterCell.focusChip(focusFirst);
         }
@@ -306,6 +336,33 @@ export class IgxFilteringService implements OnDestroy {
 
     public get filteredData() {
         return this.grid.filteredData;
+    }
+
+    /**
+     * Scrolls to a filterCell.
+     */
+    public scrollToFilterCell(column: IgxColumnComponent, shouldFocusNext: boolean) {
+        this.grid.nativeElement.focus({preventScroll: true});
+        this.columnToFocus = column;
+        this.shouldFocusNext = shouldFocusNext;
+
+        let currentColumnRight = 0;
+        let currentColumnLeft = 0;
+        for (let index = 0; index < this.unpinnedColumns.length; index++) {
+            currentColumnRight += parseInt(this.unpinnedColumns[index].width, 10);
+            if (this.unpinnedColumns[index] === column) {
+                currentColumnLeft = currentColumnRight - parseInt(this.unpinnedColumns[index].width, 10);
+                break;
+            }
+        }
+
+        const forOfDir = this.grid.headerContainer;
+        const width = this.displayContainerWidth + this.displayContainerScrollLeft;
+        if (shouldFocusNext) {
+            forOfDir.getHorizontalScroll().scrollLeft += currentColumnRight - width;
+        } else {
+            forOfDir.getHorizontalScroll().scrollLeft = currentColumnLeft;
+        }
     }
 
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {

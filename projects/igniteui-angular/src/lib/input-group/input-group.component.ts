@@ -18,6 +18,7 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IgxInputGroupBase } from './input-group.common';
 
 let NEXT_ID = 0;
 
@@ -30,9 +31,10 @@ enum IgxInputGroupType {
 
 @Component({
     selector: 'igx-input-group',
-    templateUrl: 'input-group.component.html'
+    templateUrl: 'input-group.component.html',
+    providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }]
 })
-export class IgxInputGroupComponent extends DisplayDensityBase {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
     private _supressInputAutofocus = false;
@@ -220,7 +222,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase {
      */
     @HostBinding('class.igx-input-group--cosy')
     get isDisplayDensityCosy() {
-        return this.isCosy();
+        return this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
@@ -228,7 +230,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase {
      */
     @HostBinding('class.igx-input-group--comfortable')
     get isDisplayDensityComfortable() {
-        return this.isComfortable();
+        return this.displayDensity === DisplayDensity.comfortable;
     }
 
     /**
@@ -236,7 +238,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase {
      */
     @HostBinding('class.igx-input-group--compact')
     get isDisplayDensityCompact() {
-        return this.isCompact();
+        return this.displayDensity === DisplayDensity.compact;
     }
 
     /**

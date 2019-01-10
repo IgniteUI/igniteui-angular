@@ -58,6 +58,15 @@ The TimePicker input group could be retemplated.
     </ng-template>
 </igx-time-picker>
 ```
+The TimePicker supports another interaction mode - an editable masked input and a dropdown. The user can enter or edit the time value inside the text input or select a vlaue from a dropdown, that will be applied on the text input.
+```typescript
+mode = InteractionMode.dropdown;
+```
+
+```html
+<igx-time-picker [mode]="mode">
+</igx-time-picker>
+```
 
 # API
 
@@ -67,6 +76,7 @@ The TimePicker input group could be retemplated.
 | `okButtonLabel` | string | Renders OK button with custom name, which commits the selected time, and fill the timePicker input. By default `okButtonLabel` is set to 'OK'. |
 | `cancelButtonLabel` | string | Renders cancel button with custom name, which closes the dialog. By default `cancelButtonLabel` is set to 'Cancel'. |
 | `value` | Date | Value of the timePicker. |
+|`resourceStrings`| ITimePickerResourceStrings | Resource strings of the time-picker. |
 | `disabled` | boolean | Disable the timePicker. |
 | `itemsDelta`| object | Sets the delta for hour and minute items. By default `itemsDelta` is set ti {hours:1, minutes:1} |
 | `minValue` | string | Sets minimum value. It should follow the `format` of the timePicker. |
@@ -82,6 +92,8 @@ List of time-flags:
 "mm": minutes field with leading zero
 "tt": 2 characters of string which represents AM/PM field |
 | `isSpinLoop` | boolean | Determines the spin behavior. By default `isSpinLoop` is set to true. |
+| `mode` | InteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dialog picker.|
+| `promptChar` | string | Sets the character used to prompt the user for input. The default is a dash. Only applicable for dropdown mode.
 
 ### Outputs
 | Name | Description |

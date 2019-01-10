@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings } from './../utilities';
+import { PositionSettings, Point, HorizontalAlignment, VerticalAlignment, getPointFromPositionsSettings, Size } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
 export class ConnectedPositioningStrategy implements IPositionStrategy {
@@ -11,20 +11,25 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     horizontalStartPoint: HorizontalAlignment.Left,
     verticalStartPoint: VerticalAlignment.Bottom,
     openAnimation: scaleInVerTop,
-    closeAnimation: scaleOutVerTop
+    closeAnimation: scaleOutVerTop,
+    minSize: { width: 0, height: 0 }
   };
 
+  /** @inheritdoc */
   public settings: PositionSettings;
+
   constructor(settings?: PositionSettings) {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  // we no longer use the element inside the position() as its dimensions are cached in rect
-  position(contentElement: HTMLElement, size: { width: number, height: number}, document?: Document, initialCall?: boolean): void {
+  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
     const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
 
-    contentElement.style.top = startPoint.y + this.settings.verticalDirection * size.height + 'px';
-    contentElement.style.left = startPoint.x + this.settings.horizontalDirection * size.width + 'px';
+    //  TODO: extract transform setting in util function
+    let transformString = '';
+    transformString += `translateX(${startPoint.x + this.settings.horizontalDirection * size.width}px) `;
+    transformString += `translateY(${startPoint.y + this.settings.verticalDirection * size.height}px)`;
+    contentElement.style.transform = transformString.trim();
   }
 }
 

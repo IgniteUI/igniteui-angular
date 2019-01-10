@@ -1,13 +1,19 @@
-<svg #svg class="progress-circular" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-    viewBox="0 0 100 100" preserveAspectRatio="none" role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="max" [attr.aria-valuenow]="value">
-    <circle class="progress-circular__innercircle" cx="50" cy="50" r="46" />
-    <circle #circle class="progress-circular__circle" cx="50" cy="50" r="46" />
-    <text #text [class.progress-circular__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">
+<svg #svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="xMidYMid meet"
+    role="progressbar"
+    aria-valuemin="0"
+    [attr.aria-valuemax]="max"
+    [attr.aria-valuenow]="value"
+>
+    <circle class="igx-circular-bar__inner" cx="50" cy="50" r="46" />
+    <circle #circle class="igx-circular-bar__outer" cx="50" cy="50" r="46" />
+    <text #text [class.igx-circular-bar__text--hidden]="!textVisibility" id="myTimer" text-anchor="middle" x="50" y="60">
             <ng-container *ngTemplateOutlet="textTemplate ? textTemplate.template : defaultTextTemplate; context: context">
             </ng-container>
     </text>
 
     <ng-template #defaultTextTemplate>
-        <tspan class="progress-circular__text"> {{textContent ? textContent: valueInPercent + '%'}}</tspan>
+        <tspan class="igx-circular-bar__text"> {{textContent ? textContent: valueInPercent + '%'}}</tspan>
     </ng-template>
 </svg>

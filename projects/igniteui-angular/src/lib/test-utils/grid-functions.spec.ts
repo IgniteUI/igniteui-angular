@@ -6,7 +6,7 @@ import { Calendar,
     IgxCheckboxComponent } from '../../public_api';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/grid-header.component';
 import { IgxChipComponent } from '../chips';
@@ -408,6 +408,7 @@ export class GridFunctions {
         for ( i = 0; i < ddItems.length; i++) {
             if (ddItems[i].textContent === cond) {
                 ddItems[i].click();
+                tick(100);
                 return;
             }
         }
@@ -417,13 +418,16 @@ export class GridFunctions {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         // open dropdown
         this.openFilterDD(fix.debugElement);
+        fix.detectChanges();
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
-        const input = filterUIRow.query(By.directive(IgxInputDirective));
 
+        const input = filterUIRow.query(By.directive(IgxInputDirective));
         input.nativeElement.value = value;
+        input.nativeElement.dispatchEvent(new Event('keydown'));
         input.nativeElement.dispatchEvent(new Event('input'));
+        input.nativeElement.dispatchEvent(new Event('keyup'));
         fix.detectChanges();
 
         // Enter key to submit
@@ -436,6 +440,7 @@ export class GridFunctions {
         const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
         const reset = editingBtns.queryAll(By.css('button'))[0];
         reset.nativeElement.click();
+        tick(100);
         fix.detectChanges();
     }
 
@@ -444,6 +449,7 @@ export class GridFunctions {
         const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
         const close = editingBtns.queryAll(By.css('button'))[1];
         close.nativeElement.click();
+        tick(100);
         fix.detectChanges();
     }
 

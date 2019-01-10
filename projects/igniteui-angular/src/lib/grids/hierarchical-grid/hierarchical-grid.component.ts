@@ -29,14 +29,14 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IgxColumnGroupComponent, IGridDataBindable } from '../grid';
+import { IgxColumnComponent, IgxColumnGroupComponent, IGridDataBindable, IgxSummaryOperand } from '../grid';
 import { Transaction, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxSummaryOperand } from './../grid-summary';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 
@@ -418,6 +418,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         viewRef: ViewContainerRef,
         navigation: IgxHierarchicalGridNavigationService,
         filteringService: IgxFilteringService,
+        public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(
                 gridAPI,
@@ -432,6 +433,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 viewRef,
                 navigation,
                 filteringService,
+                summaryService,
                 _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }

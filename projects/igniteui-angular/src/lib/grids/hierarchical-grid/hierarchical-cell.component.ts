@@ -13,7 +13,7 @@ import { IgxGridExpandState } from './row-island.component';
     selector: 'igx-hierarchical-grid-cell',
     templateUrl: './../cell.component.html'
 })
-export class IgxHirarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
+export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
     protected hSelection;
     protected _rootGrid;
     constructor(

@@ -12,6 +12,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from '../grid';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -223,7 +224,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     }));
 
     // Filtering
-    it('should enable filter-row for root and child grids', async () => {
+    it('should enable filter-row for root and child grids', (async () => {
         let filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
 
         expect(filteringCells.length).toEqual(3);
@@ -241,6 +242,28 @@ describe('IgxHierarchicalGrid Integration', () => {
         filteringCells[3].query(By.css('igx-chip')).nativeElement.click();
         fixture.detectChanges();
         expect(document.querySelectorAll('igx-grid-filtering-row').length).toEqual(2);
+    }));
+
+    it('should not lose child grid states after filtering in parent grid.', () => {
+        // expand 1st row
+        hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        let fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        fChildCell.nativeElement.focus({preventScroll: true});
+        fixture.detectChanges();
+        expect(fChildCell.selected).toBe(true);
+        hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fixture.detectChanges();
+        const rows = hierarchicalGrid.rowList.toArray();
+        expect(rows[0].expanded).toBe(true);
+        expect(rows[0] instanceof IgxHierarchicalRowComponent).toBeTruthy();
+        expect(rows[1] instanceof IgxChildGridRowComponent).toBeTruthy();
+
+        childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        expect(fChildCell.selected).toBe(true);
     });
 });
 
