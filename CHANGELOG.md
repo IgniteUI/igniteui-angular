@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
 
 ## 7.1.1
+    - `locale` property added. Default value is `en`. All child components will use it as locale.
 ### Bug Fixes
 * onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
 * igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
