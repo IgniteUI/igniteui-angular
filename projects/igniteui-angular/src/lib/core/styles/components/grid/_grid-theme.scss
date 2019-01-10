@@ -27,6 +27,7 @@
 /// @param {Color} $row-hover-background [null] - The hover row background color.
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
+/// @param {Color} $row-highlight [null] - The grid row highlight indication color.
 /// @param {String} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
 /// @param {Color} $pinned-border-color [null] - The color of the pinned border.
@@ -66,6 +67,7 @@
 /// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
 /// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
+
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -153,7 +155,7 @@
     $root-summaries-background: null,
     $root-summaries-text-color: null,
 
-    $hierarchical-highlight: null
+    $row-highlight: null
 ) {
     $name: 'igx-grid';
     $theme: apply-palette(map-get($schema, $name), $palette);
@@ -390,7 +392,7 @@
         root-summaries-text-color: $root-summaries-text-color,
         row-selected-cell-background: $row-selected-cell-background,
 
-        hierarchical-highlight: $hierarchical-highlight
+        row-highlight: $row-highlight
     ));
 }
 
@@ -1773,7 +1775,8 @@
         }
     }
 
-    %igx-grid__hierarchical-highlight {
+    %igx-grid__tr--highlighted {
+        //box-shadow: inset 3px 0 0 --var($theme, 'row-highlight');
         position: relative;
 
         &::after {
@@ -1783,7 +1786,7 @@
             left: 0;
             width: 3px;
             height: 100%;
-            background: --var($theme, 'hierarchical-highlight');
+            background: --var($theme, 'row-highlight');
             z-index: 3;
         }
     }

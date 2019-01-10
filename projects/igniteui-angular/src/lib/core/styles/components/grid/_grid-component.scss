@@ -123,6 +123,11 @@
         @extend %igx-grid__tr--deleted !optional;
     }
 
+
+    @include e(tr, $m: highlighted) {
+        @extend %igx-grid__tr--highlighted !optional;
+    }
+
     @include e(tr, $m: edit) {
         @extend %igx-grid__tr--edit !optional;
     }
@@ -356,10 +361,6 @@
 
     @include e(filtering-row-scroll-end) {
         @extend %igx-grid__filtering-scroll-end !optional;
-    }
-
-    @include e(hierarchical-highlight) {
-        @extend %igx-grid__hierarchical-highlight !optional;
     }
 
     @include e(hierarchical-indent) {
