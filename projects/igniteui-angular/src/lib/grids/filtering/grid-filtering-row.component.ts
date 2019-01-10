@@ -102,10 +102,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.filter();
     }
 
-    get locale() {
-        return window.navigator.language;
-    }
-
     @ViewChild('defaultFilterUI', { read: TemplateRef })
     protected defaultFilterUI: TemplateRef<any>;
 
