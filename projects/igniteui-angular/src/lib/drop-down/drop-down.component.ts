@@ -10,18 +10,21 @@ import {
     OnInit,
     Input,
     OnDestroy,
+    ViewChild,
+    EventEmitter,
+    Output,
 } from '@angular/core';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
 import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
-import { IToggleView } from '../core/navigation/IToggleView';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
+import { OverlaySettings } from '../services';
 
 
 /**
@@ -45,9 +48,12 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, IToggleView, OnDestroy {
+export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
     protected children: QueryList<IgxDropDownItemBase>;
+
+    @ViewChild(IgxToggleDirective)
+    protected toggleDirective: IgxToggleDirective;
 
     protected destroy$ = new Subject<boolean>();
     /**
@@ -83,6 +89,46 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
+     * Emitted before the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpening)='handleOpening()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpening = new EventEmitter<CancelableEventArgs>();
+
+    /**
+     * Emitted after the dropdown is opened
+     *
+     * ```html
+     * <igx-drop-down (onOpened)='handleOpened()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onOpened = new EventEmitter<void>();
+
+    /**
+     * Emitted before the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosing)='handleClosing()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosing = new EventEmitter<CancelableEventArgs>();
+
+    /**
+     * Emitted after the dropdown is closed
+     *
+     * ```html
+     * <igx-drop-down (onClosed)='handleClosed()'></igx-drop-down>
+     * ```
+     */
+    @Output()
+    public onClosed = new EventEmitter<void>();
+
+    /**
      * Get currently selected item
      *
      * ```typescript
@@ -101,6 +147,65 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /**
+     * Gets if the dropdown is collapsed
+     *
+     * ```typescript
+     * let isCollapsed = this.dropdown.collapsed;
+     * ```
+     */
+    public get collapsed(): boolean {
+        return this.toggleDirective.collapsed;
+    }
+
+    protected get scrollContainer() {
+        return this.toggleDirective.element;
+    }
+
+    constructor(
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef,
+        protected selection: IgxSelectionAPIService) {
+        super(elementRef, cdr);
+    }
+
+    /**
+     * Opens the dropdown
+     *
+     * ```typescript
+     * this.dropdown.open();
+     * ```
+     */
+    public open(overlaySettings?: OverlaySettings) {
+        this.toggleDirective.open(overlaySettings);
+    }
+
+    /**
+     * Closes the dropdown
+     *
+     * ```typescript
+     * this.dropdown.close();
+     * ```
+     */
+    public close() {
+        this.toggleDirective.close();
+    }
+
+    /**
+     * Toggles the dropdown
+     *
+     * ```typescript
+     * this.dropdown.toggle();
+     * ```
+     */
+    public toggle(overlaySettings?: OverlaySettings) {
+        if (this.toggleDirective.collapsed) {
+            this.open(overlaySettings);
+        } else {
+            this.close();
+        }
+    }
+
+    /**
      * Select an item by index
      * @param index of the item to select
      */
@@ -112,7 +217,11 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.selectItem(newSelection);
     }
 
-    navigateItem(index: number) {
+    /**
+     * Navigates to the item on the specified index
+     * @param newIndex number
+     */
+    public navigateItem(index: number) {
         super.navigateItem(index);
         if (this.allowItemsFocus && this.focusedItem) {
             this.focusedItem.element.nativeElement.focus();
@@ -120,11 +229,20 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
+    /**
+     * @hidden
+     */
     public onToggleOpening(e: CancelableEventArgs) {
-        super.onToggleOpening(e);
+        this.onOpening.emit(e);
+        if (e.cancel) {
+            return;
+        }
         this.scrollToItem(this.selectedItem);
     }
 
+    /**
+     * @hidden
+     */
     public onToggleOpened() {
         this._focusedItem = this.selectedItem;
         if (this._focusedItem) {
@@ -135,30 +253,40 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
                 this.navigateItem(firstItemIndex);
             }
         }
-        super.onToggleOpened();
+        this.onOpened.emit();
     }
 
-    ngOnInit() {
-        super.ngOnInit();
+    /**
+     * @hidden
+     */
+    public onToggleClosing(e: CancelableEventArgs) {
+        this.onClosing.emit(e);
     }
 
-    ngOnDestroy() {
+    /**
+     * @hidden
+     */
+    public onToggleClosed() {
+        if (this._focusedItem) {
+            this._focusedItem.isFocused = false;
+        }
+        this.onClosed.emit();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
         this.selection.clear(this.id);
     }
 
-    /**
-     * @hidden
-     */
     protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
         this.scrollContainer.scrollTop = (itemPosition);
     }
 
-    /**
-     * @hidden
-     */
     protected calculateScrollPosition(item: IgxDropDownItemBase): number {
         if (!item) {
             return 0;
@@ -176,7 +304,17 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return Math.floor(scrollPosition);
     }
 
-    public handleKeyDown(key: DropDownActionKey, event?: Event) {
+    /**
+     * @hidden
+     */
+    ngOnInit() {
+        this.toggleDirective.id = this.id;
+    }
+
+    /**
+     * @hidden
+     */
+    public onItemActionKey(key: DropDownActionKey, event?: Event) {
         switch (key) {
             case DropDownActionKey.ENTER:
             case DropDownActionKey.SPACE:
@@ -186,13 +324,6 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             case DropDownActionKey.ESCAPE:
                 this.close();
         }
-    }
-
-    constructor(
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr);
     }
 
     /**

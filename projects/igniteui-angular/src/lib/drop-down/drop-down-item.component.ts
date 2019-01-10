@@ -12,6 +12,9 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
     templateUrl: 'drop-down-item.component.html'
 })
 export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
+    /**
+     * @hidden
+     */
     @HostBinding('attr.tabindex')
     get setTabIndex() {
         const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
@@ -22,6 +25,9 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
         }
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {

@@ -705,6 +705,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public searchValue = '';
 
+    /**
+     * @hidden
+     */
     @HostListener('blur')
     public onBlur(): void {
         if (this.dropdown.collapsed) {
@@ -1072,7 +1075,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * @hidden;
+     * @hidden
      */
     public focusSearchInput(opening?: boolean): void {
         if (this.displaySearchInput && this.searchInput) {
@@ -1272,7 +1275,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Gets drop down state.
      *
      * ```typescript
-     * // get
      * let state = this.combo.collapsed;
      * ```
     */
@@ -1284,7 +1286,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Get current selection state
      * @returns Array of selected items
      * ```typescript
-     * // get
      * let selectedItems = this.combo.selectedItems();
      * ```
      */
@@ -1298,7 +1299,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @param newItems new items to be selected
      * @param clearCurrentSelection if true clear previous selected items
      * ```typescript
-     * // get
      * this.combo.selectItems(["New York", "New Jersey"]);
      * ```
      */
@@ -1313,7 +1313,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Deselect defined items
      * @param items items to deselected
      * ```typescript
-     * // get
      * this.combo.deselectItems(["New York", "New Jersey"]);
      * ```
      */
@@ -1328,7 +1327,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Select all (filtered) items
      * @param ignoreFilter if set to true, selects all items, otherwise selects only the filtered ones.
      * ```typescript
-     * // get
      * this.combo.selectAllItems();
      * ```
      */
@@ -1342,7 +1340,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Deselect all (filtered) items
      * @param ignoreFilter if set to true, deselects all items, otherwise deselects only the filtered ones.
      * ```typescript
-     * // get
      * this.combo.deselectAllItems();
      * ```
      */
@@ -1403,7 +1400,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      * @internal
      */
-    handleOpening(event: CancelableEventArgs) {
+    public handleOpening(event: CancelableEventArgs) {
         this.onOpening.emit(event);
         if (event.cancel) {
             return;
@@ -1414,7 +1411,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    handleOpened() {
+    public handleOpened() {
         this.triggerCheck();
         this.focusSearchInput(true);
         this.onOpened.emit();
@@ -1423,7 +1420,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    handleClosing(event) {
+    public handleClosing(event) {
         this.onClosing.emit(event);
         if (event.cancel) {
             return;
@@ -1434,7 +1431,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    handleClosed() {
+    public handleClosed() {
         this.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }

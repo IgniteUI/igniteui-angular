@@ -53,12 +53,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
-    /**
-     * Combo-DropDown accesses its children children through the combo parent.
-     * ViewChildren and ContentChildren in the DD context get an incomplete set (Only AddItemComponent and empty, resp.)
-     * @hidden
-     * @internal
-     */
     @ContentChildren(IgxComboItemComponent, { descendants: true })
     protected children: QueryList<IgxDropDownItemBase> = null;
 
@@ -70,12 +64,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     @ContentChild(forwardRef(() => IgxForOfDirective), { read: IgxForOfDirective })
     public verticalScrollContainer: IgxForOfDirective<any>;
 
-    @Input()
-    public comboID: string;
     /**
      * @hidden
      */
-    onFocus() {
+    public onFocus() {
         this._focusedItem = this._focusedItem || this.items[0];
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
@@ -85,20 +77,23 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    onBlur(evt?) {
+    public onBlur(evt?) {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
             this._focusedItem = null;
         }
     }
 
-    onToggleOpened() {
+    /**
+     * @hidden
+     */
+    public onToggleOpened() {
         this.onOpened.emit();
     }
     /**
      * @hidden
      */
-    navigatePrev() {
+    public navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
         } else {
@@ -109,7 +104,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    navigateFirst() {
+    public navigateFirst() {
         const vContainer = this.verticalScrollContainer;
         if (vContainer.state.startIndex === 0) {
             super.navigateItem(0);
@@ -126,7 +121,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    navigateLast() {
+    public navigateLast() {
         const vContainer = this.verticalScrollContainer;
         const scrollTarget = this.combo.totalItemCount ?
             this.combo.totalItemCount - 1 :
@@ -160,31 +155,12 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    selectItem(item: IgxDropDownItemBase) {
+    public selectItem(item: IgxDropDownItemBase) {
         if (item === null || item === undefined) {
             return;
         }
         this.comboAPI.set_selected_item(item.itemID);
         this._focusedItem = item;
-    }
-
-    /**
-     * @hidden
-     */
-    public navigateItem(newIndex: number, direction?: number) {
-        const vContainer = this.verticalScrollContainer;
-        const notVirtual = vContainer.dc.instance.notVirtual;
-        if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
-            super.navigateItem(newIndex); // use default scroll
-        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
-            this.navigateRemoteItem(direction);
-        } else {
-            if (direction === Navigate.Up) { // Navigate UP
-                this.navigateUp(newIndex);
-            } else if (direction === Navigate.Down) { // Navigate DOWN
-                this.navigateDown(newIndex);
-            }
-        }
     }
 
     private navigateDown(newIndex?: number) {
@@ -234,7 +210,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         const vContainer = this.verticalScrollContainer;
         const allData = vContainer.igxForOf;
         const focusedItem = this.focusedItem;
-        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden).value) { // If this is the very first non-header item
+        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden)) { // If this is the very first non-header item
             this.focusComboSearch(); // Focus combo search
             return;
         }
@@ -259,6 +235,30 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
                     super.navigateItem(0); // Focus the first loaded item
                 });
                 vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
+            }
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        let index = -1;
+        if (this._focusedItem) {
+            index = currentIndex ? currentIndex : this._focusedItem.index;
+        }
+        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
+        const vContainer = this.verticalScrollContainer;
+        const notVirtual = vContainer.dc.instance.notVirtual;
+        if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
+            super.navigateItem(newIndex); // use default scroll
+        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
+            this.navigateRemoteItem(direction);
+        } else {
+            if (direction === Navigate.Up) { // Navigate UP
+                this.navigateUp(newIndex);
+            } else if (direction === Navigate.Down) { // Navigate DOWN
+                this.navigateDown(newIndex);
             }
         }
     }
@@ -328,7 +328,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
-    public handleKeyDown(key: DropDownActionKey) {
+    public onItemActionKey(key: DropDownActionKey) {
         switch (key) {
             case DropDownActionKey.ENTER:
                 this.handleEnter();
