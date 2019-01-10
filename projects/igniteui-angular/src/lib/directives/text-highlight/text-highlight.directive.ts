@@ -162,6 +162,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     @Input('page')
     public page: number;
 
+    @Input()
+    public contentChildElement: ElementRef;
+
     /**
      * @hidden
      */
@@ -387,8 +390,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     }
 
     private clearChildElements(originalContentHidden: boolean): void {
-        if (this.parentElement.firstElementChild) {
-            this.renderer.setProperty(this.parentElement.firstElementChild, 'hidden', originalContentHidden);
+        const childToHide = this.contentChildElement ? this.contentChildElement.nativeElement :
+                            this.parentElement.firstElementChild ? this.parentElement.firstElementChild : null;
+        if (childToHide) {
+            this.renderer.setProperty(childToHide, 'hidden', originalContentHidden);
         }
 
         if (this._div !== null) {

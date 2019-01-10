@@ -470,39 +470,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     }
 
     /**
-     * @hidden
-     */
-    protected restoreHighlight(): void {
-    }
-
-    /**
-     * @hidden
-     */
-    public refreshSearch(updateActiveInfo?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
-        return 0;
-    }
-
-    /**
-     * @hidden
-     */
-    public clearSearch() {
-    }
-
-    /**
     * @hidden
     */
     public getContext(rowData): any {

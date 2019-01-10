@@ -1,10 +1,11 @@
 <ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
-        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'">
+        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'"
+        [contentChildElement]="defaultContentElement">
     <ng-container *ngIf="column.dataType === 'boolean' || column.dataType === 'string' || formatter; else default" >
-        <div class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
+        <div #defaultContentElement class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>
     </ng-container>
     <ng-template #default>
-        <div class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
+        <div #defaultContentElement class="igx-grid__td-text">{{ column.dataType === 'number' ? (value | igxdecimal) : (value | igxdate) }}</div>
     </ng-template>
 </ng-template>
 <ng-template #inlineEditor  let-cell="cell">

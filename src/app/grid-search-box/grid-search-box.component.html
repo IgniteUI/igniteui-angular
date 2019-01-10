@@ -1,0 +1,40 @@
+<igx-input-group type="search" class="offset">
+    <igx-prefix>
+        <igx-icon *ngIf="searchText.length == 0">search</igx-icon>
+        <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
+    </igx-prefix>
+
+    <input #search1 id="search1" igxInput placeholder="Search" autocomplete="off" [(ngModel)]="searchText"
+           (ngModelChange)="grid.findNext(searchText, caseSensitive, exactMatch)"
+           (keydown)="searchKeyDown($event)" />
+
+    <igx-suffix *ngIf="searchText.length > 0">
+        <div class="resultsText" *ngIf="grid.lastSearchInfo">
+            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length > 0">
+                {{ grid.lastSearchInfo.activeMatchIndex + 1 }} of {{ grid.lastSearchInfo.matchInfoCache.length }}
+                results
+            </span>
+            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length == 0">
+                No results
+            </span>
+        </div>
+        <div class="chips">
+            <igx-chips-area>
+                <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                    <span>Case Sensitive</span>
+                </igx-chip>
+                <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                    <span>Exact Match</span>
+                </igx-chip>
+            </igx-chips-area>
+        </div>
+        <div class="searchButtons">
+            <button igxButton="icon" igxRipple igxRippleCentered="true" (click)="grid.findPrev(searchText, caseSensitive, exactMatch)">
+                <igx-icon fontSet="material">navigate_before</igx-icon>
+            </button>
+            <button igxButton="icon" igxRipple igxRippleCentered="true" (click)="grid.findNext(searchText, caseSensitive, exactMatch)">
+                <igx-icon fontSet="material">navigate_next</igx-icon>
+            </button>
+        </div>
+    </igx-suffix>
+</igx-input-group>
