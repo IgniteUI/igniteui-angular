@@ -54,7 +54,7 @@ describe('ng-add schematics', () => {
 
   function populatePackageJson() {
     const pkgJson = JSON.parse(tree.read('/package.json').toString());
-    pkgJson.dependencies['@angular/cli'] = '~7.0.5';
+    pkgJson.dependencies['@angular/common'] = '^7.0.3';
     pkgJson.dependencies['@angular/core'] = '^7.0.3';
     tree.overwrite('/package.json', JSON.stringify(pkgJson));
   }
@@ -132,7 +132,7 @@ describe('ng-add schematics', () => {
 
   it('should properly add polyfills', () => {
     expect(tree.readContent('src/polyfills.ts')).toBe(polyfills);
-    runner.runSchematic('ng-add', {}, tree);
+    runner.runSchematic('ng-add', { polyfills: true }, tree);
     expect(tree.readContent('src/polyfills.ts')).not.toBe(polyfills);
   });
 });
