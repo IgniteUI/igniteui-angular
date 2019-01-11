@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Optional,
-    Self
+    Self,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -26,7 +28,7 @@ export enum IgxInputState {
 @Directive({
     selector: '[igxInput]'
 })
-export class IgxInputDirective implements AfterViewInit, OnDestroy {
+export class IgxInputDirective implements AfterViewInit, OnChanges, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
 
@@ -52,7 +54,6 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
-        this.checkValidity();
     }
     /**
      * Gets the `value` propery.
@@ -174,6 +175,14 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         }
 
         this.cdr.detectChanges();
+    }
+    /**
+     *@hidden
+     */
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.value && !changes.value.firstChange) {
+            this.checkValidity();
+        }
     }
     /**
      *@hidden
