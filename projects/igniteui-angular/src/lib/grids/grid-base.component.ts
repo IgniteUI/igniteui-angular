@@ -302,7 +302,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._locale) {
             return this._locale;
         } else {
-            return window.navigator.language;
+            return 'en';
         }
     }
 
