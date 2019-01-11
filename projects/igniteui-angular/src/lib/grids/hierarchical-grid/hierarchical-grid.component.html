@@ -97,11 +97,15 @@
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #hierarchical_record_template>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row [ngClass]="{
+                'igx-grid__tr--highlighted':row.highlighted
+              }">
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template>
-            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex'>
+            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' [ngClass]="{
+                'igx-grid__tr--highlighted':isRowHighlighted(rowData)
+              }">
                     <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex" [rowData]="rowData" [layout]='layout' #row>
                     </igx-child-grid-row>
             </div>

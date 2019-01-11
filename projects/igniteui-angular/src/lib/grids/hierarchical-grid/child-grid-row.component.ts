@@ -44,6 +44,13 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /**
      * @hidden
      */
+    public get highlighted() {
+        return this.hGrid.parent && this.hGrid.parent.highlightedRowID === this.rowData.rowID;
+    }
+
+    /**
+     * @hidden
+     */
     // public get layout() {
     //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
     //    return layout;
