@@ -23,7 +23,7 @@ function logSuccess(options: Options): Rule {
   };
 }
 
-function LogIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
+function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
   context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
@@ -52,11 +52,11 @@ function addDependencies(options: Options): Rule {
         case 'hammerjs':
           addPackageJsonDependency(tree, pkg, version);
           addHammerJsToWorkspace(tree);
-          LogIncludingDependency(context, pkg, version);
+          logIncludingDependency(context, pkg, version);
           break;
         default:
           addPackageJsonDependency(tree, pkg, version);
-          LogIncludingDependency(context, pkg, version);
+          logIncludingDependency(context, pkg, version);
           break;
       }
     });
@@ -69,7 +69,7 @@ function addDependencies(options: Options): Rule {
 }
 
 /**
- * The import is needed so that the igxGrid can render under IE.
+ *  ES7 `Object.entries` needed for igxGrid to render in IE.
  * - https://github.com/IgniteUI/igniteui-cli/issues/344
  */
 function addIgxGridSupportForIe(polyfillsData: string): string {
