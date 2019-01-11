@@ -29,6 +29,11 @@ export class AppComponent implements OnInit {
 
     componentLinks = [
         {
+            link: '/autocomplete',
+            icon: 'account_circle',
+            name: 'Autocomplete'
+        },
+        {
             link: '/avatar',
             icon: 'account_circle',
             name: 'Avatar'

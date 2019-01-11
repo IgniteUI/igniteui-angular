@@ -78,9 +78,11 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
+import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 
 const components = [
     AppComponent,
+    AutocompleteSampleComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
     BannerSampleComponent,
