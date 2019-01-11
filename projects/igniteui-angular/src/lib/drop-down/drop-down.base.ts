@@ -466,7 +466,7 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
         //  to appear on screen before animation start. As a result dropdown
         //  flickers badly. This is why we set scrollTop just a little later
         //  allowing animation to start and prevent dropdown flickering
-        if (isIE) {
+        if (isIE()) {
             setTimeout(() => {
                 this.scrollContainer.scrollTop = (itemPosition);
             }, 1);
