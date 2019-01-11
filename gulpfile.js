@@ -153,6 +153,7 @@ gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
             `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
+            `${TYPEDOC_THEME.SRC}/assets/js/src/versioning/tag-versions.req.js`,
             `${TYPEDOC_THEME.SRC}/assets/js/main.js`
         ])
         .pipe(concat('main.js'))
