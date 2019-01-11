@@ -16,4 +16,14 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     ) {
         super(dropDown, elementRef);
     }
+
+    public get isSelected () {
+        return this.selection.is_item_selected(this.dropDown.id, this.value);
+    }
+
+    public set isSelected (value: any) {
+        if (value) {
+            this.dropDown.selectItem(this);
+        }
+    }
 }

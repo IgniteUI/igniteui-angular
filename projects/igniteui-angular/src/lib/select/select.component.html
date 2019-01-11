@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup class="input-group" [igxToggleAction]="toggleDirective">
+<igx-input-group #inputGroup class="input-group" [igxToggleAction]="this">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -10,7 +10,7 @@
         readonly= "true"
         [placeholder]="this.placeholder"
         [(ngModel)]="this.value"
-        (keydown.ArrowDown)="openDropDown()"/>
+        />
     <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
         <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
         <ng-template #toggleUp>

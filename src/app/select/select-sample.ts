@@ -13,7 +13,7 @@ export class SelectComponent implements OnInit {
     @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
     public items: any[] = [];
     public value: string;
-
+//  public value = 'Option 1';
     public ngOnInit() {
         for (let i = 1; i < 4; i ++) {
             const item = { field: 'Option ' + i };

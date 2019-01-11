@@ -1,4 +1,4 @@
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -16,9 +16,8 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownItemComponent } from 'igniteui-angular';
-import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
+import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 
-let NEXT_ID = 0;
 const noop = () => { };
 
 @Component({
@@ -27,7 +26,7 @@ const noop = () => { };
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => IgxSelectComponent),
+            useExisting: IgxSelectComponent,
             multi: true
         },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
@@ -39,6 +38,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     protected children: QueryList<IgxSelectItemComponent>;
     @Input() public value: any;
     @Input() public placeholder = '';
+    @Input()
+    @HostBinding('class.igx-select--disabled')
+    public disabled = false;
+
+    public get selectedItem(): any {
+        const selectedValue = this.selection.first_item(this.id);
+        return this.items.find(x => x.value === selectedValue);
+    }
 
     //#region IMPLEMENT ControlValueAccessor METHODS
     private _onChangeCallback: (_: any) => void = noop;
@@ -46,12 +53,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         // 1. Select the new item from the drop down
         // 2. Set the input value
         if (value) {
-            const item = this.items.find((x) => x.value === value);
-            if (!item) {
-                return;
-            }
-            this.selectItem(item);
-         }
+            this.value = value;
+            this.selection.set(this.id, new Set([this.value]));
+        }
     }
 
     public registerOnChange(fn: any): void {
@@ -59,8 +63,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
     public registerOnTouched(fn: any): void { }
 
-    ngAfterContentInit() {
-    }
     //#endregion
 
     //#region ITEMS POSITION MANAGEMENT
@@ -83,24 +85,44 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     //#endregion
 
 
-    public selectItem(item: IgxDropDownItemBase, event?) {
-        super.selectItem(item, event);
+    public selectItem(newSelection: IgxDropDownItemBase, event?) {
+        const oldSelection = this.selectedItem;
+        if (newSelection === null) {
+            return;
+        }
+        if (newSelection.isHeader) {
+            return;
+        }
+        const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
+        this.onSelection.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        this.selection.set(this.id, new Set([newSelection.value]));
+        if (event) {
+            this.toggleDirective.close();
+        }
+
         if (this.selectedItem) {
             this.value = this.selectedItem.value;
             this._onChangeCallback(this.value);
         }
     }
-    public openDropDown() {
-        if (this.toggleDirective.collapsed) {
-            this.toggleDirective.open({
-                modal: false,
-                positionStrategy: new ConnectedPositioningStrategy({
-                    target: this.inputGroup.element.nativeElement
-                })
-            });
-        }
+
+    public open(overlaySettings?: OverlaySettings) {
+        super.open({
+            modal: false,
+            positionStrategy: new ConnectedPositioningStrategy({
+                target: this.inputGroup.element.nativeElement
+            })
+        });
     }
 
+    // getPrefixClientWidth () {
+
+    // }
 }
 
 @NgModule({

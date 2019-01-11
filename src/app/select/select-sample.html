@@ -1,15 +1,12 @@
-<!-- <igx-drop-down #dropDown [width]="'160px'" (onSelection)="onSelection($event)">
-    <igx-drop-down-item *ngFor="let item of items" [value]="item.field">
-        {{ item.field }}
-    </igx-drop-down-item>
-</igx-drop-down> -->
-
-<igx-select [width]="'260px'" [placeholder]="'Pick One'"  [(ngModel)]="value">
+<igx-select [width]="'260px'" [placeholder]="'Pick One'" [(ngModel)]="value"
+            [disabled]="false"
+>
     <label igxLabel>Sample Label</label>
     <igx-prefix igxPrefix igxButton="icon" igxRipple>
         <igx-icon fontSet="material">alarm</igx-icon>
     </igx-prefix>
-    <igx-select-item *ngFor="let item of items" [value]="item.field">
+    <igx-select-item *ngFor="let item of items; let index" [value]="item.field"
+        [isSelected]="item.field === 'Option 2'">
         {{ item.field }}
     </igx-select-item>
 </igx-select>
