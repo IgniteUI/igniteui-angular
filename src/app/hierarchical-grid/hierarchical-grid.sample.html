@@ -6,7 +6,7 @@
     <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [displayDensity]="density" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
         <igx-column field="ID" [pinned]="true"></igx-column>
         <igx-column-group header="Information">
-            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ChildLevels"  [groupable]='true'></igx-column>
             <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
 

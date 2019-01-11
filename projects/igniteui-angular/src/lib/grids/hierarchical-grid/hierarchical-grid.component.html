@@ -32,7 +32,7 @@
                 <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" >arrow_forward</igx-icon>
             </span>
         </ng-container>
-        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass">
+        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass" [attr.gridId]='this.id'>
             <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
     </igx-chips-area>
