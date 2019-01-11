@@ -192,6 +192,7 @@ export abstract class IgxBaseExporter {
     }
 
     private prepareData(grid: any, options: IgxExporterOptionsBase): any[] {
+        this.flatRecords = [];
         let rootRecords = grid.rootRecords;
         this._isTreeGrid = rootRecords !== undefined;
 

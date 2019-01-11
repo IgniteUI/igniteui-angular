@@ -41,7 +41,7 @@
     $stripes-color: null,
     $text-color: null
 ) {
-    $name: 'igx-progress-linear';
+    $name: 'igx-linear-bar';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
@@ -76,33 +76,26 @@
     %linear-display {
         position: relative;
         display: flex;
-        align-items: center;
-        flex-flow: column nowrap;
         width: 100%;
+        flex: 1 1 100%;
     }
 
     %linear-bar {
-        width: inherit;
-        height: $bar-height;
-        overflow: hidden;
-    }
-
-    %linear-bar-base {
         position: absolute;
         width: inherit;
-        height: inherit;
+        height: $bar-height;
         background: --var($theme, 'track-color');
+        overflow: hidden;
         z-index: 0;
     }
 
-    %linear-bar-progress {
+    %linear-indicator {
         width: 100%;
         position: relative;
         height: inherit;
-        backface-visibility: hidden;
     }
 
-    %linear-bar-progress--striped {
+    %linear-indicator--striped {
         background-image: linear-gradient(
             -45deg,
             $stripe-color 25%,
@@ -116,23 +109,39 @@
         background-size: 40px 40px;
     }
 
-    %linear-bar-progress--default {
+    %linear-indicator--indeterminate {
+        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) infinite);
+        width: 100% !important;
+
+        &::before {
+            position: absolute;
+            content: '';
+            top: 0;
+            left: -200%;
+            width: 100%;
+            height: inherit;
+            background-color: inherit;
+            transform-origin: top right;
+        }
+    }
+
+    %linear-indicator--default {
         background: --var($theme, 'fill-color-default')
     }
 
-    %linear-bar-progress--danger {
+    %linear-indicator--danger {
         background-color: --var($theme, 'fill-color-danger');
     }
 
-    %linear-bar-progress--warning {
+    %linear-indicator--warning {
         background-color: --var($theme, 'fill-color-warning');
     }
 
-    %linear-bar-progress--info {
+    %linear-indicator--info {
         background-color: --var($theme, 'fill-color-info');
     }
 
-    %linear-bar-progress--success {
+    %linear-indicator--success {
         background-color: --var($theme, 'fill-color-success');
     }
 
@@ -191,7 +200,7 @@
     $progress-circle-color: null,
     $text-color: null
 ) {
-    $name: 'igx-progress-circular';
+    $name: 'igx-circular-bar';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @return extend($theme, (
@@ -202,12 +211,15 @@
         text-color: $text-color
     ));
 }
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
+/// @requires {mixin} rotate-center
 /// @requires --var
 @mixin igx-progress-circular($theme) {
+    // Include rotate animation
+    @include rotate-center();
+
     @include igx-root-css-vars($theme);
 
     // @debug $theme;
@@ -216,25 +228,42 @@
     $circular-value-fw: 600;
 
     %circular-display {
-        width: 100%;
-        height: 100%;
+        display: inline-flex;
+        flex: 1 1 auto;
+
+        svg {
+            width: 100%;
+            height: 100%;
+            min-width: 24px;
+            min-height: 24px;
+        }
     }
 
-    %circular-innercircle {
+    %circular-display--indeterminate {
+        @include animation(rotate-center 1.4s linear infinite);
+        transform-origin: 50% 50%;
+    }
+
+    %circular-inner {
         stroke-width: 4;
         fill: transparent;
         stroke: --var($theme, 'base-circle-color');
     }
 
-    %circular-circle {
+    %circular-outer {
         fill: transparent;
         stroke: --var($theme, 'progress-circle-color');
-        stroke-width: 6;
-        stroke-linecap: round;
+        stroke-width: 4;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
         transform-origin: 50% 50%;
         transform: rotate(-90deg);
+    }
+
+    %circular-outer--indeterminate {
+        stroke-dashoffset: 180;
+        stroke-dasharray: 180;
+        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) infinite);
     }
 
     %circular-text {
@@ -245,5 +274,33 @@
 
     %circular-text--hidden {
         visibility: hidden;
+    }
+}
+
+@include keyframes('indeterminate-bar') {
+    0% {
+        transform: scaleX(0) translateX(-100%);
+        transform-origin: left;
+    }
+
+    50% {
+        transform: scaleX(1) translateX(50%);
+        transform-origin: right;
+    }
+
+    100% {
+        transform: scaleX(0) translateX(200%);
+        transform-origin: right;
+    }
+}
+
+@include keyframes('indeterminate-accordion') {
+    50% {
+        stroke-dashoffset: 260;
+        stroke-dasharray: 289;
+    }
+
+    100% {
+        stroke-dashoffset: -180;
     }
 }

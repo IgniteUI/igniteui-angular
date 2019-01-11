@@ -21,7 +21,6 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IgxBadgeModule } from '../badge/badge.component';
-import { DeprecateClass } from '../core/deprecateDecorators';
 import { IgxIconModule } from '../icon/index';
 
 export interface ISelectTabEventArgs {
