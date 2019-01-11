@@ -146,12 +146,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public labelVisibility = true;
 
     /**
-     *An @Input property that sets locales. By default the browser's language is used.
+     *An @Input property that sets locales. Default locale is en.
      *```html
      *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      *```
      */
-    @Input() public locale: string = window.navigator.language;
+    @Input() public locale: 'en';
 
     /**
      *An @Input property that sets on which day the week starts.
