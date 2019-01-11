@@ -22,14 +22,35 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBase) { }
 
     /**
-     * @hidden
+     * Gets the target of the navigation directive;
+     *
+     * ```typescript
+     * // Get
+     * export class MyComponent {
+     *  ...
+     *  @ContentChild(IgxDropDownNavigationDirective)
+     *  navDirective: IgxDropDownNavigationDirective = null
+     *  ...
+     *  const navTarget: IgxDropDownBase = navDirective.navTarget
+     * }
+     * ```
      */
     get target(): IgxDropDownBase {
         return this._target;
     }
 
     /**
-     * @hidden
+     * Sets the target of the navigation directive;
+     * If no valid target is passed, it falls back to the drop down context
+     *
+     * ```html
+     * <!-- Set -->
+     * <input [igxDropDownItemNavigation]="dropdown" />
+     * ...
+     * <igx-drop-down #dropdown>
+     * ...
+     * </igx-drop-down>
+     * ```
      */
     @Input('igxDropDownItemNavigation')
     set target(target: IgxDropDownBase) {
@@ -37,7 +58,7 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
     }
 
     /**
-     * @hidden
+     * Captures keydown events and calls the appropriate handlers on the target component
      */
     @HostListener('keydown', ['$event'])
     handleKeyDown(event: KeyboardEvent) {

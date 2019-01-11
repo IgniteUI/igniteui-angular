@@ -7,6 +7,10 @@ import {
 } from '@angular/core';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
+/**
+ * The `<igx-drop-down-item>` is a container intended for row items in
+ * a `<igx-drop-down>` container.
+ */
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'

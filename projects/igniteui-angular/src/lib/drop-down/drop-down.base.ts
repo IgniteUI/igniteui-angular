@@ -9,7 +9,13 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
 
 let NEXT_ID = 0;
 
-/** @hidden TODO: refactor */
+/**
+ * An abstract class, defining a drop-down component, with:
+ * Properties for display styles and classes
+ * A collection items of type `IgxDropDownItemBase`
+ * Properties and methods for navigating (highlighting/focusing) items from the collection
+ * Properties and methods for selecting items from the collection
+ */
 export abstract class IgxDropDownBase implements IDropDownList {
     protected _width;
     protected _height;
@@ -231,7 +237,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
 
     /**
      * Navigates to the item on the specified index
-     * @param newIndex number
+     * @param newIndex number - the index of the item in the `items` collection
      */
     public navigateItem(newIndex: number) {
         if (newIndex !== -1) {
