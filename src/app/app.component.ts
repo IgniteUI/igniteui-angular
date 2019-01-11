@@ -263,15 +263,15 @@ export class AppComponent implements OnInit {
             icon: 'android',
             name: 'Toast'
         }, {
-            link: '/hierarhicalGrid',
+            link: '/hierarchicalGrid',
             icon: 'view_column',
             name: 'Hierarchical Grid'
         }, {
-            link: '/hierarhicalGridRemote',
+            link: '/hierarchicalGridRemote',
             icon: 'swap_vert',
             name: 'Hierarchical Grid Remote'
         }, {
-            link: '/hierarhicalGridUpdating',
+            link: '/hierarchicalGridUpdating',
             icon: 'edit',
             name: 'Hierarchical Grid Updating'
         },

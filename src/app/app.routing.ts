@@ -241,13 +241,13 @@ const appRoutes = [
         path: 'tooltip',
         component: TooltipSampleComponent
     }, {
-        path: 'hierarhicalGrid',
+        path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
     }, {
-        path: 'hierarhicalGridRemote',
+        path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
     }, {
-        path: 'hierarhicalGridUpdating',
+        path: 'hierarchicalGridUpdating',
         component: HierarchicalGridUpdatingSampleComponent
     },
     {
