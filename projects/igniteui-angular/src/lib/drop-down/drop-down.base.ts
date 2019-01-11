@@ -221,6 +221,19 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
     }
 
     /**
+     * @hidden
+     */
+    protected get sortedChildren(): IgxDropDownItemBase[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
+                    return a.index - b.index;
+                });
+        }
+        return null;
+    }
+
+    /**
      * Get all non-header items
      *
      * ```typescript
@@ -230,10 +243,7 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
     public get items(): IgxDropDownItemBase[] {
         const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
-            const sortedChildren = this.children.toArray()
-                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
-                    return a.index - b.index;
-                });
+            const sortedChildren = this.sortedChildren;
             for (const child of sortedChildren) {
                 if (!child.isHeader) {
                     items.push(child);

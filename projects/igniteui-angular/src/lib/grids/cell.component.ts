@@ -760,10 +760,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'arrowleft':
             case 'left':
                 if (ctrl && key === 'home') {
+                    this.nativeElement.blur();
                     this.grid.navigation.goToFirstCell();
                     return;
                 }
                 if (ctrl || key === 'home') {
+                    this.nativeElement.blur();
                     this.grid.navigation.onKeydownHome(this.rowIndex);
                     break;
                 }
@@ -773,10 +775,12 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             case 'arrowright':
             case 'right':
                 if (ctrl && key === 'end') {
+                    this.nativeElement.blur();
                     this.grid.navigation.goToLastCell();
                     return;
                 }
                 if (ctrl || key === 'end') {
+                    this.nativeElement.blur();
                     this.grid.navigation.onKeydownEnd(this.rowIndex);
                     break;
                 }

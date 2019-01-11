@@ -227,7 +227,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         const extraScroll = this.combo.isAddButtonVisible() ? 1 : 0;
         const focusedItem = this.focusedItem;
         const items = this.items;
-        const children = this.children.toArray();
+        const children = this.sortedChildren;
         if (focusedItem) {
             if (focusedItem.value === 'ADD ITEM') { return; }
             if (focusedItem.value === allData[allData.length - 1]) {
@@ -298,7 +298,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     }
 
     private itemIndexInData(index: number) {
-        return this.children.toArray().findIndex(e => e.itemIndex === index) + this.verticalScrollContainer.state.startIndex;
+        return this.sortedChildren.findIndex(e => e.itemIndex === index) + this.verticalScrollContainer.state.startIndex;
     }
 
     private findNextFocusableItem(indexInData: number, direction: Navigate, data: any[]): number {
