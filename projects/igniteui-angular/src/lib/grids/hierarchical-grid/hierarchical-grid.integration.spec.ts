@@ -482,7 +482,8 @@ describe('IgxHierarchicalGrid Integration', () => {
                 <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
                 <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
         </igx-column-group>
-        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
+        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true"
+         [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
             <igx-column field="ID" [groupable]='true' [hasSummary]='true' ></igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
