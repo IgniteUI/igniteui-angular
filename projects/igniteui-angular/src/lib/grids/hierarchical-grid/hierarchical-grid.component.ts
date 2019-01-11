@@ -150,13 +150,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     get hasExpandableChildren() {
-        if (!this.data || this.data.length === 0
-        || this.childLayoutKeys.length === 0) {
+        if (!this.data || this.data.length === 0) {
             return false;
         }
-        return this.childLayoutKeys.some(key => {
-           return this.data.some((rec) => rec.hasOwnProperty(key));
-        });
+        return !!this.childLayoutKeys.length;
     }
 
     /**
