@@ -385,23 +385,21 @@ describe('Excel Exporter', () => {
         });
 
         it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
-            const fix = TestBed.createComponent(ProductsComponent);
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
 
             // Set column formatters
-            grid.columns[3].formatter = ((val: number) => {
-                return val.toFixed(2);
-            });
-            grid.columns[4].formatter = ((val: Date) => {
-                return val.toDateString();
+            grid.columns[0].formatter = ((val: number) => {
+                const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' , 'ten'];
+                return numbers[val - 1];
             });
             grid.cdr.detectChanges();
             fix.detectChanges();
 
             // Verify the exported data is formatted by default
-            await exportAndVerify(grid, options, actualData.gridProductsWithFormatter);
+            await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleWithFormatting);
 
             exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = true;
@@ -410,7 +408,7 @@ describe('Excel Exporter', () => {
             grid.cdr.detectChanges();
 
             // Verify the data without formatting
-            await exportAndVerify(grid, options, actualData.gridProductsWithoutFormatter);
+            await exportAndVerify(grid, options, actualData.simpleGridData);
 
             exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = false;
@@ -418,7 +416,7 @@ describe('Excel Exporter', () => {
             grid.cdr.detectChanges();
             fix.detectChanges();
             // Verify the exported data with formatting
-            await exportAndVerify(grid, options, actualData.gridProductsWithFormatter);
+            await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleWithFormatting);
         });
     });
 
