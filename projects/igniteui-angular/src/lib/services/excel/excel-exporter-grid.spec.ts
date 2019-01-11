@@ -8,7 +8,7 @@ import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { JSZipWrapper } from './jszip-verification-wrapper.spec';
 import { FileContentData } from './test-data.service.spec';
-import { ReorderedColumnsComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -32,7 +32,8 @@ describe('Excel Exporter', () => {
             declarations: [
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
+                IgxTreeGridPrimaryForeignKeyComponent,
+                ProductsComponent
             ],
             imports: [IgxGridModule.forRoot(), IgxTreeGridModule]
         }).compileComponents();
@@ -347,43 +348,79 @@ describe('Excel Exporter', () => {
                 expect(rows[i].index).toBe(i);
                 expect(JSON.stringify(rows[i].data)).toBe(JSON.stringify(data[i]));
             }
-    });
-
-    it('should not export rows when \'onRowExport\' is canceled.', async () => {
-        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
-
-        const grid = fix.componentInstance.grid;
-
-        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
-            value.cancel = true;
         });
 
-        const wrapper = await getExportedData(grid, options);
-        expect(wrapper.hasValues).toBe(false);
-        wrapper.verifyStructure();
-        wrapper.verifyTemplateFilesContent();
-    });
+        it('should not export rows when \'onRowExport\' is canceled.', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
 
-    it('shouldn\'t affect grid sort expressions', async () => {
-        const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
-        fix.detectChanges();
+            const grid = fix.componentInstance.grid;
 
-        const grid = fix.componentInstance.grid;
-        grid.columns[1].header = 'My header';
-        grid.columns[1].sortable = true;
-        grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
-        const sortField = grid.sortingExpressions[0].fieldName;
-        fix.detectChanges();
+            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+                value.cancel = true;
+            });
 
-        let wrapper = await getExportedData(grid, options);
-        fix.detectChanges();
+            const wrapper = await getExportedData(grid, options);
+            expect(wrapper.hasValues).toBe(false);
+            wrapper.verifyStructure();
+            wrapper.verifyTemplateFilesContent();
+        });
 
-        wrapper = await getExportedData(grid, options);
-        const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
-        expect(sortField).toBe(sortFieldAfterExport);
-    });
+        it('shouldn\'t affect grid sort expressions', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
 
+            const grid = fix.componentInstance.grid;
+            grid.columns[1].header = 'My header';
+            grid.columns[1].sortable = true;
+            grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
+            const sortField = grid.sortingExpressions[0].fieldName;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(grid, options);
+            fix.detectChanges();
+
+            wrapper = await getExportedData(grid, options);
+            const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
+            expect(sortField).toBe(sortFieldAfterExport);
+        });
+
+        it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
+            const fix = TestBed.createComponent(ProductsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
+            // Set column formatters
+            grid.columns[3].formatter = ((val: number) => {
+                return new Intl.NumberFormat('bg-BG').format(val);
+            });
+            grid.columns[4].formatter = ((val: Date) => {
+                return new Intl.DateTimeFormat('ja-JP').format(val);
+            });
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+
+            // Verify the exported data is formatted by default
+            await exportAndVerify(grid, options, actualData.gridProductsWithFormatter);
+
+            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+                val.skipFormatter = true;
+            });
+            fix.detectChanges();
+            grid.cdr.detectChanges();
+
+            // Verify the data without formatting
+            await exportAndVerify(grid, options, actualData.gridProductsWithoutFormatter);
+
+            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+                val.skipFormatter = false;
+            });
+            grid.cdr.detectChanges();
+            fix.detectChanges();
+            // Verify the exported data with formatting
+            await exportAndVerify(grid, options, actualData.gridProductsWithFormatter);
+        });
     });
 
     describe('', () => {
@@ -496,6 +533,28 @@ describe('Excel Exporter', () => {
                 error = ex.message;
             }
             expect(error).toMatch('Can create an outline of up to eight levels!');
+        });
+
+        it('should skip the formatter when columnExproting skipFormatter is true', async () => {
+            treeGrid.columns[4].formatter = ((val: number) => {
+                const t = Math.floor(val / 10);
+                const o = val % 10;
+                return val + parseFloat(((t + o) / 12).toFixed(2));
+            });
+            treeGrid.cdr.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
+
+            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+                args.skipFormatter = true;
+            });
+            treeGrid.cdr.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
+
+            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+                args.skipFormatter = false;
+            });
+            treeGrid.cdr.detectChanges();
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
         });
     });
 

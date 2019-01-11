@@ -18,8 +18,10 @@ export interface IRowExportingEventArgs {
 
 export interface IColumnExportingEventArgs {
     header: string;
+    field: string;
     columnIndex: number;
     cancel: boolean;
+    skipFormatter: boolean;
 }
 
 export abstract class IgxBaseExporter {
@@ -81,7 +83,8 @@ export abstract class IgxBaseExporter {
                 header: columnHeader,
                 field: column.field,
                 skip: !exportColumn,
-                formatter: column.formatter
+                formatter: column.formatter,
+                skipFormatter: false
             };
 
             if (index !== -1) {
@@ -127,13 +130,16 @@ export abstract class IgxBaseExporter {
             if (!column.skip) {
                 const columnExportArgs = {
                     header: column.header,
+                    field: column.field,
                     columnIndex: index,
-                    cancel: false
+                    cancel: false,
+                    skipFormatter: false
                 };
                 this.onColumnExport.emit(columnExportArgs);
 
                 column.header = columnExportArgs.header;
                 column.skip = columnExportArgs.cancel;
+                column.skipFormatter = columnExportArgs.skipFormatter;
 
                 if (column.skip && index <= this._indexOfLastPinnedColumn) {
                     skippedPinnedColumnsCount++;
@@ -171,7 +177,7 @@ export abstract class IgxBaseExporter {
             row = this._columnList.reduce((a, e) => {
                 if (!e.skip) {
                     const rawValue = this._isTreeGrid ? rowData.data[e.field] : rowData[e.field];
-                    a[e.header] = e.formatter ? e.formatter(rawValue) : rawValue;
+                    a[e.header] = e.formatter && !e.skipFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
