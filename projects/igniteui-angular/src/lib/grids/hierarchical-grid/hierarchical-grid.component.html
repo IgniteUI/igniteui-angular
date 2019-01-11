@@ -47,10 +47,8 @@
             <igx-icon role="button" fontSet="material" *ngIf="hierarchicalState.length === 0 && hasExpandableChildren">unfold_more</igx-icon>
         </div>
         <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__hierarchical-action-indent igx-grid__hierarchical-action-indent--header" #headerGroupContainer>
-                <button (click)="toggleAllGroupRows()" igxButton="icon" igxRipple igxRippleCentered="true">
-                    <igx-icon fontSet="material">reorder</igx-icon>
-                </button>
+            <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
+                <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">reorder</igx-icon>
             </div>
         </ng-container>
         <ng-container *ngIf="rowSelectable">
