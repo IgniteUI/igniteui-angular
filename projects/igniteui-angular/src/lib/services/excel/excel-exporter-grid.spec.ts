@@ -19,7 +19,6 @@ import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-gri
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { DecimalPipe, DatePipe } from '@angular/common';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -385,9 +384,7 @@ describe('Excel Exporter', () => {
             expect(sortField).toBe(sortFieldAfterExport);
         });
 
-        fit('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
-            const dPipe = new DatePipe('en-US');
-            const nPipe = new  DecimalPipe('en-US');
+        it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
             const fix = TestBed.createComponent(ProductsComponent);
             fix.detectChanges();
 
@@ -395,10 +392,10 @@ describe('Excel Exporter', () => {
 
             // Set column formatters
             grid.columns[3].formatter = ((val: number) => {
-                return nPipe.transform(val);
+                return val.toFixed(2);
             });
             grid.columns[4].formatter = ((val: Date) => {
-                return dPipe.transform(val);
+                return val.toDateString();
             });
             grid.cdr.detectChanges();
             fix.detectChanges();
