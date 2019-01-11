@@ -12,6 +12,7 @@ export * from './lib/animations/main';
  * Directives
  */
 export * from './lib/core/navigation';
+export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
 export * from './lib/directives/dragdrop/dragdrop.directive';
 export * from './lib/directives/filter/filter.directive';
