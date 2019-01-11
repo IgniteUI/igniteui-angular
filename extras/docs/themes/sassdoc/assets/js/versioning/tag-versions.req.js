@@ -1,6 +1,6 @@
 (function() {
     $.ajax({
-        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.json",
+        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.jsonhttp://10.14.0.51/test.json",
         type: "get",
         xhrFields: {
             withCredentials: false
