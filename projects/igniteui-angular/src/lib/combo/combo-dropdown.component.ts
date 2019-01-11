@@ -1,32 +1,33 @@
 import {
-    ChangeDetectorRef, Component, ContentChild,
-    ElementRef, forwardRef, Inject, QueryList, EventEmitter, OnDestroy, AfterViewInit
+    ChangeDetectorRef, Component, ContentChild, ElementRef, forwardRef, Inject, QueryList, OnDestroy, AfterViewInit, Input, ContentChildren
 } from '@angular/core';
 import { takeUntil, take } from 'rxjs/operators';
-import { IgxComboItemComponent } from './combo-item.component';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { Subject } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
 import { IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
 import { Navigate } from '../drop-down/drop-down.common';
+import { IDropDownBase, IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
+import { IgxDropDownComponent } from '../drop-down/drop-down.component';
+import { DropDownActionKey } from '../drop-down/drop-down-navigation.directive';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
+import { IgxComboAPIService } from './combo.api';
+import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { IgxSelectionAPIService } from '../core/selection';
+import { IgxComboItemComponent } from './combo-item.component';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-drop-down',
     templateUrl: '../drop-down/drop-down.component.html',
-    providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxComboDropDownComponent }]
 })
-export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterViewInit, OnDestroy {
-    private _children: QueryList<IgxDropDownItemBase>;
-    private _scrollPosition = 0;
-    private destroy$ = new Subject<boolean>();
+export class IgxComboDropDownComponent extends IgxDropDownComponent implements IDropDownBase, OnDestroy, AfterViewInit {
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
-        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) {
+        @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
+        protected comboAPI: IgxComboAPIService) {
         super(elementRef, cdr, selection);
     }
 
@@ -52,27 +53,10 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
             this.items.length - 1;
     }
 
-    /**
-     *  Event emitter overrides
-     *
-     * @hidden
-     */
-    public onOpened = this.combo.onOpened;
+    @ContentChildren(IgxComboItemComponent, { descendants: true })
+    protected children: QueryList<IgxDropDownItemBase> = null;
 
-    /**
-     * @hidden
-     */
-    public onOpening = this.combo.onOpening;
-
-    /**
-     * @hidden
-     */
-    public onClosing = this.combo.onClosing;
-
-    /**
-     * @hidden
-     */
-    public onClosed = this.combo.onClosed;
+    private _scrollPosition = 0;
 
     /**
      * @hidden
@@ -83,19 +67,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    protected get children(): QueryList<IgxDropDownItemBase> {
-        return this.combo.children;
-    }
-
-    protected set children(list: QueryList<IgxDropDownItemBase>) {
-        this._children = list;
-    }
-
-    /**
-     * @hidden
-     */
-    onFocus() {
-        this._focusedItem = this._focusedItem ? this._focusedItem : this.items.length ? this.items[0] : this.children.first;
+    public onFocus() {
+        this._focusedItem = this._focusedItem || this.items[0];
         if (this._focusedItem) {
             this._focusedItem.isFocused = true;
         }
@@ -104,7 +77,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    onBlur(evt?) {
+    public onBlur(evt?) {
         if (this._focusedItem) {
             this._focusedItem.isFocused = false;
             this._focusedItem = null;
@@ -114,15 +87,13 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    public get selectedItem(): any[] {
-        const sel = this.selection.get(this.combo.id);
-        return sel ? Array.from(sel) : [];
+    public onToggleOpened() {
+        this.onOpened.emit();
     }
-
     /**
      * @hidden
      */
-    navigatePrev() {
+    public navigatePrev() {
         if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
         } else {
@@ -133,7 +104,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    navigateFirst() {
+    public navigateFirst() {
         const vContainer = this.verticalScrollContainer;
         if (vContainer.state.startIndex === 0) {
             super.navigateItem(0);
@@ -150,7 +121,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    navigateLast() {
+    public navigateLast() {
         const vContainer = this.verticalScrollContainer;
         const scrollTarget = this.combo.totalItemCount ?
             this.combo.totalItemCount - 1 :
@@ -184,41 +155,12 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
     /**
      * @hidden
      */
-    setSelectedItem(itemID: any, select = true) {
-        this.combo.setSelectedItem(itemID, select);
-    }
-
-    /**
-     * @hidden
-     */
-    selectItem(item: IgxComboItemComponent, event?: Event) {
-        if (item.value === 'ADD ITEM') {
-            if (event) {
-                this.combo.addItemToCollection();
-            }
-        } else {
-            this.setSelectedItem(item.itemID);
-            this._focusedItem = item;
+    public selectItem(item: IgxDropDownItemBase) {
+        if (item === null || item === undefined) {
+            return;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public navigateItem(newIndex: number, direction?: number) {
-        const vContainer = this.verticalScrollContainer;
-        const notVirtual = vContainer.dc.instance.notVirtual;
-        if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
-            super.navigateItem(newIndex); // use default scroll
-        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
-            this.navigateRemoteItem(direction);
-        } else {
-            if (direction === Navigate.Up) { // Navigate UP
-                this.navigateUp(newIndex);
-            } else if (direction === Navigate.Down) { // Navigate DOWN
-                this.navigateDown(newIndex);
-            }
-        }
+        this.comboAPI.set_selected_item(item.itemID);
+        this._focusedItem = item;
     }
 
     private navigateDown(newIndex?: number) {
@@ -229,7 +171,7 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         const items = this.items;
         const children = this.children.toArray();
         if (focusedItem) {
-            if (focusedItem.value === 'ADD ITEM') { return; }
+            if (this.isAddItemFocused()) { return; }
             if (focusedItem.value === allData[allData.length - 1]) {
                 this.focusAddItemButton();
                 return;
@@ -268,14 +210,14 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         const vContainer = this.verticalScrollContainer;
         const allData = vContainer.igxForOf;
         const focusedItem = this.focusedItem;
-        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden).value) { // If this is the very first non-header item
+        if (focusedItem.value === allData.find(e => !e.isHeader && !e.hidden)) { // If this is the very first non-header item
             this.focusComboSearch(); // Focus combo search
             return;
         }
         let targetDataIndex = newIndex === -1 ? this.itemIndexInData(focusedItem.index) - 1 : this.itemIndexInData(newIndex);
         if (newIndex !== -1) { // If no scroll is required
             if (this.isScrolledToLast && targetDataIndex === vContainer.state.startIndex) {
-                 // If virt scrollbar is @ bottom, first item is in DOM but not visible
+                // If virt scrollbar is @ bottom, first item is in DOM but not visible
                 vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
                 super.navigateItem(0); // Focus first visible item
             } else {
@@ -293,6 +235,30 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
                     super.navigateItem(0); // Focus the first loaded item
                 });
                 vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
+            }
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    protected navigate(direction: Navigate, currentIndex?: number) {
+        let index = -1;
+        if (this._focusedItem) {
+            index = currentIndex ? currentIndex : this._focusedItem.index;
+        }
+        const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
+        const vContainer = this.verticalScrollContainer;
+        const notVirtual = vContainer.dc.instance.notVirtual;
+        if (notVirtual || !direction) { // If list has no scroll OR no direction is passed
+            super.navigateItem(newIndex); // use default scroll
+        } else if (vContainer && vContainer.totalItemCount && vContainer.totalItemCount !== 0) {
+            this.navigateRemoteItem(direction);
+        } else {
+            if (direction === Navigate.Up) { // Navigate UP
+                this.navigateUp(newIndex);
+            } else if (direction === Navigate.Down) { // Navigate DOWN
+                this.navigateDown(newIndex);
             }
         }
     }
@@ -330,50 +296,24 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
         });
     }
 
-    protected scrollToHiddenItem(newItem: any): void {}
+    protected scrollToHiddenItem(newItem: any): void { }
 
     /**
      * @hidden
      */
     protected scrollHandler = () => {
-        this.disableTransitions = true;
+        this.comboAPI.disableTransitions = true;
     }
 
     /**
      * @hidden
      */
-    onToggleOpening(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false };
-        this.onOpening.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
-        if (eventArgs.cancel) {
-            return;
-        }
-        this.combo.handleInputChange();
+    protected scrollToItem() {
     }
-
-    /**
-     * @hidden
-     */
-    onToggleOpened() {
-        this.combo.triggerCheck();
-        this.combo.focusSearchInput(true);
-        this.onOpened.emit();
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleClosed() {
-        this.combo.comboInput.nativeElement.focus();
-        this.onClosed.emit();
-    }
-
     /**
      * @hidden
      */
     onToggleClosing(e: CancelableEventArgs) {
-        this.combo.searchValue = '';
         super.onToggleClosing(e);
         this._scrollPosition = this.verticalScrollContainer.getVerticalScroll().scrollTop;
     }
@@ -383,6 +323,42 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
      */
     updateScrollPosition() {
         this.verticalScrollContainer.getVerticalScroll().scrollTop = this._scrollPosition;
+    }
+
+    /**
+     * @hidden
+     */
+    public onItemActionKey(key: DropDownActionKey) {
+        switch (key) {
+            case DropDownActionKey.ENTER:
+                this.handleEnter();
+                break;
+            case DropDownActionKey.SPACE:
+                this.handleSpace();
+                break;
+            case DropDownActionKey.ESCAPE:
+                this.close();
+        }
+    }
+
+    private handleEnter() {
+        if (this.isAddItemFocused()) {
+            this.combo.addItemToCollection();
+        } else {
+            this.close();
+        }
+    }
+
+    private handleSpace() {
+        if (this.isAddItemFocused()) {
+            return;
+        } else {
+            this.selectItem(this.focusedItem);
+        }
+    }
+
+    private isAddItemFocused(): boolean {
+        return this.focusedItem instanceof IgxComboAddItemComponent;
     }
 
     public ngAfterViewInit() {
