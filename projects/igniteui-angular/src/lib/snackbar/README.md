@@ -40,3 +40,17 @@ You can hide the Snackbar by using `snackbar.hide()` method.
 By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds. The automatic hiding behavior can be controlled via the following attributes:
  - `autoHide` - whether the snackbar should be hidden after a certain time interval.
  - `displayTime` - the time interval in which the snackbar would hide.
+
+
+## Snackbar with custom content
+
+```html
+<button (click)="snackbar.show()">Show snackbar</button>
+
+<igx-snackbar #snackbar
+             actionName="Dismiss"
+             (onAction)="snackbar.hide()">
+    <span>Custom content</span>
+</igx-snackbar>
+```
+You can display custom content by adding elements inside the snackbar.
