@@ -264,7 +264,10 @@ export class IgxOverlayService implements OnDestroy {
 
         overlayInfo.settings.positionStrategy.position(
             overlayInfo.elementRef.nativeElement.parentElement,
-            { width: overlayInfo.initialSize.width, height: overlayInfo.initialSize.height },
+            {
+                width: overlayInfo.elementRef.nativeElement.parentElement.clientWidth,
+                height: overlayInfo.elementRef.nativeElement.parentElement.clientHeight
+            },
             this._document,
             false,
             overlayInfo.settings.positionStrategy.settings.minSize);
