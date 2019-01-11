@@ -63,6 +63,13 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     /**
+     * @hidden
+     */
+    public get highlighted() {
+        return this.grid && this.grid.highlightedRowID === this.rowID;
+    }
+
+    /**
      * Toggles the hierarchical row.
      * ```typescript
      * this.grid1.rowList.first.toggle()

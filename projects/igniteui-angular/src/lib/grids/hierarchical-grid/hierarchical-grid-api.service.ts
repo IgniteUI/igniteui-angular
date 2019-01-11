@@ -44,6 +44,19 @@ export class IgxHierarchicalGridAPIService extends IgxGridAPIService {
         return allChildren;
     }
 
+    getParentRowId(childGrid: IgxHierarchicalGridComponent) {
+        let rowID;
+        this.layoutChildGrids.forEach((layoutMap) => {
+            layoutMap.forEach((grid, key) => {
+                if (grid === childGrid) {
+                    rowID = key;
+                    return;
+                }
+            });
+        });
+        return rowID;
+    }
+
     registerChildGrid(parentRowID: string|object, layoutKey: string, grid: IgxHierarchicalGridComponent) {
         let childrenForLayout = this.layoutChildGrids.get(layoutKey);
         if (!childrenForLayout) {

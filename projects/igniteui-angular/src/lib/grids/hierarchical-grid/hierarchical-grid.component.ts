@@ -56,6 +56,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private _scrollTop = 0;
     private _scrollLeft = 0;
     private _hierarchicalState = [];
+    public highlightedRowID = null;
     public parent = null;
     public updateOnRender = false;
 
@@ -233,6 +234,13 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public isRowHighlighted(rowData) {
+        return this.highlightedRowID === rowData.rowID;
     }
 
     protected getChildGrid(path: Array<IPathSegment>) {
