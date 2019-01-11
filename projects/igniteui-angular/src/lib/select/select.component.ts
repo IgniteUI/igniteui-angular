@@ -9,13 +9,14 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 
-import { IgxDropDownItemBase, IgxDropDownBase } from '../drop-down/drop-down.base';
+import { IgxDropDownItemBase, IgxDropDownBase } from '../drop-down';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownItemComponent } from 'igniteui-angular';
+import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
 
 let NEXT_ID = 0;
 const noop = () => { };
@@ -29,7 +30,7 @@ const noop = () => { };
             useExisting: forwardRef(() => IgxSelectComponent),
             multi: true
         },
-        {provide: IgxDropDownBase, useExisting: IgxSelectComponent}]
+        { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor {
     @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
@@ -84,7 +85,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     public selectItem(item: IgxDropDownItemBase, event?) {
         super.selectItem(item, event);
-        this.value = this.selectedItem.value;
+        if (this.selectedItem) {
+            this.value = this.selectedItem.value;
+            this._onChangeCallback(this.value);
+        }
     }
     public openDropDown() {
         if (this.toggleDirective.collapsed) {
@@ -97,12 +101,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
-    // TODO: Exists Only for the purposes of passing newSelection to _onChangeCallback
-    protected changeSelectedItem(newSelection?: IgxDropDownItemComponent): boolean {
-        console.log(`changeSelectedItem: newSelection: ${newSelection.value}`);
-        this._onChangeCallback(newSelection.value);
-        return super.changeSelectedItem(newSelection);
-    }
 }
 
 @NgModule({
