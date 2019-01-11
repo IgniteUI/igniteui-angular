@@ -43,6 +43,8 @@ export interface IGridResourceStrings {
     igx_grid_summary_max?: string;
     igx_grid_summary_sum?: string;
     igx_grid_summary_average?: string;
+    igx_grid_summary_earliest?: string;
+    igx_grid_summary_latest?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -90,4 +92,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_summary_max: 'Max',
     igx_grid_summary_sum: 'Sum',
     igx_grid_summary_average: 'Avg',
+    igx_grid_summary_earliest: 'Earliest',
+    igx_grid_summary_latest: 'Latest',
 };

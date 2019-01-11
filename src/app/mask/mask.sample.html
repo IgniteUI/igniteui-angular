@@ -26,5 +26,21 @@
             <igx-snackbar #snackbar [displayTime]="1000" (onAction)="snackbar.hide()"></igx-snackbar>
           </form>
         </article>
+        <article class="sample-column">
+            <form class="input-sample" action="/" method="POST">
+              <h4>Mask Using Pipes</h4>
+              <br/>
+              <igx-input-group>
+                  <label igxLabel for="email">Increase</label>
+                  <input igxInput name="increase" type="text" [(ngModel)]="value"
+                                                              [igxMask]="mask"
+                                                              [placeholder]="placeholder"
+                                                              [focusedValuePipe]="inputFormat"
+                                                              [displayValuePipe]="displayFormat"/>
+                  <igx-hint position="start">model value: {{value}}</igx-hint>
+              </igx-input-group>
+              <div style="height: 130px"></div>
+            </form>
+        </article>
       </section>
   </div>

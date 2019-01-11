@@ -302,7 +302,7 @@ describe('IgxGrid - Cell component', () => {
                 await wait();
 
                 expect(cell.inEditMode).toBe(true);
-                const datePicker = cellDomDate.query(By.css('igx-datepicker')).componentInstance;
+                const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
                 expect(datePicker).toBeDefined();
 
                 datePicker.selectDate(selectedDate);
