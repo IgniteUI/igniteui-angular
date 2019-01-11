@@ -2948,7 +2948,9 @@ const expectedResults = [];
 
 function sendInput(element, text, fix) {
     element.nativeElement.value = text;
+    element.nativeElement.dispatchEvent(new Event('keydown'));
     element.nativeElement.dispatchEvent(new Event('input'));
+    element.nativeElement.dispatchEvent(new Event('keyup'));
     fix.detectChanges();
 }
 
