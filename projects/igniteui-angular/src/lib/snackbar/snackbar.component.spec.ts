@@ -113,7 +113,7 @@ describe('IgxSnackbar with custom content', () => {
         domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
     }));
 
-    fit('should display a message, a custom content element and a button', () => {
+    it('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';
         snackbar.message = 'Item shown';
         snackbar.isVisible = true;
