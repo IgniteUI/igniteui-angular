@@ -62,6 +62,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     private _scrollTop = 0;
     private _scrollLeft = 0;
     private _hierarchicalState = [];
+    public highlightedRowID = null;
     public parent = null;
     public updateOnRender = false;
 
@@ -155,13 +156,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     }
 
     get hasExpandableChildren() {
-        if (!this.data || this.data.length === 0
-        || this.childLayoutKeys.length === 0) {
+        if (!this.data || this.data.length === 0) {
             return false;
         }
-        return this.childLayoutKeys.some(key => {
-           return this.data.some((rec) => rec.hasOwnProperty(key));
-        });
+        return !!this.childLayoutKeys.length;
     }
 
     /**
@@ -239,6 +237,13 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public isRowHighlighted(rowData) {
+        return this.highlightedRowID === rowData.rowID;
     }
 
     protected getChildGrid(path: Array<IPathSegment>) {
@@ -363,9 +368,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
-            if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
-                (<any>ref.instance)[propName] =  (<any>col)[propName];
-            }
+            (<any>ref.instance)[propName] =  (<any>col)[propName];
          });
          if (col.children.length > 0) {
              const newChildren = [];
@@ -388,6 +391,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const propName = input.propName;
             if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
                 (<any>ref.instance)[propName] =  (<any>col)[propName];
+            } else {
+                (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
         (<IgxColumnComponent>ref.instance).gridID = this.id;
