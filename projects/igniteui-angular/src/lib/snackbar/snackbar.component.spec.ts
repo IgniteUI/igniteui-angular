@@ -113,15 +113,14 @@ describe('IgxSnackbar with custom content', () => {
         domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
     }));
 
-    it('should display a message, a custom content element and a button', () => {
+    fit('should display a message, a custom content element and a button', () => {
         fixture.componentInstance.text = 'Undo';
         snackbar.message = 'Item shown';
         snackbar.isVisible = true;
         fixture.detectChanges();
 
-        const containerEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
-        const messageEl = containerEl.children[0];
-        expect(messageEl.nativeElement.innerText).toBe('Item shown');
+        const messageEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
+        expect(messageEl.nativeElement.innerText).toContain('Item shown');
 
         const customContent = fixture.debugElement.query(By.css('.igx-snackbar__content'));
         expect(customContent).toBeTruthy('Custom content is not found');
@@ -129,28 +128,13 @@ describe('IgxSnackbar with custom content', () => {
         // Verify the message is displayed on the left side of the custom content
         const messageElRect = (<HTMLElement>messageEl.nativeElement).getBoundingClientRect();
         const customContentRect = (<HTMLElement>customContent.nativeElement).getBoundingClientRect();
-        expect(messageElRect.right <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
+        expect(messageElRect.left <= customContentRect.left).toBe(true, 'The message is not on the left of the custom content');
 
         // Verify the custom content element is on the left side of the button
         const button = fixture.debugElement.query(By.css('.igx-snackbar__button'));
         const buttonRect = (<HTMLElement>button.nativeElement).getBoundingClientRect();
         expect(customContentRect.right <= buttonRect.left).toBe(true, 'The custom element is not on the left of the button');
-    });
-
-    it('should exclude the message from DOM when the message is empty', () => {
-        snackbar.message = 'Item shown';
-        snackbar.show();
-        fixture.detectChanges();
-
-        expect(domSnackbar.innerText).toContain('Item shown');
-
-        snackbar.message = '';
-        fixture.detectChanges();
-
-        // Verify the custom content is displayed instead of the default message
-        const containerEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
-        const messageEl = containerEl.children[0].nativeElement;
-        expect(messageEl.innerText).toEqual('Custom content');
+        expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
     });
 });
 
