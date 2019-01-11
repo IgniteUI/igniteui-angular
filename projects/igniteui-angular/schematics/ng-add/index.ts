@@ -27,19 +27,22 @@ function logIncludingDependency(context: SchematicContext, pkg: string, version:
   context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
 
-function displayVersionMismatch(context: SchematicContext, tree: Tree, igPackageJson: any): void {
-  const ngKey = '@angular/core';
-  const ngCommonKey = '@angular/common';
-  const ngProjVer = getDependencyVersion(ngKey, tree);
-  const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
-  const igAngularVer = igPackageJson.peerDependencies[ngKey];
-  const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
+function displayVersionMismatch(options: Options): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    const igPackageJson = require('../../package.json');
+    const ngKey = '@angular/core';
+    const ngCommonKey = '@angular/common';
+    const ngProjVer = getDependencyVersion(ngKey, tree);
+    const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
+    const igAngularVer = igPackageJson.peerDependencies[ngKey];
+    const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
 
-  if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
-    context.logger.warn(`
-    Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
-    Running 'ng update' will prevent potential version conflicts.`);
-  }
+    if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
+      context.logger.warn(`
+WARNING Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
+Running 'ng update' will prevent potential version conflicts.\n`);
+    }
+  };
 }
 
 function addDependencies(options: Options): Rule {
@@ -61,9 +64,16 @@ function addDependencies(options: Options): Rule {
       }
     });
 
+    // Add web-animations-js to dependencies
+    Object.keys(pkgJson.peerDependencies).forEach(pkg => {
+      const version = pkgJson.peerDependencies[pkg];
+      if (pkg.includes('web-animations')) {
+        addPackageJsonDependency(tree, pkg, version);
+        logIncludingDependency(context, pkg, version);
+      }
+    });
+
     addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
-    displayVersionMismatch(context, tree, pkgJson);
-    editPolyfills(context, tree, options);
     return tree;
   };
 }
@@ -174,30 +184,31 @@ function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string)
   return tree;
 }
 
-function editPolyfills(context: SchematicContext, tree: Tree, options: Options): Tree {
-  if (options.polyfills) {
-    const targetFile = 'src/polyfills.ts';
-    if (!tree.exists(targetFile)) {
-      context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
-      return;
+function enablePolyfills(options: Options): Rule {
+  return (tree: Tree, context: SchematicContext) => {
+    if (options.polyfills) {
+      const targetFile = 'src/polyfills.ts';
+      if (!tree.exists(targetFile)) {
+        context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
+        return;
+      }
+
+      // Match all commented import statements that are core-js/es6/*
+      const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
+      let polyfillsData = tree.read(targetFile).toString();
+      for (const match of polyfillsData.match(pattern)) {
+        polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
+      }
+
+      // Target the web-animations-js commented import statement and uncomment it.
+      const webAnimationsLine = '// import \'web-animations-js\';';
+      polyfillsData = polyfillsData.replace(webAnimationsLine,
+        webAnimationsLine.substring(2, webAnimationsLine.length));
+
+      polyfillsData = addIgxGridSupportForIe(polyfillsData);
+      tree.overwrite(targetFile, polyfillsData);
     }
-
-    // Match all commented import statements that are core-js/es6/*
-    const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
-    let polyfillsData = tree.read(targetFile).toString();
-    for (const match of polyfillsData.match(pattern)) {
-      polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
-    }
-
-    // Target the web-animations-js commented import statement and uncomment it.
-    const webAnimationsLine = '// import \'web-animations-js\';';
-    polyfillsData = polyfillsData.replace(webAnimationsLine,
-      webAnimationsLine.substring(2, webAnimationsLine.length));
-
-    polyfillsData = addIgxGridSupportForIe(polyfillsData);
-    tree.overwrite(targetFile, polyfillsData);
-    return tree;
-  }
+  };
 }
 
 function getDependencyVersion(pkg: string, tree: Tree): string {
@@ -225,18 +236,17 @@ function getDependencyVersion(pkg: string, tree: Tree): string {
 function installPackageJsonDependencies(options: any): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const installTaskId = context.addTask(new NodePackageInstallTask());
+    const cliInstallTask = new RunSchematicTask(
+      extSchematicModule, // Module
+      schematicName, // Schematic Name
+      {
+        collection: extSchematicModule,
+        name: schematicName,
+        options
+      }
+    );
     // Add Task for igniteu-cli schematic and wait for install task to finish
-    context.addTask(
-      new RunSchematicTask(
-        `${extSchematicModule}`, // Module
-        `${schematicName}`, // Schematic Name
-        {
-          collection: extSchematicModule,
-          name: `${schematicName}`,
-          options
-        }
-      ),
-      [installTaskId]);
+    context.addTask(cliInstallTask, [installTaskId]);
 
     return tree;
   };
@@ -244,6 +254,8 @@ function installPackageJsonDependencies(options: any): Rule {
 
 export default function (options: any): Rule {
   return chain([
+    displayVersionMismatch(options),
+    enablePolyfills(options),
     addDependencies(options),
     installPackageJsonDependencies(options),
     logSuccess(options)
