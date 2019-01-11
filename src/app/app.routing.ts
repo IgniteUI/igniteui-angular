@@ -47,6 +47,8 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
 
 const appRoutes = [
     {
@@ -61,6 +63,10 @@ const appRoutes = [
     {
         path: 'badge',
         component: BadgeSampleComponent
+    },
+    {
+        path: 'banner',
+        component: BannerSampleComponent
     },
     {
         path: 'buttons',
@@ -243,6 +249,10 @@ const appRoutes = [
     }, {
         path: 'hierarhicalGridUpdating',
         component: HierarchicalGridUpdatingSampleComponent
+    },
+    {
+        path: 'gridPercentage',
+        component: GridColumnPercentageWidthsSampleComponent
     }
 ];
 

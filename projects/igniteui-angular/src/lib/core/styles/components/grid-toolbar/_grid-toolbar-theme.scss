@@ -4,23 +4,30 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
-/// @param {Color} $background-color [rgba(0, 0, 0, .02)] - The toolbar background color.
-/// @param {Color} $title-text-color [rgba(0, 0, 0, .54)] - The toolbar title text color.
-/// @param {Color} $button-background [#f0f0f0] - The toolbar button background color.
-/// @param {Color} $button-text-color [rgba(0, 0, 0, .54)] - The toolbar button text color.
-/// @param {Color} $button-hover-background [rgba(0, 0, 0, .04)] - The toolbar button hover background color.
-/// @param {Color} $button-hover-text-color [rgba(0, 0, 0, .54)] - The toolbar button hover text color.
-/// @param {Color} $button-focus-background [rgba(0, 0, 0, .04)] - The toolbar button focus background color.
-/// @param {Color} $button-focus-text-color [rgba(0, 0, 0, .54)] - The toolbar button focus text color.
-/// @param {Color} $dropdown-background [#fff] - The toolbar drop-down background color.
-/// @param {Color} $item-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item text color.
-/// @param {Color} $item-hover-background [rgba(0, 0, 0, .04)] - The toolbar drop-down item hover background color.
-/// @param {Color} $item-hover-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item hover text color.
-/// @param {Color} $item-focus-background [rgba(0, 0, 0, .04)] - The toolbar drop-down item focus background color.
-/// @param {Color} $item-focus-text-color [rgba(0, 0, 0, .54)] - The toolbar drop-down item focus text color.
+
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
+/// @param {Color} $background-color [null] - The toolbar background color.
+/// @param {Color} $title-text-color [null] - The toolbar title text color.
+/// @param {Color} $button-background [null] - The toolbar button background color.
+/// @param {Color} $button-text-color [null] - The toolbar button text color.
+/// @param {Color} $button-hover-background [null] - The toolbar button hover background color.
+/// @param {Color} $button-hover-text-color [null] - The toolbar button hover text color.
+/// @param {Color} $button-focus-background [null] - The toolbar button focus background color.
+/// @param {Color} $button-focus-text-color [null] - The toolbar button focus text color.
+/// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
+/// @param {Color} $item-text-color [null] - The toolbar drop-down item text color.
+/// @param {Color} $item-hover-background [null] - The toolbar drop-down item hover background color.
+/// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
+/// @param {Color} $item-focus-background [null] - The toolbar drop-down item focus background color.
+/// @param {Color} $item-focus-text-color [null] - The toolbar drop-down item focus text color.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
+/// @requires text-contrast
 ///
 /// @example scss Change the toolbar background color
 ///   $my-toolbar-theme: igx-grid-toolbar-theme(
@@ -50,7 +57,8 @@
     $item-focus-background: null,
     $item-focus-text-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-grid-toolbar'), $palette);
+    $name: 'igx-grid-toolbar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -92,6 +100,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
 
         background-color: $background-color,
@@ -141,13 +150,13 @@
     %igx-grid-toolbar {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         padding: map-get($grid-toolbar-padding, 'cosy');
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
-        min-height: map-get($grid-toolbar-height, 'comfortable');
+        height: map-get($grid-toolbar-height, 'comfortable');
 
         %igx-button--flat {
             background: --var($theme, 'button-background');
@@ -223,12 +232,12 @@
     }
 
     %igx-grid-toolbar--cosy {
-        min-height: map-get($grid-toolbar-height, 'cosy');
+        height: map-get($grid-toolbar-height, 'cosy');
         padding: map-get($grid-toolbar-padding, 'cosy');
     }
 
     %igx-grid-toolbar--compact {
-        min-height: map-get($grid-toolbar-height, 'compact');
+        height: map-get($grid-toolbar-height, 'compact');
         padding: map-get($grid-toolbar-padding, 'compact');
     }
 
@@ -268,6 +277,11 @@
         @include ellipsis();
     }
 
+    %igx-grid-toolbar__custom-content {
+        display: flex;
+        flex-flow: row wrap;
+    }
+
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
@@ -291,6 +305,7 @@
     }
 
     %igx-grid-toolbar__dd-list-items {
+        cursor: pointer;
         position: relative;
         padding: em(8px) em(16px);
         color: --var($theme, 'item-text-color');

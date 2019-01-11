@@ -10,8 +10,10 @@
 /// @param {Color} $title-color [primary 500]- The text color used for the title of the list.
 /// @param {Color} $background-color [transparent] - The background color of the panel.
 ///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires extend
-/// @requires igx-color
 /// @requires text-contrast
 ///
 /// @example scss Change the title color
@@ -26,13 +28,15 @@
     $title-color: null,
     $background-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-column-hiding'), $palette);
+    $name: 'igx-column-hiding';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         title-color: $title-color,
         background-color: $background-color

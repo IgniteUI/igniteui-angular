@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
+import { IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
+import { IgxTransactionService, IgxHierarchicalTransactionService, DisplayDensity } from '../../public_api';
+import { IgxGridTransaction } from '../grids/grid-base.component';
 
 @Component({
     template: `
@@ -19,7 +22,7 @@ export class IgxTreeGridSortingComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="600px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="2" width="900px" height="800px">
         <igx-column [field]="'ID'" dataType="number" [filterable]="true"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [filterable]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [filterable]="true"></igx-column>
@@ -238,4 +241,203 @@ export class IgxTreeGridFilteringRowEditingComponent {
 export class IgxTreeGridSelectionRowEditingComponent {
     @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="900px" height="600px">
+        <igx-column-group header="General Information" >
+            <igx-column [field]="'ID'" dataType="number"></igx-column>
+            <igx-column [field]="'Name'" dataType="string"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Additional Information">
+            <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+            <igx-column [field]="'Age'" dataType="number"></igx-column>
+        </igx-column-group>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridMultiColHeadersComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeSmallTreeData();
+}
+
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="0" width="900px" height="1000px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
+        width="900px" height="1000px" summaryCalculationMode="calculationMode">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesKeyComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+class AgeSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class AgeSummaryTest extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        result.push({
+            key: 'test',
+            label: 'Test',
+            summaryResult: summaries.filter(rec => rec > 10 && rec < 40).length
+        });
+
+        return result;
+    }
+}
+
+@Component({
+    template: `
+        <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number"></igx-column>
+        <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'JobTitle'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
+    </igx-tree-grid>`
+    , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+})
+export class IgxTreeGridRowEditingTransactionComponent {
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
+    public paging = false;
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" expansionDepth="0" width="900px" height="1000px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="false"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [hasSummary]="true" [summaries]="ageSummary"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridCustomSummariesComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+    public ageSummary = AgeSummary;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
+@Component({
+    template: `<igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees"
+    [rowEditable]="true" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [editable]="true" [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [editable]="true" [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>`
+    , providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
+})
+export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
+    public data = SampleTestData.employeeAllTypesTreeData();
+    @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
+    public paging = false;
+}
+
+@Component({
+    template:
+        `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
+            <igx-tree-grid #treeGrid [data]="data" [displayDensity]="density"
+                childDataKey="Employees" primaryKey="ID">
+                <igx-column [field]="'ID'" dataType="number"></igx-column>
+                <igx-column [field]="'Name'" dataType="string"></igx-column>
+                <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+                <igx-column [field]="'Age'" dataType="number"></igx-column>
+        </igx-tree-grid>
+        </div>`
+})
+
+export class IgxTreeGridWrappedInContComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+
+    public height = null;
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
+    public outerWidth = 800;
+    public outerHeight: number;
+
+    public isHorizontalScrollbarVisible() {
+        const scrollbar = this.treeGrid.parentVirtDir.getHorizontalScroll();
+        if (scrollbar) {
+            return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+        }
+
+        return false;
+    }
+
+    public getVerticalScrollHeight() {
+        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar) {
+            return parseInt(scrollbar.style.height, 10);
+        }
+
+        return 0;
+    }
+
+    public isVerticalScrollbarVisible() {
+        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar && scrollbar.offsetHeight > 0) {
+            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+        }
+        return false;
+    }
+
 }

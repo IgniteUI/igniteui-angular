@@ -31,11 +31,18 @@ import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { TransactionService, Transaction, State } from '../../services';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
     parendID: any;
     grid: IgxHierarchicalGridComponent;
+}
+
+export const enum IgxGridExpandState {
+    COLLAPSED = -1, // Set when all rows to be collapsed through expandChildren option
+    MIXED = 0, // Should be set when rows are manually expanded/collapsed
+    EXPANDED = 1 // Set when all rows to be expanded through expandChildren option
 }
 
 @Component({
@@ -47,7 +54,11 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     private layout_id = `igx-row-island-`;
     private hgridAPI;
     private isInit = false;
-    public initialChanges;
+    private _expandChildren = false;
+    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
+    public initialChanges = [];
+    public rootGrid = null;
+
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
     public childColumns = new QueryList<IgxColumnComponent>();
 
@@ -65,7 +76,36 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
 
     @Input() public key: string;
 
-    @Input() public childrenExpanded = false;
+    @Input()
+    public set expandChildren(value) {
+        this._expandChildren = value;
+        this.childrenExpandState = value ? IgxGridExpandState.EXPANDED : IgxGridExpandState.COLLAPSED;
+        if (!this.parent && this.rootGrid) {
+            this.rootGrid.markForCheck();
+        } else if (this.parent) {
+            this.hgridAPI.getChildGridsForRowIsland(this.parent.key).forEach((grid) => {
+                if (document.body.contains(grid.nativeElement)) {
+                    // Detect changes right away if the grid is visible
+                    grid.markForCheck();
+                } else {
+                    // Else defer the detection on changes when the grid gets into view for performance.
+                    grid.updateOnRender = true;
+                }
+            });
+        }
+    }
+
+    public get expandChildren() {
+        return this._expandChildren;
+    }
+
+    public get shouldExpandAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.EXPANDED;
+    }
+
+    public get shouldCollapseAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
+    }
 
     public parent = null;
 
@@ -110,6 +150,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
             gridAPI,
@@ -124,6 +165,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
             viewRef,
             navigation,
             filteringService,
+            summaryService,
             _displayDensityOptions
         );
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
@@ -152,7 +194,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
     ngOnChanges(changes) {
         this.onLayoutChange.emit(changes);
         if (!this.isInit) {
-            this.initialChanges = changes;
+            this.initialChanges.push(changes);
         }
     }
 
@@ -167,7 +209,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         this.hgridAPI.unset(this.id);
     }
 
-    getGrids(): IgxHierarchicalGridComponent[] {
+    protected getGrids(): IgxHierarchicalGridComponent[] {
         return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 }

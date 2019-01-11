@@ -1,9 +1,10 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { State, TransactionType } from '../../services';
+import { GridBaseAPIService } from '../api.service';
+import { IgxSelectionAPIService } from '../../core/selection';
 
 @Component({
     selector: 'igx-tree-grid-row',
@@ -11,6 +12,14 @@ import { State, TransactionType } from '../../services';
     providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
 export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> {
+    constructor(
+        public gridAPI: GridBaseAPIService<IgxTreeGridComponent>,
+        selection: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) {
+            // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(gridAPI, selection, element, cdr);
+    }
     private _treeRow: ITreeGridRecord;
 
     /**
@@ -75,26 +84,5 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
         const classes = super.resolveClasses();
         const filteredClass = this.treeRow.isFilteredOutParent ? 'igx-grid__tr--filtered' : '';
         return `${classes} ${filteredClass}`;
-    }
-
-    /** @hidden */
-    public get deleted(): boolean {
-        return this.hasDeletedParent(this.rowID) || super.isRowDeleted();
-    }
-
-    private hasDeletedParent(rowId: any): boolean {
-        if (this.grid.cascadeOnDelete) {
-            const node = this.grid.records.get(rowId);
-            for (const parentId of node.path) {
-                const state: State = this.grid.transactions.getState(parentId);
-                if (state && state.type === TransactionType.DELETE) {
-                    if (this.gridAPI.get_row_by_key(this.grid.id, parentId).deleted) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 }

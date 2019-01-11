@@ -1,10 +1,13 @@
-import { PositionSettings } from './../utilities';
+import { PositionSettings, Size } from './../utilities';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_position.html)
  * Position strategies determine where to display the component in the provided IgxOverlayService.
  */
 export interface IPositionStrategy {
+    /**
+     * PositionSettings to use when position the component in the overlay
+     */
     settings: PositionSettings;
 
     /**
@@ -13,9 +16,10 @@ export interface IPositionStrategy {
      * @param size Size of the element
      * @param document reference to the Document object
      * @param initialCall should be true if this is the initial call to the method
+     * @param minSize the size up to which element could be reduced
      * ```typescript
      * settings.positionStrategy.position(content, size, document, true);
      * ```
      */
-     position(contentElement: HTMLElement, size?: {}, document?: Document, initialCall?: boolean): void;
+     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean, minSize?: Size): void;
 }

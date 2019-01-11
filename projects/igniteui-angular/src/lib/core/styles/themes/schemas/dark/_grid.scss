@@ -1,0 +1,115 @@
+@import '../light/grid';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark grid schema.
+/// @type {Map}
+/// @prop {Map} header-background [igx-color: ('grays', 100), hexrgba: #222] - The table header background color.
+/// @prop {Color} content-background [#222] - The table body background color.
+/// @prop {Color} row-odd-background [#222] - The background color of odd rows.
+/// @prop {Color} row-even-background [#222] - The background color of even rows.
+/// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
+/// @prop {Map} row-selected-background [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222] - The selected row background color.
+/// @prop {Color} row-selected-text-color [#fff] - The selected row text color.
+/// @prop {Color} ghost-header-background [#222] - The dragged header background color.
+/// @prop {Color} cell-editing-background [#222] - The background for the cell in editing mode.
+/// @prop {Map} cell-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The selected cell background color.
+/// @prop {Map} cell-selected-text-color [#fff] - The selected cell text color.
+/// @prop {Map} grouparea-background [igx-color: ('grays', 100), hexrgba: #222] - The grid group area background color.
+/// @prop {Map} group-row-background [igx-color: ('grays', 100), hexrgba: #222] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: ('grays', 200), hexrgba: #222] - The drop area background on drop color.
+/// @prop {Color} filtering-header-background [#222] - The background color of the filtered column header.
+/// @prop {Color} filtering-row-background [#222] - The background color of the filtering row.
+/// @prop {Map} body-summaries-background [igx-color: ('grays', 300), hexrgba: #222] - The background color of the summary groups located the body.
+/// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the body.
+/// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of the summary groups located the footer.
+/// @prop {Map} root-summaries-text-color [igx-color: ('grays', 100), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
+/// @requires extend
+/// @requires $_light-grid
+/// @see $default-palette
+$_dark-grid: extend($_light-grid, (
+    header-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    content-background: #222,
+
+    row-odd-background: #222,
+
+    row-even-background: #222,
+
+    row-hover-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    row-hover-text-color: #fff,
+
+    row-selected-background: (
+        igx-color: ('secondary', 500),
+        rgba: .24,
+        hexrgba: #222
+    ),
+
+    row-selected-text-color: #fff,
+
+    ghost-header-background: #222,
+
+    cell-editing-background: #222,
+
+    cell-selected-background: (
+        igx-color: ('grays', 200),
+        hexrgba: #222
+    ),
+
+    grouparea-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    group-row-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    group-row-selected-background: (
+        igx-color: ('grays', 200),
+        hexrgba: #222
+    ),
+
+    filtering-header-background: #222,
+
+    filtering-row-background: #222,
+
+    cell-selected-text-color: #fff,
+
+    body-summaries-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+
+    body-summaries-text-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #222,
+        text-contrast: ()
+    ),
+
+    root-summaries-background: (
+        igx-color: ('grays', 300),
+        hexrgba: #222
+    ),
+
+    root-summaries-text-color: (
+        igx-color: ('grays', 300),
+        hexrgba: #222,
+        text-contrast: ()
+    ),
+
+    row-highlight: (
+        igx-color: ('secondary', 500)
+    )
+));

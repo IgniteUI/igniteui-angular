@@ -24,6 +24,8 @@ import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 
@@ -55,10 +57,10 @@ export interface IGroupingDoneEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService,
+    providers: [IgxGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService
+        IgxFilteringService, IgxColumnResizingService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -86,6 +88,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     protected groupingDiffer;
     private _hideGroupedColumns = false;
+    private _dropAreaMessage = null;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -164,9 +167,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         viewRef: ViewContainerRef,
         navigation: IgxGridNavigationService,
         filteringService: IgxFilteringService,
+        summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService, _displayDensityOptions);
+                  filteringService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -360,7 +364,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 	 * @memberof IgxGridComponent
      */
     @Input()
-    public dropAreaMessage = 'Drag a column header and drop it here to group by that column.';
+    set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+    }
+
+    /**
+     * An accessor that returns the message displayed inside the GroupBy drop area where columns can be dragged on.
+    */
+    get dropAreaMessage(): string {
+        return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
 
     /**
      * An @Input property that sets the template that will be rendered as a GroupBy drop area.
@@ -457,13 +470,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     get groupAreaHostClass(): string {
-        if (this.isCosy()) {
-            return 'igx-drop-area--cosy';
-        } else if (this.isCompact()) {
-            return 'igx-drop-area--compact';
-        } else {
-            return 'igx-drop-area';
-        }
+        return this.getComponentDensityClass('igx-drop-area');
     }
 
     /**
@@ -659,7 +666,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
    public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 
@@ -856,12 +863,19 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
     * @hidden
     */
-   public get dropAreaTemplateResolved(): TemplateRef<any> {
+    public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getGroupByChipTitle(expression: IGroupingExpression): string {
+        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
     }
 
     /**
@@ -881,7 +895,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public ngOnInit() {
         this._gridAPI.register(this);
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) =>  {
+            this.endEdit(true);
+            this.summaryService.updateSummaryCache(args);
+        });
     }
 
     public ngDoCheck(): void {

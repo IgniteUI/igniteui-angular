@@ -57,6 +57,7 @@ import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
+import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
@@ -77,11 +78,15 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
+import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { BannerSampleComponent } from './banner/banner.sample';
+import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 
 const components = [
     AppComponent,
     AvatartSampleComponent,
     BadgeSampleComponent,
+    BannerSampleComponent,
     ButtonSampleComponent,
     CalendarSampleComponent,
     CardSampleComponent,
@@ -127,6 +132,7 @@ const components = [
     GridPerformanceSampleComponent,
     GridSelectionComponent,
     GridToolbarSampleComponent,
+    GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
     GridCellStylingSampleComponent,
@@ -134,6 +140,7 @@ const components = [
     GridWithTransactionsComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
+    TreeGridWithTransactionsComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -142,7 +149,8 @@ const components = [
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
     HierarchicalGridRemoteSampleComponent,
-    HierarchicalGridUpdatingSampleComponent
+    HierarchicalGridUpdatingSampleComponent,
+    GridColumnPercentageWidthsSampleComponent
 ];
 
 @NgModule({
@@ -153,7 +161,7 @@ const components = [
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        IgxIconModule.forRoot(),
+        IgxIconModule,
         IgxGridModule.forRoot(),
         IgxTreeGridModule,
         IgxHierarchicalGridModule,

@@ -31,6 +31,8 @@ import { mergeObjects } from '../../core/utils';
 import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
+import { IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 let NEXT_ID = 0;
 
@@ -55,7 +57,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [ IgxTreeGridNavigationService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [ IgxTreeGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
@@ -227,7 +229,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.cdr.markForCheck();
     }
 
-    private _expansionStates:  Map<any, boolean> = new Map<any, boolean>();
+    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
@@ -293,35 +295,20 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         viewRef: ViewContainerRef,
         navigation: IgxTreeGridNavigationService,
         filteringService: IgxFilteringService,
+        summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, _displayDensityOptions);
+                filteringService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
-    public ngOnInit() {
-        this._gridAPI.register(this);
-        super.ngOnInit();
-    }
 
-    /**
-     * @hidden
-     * Returns if the `IgxTreeGridComponent` has summarized columns.
-     * ```typescript
-     * const summarizedGrid = this.grid.hasSummarizedColumns;
-     * ```
-	 * @memberof IgxTreeGridComponent
-     */
-    get hasSummarizedColumns(): boolean {
-        return false;
-    }
-
-    private cloneMap(mapIn: Map<any, boolean>):  Map<any, boolean> {
+    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
 
         mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
 
-          mapCloned.set(key, value);
+            mapCloned.set(key, value);
         });
 
         return mapCloned;
@@ -409,7 +396,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             if (!parentRecord) {
                 throw Error('Invalid parent row ID!');
             }
-
+            this.summaryService.clearSummaryCache({rowID: parentRecord.rowID});
             if (this.primaryKey && this.foreignKey) {
                 data[this.foreignKey] = parentRowID;
                 super.addRow(data);
@@ -418,9 +405,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 const childKey = this.childDataKey;
                 if (this.transactions.enabled) {
                     const rowId = this.primaryKey ? data[this.primaryKey] : data;
+                    const path: any[] = [];
+                    path.push(...this.generateRowPath(parentRowID));
+                    path.push(parentRowID);
                     this.transactions.add({
                         id: rowId,
-                        parentId: parentRowID,
+                        path: path,
                         newValue: data,
                         type: TransactionType.ADD
                     } as HierarchicalTransaction,
@@ -431,7 +421,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                     }
                     parentData[childKey].push(data);
                 }
-
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
@@ -439,21 +428,32 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 this.refreshSearch();
             }
         } else {
+            if (this.primaryKey && this.foreignKey) {
+                const rowID = data[this.foreignKey];
+                this.summaryService.clearSummaryCache({rowID: rowID});
+            }
             super.addRow(data);
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public deleteRowById(rowId: any) {
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        //  if this is flat self-referencing data, and CascadeOnDelete is set to true
+        //  and if we have transactions we should start pending transaction. This allows
+        //  us in case of delete action to delete all child rows as single undo action
+        const flatDataWithCascadeOnDeleteAndTransactions =
+            this.primaryKey &&
+            this.foreignKey &&
+            this.cascadeOnDelete &&
+            this.transactions.enabled;
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.startPending();
         }
 
         super.deleteRowById(rowId);
 
-        if (this.transactions.enabled && this.cascadeOnDelete) {
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
             this.transactions.endPending(true);
         }
     }
@@ -465,18 +465,17 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         return 0;
     }
 
-    /**
-     * @hidden
-     */
-    protected getExportExcel(): boolean {
-        return false;
-    }
+    /** @hidden */
+    public generateRowPath(rowId: any): any[] {
+        const path: any[] = [];
+        let record = this.records.get(rowId);
 
-    /**
-     * @hidden
-     */
-    protected getExportCsv(): boolean {
-        return false;
+        while (record.parent) {
+            path.push(record.parent.rowID);
+            record = record.parent;
+        }
+
+        return path.reverse();
     }
 
     /**
@@ -515,10 +514,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
     * @hidden
     */
-   public getContext(rowData): any {
+    public getContext(rowData): any {
         return {
             $implicit: rowData,
-            templateID: 'dataRow'
+            templateID: this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
 

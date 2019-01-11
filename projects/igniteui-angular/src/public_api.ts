@@ -1,3 +1,4 @@
+
 /*
  * Public API Surface of igniteui-angular
  */
@@ -49,6 +50,7 @@ export * from './lib/data-operations/data-util';
  */
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
+export * from './lib/banner/banner.component';
 export * from './lib/buttonGroup/buttonGroup.component';
 export * from './lib/calendar/index';
 export * from './lib/card/card.component';
@@ -86,3 +88,8 @@ export * from './lib/services/index';
 export * from './lib/core/dates';
 export * from './lib/core/density';
 export { CancelableEventArgs } from './lib/core/utils';
+export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
+export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';
+export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
+

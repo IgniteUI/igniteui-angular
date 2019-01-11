@@ -67,4 +67,9 @@ export class IgxHierarchicalGridAPIService extends IgxGridAPIService {
         }
         return children;
     }
+
+    getChildGridByID(layoutKey, rowID) {
+        const childrenForLayout = this.layoutChildGrids.get(layoutKey);
+        return childrenForLayout.get(rowID);
+    }
 }

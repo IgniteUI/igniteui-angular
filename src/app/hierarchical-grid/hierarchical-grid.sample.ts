@@ -9,7 +9,10 @@ import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } fro
 export class HierarchicalGridSampleComponent {
     localData = [];
     isRowSelectable = false;
-    shouldExpand = false;
+    firstLevelExpanded = false;
+    rootExpanded = false;
+    density = '';
+    displayDensities;
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
@@ -30,6 +33,11 @@ export class HierarchicalGridSampleComponent {
         //     this.localData.push({ ID: i, Name: 'A' + i, Products: prods});
         // }
 
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
         this.localData = this.generateDataUneven(100, 3);
     }
 
@@ -73,20 +81,18 @@ export class HierarchicalGridSampleComponent {
         this.isRowSelectable = !this.isRowSelectable;
     }
 
-    testApis() {
-        const path  = new Array<IPathSegment>();
-        path.push(
-            {rowID: this.localData[0], rowIslandKey: 'childData'},
-            {rowID: this.localData[0].childData[0], rowIslandKey: 'childData'});
-        console.log('Child by path:');
-        console.log(this.hGrid.getChildGrid(path));
-        console.log('All children in depth:');
-        console.log(this.hGrid.getChildGrids(true));
-        console.log('Direct Children of hgrid:');
-        console.log(this.hGrid.getChildGrids());
-        console.log('Children of row island 1:');
-        console.log(this.layout1.getGrids());
-        this.shouldExpand = !this.shouldExpand;
+    toggleRootLevel() {
+        this.rootExpanded = !this.rootExpanded;
+    }
 
+    toggleFirstIsland() {
+        this.firstLevelExpanded = !this.firstLevelExpanded;
+    }
+
+    testApis() {
+    }
+
+    selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 }

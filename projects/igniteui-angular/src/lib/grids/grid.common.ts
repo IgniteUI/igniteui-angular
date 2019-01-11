@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    HostBinding,
     HostListener,
     Inject,
     Injectable,
@@ -15,16 +14,19 @@ import {
     Pipe,
     PipeTransform,
     Renderer2,
-    TemplateRef
+    TemplateRef,
+    LOCALE_ID
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Observable, Subject } from 'rxjs';
 import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { ConnectedPositioningStrategy } from '../services';
 import { getPointFromPositionsSettings, VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
+import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
+
+const DEFAULT_DATE_FORMAT = 'mediumDate';
 
 /**
  * @hidden
@@ -123,9 +125,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
     }
 }
-/**
- * @hidden
- */
+
 @Directive({
     selector: '[igxCell]'
 })
@@ -133,9 +133,7 @@ export class IgxCellTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-/**
- * @hidden
- */
+
 @Directive({
     selector: '[igxHeader]'
 })
@@ -154,9 +152,7 @@ export class IgxCellFooterTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
-/**
- * @hidden
- */
+
 @Directive({
     selector: '[igxCellEditor]'
 })
@@ -176,9 +172,17 @@ export class IgxColumnMovingService {
     private _column: IgxColumnComponent;
 
     public cancelDrop: boolean;
+    public isColumnMoving: boolean;
+
     public selection: {
         column: IgxColumnComponent,
         rowID: any
+    };
+
+    public activeElement: {
+        tag: string,
+        column: IgxColumnComponent,
+        rowIndex: number
     };
 
     get column(): IgxColumnComponent {
@@ -218,11 +222,11 @@ export enum DropPosition {
 export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     @Input('igxColumnMovingDrag')
-    set data(val: IgxColumnComponent) {
+    set data(val) {
         this._column = val;
     }
 
-    get column(): IgxColumnComponent {
+    get column() {
         return this._column;
     }
 
@@ -256,7 +260,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     }
 
     public onPointerDown(event) {
-
         if (!this.draggable || event.target.getAttribute('draggable') === 'false') {
             return;
         }
@@ -270,7 +273,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
         super.onPointerDown(event);
 
-        this.column.grid.isColumnMoving = true;
+        this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
         const currSelection = this.column.grid.selection.first_item(this.column.gridID + '-cell');
@@ -279,6 +282,20 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
                 column: this.column.grid.columnList.toArray()[currSelection.columnID],
                 rowID: currSelection.rowID
             };
+        }
+        // tslint:disable-next-line:no-bitwise
+        if (document.activeElement.compareDocumentPosition(this.column.grid.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS) {
+            if (parseInt(document.activeElement.getAttribute('data-visibleIndex'), 10) !== this.column.visibleIndex) {
+                (document.activeElement as HTMLElement).blur();
+                return;
+            }
+            this.cms.activeElement = {
+                tag: document.activeElement.tagName.toLowerCase() === 'igx-grid-summary-cell' ?
+                        document.activeElement.tagName.toLowerCase() : '',
+                column: this.column,
+                rowIndex: parseInt(document.activeElement.getAttribute('data-rowindex'), 10)
+            };
+            (document.activeElement as HTMLElement).blur();
         }
 
         const args = {
@@ -296,7 +313,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
             this.column.grid.cdr.detectChanges();
         }
 
-        if (this.column.grid.isColumnMoving) {
+        if (this.cms.isColumnMoving) {
             const args = {
                 source: this.column,
                 cancel: false
@@ -314,14 +331,16 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         this.zone.run(() => {
             super.onPointerUp(event);
 
-            this.column.grid.isColumnMoving = false;
+            this.cms.isColumnMoving = false;
             this.column.grid.draggedColumn = null;
             this.column.grid.cdr.detectChanges();
         });
     }
 
     protected createDragGhost(event) {
-        super.createDragGhost(event);
+        const index = this.column.grid.hasMovableColumns ? 1 : 0;
+
+        super.createDragGhost(event, this.element.nativeElement.children[index]);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -347,19 +366,15 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
         if (!this.column.columnGroup) {
             this.renderer.addClass(icon, this._dragGhostImgIconClass);
 
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.insertBefore(icon, this._dragGhost.children[1]);
+            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
         } else {
-            this._dragGhost.removeChild(this._dragGhost.children[2]);
-            this._dragGhost.removeChild(this._dragGhost.firstElementChild);
-            this._dragGhost.removeChild(this._dragGhost.lastElementChild);
-            this._dragGhost.insertBefore(icon, this._dragGhost.firstElementChild);
+            this._dragGhost.insertBefore(icon, this._dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this._dragGhostImgIconGroupClass);
-            this._dragGhost.children[1].style.paddingLeft = '0px';
+            this._dragGhost.children[0].style.paddingLeft = '0px';
 
             this.left = this._dragStartX = pageX - ((this._dragGhost.getBoundingClientRect().width / 3) * 2);
             this.top = this._dragStartY = pageY - ((this._dragGhost.getBoundingClientRect().height / 3) * 2);
@@ -389,7 +404,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     get isDropTarget(): boolean {
-        return this._column && this._column.grid.hasMovableColumns;
+        return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable;
     }
 
     get horizontalScroll(): any {
@@ -425,7 +440,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 this.renderer.removeClass(this._dropIndicator, this._dropIndicatorClass);
             }
 
-            const pos = this.elementRef.nativeElement.getBoundingClientRect().left + parseFloat(this.column.width) / 2;
+            const clientRect = this.elementRef.nativeElement.getBoundingClientRect();
+            const pos = clientRect.left + clientRect.width / 2;
 
             if (event.detail.pageX < pos) {
                 this._dropPos = DropPosition.BeforeDropTarget;
@@ -530,20 +546,17 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
             if (this.cms.selection && this.cms.selection.column) {
-                const colID = this.column.grid.columnList.toArray().indexOf(this.cms.selection.column);
-
                 this.column.grid.selection.set(this.column.gridID + '-cell', new Set([{
                     rowID: this.cms.selection.rowID,
-                    columnID: colID
+                    columnID: this.column.grid.columnList.toArray().indexOf(this.cms.selection.column)
                 }]));
-
-                const cell = this.column.grid.getCellByKey(this.cms.selection.rowID, this.cms.selection.column.field);
-
-                if (cell) {
-                    cell.nativeElement.focus();
-                }
-
-                this.cms.selection = null;
+            }
+            if (this.cms.activeElement) {
+                const gridEl = this.column.grid.nativeElement;
+                const activeEl = gridEl.querySelector(`${this.cms.activeElement.tag}[data-rowindex="${this.cms.activeElement.rowIndex}"]` +
+                    `[data-visibleIndex="${this.cms.activeElement.column.visibleIndex}"]`);
+                if (activeEl) { activeEl.focus(); }
+                this.cms.activeElement = null;
             }
 
             this.column.grid.draggedColumn = null;
@@ -559,9 +572,17 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     name: 'igxdate'
 })
 export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
-    transform(value: any): string {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
+    transform(value: any, locale: string): string {
         if (value && value instanceof Date) {
-            return super.transform(value);
+            if (locale) {
+                return super.transform(value, DEFAULT_DATE_FORMAT, undefined, locale);
+            } else {
+                return super.transform(value);
+            }
         } else {
             return value;
         }
@@ -574,19 +595,33 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
     name: 'igxdecimal'
 })
 export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    transform(value: any): string {
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
+    transform(value: any, locale: string): string {
         if (value && typeof value === 'number') {
-            return super.transform(value);
+            if (locale) {
+                return super.transform(value, undefined, locale);
+            } else {
+                return super.transform(value);
+            }
         } else {
             return value;
         }
     }
 }
 
+/**
+ * @hidden
+ */
 export interface ContainerPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
+/**
+ * @hidden
+ */
 export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
@@ -605,8 +640,13 @@ export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
             container.clientHeight <
             target.offsetTop + target.getBoundingClientRect().height + contentElement.getBoundingClientRect().height;
         this.settings.verticalStartPoint = this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom;
+        this.settings.openAnimation = this.isTop ? scaleInVerBottom : scaleInVerTop;
         const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
-        contentElement.style.top = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height + 'px';
+
+        //  TODO: extract transform setting in util function
+        const translateY = startPoint.y + (this.isTop ? VerticalAlignment.Top : VerticalAlignment.Bottom) * size.height;
+        const translateYString = `translateY(${translateY}px)`;
+        contentElement.style.transform = contentElement.style.transform.replace(/translateY\([.-\d]+px\)/g, translateYString);
         contentElement.style.width = target.clientWidth + 'px';
     }
 }

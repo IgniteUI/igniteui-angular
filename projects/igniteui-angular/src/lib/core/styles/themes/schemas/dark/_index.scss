@@ -1,0 +1,127 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+@import './avatar';
+@import './badge';
+@import './banner';
+@import './bottom-nav';
+@import './button';
+@import './button-group';
+@import './calendar';
+@import './card';
+@import './carousel';
+@import './checkbox';
+@import './chip';
+@import './column-hiding';
+@import './combo';
+@import './date-picker';
+@import './dialog';
+@import './drop-down';
+@import './expansion-panel';
+@import './grid';
+@import './grid-filtering';
+@import './grid-pagination';
+@import './grid-summary';
+@import './grid-toolbar';
+@import './icon';
+@import './input-group';
+@import './list';
+@import './navbar';
+@import './navdrawer';
+@import './overlay';
+@import './progress';
+@import './radio';
+@import './ripple';
+@import './slider';
+@import './snackbar';
+@import './switch';
+@import './tabs';
+@import './time-picker';
+@import './toast';
+@import './tooltip';
+
+/// The default dark schema for all components.
+/// @type {Map}
+/// @property {Map} igx-avatar [$_dark-avatar]
+/// @property {Map} igx-badge [$_dark-badge]
+/// @property {Map} igx-banner [$_dark-banner]
+/// @property {Map} igx-bottom-nav [$_dark-bottom-nav]
+/// @property {Map} igx-button [$_dark-button]
+/// @property {Map} igx-button-group [$_dark-button-group]
+/// @property {Map} igx-calendar [$_dark-calendar]
+/// @property {Map} igx-card [$_dark-card]
+/// @property {Map} igx-carousel [$_dark-carousel]
+/// @property {Map} igx-checkbox [$_dark-checkbox]
+/// @property {Map} igx-chip [$_dark-chip]
+/// @property {Map} igx-column-hiding [$_dark-column-hiding]
+/// @property {Map} igx-combo [$_dark-combo]
+/// @property {Map} igx-date-picker [$_dark-date-picker]
+/// @property {Map} igx-dialog [$_dark-dialog]
+/// @property {Map} igx-drop-down [$_dark-drop-down]
+/// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
+/// @property {Map} igx-grid [$_dark-grid]
+/// @property {Map} igx-grid-filtering [$_dark-grid-filtering]
+/// @property {Map} igx-grid-paginator [$_dark-grid-pagination]
+/// @property {Map} igx-grid-summary [$_dark-grid-summary]
+/// @property {Map} igx-grid-toolbar [$_dark-grid-toolbar]
+/// @property {Map} igx-icon [$_dark-icon]
+/// @property {Map} igx-input-group [$_dark-input-group]
+/// @property {Map} igx-list [$_dark-list]
+/// @property {Map} igx-navbar [$_dark-navbar]
+/// @property {Map} igx-navdrawer [$_dark-navdrawer]
+/// @property {Map} igx-overlay [$_dark-overlay]
+/// @property {Map} igx-progress-linear [$_dark-progress-linear]
+/// @property {Map} igx-progress-circular [$_dark-progress-circular]
+/// @property {Map} igx-radio [$_dark-radio]
+/// @property {Map} igx-ripple [$_dark-ripple]
+/// @property {Map} igx-slider [$_dark-slider]
+/// @property {Map} igx-snackbar [$_dark-snackbar]
+/// @property {Map} igx-switch [$_dark-switch]
+/// @property {Map} igx-tabs [$_dark-tabs]
+/// @property {Map} igx-time-picker [$_dark-time-picker]
+/// @property {Map} igx-toast [$_dark-toast]
+/// @property {Map} igx-tooltip [$_dark-tooltip]
+
+$dark-schema: (
+    igx-avatar: $_dark-avatar,
+    igx-badge: $_dark-badge,
+    igx-banner: $_dark-banner,
+    igx-bottom-nav: $_dark-bottom-nav,
+    igx-button: $_dark-button,
+    igx-button-group: $_dark-button-group,
+    igx-calendar: $_dark-calendar,
+    igx-card: $_dark-card,
+    igx-carousel: $_dark-carousel,
+    igx-checkbox: $_dark-checkbox,
+    igx-chip: $_dark-chip,
+    igx-column-hiding: $_dark-column-hiding,
+    igx-combo: $_dark-combo,
+    igx-date-picker: extend($_dark-calendar, $_dark-date-picker),
+    igx-dialog: $_dark-dialog,
+    igx-drop-down: $_dark-drop-down,
+    igx-expansion-panel: $_dark-expansion-panel,
+    igx-grid: $_dark-grid,
+    igx-grid-filtering: $_dark-grid-filtering,
+    igx-grid-paginator: $_dark-grid-pagination,
+    igx-grid-summary: $_dark-grid-summary,
+    igx-grid-toolbar: $_dark-grid-toolbar,
+    igx-icon: $_dark-icon,
+    igx-input-group: $_dark-input-group,
+    igx-list: $_dark-list,
+    igx-navbar: $_dark-navbar,
+    igx-navdrawer: $_dark-navdrawer,
+    igx-overlay: $_dark-overlay,
+    igx-linear-bar: $_dark-progress-linear,
+    igx-circular-bar: $_dark-progress-circular,
+    igx-radio: $_dark-radio,
+    igx-ripple: $_dark-ripple,
+    igx-slider: $_dark-slider,
+    igx-snackbar: $_dark-snackbar,
+    igx-switch: $_dark-switch,
+    igx-tabs: $_dark-tabs,
+    igx-time-picker: $_dark-time-picker,
+    igx-toast: $_dark-toast,
+    igx-tooltip: $_dark-tooltip
+);

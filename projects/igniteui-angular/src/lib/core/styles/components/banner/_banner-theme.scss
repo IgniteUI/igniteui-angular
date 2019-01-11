@@ -7,11 +7,18 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $banner-background [#FFFFFF)]- The background color used banner background.
-/// @param {Color} $banner-label-color [rgba(0, 0, 0, .26)]- The color used for banner label.
-/// @param {Color} $banner-border-color [rgba(0, 0, 0, .74)] - The border color used banner border.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $banner-background [null]- The background color used banner background.
+/// @param {Color} $banner-message-color [null]- The color used for banner label.
+/// @param {Color} $banner-border-color [null] - The border color used banner border.
+/// @param {Color} $banner-illustration-background [null] - The background color used for banner illustration.
+/// @param {Color} $banner-illustration-color [null] - The color used banner illustration.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
-/// @requires igx-color
 /// @requires extend
 ///
 /// @example scss Change the background in banner
@@ -24,21 +31,21 @@
     $banner-background: null,
     $banner-message-color: null,
     $banner-border-color: null,
-    $banner-illustration-background: null,
     $banner-illustration-color: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-banner'), $palette);
+    $name: 'igx-banner';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($banner-message-color) and $banner-background {
         $banner-message-color: text-contrast($banner-background);
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         banner-background: $banner-background,
         banner-message-color: $banner-message-color,
         banner-border-color: $banner-border-color,
-        banner-illustration-background: $banner-illustration-background,
         banner-illustration-color: $banner-illustration-color
     ));
 }
@@ -64,11 +71,12 @@
     }
 
     %igx-banner {
-        justify-content: space-between;
         padding: map-get($banner-padding, 'comfortable');
         background: --var($theme, 'banner-background');
         align-items: center;
         position: relative;
+        flex-wrap: wrap;
+        justify-content: flex-end;
     }
 
     %igx-banner__illustration {
@@ -77,8 +85,6 @@
         min-width: rem(40);
         height: rem(40);
         margin-left: rem(16);
-        border-radius: 50%;
-        background: --var($theme, 'banner-illustration-background');
         color: --var($theme, 'banner-illustration-color');
     }
 
@@ -107,6 +113,7 @@
     }
 
     %igx-banner__message {
+        min-width: rem(220);
         flex: 1 0 0%;
         margin-right: rem(90);
     }
@@ -121,19 +128,6 @@
         align-self: flex-end;
         justify-content: center;
         min-height: rem(40);
-    }
-
-    %igx-banner--vertical {
-        flex-direction: column;
-
-        %igx-banner__message {
-            align-self: flex-start;
-            margin-right: rem(36);
-        }
-
-        %igx-banner__text {
-            margin-left: rem(16);
-        }
     }
 }
 

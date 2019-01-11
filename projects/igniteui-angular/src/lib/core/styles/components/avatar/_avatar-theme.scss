@@ -8,13 +8,16 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
-/// @param {Color} $icon-background [rgba(0, 0, 0, .26)]- The background color used for avatars of type icon.
-/// @param {Color} $icon-color [rgba(0, 0, 0, .74)] - The icon color used for avatars of type icon.
-/// @param {Color} $initials-background [rgba(0, 0, 0, .26)] - The background color used for avatars of type initials.
-/// @param {Color} $initials-color [rgba(0, 0, 0, .74)] - The text color used for avatars of type initials.
-/// @param {Color} $image-background [transparent] - The background color used for avatars of type image.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $icon-background [null]- The background color used for avatars of type icon.
+/// @param {Color} $icon-color [null] - The icon color used for avatars of type icon.
+/// @param {Color} $initials-background [null] - The background color used for avatars of type initials.
+/// @param {Color} $initials-color [null] - The text color used for avatars of type initials.
+/// @param {Color} $image-background [null] - The background color used for avatars of type image.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
 /// @requires text-contrast
-/// @requires igx-color
 /// @requires extend
 ///
 /// @example scss Change the background and icon colors in icon avatars
@@ -30,7 +33,8 @@
     $initials-color: null,
     $image-background: null
 ) {
-    $theme: apply-palette(map-get($schema, 'igx-avatar'), $palette);
+    $name: 'igx-avatar';
+    $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);
@@ -41,6 +45,7 @@
     }
 
     @return extend($theme, (
+        name: $name,
         palette: $palette,
         icon-background: $icon-background,
         icon-color: $icon-color,
@@ -62,8 +67,13 @@
     $large-size: 88px;
 
     %igx-avatar-display {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
         position: relative;
         user-select: none;
+        color: --var($theme, 'initials-color');
+        background: --var($theme, 'initials-background');
     }
 
     %igx-avatar--rounded {
@@ -89,15 +99,12 @@
     }
 
     %igx-avatar-inner {
-        width: inherit;
-        height: inherit;
+        width: 100%;
+        height: 100%;
         border-radius: inherit;
     }
 
     %igx-avatar-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         color: --var($theme, 'icon-color');
         background: --var($theme, 'icon-background');
     }
@@ -110,9 +117,6 @@
     }
 
     %igx-avatar-initials {
-        display: flex;
-        justify-content: center;
-        align-items: center;
         text-transform: uppercase;
         color: --var($theme, 'initials-color');
         background-color: --var($theme, 'initials-background');

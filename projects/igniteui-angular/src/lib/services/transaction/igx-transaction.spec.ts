@@ -1,6 +1,7 @@
 import { IgxTransactionService } from './igx-transaction';
-import { Transaction, TransactionType } from './transaction';
+import { Transaction, TransactionType, HierarchicalTransaction } from './transaction';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxHierarchicalTransactionService } from './igx-hierarchical-transaction';
 
 describe('IgxTransaction', () => {
     describe('IgxTransaction UNIT tests', () => {
@@ -160,8 +161,9 @@ describe('IgxTransaction', () => {
             expect(trans.getTransactionLog('100').pop()).toEqual(undefined);
         });
 
-        it('Should add ADD type transaction - all feasible paths', () => {
+        it('Should add ADD type transaction - all feasible paths, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
+            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
             expect(trans).toBeDefined();
 
             // ADD
@@ -175,18 +177,24 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
+
             trans.clear();
             expect(trans.getState('1')).toBeUndefined();
             expect(trans.getAggregatedValue('1', true)).toBeNull();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(2);
 
             // ADD -> Undo
             trans.add(addTransaction);
             trans.undo();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(4);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(5);
 
             // ADD -> Undo -> Redo
             trans.add(addTransaction);
@@ -198,7 +206,10 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(8);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(9);
 
             // ADD -> DELETE
             trans.add(addTransaction);
@@ -206,7 +217,10 @@ describe('IgxTransaction', () => {
             trans.add(deleteTransaction);
             expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(11);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(12);
 
             // ADD -> DELETE -> Undo
             trans.add(addTransaction);
@@ -218,7 +232,10 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(15);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(16);
 
             // ADD -> DELETE -> Undo -> Redo
             trans.add(addTransaction);
@@ -227,7 +244,10 @@ describe('IgxTransaction', () => {
             trans.redo();
             expect(trans.getTransactionLog()).toEqual([addTransaction, deleteTransaction]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(20);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(21);
 
             // ADD -> DELETE -> Undo -> Undo
             trans.add(addTransaction);
@@ -236,7 +256,10 @@ describe('IgxTransaction', () => {
             trans.undo();
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(25);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(26);
 
             // ADD -> UPDATE
             trans.add(addTransaction);
@@ -248,7 +271,10 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(28);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(29);
 
             // ADD -> UPDATE -> Undo
             trans.add(addTransaction);
@@ -260,7 +286,10 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(32);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(33);
 
             // ADD -> UPDATE -> Undo -> Redo
             trans.add(addTransaction);
@@ -273,7 +302,10 @@ describe('IgxTransaction', () => {
                 recordRef: undefined,
                 type: addTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(37);
+
             trans.clear();
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(38);
         });
 
         it('Should add DELETE type transaction - all feasible paths', () => {
@@ -539,8 +571,10 @@ describe('IgxTransaction', () => {
             expect(originalData[49]).toEqual('Added Row');
         });
 
-        it('Should add pending transaction and push it to transaction log', () => {
+        it('Should add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
+            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };
@@ -571,7 +605,11 @@ describe('IgxTransaction', () => {
                 [
                     {
                         id: 'Key1',
-                        newValue: { key: 'Key1', value1: 10, value3: 30 },
+                        newValue: { key: 'Key1', value1: 10 },
+                        type: 'update'
+                    }, {
+                        id: 'Key1',
+                        newValue: { key: 'Key1', value3: 30 },
                         type: 'update'
                     }
                 ]);
@@ -580,10 +618,13 @@ describe('IgxTransaction', () => {
                 recordRef: recordRef,
                 type: updateTransaction.type
             });
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(1);
         });
 
-        it('Should not add pending transaction and push it to transaction log', () => {
+        it('Should not add pending transaction and push it to transaction log, and correctly fires onStateUpdate', () => {
             const trans = new IgxTransactionService();
+            spyOn(trans.onStateUpdate, 'emit').and.callThrough();
+
             expect(trans).toBeDefined();
             const recordRef = { key: 'Key1', value1: 1, value2: 2, value3: 3 };
             let newValue: any = { key: 'Key1', value1: 10 };
@@ -606,6 +647,87 @@ describe('IgxTransaction', () => {
 
             expect(trans.getTransactionLog()).toEqual([]);
             expect(trans.getAggregatedChanges(true)).toEqual([]);
+            expect(trans.onStateUpdate.emit).toHaveBeenCalledTimes(0);
+        });
+    });
+
+    describe('IgxHierarchicalTransaction UNIT Test', () => {
+        it('Should set path for each state when transaction is added in Hierarchical data source', () => {
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const path: any[] = ['P1', 'P2'];
+            const addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Add row', path };
+            transaction.add(addTransaction);
+            expect(transaction.getState(1).path).toBeDefined();
+            expect(transaction.getState(1).path.length).toBe(2);
+            expect(transaction.getState(1).path).toEqual(path);
+
+            path.push('P3');
+            const updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Updated row', path };
+            transaction.add(updateTransaction, 'Update row');
+            expect(transaction.getState(1).path.length).toBe(3);
+            expect(transaction.getState(1).path).toEqual(path);
+        });
+
+        it('Should remove added transaction from states when deleted in Hierarchical data source', () => {
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const path: any[] = [];
+            let addTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.ADD, newValue: 'Parent row', path };
+            transaction.add(addTransaction);
+            expect(transaction.getState(1).path).toBeDefined();
+            expect(transaction.getState(1).path.length).toBe(0);
+            expect(transaction.getState(1).path).toEqual(path);
+
+            path.push(addTransaction.id);
+            addTransaction = { id: 2, type: TransactionType.ADD, newValue: 'Child row', path };
+            transaction.add(addTransaction);
+            expect(transaction.getState(2).path).toBeDefined();
+            expect(transaction.getState(2).path.length).toBe(1);
+            expect(transaction.getState(2).path).toEqual(path);
+
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
+            transaction.add(deleteTransaction);
+            expect(transaction.getState(1)).toBeUndefined();
+            expect(transaction.getState(2)).toBeUndefined();
+        });
+
+        it('Should mark update transactions state as deleted type when deleted in Hierarchical data source', () => {
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const path: any[] = [];
+            let updateTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.UPDATE, newValue: 'Parent row', path };
+            transaction.add(updateTransaction, 'Original value');
+            expect(transaction.getState(1).path).toBeDefined();
+            expect(transaction.getState(1).path.length).toBe(0);
+            expect(transaction.getState(1).path).toEqual(path);
+
+            path.push(updateTransaction.id);
+            updateTransaction = { id: 2, type: TransactionType.UPDATE, newValue: 'Child row', path };
+            transaction.add(updateTransaction, 'Original Value');
+            expect(transaction.getState(2).path).toBeDefined();
+            expect(transaction.getState(2).path.length).toBe(1);
+            expect(transaction.getState(2).path).toEqual(path);
+
+            const deleteTransaction: HierarchicalTransaction = { id: 1, type: TransactionType.DELETE, newValue: null, path: [] };
+            transaction.add(deleteTransaction);
+            expect(transaction.getState(1)).toBeDefined();
+            expect(transaction.getState(1).type).toBe(TransactionType.DELETE);
+            expect(transaction.getState(2)).toBeDefined();
+            expect(transaction.getState(2).type).toBe(TransactionType.DELETE);
+        });
+
+        it('Should correctly call getAggregatedChanges without commit when recordRef is null', () => {
+            const transaction = new IgxHierarchicalTransactionService();
+            expect(transaction).toBeDefined();
+
+            const deleteTransaction: HierarchicalTransaction = { id: 0, type: TransactionType.DELETE, newValue: null, path: [] };
+            transaction.add(deleteTransaction, 'Deleted row');
+
+            expect(transaction.getAggregatedChanges(false)).toEqual([deleteTransaction]);
         });
     });
 });

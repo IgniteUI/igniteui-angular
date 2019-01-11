@@ -6,14 +6,16 @@ import {
     ElementRef,
     ChangeDetectorRef,
     ViewChildren,
-    QueryList
+    QueryList,
+    ViewChild
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxHirarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +34,12 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * let selectedRowCells = this.grid.selectedRows[2].cells;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxHirarchicalGridCellComponent), { read: IgxHirarchicalGridCellComponent })
-    public cells: QueryList<IgxHirarchicalGridCellComponent>;
+    @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
+    public cells: QueryList<IgxHierarchicalGridCellComponent>;
+
+    @ViewChild('expander', { read: ElementRef })
+    public expander: ElementRef;
+
     /**
      * @hidden
      */
@@ -51,7 +57,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     public get hasChildren() {
-        return  this.grid.childLayoutKeys.length;
+        return this.grid.childLayoutKeys.some(key => {
+            return this.rowData.hasOwnProperty(key);
+        });
     }
 
     /**
@@ -78,5 +86,5 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
             super(gridAPI, hselection, element, cdr);
-         }
+        }
 }

@@ -321,7 +321,7 @@ describe('Scroll Inertia Directive ', () => {
         const msGesture = window['MSGesture'];
         if (!msGesture) {
             // if MSGesture does not exist create a dummy obj to use instead.
-            window['MSGesture'] = () => {
+            window['MSGesture'] = function() {
                 return {
                     addPointer: (arg) => {}
                 };

@@ -17,9 +17,10 @@ import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
-import { Subscription, OperatorFunction, Subject } from 'rxjs';
+import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
 import { CancelableEventArgs } from '../../core/utils';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 @Directive({
     exportAs: 'toggle',
@@ -28,8 +29,9 @@ import { CancelableEventArgs } from '../../core/utils';
 export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayId: string;
     private destroy$ = new Subject<boolean>();
-    private _overlaySubFilter: OperatorFunction<OverlayEventArgs, OverlayEventArgs>[] = [
-        filter(x => x.id === this._overlayId)
+    private _overlaySubFilter: [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs>] = [
+        filter(x => x.id === this._overlayId),
+        takeUntil(this.destroy$)
     ];
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;
@@ -189,12 +191,12 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter, takeUntil(this.destroy$)).subscribe(() => {
+        this._overlayOpenedSub = this.overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.onOpened.emit();
         });
         this._overlayClosingSub = this.overlayService
             .onClosing
-            .pipe(...this._overlaySubFilter, takeUntil(this.destroy$))
+            .pipe(...this._overlaySubFilter)
             .subscribe((e: OverlayCancelableEventArgs) => {
                 const eventArgs: CancelableEventArgs = { cancel: false };
                 this.onClosing.emit(eventArgs);
@@ -208,7 +210,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
                 }
             });
         this._overlayClosedSub = this.overlayService.onClosed
-            .pipe(...this._overlaySubFilter, takeUntil(this.destroy$))
+            .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
     }
 
@@ -322,6 +324,8 @@ export class IgxToggleActionDirective implements OnInit {
      * let closesOnOutsideClick = this.toggle.closeOnOutsideClick;
      * ```
      */
+    @Input()
+    @DeprecateProperty(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`)
     public get closeOnOutsideClick(): boolean {
         return this._closeOnOutsideClick;
     }
@@ -331,9 +335,7 @@ export class IgxToggleActionDirective implements OnInit {
      * <div igxToggleAction [closeOnOutsideClick]="'true'"></div>
      * ```
      */
-    @Input()
     public set closeOnOutsideClick(v: boolean) {
-        console.warn(`igxToggleAction 'closeOnOutsideClick' input is deprecated. Use 'overlaySettings' input object instead.`);
         this._closeOnOutsideClick = v;
     }
 

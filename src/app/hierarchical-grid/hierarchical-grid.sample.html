@@ -1,43 +1,56 @@
-<igx-hierarchical-grid #grid1 [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
-        <igx-column field="ID" [groupable]='true' ></igx-column>
+<div class="hgrid-sample">
+    <h4 class="sample-title">Sample One</h4>
+    <div class="density-chooser" style="margin-bottom: 16px">
+        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
+    </div>
+    <igx-hierarchical-grid class="hgrid" #grid1 [data]="localData" [displayDensity]="density" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid>
+        <igx-column field="ID" [pinned]="true"></igx-column>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels" [groupable]='true'></igx-column>
-                <igx-column field="ProductName" [groupable]='true' hasSummary='true'></igx-column>
+            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
 
-    <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1 >
-            <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
-            <igx-column-group header="Information2">
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' #layout1 [expandChildren]="rootExpanded">
+                <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
+                <igx-column-group header="Information2">
                     <igx-column field="ChildLevels"  [groupable]='true'></igx-column>
                     <igx-column field="ProductName"  [groupable]='true'></igx-column>
-            </igx-column-group>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
-                <igx-column field="ID" [hasSummary]='true'></igx-column>
-                <igx-column-group header="Information3">
+                </igx-column-group>
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded">
+                    <igx-column field="ID" [hasSummary]='true'></igx-column>
+                    <igx-column-group header="Information3">
                         <igx-column field="ChildLevels"></igx-column>
                         <igx-column field="ProductName"></igx-column>
-                </igx-column-group>
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
-                    <igx-column field="ID" [hasSummary]='true'></igx-column>
-                    <igx-column-group header="Information4">
+                    </igx-column-group>
+                    <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable'>
+                        <igx-column field="ID" [hasSummary]='true'></igx-column>
+                        <igx-column-group header="Information4">
                             <igx-column field="ChildLevels"></igx-column>
                             <igx-column field="ProductName"></igx-column>
-                    </igx-column-group>
-            </igx-row-island>
+                        </igx-column-group>
+                    </igx-row-island>
 
+            </igx-row-island>
         </igx-row-island>
-    </igx-row-island>
-    <!-- <igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
-            <igx-column field="ChildLevels" [groupable]='true'></igx-column>
-            <igx-column field="ProductName" [groupable]='true'></igx-column>
-    </igx-row-island> -->
-</igx-hierarchical-grid>
-<igx-hierarchical-grid [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'" #hGrid2>
-    <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' [childrenExpanded]='true'>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' [childrenExpanded]='false'></igx-row-island>
-    </igx-row-island>
-    <igx-row-island [key]="'childData2'" [autoGenerate]="true"></igx-row-island>
-</igx-hierarchical-grid>
-<button (click)='setterBindingChange()'>Set rowSelectable via binding</button>
-<button (click)='setterChange()'>Set rowSelectable via setter on 1st layout</button>
-<button (click)='testApis()'>Test APis</button>
+    <!--<igx-row-island [key]="'childData2'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' >
+                <igx-column field="ChildLevels" [groupable]='true'></igx-column>
+                <igx-column field="ProductName" [groupable]='true'></igx-column>
+        </igx-row-island> -->
+    </igx-hierarchical-grid>
+
+    <h4 class="sample-title">Sample two</h4>
+    <div class="sample-actions">
+        <button igxButton="raised" (click)='setterBindingChange()'>Set rowSelectable via binding</button>
+        <button igxButton="raised" (click)='setterChange()'>Set rowSelectable via setter on 1st layout</button>
+        <button igxButton="raised" (click)='testApis()'>Test APis</button>
+        <button igxButton="raised" (click)='toggleRootLevel()'>Toggle root level</button>
+        <button igxButton="raised" (click)='toggleFirstIsland()'>Toggle level 1</button>
+    </div>
+    <igx-hierarchical-grid [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'" #hGrid2>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' [expandChildren]='false'>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelectable]='isRowSelectable' [expandChildren]='false'></igx-row-island>
+        </igx-row-island>
+        <igx-row-island [key]="'childData2'" [autoGenerate]="true"></igx-row-island>
+    </igx-hierarchical-grid>
+
+</div>
