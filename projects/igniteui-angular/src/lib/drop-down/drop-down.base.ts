@@ -2,19 +2,10 @@ import {
     Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef
 } from '@angular/core';
 
-<<<<<<< HEAD
-import { CancelableEventArgs, isIE } from '../core/utils';
-import { IgxSelectionAPIService } from '../core/selection';
-import { OverlaySettings } from '../services';
-import { IToggleView } from '../core/navigation';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { ISelectionEventArgs, Navigate } from './drop-down.common';
-=======
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down-navigation.directive';
 import { IgxDropDownItemBase } from './drop-down-item.base';
->>>>>>> remotes/origin/master
 
 let NEXT_ID = 0;
 
@@ -226,129 +217,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
             index = currentIndex ? currentIndex : this._focusedItem.index;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
-<<<<<<< HEAD
-        this.navigateItem(newIndex, direction);
-    }
-
-    /**
-     * @hidden
-     */
-    navigateFirst() {
-        this.navigate(Navigate.Down, -1);
-    }
-
-    /**
-     * @hidden
-     */
-    navigateLast() {
-        this.navigate(Navigate.Up, this.items.length);
-    }
-
-    /**
-     * @hidden
-     */
-    navigateNext() {
-        this.navigate(Navigate.Down);
-    }
-
-    /**
-     * @hidden
-     */
-    navigatePrev() {
-        this.navigate(Navigate.Up);
-    }
-
-    /**
-     * @hidden
-     */
-    ngOnInit() {
-        this.toggleDirective.id = this.id;
-        this.selection.clear(this.id);
-    }
-
-
-    /**
-     * @hidden
-     */
-    onToggleOpening(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false };
-        this.onOpening.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
-        if (eventArgs.cancel) {
-            return;
-        }
-        this.scrollToItem(this.selectedItem);
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleOpened() {
-        this._initiallySelectedItem = this.selectedItem;
-        this._focusedItem = this.selectedItem;
-        if (this._focusedItem) {
-            this._focusedItem.isFocused = true;
-        } else if (this.allowItemsFocus) {
-            const firstItemIndex = this.getNearestSiblingFocusableItemIndex(-1, Navigate.Down);
-            if (firstItemIndex !== -1) {
-                this.navigateItem(firstItemIndex);
-            }
-        }
-        this.onOpened.emit();
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleClosing(e: CancelableEventArgs) {
-        const eventArgs = { cancel: false };
-        this.onClosing.emit(eventArgs);
-        e.cancel = eventArgs.cancel;
-    }
-
-    /**
-     * @hidden
-     */
-    onToggleClosed() {
-        if (this._focusedItem) {
-            this._focusedItem.isFocused = false;
-        }
-
-        this.onClosed.emit();
-    }
-
-    /**
-     * @hidden
-     */
-    protected scrollToItem(item: IgxDropDownItemBase) {
-        const itemPosition = this.calculateScrollPosition(item);
-
-        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
-        //  to appear on screen before animation start. As a result dropdown
-        //  flickers badly. This is why we set scrollTop just a little later
-        //  allowing animation to start and prevent dropdown flickering
-        if (isIE()) {
-            setTimeout(() => {
-                this.scrollContainer.scrollTop = (itemPosition);
-            }, 1);
-        } else {
-            this.scrollContainer.scrollTop = (itemPosition);
-        }
-    }
-
-    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
-        const elementRect = newItem.element.nativeElement.getBoundingClientRect();
-        const parentRect = this.scrollContainer.getBoundingClientRect();
-        if (parentRect.top > elementRect.top) {
-            this.scrollContainer.scrollTop -= (parentRect.top - elementRect.top);
-        }
-
-        if (parentRect.bottom < elementRect.bottom) {
-            this.scrollContainer.scrollTop += (elementRect.bottom - parentRect.bottom);
-        }
-=======
         this.navigateItem(newIndex);
->>>>>>> remotes/origin/master
     }
 
     protected getNearestSiblingFocusableItemIndex(startIndex: number, direction: Navigate): number {
