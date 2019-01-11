@@ -255,7 +255,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public ngOnInit(): void {
         let totalSize = 0;
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
-        this.igxForSizePropName = this.igxForSizePropName ? this.igxForSizePropName : 'width';
+        this.igxForSizePropName = this.igxForSizePropName || 'width';
 
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
