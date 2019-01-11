@@ -60,6 +60,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private chipsAreaWidth: number;
     private chipAreaScrollOffset = 0;
     private _column = null;
+    private isKeyPressed = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -224,6 +225,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on the input.
      */
     public onInputKeyDown(event: KeyboardEvent) {
+        this.isKeyPressed = true;
+
         if (this.column.dataType === DataType.Boolean) {
             if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) &&
             this.dropDownConditions.collapsed) {
@@ -263,6 +266,24 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.close();
         }
         event.stopPropagation();
+    }
+
+    /**
+     * Event handler for keyup on the input.
+     */
+    public onInputKeyUp(eventArgs) {
+        this.isKeyPressed = false;
+    }
+
+    /**
+     * Event handler for input on the input.
+     */
+    public onInput(eventArgs) {
+        // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
+        // when you have a japanese character as a placeholder, on init the value here is empty string .
+        if (this.isKeyPressed) {
+            this.value = eventArgs.target.value;
+        }
     }
 
     /**
