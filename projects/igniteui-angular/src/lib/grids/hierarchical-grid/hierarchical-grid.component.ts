@@ -357,9 +357,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
-            if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
-                (<any>ref.instance)[propName] =  (<any>col)[propName];
-            }
+            (<any>ref.instance)[propName] =  (<any>col)[propName];
          });
          if (col.children.length > 0) {
              const newChildren = [];
@@ -382,6 +380,8 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             const propName = input.propName;
             if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
                 (<any>ref.instance)[propName] =  (<any>col)[propName];
+            } else {
+                (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
         (<IgxColumnComponent>ref.instance).gridID = this.id;
