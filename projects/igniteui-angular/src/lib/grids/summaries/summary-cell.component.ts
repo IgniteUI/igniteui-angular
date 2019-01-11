@@ -165,7 +165,10 @@ export class IgxSummaryCellComponent {
         return this.column.grid.defaultRowHeight;
     }
 
-    private get grid() {
+    /**
+     * @hidden
+     */
+    public get grid() {
         return (this.column.grid as any);
     }
 
@@ -177,5 +180,9 @@ export class IgxSummaryCellComponent {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
 
+    }
+
+    public translateSummary(summary: IgxSummaryResult): string {
+        return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 }

@@ -1,10 +1,32 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.1.2
+### Features
+- `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
+- `IgxTimePickerComponent`: in addition to the current dialog interaction mode, now the user can select or edit a time value, using an editable masked input with a dropdown.
+- `IgxColumnComponent` now accepts its templates as input properties through the markup. This can reduce the amount of code one needs to write when applying a single template to multiple columns declaratively. The new exposed inputs are:
+    + `cellTemplate` - the template for the column cells
+    + `headerTemplate` - the template for the column header
+    + `cellEditorTemplate` - the template for the column cells when a cell is in edit mode
+    + ```html
+        <!-- Example -->
+
+        <igx-grid ...>
+            <igx-column *ngFor="let each of defs" [cellTemplate]="newTemplate" ...></igx-column>
+        </igx-grid>
+
+        <ng-template #newTemplate let-value>
+            {{ value }}
+        </ng-template>
+        ```
 
 ## 7.1.1
+### Features
+- `igxGrid`
+    - `locale` property added. Default value is `en`. All child components will use it as locale.
+    
 ### Bug Fixes
-
 * onSortingDone is not fired when sorting indicator of a header in the group by area is clicked ([#3257](https://github.com/IgniteUI/igniteui-angular/issues/3257))
 * igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([#3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
 * Preventing wrap-around for scrollNext and scrollPrev([#3365](https://github.com/IgniteUI/igniteui-angular/issues/3365))
@@ -13,6 +35,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
+
 
 ## 7.1.0
 ### Features
@@ -40,6 +63,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`:
     - `ElasticPositioningStrategy` added. This strategy positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view.
 
+
 ## 7.0.5
 
 ### Bug Fixes
@@ -59,6 +83,7 @@ All notable changes for each version of this project will be documented in this 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
 * Move all keyboard navigation tests in a separate file ([#2975](https://github.com/IgniteUI/igniteui-angular/issues/2975))
+
 
 ## 7.0.4
 ### Bug fixes
