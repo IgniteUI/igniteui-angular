@@ -14,12 +14,12 @@ import { first } from 'rxjs/operators';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { formatDate, formatNumber } from '@angular/common';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -393,10 +393,10 @@ describe('Excel Exporter', () => {
 
             // Set column formatters
             grid.columns[3].formatter = ((val: number) => {
-                return new Intl.NumberFormat('bg-BG').format(val);
+                return formatNumber(val, 'en-US');
             });
             grid.columns[4].formatter = ((val: Date) => {
-                return new Intl.DateTimeFormat('ja-JP').format(val);
+                return formatDate(val, 'dd/MMM/yyyy', 'en-US');
             });
             grid.cdr.detectChanges();
             fix.detectChanges();
