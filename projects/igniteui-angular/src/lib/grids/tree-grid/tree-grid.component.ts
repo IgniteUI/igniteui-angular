@@ -63,6 +63,11 @@ let NEXT_ID = 0;
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
 
+    public ngOnInit() {
+        this._gridAPI.register(this);
+        super.ngOnInit();
+    }
+
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
