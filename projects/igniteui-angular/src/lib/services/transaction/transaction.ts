@@ -12,7 +12,10 @@ export interface Transaction {
     newValue: any;
 }
 
-/** @experimental @hidden */
+/**
+ * @experimental
+ * @hidden
+ */
 export interface HierarchicalTransaction extends Transaction {
     path: any[];
 }
@@ -23,7 +26,10 @@ export interface State {
     type: TransactionType;
 }
 
-/** @experimental @hidden */
+/**
+ * @experimental
+ * @hidden
+ */
 export interface HierarchicalState extends State {
     path: any[];
 }
