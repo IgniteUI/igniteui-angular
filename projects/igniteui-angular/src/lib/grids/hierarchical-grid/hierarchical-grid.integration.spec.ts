@@ -150,28 +150,29 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('GroupBy', () => {
-        it('Data should be rendered correctly when children are expanded', () => {
+        it('Data should be rendered correctly when children are expanded', async() => {
             const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
             // expand 1st row
             firstRow.nativeElement.children[0].click();
-            fixture.detectChanges();
+            await wait(100);
+            hierarchicalGrid.cdr.detectChanges();
 
             hierarchicalGrid.groupBy({
                 fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
             });
-            fixture.detectChanges();
-            let rows = hierarchicalGrid.rowList.toArray();
-            expect(rows[0] instanceof IgxGridGroupByRowComponent).toBeTruthy();
-            expect(rows[1] instanceof IgxHierarchicalRowComponent).toBeTruthy();
-            expect(rows[2] instanceof IgxChildGridRowComponent).toBeTruthy();
+            hierarchicalGrid.cdr.detectChanges();
+            await wait(100);
+
+            expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxGridGroupByRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             hierarchicalGrid.clearGrouping('ID');
             hierarchicalGrid.cdr.detectChanges();
             fixture.detectChanges();
-            rows = hierarchicalGrid.rowList.toArray();
-            expect(rows[0] instanceof IgxHierarchicalRowComponent).toBeTruthy();
-            expect(rows[1] instanceof IgxChildGridRowComponent).toBeTruthy();
-            expect(rows[2] instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxHierarchicalRowComponent).toBeTruthy();
         });
 
         it('child grids data should be correct after grouping in parent grid.',  (async () => {
