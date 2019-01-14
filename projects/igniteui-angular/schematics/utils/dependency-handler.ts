@@ -1,5 +1,5 @@
 import { Tree } from '@angular-devkit/schematics/src/tree/interface';
-import { SchematicContext, Rule, SchematicsException, chain } from '@angular-devkit/schematics';
+import { SchematicContext, Rule, SchematicsException } from '@angular-devkit/schematics';
 import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { Options } from '../interfaces/options';
@@ -22,17 +22,19 @@ export function logSuccess(options: Options): Rule {
 export function addDependencies(options: Options): Rule {
     return (tree: Tree, context: SchematicContext) => {
         const pkgJson = require('../../package.json');
+        const dependencies = 'dependencies';
+        const devDependencies = 'devDependencies';
 
         Object.keys(pkgJson.dependencies).forEach(pkg => {
             const version = pkgJson.dependencies[pkg];
             switch (pkg) {
                 case 'hammerjs':
-                    addPackageJsonDependency(tree, pkg, version);
+                    addPackageToPkgJson(tree, pkg, version, dependencies);
                     addHammerJsToWorkspace(tree);
                     logIncludingDependency(context, pkg, version);
                     break;
                 default:
-                    addPackageJsonDependency(tree, pkg, version);
+                    addPackageToPkgJson(tree, pkg, version, dependencies);
                     logIncludingDependency(context, pkg, version);
                     break;
             }
@@ -42,13 +44,13 @@ export function addDependencies(options: Options): Rule {
         Object.keys(pkgJson.peerDependencies).forEach(pkg => {
             const version = pkgJson.peerDependencies[pkg];
             if (pkg.includes('web-animations')) {
-                addPackageJsonDependency(tree, pkg, version);
+                addPackageToPkgJson(tree, pkg, version, dependencies);
                 logIncludingDependency(context, pkg, version);
                 return;
             }
         });
 
-        addPackageToJsonDevDependency(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli']);
+        addPackageToPkgJson(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli'], devDependencies);
         return tree;
     };
 }
@@ -103,45 +105,22 @@ function addHammerToAngularWorkspace(workspace: WorkspaceSchema, key: string): b
     }
 }
 
-function addPackageJsonDependency(tree: Tree, pkg: string, version: string): Tree {
+function addPackageToPkgJson(tree: Tree, pkg: string, version: string, target: string): Tree {
     const targetFile = 'package.json';
     if (tree.exists(targetFile)) {
         const sourceText = tree.read(targetFile).toString();
         const json = JSON.parse(sourceText);
 
-        if (!json.dependencies) {
-            json.dependencies = {};
+        if (!json[target]) {
+            json[target] = {};
         }
 
         if (!json.dependencies[pkg]) {
-            json.dependencies[pkg] = version;
-            json.dependencies =
-                Object.keys(json.dependencies)
+            json[target][pkg] = version;
+            json[target] =
+                Object.keys(json[target])
                     .sort()
-                    .reduce((result, key) => (result[key] = json.dependencies[key]) && result, {});
-            tree.overwrite(targetFile, JSON.stringify(json, null, 2) + '\n');
-        }
-    }
-
-    return tree;
-}
-
-function addPackageToJsonDevDependency(tree: Tree, pkg: string, version: string): Tree {
-    const targetFile = 'package.json';
-    if (tree.exists(targetFile)) {
-        const sourceText = tree.read(targetFile).toString();
-        const json = JSON.parse(sourceText);
-
-        if (!json.devDependencies) {
-            json.devDependencies = {};
-        }
-
-        if (!json.devDependencies[pkg]) {
-            json.devDependencies[pkg] = version;
-            json.devDependencies =
-                Object.keys(json.devDependencies)
-                    .sort()
-                    .reduce((result, key) => (result[key] = json.devDependencies[key]) && result, {});
+                    .reduce((result, key) => (result[key] = json[target][key]) && result, {});
             tree.overwrite(targetFile, JSON.stringify(json, null, 2) + '\n');
         }
     }
