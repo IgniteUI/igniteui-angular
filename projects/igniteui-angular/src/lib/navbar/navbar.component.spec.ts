@@ -121,9 +121,9 @@ describe('IgxNavbar', () => {
             fixture = TestBed.createComponent(NavbarCustomIgxIconTestComponent);
             fixture.detectChanges();
 
-            await wait(100);            
+            await wait(100);
 
-            const domNavbar = fixture.debugElement.query(By.css('igx-navbar'));
+            domNavbar = fixture.debugElement.query(By.css('igx-navbar'));
             const customActionIcon = domNavbar.query(By.css('igx-action-icon'));
             const customIcon = customActionIcon.query(By.css('igx-icon'));
 
@@ -135,7 +135,7 @@ describe('IgxNavbar', () => {
             const navbarBottom = (<HTMLElement>domNavbar.nativeElement).getBoundingClientRect().bottom;
             const customIconBottom = (<HTMLElement>customIcon.nativeElement).getBoundingClientRect().bottom;
             const bottomOffset = navbarBottom - customIconBottom;
-            
+
             expect(topOffset).toBe(bottomOffset, 'Custom icon is not vertically-centered.');
         }));
     });
