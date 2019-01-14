@@ -192,7 +192,7 @@ export class IgxGridNavigationService {
     public onKeydownHome(rowIndex, isSummary = false) {
         const rowList = isSummary ? this.grid.summariesRowList : this.grid.dataRowList;
         let rowElement = rowList.find((row) => row.index === rowIndex);
-        const cellSelector = this.getCellSelector(-1, isSummary);
+        const cellSelector = this.getCellSelector(0, isSummary);
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
         let firstCell =  rowElement.querySelector(cellSelector);

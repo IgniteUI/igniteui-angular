@@ -155,7 +155,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         await wait(10);
         fixture.detectChanges();
 
-        const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
+        const childLastCell =  childGrid.getCellByColumn(9, 'childData2');
         childLastCell.nativeElement.focus();
         await wait(10);
         fixture.detectChanges();
@@ -188,7 +188,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 
         // last cell in child should be focused
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
+        const childLastCell =  childGrid.getCellByColumn(9, 'childData2');
 
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.focused).toBe(true);
@@ -204,7 +204,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         await wait(100);
         fixture.detectChanges();
         await wait(100);
-        const childLastCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
+        const childLastCell =  childGrid.getCellByColumn(9, 'childData2');
         // correct cell should be focused
         expect(childLastCell.selected).toBe(true);
         expect(childLastCell.focused).toBe(true);
@@ -397,7 +397,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[3];
+        const childLastRowCell =  childGrid.getCellByColumn(9, 'childData2');
 
         expect(childLastRowCell.selected).toBe(true);
         expect(childLastRowCell.focused).toBe(true);
@@ -413,7 +413,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         fixture.detectChanges();
 
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', ctrlKey: true }));
-        await wait(100);
+        await wait(1000);
         fixture.detectChanges();
 
         const lastDataCell = hierarchicalGrid.getCellByKey(19, 'childData2');
@@ -650,7 +650,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         await wait(100);
         fixture.detectChanges();
 
-        const child1Cell = child1.dataRowList.toArray()[1].cells.toArray()[3];
+        const child1Cell = child1.getCellByColumn(9, 'childData2');
 
         expect(child1Cell.selected).toBe(true);
         expect(child1Cell.rowIndex).toBe(9);
