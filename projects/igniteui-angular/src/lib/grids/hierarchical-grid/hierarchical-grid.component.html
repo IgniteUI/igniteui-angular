@@ -42,7 +42,7 @@
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-        <div class="igx-grid__hierarchical-action-indent igx-grid__hierarchical-action-indent--header" #headerHierarchyExpander (click)="toggleAllRows()">
+        <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header" #headerHierarchyExpander (click)="toggleAllRows()">
             <igx-icon role="button" fontSet="material" *ngIf="hierarchicalState.length > 0 && hasExpandableChildren">unfold_less</igx-icon>
             <igx-icon role="button" fontSet="material" *ngIf="hierarchicalState.length === 0 && hasExpandableChildren">unfold_more</igx-icon>
         </div>

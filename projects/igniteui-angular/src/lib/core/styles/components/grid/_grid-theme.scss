@@ -1791,7 +1791,7 @@
         }
     }
 
-    %igx-grid__hierarchical-action-indent {
+    %igx-grid__hierarchical-expander {
         user-select: none;
         background: inherit;
         padding-left: map-get($hierarchical-grid-indent, 'comfortable');
@@ -1824,17 +1824,17 @@
         }
     }
 
-    %igx-grid__hierarchical-action-indent--cosy {
+    %igx-grid__hierarchical-expander--cosy {
         padding-left: map-get($hierarchical-grid-indent, 'cosy');
         padding-right: map-get($hierarchical-grid-indent, 'cosy');
     }
 
-    %igx-grid__hierarchical-action-indent--compact {
+    %igx-grid__hierarchical-expander--compact {
         padding-left: map-get($hierarchical-grid-indent, 'compact');
         padding-right: map-get($hierarchical-grid-indent, 'compact');
     }
 
-    %igx-grid__hierarchical-action-indent--header {
+    %igx-grid__hierarchical-expander--header {
         background: inherit;
         align-items: flex-start;
         border-right: 1px solid --var($theme, 'header-border-color');
@@ -1848,13 +1848,13 @@
         }
     }
 
-    %igx-grid__hierarchical-action-indent--header--cosy {
+    %igx-grid__hierarchical-expander--header--cosy {
         igx-icon {
             min-height: map-get($grid-header-height, 'cosy');
         }
     }
 
-    %igx-grid__hierarchical-action-indent--header--compact {
+    %igx-grid__hierarchical-expander--header--compact {
         igx-icon {
             min-height: map-get($grid-header-height, 'compact');
         }
