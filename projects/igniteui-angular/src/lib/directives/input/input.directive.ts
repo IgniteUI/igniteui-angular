@@ -28,7 +28,7 @@ export enum IgxInputState {
 @Directive({
     selector: '[igxInput]'
 })
-export class IgxInputDirective implements AfterViewInit, OnChanges, OnDestroy {
+export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
 
@@ -54,6 +54,7 @@ export class IgxInputDirective implements AfterViewInit, OnChanges, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
+        this.checkValidity();
     }
     /**
      * Gets the `value` propery.
@@ -179,14 +180,6 @@ export class IgxInputDirective implements AfterViewInit, OnChanges, OnDestroy {
     /**
      *@hidden
      */
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.value && !changes.value.firstChange) {
-            this.checkValidity();
-        }
-    }
-    /**
-     *@hidden
-     */
     ngOnDestroy() {
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
@@ -304,7 +297,7 @@ export class IgxInputDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     private checkValidity() {
-        if (!this.ngControl && this._hasValidators) {
+        if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
