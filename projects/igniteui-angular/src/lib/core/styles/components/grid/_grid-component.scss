@@ -458,11 +458,11 @@
             @extend %igx-grid__hierarchical-indent--cosy--scroll !optional;
         }
 
-        @include e(hierarchical-action-indent) {
+        @include e(hierarchical-expander) {
             @extend %igx-grid__hierarchical-expander--cosy !optional;
         }
 
-        @include e(hierarchical-action-indent, $m: header) {
+        @include e(hierarchical-expander, $m: header) {
             @extend %igx-grid__hierarchical-expander--header--cosy !optional;
         }
 
@@ -546,11 +546,11 @@
             @extend %igx-grid__hierarchical-indent--compact--scroll !optional;
         }
 
-        @include e(hierarchical-action-indent) {
+        @include e(hierarchical-expander) {
             @extend %igx-grid__hierarchical-expander--compact !optional;
         }
 
-        @include e(hierarchical-action-indent, $m: header) {
+        @include e(hierarchical-hierarchical-expander, $m: header) {
             @extend %igx-grid__hierarchical-expander--header--compact !optional;
         }
 
