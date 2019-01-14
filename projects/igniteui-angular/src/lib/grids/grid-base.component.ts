@@ -4186,21 +4186,31 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.lastSearchInfo.matchInfoCache.length) {
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
 
-            IgxTextHighlightDirective.setActiveHighlight(this.id, {
-                columnIndex: matchInfo.column,
-                rowIndex: matchInfo.row,
-                index: matchInfo.index,
-                page: matchInfo.page
-            });
-
             if (scroll !== false) {
                 this.scrollTo(matchInfo.row, matchInfo.column, matchInfo.page, matchInfo.groupByRecord);
             }
+
+            const fixedMatchInfo = this.fixMatchInfoIndexes(matchInfo);
+
+            IgxTextHighlightDirective.setActiveHighlight(this.id, {
+                columnIndex: fixedMatchInfo.column,
+                rowIndex: fixedMatchInfo.row,
+                index: fixedMatchInfo.index,
+                page: fixedMatchInfo.page
+            });
+
         } else {
             IgxTextHighlightDirective.clearActiveHighlight(this.id);
         }
 
         return this.lastSearchInfo.matchInfoCache.length;
+    }
+
+    /**
+     * @hidden
+     */
+    protected fixMatchInfoIndexes(matchInfo: any): any {
+        return matchInfo;
     }
 
     /**
@@ -4338,13 +4348,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
             const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
-            let rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
 
             if (this.paging && i % this.perPage === 0) {
                 collapsedRowsCount = 0;
             }
-
-            rowIndex -= collapsedRowsCount;
+            const rowIndex = this.resolveSearchRowIndex(i, pagingIncrement, groupByIncrement, collapsedRowsCount);
 
             if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
                 collapsedRowsCount++;
@@ -4387,6 +4395,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             });
         });
+    }
+
+    /**
+     * @hidden
+     */
+    protected resolveSearchRowIndex(index: number, pagingIncrement: number, groupByIncrement: number, collapsedRowsCount: number) {
+        let rowIndex = this.paging ? (index % this.perPage) + pagingIncrement : index + groupByIncrement;
+        rowIndex -= collapsedRowsCount;
+        return rowIndex;
     }
 
     /**

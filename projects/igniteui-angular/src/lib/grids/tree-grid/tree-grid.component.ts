@@ -94,6 +94,16 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     public flatData: any[];
 
     /**
+    * @hidden
+    */
+    public processedFlatData: any[];
+
+    /**
+    * @hidden
+    */
+    public processedExpandedFlatData: any[];
+
+    /**
      * Returns an array of the root level `ITreeGridRecord`s.
      * ```typescript
      * // gets the root record with index=2
@@ -467,6 +477,53 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
 
         return path.reverse();
+    }
+
+    /**
+     * @hidden
+     */
+    protected resolveFilteredSortedData(): any[] {
+        return this.processedFlatData;
+    }
+
+    /**
+     * @hidden
+     */
+    protected scrollTo(row: number, column: number, page: number): void {
+        const rowData = this.processedFlatData[row];
+        const rowID = this._gridAPI.get_row_id(this.id, rowData);
+        const record = this.processedRecords.get(rowID);
+        this._gridAPI.expand_path_to_recrod(this.id, record);
+
+        const matchInfo = this.fixMatchInfoIndexes({
+            row: row,
+            column: column,
+            page: page
+        });
+
+        super.scrollTo(matchInfo.row, matchInfo.column, matchInfo.page);
+    }
+
+    /**
+     * @hidden
+     */
+    protected resolveSearchRowIndex(index: number, pagingIncrement: number, groupByIncrement: number, collapsedRowsCount: number) {
+        return index;
+    }
+
+    /**
+     * @hidden
+     */
+    protected fixMatchInfoIndexes(matchInfo: any): any {
+        const fixedMatchInfo: any = {};
+        const rowData = this.processedFlatData[matchInfo.row];
+        fixedMatchInfo.row = this.processedExpandedFlatData.indexOf(rowData);
+        fixedMatchInfo.page = this.paging ? Math.floor(fixedMatchInfo.row / this.perPage) : 0;
+        fixedMatchInfo.row = this.paging ? fixedMatchInfo.row % this.perPage : fixedMatchInfo.row;
+        fixedMatchInfo.column = matchInfo.column;
+        fixedMatchInfo.index = matchInfo.index;
+
+        return fixedMatchInfo;
     }
 
     /**

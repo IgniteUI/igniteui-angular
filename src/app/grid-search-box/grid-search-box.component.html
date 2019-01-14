@@ -1,4 +1,4 @@
-<igx-input-group type="search" class="offset">
+<igx-input-group type="search">
     <igx-prefix>
         <igx-icon *ngIf="searchText.length == 0">search</igx-icon>
         <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
@@ -21,10 +21,10 @@
         <div class="chips">
             <igx-chips-area>
                 <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
-                    <span>Case Sensitive</span>
+                    <span title="Match Case">Aa</span>
                 </igx-chip>
                 <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
-                    <span>Exact Match</span>
+                    <u title="Match Whole Word">Ab</u>
                 </igx-chip>
             </igx-chips-area>
         </div>
