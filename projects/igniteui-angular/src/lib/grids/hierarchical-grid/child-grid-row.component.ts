@@ -23,12 +23,12 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
 
-        /**
-     * Returns whether the row is expanded.
-     * ```typescript
-     * const RowExpanded = this.grid1.rowList.first.expanded;
-     * ```
-     */
+    /**
+ * Returns whether the row is expanded.
+ * ```typescript
+ * const RowExpanded = this.grid1.rowList.first.expanded;
+ * ```
+ */
     public expanded = false;
 
     @Input()
@@ -55,9 +55,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
     //    return layout;
     // }
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     @Input()
     public parentGridID: string;
 
@@ -137,10 +137,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
-                private selectionAPI: IgxSelectionAPIService,
-                public element: ElementRef,
-                public cdr: ChangeDetectorRef) {
-                }
+        private selectionAPI: IgxSelectionAPIService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef) {
+    }
 
 
     /**
@@ -170,7 +170,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this._handleLayoutChanges(change);
         });
         this.hGrid.parent = this.parentGrid;
-
+        this.hGrid.parentIsland = this.layout;
     }
     ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;

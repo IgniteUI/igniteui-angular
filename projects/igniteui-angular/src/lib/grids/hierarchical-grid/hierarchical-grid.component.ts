@@ -19,7 +19,8 @@ import {
     ComponentFactoryResolver,
     AfterViewInit,
     AfterContentInit,
-    Optional
+    Optional,
+    OnInit
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -51,11 +52,14 @@ export const IgxHierarchicalTransactionServiceFactory = {
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
-    providers: [ { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
+    providers: [
+        { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
-        IgxFilteringService, IgxHierarchicalGridNavigationService ]
-    })
-export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit {
+        IgxFilteringService,
+        IgxHierarchicalGridNavigationService
+    ]
+})
+export class IgxHierarchicalGridComponent extends IgxGridComponent implements AfterViewInit, AfterContentInit, OnInit {
     private h_id = `igx-hierarchical-grid-${NEXT_ID++}`;
     public hgridAPI: IgxHierarchicalGridAPIService;
     private _childGridTemplates: Map<any, any> = new Map();
@@ -65,6 +69,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
     public highlightedRowID = null;
     public parent = null;
     public updateOnRender = false;
+    public parentIsland: IgxRowIslandComponent;
 
     /**
      * @hidden
@@ -227,14 +232,14 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
      * @hidden
     */
     toggleAllRows() {
-        const collapseAll =  this.hierarchicalState.length > 0;
+        const collapseAll = this.hierarchicalState.length > 0;
         if (collapseAll) {
             this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = [];
         } else {
             this.verticalScrollContainer.scrollTo(0);
             this.hierarchicalState = this.data.map((rec) => {
-                return {rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
         }
     }
@@ -253,7 +258,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return this.hgridAPI.getChildGrid(path);
     }
     protected getChildGrids(inDeph?: boolean) {
-        return  this.hgridAPI.getChildGrids(inDeph);
+        return this.hgridAPI.getChildGrids(inDeph);
     }
 
     /**
@@ -368,10 +373,10 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
-            (<any>ref.instance)[propName] =  (<any>col)[propName];
-         });
-         if (col.children.length > 0) {
-             const newChildren = [];
+            (<any>ref.instance)[propName] = (<any>col)[propName];
+        });
+        if (col.children.length > 0) {
+            const newChildren = [];
             col.children.forEach(child => {
                 const newCol = this._createColumn(child).instance;
                 newCol.parent = ref.instance;
@@ -379,9 +384,9 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
             });
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
-         }
-         (<IgxColumnGroupComponent>ref.instance).gridID = this.id;
-         return ref;
+        }
+        (<IgxColumnGroupComponent>ref.instance).gridID = this.id;
+        return ref;
     }
 
     private _createColComponent(col) {
@@ -390,7 +395,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         factoryColumn.inputs.forEach((input) => {
             const propName = input.propName;
             if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
-                (<any>ref.instance)[propName] =  (<any>col)[propName];
+                (<any>ref.instance)[propName] = (<any>col)[propName];
             } else {
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
@@ -416,6 +421,11 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         return super.getPossibleColumnWidth(computedWidth);
     }
 
+    public ngOnInit() {
+        super.ngOnInit();
+        this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
+    }
+
     constructor(
         gridAPI: GridBaseAPIService<IgxGridComponent>,
         selection: IgxHierarchicalSelectionAPIService,
@@ -431,21 +441,21 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         filteringService: IgxFilteringService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(
-                gridAPI,
-                selection,
-                typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-                elementRef,
-                zone,
-                document,
-                cdr,
-                resolver,
-                differs,
-                viewRef,
-                navigation,
-                filteringService,
-                summaryService,
-                _displayDensityOptions);
+        super(
+            gridAPI,
+            selection,
+            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            summaryService,
+            _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 }
