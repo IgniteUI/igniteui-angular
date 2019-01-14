@@ -13,7 +13,7 @@ export class GridSelectionComponent implements AfterViewInit {
     @ViewChild('grid1')
     grid1: IgxGridComponent;
     remote: Observable<any[]>;
-    selection;
+    selection = true;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (state) => this.remoteService.url;
