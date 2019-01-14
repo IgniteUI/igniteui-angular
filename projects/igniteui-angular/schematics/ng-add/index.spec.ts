@@ -135,4 +135,13 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { polyfills: true }, tree);
     expect(tree.readContent('src/polyfills.ts')).not.toBe(polyfills);
   });
+
+  it('should properly add web animations', () => {
+    runner.runSchematic('ng-add', {}, tree);
+
+    const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(pkgJsonData.dependencies).toBeTruthy();
+
+    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('web-animations-js')).length).toBeGreaterThan(0);
+  });
 });
