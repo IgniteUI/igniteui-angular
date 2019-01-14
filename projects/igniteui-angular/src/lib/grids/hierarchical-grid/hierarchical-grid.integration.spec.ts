@@ -9,7 +9,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridGroupByRowComponent } from '../grid';
+import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective } from '../grid';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -42,7 +42,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(hierarchicalGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(hierarchicalGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
-            expect(document.querySelectorAll('igx-grid-header').length).toEqual(4);
+            expect(document.querySelectorAll('igx-grid-header').length).toEqual(3);
 
             const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
             // first child of the row should expand indicator
@@ -54,7 +54,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.columnList.filter(col => col.columnGroup).length).toEqual(expectedColumnGroups);
             expect(childGrid.getColumnByName('ProductName').level).toEqual(expectedLevel);
 
-            expect(document.querySelectorAll('igx-grid-header').length).toEqual(8);
+            expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
         });
     });
 
@@ -217,7 +217,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             });
             fixture.detectChanges();
 
-            hierarchicalGrid.verticalScrollContainer.scrollTo(5);
+            hierarchicalGrid.verticalScrollContainer.scrollTo(10);
             await wait(100);
             fixture.detectChanges();
 
@@ -440,9 +440,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             // Check visible columns and headers are rendered correctly
             let childHeaders = childGrids[0].queryAll(By.css('igx-grid-header'));
             expect(childGrid.pinnedColumns.length).toEqual(0);
-            expect(childHeaders[0].nativeElement.innerText.trim()).toEqual('ID');
-            expect(childHeaders[1].nativeElement.innerText.trim()).toEqual('ChildLevels');
-            expect(childHeaders[2].nativeElement.innerText.trim()).toEqual('ProductName');
+            expect(childHeaders[0].children[0].nativeElement.innerText.trim()).toEqual('ID');
+            expect(childHeaders[1].children[0].nativeElement.innerText.trim()).toEqual('ChildLevels');
+            expect(childHeaders[2].children[0].nativeElement.innerText.trim()).toEqual('ProductName');
 
             // Check hiding button is rendered
             expect(pinButton).toBeDefined();
@@ -466,10 +466,55 @@ describe('IgxHierarchicalGrid Integration', () => {
             // Check visible columns and headers
             childHeaders = childGrids[0].queryAll(By.css('igx-grid-header'));
             expect(childGrid.pinnedColumns.length).toEqual(3);
-            expect(childHeaders[0].nativeElement.innerText.trim()).toEqual('ChildLevels');
-            expect(childHeaders[1].nativeElement.innerText.trim()).toEqual('ProductName');
-            expect(childHeaders[2].nativeElement.innerText.trim()).toEqual('ID');
+            expect(childHeaders[0].children[0].nativeElement.innerText.trim()).toEqual('ChildLevels');
+            expect(childHeaders[1].children[0].nativeElement.innerText.trim()).toEqual('ProductName');
+            expect(childHeaders[2].children[0].nativeElement.innerText.trim()).toEqual('ID');
         });
+    });
+
+    describe('Moving', () => {
+        it('should not be possible to drag move a column from another grid.', (async() => {
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            const childHeader = childGrids[0].queryAll(By.css('igx-grid-header'))[0].nativeElement;
+            const mainHeaders = hierarchicalGrid.nativeElement
+                .querySelectorAll('igx-grid-header[ng-reflect-grid-i-d="' + hierarchicalGrid.id + '"]');
+
+            const childHeaderX = childHeader.getBoundingClientRect().x + childHeader.getBoundingClientRect().width / 2;
+            const childHeaderY = childHeader.getBoundingClientRect().y + childHeader.getBoundingClientRect().height / 2;
+            const mainHeaderX = mainHeaders[0].getBoundingClientRect().x + mainHeaders[0].getBoundingClientRect().width / 2;
+            const mainHeaderY = mainHeaders[0].getBoundingClientRect().y + mainHeaders[0].getBoundingClientRect().height / 2;
+
+            UIInteractions.simulatePointerEvent('pointerdown', childHeader, childHeaderX, childHeaderY);
+            await wait();
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', childHeader, childHeaderX, childHeaderY - 10);
+            await wait(100);
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', childHeader, mainHeaderX + 50, mainHeaderY);
+            await wait(100);
+            fixture.detectChanges();
+
+            // The moving indicator shouldn't show that a column can be moved.
+            const childGroupHeader = childGrids[0].query(By.css('igx-grid-header')).injector.get(IgxColumnMovingDragDirective);
+            const dragElem = childGroupHeader['_dragGhost'];
+            const dragIcon = dragElem.querySelector('i');
+            expect(dragElem).toBeDefined();
+            expect(dragIcon.innerText.trim()).toEqual('block');
+
+            UIInteractions.simulatePointerEvent('pointerup', childHeader, mainHeaderX + 50, mainHeaderY);
+            await wait();
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.columnList.length).toEqual(4);
+            expect(mainHeaders.length).toEqual(3);
+            expect(mainHeaders[0].children[0].innerText.trim()).toEqual('ID');
+            expect(mainHeaders[1].children[0].innerText.trim()).toEqual('ChildLevels');
+            expect(mainHeaders[2].children[0].innerText.trim()).toEqual('ProductName');
+        }));
     });
 });
 
@@ -477,14 +522,14 @@ describe('IgxHierarchicalGrid Integration', () => {
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid primaryKey="ID">
-        <igx-column field="ID" [groupable]='true' ></igx-column>
+        <igx-column field="ID" [groupable]='true' [movable]='true'></igx-column>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
-                <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
+                <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true" [movable]='true'></igx-column>
+                <igx-column field="ProductName" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true"
             [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
-            <igx-column field="ID" [groupable]='true' [hasSummary]='true' ></igx-column>
+            <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
                     <igx-column field="ProductName" [groupable]='true'></igx-column>

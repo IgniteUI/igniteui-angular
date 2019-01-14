@@ -232,6 +232,27 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
         .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
+        expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
+        .not.toBe(-1);
+    });
+
+    it('should update context information correctly for child grid container after scrolling',  async() => {
+        // expand 3rd row
+        const row = hierarchicalGrid.dataRowList.toArray()[3];
+        row.nativeElement.children[0].click();
+        fixture.detectChanges();
+
+        // verify index and rowData
+        let childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
+        expect(childRowComponent.rowData.rowID).toBe('3');
+        expect(childRowComponent.index).toBe(4);
+
+        hierarchicalGrid.verticalScrollContainer.scrollNext();
+        await wait(100);
+        fixture.detectChanges();
+        childRowComponent = fixture.debugElement.query(By.css('igx-child-grid-row')).componentInstance;
+        expect(childRowComponent.rowData.rowID).toBe('3');
+        expect(childRowComponent.index).toBe(4);
     });
 
 });

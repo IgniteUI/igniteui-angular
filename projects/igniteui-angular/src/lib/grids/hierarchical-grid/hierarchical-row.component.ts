@@ -63,6 +63,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     /**
      * @hidden
      */
+    @HostBinding('class.igx-grid__tr--highlighted')
     public get highlighted() {
         return this.grid && this.grid.highlightedRowID === this.rowID;
     }

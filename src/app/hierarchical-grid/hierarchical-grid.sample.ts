@@ -11,7 +11,7 @@ export class HierarchicalGridSampleComponent {
     isRowSelectable = false;
     firstLevelExpanded = false;
     rootExpanded = false;
-    density = '';
+    density = 'comfortable';
     displayDensities;
 
     @ViewChild('layout1')

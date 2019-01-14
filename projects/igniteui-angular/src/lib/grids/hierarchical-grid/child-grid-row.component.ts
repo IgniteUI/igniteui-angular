@@ -51,6 +51,14 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /**
      * @hidden
      */
+    public get parentHasScroll() {
+        return !this.parentGrid.verticalScrollContainer.dc.instance.notVirtual;
+    }
+
+
+    /**
+     * @hidden
+     */
     // public get layout() {
     //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
     //    return layout;
