@@ -25,6 +25,8 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
+import { registerLocaleData } from '@angular/common';
+import localeDE from '@angular/common/locales/de';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 
@@ -2752,6 +2754,33 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
         expect(filteringRow).toBeNull();
     }));
+
+    it('should correctly apply locale to datePicker.', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+        registerLocaleData(localeDE);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        grid.locale = 'de-DE';
+
+        const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const dateCellChip = initialChips[3].nativeElement;
+
+        dateCellChip.click();
+        fix.detectChanges();
+
+        const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        const input = filteringRow.query(By.directive(IgxInputDirective));
+
+        input.nativeElement.click();
+        tick();
+        fix.detectChanges();
+
+        const calendar = fix.debugElement.query(By.css('igx-calendar'));
+        const sundayLabel = calendar.nativeElement.children[1].children[1].children[0].innerText;
+
+        expect(sundayLabel).toEqual('So');
+    }));
 });
 
 export class CustomFilter extends IgxFilteringOperand {
@@ -2919,7 +2948,9 @@ const expectedResults = [];
 
 function sendInput(element, text, fix) {
     element.nativeElement.value = text;
+    element.nativeElement.dispatchEvent(new Event('keydown'));
     element.nativeElement.dispatchEvent(new Event('input'));
+    element.nativeElement.dispatchEvent(new Event('keyup'));
     fix.detectChanges();
 }
 
