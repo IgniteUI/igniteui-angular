@@ -39,16 +39,16 @@ describe('Basic IgxHierarchicalGrid', () => {
         ];
         fixture.detectChanges();
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-        expect(row1.hasChildren).toBe(false);
+        expect(row1.hasChildren).toBe(true);
         const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
-        expect(rowElems[0].query(By.css('igx-icon.chevron_right'))).toBe(null);
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
         const row2 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
         expect(row2.hasChildren).toBe(true);
-        expect(rowElems[1].query(By.css('igx-icon.chevron_right'))).not.toBe(null);
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
 
         const row3 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
         expect(row3.hasChildren).toBe(true);
-        expect(rowElems[2].query(By.css('igx-icon.chevron_right'))).not.toBe(null);
+        expect(rowElems[2].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
     });
 
     it('should allow expand/collapse rows through the UI', () => {
@@ -68,17 +68,15 @@ describe('Basic IgxHierarchicalGrid', () => {
     it('should change expand/collapse indicators when state of the row changes', () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         const rowElem = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent))[0];
-        expect(rowElem.query(By.css('igx-icon.chevron_right'))).not.toBe(null);
-        expect(rowElem.query(By.css('igx-icon.expand_more'))).toBe(null);
+        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
 
-        expect(rowElem.query(By.css('igx-icon.chevron_right'))).toBe(null);
-        expect(rowElem.query(By.css('igx-icon.expand_more'))).not.toBe(null);
+        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
     });
 
     it('should expand/collapse all rows that belongs to a grid via header expand/collapse icon', () => {
-        const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__header-indentation'))[0];
+        const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__hierarchical-expander--header'))[0];
         let iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_more');
         UIInteractions.clickElement(headerExpanderElem);
@@ -145,14 +143,14 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
     }));
 
-    it('should not show header expand/collapse button if grid has no expandable elements', () => {
+    it('should show header collapse button if grid has data and row island is defined.', () => {
         fixture.componentInstance.data = [
             {ID: 0, ProductName: 'Product: A0'}
         ];
         fixture.detectChanges();
-        const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__header-indentation'))[0];
+        const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__hierarchical-expander--header'))[0];
         const icon = headerExpanderElem.query(By.css('igx-icon'));
-        expect(icon).toBeNull();
+        expect(icon).toBeDefined();
     });
 
     it('should render last cell of rows fully visible when columns does not have width specified and without scrollbar', () => {

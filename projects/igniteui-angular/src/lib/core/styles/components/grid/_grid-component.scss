@@ -367,12 +367,12 @@
         @extend %igx-grid__hierarchical-indent !optional;
     }
 
-    @include e(hierarchical-action-indent) {
-        @extend %igx-grid__hierarchical-action-indent !optional;
+    @include e(hierarchical-expander) {
+        @extend %igx-grid__hierarchical-expander !optional;
     }
 
     @include e(hierarchical-action-indent, $m: header) {
-        @extend %igx-grid__hierarchical-action-indent--header !optional;
+        @extend %igx-grid__hierarchical-expander--header !optional;
     }
 
     @include e(hierarchical-indent, $m: scroll) {
@@ -458,12 +458,12 @@
             @extend %igx-grid__hierarchical-indent--cosy--scroll !optional;
         }
 
-        @include e(hierarchical-action-indent) {
-            @extend %igx-grid__hierarchical-action-indent--cosy !optional;
+        @include e(hierarchical-expander) {
+            @extend %igx-grid__hierarchical-expander--cosy !optional;
         }
 
-        @include e(hierarchical-action-indent, $m: header) {
-            @extend %igx-grid__hierarchical-action-indent--header--cosy !optional;
+        @include e(hierarchical-expander, $m: header) {
+            @extend %igx-grid__hierarchical-expander--header--cosy !optional;
         }
 
         @for $i from 1 through 10 {
@@ -546,12 +546,12 @@
             @extend %igx-grid__hierarchical-indent--compact--scroll !optional;
         }
 
-        @include e(hierarchical-action-indent) {
-            @extend %igx-grid__hierarchical-action-indent--compact !optional;
+        @include e(hierarchical-expander) {
+            @extend %igx-grid__hierarchical-expander--compact !optional;
         }
 
-        @include e(hierarchical-action-indent, $m: header) {
-            @extend %igx-grid__hierarchical-action-indent--header--compact !optional;
+        @include e(hierarchical-hierarchical-expander, $m: header) {
+            @extend %igx-grid__hierarchical-expander--header--compact !optional;
         }
 
         @for $i from 1 through 10 {

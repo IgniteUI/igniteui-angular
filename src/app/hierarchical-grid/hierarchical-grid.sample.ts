@@ -36,7 +36,7 @@ export class HierarchicalGridSampleComponent {
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+            { label: 'comfortable', selected: true, togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
     }
