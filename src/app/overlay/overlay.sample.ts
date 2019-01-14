@@ -27,13 +27,13 @@ export class OverlaySampleComponent {
         modal: true,
         closeOnOutsideClick: true
     };
-    items = [
-        'Item 1',
-        'Item 2',
-        'Item 3',
-        'Item 4',
-        'Item 5'
-    ];
+    constructor() {
+        for (let item = 0; item < 100; item++) {
+            this.items.push(`Item ${item}`);
+        }
+    }
+
+    items = [];
 
     buttonLeft = 90;
     buttonTop = 35;
@@ -159,7 +159,7 @@ export class OverlaySampleComponent {
                     case 'Elastic':
                         this._overlaySettings = {
                             positionStrategy: new ElasticPositionStrategy({
-                                minSize: { width: 50, height: 50 }
+                                minSize: { width: 150, height: 150 }
                             }),
                             scrollStrategy: new NoOpScrollStrategy(),
                             modal: true,
@@ -209,7 +209,7 @@ export class OverlaySampleComponent {
                 'Connected': new ConnectedPositioningStrategy(),
                 'Global': new GlobalPositionStrategy(),
                 'Elastic': new ElasticPositionStrategy({
-                    minSize: { width: 50, height: 50 }
+                    minSize: { width: 150, height: 150 }
                 }),
             },
             'VerticalDirection': {

@@ -1,14 +1,12 @@
-import { ElementRef, EventEmitter, QueryList } from '@angular/core';
+import { ElementRef, EventEmitter } from '@angular/core';
 import { CancelableEventArgs } from '../core/utils';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { IgxDropDownItemBase } from '../drop-down/drop-down.base';
 
 export const IGX_COMBO_COMPONENT = 'IgxComboComponentToken';
 
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
     id: string;
-    children: QueryList<IgxDropDownItemBase>;
     data: any[];
     valueKey: string;
     groupKey: string;
@@ -25,12 +23,12 @@ export interface IgxComboBase {
     onOpening: EventEmitter<CancelableEventArgs>;
     onClosing: EventEmitter<CancelableEventArgs>;
     onClosed: EventEmitter<void>;
-
     focusSearchInput(opening?: boolean): void;
-    triggerCheck();
-    setSelectedItem(itemID: any, select?: boolean);
-    isItemSelected(item: any): boolean;
-    addItemToCollection();
+    triggerCheck(): void;
+    addItemToCollection(): void;
     isAddButtonVisible(): boolean;
-    handleInputChange(event?);
+    handleInputChange(event?: string): void;
+    isItemSelected(itemID: any): boolean;
+    selectItems(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
+    deselectItems(itemIDs: any[], event?: Event): void;
 }
