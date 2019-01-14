@@ -269,6 +269,20 @@ export class IgxColumnComponent implements AfterContentInit {
             this._width = value;
         }
     }
+
+    public get calcWidth(): any {
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+        } else if (!colWidth) {
+            // no width
+            return this.defaultWidth || this.grid.getPossibleColumnWidth();
+        } else {
+            return this.width;
+        }
+    }
+
     /**
      * Sets/gets the maximum `width` of the column.
      * ```typescript
