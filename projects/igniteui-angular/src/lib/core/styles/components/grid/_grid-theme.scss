@@ -1865,6 +1865,10 @@
         margin-top: map-get($hierarchical-grid-indent, 'comfortable');
         margin-right: map-get($hierarchical-grid-indent, 'comfortable');
         margin-bottom: map-get($hierarchical-grid-indent, 'comfortable');
+
+        &--scroll {
+            margin-right: calc(#{map-get($hierarchical-grid-indent, 'comfortable')} + 18px);
+        }
     }
 
     %igx-grid__hierarchical-indent--cosy {
