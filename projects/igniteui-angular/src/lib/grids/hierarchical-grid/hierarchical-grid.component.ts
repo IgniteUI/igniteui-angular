@@ -183,20 +183,23 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
                 return {
                     $implicit: rowData,
                     moveView: view,
-                    owner: tmlpOutlet
+                    owner: tmlpOutlet,
+                    index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
                 };
             } else {
                 const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData,
-                    templateID: 'childRow-' + rowID
+                    templateID: 'childRow-' + rowID,
+                    index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
                 };
             }
         } else {
             return {
                 $implicit: rowData,
-                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow'
+                templateID: this.isGroupByRecord(rowData) ? 'groupRow' : 'dataRow',
+                index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
             };
         }
     }
