@@ -1,4 +1,5 @@
-<div class="igx-drop-down__list" igxToggle [style.maxHeight]="maxHeight"
+<div class="igx-drop-down__list" igxToggle [style.width]="width" [style.height]="height"
+[style.maxHeight]="maxHeight"
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
     <ng-container *ngIf="!collapsed">
