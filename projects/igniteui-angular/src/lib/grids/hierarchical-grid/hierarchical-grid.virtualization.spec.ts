@@ -232,6 +232,8 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
         .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
+        expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
+        .not.toBe(-1);
     });
 
     it('should update context information correctly for child grid container after scrolling',  async() => {
