@@ -44,6 +44,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public igxForOf: any[];
 
     /**
+     * An @Input property that sets the property name from which to read the size in the data object.
+     */
+    @Input()
+    public igxForSizePropName;
+
+    /**
      * An @Input property that specifies the scroll orientation.
      * Scroll orientation can be "vertical" or "horizontal".
      * ```html
@@ -249,6 +255,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public ngOnInit(): void {
         let totalSize = 0;
         const vc = this.igxForScrollContainer ? this.igxForScrollContainer._viewContainer : this._viewContainer;
+        this.igxForSizePropName = this.igxForSizePropName || 'width';
 
         const dcFactory: ComponentFactory<DisplayContainerComponent> = this.resolver.resolveComponentFactory(DisplayContainerComponent);
         this.dc = this._viewContainer.createComponent(dcFactory, 0);
@@ -458,9 +465,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     public scrollNext() {
-        const scr = this.igxForScrollOrientation === 'horizontal' ?
+        const scr = Math.ceil(this.igxForScrollOrientation === 'horizontal' ?
             this.hScroll.scrollLeft :
-            this.vh.instance.elementRef.nativeElement.scrollTop;
+            this.vh.instance.elementRef.nativeElement.scrollTop);
         const endIndex = this.getIndexAt(
             scr + parseInt(this.igxForContainerSize, 10),
             this.sizesCache,
@@ -618,7 +625,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     public recalcUpdateSizes() {
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            'width' : 'height';
+        this.igxForSizePropName : 'height';
         const diffs = [];
         let totalDiff = 0;
         for (let i = 0; i < this._embeddedViews.length; i++) {
@@ -891,7 +898,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            'width' : 'height';
+            this.igxForSizePropName : 'height';
         let i = 0;
         this.sizesCache = [];
         this.heightCache = [];
@@ -903,7 +910,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 size = parseInt(this.igxForItemSize, 10) || 0;
                 this.heightCache.push(size);
             } else {
-                size = parseInt(items[i][dimension], 10) || 0;
+                size = this._getItemSize(items[i], dimension);
             }
             totalSize += size;
             this.sizesCache.push(totalSize);
@@ -921,8 +928,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const arr = [];
         let sum = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            'width' : 'height';
-        const reducer = (accumulator, currentItem) => accumulator + parseInt(currentItem[dimension], 10);
+        this.igxForSizePropName : 'height';
+        const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
         const availableSize = parseInt(this.igxForContainerSize, 10);
         for (i; i < this.igxForOf.length; i++) {
             let item = this.igxForOf[i];
@@ -931,7 +938,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
             const size = dimension === 'height' ?
                 this.heightCache[i] :
-                parseInt(item[dimension], 10);
+                this._getItemSize(item, dimension);
             sum = arr.reduce(reducer, size);
             if (sum <= availableSize) {
                 arr.push(item);
@@ -953,7 +960,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
             } else {
                 arr.push(item);
-                length = dimension === 'width' ? arr.length + 1 : arr.length;
+                length = dimension === this.igxForSizePropName ? arr.length + 1 : arr.length;
                 if (dimension === 'height' && sum - availableSize < parseInt(this.igxForItemSize, 10)) {
                     // add one more for vertical smooth scroll
                     length++;
@@ -1108,6 +1115,11 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.hScroll.scrollLeft - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
+
+    private _getItemSize(item, dimension: string): number {
+        const hasDimension = (item[dimension] !== null && item[dimension] !== undefined);
+        return hasDimension ? parseInt(item[dimension], 10) : this.igxForItemSize;
+    }
 }
 
 export function getTypeNameForDebugging(type: any): string {
@@ -1168,7 +1180,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         let totalSize = 0;
         let size = 0;
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
-            'width' : 'height';
+            this.igxForSizePropName : 'height';
         let i = 0;
         this.sizesCache = [];
         this.heightCache = [];

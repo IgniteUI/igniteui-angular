@@ -1099,6 +1099,62 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalledTimes(2);
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
         }));
+
+        it('Should NOT select deleted rows through API - Hierarchical DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+
+            treeGrid.rowSelectable = true;
+            tick();
+            fix.detectChanges();
+            /** Select deleted row */
+            treeGrid.deleteRowById(663);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([663]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(147);
+            tick();
+            fix.detectChanges();
+            // 147 -> 475
+            treeGrid.selectRows([475]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+        }));
+
+        it('Should NOT select deleted rows through API - Flat DS', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+
+            treeGrid.rowSelectable = true;
+            tick();
+            fix.detectChanges();
+            /** Select deleted row */
+            treeGrid.deleteRowById(6);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([6]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(10);
+            tick();
+            fix.detectChanges();
+            // 10 -> 9
+            treeGrid.selectRows([9]);
+            tick();
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+        }));
     });
 
     describe('Multi-column header', () => {

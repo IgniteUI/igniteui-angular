@@ -20,6 +20,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
+import { ElasticPositionStrategy } from './position';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -166,7 +167,16 @@ export class IgxOverlayService implements OnDestroy {
             this.updateSize(info);
             this._overlayInfos.push(info);
 
-            settings.positionStrategy.position(info.elementRef.nativeElement.parentElement, info.initialSize, document, true);
+            const elementStyle = info.elementRef.nativeElement.style;
+            if (settings.positionStrategy instanceof ElasticPositionStrategy) {
+                info.originalElementStyleSize = { width: elementStyle.width, height: elementStyle.height };
+            }
+            settings.positionStrategy.position(
+                info.elementRef.nativeElement.parentElement,
+                { width: info.initialSize.width, height: info.initialSize.height },
+                document,
+                true,
+                settings.positionStrategy.settings.minSize);
             settings.scrollStrategy.initialize(this._document, this, id);
             settings.scrollStrategy.attach();
         }
@@ -246,16 +256,21 @@ export class IgxOverlayService implements OnDestroy {
      * ```
      */
     reposition(id: string) {
-        const overlay = this.getOverlayById(id);
-        if (!overlay) {
+        const overlayInfo = this.getOverlayById(id);
+        if (!overlayInfo) {
             console.error('Wrong id provided in overlay.reposition method. Id: ' + id);
             return;
         }
 
-        overlay.settings.positionStrategy.position(
-            overlay.elementRef.nativeElement.parentElement,
-            overlay.initialSize,
-            this._document);
+        overlayInfo.settings.positionStrategy.position(
+            overlayInfo.elementRef.nativeElement.parentElement,
+            {
+                width: overlayInfo.elementRef.nativeElement.parentElement.clientWidth,
+                height: overlayInfo.elementRef.nativeElement.parentElement.clientHeight
+            },
+            this._document,
+            false,
+            overlayInfo.settings.positionStrategy.settings.minSize);
     }
 
     private getOverlayInfo(component: any): OverlayInfo {
@@ -394,6 +409,12 @@ export class IgxOverlayService implements OnDestroy {
         if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
+        }
+
+        //  restore the element's original width and height if any
+        if (info.originalElementStyleSize) {
+            info.elementRef.nativeElement.style.height = info.originalElementStyleSize.height;
+            info.elementRef.nativeElement.style.width = info.originalElementStyleSize.width;
         }
 
         this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
