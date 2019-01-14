@@ -1,67 +1,92 @@
 import {
     Component,
     ElementRef,
-    forwardRef,
-    HostListener,
     HostBinding,
     Inject,
-    Input
+    Input,
+    DoCheck,
+    Host,
+    HostListener
 } from '@angular/core';
+import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
+import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
+import { IgxComboAPIService } from './combo.api';
 import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../drop-down/drop-down.base';
-import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 
 /** @hidden */
 @Component({
     selector: 'igx-combo-item',
     templateUrl: 'combo-item.component.html'
 })
-export class IgxComboItemComponent extends IgxDropDownItemBase {
+export class IgxComboItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
     /**
      * Gets the height of a list item
+     * @hidden
      */
+    @Input()
     @HostBinding('style.height.px')
-    get itemHeight() {
-        return this.combo.itemHeight;
-    }
+    public itemHeight = '';
 
     /**
      * @hidden
      */
     public get itemID() {
-        return this.combo.isRemote ? JSON.stringify(this.value) : this.value;
+        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
+    }
+
+    /**
+     * @hidden
+     */
+    public get comboID() {
+        return this.comboAPI.comboID;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get disableTransitions() {
+        return this.comboAPI.disableTransitions;
     }
 
     constructor(
-        @Inject(IGX_COMBO_COMPONENT) private combo: IgxComboBase,
-        public dropDown: IgxDropDownBase,
+        protected comboAPI: IgxComboAPIService,
+        @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
-        protected selection: IgxSelectionAPIService
+        @Inject(IgxSelectionAPIService) protected selection: IgxSelectionAPIService
     ) {
-        super(dropDown, elementRef);
+        super(dropDown, elementRef, selection);
     }
 
     /**
      * @hidden
      */
-    get isSelected() {
-        return this.combo.isItemSelected(this.itemID);
+    get isSelected(): boolean {
+        return this.comboAPI.is_item_selected(this.itemID);
     }
 
-    /**
-     * @hidden
-     */
+    set isSelected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
+        this._isSelected = value;
+    }
+
     @HostListener('click', ['$event'])
     clicked(event) {
-        this.dropDown.disableTransitions = false;
+        this.comboAPI.disableTransitions = false;
         if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.focusedItem;
-            if (focusedItem) {
+            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
+            if (this.dropDown.allowItemsFocus && focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });
             }
             return;
         }
-        this.dropDown.selectItem(this, event);
+        this.dropDown.navigateItem(this.index);
+        this.comboAPI.set_selected_item(this.itemID, event);
+    }
+
+    ngDoCheck() {
     }
 }
