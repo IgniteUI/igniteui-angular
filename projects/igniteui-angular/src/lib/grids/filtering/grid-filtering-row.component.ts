@@ -61,6 +61,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private chipAreaScrollOffset = 0;
     private _column = null;
     private isKeyPressed = false;
+    private isComposing = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -246,6 +247,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         if (event.key === KEYS.ENTER) {
+            if (this.isComposing) {
+                return;
+            }
+
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
             let indexToDeselect = -1;
@@ -289,6 +294,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.isKeyPressed) {
             this.value = eventArgs.target.value;
         }
+    }
+
+    /**
+     * Event handler for compositionstart on the input.
+     */
+    public onCompositionStart() {
+        this.isComposing = true;
+    }
+
+    /**
+     * Event handler for compositionend on the input.
+     */
+    public onCompositionEnd() {
+        this.isComposing = false;
     }
 
     /**
