@@ -11,7 +11,7 @@ export class HierarchicalGridSampleComponent {
     isRowSelectable = false;
     firstLevelExpanded = false;
     rootExpanded = false;
-    density = '';
+    density = 'comfortable';
     displayDensities;
 
     @ViewChild('layout1')
@@ -36,7 +36,7 @@ export class HierarchicalGridSampleComponent {
         this.displayDensities = [
             { label: 'compact', selected: this.density === 'compact', togglable: true },
             { label: 'cosy', selected: this.density === 'cosy', togglable: true },
-            { label: 'comfortable', selected: true, togglable: true }
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
     }
