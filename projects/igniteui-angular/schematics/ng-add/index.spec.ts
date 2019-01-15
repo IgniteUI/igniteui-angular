@@ -121,7 +121,7 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { polyfills: true }, tree);
     const polyfillsData = tree.readContent('src/polyfills.ts');
     expect(polyfillsData).not.toBe(polyfills);
-    expect(polyfillsData.match(/[//]/g).length).toBe(3);
+    expect(polyfillsData.match(/[/] /g).length).toBe(3);
   });
 
   it('should properly add web animations', () => {
