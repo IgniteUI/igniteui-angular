@@ -53,9 +53,14 @@ describe('ng-add schematics', () => {
   });
 
   function populatePackageJson() {
+    const igPkgJson = require('../../package.json');
     const pkgJson = JSON.parse(tree.read('/package.json').toString());
-    pkgJson.dependencies['@angular/common'] = '^7.0.3';
-    pkgJson.dependencies['@angular/core'] = '^7.0.3';
+    const angularCommon = '@angular/common';
+    const angularCore = '@angular/core';
+
+    pkgJson.dependencies[angularCommon] = igPkgJson.peerDependencies[angularCommon];
+    pkgJson.dependencies[angularCore] = igPkgJson.peerDependencies[angularCore];
+
     tree.overwrite('/package.json', JSON.stringify(pkgJson));
   }
 
@@ -86,8 +91,6 @@ describe('ng-add schematics', () => {
 
     const dependenciesFound = Object.keys(pkgJsonData.dependencies)
       .filter(pkg =>
-        pkg.includes('igniteui-angular') ||
-        pkg.includes('web-animations-js') ||
         pkg.includes('jszip') ||
         pkg.includes('hammerjs'));
 
@@ -115,8 +118,7 @@ describe('ng-add schematics', () => {
 
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
-
-    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('hammerjs')).length).toBeGreaterThan(0);
+    expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should add the CLI only to devDependencies', () => {
@@ -126,8 +128,8 @@ describe('ng-add schematics', () => {
     expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.devDependencies).toBeTruthy();
 
-    expect(Object.keys(pkgJsonData.devDependencies).filter(k => k.includes('igniteui-cli')).length).toBeGreaterThan(0);
-    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('igniteui-cli')).length).toBe(0);
+    expect(pkgJsonData.devDependencies['igniteui-cli']).toBeTruthy();
+    expect(pkgJsonData.dependencies['igniteui-cli']).toBeFalsy();
   });
 
   it('should properly add polyfills', () => {
@@ -138,10 +140,8 @@ describe('ng-add schematics', () => {
 
   it('should properly add web animations', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
-
-    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('web-animations-js')).length).toBeGreaterThan(0);
+    expect(pkgJsonData.dependencies['web-animations-js']).toBeTruthy();
   });
 });
