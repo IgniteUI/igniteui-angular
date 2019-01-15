@@ -1,8 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
-import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
-import { ElementRef, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding, Output, EventEmitter, HostListener } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostListener } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -18,13 +16,9 @@ import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
 
-import { CancelableEventArgs } from './../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { IgxDropDownItemComponent } from 'igniteui-angular';
+import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
-import { IgxSelectionAPIService } from '../core/selection';
-import { ISelectComponent } from './ISelectComponent';
+
 
 const noop = () => { };
 

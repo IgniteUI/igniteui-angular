@@ -30,7 +30,4 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     getItemOffsets(select) {
 
     }
-    // position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
-    //     //super.position(contentElement, size, document, initialCall, minSize);
-    // }
 }
