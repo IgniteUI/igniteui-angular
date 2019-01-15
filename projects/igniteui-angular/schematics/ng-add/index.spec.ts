@@ -3,27 +3,6 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
 
-const polyfills =
-  `
-// import 'core-js/es6/symbol';
-// import 'core-js/es6/object';
-// import 'core-js/es6/function';
-// import 'core-js/es6/parse-int';
-// import 'core-js/es6/parse-float';
-// import 'core-js/es6/number';
-// import 'core-js/es6/math';
-// import 'core-js/es6/string';
-// import 'core-js/es6/date';
-// import 'core-js/es6/array';
-// import 'core-js/es6/regexp';
-// import 'core-js/es6/map';
-// import 'core-js/es6/weak-map';
-// import 'core-js/es6/set';
-// import 'core-js/es6/reflect';
-// import 'core-js/es7/object';
-// import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
-`;
-
 describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
@@ -48,7 +27,6 @@ describe('ng-add schematics', () => {
     tree = new UnitTestTree(new EmptyTree());
     tree.create('/angular.json', JSON.stringify(ngJsonConfig));
     tree.create('/package.json', JSON.stringify(pkgJsonConfig));
-    tree.create('src/polyfills.ts', polyfills);
     populatePackageJson();
   });
 
@@ -117,11 +95,32 @@ describe('ng-add schematics', () => {
   });
 
   it('should properly add polyfills', () => {
-    expect(tree.readContent('src/polyfills.ts')).toBe(polyfills);
+    const polyfills = `
+// import 'core-js/es6/object';
+// import 'core-js/es6/function';
+/** a comment */
+// import 'core-js/es6/reflect';
+// import 'core-js/es6/set';
+
+/** comment */
+// import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
+`;
+    const result = `
+import 'core-js/es6/object';
+import 'core-js/es6/function';
+/** a comment */
+import 'core-js/es6/reflect';
+import 'core-js/es6/set';
+/** ES7 \`Object.entries\` needed for igxGrid to render in IE. */
+import 'core-js/es7/object';
+
+/** comment */
+import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
+`;
+
+    tree.create('src/polyfills.ts', polyfills);
     runner.runSchematic('ng-add', { polyfills: true }, tree);
-    const polyfillsData = tree.readContent('src/polyfills.ts');
-    expect(polyfillsData).not.toBe(polyfills);
-    expect(polyfillsData.match(/[/] /g).length).toBe(3);
+    expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 
   it('should properly add web animations', () => {
