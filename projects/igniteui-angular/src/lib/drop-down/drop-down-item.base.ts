@@ -1,6 +1,7 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * An abstract class defining a drop-down item:
@@ -56,14 +57,34 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemSelected = mySelectedItem.isSelected; // true
+     *  let isMyItemSelected = mySelectedItem.selected; // true
      * ```
      */
     @Input()
+    get selected(): boolean {
+        return this._isSelected;
+    }
+
+    set selected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
+        this._isSelected = value;
+    }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is depracated.\n` +
+        `Use \`selected\` instead.`)
     get isSelected(): boolean {
         return this._isSelected;
     }
 
+    /**
+     * @hidden
+     */
     set isSelected(value: boolean) {
         if (this.isHeader) {
             return;
@@ -77,7 +98,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     get selectedStyle(): boolean {
-        return this.isSelected;
+        return this.selected;
     }
 
     /**
@@ -88,7 +109,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
-    get isFocused(): boolean {
+    get focused(): boolean {
         return (!this.isHeader && !this.disabled) && this._isFocused;
     }
 
@@ -100,6 +121,22 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *      </div>
      *  </igx-drop-down-item>
      * ```
+     */
+    set focused(value: boolean) {
+        this._isFocused = value;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-drop-down__item--focused')
+    @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
+        `Use \`focused\` instead.`)
+    get isFocused(): boolean {
+        return (!this.isHeader && !this.disabled) && this._isFocused;
+    }
+    /**
+     * @hidden
      */
     set isFocused(value: boolean) {
         this._isFocused = value;
@@ -185,7 +222,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     ngDoCheck(): void {
-        if (this.isSelected) {
+        if (this.selected) {
             const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
             if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
