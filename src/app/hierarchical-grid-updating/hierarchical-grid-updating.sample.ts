@@ -2,16 +2,19 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
-    IGridCreatedEventArgs
+    IGridCreatedEventArgs,
+    IgxHierarchicalTransactionServiceFactory,
+    IgxHierarchicalTransactionService,
+    IgxGridTransaction
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 @Component({
-    selector: 'app-hierarchical-grid-remote-sample',
-    templateUrl: 'hierarchical-grid-remote.sample.html',
-    providers: [RemoteService]
+    selector: 'app-hierarchical-grid-updating-sample',
+    templateUrl: 'hierarchical-grid-updating.sample.html',
+    providers: [ RemoteService, IgxHierarchicalTransactionServiceFactory ]
 })
-export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
+export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     isRowSelectable = false;
     remoteData = [];
@@ -24,6 +27,9 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
 
     @ViewChild('rowIsland1')
     rowIsland1: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2')
+    rowIsland2: IgxRowIslandComponent;
 
     @ViewChild('hGrid')
     hGrid: IgxHierarchicalGridComponent;
@@ -60,18 +66,38 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
         });
     }
 
-    setterChange() {
-        this.rowIsland1.rowSelectable = !this.rowIsland1.rowSelectable;
-    }
-
-    setterBindingChange() {
-        this.isRowSelectable = !this.isRowSelectable;
-    }
-
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
         this.remoteService.getData({ parentID: event.parendID, level: rowIsland.level, key: rowIsland.key }, (data) => {
             event.grid.data = data['value'];
             event.grid.cdr.detectChanges();
         });
+        this.lastChildGrid = event.grid;
     }
+
+    public lastChildGrid: IgxHierarchicalGridComponent;
+    public lastIdx = 1000;
+
+    addRow() {
+        this.hGrid.addRow({
+            "CustomerID": this.lastIdx,
+            "CompanyName": "Some Company " + this.lastIdx,
+            "ContactName": "Some Contact " + this.lastIdx,
+            "ContactTitle": "Some Title " + this.lastIdx++,
+            "Country": "Germany",
+            "Phone": "000-0000"
+        })
+    }
+
+    deleteRow() {
+        this.hGrid.deleteRow("ALFKI");
+    }
+
+    logTransactionsMain() {
+        console.log(this.hGrid.transactions.getTransactionLog());
+    }
+
+    logTransactionsIsland1() {
+        console.log(this.rowIsland1.transactions.getTransactionLog());
+    }
+
 }

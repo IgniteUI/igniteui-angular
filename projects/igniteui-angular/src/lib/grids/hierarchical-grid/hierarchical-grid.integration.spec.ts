@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxHierarchicalGridComponent, IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -13,6 +13,7 @@ import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective } from '../gri
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { take } from 'rxjs/operators';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -100,6 +101,42 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fCell.selected).toBeTruthy();
         }));
     });
+
+    describe('Updating', () => {
+        it('should have separate instances of updating service for parent and children and the same for children of the same island', (async () => {
+            const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
+            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
+                firstLayoutInstances.push(args.grid);
+            });
+            // expand 1st row
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+            // expand 2nd row
+            hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+            fixture.detectChanges();
+            // test instances
+            expect(firstLayoutInstances.length).toEqual(2);
+            expect(hierarchicalGrid.transactions).not.toEqual(firstLayoutInstances[0].transactions);
+            expect(firstLayoutInstances[0].transactions).toEqual(firstLayoutInstances[1].transactions);
+        }));
+
+        it('should contain all transactions for a row island', (async () => {
+            const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
+            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
+                firstLayoutInstances.push(args.grid);
+            });
+            // expand 1st row
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+            // expand 2nd row
+            hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+            fixture.detectChanges();
+            firstLayoutInstances[0].updateRow({ ProductName: "Changed" }, '00');
+            firstLayoutInstances[1].updateRow({ ProductName: "Changed" }, '10');
+            expect(hierarchicalGrid.transactions.getTransactionLog().length).toEqual(0);
+            expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(2);
+        }));
+    })
 
     describe('Sorting', () => {
         it('should display correct child data for expanded row after sorting.', (async () => {
@@ -521,15 +558,15 @@ describe('IgxHierarchicalGrid Integration', () => {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true"
-     [height]="'600px'" [width]="'700px'" #hierarchicalGrid primaryKey="ID">
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true"
+     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
         <igx-column field="ID" [groupable]='true' [movable]='true'></igx-column>
         <igx-column-group header="Information">
                 <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true" [movable]='true'></igx-column>
                 <igx-column field="ProductName" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
-        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true"
-         [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
+        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true"
+            [primaryKey]="'ID'" [showToolbar]="true" [columnHiding]="true" [columnPinning]="true">
             <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
             <igx-column-group header="Information">
                     <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
@@ -543,7 +580,8 @@ describe('IgxHierarchicalGrid Integration', () => {
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`
+    </igx-hierarchical-grid>`,
+    providers: [ IgxHierarchicalTransactionServiceFactory ]
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
