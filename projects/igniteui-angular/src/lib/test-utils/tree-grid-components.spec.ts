@@ -441,3 +441,18 @@ export class IgxTreeGridWrappedInContComponent {
     }
 
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="800px">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" [hasSummary]="true" ></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesScrollingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeScrollingData();
+}
