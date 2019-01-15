@@ -1,9 +1,9 @@
 <div [style.width.px]="width">
-    <ng-container *ngFor="let item of data">
-        <ng-container *ngTemplateOutlet="template; context: {$implicit: item}"></ng-container>
+    <ng-container *ngFor="let item of data | igxautocomplete:condition:term">
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: item }"></ng-container>
     </ng-container>
 </div>
 
 <ng-template #defaultItemTemplate let-item>
-    <igx-drop-down-item>{{item}}</igx-drop-down-item>
+    <igx-drop-down-item [value]="item">{{item}}</igx-drop-down-item>
 </ng-template>

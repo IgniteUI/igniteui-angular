@@ -7,9 +7,11 @@ import { CommonModule } from '@angular/common';
 import { first } from 'rxjs/operators';
 import { OverlaySettings, IgxOverlayService, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
 import { IgxDropDownModule } from '../../drop-down/drop-down.component';
-import { IgxDropDownBase } from '../../drop-down/drop-down.base';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxAutocompleteDropDownComponent } from './autocomplete.dropdown.component';
+import { ISelectionEventArgs } from '../../drop-down';
+import { IgxAutocompletePipe } from './autocomplete.pipe';
+import { IAutocompleteItemSelectionEventArgs } from './autocomplete.common';
 //#endregion
 
 @Directive({
@@ -18,12 +20,11 @@ import { IgxAutocompleteDropDownComponent } from './autocomplete.dropdown.compon
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective {
 
     //#region constructor
-    constructor(@Self() @Optional() public dropdown: IgxDropDownBase,
-                @Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
+    constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
                 protected elementRef: ElementRef,
                 protected overlay: IgxOverlayService) {
-        super(dropdown);
+        super(null);
     }
     //#endregion
 
@@ -33,6 +34,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     //#region protected properties
     protected ref: ComponentRef<IgxAutocompleteDropDownComponent>;
     protected id: string;
+    protected get model() {
+        return this.ngModel ? this.ngModel : this.formControl;
+    }
     //#endregion
 
     //#region @ContentChild
@@ -90,7 +94,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * @hidden
      */
     @HostBinding('attr.autocomplete')
-    public browserAutocomplete = 'off';
+    public autofill = 'something-new';
     /**
      * @hidden
      */
@@ -124,13 +128,18 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     //#region @HostListeners
     @HostListener('input', ['$event'])
-    onInput(event) {
+    onInput() {
         if (this.disabled)  {
             return;
         }
         if (this.collapsed) {
-            this.openPanel();
+            this.open();
         }
+        this.filter();
+    }
+    @HostListener('blur', ['$event'])
+    onBlur() {
+        this.close();
     }
     //#endregion
 
@@ -144,7 +153,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     //#endregion
 
     //#region public methods
-    openPanel() {
+    open = () => {
         this.overlay.onOpening
             .pipe(first())
             .subscribe(event => {
@@ -159,22 +168,39 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             });
 
         this.id = this.overlay.show(IgxAutocompleteDropDownComponent, this.overlaySettings);
-        this.createAutocompleteDropDown(this.target);
+        this.createAutocompleteDropDown(this.target as IgxAutocompleteDropDownComponent); // ?
     }
 
-    closePanel() {
+    close = () => {
         if (!this.collapsed) {
             this.overlay.hide(this.id);
         }
     }
+
+    filter = () => {
+        (this.target as IgxAutocompleteDropDownComponent).term = this.nativeElement.value;
+    }
+
+    select = (value: ISelectionEventArgs) => { // ?
+        const newValue = value.newSelection.value;
+        const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
+        this.onItemSelected.emit(args);
+        if (args.cancel) {
+            return;
+        }
+        this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
+        this.close();
+    }
     //#endregion
 
     //#region private methods
-    private createAutocompleteDropDown(dropdown) {
+    private createAutocompleteDropDown(dropdown: IgxAutocompleteDropDownComponent) { // ?
+        dropdown.autocomplete = this;
         dropdown.data = this.data;
         dropdown.width = this.nativeElement.clientWidth;
         dropdown.itemTemplate = this.itemTemplate;
-
+        dropdown.condition = this.condition;
+        dropdown.onSelection.subscribe(this.select);
     }
     //#endregion
 }
@@ -182,7 +208,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 //#region module
 @NgModule({
     imports: [IgxDropDownModule, CommonModule],
-    declarations: [IgxAutocompleteDirective, IgxAutocompleteDropDownComponent],
+    declarations: [IgxAutocompleteDirective, IgxAutocompleteDropDownComponent, IgxAutocompletePipe],
     entryComponents: [IgxAutocompleteDropDownComponent],
     exports: [IgxAutocompleteDirective]
 })
@@ -214,4 +240,9 @@ export class IgxAutocompleteModule { }
 12. Changelog
 13. Demos
 14. DocFX
+
+???
+1. Click select all text
+2. Click outside and blur
+3. // ?
 */

@@ -1,8 +1,8 @@
-import { Component, ElementRef, ChangeDetectorRef, ViewChildren, QueryList, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, Input, TemplateRef, ViewChild } from '@angular/core';
 import { IgxDropDownBase} from '../../drop-down/drop-down.base';
 import { IGX_DROPDOWN_BASE } from '../../drop-down/drop-down.common';
-import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
-import { IgxDropDownItemBase } from '../../drop-down/drop-down-item.base';
+import { DropDownActionKey, IgxDropDownItemBase } from '../../drop-down';
+import { IgxAutocompleteDirective } from './autocomplete.directive';
 
 @Component({
     selector: 'igx-autocomplete-dropdown',
@@ -28,6 +28,15 @@ export class IgxAutocompleteDropDownComponent extends IgxDropDownBase {
     @Input()
     width: any;
 
+    @Input()
+    condition: (item: any, term: any) => boolean;
+
+    @Input()
+    term = '';
+
+    @Input()
+    autocomplete: IgxAutocompleteDirective; // ?
+
     get template(): TemplateRef<any> {
         return this.itemTemplate ? this.itemTemplate : this.defaultItemTemplate;
     }
@@ -38,5 +47,12 @@ export class IgxAutocompleteDropDownComponent extends IgxDropDownBase {
     }
     public set collapsed(value: boolean) {
         this._collapsed = value;
+    }
+
+    public onItemActionKey(key: DropDownActionKey, event?: Event) {
+        if (key === DropDownActionKey.ESCAPE) {
+            this.autocomplete.close(); // ?
+        }
+        super.onItemActionKey(key, event);
     }
 }

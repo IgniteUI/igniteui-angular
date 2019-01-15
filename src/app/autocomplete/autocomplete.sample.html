@@ -4,18 +4,26 @@
         <article class="sample-column">
             <form class="input-sample" action="/" method="POST">
                 <igx-input-group>
-                    <input igxInput name="towns" type="text" required [igxAutocomplete]='towns'/>
+                    <input igxInput name="towns" type="text" [(ngModel)]="town" required [igxAutocomplete]='towns'/>
                     <label igxLabel for="towns">Towns</label>
                 </igx-input-group>
 
                 <igx-input-group>
-                    <input igxInput name="townsDetailed" type="text" [(ngModel)]="info.town" required [igxAutocomplete]='townsDetailed' [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate" />
+                    <input igxInput name="townsDetailed" type="text" [(ngModel)]="town" required [igxAutocomplete]='townsDetailed' [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate" />
                     <label igxLabel for="townsDetailed">Towns Detailed</label>
                 </igx-input-group>
 
                 <ng-template #igxAutocompleteItemTemplate let-item>
-                    <igx-drop-down-item>{{item.name}}</igx-drop-down-item>
+                    <igx-drop-down-item [value]="item.name">
+                        <img [src]="item.image" class='logo' width="50" height="50"/>
+                        {{item.name}}
+                    </igx-drop-down-item>
                 </ng-template>
+
+                <igx-input-group>
+                    <input igxInput name="townsDisabled" type="text" [(ngModel)]="town" required disabled/>
+                    <label igxLabel for="townsDisabled">Towns Disabled</label>
+                </igx-input-group>
             </form>
         </article>
     </section>
