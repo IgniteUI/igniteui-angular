@@ -24,7 +24,7 @@ import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChi
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from './grid-filtering.service';
-import { KEYS, isIE } from '../../core/utils';
+import { KEYS, isEdge } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 
 /**
@@ -286,12 +286,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isIE() && this.isKeyPressed) {
+        if (isEdge()) {
             this.value = eventArgs.target.value;
-            return;
+        } else if (this.isKeyPressed) {
+            this.value = eventArgs.target.value;
         }
-
-        this.value = eventArgs.target.value;
     }
 
     /**
