@@ -161,9 +161,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     /**
      * Gets if the dropdown is collapsed
      */
-    public get collapsed(): boolean {
-        return false;
-    }
+    public abstract collapsed: boolean;
 
     constructor(
         protected elementRef: ElementRef,
