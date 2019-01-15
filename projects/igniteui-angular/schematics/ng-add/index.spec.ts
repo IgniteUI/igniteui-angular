@@ -68,7 +68,6 @@ describe('ng-add schematics', () => {
     expect(tree).toBeTruthy();
     expect(tree.exists('/angular.json')).toBeTruthy();
     expect(tree.exists('/package.json')).toBeTruthy();
-
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect).toBeTruthy();
 
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
@@ -77,7 +76,6 @@ describe('ng-add schematics', () => {
 
   it('should add packages to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.devDependencies).toBeTruthy();
@@ -85,24 +83,15 @@ describe('ng-add schematics', () => {
 
   it('should add the correct igniteui-angular packages to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
-
-    const dependenciesFound = Object.keys(pkgJsonData.dependencies)
-      .filter(pkg =>
-        pkg.includes('jszip') ||
-        pkg.includes('hammerjs'));
-
-    expect(dependenciesFound.length).toBeGreaterThan(0);
+    expect(pkgJsonData.dependencies['jszip']).toBeTruthy();
+    expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should add hammer.js to the workspace', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const workspace = getWorkspace(tree) as any;
     const currentProjectName = workspace.defaultProject;
-
     expect(
       workspace.projects[currentProjectName].architect.test.options.scripts.filter(d => d.includes('hammerjs')).length
     )
@@ -115,18 +104,13 @@ describe('ng-add schematics', () => {
 
   it('should add hammer.js to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should add the CLI only to devDependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
-    expect(pkgJsonData.devDependencies).toBeTruthy();
 
     expect(pkgJsonData.devDependencies['igniteui-cli']).toBeTruthy();
     expect(pkgJsonData.dependencies['igniteui-cli']).toBeFalsy();
@@ -135,13 +119,14 @@ describe('ng-add schematics', () => {
   it('should properly add polyfills', () => {
     expect(tree.readContent('src/polyfills.ts')).toBe(polyfills);
     runner.runSchematic('ng-add', { polyfills: true }, tree);
-    expect(tree.readContent('src/polyfills.ts')).not.toBe(polyfills);
+    const polyfillsData = tree.readContent('src/polyfills.ts');
+    expect(polyfillsData).not.toBe(polyfills);
+    expect(polyfillsData.match(/[//]/g).length).toBe(3);
   });
 
   it('should properly add web animations', () => {
     runner.runSchematic('ng-add', {}, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.dependencies['web-animations-js']).toBeTruthy();
   });
 });
