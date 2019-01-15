@@ -28,7 +28,7 @@
 (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)" 
 (onOpened)="handleOpened()" (onClosed)="handleClosed()">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
-        <input class="igx-combo-input" igxInput #searchInput name="searchInput" type="text" [(ngModel)]="searchValue"
+        <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text" [(ngModel)]="searchValue"
             (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)"
             (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
             [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
