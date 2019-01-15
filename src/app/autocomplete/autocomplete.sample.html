@@ -1,18 +1,21 @@
 <div class="sample-wrapper">
     <app-page-header title="Autocomplete"></app-page-header>
-
     <section class="sample-content">
-
         <article class="sample-column">
-            <h4 class="sample-title">Autocomplete</h4>
-
             <form class="input-sample" action="/" method="POST">
-                <h4 class="form-title igx-typography__overline">Personal Info</h4>
+                <igx-input-group>
+                    <input igxInput name="towns" type="text" required [igxAutocomplete]='towns'/>
+                    <label igxLabel for="towns">Towns</label>
+                </igx-input-group>
 
                 <igx-input-group>
-                    <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required [igxAutocomplete]='items'/>
-                    <label igxLabel for="firstName">First Name</label>
+                    <input igxInput name="townsDetailed" type="text" [(ngModel)]="info.town" required [igxAutocomplete]='townsDetailed' [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate" />
+                    <label igxLabel for="townsDetailed">Towns Detailed</label>
                 </igx-input-group>
+
+                <ng-template #igxAutocompleteItemTemplate let-item>
+                    <igx-drop-down-item>{{item.name}}</igx-drop-down-item>
+                </ng-template>
             </form>
         </article>
     </section>

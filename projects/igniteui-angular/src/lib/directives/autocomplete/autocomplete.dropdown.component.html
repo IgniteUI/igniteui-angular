@@ -1,3 +1,9 @@
-<div igxToggle style="display: block!important;" [style.width.px]="width">
-    <igx-drop-down-item *ngFor="let item of data">{{item}}</igx-drop-down-item>
+<div [style.width.px]="width">
+    <ng-container *ngFor="let item of data">
+        <ng-container *ngTemplateOutlet="template; context: {$implicit: item}"></ng-container>
+    </ng-container>
 </div>
+
+<ng-template #defaultItemTemplate let-item>
+    <igx-drop-down-item>{{item}}</igx-drop-down-item>
+</ng-template>

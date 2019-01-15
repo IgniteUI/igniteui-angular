@@ -8,32 +8,27 @@ import { Component } from '@angular/core';
 export class AutocompleteSampleComponent {
     placeholder = 'Please enter a value';
 
-    user = {
-        comment: '',
-        firstName: 'John',
-        gender: 'Male',
-        lastName: 'Doe',
-        password: '1337s3cr3t',
-        registered: false,
-        subscribed: false
-    };
-
-    items;
-    itemsObj;
+    info;
+    towns;
+    townsDetailed;
 
     constructor() {
-        this.items = [
+        this.towns = [
             'Jambol',
             'Topolovgrad',
             'Kermen',
             'Bolyarovo'
         ];
 
-        this.itemsObj = [
+        this.townsDetailed = [
             { id: 1, name: 'Jambol'},
             { id: 2, name: 'Topolovgrad'},
             { id: 3, name: 'Kermen'},
             { id: 4, name: 'Bolyarovo'}
         ];
+
+        this.info = {
+            town: this.towns[0]
+        };
     }
 }

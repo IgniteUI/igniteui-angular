@@ -1,40 +1,42 @@
-import { Component, ElementRef, ChangeDetectorRef, ViewChildren, QueryList, Input } from '@angular/core';
-import { IgxDropDownBase, IgxDropDownItemBase } from '../../drop-down/drop-down.base';
-import { IgxSelectionAPIService } from '../../core/selection';
+import { Component, ElementRef, ChangeDetectorRef, ViewChildren, QueryList, Input, TemplateRef, ViewChild } from '@angular/core';
+import { IgxDropDownBase} from '../../drop-down/drop-down.base';
+import { IGX_DROPDOWN_BASE } from '../../drop-down/drop-down.common';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
+import { IgxDropDownItemBase } from '../../drop-down/drop-down-item.base';
 
 @Component({
     selector: 'igx-autocomplete-dropdown',
     templateUrl: 'autocomplete.dropdown.component.html',
-    providers: [{ provide: IgxDropDownBase, useExisting: IgxAutocompleteDropDownComponent }]
+    providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxAutocompleteDropDownComponent }]
 })
 export class IgxAutocompleteDropDownComponent extends IgxDropDownBase {
     constructor(
         protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr, selection);
+        protected cdr: ChangeDetectorRef) {
+        super(elementRef, cdr);
     }
+
+    @ViewChild('defaultItemTemplate', { read: TemplateRef })
+    protected defaultItemTemplate: TemplateRef<any>;
 
     @Input()
     data = [];
 
     @Input()
+    itemTemplate: TemplateRef<any>;
+
+    @Input()
     width: any;
 
-    private _list: QueryList<IgxDropDownItemBase>;
-
-    @ViewChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent })
-    public set children(list: QueryList<IgxDropDownItemBase>) {
-        this._list = list;
+    get template(): TemplateRef<any> {
+        return this.itemTemplate ? this.itemTemplate : this.defaultItemTemplate;
     }
 
-    public get children(): QueryList<IgxDropDownItemBase> {
-        return this._list;
+    private _collapsed = true;
+    public get collapsed(): boolean {
+        return this._collapsed;
     }
-
-    // private _collapsed: boolean;
-    // public setCollapsed(v: boolean) {
-    //     this._collapsed = v;
-    // }
+    public set collapsed(value: boolean) {
+        this._collapsed = value;
+    }
 }
