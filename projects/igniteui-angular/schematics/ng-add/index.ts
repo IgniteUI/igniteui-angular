@@ -29,7 +29,8 @@ Running 'ng update' will prevent potential version conflicts.\n`);
 function addIgxGridSupportForIe(polyfillsData: string): string {
   const targetImport = 'import \'core-js/es6/set\';';
   const lineToAdd = 'import \'core-js/es7/object\';';
-  return polyfillsData.replace(targetImport, `${targetImport}\n ${lineToAdd}`);
+  const comment = '// ES7 `Object.entries` needed for igxGrid to render in IE.';
+  return polyfillsData.replace(targetImport, `${targetImport}\n ${comment}\n ${lineToAdd}`);
 }
 
 function enablePolyfills(options: Options): Rule {
