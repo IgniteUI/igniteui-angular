@@ -302,6 +302,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
+    public ngOnInit() {
+        this._gridAPI.register(this);
+        super.ngOnInit();
+    }
 
     private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
         const mapCloned: Map<any, boolean> = new Map<any, boolean>();
@@ -536,10 +540,5 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
-    }
-
-    public ngOnInit() {
-        this._gridAPI.register(this);
-        super.ngOnInit();
     }
 }

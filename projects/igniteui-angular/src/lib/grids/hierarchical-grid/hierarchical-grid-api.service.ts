@@ -70,7 +70,7 @@ export class IgxHierarchicalGridAPIService extends IgxGridAPIService {
       return this.layouts.get(id);
     }
 
-    getChildGridsForRowIsland(layoutKey) {
+    getChildGridsForRowIsland(layoutKey): IgxHierarchicalGridComponent[] {
         const childrenForLayout = this.layoutChildGrids.get(layoutKey);
         const children = [];
         if (childrenForLayout) {

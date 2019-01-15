@@ -26,11 +26,11 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridBaseComponent, IgxGridComponent, GridBaseAPIService, IgxGridTransaction, IGridDataBindable } from '../grid';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxSelectionAPIService } from '../../core/selection';
-import { Transaction, TransactionService, State } from '../../services/index';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { DOCUMENT } from '@angular/common';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 
 export interface IGridCreatedEventArgs {
@@ -128,10 +128,19 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         return lvl + 1;
     }
 
+    /**
+     * Get transactions service for the children grid components.
+     * @experimental @hidden
+     */
+    get transactions(): TransactionService<Transaction, State> {
+        const grids = this.getGrids();
+        return grids.length ? grids[0].transactions : this._transactions;
+    }
+
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
+        @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -146,7 +155,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         super(
             gridAPI,
             selection,
-            _transactions,
+            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
             document,
@@ -200,7 +209,7 @@ export class IgxRowIslandComponent extends IgxGridComponent implements AfterCont
         this.hgridAPI.unset(this.id);
     }
 
-    protected getGrids() {
+    protected getGrids(): IgxHierarchicalGridComponent[] {
         return this.hgridAPI.getChildGridsForRowIsland(this.key);
     }
 }
