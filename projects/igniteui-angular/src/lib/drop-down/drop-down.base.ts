@@ -3,7 +3,7 @@ import {
     QueryList, ViewChild, Output, EventEmitter, ChangeDetectorRef
 } from '@angular/core';
 
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { OverlaySettings } from '../services';
 import { IToggleView } from '../core/navigation';
@@ -461,7 +461,18 @@ export abstract class IgxDropDownBase implements OnInit, IToggleView {
      */
     protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
-        this.scrollContainer.scrollTop = (itemPosition);
+
+        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
+        //  to appear on screen before animation start. As a result dropdown
+        //  flickers badly. This is why we set scrollTop just a little later
+        //  allowing animation to start and prevent dropdown flickering
+        if (isIE()) {
+            setTimeout(() => {
+                this.scrollContainer.scrollTop = (itemPosition);
+            }, 1);
+        } else {
+            this.scrollContainer.scrollTop = (itemPosition);
+        }
     }
 
     protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {

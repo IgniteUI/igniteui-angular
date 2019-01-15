@@ -20,6 +20,7 @@ describe('IgxGrid - Column properties', () => {
             declarations: [
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
+                TemplatedInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent
@@ -247,6 +248,26 @@ describe('IgxGrid - Column properties', () => {
         expect(grid.columns[0].width).toBe('300');
         expect(grid.columns[1].width).toBe('300');
     });
+
+    it('should support passing templates through the markup as an input property', () => {
+        const fixture = TestBed.createComponent(TemplatedInputColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+
+        grid.getColumnByName('Name').cells.forEach(c =>
+            expect(c.nativeElement.querySelector('.customCellTemplate')).toBeDefined());
+
+        grid.headerCellList.forEach(header =>
+            expect(header.elementRef.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
+
+        const cell = grid.getCellByColumn(0, 'ID');
+        cell.inEditMode = true;
+        fixture.detectChanges();
+
+        expect(cell.nativeElement.querySelector('.customEditorTemplate')).toBeDefined();
+
+    });
 });
 
 @Component({
@@ -282,6 +303,37 @@ export class TemplatedColumnsComponent {
 
     @ViewChild('newCell', { read: TemplateRef })
     public newCellTemplate: TemplateRef<any>;
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column *ngFor="let field of columns" [field]="field" [editable]="true"
+                [cellTemplate]="cell" [headerTemplate]="header"
+                [cellEditorTemplate]="editor">
+            </igx-column>
+        </igx-grid>
+
+        <ng-template #cell let-value>
+            <span class="customCellTemplate">{{ value }}</span>
+        </ng-template>
+
+        <ng-template #header let-column>
+            <span class="customHeaderTemplate">{{ column.field }}</span>
+        </ng-template>
+
+        <ng-template #editor let-value>
+            <span class="customEditorTemplate">{{ value }}</span>
+        </ng-template>
+    `
+})
+export class TemplatedInputColumnsComponent {
+
+    data = SampleTestData.personIDNameRegionData();
+    columns = Object.keys(this.data[0]);
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
 }
 
 @Component({
