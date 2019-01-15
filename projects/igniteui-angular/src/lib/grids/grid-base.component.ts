@@ -187,6 +187,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
+    private _locale = null;
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -290,6 +291,26 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
+    }
+
+    /**
+     * Returns the locale of the grid.
+     * If not set, returns browser's language.
+     */
+    @Input()
+    get locale(): string {
+        if (this._locale) {
+            return this._locale;
+        } else {
+            return 'en';
+        }
+    }
+
+    /**
+     * Sets the locale of the grid.
+     */
+    set locale(value) {
+        this._locale = value;
     }
 
     /**
@@ -2753,7 +2774,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].width, 10) || 0;
+            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
         }
         return totalWidth;
     }
@@ -3661,12 +3682,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getPossibleColumnWidth() {
+    public getPossibleColumnWidth() {
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
+            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.clientWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -4123,7 +4144,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.width;
+        return col.field + col.calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
