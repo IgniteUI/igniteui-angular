@@ -2,8 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { async, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxNavbarComponent, IgxNavbarModule } from './navbar.component';
+import { IgxIconModule } from '../icon/index';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
@@ -13,10 +15,12 @@ describe('IgxNavbar', () => {
         TestBed.configureTestingModule({
             declarations: [
                 NavbarIntializeTestComponent,
-                NavbarCustomActionIconTestComponent
+                NavbarCustomActionIconTestComponent,
+                NavbarCustomIgxIconTestComponent
             ],
             imports: [
-                IgxNavbarModule
+                IgxNavbarModule,
+                IgxIconModule
             ]
         }).compileComponents();
     }));
@@ -95,12 +99,10 @@ describe('IgxNavbar', () => {
     });
 
     describe('Custom Action Icon', () => {
-        beforeEach(() => {
+        it('should have custom action icon/content when user has provided one', () => {
             fixture = TestBed.createComponent(NavbarCustomActionIconTestComponent);
             fixture.detectChanges();
-        });
 
-        it('should have custom action icon/content when user has provided one', () => {
             const leftArea = fixture.debugElement.query(By.css(LEFT_AREA_CSS_CLAS));
 
             // Verify there is no default icon on the left.
@@ -114,6 +116,28 @@ describe('IgxNavbar', () => {
             const customContentLeft = (<HTMLElement>customContent.nativeElement).getBoundingClientRect().left;
             expect(leftAreaLeft).toBe(customContentLeft, 'Custom action icon content is not first on the left.');
         });
+
+        it('should have vertically-centered custom action icon content', (async() => {
+            fixture = TestBed.createComponent(NavbarCustomIgxIconTestComponent);
+            fixture.detectChanges();
+
+            await wait(100);
+
+            domNavbar = fixture.debugElement.query(By.css('igx-navbar'));
+            const customActionIcon = domNavbar.query(By.css('igx-action-icon'));
+            const customIcon = customActionIcon.query(By.css('igx-icon'));
+
+            // Verify custom igxIcon is vertically-centered within the igx-action-icon.
+            const navbarTop = (<HTMLElement>domNavbar.nativeElement).getBoundingClientRect().top;
+            const customIconTop = (<HTMLElement>customIcon.nativeElement).getBoundingClientRect().top;
+            const topOffset = customIconTop - navbarTop;
+
+            const navbarBottom = (<HTMLElement>domNavbar.nativeElement).getBoundingClientRect().bottom;
+            const customIconBottom = (<HTMLElement>customIcon.nativeElement).getBoundingClientRect().bottom;
+            const bottomOffset = navbarBottom - customIconBottom;
+
+            expect(topOffset).toBe(bottomOffset, 'Custom icon is not vertically-centered.');
+        }));
     });
 });
 @Component({
@@ -143,5 +167,20 @@ class NavbarIntializeTestComponent {
                </igx-navbar>`
 })
 class NavbarCustomActionIconTestComponent {
+    @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
+}
+
+@Component({
+    selector: 'igx-navbar-custom-igxicon-component',
+    template: `<igx-navbar #navbar
+                            title="Test Title"
+                            actionButtonIcon="home"
+                            isActionButtonVisible="true">
+                    <igx-action-icon>
+                        <igx-icon fontSet="material">arrow_back</igx-icon>
+                    </igx-action-icon>
+               </igx-navbar>`
+})
+class NavbarCustomIgxIconTestComponent {
     @ViewChild(IgxNavbarComponent) public navbar: IgxNavbarComponent;
 }
