@@ -9,6 +9,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxCheckboxComponent } from './checkbox.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxCheckbox', () => {
     configureTestSuite();
@@ -25,7 +26,7 @@ describe('IgxCheckbox', () => {
                 CheckboxDisabledTransitionsComponent,
                 IgxCheckboxComponent
             ],
-            imports: [FormsModule, IgxRippleModule]
+            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
