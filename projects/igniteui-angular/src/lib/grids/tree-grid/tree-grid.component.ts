@@ -541,9 +541,4 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.flatData[rowIndex], value);
     }
-
-    public ngOnInit() {
-        this._gridAPI.register(this);
-        super.ngOnInit();
-    }
 }

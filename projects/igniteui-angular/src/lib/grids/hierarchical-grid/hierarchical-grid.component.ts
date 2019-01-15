@@ -417,7 +417,7 @@ export class IgxHierarchicalGridComponent extends IgxGridComponent implements Af
         }
     }
 
-    protected getPossibleColumnWidth() {
+    public getPossibleColumnWidth() {
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         computedWidth -= this.headerHierarchyExpander.nativeElement.clientWidth;
