@@ -961,9 +961,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             } else {
                 arr.push(item);
                 length = dimension === this.igxForSizePropName ? arr.length + 1 : arr.length;
-                if (dimension === 'height' && sum - availableSize < parseInt(this.igxForItemSize, 10)) {
-                    // add one more for vertical smooth scroll
-                    length++;
+                if (dimension === 'height') {
+                    const maxItemSize = arr.reduce((pr, c) => Math.max(pr, this._getItemSize(c, dimension)), 0);
+                    if (sum - availableSize < maxItemSize) {
+                        // add one more for vertical smooth scroll
+                        length++;
+                    }
                 }
                 arr.splice(0, 1);
             }
@@ -1217,9 +1220,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
-            this.recalcUpdateSizes();
-            const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+            requestAnimationFrame(() => {
+                this.recalcUpdateSizes();
+                const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+                scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
+            });
         }
     }
 
