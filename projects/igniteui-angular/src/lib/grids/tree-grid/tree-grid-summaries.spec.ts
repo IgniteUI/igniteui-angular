@@ -5,12 +5,14 @@ import {
     IgxTreeGridSummariesComponent,
     IgxTreeGridSummariesKeyComponent,
     IgxTreeGridCustomSummariesComponent,
-    IgxTreeGridSummariesTransactionsComponent
+    IgxTreeGridSummariesTransactionsComponent,
+    IgxTreeGridSummariesScrollingComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
+import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 describe('IgxTreeGrid - Summaries', () => {
     configureTestSuite();
@@ -20,7 +22,8 @@ describe('IgxTreeGrid - Summaries', () => {
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
                 IgxTreeGridCustomSummariesComponent,
-                IgxTreeGridSummariesTransactionsComponent
+                IgxTreeGridSummariesTransactionsComponent,
+                IgxTreeGridSummariesScrollingComponent
             ],
             imports: [
                 BrowserAnimationsModule,
@@ -779,6 +782,29 @@ describe('IgxTreeGrid - Summaries', () => {
         verifyTreeBaseSummaries(fix);
         verifySummaryForRow663(fix, 5);
         verifySummaryForRow847(fix, 6);
+    });
+
+    it('should render rows correctly after collapse and expand', async() => {
+        const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
+        fix.detectChanges();
+        await wait(16);
+        const treeGrid = fix.componentInstance.treeGrid;
+
+        (treeGrid as any).scrollTo(23, 0, 0);
+        fix.detectChanges();
+        await wait(16);
+
+        let row = treeGrid.getRowByKey(15);
+        (row as IgxTreeGridRowComponent).expanded = false;
+        fix.detectChanges();
+        await wait(16);
+
+        row = treeGrid.getRowByKey(15);
+        (row as IgxTreeGridRowComponent).expanded = true;
+        fix.detectChanges();
+        await wait(16);
+
+        expect(treeGrid.dataRowList.length).toEqual(9);
     });
 
     function verifySummaryForRow147(fixture, vissibleIndex) {
