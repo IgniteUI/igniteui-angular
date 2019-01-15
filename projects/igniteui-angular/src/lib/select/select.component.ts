@@ -18,6 +18,7 @@ import { SelectPositioningStrategy } from './../services/overlay/position/select
 
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 
 
 const noop = () => { };
@@ -122,7 +123,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
 
     @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    @HostListener('keydown.Escape', ['$event'])
     public handleClosingInteraction (event: KeyboardEvent) {
         this.close();
     }
@@ -135,8 +135,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 }
 
 @NgModule({
-    declarations: [IgxSelectComponent, IgxSelectItemComponent],
-    exports: [IgxSelectComponent, IgxSelectItemComponent],
+    declarations: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
+    exports: [IgxSelectComponent, IgxSelectItemComponent, IgxSelectItemNavigationDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxToggleModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: []
