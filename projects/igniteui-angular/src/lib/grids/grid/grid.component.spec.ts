@@ -26,6 +26,7 @@ import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 
 const DEBOUNCETIME = 30;
 
@@ -304,6 +305,7 @@ describe('IgxGrid Component Tests', () => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridDefaultRenderingComponent,
+                    IgxGridColumnPercentageWidthComponent,
                     IgxGridWrappedInContComponent,
                     IgxGridFormattingComponent
                 ],
@@ -750,6 +752,121 @@ describe('IgxGrid Component Tests', () => {
                     expect(earliestValue).toBe('May 17, 1990');
                 }
             });
+        });
+
+        it('Should calculate default column width when a column has width in %', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            expect(grid.columns[1].width).toEqual('150');
+            expect(grid.columns[2].width).toEqual('150');
+
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            grid.columns[0].width = '70%';
+            fix.detectChanges();
+            await wait(16);
+            // check UI
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+
+            expect(header0.nativeElement.offsetWidth).toEqual(350);
+            expect(header1.nativeElement.offsetWidth).toEqual(136);
+            expect(header2.nativeElement.offsetWidth).toEqual(136);
+            expect(hScroll.nativeElement.hidden).toBe(false);
+
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(350);
+            expect(virtDir.getSizeAt(1)).toEqual(136);
+            expect(virtDir.getSizeAt(2)).toEqual(136);
+        });
+        it('Should re-calculate column width when a column has width in % and grid width changes.', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            expect(hScroll.nativeElement.hidden).toBe(true);
+            grid.columns[0].width = '70%';
+            fix.detectChanges();
+            await wait(16);
+            grid.width = '1000px';
+            fix.detectChanges();
+            await wait(16);
+
+            // check UI
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+            expect(header0.nativeElement.offsetWidth).toEqual(700);
+            expect(header1.nativeElement.offsetWidth).toEqual(150);
+            expect(header2.nativeElement.offsetWidth).toEqual(150);
+
+            expect(hScroll.nativeElement.hidden).toBe(true);
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(700);
+            expect(virtDir.getSizeAt(1)).toEqual(150);
+            expect(virtDir.getSizeAt(2)).toEqual(150);
+        });
+       it('Should calculate column width when a column has width in % and row selectors are enabled.', async() => {
+        const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+        fix.componentInstance.initColumnsRows(5, 3);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+        grid.rowSelectable = true;
+        fix.detectChanges();
+        grid.columns[0].width = '70%';
+
+        fix.detectChanges();
+        await wait(16);
+        // check UI
+        const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+        const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+        const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+        expect(header0.nativeElement.offsetWidth).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+        expect(header1.nativeElement.offsetWidth).toEqual(136);
+        expect(header2.nativeElement.offsetWidth).toEqual(136);
+        expect(hScroll.nativeElement.hidden).toBe(false);
+
+        // check virtualization cache is valid
+        const virtDir = grid.getRowByIndex(0).virtDirRow;
+        expect(virtDir.getSizeAt(0)).toEqual(Math.floor(0.7 * grid.unpinnedWidth));
+        expect(virtDir.getSizeAt(1)).toEqual(136);
+        expect(virtDir.getSizeAt(2)).toEqual(136);
+
+       });
+       it('Should render correct column widths when having mixed width setting - px, %, null', async() => {
+            const fix = TestBed.createComponent(IgxGridColumnPercentageWidthComponent);
+            fix.componentInstance.initColumnsRows(5, 3);
+            const grid = fix.componentInstance.grid;
+            const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
+            fix.detectChanges();
+            grid.columns[0].width = '50%';
+            grid.columns[1].width = '100px';
+            fix.detectChanges();
+            await wait(16);
+            const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
+            const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
+            const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
+
+            expect(header0.nativeElement.offsetWidth).toEqual(250);
+            expect(header1.nativeElement.offsetWidth).toEqual(100);
+            expect(header2.nativeElement.offsetWidth).toEqual(150);
+            expect(hScroll.nativeElement.hidden).toBe(true);
+
+            // check virtualization cache is valid
+            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            expect(virtDir.getSizeAt(0)).toEqual(250);
+            expect(virtDir.getSizeAt(1)).toEqual(100);
+            expect(virtDir.getSizeAt(2)).toEqual(150);
+
         });
     });
 
@@ -1793,11 +1910,12 @@ describe('IgxGrid Component Tests', () => {
 
                 const targetCell = grid.getCellByColumn(0, 'ProductName');
                 targetCell.onFocus({});
-                tick();
+                tick(100);
                 fixture.detectChanges();
                 expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
                 expect(targetCell.focused).toBeTruthy();
-                expect(firstCell.focused).toBeFalsy();
+                expect(targetCell.selected).toBeTruthy();
+                expect(firstCell.selected).toBeFalsy();
             }));
         });
 
@@ -2865,6 +2983,105 @@ describe('IgxGrid Component Tests', () => {
                 expect(targetRowElement.classList).toContain('igx-grid__tr--edited', 'row does not contain edited class w/ edits');
                 expect(targetCellElement.classList).toContain('igx-grid__td--edited', 'cell does not contain edited class w/ edits');
             }));
+
+            it('Should change pages when the only item on the last page is a pending added row that gets deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.addRow({
+                    ProductID: 123,
+                    ProductName: 'DummyItem',
+                    InStock: true,
+                    UnitsInStock: 1,
+                    OrderDate: new Date()
+                });
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(3);
+                grid.page = 2;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(2);
+                grid.deleteRowById(123);
+                tick();
+                fixture.detectChanges();
+                // This is behaving incorrectly - if there is only 1 transaction and it is an ADD transaction on the last page
+                // Deleting the ADD transaction on the last page will trigger grid.page-- TWICE
+                expect(grid.page).toEqual(1); // Should be 1
+                expect(grid.totalPages).toEqual(2);
+            }));
+
+            it('Should change pages when commiting deletes on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+
+                const grid = fixture.componentInstance.grid;
+                expect(grid.data.length).toEqual(10);
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                for (let i = 0; i < grid.data.length / 2; i++) {
+                    grid.deleteRowById(grid.data.reverse()[i].ProductID);
+                }
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                grid.transactions.commit(grid.data);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(0);
+                expect(grid.totalPages).toEqual(1);
+            }));
+
+            it('Should NOT change pages when deleting a row on the last page', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.paging = true;
+                grid.perPage = 5;
+                fixture.detectChanges();
+                tick();
+                expect(grid.totalPages).toEqual(2);
+                expect(grid.data.length).toEqual(10);
+                grid.page = 1;
+                tick();
+                fixture.detectChanges();
+                expect(grid.page).toEqual(1);
+                grid.deleteRowById(grid.data[grid.data.length - 1].ProductID);
+                fixture.detectChanges();
+                tick();
+                expect(grid.page).toEqual(1);
+                expect(grid.totalPages).toEqual(2);
+            }));
+
+            it('Should not allow selecting rows that are deleted', fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                fixture.detectChanges();
+                const grid = fixture.componentInstance.grid;
+                grid.rowSelectable = true;
+                fixture.detectChanges();
+
+                grid.deleteRowById(2);
+                grid.deleteRowById(3);
+
+                fixture.detectChanges();
+                grid.selectRows([2, 3, 4]);
+                fixture.detectChanges();
+                expect(grid.selectedRows()).toEqual([4]);
+            }));
         });
 
         describe('Row Editing - Grouping',  () => {
@@ -2984,6 +3201,35 @@ describe('IgxGrid Component Tests', () => {
             }));
         });
     });
+
+    describe('IgxGrid - Integration with other Igx Controls', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridInsideIgxTabsComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
+            }).compileComponents();
+        }));
+
+        it('IgxTabs: should initialize a grid with correct width/height', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const tab = fix.componentInstance.tabs;
+            tab.tabs.toArray()[2].select();
+            tick(100);
+            fix.detectChanges();
+            const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+            const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(400);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(400);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
+        }));
+    });
 });
 
 @Component({
@@ -3033,7 +3279,7 @@ export class IgxGridTestComponent {
 
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (scrollbar) {
+        if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
         return false;
@@ -3114,6 +3360,20 @@ export class IgxGridDefaultRenderingComponent {
                     }
                     break;
             }
+        }
+    }
+}
+
+@Component({
+    template: `<igx-grid #grid [data]="data" [width]="'500px'" (onColumnInit)="initColumns($event)">
+        <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderingComponent {
+    public initColumns(column) {
+        if (column.index === 0) {
+            column.width = '40%';
         }
     }
 }
@@ -3505,5 +3765,58 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
     }
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
+    }
+}
+
+@Component({
+    template: `
+    <div style="width: 400px; height: 400px;">
+    <igx-tabs #tabs>
+      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
+      <igx-tabs-group label="Tab 2">This is Tab 2 content.</igx-tabs-group>
+      <igx-tabs-group label="Tab 3">
+        <igx-grid #grid [data]="data" [primaryKey]="'id'">
+          <igx-column
+            *ngFor="let column of columns"
+            [field]="column.field"
+            [header]="column.field"
+            [width]="column.width"
+          >
+          </igx-column>
+        </igx-grid>
+      </igx-tabs-group>
+    </igx-tabs>
+  </div>
+    `
+})
+export class IgxGridInsideIgxTabsComponent {
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public grid: IgxGridComponent;
+
+    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent })
+    public tabs: IgxTabsComponent;
+
+    public columns = [
+        { field: 'id', width: 100},
+        { field: '1', width: 100},
+        { field: '2', width: 100},
+        { field: '3', width: 100}
+    ];
+
+    public data = [];
+
+    constructor() {
+        const data = [];
+        for (let j = 1; j <= 10; j++) {
+          const item = {};
+          item['id'] = j;
+          for (let k = 2, len = this.columns.length; k <= len; k++) {
+            const field = this.columns[k - 1].field;
+            item[field] = `item${j}-${k}`;
+          }
+          data.push(item);
+        }
+        this.data = data;
     }
 }

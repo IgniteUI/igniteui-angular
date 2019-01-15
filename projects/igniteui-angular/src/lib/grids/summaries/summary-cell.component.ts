@@ -145,22 +145,7 @@ export class IgxSummaryCellComponent {
     @HostBinding('style.max-width')
     @HostBinding('style.flex-basis')
     get width() {
-        const hasVerticalScroll = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
-        const colWidth = this.column.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-
-        if (colWidth && !isPercentageWidth) {
-            let cellWidth = this.isLastUnpinned && hasVerticalScroll ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
-
-            if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
-                cellWidth += 'px';
-            }
-
-            return cellWidth;
-        } else {
-            return colWidth;
-        }
+        return this.column.getCellWidth();
     }
 
     get nativeElement(): any {
@@ -180,7 +165,10 @@ export class IgxSummaryCellComponent {
         return this.column.grid.defaultRowHeight;
     }
 
-    private get grid() {
+    /**
+    * @hidden
+    */
+    public get grid() {
         return (this.column.grid as any);
     }
 
@@ -192,5 +180,9 @@ export class IgxSummaryCellComponent {
         return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
         'home', 'end', 'tab', 'space', ' ', 'spacebar'].indexOf(key) !== -1;
 
+    }
+
+    public translateSummary(summary: IgxSummaryResult): string {
+        return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
     }
 }

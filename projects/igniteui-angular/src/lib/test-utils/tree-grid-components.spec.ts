@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
-import { IgxTransactionService, IgxHierarchicalTransactionService } from '../../public_api';
+import { IgxTransactionService, IgxHierarchicalTransactionService, DisplayDensity } from '../../public_api';
 import { IgxGridTransaction } from '../grids/grid-base.component';
 
 @Component({
@@ -388,4 +388,71 @@ export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
     public data = SampleTestData.employeeAllTypesTreeData();
     @ViewChild('treeGrid', { read: IgxTreeGridComponent }) public treeGrid: IgxTreeGridComponent;
     public paging = false;
+}
+
+@Component({
+    template:
+        `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
+            <igx-tree-grid #treeGrid [data]="data" [displayDensity]="density"
+                childDataKey="Employees" primaryKey="ID">
+                <igx-column [field]="'ID'" dataType="number"></igx-column>
+                <igx-column [field]="'Name'" dataType="string"></igx-column>
+                <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+                <igx-column [field]="'Age'" dataType="number"></igx-column>
+        </igx-tree-grid>
+        </div>`
+})
+
+export class IgxTreeGridWrappedInContComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+
+    public height = null;
+    public paging = false;
+    public pageSize = 5;
+    public density = DisplayDensity.comfortable;
+    public outerWidth = 800;
+    public outerHeight: number;
+
+    public isHorizontalScrollbarVisible() {
+        const scrollbar = this.treeGrid.parentVirtDir.getHorizontalScroll();
+        if (scrollbar) {
+            return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+        }
+
+        return false;
+    }
+
+    public getVerticalScrollHeight() {
+        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar) {
+            return parseInt(scrollbar.style.height, 10);
+        }
+
+        return 0;
+    }
+
+    public isVerticalScrollbarVisible() {
+        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        if (scrollbar && scrollbar.offsetHeight > 0) {
+            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+        }
+        return false;
+    }
+
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="employeeID" foreignKey="PID" width="900px" height="800px">
+        <igx-column [field]="'employeeID'" dataType="number"></igx-column>
+        <igx-column [field]="'firstName'"></igx-column>
+        <igx-column [field]="'lastName'"></igx-column>
+        <igx-column [field]="'Salary'" dataType="number" [hasSummary]="true" ></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesScrollingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeScrollingData();
 }

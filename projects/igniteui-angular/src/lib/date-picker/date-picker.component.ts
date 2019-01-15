@@ -16,7 +16,8 @@ import {
     HostListener,
     ElementRef,
     TemplateRef,
-    Directive
+    Directive,
+    ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -33,7 +34,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { OverlaySettings } from '../services';
-import { DeprecateClass } from '../core/deprecateDecorators';
 import { DateRangeDescriptor } from '../core/dates/dateRange';
 import { EditorProvider } from '../core/edit-provider';
 
@@ -73,11 +73,10 @@ let NEXT_ID = 0;
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
-    selector: 'igx-datePicker, igx-date-picker',
+    selector: 'igx-date-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
-@DeprecateClass('\'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.')
 export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvider, OnInit, OnDestroy {
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -153,7 +152,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      *<igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      *```
      */
-    @Input() public locale: string = Constants.DEFAULT_LOCALE_DATE;
+    @Input() public locale: 'en';
 
     /**
      *An @Input property that sets on which day the week starts.
@@ -446,7 +445,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
 
-    constructor(private resolver: ComponentFactoryResolver) { }
+    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef) { }
 
     /**
      *Method that sets the selected date.
@@ -463,6 +462,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      */
     public writeValue(value: Date) {
         this.value = value;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -677,8 +677,8 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         });
     }
 
-    private _setLocaleToDate(value: Date, locale: string = Constants.DEFAULT_LOCALE_DATE): string {
-        return value.toLocaleDateString(locale);
+    private _setLocaleToDate(value: Date): string {
+        return value.toLocaleDateString(this.locale);
     }
 
     /**
@@ -687,16 +687,12 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      * @param date passed date
      */
     private _customFormatChecker(formatter: (_: Date) => string, date: Date) {
-        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date, this.locale);
+        return this.formatter ? this.formatter(date) : this._setLocaleToDate(date);
     }
 
     private _onTouchedCallback: () => void = () => { };
 
     private _onChangeCallback: (_: Date) => void = () => { };
-}
-
-class Constants {
-    public static readonly DEFAULT_LOCALE_DATE = 'en';
 }
 
 /**

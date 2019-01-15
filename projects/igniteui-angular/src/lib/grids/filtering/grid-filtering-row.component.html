@@ -24,11 +24,15 @@
             tabindex="0"
             [placeholder]="placeholder"
             autocomplete="off"
-            [(ngModel)]="value"
+            [value]="value"
+            (input)="onInput($event)"
             [type]="type"
             [readonly]="isUnaryCondition"
             (click)="onInputClick()"
-            (keydown)="onInputKeyDown($event)"/>
+            (compositionstart)="onCompositionStart()"
+            (compositionend)="onCompositionEnd()"
+            (keydown)="onInputKeyDown($event)"
+            (keyup)="onInputKeyUp($event)"/>
             <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
                 <igx-icon>clear</igx-icon>
             </igx-suffix>
@@ -36,7 +40,7 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-datePicker tabindex="0" [(ngModel)]="value" [locale]="locale" (onClose)="datePickerClose()">
+    <igx-date-picker tabindex="0" [(ngModel)]="value" [locale]="filteringService.grid.locale" (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-displayData="displayData">
             <igx-input-group type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
                 <igx-prefix #inputGroupPrefix
@@ -60,7 +64,7 @@
                 </igx-suffix>
             </igx-input-group>
             </ng-template>
-    </igx-datePicker>
+    </igx-date-picker>
 </ng-template>
 
 <ng-container *ngTemplateOutlet="template; context: { $implicit: this }"></ng-container>

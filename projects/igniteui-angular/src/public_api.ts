@@ -1,3 +1,4 @@
+
 /*
  * Public API Surface of igniteui-angular
  */
@@ -56,11 +57,10 @@ export * from './lib/card/card.component';
 export * from './lib/carousel/carousel.component';
 export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/index';
-export * from './lib/combo/combo.component';
+export * from './lib/combo/index';
 export * from './lib/date-picker/date-picker.component';
 export * from './lib/dialog/dialog.component';
-export * from './lib/drop-down/drop-down.component';
-export * from './lib/drop-down/drop-down-item.component';
+export * from './lib/drop-down/index';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/icon/index';
@@ -88,4 +88,6 @@ export * from './lib/core/density';
 export { CancelableEventArgs } from './lib/core/utils';
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
+export { TimePickerInteractionMode } from './lib/time-picker/time-picker.common';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
+
