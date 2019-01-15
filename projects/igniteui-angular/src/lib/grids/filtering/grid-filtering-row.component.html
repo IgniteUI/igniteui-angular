@@ -29,6 +29,8 @@
             [type]="type"
             [readonly]="isUnaryCondition"
             (click)="onInputClick()"
+            (compositionstart)="onCompositionStart()"
+            (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
             (keyup)="onInputKeyUp($event)"/>
             <igx-suffix *ngIf="value || value === 0" (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">
