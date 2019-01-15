@@ -262,10 +262,9 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fChildCell.selected).toBe(true);
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
             fixture.detectChanges();
-            const rows = hierarchicalGrid.rowList.toArray();
-            expect(rows[0].expanded).toBe(true);
-            expect(rows[0] instanceof IgxHierarchicalRowComponent).toBeTruthy();
-            expect(rows[1] instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect((<IgxHierarchicalRowComponent>hierarchicalGrid.getRowByIndex(0)).expanded).toBe(true);
+            expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
             fChildCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
