@@ -4288,11 +4288,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        const rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
+        let rowIndex = typeof row === 'number' ? row : this.filteredSortedData.indexOf(row);
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
 
         if (this.paging) {
             this.page = Math.floor(rowIndex / this.perPage);
+            rowIndex = rowIndex - this.page * this.perPage;
         }
 
         this.scrollDirective(this.verticalScrollContainer, rowIndex);

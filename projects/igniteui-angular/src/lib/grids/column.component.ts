@@ -198,6 +198,7 @@ export class IgxColumnComponent implements AfterContentInit {
             }
             this.check();
             if (this.grid) {
+                this.grid.refreshSearch(true);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
@@ -987,6 +988,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
+        this.grid.refreshSearch(true);
         return true;
     }
     /**
@@ -1037,6 +1039,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.cdr.detectChanges();
         this.grid.filteringService.refreshExpressions();
+        this.grid.refreshSearch(true);
         return true;
     }
     /**
