@@ -23,7 +23,7 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { isDate } from 'util';
+import { isDate } from '../core/utils';
 
 let NEXT_ID = 0;
 
