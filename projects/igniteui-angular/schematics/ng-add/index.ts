@@ -45,9 +45,9 @@ function enablePolyfills(options: Options): Rule {
       const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
       let polyfillsData = tree.read(targetFile).toString();
       if (pattern.test(polyfillsData)) {
-        for (const match of polyfillsData.match(pattern)) {
+        polyfillsData.match(pattern).forEach(match => {
           polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
-        }
+        });
       }
 
       // Target the web-animations-js commented import statement and uncomment it.
