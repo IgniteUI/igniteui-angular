@@ -156,6 +156,11 @@ export class HelperUtils {
                 resolve();
             })
 
+            public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults){
+                const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
+                HelperUtils.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
+            }
+
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
         // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
         const summary = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);

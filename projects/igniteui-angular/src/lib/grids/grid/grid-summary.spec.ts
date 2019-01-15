@@ -2,7 +2,13 @@
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxDateSummaryOperand, IgxGridModule, IgxNumberSummaryOperand, IgxSummaryResult } from './index';
+import {
+    IgxDateSummaryOperand,
+    IgxGridModule,
+    IgxNumberSummaryOperand,
+    IgxSummaryResult,
+    IgxGridGroupByRowComponent
+} from './index';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -13,12 +19,14 @@ import {
     SummaryColumnComponent,
     FilteringComponent,
     SummarieGroupByComponent,
-    SummarieGroupByWithScrollsComponent
+    SummarieGroupByWithScrollsComponent,
+    SummarieGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxNumberFilteringOperand, SortingDirection } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
+import { isAwaitExpression } from 'typedoc/node_modules/typescript';
 
 describe('IgxGrid - Summaries', () => {
     configureTestSuite();
@@ -40,7 +48,8 @@ describe('IgxGrid - Summaries', () => {
                 ColumnGroupFourLevelTestComponent,
                 SummarieGroupByComponent,
                 SummarieGroupByWithScrollsComponent,
-                SummaryColumnsWithSpecificWidthsComponent
+                SummaryColumnsWithSpecificWidthsComponent,
+                SummarieGroupByTransactionsComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule.forRoot(), NoopAnimationsModule]
         })
@@ -935,6 +944,605 @@ describe('IgxGrid - Summaries', () => {
             expect(cell.selected).toBe(true);
         });
 
+        xit('Grouping: should navigate with arrow keys from cell to summary row ', async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(2, 'ID');
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            cell = grid.getCellByColumn(2, 'ID')
+            expect(cell.selected).toBe(true);
+
+            await HelperUtils.navigateVerticallyToIndex(grid, 2, 11, 0);
+
+            HelperUtils.verifySummaryCellActive(fix, 11, 0);
+            cell = grid.getCellByColumn(11, 'ID');
+            expect(cell.selected).toBe(true);
+
+        });
+    });
+
+    describe('CRUD with transactions: ', () => {
+        let fix;
+        let grid;
+        beforeEach(() => {
+            fix = TestBed.createComponent(SummarieGroupByTransactionsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('Add row', () => {
+            let newRow = {
+                ID: 777,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19,
+                OnPTO: true
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['25', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
+
+            // redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
+
+            // Commit
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
+
+            newRow = {
+                ID: 999,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19,
+                OnPTO: true
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['10']);
+
+            // Discard
+            grid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
+        });
+
+        it('Delete row', () => {
+            grid.deleteRow(475);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['7']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['8']);
+
+            // redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['7']);
+
+            // Commit
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['7']);
+
+            grid.deleteRow(317);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['6']);
+
+            // Discard
+            grid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['7']);
+        });
+
+        it('Update row', () => {
+            let newRow = {
+                ID: 12,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19
+            };
+            grid.updateRow(newRow, 12);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Dec 18, 2007', 'Dec 9, 2017']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['25', '50']);
+
+            // redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            // Commit
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            newRow = {
+                ID: 957,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2000, 4, 4),
+                Age: 65
+            };
+            grid.updateRow(newRow, 957);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'May 4, 2000', 'Apr 3, 2019']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '65']);
+
+            // Discard
+            grid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['8', 'Jul 19, 2009', 'Apr 3, 2019']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+        });
+
+        it('Update cell', () => {
+            grid.updateCell(19, grid.getRowByKey(12).rowID, 'Age');
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['25', '50']);
+
+            // redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            // Commit
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+
+            grid.updateCell(65, grid.getRowByKey(957).rowID, 'Age');
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '65']);
+
+            // Discard
+            grid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
+        });
+
+        it('Grouping: Add grouped row', (async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 777,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19,
+                OnPTO: true
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['9']);
+
+            grid.verticalScrollContainer.scrollTo(0);
+            await wait(100);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 4);
+            HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 5, ['Count'], ['2']);
+
+            // redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 5, ['Count'], ['3']);
+        }));
+
+        it('Grouping: Add not grouped row', (async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 777,
+                ParentID: 999,
+                Name: 'New Employee',
+                HireDate: null,
+                Age: 19,
+                OnPTO: true
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['9']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Dec 9, 2017']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(50);
+            fix.detectChanges();
+
+            let row = grid.getRowByIndex(16);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 18, 4, ['Min', 'Max'], ['19', '19']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 18, 3, ['Count', 'Earliest', 'Latest'], ['1', '', '']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            await wait(50);
+            fix.detectChanges();
+            row = grid.getRowByIndex(16);
+            expect(row).toBeUndefined();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+
+            // redo transactions
+            grid.transactions.redo();
+            await wait(50);
+            fix.detectChanges();
+
+            row = grid.getRowByIndex(16);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(50);
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
+
+            // Discard
+            grid.transactions.clear();
+            await wait(50);
+            fix.detectChanges();
+
+            row = grid.getRowByIndex(16);
+            expect(row).toBeUndefined();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+        }));
+
+        it('Grouping: delete row', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            grid.deleteRow(grid.getRowByIndex(1).rowID);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['7']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['1']);
+
+            grid.deleteRow(grid.getRowByIndex(2).rowID);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['6']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['0']);
+
+            const row = grid.getRowByIndex(0);
+            expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
+
+            // Commit transactions
+            grid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['6']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+        });
+
+        it('Grouping: Update row and keep grouping', (async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 225,
+                ParentID: 847,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19
+            };
+            grid.updateRow(newRow, 225);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50',]);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(50);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['19', '25',]);
+        }));
+
+        it('Grouping: Update row and change grouping', (async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 225,
+                ParentID: 17,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19
+            };
+            grid.updateRow(newRow, 225);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 2, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50',]);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(50);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '25',]);
+
+            // Undo transactions
+            grid.transactions.undo();
+            await wait(50);
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
+
+            // Redo transactions
+            grid.transactions.redo();
+            await wait(50);
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['1']);
+        }));
+
+        it('Grouping: Update row and add new group', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 12,
+                ParentID: -2,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19
+            };
+            grid.updateRow(newRow, 12);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
+
+            // Undo transactions
+            grid.transactions.undo();
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+
+            // Redo transactions
+            grid.transactions.redo();
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
+        });
+
+        it('Grouping: Update row and change group name', () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const newRow1 = {
+                ID: 12,
+                ParentID: -2,
+                Name: 'New Employee',
+                HireDate: new Date(2019, 3, 3),
+                Age: 19
+            };
+            grid.updateRow(newRow1, 12);
+
+            const newRow2 = {
+                ID: 101,
+                ParentID: -2,
+                Name: 'New Employee2',
+                HireDate: new Date(2015, 5, 5),
+                Age: 60
+            };
+            grid.updateRow(newRow2, 101);
+            fix.detectChanges();
+
+
+            let groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(-2);
+            expect(groupRows[1].groupRow.value).toEqual(19);
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60',]);
+
+            // Undo transactions
+            grid.transactions.undo();
+            grid.transactions.undo();
+            fix.detectChanges();
+            groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(17);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50',]);
+
+            // Redo transactions
+            grid.transactions.redo();
+            grid.transactions.redo();
+            fix.detectChanges();
+            groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(-2);
+            expect(groupRows[1].groupRow.value).toEqual(19);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60',]);
+        });
+
+        it('Grouping: Update cell and change grouping', (async () => {
+            grid.groupBy({
+                fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            grid.updateCell(-1, grid.getRowByKey(101).rowID, 'ParentID');
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['27', '27',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 4, ['Min', 'Max'], ['50', '50',]);
+            let groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(-1);
+            expect(groupRows[1].groupRow.value).toEqual(17);
+
+            grid.updateCell(847, grid.getRowByKey(12).rowID, 'ParentID');
+            fix.detectChanges();
+            groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(-1);
+            expect(groupRows[1].groupRow.value).toEqual(19);
+
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(50);
+            fix.detectChanges();
+
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '50',]);
+
+            // Undo transactions
+            grid.transactions.undo();
+            await wait(50);
+            fix.detectChanges();
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 17, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 17, 4, ['Min', 'Max'], ['25', '44',]);
+
+            grid.transactions.clear();
+            fix.detectChanges();
+            grid.verticalScrollContainer.scrollTo(0);
+            await wait(50);
+            fix.detectChanges();
+            groupRows = grid.groupsRowList.toArray();
+            expect(groupRows[0].groupRow.value).toEqual(17);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50',]);
+        }));
     });
 
     describe('Grouping tests: ', () => {

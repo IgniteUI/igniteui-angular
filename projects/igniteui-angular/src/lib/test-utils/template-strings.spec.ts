@@ -401,6 +401,15 @@ export class ColumnDefinitions {
     <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
     <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
     `;
+
+    public static summariesGoupByTansColumns = `
+    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true' [summaries]="ageSummaryMinMax"></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+    `;
 }
 
 export class EventSubscriptions {
