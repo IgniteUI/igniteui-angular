@@ -1,5 +1,5 @@
 <ng-template #defaultCell igxTextHighlight [cssClass]="highlightClass" [activeCssClass]="activeHighlightClass" [groupName]="gridID"
-        [value]="formatter ? formatter(value) : value" [row]="rowIndex" [column]="this.column.visibleIndex" [page]="this.grid.page" [containerClass]="'igx-grid__td-text'"
+        [value]="formatter ? formatter(value) : value" [row]="row.rowData" [column]="this.column.field" [containerClass]="'igx-grid__td-text'"
         [contentChildElement]="defaultContentElement">
     <ng-container *ngIf="column.dataType === 'boolean' || column.dataType === 'string' || formatter; else default" >
         <div #defaultContentElement class="igx-grid__td-text">{{ formatter ? formatter(value) : value }}</div>

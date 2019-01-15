@@ -489,41 +489,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
      * @hidden
      */
-    protected scrollTo(row: number, column: number, page: number): void {
-        const rowData = this.processedFlatData[row];
-        const rowID = this._gridAPI.get_row_id(this.id, rowData);
+    protected scrollTo(row: any | number, column: any | number): void {
+        const rowID = this._gridAPI.get_row_id(this.id, row);
         const record = this.processedRecords.get(rowID);
         this._gridAPI.expand_path_to_recrod(this.id, record);
+        const rowIndex = this.processedExpandedFlatData.indexOf(row);
 
-        const matchInfo = this.fixMatchInfoIndexes({
-            row: row,
-            column: column,
-            page: page
-        });
-
-        super.scrollTo(matchInfo.row, matchInfo.column, matchInfo.page);
-    }
-
-    /**
-     * @hidden
-     */
-    protected resolveSearchRowIndex(index: number, pagingIncrement: number, groupByIncrement: number, collapsedRowsCount: number) {
-        return index;
-    }
-
-    /**
-     * @hidden
-     */
-    protected fixMatchInfoIndexes(matchInfo: any): any {
-        const fixedMatchInfo: any = {};
-        const rowData = this.processedFlatData[matchInfo.row];
-        fixedMatchInfo.row = this.processedExpandedFlatData.indexOf(rowData);
-        fixedMatchInfo.page = this.paging ? Math.floor(fixedMatchInfo.row / this.perPage) : 0;
-        fixedMatchInfo.row = this.paging ? fixedMatchInfo.row % this.perPage : fixedMatchInfo.row;
-        fixedMatchInfo.column = matchInfo.column;
-        fixedMatchInfo.index = matchInfo.index;
-
-        return fixedMatchInfo;
+        super.scrollTo(rowIndex, column);
     }
 
     /**
