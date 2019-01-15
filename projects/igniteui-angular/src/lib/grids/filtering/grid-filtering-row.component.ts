@@ -15,7 +15,7 @@ import {
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/drop-down.component';
+import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
@@ -61,6 +61,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private chipAreaScrollOffset = 0;
     private _column = null;
     private isKeyPressed = false;
+    private isComposing = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -140,11 +141,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
         this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
-
-        if (this.column.dataType === DataType.Date) {
-            // TODO: revise usage of cdr.detectChanges() here
-            this.cdr.detectChanges();
-        }
 
         this.input.nativeElement.focus();
     }
@@ -246,6 +242,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         if (event.key === KEYS.ENTER) {
+            if (this.isComposing) {
+                return;
+            }
+
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
             let indexToDeselect = -1;
@@ -289,6 +289,20 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.isKeyPressed) {
             this.value = eventArgs.target.value;
         }
+    }
+
+    /**
+     * Event handler for compositionstart on the input.
+     */
+    public onCompositionStart() {
+        this.isComposing = true;
+    }
+
+    /**
+     * Event handler for compositionend on the input.
+     */
+    public onCompositionEnd() {
+        this.isComposing = false;
     }
 
     /**
