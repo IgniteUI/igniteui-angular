@@ -4,6 +4,8 @@ import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
 
+import * as os from 'os';
+
 function displayVersionMismatch(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const igPackageJson = require('../../package.json');
@@ -29,8 +31,8 @@ Running 'ng update' will prevent potential version conflicts.\n`);
 function addIgxGridSupportForIe(polyfillsData: string): string {
   const targetImport = 'import \'core-js/es6/set\';';
   const lineToAdd = 'import \'core-js/es7/object\';';
-  const comment = '// ES7 `Object.entries` needed for igxGrid to render in IE.';
-  return polyfillsData.replace(targetImport, `${targetImport}\n ${comment}\n ${lineToAdd}`);
+  const comment = '/** ES7 `Object.entries` needed for igxGrid to render in IE. */';
+  return polyfillsData.replace(targetImport, `${targetImport}${os.EOL}${comment}${os.EOL}${lineToAdd}`);
 }
 
 function enablePolyfills(options: Options): Rule {
@@ -43,18 +45,19 @@ function enablePolyfills(options: Options): Rule {
       }
 
       // Match all commented import statements that are core-js/es6/*
-      const pattern = /\/{2}\s{0,}import\s{0,}\'core\-js\/es6\/.+/g;
+      const pattern = /\/{2}\s{0,}(import\s{0,}\'core\-js\/es6\/.+)/;
       let polyfillsData = tree.read(targetFile).toString();
       if (pattern.test(polyfillsData)) {
-        polyfillsData.match(pattern).forEach(match => {
-          polyfillsData = polyfillsData.replace(match, match.substring(2, match.length));
-        });
+        let result: any;
+        while (result = pattern.exec(polyfillsData)) {
+          polyfillsData = polyfillsData.replace(result[0], result[1]);
+        }
       }
 
       // Target the web-animations-js commented import statement and uncomment it.
       const webAnimationsLine = '// import \'web-animations-js\';';
       polyfillsData = polyfillsData.replace(webAnimationsLine,
-        webAnimationsLine.substring(2, webAnimationsLine.length));
+        webAnimationsLine.substring(3, webAnimationsLine.length));
 
       polyfillsData = addIgxGridSupportForIe(polyfillsData);
       tree.overwrite(targetFile, polyfillsData);
