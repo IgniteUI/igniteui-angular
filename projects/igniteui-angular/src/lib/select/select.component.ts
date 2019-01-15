@@ -1,4 +1,8 @@
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding } from '@angular/core';
+import { IgxInputDirective } from './../directives/input/input.directive';
+import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
+import { ElementRef, ViewContainerRef, ChangeDetectorRef } from '@angular/core';
+// tslint:disable-next-line:max-line-length
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding, Output, EventEmitter, HostListener } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -12,11 +16,15 @@ import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/inpu
 import { IgxDropDownItemBase, IgxDropDownBase } from '../drop-down';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
+import { SelectPositioningStrategy } from './../services/overlay/position/select-positioning-strategy';
 
+import { CancelableEventArgs } from './../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IgxDropDownItemComponent } from 'igniteui-angular';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
+import { IgxSelectionAPIService } from '../core/selection';
+import { ISelectComponent } from './ISelectComponent';
 
 const noop = () => { };
 
@@ -24,34 +32,31 @@ const noop = () => { };
     selector: 'igx-select',
     templateUrl: './select.component.html',
     providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: IgxSelectComponent,
-            multi: true
-        },
+        { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor {
     @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
-    @ViewChild('input', { read: IgxInputGroupComponent}) public input: HTMLInputElement;
+    @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
-    protected children: QueryList<IgxSelectItemComponent>;
+    public children: QueryList<IgxSelectItemComponent>;
+
     @Input() public value: any;
     @Input() public placeholder = '';
-    @Input()
-    @HostBinding('class.igx-select--disabled')
-    public disabled = false;
+    @Input() public disabled = false;
+
 
     public get selectedItem(): any {
         const selectedValue = this.selection.first_item(this.id);
-        return this.items.find(x => x.value === selectedValue);
+        return this.items.find(x => x.value === selectedValue) ;
     }
 
     //#region IMPLEMENT ControlValueAccessor METHODS
     private _onChangeCallback: (_: any) => void = noop;
+
     public writeValue = (value: any) => {
-        // 1. Select the new item from the drop down
-        // 2. Set the input value
+        // 1. Set the input value
+        // 2. Select the new item from the drop down
         if (value) {
             this.value = value;
             this.selection.set(this.id, new Set([this.value]));
@@ -61,29 +66,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public registerOnChange(fn: any): void {
         this._onChangeCallback = fn;
     }
+
     public registerOnTouched(fn: any): void { }
-
     //#endregion
-
-    //#region ITEMS POSITION MANAGEMENT
-    // Option1: OVERRIDE ITEMS POSITION METHODS IN drop-DownRightButtonComponent.base
-    scrollToItem(item: IgxDropDownItemBase) {
-        const itemPosition = this.calculateScrollPosition(item);
-        this.scrollContainer.scrollTop = (itemPosition);
-    }
-
-    // calculateScrollPosition(item: IgxDropDownItemBase): number {
-
-    // }
-    public getSelectedItemPosition() {
-
-    }
-
-    public positionSelectedItem() {
-
-    }
-    //#endregion
-
 
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
@@ -114,15 +99,45 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public open(overlaySettings?: OverlaySettings) {
         super.open({
             modal: false,
-            positionStrategy: new ConnectedPositioningStrategy({
-                target: this.inputGroup.element.nativeElement
-            })
+            closeOnOutsideClick: false, // TODO: Test with click handler interaction.
+            positionStrategy: new SelectPositioningStrategy(
+                this,
+                { target: this.input.nativeElement }
+            ),
+            scrollStrategy: new AbsoluteScrollStrategy()
         });
     }
 
-    // getPrefixClientWidth () {
+    private calculateItemOffset() {
 
-    // }
+    }
+
+    @HostListener('keydown.Enter', ['$event'])
+    @HostListener('keydown.Space', ['$event'])
+    @HostListener('keydown.Spacebar', ['$event'])
+    @HostListener('click', ['$event'])
+    public handleToggleInteraction(event: Event) {
+        if (this.disabled) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+         } else {
+             this.toggle();
+             return;
+         }
+        }
+
+    @HostListener('keydown.Alt.ArrowUp', ['$event'])
+    @HostListener('keydown.Escape', ['$event'])
+    public handleClosingInteraction (event: KeyboardEvent) {
+        this.close();
+    }
+
+    @HostListener('keydown.Alt.ArrowDown', ['$event'])
+    public handleOpeningInteraction (event: KeyboardEvent) {
+
+        this.open();
+    }
 }
 
 @NgModule({
