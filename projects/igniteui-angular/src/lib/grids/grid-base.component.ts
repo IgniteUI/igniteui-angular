@@ -4285,23 +4285,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const groupIndexData = this.getGroupIncrementData();
         const groupByRecords = this.getGroupByRecords();
-        let collapsedRowsCount = 0;
 
         data.forEach((dataRow, i) => {
             const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
             const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
-            let rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
+            const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
 
-            if (this.paging && i % this.perPage === 0) {
-                collapsedRowsCount = 0;
-            }
-
-            rowIndex -= collapsedRowsCount;
-
-            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-                collapsedRowsCount++;
-            }
             columnItems.forEach((c, j) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
