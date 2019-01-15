@@ -2391,6 +2391,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+
+        this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.lastSearchInfo.searchText) {
+                this.cdr.detectChanges();
+                this.restoreHighlight(true);
+            }
+        });
     }
 
     private combineForOfCollections(dataList, summaryList) {
@@ -4368,7 +4375,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected restoreHighlight(): void {
+    protected restoreHighlight(shouldUpdateUI?: boolean): void {
         if (this.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
@@ -4385,6 +4392,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const row = this.paging ? (rowIndex % this.perPage) + increment : rowIndex + increment;
 
             this.rebuildMatchCache();
+            if (shouldUpdateUI) {
+                // update UI
+                this.rowList.forEach((r) => {
+                    if (r.cells) {
+                        r.cells.forEach((c) => {
+                            c.highlightText(
+                                this.lastSearchInfo.searchText,
+                                 this.lastSearchInfo.caseSensitive,
+                                 this.lastSearchInfo.exactMatch);
+                        });
+                    }
+                });
+            }
 
             if (rowIndex !== -1) {
                 if (this.collapsedHighlightedItem && groupByIncrements !== null) {
