@@ -124,6 +124,11 @@
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>
 
+<ng-template #defaultLoadingGrid>
+    <igx-linear-bar [indeterminate]="true">
+    </igx-linear-bar>
+</ng-template>
+
 <ng-template #defaultDropArea>
     <igx-icon fontSet="material" class="igx-drop-area__icon">group_work</igx-icon>
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>

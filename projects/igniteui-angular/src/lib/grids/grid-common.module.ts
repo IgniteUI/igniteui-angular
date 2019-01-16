@@ -60,6 +60,7 @@ import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
+import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 
 @NgModule({
     declarations: [
@@ -139,6 +140,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxColumnPinningModule,
+        IgxProgressBarModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
@@ -166,7 +168,8 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnHidingModule,
         IgxDropDownModule,
         IgxButtonGroupModule,
-        IgxColumnPinningModule
+        IgxColumnPinningModule,
+        IgxProgressBarModule
     ],
     providers: [
         IgxSelectionAPIService,
