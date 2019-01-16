@@ -3,11 +3,12 @@ import { DependencyNotFoundException } from '@angular-devkit/core';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
+import { yellow } from '@angular-devkit/core/src/terminal/colors';
 
 import * as os from 'os';
 
 function displayVersionMismatch(options: Options): Rule {
-  return (tree: Tree, context: SchematicContext) => {
+  return (tree: Tree) => {
     const igPackageJson = require('../../package.json');
     const ngKey = '@angular/core';
     const ngCommonKey = '@angular/common';
@@ -17,9 +18,9 @@ function displayVersionMismatch(options: Options): Rule {
     const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
 
     if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
-      context.logger.warn(`
+      console.warn(yellow(`
 WARNING Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
-Running 'ng update' will prevent potential version conflicts.\n`);
+Running 'ng update' will prevent potential version conflicts.\n`));
     }
   };
 }

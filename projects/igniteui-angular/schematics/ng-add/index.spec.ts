@@ -32,7 +32,7 @@ describe('ng-add schematics', () => {
 
   function populatePackageJson() {
     const igPkgJson = require('../../package.json');
-    const pkgJson = JSON.parse(tree.read('/package.json').toString());
+    const pkgJson = JSON.parse(tree.readContent('/package.json'));
     const angularCommon = '@angular/common';
     const angularCore = '@angular/core';
 
@@ -127,5 +127,21 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     runner.runSchematic('ng-add', {}, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies['web-animations-js']).toBeTruthy();
+  });
+
+  it('should properly display the dependency mismatch warning', () => {
+    const targetFile = '/package.json';
+    const angularCore = '@angular/core';
+    const angularCommon = '@angular/common';
+    const version = '^6.1.0';
+
+    const pkgJson = JSON.parse(tree.readContent(targetFile));
+    pkgJson.dependencies[angularCore] = version;
+    pkgJson.dependencies[angularCommon] = version;
+    tree.overwrite(targetFile, JSON.stringify(pkgJson));
+
+    spyOn(console, 'warn');
+    runner.runSchematic('ng-add', {}, tree);
+    expect(console.warn).toHaveBeenCalledWith(jasmine.stringMatching(/WARNING */));
   });
 });
