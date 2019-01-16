@@ -52,26 +52,6 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
-     * Sets/Gets if the item is the currently selected one in the dropdown
-     *
-     * ```typescript
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemSelected = mySelectedItem.isSelected; // true
-     * ```
-     */
-    @Input()
-    get isSelected(): boolean {
-        return this._isSelected;
-    }
-
-    set isSelected(value: boolean) {
-        if (this.isHeader) {
-            return;
-        }
-        this._isSelected = value;
-    }
-
-    /**
      * @hidden
      */
     @HostBinding('attr.aria-selected')
@@ -146,6 +126,26 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @Input()
     @HostBinding('class.igx-drop-down__item--disabled')
     public disabled = false;
+
+    /**
+     * Sets/Gets if the item is the currently selected one in the dropdown
+     *
+     * ```typescript
+     *  let mySelectedItem = this.dropdown.selectedItem;
+     *  let isMyItemSelected = mySelectedItem.isSelected; // true
+     * ```
+     */
+    @Input()
+    get isSelected(): boolean {
+        return this._isSelected;
+    }
+
+    set isSelected(value: boolean) {
+        if (this.isHeader) {
+            return;
+        }
+        this._isSelected = value;
+    }
 
     /**
      * Gets item index
