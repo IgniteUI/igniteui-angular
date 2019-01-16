@@ -274,7 +274,7 @@ describe('IgxTabs', () => {
         tick(100);
         fixture.detectChanges();
 
-        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '400px';
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '200px';
         tick(100);
         fixture.detectChanges();
 
@@ -329,7 +329,7 @@ describe('IgxTabs', () => {
 
         tick();
         fixture.detectChanges();
-        expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(320px)');
+        expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(180px)');
     }));
 });
 
