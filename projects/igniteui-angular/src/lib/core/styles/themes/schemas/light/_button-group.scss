@@ -19,7 +19,7 @@
 /// @prop {Color} item-selected-text-color [igx-color: ('grays', 800)]- The text color for a selected item in the button group.
 /// @prop {Color} item-selected-background [igx-color: ('grays', 400)] - The background color for a selected item in the button group.
 /// @prop {Color} item-selected-border-color [igx-color: ('grays', 600), rgba: .12] - The border color for a selected item from the button group.
-/// @prop {Number} elevation [2] - The elevation level, between 1-24, to be used for the badge shadow.
+/// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @see $default-palette
 $_light-button-group: (
     item-background: #fff,
