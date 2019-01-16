@@ -19,6 +19,8 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Change the background and content text colors in card
 ///   $my-card-theme: igx-card-theme(
@@ -30,6 +32,7 @@
 @function igx-card-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $background: null,
     $header-text-color: null,
@@ -38,7 +41,16 @@
     $actions-text-color: null
 ) {
     $name: 'igx-card';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $card-schema: map-get($schema, $name);
+
+    $theme: apply-palette($card-schema, $palette);
+
+
+    $resting-elevation: map-get($card-schema, 'resting-elevation');
+    $hover-elevation: map-get($card-schema, 'hover-elevation');
+
+    $resting-shadow: igx-elevation($elevations, $resting-elevation);
+    $hover-shadow: igx-elevation($elevations, $hover-elevation);
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -61,9 +73,11 @@
         palette: $palette,
         background: $background,
         header-text-color: $header-text-color,
-        subtitle-text-color:$subtitle-text-color,
-        content-text-color:$content-text-color,
-        actions-text-color:$actions-text-color
+        subtitle-text-color: $subtitle-text-color,
+        content-text-color: $content-text-color,
+        actions-text-color: $actions-text-color,
+        resting-shadow: $resting-shadow,
+        hover-shadow: $hover-shadow
     ));
 }
 
@@ -71,16 +85,11 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires --var
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
     $card-border-radius: 4px;
-    $card-shadow: igx-elevation($elevations, 2);
-    $card-shadow-hover: igx-elevation($elevations, 8);
-
     $card-title-fz: em(24px, 16px);
     $card-title-line-height: em(24px, 16px);
     $card-subtitle-line-height: em(24px, 16px);
@@ -100,7 +109,7 @@
     %igx-card-display {
         display: flex;
         flex-flow: row wrap;
-        box-shadow: $card-shadow;
+        box-shadow: --var($theme, 'resting-shadow');
         overflow: hidden;
         border-radius: $card-border-radius;
         background: --var($theme, 'background');
@@ -108,7 +117,7 @@
         backface-visibility: hidden;
 
         &:hover {
-            box-shadow: $card-shadow-hover;
+            box-shadow: --var($theme, 'hover-shadow');
         }
     }
 
