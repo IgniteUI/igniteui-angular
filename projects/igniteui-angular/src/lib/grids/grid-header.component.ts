@@ -80,7 +80,7 @@ export class IgxGridHeaderComponent implements DoCheck {
             // are material icons ligature strings
             return this.sortDirection === SortingDirection.Asc ? 'arrow_upward' : 'arrow_downward';
         }
-        return 'none';
+        return 'arrow_upward';
     }
 
     get sorted() {

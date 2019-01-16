@@ -930,6 +930,24 @@
         border-right: $grid-header-border;
         outline-style: none;
         overflow: hidden;
+        transition: color 250ms ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+            .sort-icon {
+                opacity: 1;
+            }
+
+            color: igx-color($palette, 'grays', 900);
+        }
+    }
+
+    %igx-grid__th--sortable {
+        cursor: pointer;
+
+        %grid-cell-header-title {
+            cursor: pointer;
+        }
     }
 
     %grid-cell-header--filtering {
@@ -984,8 +1002,28 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
-            color: igx-color($palette, 'secondary');
+            color: igx-color($palette, 'grays', 500);
+
+            &:hover {
+                color: igx-color($palette, 'secondary', 500);
+            }
         }
+    }
+
+    %igx-grid__th--sorted {
+        .sort-icon {
+            opacity: 1;
+            color: igx-color($palette, 'secondary', 500);
+
+            &:hover {
+                color: igx-color($palette, 'secondary', 600);
+            }
+        }
+    }
+
+    .sort-icon {
+        opacity: 0;
+        transition: all 250ms ease-in-out;
     }
 
     %grid-cell-header-icons--cosy {
