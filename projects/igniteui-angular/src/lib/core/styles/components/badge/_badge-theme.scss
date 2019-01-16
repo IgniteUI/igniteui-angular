@@ -36,6 +36,7 @@
 @function igx-badge-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $icon-color: null,
     $text-color: null,
@@ -46,10 +47,14 @@
     $disable-border: true
 ) {
     $name: 'igx-badge';
-    $badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+
+    $badge-schema: map-get($schema, $name);
+    $elevation: map-get($badge-schema, 'elevation');
+
+    $badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, $elevation));
     $border-width: if($disable-border == true, 0, rem(1px));
 
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $theme: apply-palette($badge-schema, $palette);
 
     @if not($icon-color) and $background-color {
         $icon-color: text-contrast($background-color);

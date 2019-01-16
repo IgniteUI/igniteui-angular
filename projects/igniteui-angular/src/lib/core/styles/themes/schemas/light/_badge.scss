@@ -10,6 +10,7 @@
 /// @property {Map} text-color [igx-contrast-color: ('primary', 500)] - The text color used.
 /// @property {Color} border-color [#fff] - The border color used.
 /// @property {Map} background-color [igx-color: ('primary', 500)] - The background color used.
+/// @property {Number} elevation [1] - The elevation level, between 1-24, to be used for the badge shadow.
 /// @see $default-palette
 $_light-badge: (
     icon-color: (
@@ -24,5 +25,7 @@ $_light-badge: (
 
     background-color: (
         igx-color: ('primary', 500)
-    )
+    ),
+
+    elevation: 1
 );
