@@ -27,11 +27,13 @@
 ///
 /// @param {Color} $tab-ripple-color [null] - The color used for the button background.
 /// @param {Color} $button-ripple-color [null] - The color used for the button background on hover.
+/// @param {Bool} $disable-shadow [true] - Sets the tabs header shadow visibility.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires igx-elevation
 /// @requires text-contrast
 ///
 /// @example scss Set a custom background color
@@ -62,13 +64,17 @@
     $button-hover-color: null,
 
     $tab-ripple-color: null,
-    $button-ripple-color: null
+    $button-ripple-color: null,
+
+    $disable-shadow: true
 ) {
     $name: 'igx-tabs';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
+    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+
     @if not($item-text-color) and $item-background {
-        $item-text-color: text-contrast($item-background);
+        $item-text-color: rgba(text-contrast($item-background), .54);
     }
 
     @if not($item-hover-color) and $item-background {
@@ -83,8 +89,22 @@
         $item-active-icon-color: text-contrast($item-active-background);
     }
 
+    @if not($item-active-icon-color) and $item-background {
+        $item-active-icon-color: text-contrast($item-background);
+    }
+
+    @if not($indicator-color) and $item-background {
+        $indicator-color: text-contrast($item-background);
+    }
+
     @if not($item-active-color) and $item-active-icon-color {
         $item-active-color: $item-active-icon-color;
+    }
+
+
+    // Button
+    @if not($button-color) and $item-background {
+        $button-color: text-contrast($item-background);
     }
 
     @if not($button-color) and $button-background {
@@ -137,9 +157,7 @@
         $tab-ripple-color: text-contrast($item-background);
     }
 
-    @if not($button-ripple-color) and $button-background {
-        $button-ripple-color: text-contrast($button-background);
-    }
+
 
     @return extend($theme, (
         name: $name,
@@ -158,6 +176,7 @@
         button-hover-color:$button-hover-color,
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
+        tab-area-shadow: $tab-area-shadow,
     ));
 }
 
@@ -176,15 +195,11 @@
     $item-min-width: 90px;
     $item-max-width: 360px;
 
-    $item-min-width-small-res: 74px;
-    $item-min-width: 160px;
-
-    $item-max-width: 264px;
-    $item-padding: 0 rem(24px);
+    $item-padding: 0 rem(16px);
     $tabs-height: rem(48px);
-    $tabs-height-icon: rem(77px);
+    $tabs-height-icon: rem(72px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
-    $icon-label-space: rem(10px);
+    $icon-label-space: rem(12px);
 
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
@@ -199,11 +214,7 @@
         align-items: center;
         overflow: hidden;
         background: --var($theme, 'item-background');
-    }
-
-    // ITEM WRAPPER
-    %igx-tabs__content-fixed {
-        min-width: $item-max-width
+        box-shadow: --var($theme, 'tab-area-shadow');
     }
 
     %igx-tabs__content-fixed,
@@ -247,7 +258,7 @@
         overflow: hidden;
         cursor: pointer;
         position: relative;
-        transition: background .3s $tabs-animation-function;
+        transition: all .3s $tabs-animation-function;
         user-select: none;
         background: --var($theme, 'item-background');
         color: --var($theme, 'item-text-color');
@@ -319,9 +330,6 @@
         transform: translateX(0);
         height: 2px;
         min-width: $item-min-width;
-        @media only screen and (max-width: 600px) {
-            min-width: $item-min-width-small-res;
-        }
         background: --var($theme, 'indicator-color');
         transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
     }
@@ -419,3 +427,5 @@
         }
     }
 }
+
+
