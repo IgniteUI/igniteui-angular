@@ -11,9 +11,9 @@
     </igx-prefix>
     <igx-select-item *ngFor="let item of items; let inx=index"
         [value]="item.field"
-        [isHeader]="inx===2"
+        [isHeader]="inx === 2"
         [disabled]="inx === 4"
-        [isSelected]="inx===3"
+        [isSelected]="inx === 4"
          >
         {{ item.field }}
         <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>

@@ -18,11 +18,11 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     }
 
     public get isSelected () {
-        return !this.isHeader && this.selection.is_item_selected(this.dropDown.id, this.value);
+        return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this.value);
     }
 
     public set isSelected (value: any) {
-        if (value && !this.isHeader) {
+        if (value && !this.isHeader && !this.disabled) {
             this.dropDown.selectItem(this);
         }
     }
