@@ -79,17 +79,14 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is depracated.\n` +
         `Use \`selected\` instead.`)
     get isSelected(): boolean {
-        return this._isSelected;
+        return this.selected;
     }
 
     /**
      * @hidden
      */
     set isSelected(value: boolean) {
-        if (this.isHeader) {
-            return;
-        }
-        this._isSelected = value;
+        this.selected = value;
     }
 
     /**
