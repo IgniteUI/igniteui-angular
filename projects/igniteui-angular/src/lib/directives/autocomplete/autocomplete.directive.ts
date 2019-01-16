@@ -94,7 +94,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * @hidden
      */
     @HostBinding('attr.autocomplete')
-    public autofill = 'something-new';
+    public autofill = 'off';
     /**
      * @hidden
      */

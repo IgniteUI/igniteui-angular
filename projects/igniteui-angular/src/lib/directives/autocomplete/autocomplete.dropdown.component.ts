@@ -1,7 +1,7 @@
-import { Component, ElementRef, ChangeDetectorRef, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ChangeDetectorRef, Input, TemplateRef, ViewChild, ViewChildren, QueryList } from '@angular/core';
 import { IgxDropDownBase} from '../../drop-down/drop-down.base';
 import { IGX_DROPDOWN_BASE } from '../../drop-down/drop-down.common';
-import { DropDownActionKey, IgxDropDownItemBase } from '../../drop-down';
+import { DropDownActionKey, IgxDropDownItemBase, IgxDropDownItemComponent } from '../../drop-down';
 import { IgxAutocompleteDirective } from './autocomplete.directive';
 
 @Component({
@@ -14,6 +14,15 @@ export class IgxAutocompleteDropDownComponent extends IgxDropDownBase {
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef) {
         super(elementRef, cdr);
+    }
+
+    private _list: QueryList<IgxDropDownItemBase>;
+    @ViewChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent })
+    public set children(list: QueryList<IgxDropDownItemBase>) {
+        this._list = list;
+    }
+    public get children(): QueryList<IgxDropDownItemBase> {
+        return this._list;
     }
 
     @ViewChild('defaultItemTemplate', { read: TemplateRef })

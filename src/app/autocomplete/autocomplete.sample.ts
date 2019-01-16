@@ -10,12 +10,10 @@ import { IgxAutocompleteDropDownComponent
     providers: [{ provide: IGX_DROPDOWN_BASE, useClass: IgxAutocompleteDropDownComponent }] // ?
 })
 export class AutocompleteSampleComponent {
-    placeholder = 'Please enter a value';
-
-    info;
     town;
     towns;
     townsDetailed;
+    townsGrouped;
 
     constructor() {
         this.towns = [
@@ -31,5 +29,19 @@ export class AutocompleteSampleComponent {
             { id: 3, name: 'Straldja', image: 'https://goo.gl/9XiRZb'},
             { id: 4, name: 'Karnobat', image: 'https://goo.gl/VuWHvR'}
         ];
+
+        this.townsGrouped = [
+            { id: 0, name: 'Jambol', isHeader: true },
+            { id: 1, name: 'Jambol', image: 'https://goo.gl/xxKw77'},
+            { id: 2, name: 'Straldja', image: 'https://goo.gl/9XiRZb'},
+            { id: 3, name: 'Haskovo', isHeader: true },
+            { id: 4, name: 'Topolovgrad', image: 'https://goo.gl/UmhvYF'},
+            { id: 5, name: 'Burgas', isHeader: true },
+            { id: 6, name: 'Karnobat', image: 'https://goo.gl/VuWHvR'}
+        ];
+    }
+
+    customFilter = (value: any, term: any): boolean => {
+        return value.name.toLowerCase().indexOf(term.toLowerCase()) > -1;
     }
 }
