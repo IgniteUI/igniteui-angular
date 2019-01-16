@@ -103,7 +103,8 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('Updating', () => {
-        it('should have separate instances of updating service for parent and children and the same for children of the same island', (async () => {
+        it(`should have separate instances of updating service for
+        parent and children and the same for children of the same island`, (async () => {
             const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
             hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
@@ -131,12 +132,12 @@ describe('IgxHierarchicalGrid Integration', () => {
             // expand 2nd row
             hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
             fixture.detectChanges();
-            firstLayoutInstances[0].updateRow({ ProductName: "Changed" }, '00');
-            firstLayoutInstances[1].updateRow({ ProductName: "Changed" }, '10');
+            firstLayoutInstances[0].updateRow({ ProductName: 'Changed' }, '00');
+            firstLayoutInstances[1].updateRow({ ProductName: 'Changed' }, '10');
             expect(hierarchicalGrid.transactions.getTransactionLog().length).toEqual(0);
             expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(2);
         }));
-    })
+    });
 
     describe('Sorting', () => {
         it('should display correct child data for expanded row after sorting.', (async () => {

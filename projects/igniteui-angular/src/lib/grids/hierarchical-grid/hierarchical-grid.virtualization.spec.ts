@@ -163,16 +163,20 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
-        expect(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top)
-        .toEqual(topOffset);
+        expect(
+            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(topOffset, 10)
+        ).toBeLessThanOrEqual(1);
 
         secondRow.nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
         // collapse second row
         expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toEqual(startIndex);
-        expect(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top)
-        .toEqual(topOffset);
+        expect(
+            parseInt(fixture.debugElement.queryAll(By.css('.igx-display-container'))[1].nativeElement.style.top, 10) -
+            parseInt(topOffset, 10)
+        ).toBeLessThanOrEqual(1);
     });
 
     it('should reset scroll position if neccessary after expanding/collapsing all row.', async() => {
