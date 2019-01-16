@@ -9,6 +9,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxSwitchComponent } from './switch.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
     configureTestSuite();
@@ -23,7 +24,7 @@ describe('IgxSwitch', () => {
                 SwitchInvisibleLabelComponent,
                 IgxSwitchComponent
             ],
-            imports: [FormsModule, IgxRippleModule]
+            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
