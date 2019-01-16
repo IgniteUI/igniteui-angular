@@ -464,7 +464,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     protected inlineEditorTemplate: TemplateRef<any>;
 
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
-    private highlight: IgxTextHighlightDirective;
+    protected highlight: IgxTextHighlightDirective;
 
     /**
      * Sets the current edit value while a cell is in edit mode.
@@ -619,7 +619,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             this.gridAPI.escape_editMode(this.gridID, editableCell.cellID);
         }
         this.cdr.markForCheck();
-        this.grid.refreshSearch();
     }
 
 

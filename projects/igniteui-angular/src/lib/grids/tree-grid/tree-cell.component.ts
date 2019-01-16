@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject } from '@angular/core';
+import { AfterViewInit, Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ViewChildren, QueryList } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -11,7 +11,7 @@ import { IgxGridBaseComponent } from '../grid';
     selector: 'igx-tree-grid-cell',
     templateUrl: 'tree-cell.component.html'
 })
-export class IgxTreeGridCellComponent extends IgxGridCellComponent {
+export class IgxTreeGridCellComponent extends IgxGridCellComponent implements AfterViewInit {
     private treeGridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
@@ -31,6 +31,36 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent {
 
     @ViewChild('defaultContentElement', { read: ElementRef })
     public defaultContentElement: ElementRef;
+
+    /**
+     *@hidden
+     */
+    public ngAfterViewInit() {
+        if (this.highlight) {
+            this.highlight.contentChildElement = this.defaultContentElement;
+
+            if (this.grid.lastSearchInfo.searchText) {
+                this.highlight.highlight(this.grid.lastSearchInfo.searchText,
+                    this.grid.lastSearchInfo.caseSensitive,
+                    this.grid.lastSearchInfo.exactMatch);
+                this.highlight.activateIfNecessary();
+            }
+        }
+    }
+
+    /**
+     * If the provided string matches the text in the cell, the text gets highlighted.
+     * ```typescript
+     * this.cell.highlightText('Cell Value', true);
+     * ```
+     * @memberof IgxGridCellComponent
+     */
+    public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        if (this.highlight) {
+            this.highlight.contentChildElement = this.defaultContentElement;
+        }
+        return super.highlightText(text, caseSensitive, exactMatch);
+    }
 
     /**
      * @hidden

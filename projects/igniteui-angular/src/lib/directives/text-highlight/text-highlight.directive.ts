@@ -152,7 +152,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     @Input('page')
     public page: number;
 
-    @Input()
+    /**
+     * The content child element that should be hidden when there is a highlight
+     */
     public contentChildElement: ElementRef;
 
     /**
