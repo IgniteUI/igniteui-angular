@@ -62,7 +62,7 @@
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template>
-            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [firstCellIndentation]="rowData.cellIndentation" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
+            <igx-grid-summary-row [gridID]="id" #row [summaries]="rowData.summaries" [firstCellIndentation]="rowData.cellIndentation" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
             </igx-grid-summary-row>
         </ng-template>
 
