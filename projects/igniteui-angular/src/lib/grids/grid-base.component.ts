@@ -2223,7 +2223,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._keydownListener = this.keydownHandler.bind(this);
             this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
-        this.calculateGridWidth();
         this.initPinning();
         this.calculateGridSizes();
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -2238,20 +2237,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // In some rare cases we get the AfterViewInit before the grid is added to the DOM
         // and as a result we get 0 width and can't size ourselves properly.
         // In order to prevent that add a mutation observer that watches if we have been added.
-        if (!this.calcWidth && this._width !== undefined) {
+        if (!this.isAttachedToDom) {
             const config = { childList: true, subtree: true };
             let observer: MutationObserver = null;
             const callback = (mutationsList) => {
                 mutationsList.forEach((mutation) => {
                     if (mutation.type === 'childList') {
-                        const addedNodes = new Array(...mutation.addedNodes);
-                        addedNodes.forEach((node) => {
-                            const added = this.checkIfGridIsAdded(node);
+                        for (let i = 0; i < mutation.addedNodes.length; i++) {
+                            const added = this.checkIfGridIsAdded(mutation.addedNodes[i]);
                             if (added) {
-                                this.calculateGridWidth();
+                                this.reflow();
                                 observer.disconnect();
                             }
-                        });
+                        }
                     }
                 });
             };
@@ -3409,9 +3407,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Sets this._height
      */
     protected _derivePossibleHeight() {
-        if ((this._height && this._height.indexOf('%') === -1) || !this._height) {
+        if ((this._height && this._height.indexOf('%') === -1) || !this._height || !this.isAttachedToDom) {
             return;
         }
         if (!this.nativeElement.parentNode || !this.nativeElement.parentNode.clientHeight) {
@@ -3421,18 +3420,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const parentHeight = this.nativeElement.parentNode.getBoundingClientRect().height;
             this._height = this.rowBasedHeight <= parentHeight ? null : this._height;
         }
-        this.calculateGridHeight();
-        this.cdr.detectChanges();
     }
 
     /**
      * @hidden
+     * Sets columns defaultWidth property
      */
     protected _derivePossibleWidth() {
         if (!this._columnWidthSetByUser) {
             this._columnWidth = this.getPossibleColumnWidth();
             this.columnList.forEach((column: IgxColumnComponent) => {
-                column.defaultWidth = this.columnWidth;
+                column.defaultWidth = this._columnWidth;
             });
         }
     }
@@ -3448,10 +3446,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
-
+        this._derivePossibleHeight();
         // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
             this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
@@ -3467,33 +3465,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
 
-        let toolbarHeight = 0;
-        if (this.showToolbar && this.toolbarHtml != null) {
-            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
-                this.toolbarHtml.nativeElement.offsetHeight : 0;
-        }
-
-        let pagingHeight = 0;
-        if (this.paging && this.paginator) {
-            pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.offsetHeight : 0;
-        }
-
         if (!this.summariesHeight) {
             this.summariesHeight = this.summaries ?
                 this.calcMaxSummaryHeight() : 0;
         }
 
-        const groupAreaHeight = this.getGroupAreaHeight();
-
-        if (this._height && this._height.indexOf('%') !== -1) {
-            /*height in %*/
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(computed.getPropertyValue('height'), 10), toolbarHeight, pagingHeight, groupAreaHeight);
-        } else {
-            this.calcHeight = this._calculateGridBodyHeight(
-                parseInt(this._height, 10), toolbarHeight, pagingHeight, groupAreaHeight);
-        }
+        this.calcHeight = this._calculateGridBodyHeight();
     }
 
     /**
@@ -3506,19 +3483,60 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _calculateGridBodyHeight(gridHeight: number,
-        toolbarHeight: number, pagingHeight: number, groupAreaHeight: number) {
+    protected getToolbarHeight(): number {
+        let toolbarHeight = 0;
+        if (this.showToolbar && this.toolbarHtml != null) {
+            toolbarHeight = this.toolbarHtml.nativeElement.firstElementChild ?
+                this.toolbarHtml.nativeElement.offsetHeight : 0;
+        }
+        return toolbarHeight;
+    }
+
+    /**
+     * @hidden
+     */
+    protected getPagingHeight(): number {
+        let pagingHeight = 0;
+        if (this.paging && this.paginator) {
+            pagingHeight = this.paginator.nativeElement.firstElementChild ?
+                this.paginator.nativeElement.offsetHeight : 0;
+        }
+        return pagingHeight;
+    }
+
+    /**
+     * @hidden
+     */
+    protected _calculateGridBodyHeight() {
         const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
             this.tfoot.nativeElement.clientHeight;
-        if (isNaN(gridHeight)) {
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
+        const toolbarHeight = this.getToolbarHeight();
+        const pagingHeight = this.getPagingHeight();
+        const groupAreaHeight = this.getGroupAreaHeight();
+        let gridHeight;
+
+        if (!this.isAttachedToDom) {
+            return null;
+        }
+
+        if (this._height && this._height.indexOf('%') !== -1) {
+            /*height in %*/
+            gridHeight = parseInt(computed.getPropertyValue('height'), 10);
+        } else {
+            gridHeight = parseInt(this._height, 10);
+        }
+        const height = Math.abs(gridHeight - toolbarHeight -
+                this.theadRow.nativeElement.offsetHeight -
+                this.summariesHeight - pagingHeight - groupAreaHeight -
+                footerBordersAndScrollbars -
+                this.scr.nativeElement.clientHeight);
+
+        if (height === 0 || isNaN(gridHeight)) {
             return this.defaultTargetBodyHeight;
         }
 
-        return Math.abs(gridHeight - toolbarHeight -
-            this.theadRow.nativeElement.offsetHeight -
-            this.summariesHeight - pagingHeight - groupAreaHeight -
-            footerBordersAndScrollbars -
-            this.scr.nativeElement.clientHeight);
+        return height;
     }
 
     /**
@@ -3556,6 +3574,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * Sets grid width i.e. this.calcWidth
      */
     protected calculateGridWidth() {
         let width;
@@ -4595,5 +4614,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected getExportCsv(): boolean {
         return this._exportCsv;
+    }
+
+    /**
+     * @hidden
+     */
+    protected get isAttachedToDom(): boolean {
+        return this.document.body.contains(this.nativeElement);
     }
 }
