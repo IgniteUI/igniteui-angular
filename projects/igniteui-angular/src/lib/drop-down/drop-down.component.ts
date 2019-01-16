@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -49,7 +48,7 @@ import { OverlaySettings } from '../services';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
     protected children: QueryList<IgxDropDownItemBase>;
 
     @ViewChild(IgxToggleDirective)
@@ -364,13 +363,3 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    imports: [CommonModule, IgxToggleModule],
-    providers: [IgxSelectionAPIService]
-})
-export class IgxDropDownModule { }

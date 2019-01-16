@@ -12,7 +12,7 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">With
+        <button igxButton="raised" igxRipple [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">With
             action directive</button>
         <igx-drop-down #dropdown2 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
@@ -22,7 +22,7 @@
             </igx-drop-down-item>
         </igx-drop-down>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">igxToggle</button>
+        <button igxButton="raised" igxRipple [igxToggleAction]="toggle" [igxToggleOutlet]="outlet">igxToggle</button>
         <div igxToggle #toggle="toggle" style="height: 300px; overflow: auto">
             <div *ngFor="let item of items">
                 <div class="igx-drop-down__item-template">
@@ -31,13 +31,29 @@
             </div>
         </div>
 
-        <button #button igxButton="raised" igxRipple [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
+        <button igxButton="raised" igxRipple [igxToggleAction]="menu" [igxDropDownItemNavigation]="menu">Menu</button>
         <igx-drop-down #menu (onSelection)="onSelectionMenu($event)" height='400px'>
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
                 </div>
             </igx-drop-down-item>
+        </igx-drop-down>
+
+        <button igxButton="raised" igxRipple [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
+        <igx-drop-down #group (onSelection)="onSelection($event)" height='400px'>
+            <igx-drop-down-group header="A group">
+                <igx-drop-down-item>One</igx-drop-down-item>
+                <igx-drop-down-item>Two</igx-drop-down-item>
+                <igx-drop-down-item>Three</igx-drop-down-item>
+            </igx-drop-down-group>
+            <div>
+                    <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
+                            <div class="igx-drop-down__item-template">
+                                {{ item.field }}
+                            </div>
+                        </igx-drop-down-item>
+            </div>
         </igx-drop-down>
 
 
