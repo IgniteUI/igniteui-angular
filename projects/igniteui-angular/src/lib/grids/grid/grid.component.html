@@ -38,8 +38,9 @@
     </igx-chips-area>
 </div>
 
-<div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
-    <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
+<div style='grid-row:3;'>
+<div class="igx-grid__thead"  role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow style='float:left;overflow:hidden;'>
+    <div class="igx-grid__tr" [style.width.px]='calcWidth + 1' role="row">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-container *ngIf="groupingExpressions.length > 0">
@@ -65,8 +66,11 @@
     </div>
     <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
 </div>
+<!-- <div class="igx-grid__header_scroll_holder" style='float: right;height: 100px;' *ngIf='hasVerticalSroll()' [style.width]="'18px'"></div> -->
+</div>
 
-<div class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
+<div style='grid-row:4;'>
+<div style='float:left;' class="igx-grid__tbody" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
     <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
     <ng-template igxGridFor let-rowData [igxGridForOf]="data | gridTransaction:id:pipeTrigger
@@ -76,7 +80,7 @@
     | gridPaging:page:perPage:id:pipeTrigger
     | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
     | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
-    let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
+    let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>
             <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
@@ -96,9 +100,14 @@
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
 </div>
+    <div style='float:right;' class="igx-grid__vert_scroll" [style.width]="'18px'" [style.height.px]='calcHeight'>
+        <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder>
+        </ng-template>
+    </div>
+</div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot style='overflow:hidden;'>
     <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [indentation]="groupingExpressions.length" [index]="0" class="igx-grid__summaries"  #summaryRow>
     </igx-grid-summary-row>
 </div>

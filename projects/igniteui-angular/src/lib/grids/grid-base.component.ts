@@ -1447,6 +1447,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
 
+        /**
+     * @hidden
+     */
+    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective })
+    public verticalScroll: IgxGridForOfDirective<any>;
+
     /**
      * @hidden
      */
@@ -3685,7 +3691,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getPossibleColumnWidth() {
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
-
+        if (this.hasVerticalSroll()) {
+            computedWidth -= 18;
+        }
         if (this.showRowCheckboxes) {
             computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
         }
@@ -3738,10 +3746,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
+        if (this.hasVerticalSroll()) {
+            width -= 18;
+        }
         if (Number.isFinite(width) && width !== this.calcWidth) {
             this.calcWidth = width;
             this.cdr.markForCheck();
         }
+    }
+
+    public hasVerticalSroll() {
+        return this.verticalScrollContainer.igxForOf &&
+        this.verticalScrollContainer.igxForOf.length > 0 &&
+        !this.verticalScrollContainer.dc.instance.notVirtual;
     }
 
     /**
@@ -3793,9 +3810,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const width = this._width && this._width.indexOf('%') !== -1 ?
+        let width = this._width && this._width.indexOf('%') !== -1 ?
             this.calcWidth :
             parseInt(this._width, 10);
+            if (this.hasVerticalSroll()) {
+                width -= 18;
+            }
         return width - this.getPinnedWidth(takeHidden);
     }
 
