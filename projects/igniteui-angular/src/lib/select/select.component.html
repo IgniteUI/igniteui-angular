@@ -9,7 +9,7 @@
     <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
         readonly= "true"
         [placeholder]="this.placeholder"
-        [(ngModel)]="this.value"
+        [(ngModel)]="this.selectionValue"
         />
     <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
         <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>

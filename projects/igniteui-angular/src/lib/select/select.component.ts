@@ -36,11 +36,30 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
     public children: QueryList<IgxSelectItemComponent>;
 
+    /**
+     * An @Input property that sets how the input value.
+     *
+     */
     @Input() public value: any;
+    /**
+     * An @Input property that sets how input placeholder.
+     *
+     */
     @Input() public placeholder = '';
+    /**
+     * An @Input property that disables the `IgxSelectComponent`.
+     * ```html
+     * <igx-select [disabled]="'true'"></igx-select>
+     * ```
+     */
     @Input() public disabled = false;
 
+    @Input()
+    overlaySettings: OverlaySettings;
 
+    public get selectionValue () {
+        return this.selection.first_item(this.id);
+    }
     public get selectedItem(): any {
         const selectedValue = this.selection.first_item(this.id);
         return this.items.find(x => x.value === selectedValue) ;
@@ -54,7 +73,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         // 2. Select the new item from the drop down
         if (value) {
             this.value = value;
-            this.selection.set(this.id, new Set([this.value]));
+            if (this.items.find(x => x.value === value)) {
+                this.selection.set(this.id, new Set([this.value]));
+            }
         }
     }
 
@@ -94,17 +115,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public open(overlaySettings?: OverlaySettings) {
         super.open({
             modal: false,
-            closeOnOutsideClick: false, // TODO: Test with click handler interaction.
+            closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(
                 this,
                 { target: this.input.nativeElement }
             ),
             scrollStrategy: new AbsoluteScrollStrategy()
         });
-    }
-
-    private calculateItemOffset() {
-
     }
 
     @HostListener('keydown.Enter', ['$event'])
@@ -129,7 +146,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public handleOpeningInteraction (event: KeyboardEvent) {
-
         this.open();
     }
 }
