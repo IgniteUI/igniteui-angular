@@ -127,8 +127,8 @@
         @error '$elevation must be a number';
     }
 
-    @if $elevation < 1 or $elevation > 24 {
-        @error '$elevation must be between 1 and 24';
+    @if $elevation < 0 or $elevation > 24 {
+        @error '$elevation must be between 0 and 24';
     }
 
     @return map-get($elevations, #{$elevation});
@@ -141,7 +141,7 @@
 /// @param {Color} $color-2 - The penumbra shadow color.
 /// @param {Color} $color-3 - The ambient shadow color.
 @function igx-elevations($color-1, $color-2, $color-3) {
-    $result: ();
+    $result: (0: none);
 
     @for $i from 1 through 24 {
         $elevation: (#{$i}: _elevation($i, $color-1, $color-2, $color-3));
