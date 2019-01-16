@@ -48,6 +48,8 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: igx-button-theme(
@@ -59,6 +61,7 @@
 @function igx-button-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $button-roundness: null,
 
@@ -94,7 +97,24 @@
     $disabled-background: null
 ) {
     $name: 'igx-button';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $button-schema: map-get($schema, $name);
+    $theme: apply-palette($button-schema, $palette);
+
+    $raised-resting-elevation: map-get($button-schema, 'raised-resting-elevation');
+    $raised-hover-elevation: map-get($button-schema, 'raised-hover-elevation');
+    $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
+
+    $fab-resting-elevation: map-get($button-schema, 'fab-resting-elevation');
+    $fab-hover-elevation: map-get($button-schema, 'fab-hover-elevation');
+    $fab-focus-elevation: map-get($button-schema, 'fab-focus-elevation');
+
+    $raised-resting-shadow: igx-elevation($elevations, $raised-resting-elevation);
+    $raised-hover-shadow: igx-elevation($elevations, $raised-hover-elevation);
+    $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
+
+    $fab-resting-shadow: igx-elevation($elevations, $fab-resting-elevation);
+    $fab-hover-shadow: igx-elevation($elevations, $fab-hover-elevation);
+    $fab-focus-shadow: igx-elevation($elevations, $fab-focus-elevation);
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -211,14 +231,20 @@
 
         disabled-color: $disabled-color,
         disabled-background: $disabled-background,
+
+        raised-resting-shadow: $raised-resting-shadow,
+        raised-hover-shadow: $raised-hover-shadow,
+        raised-focus-shadow: $raised-focus-shadow,
+
+        fab-resting-shadow: $fab-resting-shadow,
+        fab-hover-shadow: $fab-hover-shadow,
+        fab-focus-shadow: $fab-focus-shadow,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-elevation
 /// @requires rem
-/// @requires $elevations
 /// @requires --var
 @mixin igx-button($theme) {
     @include igx-root-css-vars($theme);
@@ -232,14 +258,8 @@
 
     $button-disabled-shadow: none;
 
-    $button-raised-shadow: igx-elevation($elevations, 2);
-    $button-hover-shadow: igx-elevation($elevations, 4);
-    $button-raised-focus-shadow: igx-elevation($elevations, 8);
-
     $button-floating-width: rem(56px);
     $button-floating-height: $button-floating-width;
-    $button-floating-shadow: igx-elevation($elevations, 6);
-    $button-floating-hover-shadow: igx-elevation($elevations, 12);
 
     $button-icon-width: rem(36px, 16px);
     $button-icon-height: $button-icon-width;
@@ -284,19 +304,19 @@
     %igx-button--raised {
         color: --var($theme, 'raised-text-color');
         background: --var($theme, 'raised-background');
-        box-shadow: $button-raised-shadow;
+        box-shadow: --var($theme, 'raised-resting-shadow');
 
         &:focus,
         &:hover {
             color: --var($theme, 'raised-hover-text-color');
             background: --var($theme, 'raised-hover-background');
-            box-shadow: $button-hover-shadow;
+            box-shadow: --var($theme, 'raised-hover-shadow');
         }
 
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');
-            box-shadow: $button-raised-focus-shadow;
+            box-shadow: --var($theme, 'raised-focus-shadow');
         }
     }
 
@@ -323,18 +343,19 @@
         height: $button-floating-height;
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
-        box-shadow: $button-floating-shadow;
+        box-shadow: --var($theme, 'fab-resting-shadow');
 
         &:hover {
-            box-shadow: $button-floating-hover-shadow;
             color: --var($theme, 'fab-hover-text-color');
             background: --var($theme, 'fab-hover-background');
+            box-shadow: --var($theme, 'fab-hover-shadow');
         }
 
         &:focus,
         &:active {
             color: --var($theme, 'fab-focus-text-color');
             background: --var($theme, 'fab-focus-background');
+            box-shadow: --var($theme, 'fab-focus-shadow');
         }
     }
 
@@ -363,7 +384,7 @@
         color: --var($theme, 'disabled-color') !important;
         background: --var($theme, 'disabled-background') !important;
         pointer-events: none;
-        box-shadow: $button-disabled-shadow;
+        box-shadow: none;
 
         &%igx-button--flat {
             background: transparent !important;
