@@ -125,8 +125,10 @@
 </ng-template>
 
 <ng-template #defaultLoadingGrid>
-    <igx-linear-bar [indeterminate]="true">
-    </igx-linear-bar>
+    <div class="igx-grid__loading">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
 </ng-template>
 
 <ng-template #defaultDropArea>
