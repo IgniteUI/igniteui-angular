@@ -136,6 +136,10 @@
         @extend %igx-grid__th--sortable !optional;
     }
 
+    @include e(th, $m: filtrable) {
+        @extend %igx-grid__th--filtrable !optional;
+    }
+
     @include e(th, $m: sorted) {
         @extend %igx-grid__th--sorted !optional;
     }

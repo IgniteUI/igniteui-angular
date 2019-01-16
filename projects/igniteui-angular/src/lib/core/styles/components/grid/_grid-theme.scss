@@ -931,15 +931,6 @@
         outline-style: none;
         overflow: hidden;
         transition: color 250ms ease-in-out;
-        cursor: pointer;
-
-        &:hover {
-            .sort-icon {
-                opacity: 1;
-            }
-
-            color: igx-color($palette, 'grays', 900);
-        }
     }
 
     %igx-grid__th--sortable {
@@ -948,12 +939,30 @@
         %grid-cell-header-title {
             cursor: pointer;
         }
+
+        &:hover {
+            color: igx-color($palette, 'grays', 900);
+
+            .sort-icon {
+                opacity: 1;
+            }
+        }
     }
 
     %grid-cell-header--filtering {
         background: --var($theme, 'filtering-header-background');
         color: --var($theme, 'filtering-header-text-color');
         z-index: 3;
+    }
+
+    %igx-grid__th--filtrable {
+        cursor: pointer;
+
+        &:hover {
+            %grid-cell-header-title {
+                cursor: pointer;
+            }
+        }
     }
 
     %grid-cell-header--cosy {
@@ -1011,6 +1020,8 @@
     }
 
     %igx-grid__th--sorted {
+        color: igx-color($palette, 'grays', 900);
+
         .sort-icon {
             opacity: 1;
             color: igx-color($palette, 'secondary', 500);
