@@ -15,39 +15,41 @@ export class SelectComponent implements OnInit {
     public value: string;
 //  public value = 'Option 1';
     public ngOnInit() {
-        for (let i = 1; i < 4; i ++) {
+        for (let i = 1; i < 6; i ++) {
             const item = { field: 'Option ' + i };
             this.items.push(item);
         }
 
-        this.igxSelect.onOpening.subscribe((eventArgs: CancelableEventArgs) => {
-            console.log(`onOpening log!: ${eventArgs.cancel}`);
-        });
+        // this.igxSelect.onOpening.subscribe((eventArgs: CancelableEventArgs) => {
+        //     console.log(`onOpening log!: ${eventArgs.cancel}`);
+        // });
 
-        this.igxSelect.onOpened.subscribe(() => {
-            console.log(`onOpened log!`);
-        });
+        // this.igxSelect.onOpened.subscribe(() => {
+        //     console.log(`onOpened log!`);
+        // });
 
-        this.igxSelect.onClosing.subscribe((eventArgs: CancelableEventArgs) => {
-            console.log( `onClosing log!: ${eventArgs.cancel}`);
-        });
+        // this.igxSelect.onClosing.subscribe((eventArgs: CancelableEventArgs) => {
+        //     console.log( `onClosing log!: ${eventArgs.cancel}`);
+        // });
 
-        this.igxSelect.onClosed.subscribe(() => {
-            console.log('onClosed log!');
-        });
+        // this.igxSelect.onClosed.subscribe(() => {
+        //     console.log('onClosed log!');
+        // });
 
-        this.igxSelect.onSelection.subscribe((eventArgs: ISelectionEventArgs) => {
-            console.log(`
-                onSelection log!:
-                newSelection: ${eventArgs.newSelection.value}
-                cancel: ${eventArgs.cancel}`);
-        });
+        // this.igxSelect.onSelection.subscribe((eventArgs: ISelectionEventArgs) => {
+        //     console.log(`
+        //         onSelection log!:
+        //         newSelection: ${eventArgs.newSelection.value}
+        //         cancel: ${eventArgs.cancel}`);
+        // });
     }
 
-    public onSelection(eventArgs: ISelectionEventArgs) {
-        this.value = eventArgs.newSelection.value;
+    public testOnSelection(eventArgs: ISelectionEventArgs) {
+        console.log('testOnSelection.....................');
+
     }
 
-    public openDropDown() {
+    public myOnOpening(evt: CancelableEventArgs) {
+        console.log('myOnOpening.....................: ' + evt.cancel);
     }
 }

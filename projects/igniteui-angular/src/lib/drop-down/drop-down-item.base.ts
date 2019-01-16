@@ -185,7 +185,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     ngDoCheck(): void {
-        if (this.isSelected) {
+        if (this.isSelected && !this.isHeader) {
             const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
             if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);

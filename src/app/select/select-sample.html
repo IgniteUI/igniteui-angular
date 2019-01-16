@@ -3,14 +3,20 @@
     [(ngModel)]="value"
     (onOpening)="myOnOpening($event)"
     [disabled]="false"
+    (onSelection)="testOnSelection($event)"
 >
     <label igxLabel>Sample Label</label>
     <igx-prefix igxPrefix igxButton="icon" igxRipple>
         <igx-icon fontSet="material">alarm</igx-icon>
     </igx-prefix>
-    <igx-select-item *ngFor="let item of items; let index" [value]="item.field"
-        [isSelected]="item.field === 'Option 2'">
+    <igx-select-item *ngFor="let item of items; let inx=index"
+        [value]="item.field"
+        [isHeader]="inx===2"
+        [disabled]="inx === 4"
+        [isSelected]="inx===3"
+         >
         {{ item.field }}
+        <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
     </igx-select-item>
 </igx-select>
 
