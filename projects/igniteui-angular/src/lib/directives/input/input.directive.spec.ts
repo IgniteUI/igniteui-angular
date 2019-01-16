@@ -18,7 +18,7 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
-describe('IgxInput', () => {
+fdescribe('IgxInput', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -201,8 +201,8 @@ describe('IgxInput', () => {
         const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
 
         const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
-        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
-        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
 
         dispatchInputEvent('focus', inputElement, fixture);
         dispatchInputEvent('blur', inputElement, fixture);
