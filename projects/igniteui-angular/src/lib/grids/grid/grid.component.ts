@@ -470,7 +470,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         }
         this.cdr.detectChanges();
         this.calculateGridSizes();
-        this.refreshSearch(true);
     }
 
     /**
@@ -486,7 +485,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
     public clearGrouping(name?: string | Array<string>): void {
         this._gridAPI.clear_groupby(this.id, name);
         this.calculateGridSizes();
-        this.refreshSearch(true);
     }
 
     /**
@@ -717,21 +715,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements OnInit, Do
         }
 
         super.scrollTo(row, column);
-    }
-
-    /**
-     * @hidden
-     */
-    protected resolveFilteredSortedData(): any[] {
-        let data: any[] = super.resolveFilteredSortedData();
-
-        if (this.sortingExpressions &&
-            this.sortingExpressions.length > 0) {
-
-            const sortingPipe = new IgxGridSortingPipe();
-            data = sortingPipe.transform(data, this.sortingExpressions, -1);
-        }
-        return data;
     }
 
     /**

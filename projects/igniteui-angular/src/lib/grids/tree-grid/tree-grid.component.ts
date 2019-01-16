@@ -96,11 +96,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     /**
     * @hidden
     */
-    public processedFlatData: any[];
-
-    /**
-    * @hidden
-    */
     public processedExpandedFlatData: any[];
 
     /**
@@ -389,8 +384,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
                 this.cdr.markForCheck();
-
-                this.refreshSearch();
             }
         } else {
             if (this.primaryKey && this.foreignKey) {
@@ -477,13 +470,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         }
 
         return path.reverse();
-    }
-
-    /**
-     * @hidden
-     */
-    protected resolveFilteredSortedData(): any[] {
-        return this.processedFlatData;
     }
 
     /**

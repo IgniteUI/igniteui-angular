@@ -142,7 +142,6 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 
         grid.processedRootRecords = collection;
         grid.processedRecords = new Map<any, ITreeGridRecord>();
-        grid.processedFlatData = [];
 
         this.getFlatDataRecursive(collection, data, expandedLevels, expandedStates, id, true);
 
@@ -172,7 +171,6 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             this.updateNonProcessedRecordExpansion(grid, hierarchicalRecord);
 
             grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
-            grid.processedFlatData.push(hierarchicalRecord.data);
 
             this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
                 expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded);
@@ -210,8 +208,20 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.treeGridSort(hierarchicalData, expressions);
         }
+        const filteredSortedData = [];
+        this.flattenTreeGridRecords(result, filteredSortedData);
+        grid.filteredSortedData = filteredSortedData;
 
         return result;
+    }
+
+    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
+        if (records && records.length) {
+            for (const record of records) {
+                flatData.push(record.data);
+                this.flattenTreeGridRecords(record.children, flatData);
+            }
+        }
     }
 }
 

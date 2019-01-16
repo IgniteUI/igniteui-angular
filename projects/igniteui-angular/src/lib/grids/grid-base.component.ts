@@ -340,8 +340,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.rowSelectable) {
             this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
         }
-
-        this.refreshSearch(true);
     }
 
     /**
@@ -1646,8 +1644,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = cloneArray(value);
         this.cdr.markForCheck();
-
-        this.refreshSearch(true);
     }
 
     /**
@@ -2166,6 +2162,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _wheelListener = null;
     protected _allowFiltering = false;
     private _filteredData = null;
+    private _filteredSortedData = null;
     private resizeHandler;
     private columnListDiffer;
     private _hiddenColumnsText = '';
@@ -3012,8 +3009,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;
         this.cdr.markForCheck();
-
-        this.refreshSearch();
     }
 
     /**
@@ -3070,7 +3065,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Data needs to be recalculated if transactions are in place
         // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
         const dataAfterDelete = this.transactions.enabled ? this.dataWithAddedInTransactionRows : data;
-        this.refreshSearch();
         if (dataAfterDelete.length % this.perPage === 0 && dataAfterDelete.length / this.perPage - 1 < this.page && this.page !== 0) {
             this.page--;
         }
@@ -3122,7 +3116,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     this.gridAPI.escape_editMode(this.id, editableCell.cellID);
                 }
                 this.cdr.markForCheck();
-                this.refreshSearch();
             }
         }
     }
@@ -3148,7 +3141,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.gridAPI.update_row(value, this.id, rowSelector);
             this.cdr.markForCheck();
-            this.refreshSearch();
         }
     }
 
@@ -4197,30 +4189,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns an array containing the filtered data.
+     * Returns an array containing the filtered sorted data.
      * ```typescript
-     * const filteredData = this.grid1.filteredSortedData;
+     * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
 	 * @memberof IgxGridBaseComponent
      */
     get filteredSortedData(): any[] {
-        return this.resolveFilteredSortedData();
+        return this._filteredSortedData;
     }
-
-    /**
-     * @hidden
-     */
-    protected resolveFilteredSortedData(): any[] {
-        let data: any[] = this.filteredData ? this.filteredData : this.data;
-        if (!this.filteredData && this.transactions.enabled) {
-            data = DataUtil.mergeTransactions(
-                cloneArray(data),
-                this.transactions.getAggregatedChanges(true),
-                this.primaryKey
-            );
-        }
-
-        return data;
+    set filteredSortedData(value: any[]) {
+        this._filteredSortedData = value;
+        this.refreshSearch(true);
     }
 
     /**
