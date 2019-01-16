@@ -9,7 +9,9 @@ import {
     Input,
     OnDestroy,
     Optional,
-    Self
+    Self,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { AbstractControl, FormControlName, NgControl, NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -295,7 +297,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     private checkValidity() {
-        if (!this.ngControl && this._hasValidators) {
+        if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
