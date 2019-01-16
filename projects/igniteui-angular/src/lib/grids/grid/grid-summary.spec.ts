@@ -956,7 +956,7 @@ describe('IgxGrid - Summaries', () => {
 
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            cell = grid.getCellByColumn(2, 'ID')
+            cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
             await HelperUtils.navigateVerticallyToIndex(grid, 2, 11, 0);
@@ -1348,14 +1348,14 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
 
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(50);
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['19', '25',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['19', '25']);
         }));
 
         it('Grouping: Update row and change grouping', (async () => {
@@ -1375,16 +1375,16 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 2, ['Count'], ['3']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
 
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(50);
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['1']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '25',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '25']);
 
             // Undo transactions
             grid.transactions.undo();
@@ -1416,24 +1416,24 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
 
             // Undo transactions
             grid.transactions.undo();
             fix.detectChanges();
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
 
             // Redo transactions
             grid.transactions.redo();
             fix.detectChanges();
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '44']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['19', '19']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
         });
 
@@ -1468,9 +1468,9 @@ describe('IgxGrid - Summaries', () => {
             expect(groupRows[1].groupRow.value).toEqual(19);
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60']);
 
             // Undo transactions
             grid.transactions.undo();
@@ -1478,9 +1478,9 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(17);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['25', '50']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50']);
 
             // Redo transactions
             grid.transactions.redo();
@@ -1490,9 +1490,9 @@ describe('IgxGrid - Summaries', () => {
             expect(groupRows[0].groupRow.value).toEqual(-2);
             expect(groupRows[1].groupRow.value).toEqual(19);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '60']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['19', '60']);
         });
 
         it('Grouping: Update cell and change grouping', (async () => {
@@ -1506,9 +1506,9 @@ describe('IgxGrid - Summaries', () => {
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 2, ['Count'], ['1']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['27', '27',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 2, 4, ['Min', 'Max'], ['27', '27']);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 2, ['Count'], ['1']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 4, ['Min', 'Max'], ['50', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 5, 4, ['Min', 'Max'], ['50', '50']);
             let groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(17);
@@ -1524,14 +1524,14 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
 
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 2, ['Count'], ['3']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 15, 4, ['Min', 'Max'], ['25', '50']);
 
             // Undo transactions
             grid.transactions.undo();
             await wait(50);
             fix.detectChanges();
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 17, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 17, 4, ['Min', 'Max'], ['25', '44',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 17, 4, ['Min', 'Max'], ['25', '44']);
 
             grid.transactions.clear();
             fix.detectChanges();
@@ -1541,7 +1541,7 @@ describe('IgxGrid - Summaries', () => {
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(17);
             HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['2']);
-            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50',]);
+            HelperUtils.verifyColumnSummariesBySummaryRowIndex(fix, 3, 4, ['Min', 'Max'], ['27', '50']);
         }));
     });
 

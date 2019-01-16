@@ -310,6 +310,7 @@ export class IgxTreeGridSummariesKeyComponent {
         <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="false"></igx-column>
         <igx-column [field]="'Age'" dataType="number" [hasSummary]="true" [summaries]="ageSummary"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number" [hasSummary]="false"></igx-column>
     </igx-tree-grid>
     `
     , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]

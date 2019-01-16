@@ -519,8 +519,8 @@ describe('IgxTreeGrid - Summaries', () => {
 
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-           HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Feb 1, 2010', 'Feb 22, 2014']);
-           HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '42', '61', '152', '50.667']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['3', 'Feb 1, 2010', 'Feb 22, 2014']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['3', '42', '61', '152', '50.667']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
 
             verifySummaryForRow847(fix, 5);
@@ -673,9 +673,9 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '0']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
 
-             // Undo transactions
-             treeGrid.transactions.undo();
-             fix.detectChanges();
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
 
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -701,43 +701,385 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '0']);
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
 
-             // Commit transactions
-             treeGrid.transactions.commit(fix.componentInstance.data);
-             fix.detectChanges();
+            // Commit transactions
+            treeGrid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
 
-             expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
-             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
-             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
         });
 
-        fit('Delete not visible root node', () => {
+        it('Delete a root node with cascadeOnDelete set to false', () => {
+            treeGrid.cascadeOnDelete = false;
             treeGrid.expandAll();
             fix.detectChanges();
 
-            treeGrid.deleteRow(17);
+            treeGrid.deleteRow(147);
             fix.detectChanges();
 
-            // let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '55']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
-            //  // Undo transactions
-            //  treeGrid.transactions.undo();
-            //  fix.detectChanges();
+            // Verify summary is updated
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
 
-            // summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '61']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
-            // // Redo transactions
-            // treeGrid.transactions.redo();
-            // fix.detectChanges();
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
 
-            // summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '55']);
-            // HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['3']);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+
+            // Commit transactions
+            treeGrid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['6']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 5);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
         });
+
+        it('Delete child node', () => {
+            treeGrid.deleteRow(317);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '0']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['0', '0']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['0']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+
+            // Celar transactions
+            treeGrid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+        });
+
+        it('Delete child node cascadeOnDelete set to false', () => {
+            treeGrid.cascadeOnDelete = false;
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            treeGrid.deleteRow(317);
+            fix.detectChanges();
+
+            // Verify summaries are not changed
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+
+            // Commit
+            treeGrid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['6']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+        });
+
+        it('Add root node', () => {
+            const newRow = {
+                ID: 11,
+                ParentID: -1,
+                Name: 'New Employee',
+                HireDate: new Date(1984, 3, 3),
+                Age: 70
+            };
+            treeGrid.addRow(newRow);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '70']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '61']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '70']);
+
+            // Commit transactions
+            treeGrid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
+        });
+
+        it('Add child node', () => {
+            const newRow = {
+                ID: 11,
+                ParentID: 317,
+                Name: 'New Employee',
+                HireDate: new Date(1984, 3, 3),
+                Age: 70
+            };
+            treeGrid.addRow(newRow);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '70']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 8);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '70']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 8);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+        });
+
+        it('Update root node', () => {
+            const newRow = {
+                ID: 847,
+                ParentID: -1,
+                Name: 'New Employee',
+                HireDate: new Date(1984, 3, 3),
+                Age: 13
+            };
+            treeGrid.updateRow(newRow, 847);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '61']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '61']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count'], ['4']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '61']);
+
+            // Commit transactions
+            treeGrid.transactions.commit(fix.componentInstance.data);
+            fix.detectChanges();
+
+            expect(HelperUtils.getAllVisbleSummariesLength(fix)).toEqual(1);
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+        });
+
+        it('Update child node', () => {
+            const newRow = {
+                ID: 317,
+                ParentID: 147,
+                Name: 'New Employee',
+                HireDate: new Date(1984, 3, 3),
+                Age: 13
+            };
+            treeGrid.updateRow(newRow, 317);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '61']);
+
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '43']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '43']);
+        });
+
+        fit('Update child node and change tree structure', () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 317,
+                ParentID: -1,
+                Name: 'New Employee',
+                HireDate: new Date(1984, 3, 3),
+                Age: 13
+            };
+            treeGrid.getRowByKey(317).update(newRow);
+            fix.detectChanges();
+
+            let summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '61']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            // Undo transactions
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
+
+            // Redo transactions
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '61']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            // Celar transactions
+            treeGrid.transactions.clear();
+            fix.detectChanges();
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 6);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '44']);
+
+            summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 7);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
+        });
+
     });
 
     it('should render correct custom summaries', () => {
@@ -784,7 +1126,7 @@ describe('IgxTreeGrid - Summaries', () => {
         verifySummaryForRow847(fix, 6);
     });
 
-    it('should render rows correctly after collapse and expand', async() => {
+    it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
         fix.detectChanges();
         await wait(16);
