@@ -116,6 +116,11 @@
             }
         }
     }
+
+    igx-action-icon {
+        display: flex;
+        align-items: center;
+    }
 }
 
 /// Adds typography styles for the igx-navbar component.

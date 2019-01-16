@@ -5,13 +5,14 @@ import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxTabs', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent, TabsTestSelectedTabComponent],
-            imports: [IgxTabsModule]
+            imports: [IgxTabsModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
@@ -373,7 +374,7 @@ class TabsTestComponent {
 
 @Component({
     template: `
-        <div #wrapperDiv>
+        <div #wrapperDiv style="display:flex">
             <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
             </igx-tabs>
