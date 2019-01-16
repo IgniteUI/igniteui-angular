@@ -28,6 +28,8 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Change the background, text, and border colors
 ///   $my-button-group-theme: igx-button-group-theme(
@@ -40,6 +42,7 @@
 @function igx-button-group-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $item-text-color: null,
     $item-background: null,
@@ -56,7 +59,12 @@
     $item-selected-border-color: null
 ) {
     $name: 'igx-button-group';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $button-group-schema: map-get($schema, $name);
+    $theme: apply-palette($button-group-schema, $palette);
+
+    $elevation: map-get($button-group-schema, 'elevation');
+    $shadow: igx-elevation($elevations, $elevation);
+    $border: 1px solid map-get($theme, 'item-selected-border-color');
 
     @if not($item-text-color) and $item-background  {
         $item-text-color: text-contrast($item-background);
@@ -90,6 +98,10 @@
         $disabled-text-color: rgba(text-contrast($item-background), .3);
     }
 
+    @if map-get($button-group-schema, 'elevation') > 0 {
+        $border: none;
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -105,7 +117,10 @@
 
         item-selected-text-color: $item-selected-text-color,
         item-selected-background: $item-selected-background,
-        item-selected-border-color: $item-selected-border-color
+        item-selected-border-color: $item-selected-border-color,
+
+        border: $border,
+        shadow: $shadow
     ));
 }
 
@@ -113,15 +128,11 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires igx-color
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires --var
 @mixin igx-button-group($theme) {
     @include igx-root-css-vars($theme);
 
     $group-radius: 4px;
-    $group-shadow: igx-elevation($elevations, 2);
-
     $group-item-min-width: 24px;
     $group-item-min-height: 36px;
     $group-item-border-thickness: 1px;
@@ -133,8 +144,9 @@
         display: flex;
         flex-flow: row nowrap;
         justify-content: center;
+        border: --var($theme, 'border');
         border-radius: $group-radius;
-        box-shadow: $group-shadow;
+        box-shadow: --var($theme, 'shadow');
         transition: box-shadow .2s ease;
         overflow: hidden;
         background-color: --var($theme, 'item-background');
