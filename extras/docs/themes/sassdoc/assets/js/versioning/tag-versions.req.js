@@ -1,6 +1,8 @@
-(function() {
+(function () {
+    const baseUrl = $('body').data('base-url');
+
     $.ajax({
-        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.jsonhttp://10.14.0.51/test.json",
+        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.json",
         type: "get",
         xhrFields: {
             withCredentials: false
@@ -11,7 +13,7 @@
 
         folders.forEach(f => {
             select.append($('<option>', {
-                value: f,
+                value: `${baseUrl}/angular-docs/${f}/sass`,
                 text: f
             }));
         });
@@ -24,5 +26,6 @@
     $('#versions').on('change', (...rest) => {
         const val = $('#versions').val();
         sessionStorage.apiVersion = val;
-    })
+        window.location.replace(val);
+    });
 })();
