@@ -714,8 +714,7 @@ describe('IgxGrid - search API', () => {
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
-        fit('should keep the active highlight when active cell enters and exits edit mode', async () => {
-            // pending('When the cell enters edit mode, the highlight stays and the content is doubled! Happens in tests only!');
+        it('should keep the active highlight when active cell enters and exits edit mode', async () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             const cell = grid.getCellByColumn(0, 'ID');
             const initialValue = rv.textContent;
@@ -732,7 +731,6 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).not.toBeNull();
 
             cell.inEditMode = true;
-            // fix.detectChanges();
             await wait(16);
             fix.detectChanges();
 
@@ -750,9 +748,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).not.toBeNull();
         });
 
-        fit('should update highlights when a new value is entered', async () => {
-            // pending('When the cell enters edit mode, the highlight stays and the content is doubled! Happens in tests only!');
-
+        it('should update highlights when a new value is entered', async () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
             const cell = grid.getCellByColumn(0, 'ID');
             cell.column.editable = true;
