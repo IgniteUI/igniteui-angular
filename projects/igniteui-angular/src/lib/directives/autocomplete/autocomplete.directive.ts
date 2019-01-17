@@ -137,8 +137,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         if (this.collapsed) {
             this.open();
+        } else {
+            this.filter();
+            this.highlightItem();
         }
-        this.filter();
     }
     @HostListener('blur', ['$event'])
     onBlur() {
@@ -156,7 +158,16 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     //#endregion
 
     //#region public methods
-    open() {
+    close() {
+        if (!this.collapsed) {
+            this.overlay.hide(this.id);
+        }
+    }
+    //#endregion
+
+    //#region private methods
+
+    private open() {
         this.overlay.onOpening
             .pipe(first())
             .subscribe(event => {
@@ -164,13 +175,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 this.target = this.ref.instance;
                 this.target.collapsed = false;
                 this.createAutocompleteDropDown(this.target as IgxAutocompleteDropDownComponent); // ?
+                this.filter();
             });
         this.overlay.onOpened
             .pipe(first())
             .subscribe(() => {
-                if (this.highlightMatch) {
-                    this.onArrowDownKeyDown();
-                }
+                this.highlightItem();
             });
         this.overlay.onClosing
             .pipe()
@@ -181,17 +191,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.id = this.overlay.show(IgxAutocompleteDropDownComponent, this.overlaySettings);
     }
 
-    close() {
-        if (!this.collapsed) {
-            this.overlay.hide(this.id);
-        }
-    }
-
-    filter() {
+    private filter () {
         (this.target as IgxAutocompleteDropDownComponent).term = this.nativeElement.value;
     }
 
-    select = (value: ISelectionEventArgs) => { // ?
+    private select = (value: ISelectionEventArgs) => { // ?
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
@@ -201,9 +205,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
     }
-    //#endregion
 
-    //#region private methods
     private createAutocompleteDropDown(dropdown: IgxAutocompleteDropDownComponent) { // ?
         dropdown.autocomplete = this;
         dropdown.data = this.data;
@@ -211,6 +213,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         dropdown.itemTemplate = this.itemTemplate;
         dropdown.condition = this.condition;
         dropdown.onSelection.subscribe(this.select);
+    }
+
+    private highlightItem() {
+        if (this.highlightMatch) {
+            this.onArrowDownKeyDown();
+        }
     }
     //#endregion
 }
