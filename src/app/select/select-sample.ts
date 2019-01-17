@@ -12,10 +12,9 @@ export class SelectComponent implements OnInit {
 
     @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
     public items: any[] = [];
-    public value: string;
-    // Force selected value potentially disabled
-    // https://stackblitz.com/edit/angular-mat-select-disabled-value-bound?file=app%2Fselect-disabled-example.html
-    // public value = 'Option 5';
+    //public value: string;
+
+    public value = 'notContainedInItemsValue';
     public ngOnInit() {
         for (let i = 1; i < 6; i ++) {
             const item = { field: 'Option ' + i };

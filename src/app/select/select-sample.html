@@ -1,4 +1,4 @@
-<igx-select
+<igx-select #select
     [width]="'260px'" [placeholder]="'Pick One'"
     [(ngModel)]="value"
     (onOpening)="myOnOpening($event)"
@@ -9,6 +9,7 @@
     <igx-prefix igxPrefix igxButton="icon" igxRipple>
         <igx-icon fontSet="material">alarm</igx-icon>
     </igx-prefix>
+    <igx-select-item>None</igx-select-item>
     <igx-select-item *ngFor="let item of items; let inx=index"
         [value]="item.field"
         [isHeader]="inx === 2"
@@ -19,6 +20,18 @@
         <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
     </igx-select-item>
 </igx-select>
-
-<span>Selected: {{value}}</span>
+<br/>
+<div style="padding-left: 50px">
+    <span>IgxSelect value:
+        <span class="spanValue">{{value}}</span>
+    </span>
+    <br/>
+    <span>input element value:
+        <span class="spanValue">{{select.input.value}}</span>
+    </span>
+    <br/>
+    <span>selectedItem value:
+        <span class="spanValue">{{select.selectedItem.value}}</span>
+    </span>
+</div>
 
