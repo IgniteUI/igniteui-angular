@@ -970,7 +970,6 @@ describe('igxCombo', () => {
             let targetItem: IgxDropDownItemBase;
             targetItem = combo.dropdown.items[5] as IgxDropDownItemBase;
             expect(targetItem).toBeDefined();
-            combo.dropdown.selectItem(targetItem);
             expect(targetItem.itemIndex).toEqual(5);
 
             combo.dropdown.selectItem(targetItem);

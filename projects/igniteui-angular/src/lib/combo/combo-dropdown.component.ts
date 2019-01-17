@@ -94,7 +94,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden
      */
     public navigatePrev() {
-        if (this._focusedItem.index === 0 && this.verticalScrollContainer.state.startIndex === 0) {
+        if (this._focusedItem.itemIndex === 0 && this.verticalScrollContainer.state.startIndex === 0) {
             this.combo.focusSearchInput(false);
         } else {
             super.navigatePrev();
