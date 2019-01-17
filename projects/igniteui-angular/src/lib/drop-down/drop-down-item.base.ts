@@ -130,13 +130,13 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
         `Use \`focused\` instead.`)
     get isFocused(): boolean {
-        return (!this.isHeader && !this.disabled) && this._isFocused;
+        return this.focused;
     }
     /**
      * @hidden
      */
     set isFocused(value: boolean) {
-        this._isFocused = value;
+        this.focused = value;
     }
 
     /**
