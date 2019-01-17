@@ -745,9 +745,9 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="1000px"  width="900px" [primaryKey]="'ID'"`, '',
-    ColumnDefinitions.summariesGoupByColumns)}`
+    ColumnDefinitions.summariesGroupByColumns)}`
 })
-export class SummarieGroupByComponent extends BasicGridComponent {
+export class SummariesGroupByComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
@@ -756,10 +756,10 @@ export class SummarieGroupByComponent extends BasicGridComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="600px"  width="900px" [primaryKey]="'ID'"`, '',
-    ColumnDefinitions.summariesGoupByTansColumns)}`,
+    ColumnDefinitions.summariesGroupByTansColumns)}`,
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
-export class SummarieGroupByTransactionsComponent extends BasicGridComponent {
+export class SummariesGroupByTransactionsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
@@ -768,9 +768,9 @@ export class SummarieGroupByTransactionsComponent extends BasicGridComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="800px"  width="400px" [primaryKey]="'ID'"`, '',
-    ColumnDefinitions.summariesGoupByColumns)}`
+    ColumnDefinitions.summariesGroupByColumns)}`
 })
-export class SummarieGroupByWithScrollsComponent extends BasicGridComponent {
+export class SummariesGroupByWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;

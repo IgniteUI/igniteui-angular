@@ -284,6 +284,24 @@ export class IgxTreeGridSummariesComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
+    width="400px" height="800px">
+        <igx-column [field]="'ID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesKeyScroliingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
         width="900px" height="1000px" summaryCalculationMode="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
