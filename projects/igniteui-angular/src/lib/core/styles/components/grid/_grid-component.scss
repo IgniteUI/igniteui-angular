@@ -24,6 +24,10 @@
         }
     }
 
+    @include e(thead-container) {
+        @extend %grid-thead-container !optional;
+    }
+
     @include e(thead-title) {
         @extend %grid-cell-display !optional;
         @extend %grid-cell-header !optional;
@@ -50,6 +54,10 @@
         @extend %grid-tbody !optional;
     }
 
+    @include e(tbody-container) {
+        @extend %grid-tbody-container !optional;
+    }
+
     @include e(tbody-message) {
         @extend %grid-tbody-message !optional;
     }
@@ -64,6 +72,10 @@
 
     @include e(scroll-main) {
         @extend %grid-scroll-main !optional;
+    }
+
+    @include e(scroll-thumb) {
+        @extend %grid-scroll-thumb !optional;
     }
 
     @include e(tfoot) {
@@ -391,7 +403,7 @@
 
         @include e(thead-title) {
             @extend %grid-thead-title--cosy !optional;
-        }
+        }        
 
         @include e(th-title) {
             @extend %grid-cell-header-title--cosy !optional;

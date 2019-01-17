@@ -3666,7 +3666,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getGroupAreaHeight(): number {
         return 0;
     }
-
     /**
      * @hidden
      */
@@ -3685,6 +3684,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.scr.nativeElement.clientHeight);
     }
 
+    public get headerHeight() {
+       return this.theadRow ? this.theadRow.nativeElement.clientHeight : 0;
+    }
     /**
      * @hidden
      */

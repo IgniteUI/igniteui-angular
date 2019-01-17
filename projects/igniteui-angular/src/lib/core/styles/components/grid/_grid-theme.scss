@@ -527,7 +527,6 @@
     }
 
     %grid-thead {
-        grid-row: 3;
         border-bottom: $grid-header-border;
         z-index: 2;
 
@@ -545,6 +544,11 @@
         %grid-row:last-of-type {
             border-bottom: none;
         }
+    }
+
+    %grid-thead-container {
+        grid-row: 3;
+        display: flex;
     }
 
     %grid-thead--cosy {
@@ -617,11 +621,14 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 4;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
         z-index: 1;
+    }
+    %grid-tbody-container {
+        display: flex;
+        grid-row: 4;
     }
 
     %grid-tbody-message {
@@ -639,6 +646,11 @@
         width: 100%;
         background: --var($theme, 'header-background');
         z-index: 10001;
+    }
+
+    %grid-scroll-thumb {
+        display: inline-flex;
+        background: --var($theme, 'header-background');
     }
 
     %grid-scroll-start {
@@ -1064,7 +1076,8 @@
     }
 
     %grid-summaries {
-        display: flex;
+        overflow: hidden;
+        display: inline-flex;
         background: --var($theme, 'root-summaries-background');
 
         // %igx-grid-summary__label,
@@ -1387,7 +1400,7 @@
         padding-left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
-    %igx-grid__grouparea {
+    %igx-grid__grouparea {        
         grid-row: 2;
         display: flex;
         align-items: center;
