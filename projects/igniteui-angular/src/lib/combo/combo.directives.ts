@@ -54,3 +54,12 @@ export class IgxComboHeaderItemDirective {
 })
 export class IgxComboAddItemDirective {
 }
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxComboButton]'
+})
+export class IgxComboButtonDirective {
+}

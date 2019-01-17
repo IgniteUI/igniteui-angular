@@ -10,7 +10,8 @@ import {
     IgxComboHeaderItemDirective,
     IgxComboHeaderDirective,
     IgxComboFooterDirective,
-    IgxComboAddItemDirective
+    IgxComboAddItemDirective,
+    IgxComboButtonDirective
 } from './combo.directives';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
@@ -25,7 +26,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
@@ -207,6 +208,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
+
+    @ContentChild(IgxComboButtonDirective, { read: TemplateRef })
+    public suffixTemplate: TemplateRef<any> = null;
+
     /**
      * @hidden
      */
@@ -547,6 +552,18 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @Input()
     public placeholder = '';
+
+    /**
+     * @hidden
+     */
+    public get inputEmpty(): boolean {
+        return !this.value && !this.placeholder;
+    }
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxInputGroupComponent, { read: IgxInputGroupComponent })
+    public inputGroups: QueryList<IgxInputGroupComponent>;
 
     /**
      * Defines the placeholder value for the combo dropdown search field
@@ -1448,14 +1465,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
-        IgxComboAddItemDirective],
+        IgxComboAddItemDirective,
+        IgxComboButtonDirective],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
-        IgxComboAddItemDirective],
+        IgxComboAddItemDirective,
+        IgxComboButtonDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: [IgxSelectionAPIService]
