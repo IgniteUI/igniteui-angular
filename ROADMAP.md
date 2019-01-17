@@ -19,7 +19,7 @@
 2. Row-pinning
 3. Column Groups expand/collapse, with column grouping templates
 4. Visual Cell merging 
-5. Multi-Row Layout 
+5. Grid Multi-Row Layout 
 
 
 # Previous Milestones
