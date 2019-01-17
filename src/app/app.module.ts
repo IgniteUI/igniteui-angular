@@ -78,7 +78,8 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
-import { GridSearchComponent } from './grid-search-box/grid-search-box.component';
+import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
+import { GridSearchComponent } from './grid-search/grid-search.sample';
 
 const components = [
     AppComponent,
@@ -146,6 +147,7 @@ const components = [
     RadioSampleComponent,
     TooltipSampleComponent,
     GridColumnPercentageWidthsSampleComponent,
+    GridSearchBoxComponent,
     GridSearchComponent
 ];
 

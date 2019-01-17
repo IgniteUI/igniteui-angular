@@ -6,7 +6,7 @@ import { IgxGridBaseComponent } from 'igniteui-angular';
     styleUrls: ['./grid-search-box.component.css'],
     templateUrl: './grid-search-box.component.html'
 })
-export class GridSearchComponent {
+export class GridSearchBoxComponent {
     @Input()
     public grid: IgxGridBaseComponent;
 
