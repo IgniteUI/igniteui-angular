@@ -285,8 +285,10 @@ describe('IgxDatePicker', () => {
         fix.detectChanges();
 
         const dom = fix.debugElement;
-        expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
+        const inputGroup = dom.query(By.css('.igx-input-group'));
+        expect(inputGroup).not.toBeNull();
         expect(dom.query(By.css('.igx-icon'))).toBeNull();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     }));
 
     it('Should be able to deselect using the API.', () => {
@@ -439,7 +441,7 @@ export class IgxDatePickerNgModelComponent {
     <ng-template igxDatePickerTemplate let-displayData="displayData">
         <igx-input-group>
             <label igxLabel>Date</label>
-            <input igxInput [value]="displayData"/>
+            <input igxInput [value]="displayData" required />
         </igx-input-group>
     </ng-template>
 </igx-date-picker>

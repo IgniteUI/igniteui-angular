@@ -818,8 +818,10 @@ describe('IgxTimePicker', () => {
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
-        expect(dom.query(By.css('.igx-input-group'))).not.toBeNull();
+        const inputGroup = dom.query(By.css('.igx-input-group'));
+        expect(inputGroup).not.toBeNull();
         expect(dom.query(By.css('.igx-icon'))).toBeNull();
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     }));
 
     // https://github.com/IgniteUI/igniteui-angular/issues/2470
@@ -1514,7 +1516,7 @@ export class IgxTimePickerWithItemsDeltaValueComponent {
     <ng-template igxTimePickerTemplate let-displayTime="displayTime">
         <igx-input-group>
             <label igxLabel>Time</label>
-            <input igxInput [value]="displayTime"/>
+            <input igxInput [value]="displayTime" required/>
         </igx-input-group>
     </ng-template>
 </igx-time-picker>
