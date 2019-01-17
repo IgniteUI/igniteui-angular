@@ -270,10 +270,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         const result = editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
                                       this.cellID.columnID === editableCell.cellID.columnID : false;
 
-        if (result && !this._cellEditMode && this.highlight && this.grid.lastSearchInfo.searchText) {
+        if (result && !this._inEditMode && this.highlight && this.grid.lastSearchInfo.searchText) {
             this.highlight.observe();
         }
-        this._cellEditMode = result;
+        this._inEditMode = result;
 
         return result;
     }
@@ -498,7 +498,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
-    private _cellEditMode: boolean;
+    private _inEditMode: boolean;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
