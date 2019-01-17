@@ -42,14 +42,14 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         elem.scrollTop = 1000;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        await wait(100);
         expect(firstRow.expanded).toBeFalsy();
 
         // scroll to top
         elem.scrollTop = 0;
         fixture.detectChanges();
         fixture.componentRef.hostView.detectChanges();
-        await wait();
+        await wait(100);
         expect(firstRow.expanded).toBeTruthy();
     });
 
