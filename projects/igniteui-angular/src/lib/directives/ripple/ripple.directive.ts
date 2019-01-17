@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, NgModule, NgZone, Renderer2 } from '@angular/core';
+import { AnimationBuilder, style, animate } from '@angular/animations';
 
 @Directive({
     selector: '[igxRipple]'
@@ -85,17 +86,11 @@ export class IgxRippleDirective {
 
     private rippleElementClass = 'igx-ripple__inner';
     private rippleHostClass = 'igx-ripple';
-
-    private animationFrames = [
-        { opacity: 0.5, transform: 'scale(.3)' },
-        { opacity: 0, transform: 'scale(2)' }
-    ];
-
-
     private _centered = false;
     private animationQueue = [];
 
     constructor(
+        protected builder: AnimationBuilder,
         protected elementRef: ElementRef,
         protected renderer: Renderer2,
         private zone: NgZone) { }
@@ -146,16 +141,23 @@ export class IgxRippleDirective {
         this.renderer.addClass(target, this.rippleHostClass);
         this.renderer.appendChild(target, rippleElement);
 
-        const animation = rippleElement.animate(this.animationFrames, { duration: this.rippleDuration, fill: 'forwards' });
+        const animation = this.builder.build([
+            style({ opacity: 0.5, transform: 'scale(.3)' }),
+            animate(this.rippleDuration, style({ opacity: 0, transform: 'scale(2)' }))
+        ]).create(rippleElement);
+
         this.animationQueue.push(animation);
 
-        animation.onfinish = () => {
+        animation.onDone(() => {
             this.animationQueue.splice(this.animationQueue.indexOf(animation), 1);
             target.removeChild(rippleElement);
             if (this.animationQueue.length < 1) {
                 this.renderer.removeClass(target, this.rippleHostClass);
             }
-        };
+        });
+
+        animation.play();
+
     }
 }
 /**
