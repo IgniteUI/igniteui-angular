@@ -41,6 +41,10 @@ export class AutocompleteSampleComponent {
         ];
     }
 
+    customSettings = {
+        closeOnOutsideClick: false
+    };
+
     customFilter = (value: any, term: any): boolean => {
         return value.name.toLowerCase().indexOf(term.toLowerCase()) > -1;
     }

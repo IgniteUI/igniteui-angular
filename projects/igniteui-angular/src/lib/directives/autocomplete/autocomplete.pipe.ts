@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'igxautocomplete'
+    name: 'filter'
 })
 export class IgxAutocompletePipe implements PipeTransform {
     public transform(collection: any[], condition = this.defaultCondition, term) {

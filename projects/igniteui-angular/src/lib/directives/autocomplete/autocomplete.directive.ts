@@ -74,6 +74,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @Input('igxAutocompleteItemTemplate')
     protected itemTemplate: TemplateRef<any>;
 
+    @Input('igxAutocompleteHighlightMatch')
+    protected highlightMatch = false;
+
     // @Input() width: number;
     // @Input() itemHeight: number;
     // @Input() itemsMaxHeight: number;
@@ -153,13 +156,21 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     //#endregion
 
     //#region public methods
-    open = () => {
+    open() {
         this.overlay.onOpening
             .pipe(first())
             .subscribe(event => {
                 this.ref = event.componentRef as ComponentRef<IgxAutocompleteDropDownComponent>;
                 this.target = this.ref.instance;
                 this.target.collapsed = false;
+                this.createAutocompleteDropDown(this.target as IgxAutocompleteDropDownComponent); // ?
+            });
+        this.overlay.onOpened
+            .pipe(first())
+            .subscribe(() => {
+                if (this.highlightMatch) {
+                    this.onArrowDownKeyDown();
+                }
             });
         this.overlay.onClosing
             .pipe()
@@ -168,16 +179,15 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             });
 
         this.id = this.overlay.show(IgxAutocompleteDropDownComponent, this.overlaySettings);
-        this.createAutocompleteDropDown(this.target as IgxAutocompleteDropDownComponent); // ?
     }
 
-    close = () => {
+    close() {
         if (!this.collapsed) {
             this.overlay.hide(this.id);
         }
     }
 
-    filter = () => {
+    filter() {
         (this.target as IgxAutocompleteDropDownComponent).term = this.nativeElement.value;
     }
 
@@ -215,34 +225,4 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 export class IgxAutocompleteModule { }
 //#endregion
 
-/* TODO
-==================
-1. DEV sample.
-2. Add tests
-    - Don't open on click, but on type.
-    - Option for autofocus first match (false) by default
-    - Hide browser autocomplete
-    - Close on Esc, Select and blur (option or close by default)
-    - Textbox
-    - Other components - dialog
-    - Disabled
-    - Aria (autocomplete)
-    - Item navigation
-3. Filtering
-4. Item template
-5. Update model when item is selected - issue in angular - input text is not updated.
-6. Events
-7. Animations and Styling
-8. Grouping in template
-9. POC and specification update
-10. Comments on properties and methods
-11. Readme.MD
-12. Changelog
-13. Demos
-14. DocFX
 
-???
-1. Click select all text
-2. Click outside and blur
-3. // ?
-*/

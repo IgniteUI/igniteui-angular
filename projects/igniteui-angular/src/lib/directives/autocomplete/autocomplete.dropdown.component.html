@@ -1,5 +1,5 @@
-<div [style.width.px]="width">
-    <ng-container *ngFor="let item of data | igxautocomplete:condition:term">
+<div [style.width.px]="width" class="igx-drop-down__list">
+    <ng-container *ngFor="let item of data | filter:condition:term">
         <ng-container *ngTemplateOutlet="template; context: { $implicit: item }"></ng-container>
     </ng-container>
 </div>

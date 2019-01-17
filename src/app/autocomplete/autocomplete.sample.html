@@ -6,7 +6,8 @@
 
                 <igx-input-group>
                     <input igxInput name="towns" type="text" [(ngModel)]="town" required
-                        [igxAutocomplete]='towns'/>
+                        [igxAutocomplete]='towns'
+                        [igxAutocompleteHighlightMatch]='true' />
                     <label igxLabel for="towns">Towns</label>
                 </igx-input-group>
 
@@ -28,8 +29,9 @@
                     <input igxInput name="townsGrouped" type="text" [(ngModel)]="town" required
                         [igxAutocomplete]='townsGrouped'
                         [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate"
-                        [igxAutocompleteCondition]="customFilter" />
-                    <label igxLabel for="townsGrouped">Towns Detailed</label>
+                        [igxAutocompleteCondition]="customFilter" 
+                        [igxAutocompleteSettings]="customSettings" />
+                    <label igxLabel for="townsGrouped">Towns Grouped</label>
                 </igx-input-group>
                 <ng-template #igxAutocompleteItemTemplate let-item>
                     <igx-drop-down-item [value]="item.name" [isHeader]="item.isHeader">
