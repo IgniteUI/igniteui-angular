@@ -477,8 +477,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * This method is bound at first at the base element.
      * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
      * @param event PointerMove event captured
+     * @param hostElement Element where the dragged element is rendered. If not provided, element is rendered in the body.
      */
-    public onPointerMove(event) {
+    public onPointerMove(event, hostElement: any = null) {
         if (this._clicked) {
             const dragStartArgs: IDragStartEventArgs = {
                 originalEvent: event,
@@ -516,8 +517,10 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 return;
             }
 
-            this.left = this._dragStartX + totalMovedX;
-            this.top = this._dragStartY + totalMovedY;
+            const hostLeft = hostElement ? hostElement.getBoundingClientRect().left : 0;
+            const hostTop = hostElement ? hostElement.getBoundingClientRect().top : 0;
+            this.left = this._dragStartX + totalMovedX - hostLeft;
+            this.top = this._dragStartY + totalMovedY - hostTop;
 
             this.dispatchDragEvents(pageX, pageY);
         }
@@ -577,8 +580,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * Bind all needed events.
      * @param event Pointer event required when the dragGhost is being initialized.
      * @param node The Node object to be cloned.
+     * @param hostElement Element where the dragged element is rendered. If not provided, element is rendered in the body.
      */
-    protected createDragGhost(event, node: any = null) {
+    protected createDragGhost(event, node: any = null, hostElement: any = null) {
         this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';
@@ -589,7 +593,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.renderer.addClass(this._dragGhost, this.ghostImageClass);
         }
 
-        document.body.appendChild(this._dragGhost);
+        if (hostElement) {
+            hostElement.appendChild(this._dragGhost);
+        } else {
+            document.body.appendChild(this._dragGhost);
+        }
 
         if (this.pointerEventsEnabled) {
             // The dragGhost takes control for moving and dragging after it has been shown.
