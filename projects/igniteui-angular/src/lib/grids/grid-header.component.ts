@@ -146,7 +146,7 @@ export class IgxGridHeaderComponent implements DoCheck {
     }
 
     public onSortingIconClick(event) {
-        if (this.grid.filteringService.isFilterRowVisible && this.filteringService.filteredColumn === this.column) {
+        if (this.grid.filteringService.isFilterRowVisible) {
             event.stopPropagation();
             this.triggerSort();
         }
