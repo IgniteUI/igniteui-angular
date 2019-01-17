@@ -194,19 +194,15 @@ describe('UpdateChanges', () => {
         expect(appTree.readContent('test.component.html')).toEqual(
             `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
 
-        inputJson.changes[1] = {
-            name: 'oldProp', remove: true,
-                    owner: { type: 'component' as any, selector: 'another' }
-        };
-
+        inputJson.changes[1].owner = { type: 'component' as any, selector: 'another' };
         inputJson.changes[0].owner = { type: 'component' as any, selector: 'comp' };
         const fileContent2 =
-        `<comp\r\ntag [replaced]="NOT.replaceMe" ><another oldProp="g" /></comp>`;
+        `<comp\r\ntag [oldProp]="g" [replaceMe]="NOT.replaceMe" ><another oldProp="g" [otherProp]="oldProp" /></comp>`;
         appTree.overwrite('test.component.html', fileContent2);
         const update4 = new UnitUpdateChanges(__dirname, appTree);
         update4.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp\r\ntag [replaced]="NOT.replaceMe" ><another /></comp>`);
+            `<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
         done();
     });
 

@@ -27,64 +27,6 @@ describe('Update 7.2.0', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
-    it(`should replace bound 'isSelected' and 'isFocused'`, done => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-drop-down #myDropDown>
-                <igx-drop-down-item *ngFor="let item of items"
-                    [value]="item.value"
-                    [isSelected]="item.isSelected"
-                    [isFocused]="item.isFocused"
-                    [isHeader]="item.thisPropertyIsNOTisSelectedORisFocused"
-                >Selected: {{ item.isSelected }}, Focused {{ item.isFocused }}
-                </igx-drop-down-item>
-            </igx-drop-down>`);
-
-        const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-                `<igx-drop-down #myDropDown>
-                <igx-drop-down-item *ngFor="let item of items"
-                    [value]="item.value"
-                    [selected]="item.isSelected"
-                    [focused]="item.isFocused"
-                    [isHeader]="item.thisPropertyIsNOTisSelectedORisFocused"
-                >Selected: {{ item.isSelected }}, Focused {{ item.isFocused }}
-                </igx-drop-down-item>
-            </igx-drop-down>`);
-
-        done();
-    });
-
-    it(`should replace 'isSelected' and 'isFocused'`, done => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-drop-down #myDropDown>
-                <igx-drop-down-item *ngFor="let item of items"
-                    [value]="item.value"
-                    isSelected="true"
-                    isFocused="true"
-                    [isHeader]="item.thisPropertyIsNOTisSelectedORisFocused"
-                >Selected: {{ item.isSelected }}, Focused {{ item.isFocused }}
-                </igx-drop-down-item>
-            </igx-drop-down>`);
-
-        const tree = schematicRunner.runSchematic('migration-08', {}, appTree);
-        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-                `<igx-drop-down #myDropDown>
-                <igx-drop-down-item *ngFor="let item of items"
-                    [value]="item.value"
-                    selected="true"
-                    focused="true"
-                    [isHeader]="item.thisPropertyIsNOTisSelectedORisFocused"
-                >Selected: {{ item.isSelected }}, Focused {{ item.isFocused }}
-                </igx-drop-down-item>
-            </igx-drop-down>`);
-
-        done();
-    });
-
     it(`should replace **ONLY** 'isSelected' and 'isFocused'`, done => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html',
