@@ -305,7 +305,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
 
     public onPointerMove(event) {
         event.preventDefault();
-        super.onPointerMove(event);
+        super.onPointerMove(event, this.column.grid.outletDirective.nativeElement);
 
         if (this._dragStarted && this._dragGhost && !this.column.grid.draggedColumn) {
             this.column.grid.draggedColumn = this.column;
@@ -339,7 +339,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective {
     protected createDragGhost(event) {
         const index = this.column.grid.hasMovableColumns ? 1 : 0;
 
-        super.createDragGhost(event, this.element.nativeElement.children[index]);
+        super.createDragGhost(event, this.element.nativeElement.children[index], this.column.grid.outletDirective.nativeElement);
 
         let pageX, pageY;
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
