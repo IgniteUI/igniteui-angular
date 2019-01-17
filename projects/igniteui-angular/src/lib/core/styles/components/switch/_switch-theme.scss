@@ -10,6 +10,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
@@ -19,6 +20,9 @@
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
 /// @param {Color} $label-color [null] - The color of the switch label
 /// @param {Color} $label-disabled-color [null] - The color of the switch label when the switch is disabled
+/// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
+/// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
+/// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -45,20 +49,31 @@
     $thumb-disabled-color: null,
 
     $label-color: null,
-    $label-disabled-color: null
+    $label-disabled-color: null,
+
+    $resting-shadow: null,
+    $hover-shadow: null,
+    $disabled-shadow: null
 ) {
     $name: 'igx-switch';
     $switch-schema: map-get($schema, $name);
 
     $theme: apply-palette($switch-schema, $palette);
 
-    $resting-elevation: map-get($switch-schema, 'resting-elevation');
-    $hover-elevation: map-get($switch-schema, 'hover-elevation');
-    $disabled-elevation: map-get($switch-schema, 'disabled-elevation');
+    @if not($resting-shadow) {
+        $resting-elevation: map-get($switch-schema, 'resting-elevation');
+        $resting-shadow: igx-elevation($elevations, $resting-elevation);
+    }
 
-    $resting-shadow: igx-elevation($elevations, $resting-elevation);
-    $hover-shadow: igx-elevation($elevations, $hover-elevation);
-    $disabled-shadow: igx-elevation($elevations, $disabled-elevation);
+    @if not($hover-shadow) {
+        $hover-elevation: map-get($switch-schema, 'hover-elevation');
+        $hover-shadow: igx-elevation($elevations, $hover-elevation);
+    }
+
+    @if not($disabled-shadow) {
+        $disabled-elevation: map-get($switch-schema, 'disabled-elevation');
+        $disabled-shadow: igx-elevation($elevations, $disabled-elevation);
+    }
 
     @return extend($theme, (
         name: $name,
