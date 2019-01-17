@@ -1,29 +1,9 @@
-import { chain, Rule, SchematicContext, Tree, FileDoesNotExistException, schematic } from '@angular-devkit/schematics';
-import { DependencyNotFoundException } from '@angular-devkit/core';
+import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
 import { logSuccess, addDependencies } from '../utils/dependency-handler';
-import { yellow } from '@angular-devkit/core/src/terminal/colors';
 
 import * as os from 'os';
-
-function displayVersionMismatch(options: Options): Rule {
-  return (tree: Tree) => {
-    const igPackageJson = require('../../package.json');
-    const ngKey = '@angular/core';
-    const ngCommonKey = '@angular/common';
-    const ngProjVer = getDependencyVersion(ngKey, tree);
-    const ngCommonProjVer = getDependencyVersion(ngCommonKey, tree);
-    const igAngularVer = igPackageJson.peerDependencies[ngKey];
-    const igAngularCommonVer = igPackageJson.peerDependencies[ngCommonKey];
-
-    if (ngProjVer < igAngularVer || ngCommonProjVer < igAngularCommonVer) {
-      console.warn(yellow(`
-WARNING Version mismatch detected - igniteui-angular is built against a newer version of @angular/core (${igAngularVer}).
-Running 'ng update' will prevent potential version conflicts.\n`));
-    }
-  };
-}
 
 /**
  *  ES7 `Object.entries` needed for igxGrid to render in IE.
@@ -66,34 +46,11 @@ function enablePolyfills(options: Options): Rule {
   };
 }
 
-function getDependencyVersion(pkg: string, tree: Tree): string {
-  const targetFile = 'package.json';
-  if (tree.exists(targetFile)) {
-    const sourceText = tree.read(targetFile).toString();
-    const json = JSON.parse(sourceText);
-
-    let targetDep: any;
-    if (json.dependencies[pkg]) {
-      targetDep = json.dependencies[pkg];
-    } else {
-      targetDep = json.devDependencies[pkg];
-    }
-    if (!targetDep) {
-      throw new DependencyNotFoundException();
-    }
-
-    return targetDep;
-  }
-
-  throw new FileDoesNotExistException(`${tree.root.path}/${targetFile}`);
-}
-
 export default function (options: Options): Rule {
   return chain([
     enablePolyfills(options),
     addDependencies(options),
-    logSuccess(options),
     installPackageJsonDependencies(options),
-    displayVersionMismatch(options),
+    logSuccess(options)
   ]);
 }
