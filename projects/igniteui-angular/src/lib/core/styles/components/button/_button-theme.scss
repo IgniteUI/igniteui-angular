@@ -10,6 +10,7 @@
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {String} $button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
 ///
 /// @param {Color} $flat-background [null] - The background color of a flat button.
@@ -26,12 +27,20 @@
 /// @param {Color} $raised-focus-background [null] - The focus background color of a raised button.
 /// @param {Color} $raised-focus-text-color [null] - The focus text color of a raised button.
 ///
+/// @param {box-shadow} $raised-resting-shadow [null] - The shadow color of the raised button in its resting state.
+/// @param {box-shadow} $raised-hover-shadow [null] - The shadow color of the raised button in its hover state.
+/// @param {box-shadow} $raised-focus-shadow [null] - The shadow color of the raised button in its focus state.
+///
 /// @param {Color} $fab-background [null] - The background color of a floating action button.
 /// @param {Color} $fab-text-color [null] - The text color of a floating action button.
 /// @param {Color} $fab-hover-background [null] - The hover background color of a floating action button.
 /// @param {Color} $fab-hover-text-color [null] - The hover text color of a floating action button.
 /// @param {Color} $fab-focus-background [null] - The focus background color of floating action button.
 /// @param {Color} $fab-focus-text-color [null] - The focus text color of a floating action button.
+///
+/// @param {box-shadow} $fab-resting-shadow [null] - The shadow color of the floating action button in its resting state.
+/// @param {box-shadow} $fab-hover-shadow [null] - The shadow color of the floating action button in its hover state.
+/// @param {box-shadow} $fab-focus-shadow [null] - The shadow color of the floating action button in its focus state.
 ///
 /// @param {Color} $icon-color [null] - The icon color of an icon button.
 /// @param {Color} $icon-hover-color [null] - The hover icon color of an icon button.
@@ -79,12 +88,20 @@
     $raised-focus-background: null,
     $raised-focus-text-color: null,
 
+    $raised-resting-shadow: null,
+    $raised-hover-shadow: null,
+    $raised-focus-shadow: null,
+
     $fab-text-color: null,
     $fab-background: null,
     $fab-hover-background: null,
     $fab-hover-text-color: null,
     $fab-focus-background: null,
     $fab-focus-text-color: null,
+
+    $fab-resting-shadow: null,
+    $fab-hover-shadow: null,
+    $fab-focus-shadow: null,
 
     $icon-color: null,
     $icon-background: null,
@@ -99,22 +116,6 @@
     $name: 'igx-button';
     $button-schema: map-get($schema, $name);
     $theme: apply-palette($button-schema, $palette);
-
-    $raised-resting-elevation: map-get($button-schema, 'raised-resting-elevation');
-    $raised-hover-elevation: map-get($button-schema, 'raised-hover-elevation');
-    $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
-
-    $fab-resting-elevation: map-get($button-schema, 'fab-resting-elevation');
-    $fab-hover-elevation: map-get($button-schema, 'fab-hover-elevation');
-    $fab-focus-elevation: map-get($button-schema, 'fab-focus-elevation');
-
-    $raised-resting-shadow: igx-elevation($elevations, $raised-resting-elevation);
-    $raised-hover-shadow: igx-elevation($elevations, $raised-hover-elevation);
-    $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
-
-    $fab-resting-shadow: igx-elevation($elevations, $fab-resting-elevation);
-    $fab-hover-shadow: igx-elevation($elevations, $fab-hover-elevation);
-    $fab-focus-shadow: igx-elevation($elevations, $fab-focus-elevation);
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -194,6 +195,36 @@
 
     @if not($icon-hover-color) and $icon-hover-background {
         $icon-hover-color: text-contrast($icon-hover-background);
+    }
+
+    @if not($fab-resting-shadow) {
+        $fab-resting-elevation: map-get($button-schema, 'fab-resting-elevation');
+        $fab-resting-shadow: igx-elevation($elevations, $fab-resting-elevation);
+    }
+
+    @if not($fab-hover-shadow) {
+        $fab-hover-elevation: map-get($button-schema, 'fab-hover-elevation');
+        $fab-hover-shadow: igx-elevation($elevations, $fab-hover-elevation);
+    }
+
+    @if not($fab-focus-shadow) {
+        $fab-focus-elevation: map-get($button-schema, 'fab-focus-elevation');
+        $fab-focus-shadow: igx-elevation($elevations, $fab-focus-elevation);
+    }
+
+    @if not($raised-resting-shadow) {
+        $raised-resting-elevation: map-get($button-schema, 'raised-resting-elevation');
+        $raised-resting-shadow: igx-elevation($elevations, $raised-resting-elevation);
+    }
+
+    @if not($raised-hover-shadow) {
+        $raised-hover-elevation: map-get($button-schema, 'raised-hover-elevation');
+        $raised-hover-shadow: igx-elevation($elevations, $raised-hover-elevation);
+    }
+
+    @if not($raised-focus-shadow) {
+        $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
+        $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
     }
 
     @return extend($theme, (
