@@ -33,9 +33,9 @@
 /// @param {Color} $search-background [null] - The background color of an input group of type search.
 /// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
 ///
-/// @param {Color} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
-/// @param {Color} $search-hover-shadow [null] - The shadow color of an input group of type search in its hover state.
-/// @param {Color} $search-disabled-shadow [null] - The shadow color of an input group of type search in its disabled state.
+/// @param {box-shadow} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
+/// @param {box-shadow} $search-hover-shadow [null] - The shadow color of an input group of type search in its hover state.
+/// @param {box-shadow} $search-disabled-shadow [null] - The shadow color of an input group of type search in its disabled state.
 ///
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
@@ -101,6 +101,14 @@
     $search-hover-elevation: map-get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map-get($input-group-schema, 'search-disabled-elevation');
 
+    @if not($placeholder-color) and $box-background {
+        $placeholder-color: text-contrast($box-background);
+    }
+
+    @if not($placeholder-color) and $search-background {
+        $placeholder-color: text-contrast($search-background);
+    }
+
     @if not($search-resting-shadow) {
         $search-resting-shadow: igx-elevation($elevations, $search-resting-elevation);
     }
@@ -152,14 +160,6 @@
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
     ));
-
-    @if not($placeholder-color) and $box-background {
-        $placeholder-color: text-contrast($box-background);
-    }
-
-    @if not($placeholder-color) and $search-background {
-        $placeholder-color: text-contrast($search-background);
-    }
 }
 
 
