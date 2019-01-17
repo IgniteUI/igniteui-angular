@@ -7,14 +7,16 @@
 /// Generates a light time-picker schema.
 /// @type {Map}
 ///
-/// @property {map} text-color [igx-color: ('grays', 500)] - The text color of a open time picker.
-/// @property {map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
-/// @property {map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
-/// @property {map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
-/// @property {map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
-/// @property {map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
-/// @property {map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
-/// @property {Color} background-color [#fff] - The time-picker panel background color.
+/// @prop {map} text-color [igx-color: ('grays', 500)] - The text color of a open time picker.
+/// @prop {map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
+/// @prop {map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
+/// @prop {map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
+/// @prop {map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
+/// @prop {map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
+/// @prop {map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
+/// @prop {Color} background-color [#fff] - The time-picker panel background color.
+/// @prop {number} modal-elevation [24] - The elevation level used for the time picker in modal mode.
+/// @prop {number} dropdown-elevation [24] - The elevation level used for the time picker in dropdown mode.
 ///
 /// @see $default-palette
 
@@ -34,6 +36,7 @@ $_light-time-picker: (
     active-item-background: (
         igx-color: ('grays', 100)
     ),
+
     header-background: (
         igx-color: ('secondary', 500)
     ),
@@ -47,5 +50,9 @@ $_light-time-picker: (
         rgba: .8
     ),
 
-    background-color: #fff
+    background-color: #fff,
+
+    modal-elevation: 24,
+
+    dropdown-elevation: 3
 );
