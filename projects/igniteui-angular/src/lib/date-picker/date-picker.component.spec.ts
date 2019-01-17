@@ -46,7 +46,7 @@ describe('IgxDatePicker', () => {
 
         it('Initialize a datepicker component', () => {
              expect(fixture.componentInstance).toBeDefined();
-            expect(datePicker.displayData).toEqual('');
+            expect(datePicker.displayData).toBeUndefined();
         });
 
         it('Initialize a datepicker component with id', () => {
