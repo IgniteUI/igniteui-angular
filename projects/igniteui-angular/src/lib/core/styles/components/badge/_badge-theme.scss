@@ -10,12 +10,14 @@
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
 /// @param {Color} $background-color [null] - The background color used.
 /// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
 /// @param {Bool} $disable-border [true] - Sets the badge border visibility.
+/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -43,18 +45,14 @@
     $text-color: null,
     $border-color: null,
     $background-color: null,
+    $shadow: null,
 
     $disable-shadow: true,
     $disable-border: true
 ) {
     $name: 'igx-badge';
-
     $badge-schema: map-get($schema, $name);
-    $elevation: map-get($badge-schema, 'elevation');
-
-    $badge-shadow: if($disable-shadow == true, none, igx-elevation($elevations, $elevation));
     $border-width: if($disable-border == true, 0, rem(1px));
-
     $theme: apply-palette($badge-schema, $palette);
 
     @if not($icon-color) and $background-color {
@@ -65,6 +63,15 @@
         $text-color: text-contrast($background-color);
     }
 
+    @if not($shadow) {
+        $elevation: map-get($badge-schema, 'elevation');
+        $shadow: igx-elevation($elevations, $elevation);
+    }
+
+    @if $disable-shadow {
+        $shadow: none;
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -72,7 +79,7 @@
         text-color: $text-color,
         border-color: $border-color,
         background-color: $background-color,
-        badge-shadow: $badge-shadow,
+        shadow: $shadow,
         border-width: $border-width
     ));
 }
@@ -130,7 +137,7 @@
 
     %igx-badge--circle {
         border-radius: $badge-border-radius-circle;
-        box-shadow: --var($theme, 'badge-shadow');
+        box-shadow: --var($theme, 'shadow');
         border-width: --var($theme, 'border-width');
         border-color: --var($theme, 'border-color');
         border-style: $border-type;
