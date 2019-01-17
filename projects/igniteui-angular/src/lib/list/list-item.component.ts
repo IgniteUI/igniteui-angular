@@ -170,7 +170,7 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('click', ['$event'])
     clicked(evt) {
-        this.list.onItemClicked.emit({ item: this, direction: this.lastPanDir, event: evt });
+        this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
         this.lastPanDir = IgxListPanState.NONE;
     }
 
