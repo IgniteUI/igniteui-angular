@@ -178,36 +178,13 @@ describe('IgxHierarchicalGrid Virtualization', () => {
             parseInt(topOffset, 10)
         ).toBeLessThanOrEqual(1);
     });
-
-    it('should reset scroll position if neccessary after expanding/collapsing all row.', async() => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(20);
-        await wait(100);
-        fixture.detectChanges();
-
-        // expand all
-        hierarchicalGrid.toggleAllRows();
-        await wait(100);
-        fixture.detectChanges();
-        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toBe(0);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(fixture.componentInstance.data.length);
-
-        hierarchicalGrid.verticalScrollContainer.scrollTo(20);
-        await wait(100);
-        fixture.detectChanges();
-
-        // collapse all
-        hierarchicalGrid.toggleAllRows();
-        await wait(100);
-        fixture.detectChanges();
-
-        expect(hierarchicalGrid.verticalScrollContainer.state.startIndex).toBe(0);
-        expect(hierarchicalGrid.hierarchicalState.length).toEqual(0);
-
-    });
     it('should be able to scroll last row in view after all rows get expanded.', async() => {
         // expand all
-        hierarchicalGrid.toggleAllRows();
+        hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
+            return { rowID: hierarchicalGrid.primaryKey ? rec[hierarchicalGrid.primaryKey] : rec };
+        });
         await wait(100);
+        fixture.detectChanges();
         hierarchicalGrid.cdr.detectChanges();
         // scroll to bottom
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
