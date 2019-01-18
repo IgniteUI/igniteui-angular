@@ -5,7 +5,7 @@
             dropdown</button>
         <igx-drop-down #dropdown1 (onSelection)="onSelection($event)" (onOpening)="onOpening($event)">
             <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header"
-                [isSelected]="item.selected">
+                [selected]="item.selected">
                 <div class="igx-drop-down__item-template">
                     {{ item.field }}
                 </div>
