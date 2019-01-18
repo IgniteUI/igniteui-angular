@@ -48,7 +48,7 @@ export class IgxGridHeaderComponent implements DoCheck {
             'desc': this.descending,
             'igx-grid__th--number': this.column.dataType === DataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
-            'igx-grid__th--filtrable': this.column.filterable,
+            'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,
             'igx-grid__th--sorted': this.sorted
         };
 
