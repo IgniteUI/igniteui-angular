@@ -1224,7 +1224,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '-1', '-1', '-4', '-1']);
         });
 
-        it('should select last grid cell when press Shift+Tab on root summaries', async () => {
+        it('should select last cell when press Shift+Tab on root summaries', async () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -1234,11 +1234,16 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifySummaryCellActive(fix, 0, 0);
 
             await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
-            await wait(100);
+            await wait(200);
+            fix.detectChanges();
 
-            const cell = treeGrid.getCellByColumn(23, 'OnPTO');
-            expect(cell.selected).toBe(true);
-            expect(cell.focused).toBe(true);
+            HelperUtils.verifySummaryCellActive(fix, 24, 5);
+
+            await HelperUtils.moveSummaryCell(fix, 24, 5, 'Tab');
+            await wait(200);
+            fix.detectChanges();
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
         });
 
         it('should select first root summary cell when press Tab an a last grid cell', async () => {
