@@ -16,7 +16,7 @@
                 </igx-input-group>
             </div>
             <div class="input-row">
-                <igx-combo class="input-container" [placeholder]="''"
+                <igx-combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
                             (onSelectionChange)="handleSelectionChange($event)"
                             [data]="items"
@@ -47,15 +47,8 @@
                     <ng-template igxComboAddItem let-display let-control>
                         <button igxButton="flat" igxRipple>Add CUSTOM item</button>
                     </ng-template>
-                    <label igxLabel>Cities</label>
+                    <label igxLabel>States</label>
                     <igx-prefix><igx-icon>home</igx-icon></igx-prefix>
-                    <igx-suffix><igx-icon>directions_car</igx-icon></igx-suffix>
-                    <igx-suffix><igx-icon>pets</igx-icon></igx-suffix>
-                    <igx-suffix><igx-icon>healing</igx-icon></igx-suffix>
-                    <igx-suffix><igx-icon>sentiment_very_dissatisfied</igx-icon></igx-suffix>
-                    <ng-template igxComboButton let-item>
-                        <igx-suffix><igx-icon>{{ item.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon></igx-suffix>
-                    </ng-template>
                 </igx-combo>
             </div>
             <div class="btn-wrapper mb24">

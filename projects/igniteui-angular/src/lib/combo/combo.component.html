@@ -27,16 +27,17 @@
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
     <igx-suffix *ngIf="value.length" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
-        <igx-icon fontSet="material">clear</igx-icon>
+        <ng-container *ngIf="clearIconTemplate">
+            <ng-container *ngTemplateOutlet="clearIconTemplate; context: {$implicit: this}"></ng-container>
+        </ng-container>
+        <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
     </igx-suffix>
-    <ng-container *ngIf="!suffixTemplate" ngProjectAs="igx-suffix">
-        <igx-suffix igxButton="icon" class="igx-combo__clear-button" igxRipple>
-            <igx-icon fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
-        </igx-suffix>
-    </ng-container>
-    <ng-container *ngIf="suffixTemplate" ngProjectAs="igx-suffix">
-        <ng-container *ngTemplateOutlet="suffixTemplate; context: {$implicit: this}"></ng-container>
-    </ng-container>
+    <igx-suffix igxButton="icon" class="igx-combo__clear-button" igxRipple>
+        <ng-container *ngIf="toggleIconTemplate">
+            <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this}"></ng-container>
+        </ng-container>
+        <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
+    </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'" (onOpening)="handleOpening($event)"
     (onClosing)="handleClosing($event)" (onOpened)="handleOpened()" (onClosed)="handleClosed()">

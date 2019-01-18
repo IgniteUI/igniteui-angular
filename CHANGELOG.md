@@ -4,6 +4,25 @@ All notable changes for each version of this project will be documented in this 
 ## 7.2.0
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
+    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <label igxLabel>Genres</label>
+            <igx-prefix><igx-icon>music_note</igx-icon></igx-prefix>
+        </igx-combo>
+     ```
+    - **Feature** the default combo 'clear' and 'toggle' icons can now be templated. Two new directives are added (with selector `[igxComboClearIcon]` and `[igxComboToggleIcon]`). Passing an `ng-template` with one of the directives will overwrite the default conent of the respective icon. Functionality will remain unaffected. Expample:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <ng-template igxComboToggleIcon let-item>
+                <igx-icon>{{ item.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+            </ng-template>
+        </igx-combo>
+    ```
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.

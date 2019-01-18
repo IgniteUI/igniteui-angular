@@ -11,7 +11,8 @@ import {
     IgxComboHeaderDirective,
     IgxComboFooterDirective,
     IgxComboAddItemDirective,
-    IgxComboButtonDirective
+    IgxComboToggleIconDirective,
+    IgxComboClearIconDirective
 } from './combo.directives';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
@@ -191,26 +192,184 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         return this.filterable || this.allowCustomValues;
     }
 
+    /**
+     * The custom template, if any, that should be used when rendering ITEMS in the combo list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.itemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboItem>
+     *          <div class="custom-item" let-item let-key="valueKey">
+     *              <div class="custom-item__name">{{ item[key] }}</div>
+     *              <div class="custom-item__cost">{{ item.cost }}</div>
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboItemDirective, { read: TemplateRef })
     public itemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the HEADER for the combo items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.headerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboHeader>
+     *          <div class="combo__header">
+     *              This is a custom header
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
     public headerTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the FOOTER for the combo items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.footerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboFooter>
+     *          <div class="combo__footer">
+     *              This is a custom footer
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
     public footerTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering HEADER ITEMS for groups in the combo list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.headerItemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboHeaderItem let-item let-key="groupKey">
+     *          <div class="custom-item--group">Group header for {{ item[key] }}</div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.addItemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboAddItem>
+     *          <button class="combo__add-button">
+     *              Click to add item
+     *          </button>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
     public addItemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.emptyTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboEmpty>
+     *          <div class="combo--emtpy">
+     *              There are no items to display
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
 
-    @ContentChild(IgxComboButtonDirective, { read: TemplateRef })
-    public suffixTemplate: TemplateRef<any> = null;
+    /**
+     * The custom template, if any, that should be used when rendering the combo TOGGLE(open/close) button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.toggleIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboToggleIcon let-comboContext>
+     *          <igx-icon>{{ comboContext.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
+    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
+    public toggleIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the combo CLEAR button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.clearIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboClearIcon let-combo>
+     *          <igx-icon>clear</igx-icon>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
+    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
+    public clearIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
@@ -1466,7 +1625,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
-        IgxComboButtonDirective],
+        IgxComboToggleIconDirective,
+        IgxComboClearIconDirective],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
@@ -1474,7 +1634,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
         IgxComboAddItemDirective,
-        IgxComboButtonDirective],
+        IgxComboToggleIconDirective,
+        IgxComboClearIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: [IgxSelectionAPIService]
