@@ -1063,7 +1063,7 @@ export class SampleTestData {
                     Name: 'Michael Langdon',
                     HireDate: new Date(2011, 6, 3),
                     Age: 30,
-                    JobTitle: 'Junior Software Developer',
+                    JobTitle: 'Software Developer Evangelist',
                     Employees: null
                 },
                 {
@@ -1083,7 +1083,7 @@ export class SampleTestData {
                     Employees: [
                         {
                             ID: 711,
-                            Name: 'Roland Mendel',
+                            Name: 'Eva Mendel',
                             HireDate: new Date(2015, 9, 17),
                             JobTitle: 'Senior Software Developer',
                             Age: 35
