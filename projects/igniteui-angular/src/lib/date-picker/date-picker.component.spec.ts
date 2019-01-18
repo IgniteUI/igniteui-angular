@@ -349,6 +349,54 @@ describe('IgxDatePicker', () => {
         expect(document.activeElement).toEqual(todayDate.nativeElement);
     });
 
+    fit('#3595 - Should be able to change year', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        const target = fix.debugElement.query(By.css('.igx-icon'));
+        target.nativeElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        let year = fix.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[1];
+        year.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        const firstYear = fix.debugElement.query(By.css('.igx-calendar__year'));
+        const expectedResult = firstYear.nativeElement.innerText;
+        firstYear.nativeElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        year = fix.debugElement.nativeElement.getElementsByClassName('igx-calendar-picker__date')[1];
+        expect(year.innerText).toBe(expectedResult);
+    }));
+
+    fit('#3595 - Should be able to change month', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxDatePickerTestComponent);
+        fix.detectChanges();
+
+        const target = fix.debugElement.query(By.css('.igx-icon'));
+        target.nativeElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        let month = fix.debugElement.query(By.css('.igx-calendar-picker__date'));
+        month.nativeElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        const firstMonth = fix.debugElement.query(By.css('.igx-calendar__month'));
+        const expectedResult = firstMonth.nativeElement.innerText;
+        firstMonth.nativeElement.dispatchEvent(new Event('click'));
+        tick();
+        fix.detectChanges();
+
+        month = fix.debugElement.query(By.css('.igx-calendar-picker__date'));
+        expect(month.nativeElement.innerText).toBe(expectedResult);
+    }));
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(IgxDatePickerTestComponent);

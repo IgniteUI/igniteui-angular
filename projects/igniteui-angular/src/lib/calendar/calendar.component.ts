@@ -1156,6 +1156,20 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      * @hidden
      */
+    public monthTracker(index, item): string {
+        return `${item.getMonth()}}`;
+    }
+
+    /**
+     * @hidden
+     */
+    public yearTracker(index, item): string {
+        return `${item.getFullYear()}}`;
+    }
+
+    /**
+     * @hidden
+     */
     public rowTracker(index, item): string {
         return `${item[index].date.getMonth()}${item[index].date.getDate()}`;
     }
