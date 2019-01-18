@@ -173,7 +173,7 @@ describe('IgxGrid Component Tests', () => {
             tick(200);
             fix.detectChanges();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
-            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
+            expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
             verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
             grid.width = '200px';
 
@@ -205,7 +205,8 @@ describe('IgxGrid Component Tests', () => {
 
             gridBodyHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
-                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
+                - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)
+                - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
 
             // The scrollbar is no longer visible
             //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
@@ -451,7 +452,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.columns[0].width).toEqual('100px');
                 expect(grid.columns[4].width).toEqual('100px');
 
-                const actualGridWidth = grid.nativeElement.clientWidth;
+                const actualGridWidth = grid.tbody.nativeElement.clientWidth;
 
                 const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
                     parseInt(grid.columns[0].width, 10) -
@@ -471,7 +472,7 @@ describe('IgxGrid Component Tests', () => {
                     }
                 });
 
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
                 expect(grid.rowList.length).toBeGreaterThan(0);
             });
 
@@ -3120,8 +3121,8 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
             const gridBody = fix.debugElement.query(By.css('.igx-grid__tbody'));
-            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(400);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(400);
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(401);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(401);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
         }));
     });

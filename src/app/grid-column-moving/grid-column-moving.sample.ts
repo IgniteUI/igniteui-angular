@@ -22,15 +22,15 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
-            // { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
-            // { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
-            // { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
+            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
+            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
+            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
         ];
         this.data = [
             {

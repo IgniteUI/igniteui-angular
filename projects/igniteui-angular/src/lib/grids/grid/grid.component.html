@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" *ngIf="showToolbar" [gridID]="id" [displayDensity]="displayDensity" #toolbar>
+<igx-grid-toolbar [style.width.px]="outerWidth" role="rowgroup" *ngIf="showToolbar" [gridID]="id" [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
 <ng-template #defaultPager let-api>
@@ -20,7 +20,7 @@
     </select>
 </ng-template>
 
-<div class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
+<div [style.width.px]='outerWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
@@ -64,7 +64,7 @@
         </ng-template>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     </div>
-    <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
+    <igx-grid-filtering-row [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
 </div>
 <div class="igx-grid__scroll-thumb" *ngIf='hasVerticalSroll()' [style.height.px]='headerHeight' [style.width]="'18px'"></div>
 </div>

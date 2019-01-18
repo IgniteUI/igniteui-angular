@@ -3687,6 +3687,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public get headerHeight() {
        return this.theadRow ? this.theadRow.nativeElement.clientHeight : 0;
     }
+
+    public get outerWidth() {
+        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+    }
     /**
      * @hidden
      */
