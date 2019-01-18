@@ -51,7 +51,7 @@
 
 <div *ngIf="isYearView" class="igx-calendar__body" [@animateView]="activeView">
     <div class="igx-calendar__body-row--wrap">
-        <div (onMonthSelection)="changeMonth($event)" [igxCalendarMonth]="month" [index]="i" *ngFor="let month of months; index as i;">
+        <div (onMonthSelection)="changeMonth($event)" [igxCalendarMonth]="month" [index]="i" *ngFor="let month of months; index as i; trackBy: monthTracker">
             {{ formattedMonth(month) | titlecase }}
         </div>
     </div>
@@ -59,7 +59,7 @@
 
 <div *ngIf="isDecadeView" class="igx-calendar__body" [@animateView]="activeView">
     <div class="igx-calendar__body-column" (wheel)="onScroll($event)" (pan)="onPan($event)">
-        <span (onYearSelection)="changeYear($event)" [igxCalendarYear]="year" *ngFor="let year of decade">
+        <span (onYearSelection)="changeYear($event)" [igxCalendarYear]="year" *ngFor="let year of decade; trackBy: yearTracker">
             {{ formattedYear(year) }}
         </span>
     </div>

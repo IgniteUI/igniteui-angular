@@ -2774,7 +2774,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let totalWidth = 0;
         let i = 0;
         for (i; i < cols.length; i++) {
-            totalWidth += parseInt(cols[i].width, 10) || 0;
+            totalWidth += parseInt(cols[i].calcWidth, 10) || 0;
         }
         return totalWidth;
     }
@@ -3682,12 +3682,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getPossibleColumnWidth() {
+    public getPossibleColumnWidth() {
         let computedWidth = parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
 
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer.nativeElement.clientWidth;
+            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.clientWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -4144,7 +4144,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public trackColumnChanges(index, col) {
-        return col.field + col.width;
+        return col.field + col.calcWidth;
     }
 
     private find(text: string, increment: number, caseSensitive?: boolean, exactMatch?: boolean, scroll?: boolean) {
