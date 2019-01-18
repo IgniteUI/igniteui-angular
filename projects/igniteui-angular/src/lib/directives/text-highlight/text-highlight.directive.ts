@@ -311,7 +311,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         if (this._observer === null) {
             const callback = (mutationList) => {
                 mutationList.forEach((mutation) => {
-                    const removedNodes = new Array(... mutation.removedNodes);
+                    const removedNodes = Array.from(mutation.removedNodes);
                     removedNodes.forEach((n) => {
                         if (n === this._container) {
                             this._nodeWasRemoved = true;
@@ -319,7 +319,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                         }
                     });
 
-                    const addedNodes = new Array(... mutation.addedNodes);
+                    const addedNodes = Array.from(mutation.addedNodes);
                     addedNodes.forEach((n) => {
                         if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
                             this._container = this.parentElement.firstElementChild;
