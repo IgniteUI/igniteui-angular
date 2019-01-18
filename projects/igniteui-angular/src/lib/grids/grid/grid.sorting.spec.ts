@@ -320,34 +320,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
-    it(`Should allow sorting using a custom Sorting Strategy.`, () => {
-        fixture = TestBed.createComponent(SortByParityComponent);
-        grid = fixture.componentInstance.grid;
-        fixture.componentInstance.data.push(
-            { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
-            { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
-            { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
-        );
-        fixture.detectChanges();
-        grid.sort({
-            fieldName: 'ID',
-            dir: SortingDirection.Desc,
-            ignoreCase: false,
-            strategy: new SortByParityComponent()
-        });
-        fixture.detectChanges();
-        const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
-        const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
-        const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
-        const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
-        expect(isFirstHalfOdd).toEqual(true);
-        expect(isSecondHalfEven).toEqual(true);
-    });
-
     it('Should sort grid by clicking on sorting icon when FilterRow is visible.', () => {
-        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
-        const grid = fixture.componentInstance.grid;
-
         grid.allowFiltering = true;
         fixture.detectChanges();
 
@@ -380,6 +353,30 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
     });
 
+
+    it(`Should allow sorting using a custom Sorting Strategy.`, () => {
+        fixture = TestBed.createComponent(SortByParityComponent);
+        grid = fixture.componentInstance.grid;
+        fixture.componentInstance.data.push(
+            { ID: 8, Name: 'Brad', LastName: 'Walker', Region: 'DD' },
+            { ID: 9, Name: 'Mary', LastName: 'Smith', Region: 'OC' },
+            { ID: 10, Name: 'Brad', LastName: 'Smith', Region: 'BD' },
+        );
+        fixture.detectChanges();
+        grid.sort({
+            fieldName: 'ID',
+            dir: SortingDirection.Desc,
+            ignoreCase: false,
+            strategy: new SortByParityComponent()
+        });
+        fixture.detectChanges();
+        const oddHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(0, 5);
+        const evenHalf: IgxGridCellComponent[] = grid.getColumnByName('ID').cells.slice(5);
+        const isFirstHalfOdd: boolean = oddHalf.every(cell => cell.value % 2 === 1);
+        const isSecondHalfEven: boolean = evenHalf.every(cell => cell.value % 2 === 0);
+        expect(isFirstHalfOdd).toEqual(true);
+        expect(isSecondHalfEven).toEqual(true);
+    });
 });
 
 @Component({
