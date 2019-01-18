@@ -277,7 +277,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     private focusComboSearch() {
         this.combo.focusSearchInput(false);
         if (this.focusedItem) {
-            this.focusedItem.isFocused = false;
+            this.focusedItem.focused = false;
         }
         this.focusedItem = null;
     }

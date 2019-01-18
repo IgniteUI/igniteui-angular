@@ -404,7 +404,7 @@ describe('igxCombo', () => {
             expect(dropdown.items.length).toBeTruthy();
             dropdown.onFocus();
             expect(dropdown.focusedItem).toEqual(dropdown.items[0]);
-            expect(dropdown.focusedItem.isFocused).toEqual(true);
+            expect(dropdown.focusedItem.focused).toEqual(true);
             dropdown.onFocus();
             dropdown.onBlur();
             expect(dropdown.focusedItem).toEqual(null);

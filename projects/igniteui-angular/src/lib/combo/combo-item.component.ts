@@ -73,11 +73,11 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     /**
      * @hidden
      */
-    get isSelected(): boolean {
+    get selected(): boolean {
         return this.comboAPI.is_item_selected(this.itemID);
     }
 
-    set isSelected(value: boolean) {
+    set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -88,7 +88,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     clicked(event) {
         this.comboAPI.disableTransitions = false;
         if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
+            const focusedItem = this.dropDown.items.find((item) => item.focused);
             if (this.dropDown.allowItemsFocus && focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });
             }

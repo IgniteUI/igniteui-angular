@@ -267,12 +267,15 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      */
     get inEditMode(): boolean {
         const editableCell = this.gridAPI.get_cell_inEditMode(this.gridID);
-        if (editableCell) {
-            return this.cellID.rowID === editableCell.cellID.rowID &&
-                this.cellID.columnID === editableCell.cellID.columnID;
-        } else {
-            return false;
+        const result = editableCell ? this.cellID.rowID === editableCell.cellID.rowID &&
+                                      this.cellID.columnID === editableCell.cellID.columnID : false;
+
+        if (result && !this._inEditMode && this.highlight && this.grid.lastSearchInfo.searchText) {
+            this.highlight.observe();
         }
+        this._inEditMode = result;
+
+        return result;
     }
 
     /**
@@ -289,9 +292,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         if (this.column.editable && value) {
             this.focused = true;
             this.gridAPI.set_cell_inEditMode(this.gridID, this);
-            if (this.highlight && this.grid.lastSearchInfo.searchText) {
-                this.highlight.observe();
-            }
             this.editValue = this.value;
         } else {
             this.gridAPI.escape_editMode(this.gridID, this.cellID);
@@ -498,6 +498,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     private cellSelectionID: string;
     private prevCellSelectionID: string;
     private previousCellEditMode = false;
+    private _inEditMode: boolean;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
