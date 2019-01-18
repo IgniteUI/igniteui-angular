@@ -566,8 +566,6 @@ export class IgxTimePickerComponent implements
         if (this.value) {
             return this._formatTime(this.value, this.format);
         }
-
-        return '';
     }
 
     /**
