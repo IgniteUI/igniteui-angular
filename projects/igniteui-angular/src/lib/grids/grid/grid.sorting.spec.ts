@@ -10,6 +10,9 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { DefaultSortingStrategy, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
+import { IgxChipComponent } from '../../chips/chip.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -25,7 +28,7 @@ describe('IgxGrid - Grid Sorting', () => {
                 GridDeclaredColumnsComponent,
                 SortByParityComponent
             ],
-            imports: [IgxGridModule.forRoot()]
+            imports: [NoopAnimationsModule, IgxGridModule.forRoot()]
         })
         .compileComponents();
     }));
@@ -340,6 +343,43 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(isFirstHalfOdd).toEqual(true);
         expect(isSecondHalfEven).toEqual(true);
     });
+
+    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', () => {
+        const fixture = TestBed.createComponent(GridDeclaredColumnsComponent);
+        const grid = fixture.componentInstance.grid;
+
+        grid.allowFiltering = true;
+        fixture.detectChanges();
+
+        const initialChips = fixture.debugElement.queryAll(By.directive(IgxChipComponent));
+
+        initialChips[0].nativeElement.click();
+        fixture.detectChanges();
+
+        const filteringRow = fixture.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+        expect(filteringRow).toBeDefined();
+
+        const headers = fixture.debugElement.queryAll(By.css('igx-grid-header'));
+        headers[0].nativeElement.click();
+
+        expect(grid.headerGroups.toArray()[0].isFiltered).toBeTruthy();
+
+        const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
+
+        sortingIcon.nativeElement.click();
+        sortingIcon.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_DESC_CONTENT);
+        expect(grid.getCellByColumn(0, 'ID').value).toEqual(7);
+
+        headers[1].nativeElement.click();
+        fixture.detectChanges();
+
+        expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
+    });
+
 });
 
 @Component({
