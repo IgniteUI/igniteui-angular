@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "isSelected",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-drop-down-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "isFocused",
+            "replaceWith": "focused",
+            "owner": {
+                "selector": "igx-drop-down-item",
+                "type": "component"
+            }
+        }
+    ]
+}
