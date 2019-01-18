@@ -30,6 +30,12 @@ export class TreeGridFunctions {
         return rowDOM.query(By.css('igx-tree-grid-cell'));
     }
 
+    public static getCell(fix, rowIndex, columnKey) {
+        const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
+        const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
+        return rowCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey)[0];
+    }
+
     public static getTreeCells(fix) {
         return fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
     }
