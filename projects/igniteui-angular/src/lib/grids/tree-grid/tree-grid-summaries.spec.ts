@@ -1426,11 +1426,13 @@ describe('IgxTreeGrid - Summaries', () => {
 
             await HelperUtils.moveSummaryCell(fix, 6, 5, 'Tab');
             await wait(200);
+            fix.detectChanges();
 
             HelperUtils.verifySummaryCellActive(fix, 7, 0);
 
             await HelperUtils.moveSummaryCell(fix, 7, 0, 'Tab', true);
             await wait(100);
+            fix.detectChanges();
 
             HelperUtils.verifySummaryCellActive(fix, 6, 5);
         });
