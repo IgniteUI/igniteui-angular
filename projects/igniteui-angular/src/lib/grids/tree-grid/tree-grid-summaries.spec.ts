@@ -1234,7 +1234,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifySummaryCellActive(fix, 0, 0);
 
             await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
-            await wait(DEBOUNCETIME);
+            await wait(100);
 
             const cell = treeGrid.getCellByColumn(23, 'OnPTO');
             expect(cell.selected).toBe(true);
