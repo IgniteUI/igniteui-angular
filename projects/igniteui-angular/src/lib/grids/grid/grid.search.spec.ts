@@ -492,6 +492,20 @@ describe('IgxGrid - search API', () => {
             expect(cell.innerText).toBe('1');
         });
 
+        it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
+            grid.columns[1].hidden = true;
+            fix.detectChanges();
+
+            let finds =  grid.findNext('Director');
+            expect(finds).toEqual(2);
+
+            grid.columns[2].hidden = true;
+            fix.detectChanges();
+
+            finds =  grid.findNext('Director');
+            expect(finds).toEqual(0);
+        });
+
         it('Clear filter properly updates the highlights', async () => {
             let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
