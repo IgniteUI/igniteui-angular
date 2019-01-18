@@ -11,7 +11,7 @@ import { DebugElement } from '@angular/core';
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-fdescribe('IgxTreeGrid - search API', () => {
+describe('IgxTreeGrid - search API', () => {
     configureTestSuite();
     let fix;
     let fixNativeElement;
