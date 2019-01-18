@@ -299,6 +299,130 @@ describe('IgxGrid Component Tests', () => {
 
             expect(gridBody.nativeElement.innerText).toMatch(grid.emptyGridMessage);
         }));
+
+        it('should render loading indicator when loading is enabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.grid.isLoading = true;
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).toBeDefined();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            // Check for loaded rows in grid's container
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            // Check for empty filter grid message and body less than 100px
+            const columns = fixture.componentInstance.grid.columns;
+            grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+            fixture.detectChanges();
+            tick(100);
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeLessThan(100);
+
+            // Clear filter and check if grid's body height is restored based on all loaded rows
+            grid.clearFilter(columns[0].field);
+            fixture.detectChanges();
+            tick(100);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(1000);
+
+            // Clearing grid's data and check for empty grid message
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeDefined();
+        }));
+
+        it('should render loading indicator when loading is enabled when there is height', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.grid.isLoading = true;
+            fixture.componentInstance.grid.height = '400px';
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).toBeDefined();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            // Check for loaded rows in grid's container
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(300);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            // Check for empty filter grid message and body less than 100px
+            const columns = fixture.componentInstance.grid.columns;
+            grid.filter(columns[0].field, 546000, IgxNumberFilteringOperand.instance().condition('equals'));
+            fixture.detectChanges();
+            tick(100);
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyFilteredGridMessage);
+
+            // Clear filter and check if grid's body height is restored based on all loaded rows
+            grid.clearFilter(columns[0].field);
+            fixture.detectChanges();
+            tick(100);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(300);
+
+            // Clearing grid's data and check for empty grid message
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeDefined();
+        }));
+
+        it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.grid.isLoading = true;
+            fixture.componentInstance.columns = [];
+            fixture.componentInstance.autoGenerate = true;
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).toBeDefined();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            // Check for loaded rows in grid's container
+            fixture.componentInstance.data = [
+                { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
+            ];
+            fixture.detectChanges();
+            tick(1000);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            // Clearing grid's data and check for empty grid message
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeDefined();
+        }));
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {

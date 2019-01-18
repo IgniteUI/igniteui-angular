@@ -3905,7 +3905,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected autogenerateColumns() {
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const fields = Object.keys(this.data ? this.data[0] : []);
+        const fields = Object.keys(this.data && this.data.length !== 0 ? this.data[0] : []);
         const columns = [];
 
         fields.forEach((field) => {
@@ -3997,7 +3997,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        if (this.isLoading) {
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
