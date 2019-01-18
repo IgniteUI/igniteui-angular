@@ -23,6 +23,9 @@ All notable changes for each version of this project will be documented in this 
             </ng-template>
         </igx-combo>
     ```
+- `igxDropDown`
+    - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
