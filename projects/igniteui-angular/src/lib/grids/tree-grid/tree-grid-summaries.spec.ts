@@ -1206,6 +1206,7 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.focusSummaryCell(fix, 0, 0);
             await wait(DEBOUNCETIME);
 
+            // Should navigate with Tab key
             for (let i = 0; i < 5; i++) {
                 HelperUtils.verifySummaryCellActive(fix, 0, i);
                 await HelperUtils.moveSummaryCell(fix, 0, i, 'Tab');
@@ -1215,6 +1216,11 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '42', '61', '207', '51.75']);
             HelperUtils.verifyColumnSummaries(summaryRow, 5, ['Count'], ['4']);
 
+            // Should not change active item when press Tab on the last summary cell
+            await HelperUtils.moveSummaryCell(fix, 0, 5, 'Tab');
+            HelperUtils.verifySummaryCellActive(fix, 0, 5);
+
+            // Should navigate with Shift+Tab keys
             for (let i = 5; i > 0; i--) {
                 HelperUtils.verifySummaryCellActive(fix, 0, i);
                 await HelperUtils.moveSummaryCell(fix, 0, i, 'Tab', true);
