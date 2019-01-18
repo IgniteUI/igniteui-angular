@@ -1222,12 +1222,41 @@ describe('IgxTreeGrid - Summaries', () => {
             summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['4', '-1', '-1', '-4', '-1']);
+        });
 
+        it('should select last grid cell when press Shift+Tab on root summaries', async () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 0, 0);
+            await wait(DEBOUNCETIME);
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
+
+            await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
+            await wait(DEBOUNCETIME);
+
+            const cell = treeGrid.getCellByColumn(23, 'OnPTO');
+            expect(cell.selected).toBe(true);
+            expect(cell.focused).toBe(true);
+        });
+
+        it('should select first root summary cell when press Tab an a last grid cell', async () => {
+            HelperUtils.focusSummaryCell(fix, 0, 0);
+            await wait(DEBOUNCETIME);
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
             await HelperUtils.moveSummaryCell(fix, 0, 0, 'Tab', true);
 
             const cell = treeGrid.getCellByColumn(3, 'OnPTO');
             expect(cell.selected).toBe(true);
             expect(cell.focused).toBe(true);
+
+            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+            await wait(100);
+            fix.detectChanges();
+
+            HelperUtils.verifySummaryCellActive(fix, 0, 0);
         });
 
         it('should be able to navigate with Arrow keys and Ctrl', async () => {
@@ -1289,6 +1318,21 @@ describe('IgxTreeGrid - Summaries', () => {
 
             await HelperUtils.moveSummaryCell(fix, 6, 1, 'ArrowUp', false, true);
             HelperUtils.verifySummaryCellActive(fix, 6, 1);
+        });
+
+        it('Should not change active summary cell when press Arrow Down and it is last summary row', async () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(100);
+            fix.detectChanges();
+
+            HelperUtils.focusSummaryCell(fix, 24, 1);
+            HelperUtils.verifySummaryCellActive(fix, 24, 1);
+
+            await HelperUtils.moveSummaryCell(fix, 24, 1, 'ArrowDown');
+            HelperUtils.verifySummaryCellActive(fix, 24, 1);
         });
 
         it('Should be able to navigate with Arrow keys Left/Right and Ctrl on a child summary', async () => {
@@ -1370,13 +1414,13 @@ describe('IgxTreeGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '317', '317', '634', '317']);
 
             await HelperUtils.moveSummaryCell(fix, 6, 0, 'ArrowRight', false, true);
-            await wait(100);
+            await wait(200);
             HelperUtils.verifySummaryCellActive(fix, 6, 5);
             cell = treeGrid.getCellByColumn(5, 'OnPTO');
             expect(cell.selected).toBe(true);
 
             await HelperUtils.moveSummaryCell(fix, 6, 5, 'Tab');
-            await wait(100);
+            await wait(200);
 
             HelperUtils.verifySummaryCellActive(fix, 7, 0);
 

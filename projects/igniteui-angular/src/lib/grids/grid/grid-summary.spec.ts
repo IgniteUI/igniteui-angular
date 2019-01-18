@@ -991,7 +991,7 @@ describe('IgxGrid - Summaries', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-           HelperUtils.verifySummaryCellActive(fix, 3, 1);
+            HelperUtils.verifySummaryCellActive(fix, 3, 1);
 
             await HelperUtils.moveSummaryCell(fix, 3, 1, 'ArrowUp');
             await wait(DEBOUNCETIME);
@@ -1602,6 +1602,37 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             verifyBaseSummaries(fix);
             verifySummariesForParentID19(fix, 3);
+        });
+
+        it('should render correct summaries when change grouping', () => {
+            // Group by another column
+            grid.groupBy({
+                fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 4);
+            verifySummariesForParentID17(fix, 5);
+
+            // change order
+            grid.groupingExpressions = [
+                { fieldName: 'OnPTO', dir: SortingDirection.Asc, ignoreCase: true },
+                { fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: true }
+            ];
+            fix.detectChanges();
+
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 4);
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 8);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count'], ['2']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['2', 'Jul 3, 2011', 'Sep 18, 2014']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 4, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '31', '43', '74', '37']);
+
+            grid.clearGrouping('OnPTO');
+            verifyBaseSummaries(fix);
+            verifySummariesForParentID17(fix, 3);
+            verifySummariesForParentID19(fix, 6);
         });
 
         it('should be able to enable/disable summaries at runtime', () => {
