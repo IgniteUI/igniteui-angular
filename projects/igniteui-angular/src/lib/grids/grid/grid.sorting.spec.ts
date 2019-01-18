@@ -11,7 +11,6 @@ import { DefaultSortingStrategy, ISortingStrategy } from '../../data-operations/
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-const SORTING_ICON_NONE_CONTENT = 'none';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
@@ -303,7 +302,7 @@ describe('IgxGrid - Grid Sorting', () => {
 
     it('Should have a valid sorting icon when sorting using the API.', () => {
         const sortingIcon = fixture.debugElement.query(By.css('.sort-icon'));
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
 
         grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true});
         fixture.detectChanges();
@@ -315,7 +314,7 @@ describe('IgxGrid - Grid Sorting', () => {
 
         grid.clearSort();
         fixture.detectChanges();
-        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_NONE_CONTENT);
+        expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
     it(`Should allow sorting using a custom Sorting Strategy.`, () => {
