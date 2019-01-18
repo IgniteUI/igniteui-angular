@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostListener } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -20,7 +20,6 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 
-
 const noop = () => { };
 
 @Component({
@@ -31,6 +30,7 @@ const noop = () => { };
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor {
+
     @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
@@ -56,6 +56,40 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     @Input()
     overlaySettings: OverlaySettings;
+
+    /**
+     * @hidden
+     */
+    @HostBinding(`attr.role`)
+    public role = 'combobox';
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-expanded')
+    public get ariaExpanded(): boolean {
+        return !this.collapsed;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-haspopup')
+    public get hasPopUp() {
+        return 'listbox';
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.aria-owns')
+    public get ariaOwns() {
+        return this.listId;
+    }
+
+    public get listId() {
+        return this.id + '-list';
+    }
 
     public get selectionValue () {
         return this.selection.first_item(this.id);
@@ -113,6 +147,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
 
     public open(overlaySettings?: OverlaySettings) {
+        if (this.disabled) {
+            return;
+         }
         super.open({
             modal: false,
             closeOnOutsideClick: true,
@@ -122,31 +159,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             ),
             scrollStrategy: new AbsoluteScrollStrategy()
         });
-    }
-
-    @HostListener('keydown.Enter', ['$event'])
-    @HostListener('keydown.Space', ['$event'])
-    @HostListener('keydown.Spacebar', ['$event'])
-    @HostListener('click', ['$event'])
-    public handleToggleInteraction(event: Event) {
-        if (this.disabled) {
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-         } else {
-             this.toggle();
-             return;
-         }
-        }
-
-    @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    public handleClosingInteraction (event: KeyboardEvent) {
-        this.close();
-    }
-
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
-    public handleOpeningInteraction (event: KeyboardEvent) {
-        this.open();
     }
 }
 

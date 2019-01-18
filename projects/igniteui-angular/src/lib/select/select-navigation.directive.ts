@@ -1,31 +1,52 @@
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
 import { Directive, Input, Inject, Optional, Self } from '@angular/core';
-import { IgxDropDownBase } from '../drop-down';
-import { IGX_DROPDOWN_BASE } from '../drop-down/drop-down.common';
+import { IgxSelectComponent } from './select.component';
 
 @Directive({
     selector: '[igxSelectItemNavigation]'
 })
 export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationDirective {
-
-    protected _target: IgxDropDownBase = null;
-
-    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBase) {
-        super(dropdown);
-    }
-
-    get target(): IgxDropDownBase {
-        return this._target;
-    }
-
     @Input('igxSelectItemNavigation')
-    set target(target: IgxDropDownBase) {
-        this._target = target ? target : this.dropdown;
-    }
+    public target: IgxSelectComponent;
+
+    constructor() { super(null); }
 
     handleKeyDown(event: KeyboardEvent) {
-        if (!event || event.altKey || event.shiftKey) {
+        if (!event || event.shiftKey) {
             return;
+        }
+        const key = event.key.toLowerCase();
+
+        if (event.altKey) {
+            switch (key) {
+                case 'arrowdown':
+                    this.target.toggle();
+                    break;
+                case 'arrowup':
+                    this.target.toggle();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (this.target.collapsed) {
+            switch (key) {
+                case 'enter':
+                    this.target.open();
+                    return;
+                case 'space':
+                case 'spacebar':
+                case ' ':
+                    this.target.open();
+                    return;
+                default:
+                    break;
+            }
+        }
+
+        if (!this.target.collapsed && key === 'tab') {
+            this.target.close();
         }
         super.handleKeyDown(event);
     }

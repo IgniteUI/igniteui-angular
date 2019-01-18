@@ -1,4 +1,4 @@
-<igx-input-group #inputGroup class="input-group" [disabled]="disabled">
+<igx-input-group #inputGroup class="input-group" [disabled]="disabled" (click)="toggle()">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -10,6 +10,7 @@
         readonly= "true"
         [placeholder]="this.placeholder"
         [(ngModel)]="this.selectionValue"
+        [attr.role]="'textbox'"
         />
     <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
         <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
@@ -20,6 +21,8 @@
 </igx-input-group>
 <div class="igx-drop-down__list" igxToggle [style.maxHeight]="maxHeight"
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-    <ng-content select="igx-select-item"></ng-content>
+    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
+    [attr.id]="this.listId" [attr.role]="'listbox'">
+    <ng-content select="igx-select-item">
+    </ng-content>
 </div>

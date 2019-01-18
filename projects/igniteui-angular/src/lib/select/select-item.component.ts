@@ -1,5 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, ElementRef, Input, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, HostBinding } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
 
@@ -15,6 +15,16 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
         protected selection: IgxSelectionAPIService
     ) {
         super(dropDown, elementRef);
+    }
+
+    @HostBinding('attr.aria-disabled')
+    public get ariaDisabled() {
+        return this.disabled;
+    }
+
+    @HostBinding('attr.role')
+    public get ariaRole() {
+        return 'option';
     }
 
     public get isSelected () {
