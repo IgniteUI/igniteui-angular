@@ -23,7 +23,6 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { isDate } from 'util';
 
 let NEXT_ID = 0;
 
@@ -142,7 +141,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
 
     /**
      * Gets the `locale` of the calendar.
-     * By default the browser's language is used.
+     * Default value is `"en"`.
      * ```typescript
      * let locale =  this.calendar.locale;
      * ```
@@ -156,7 +155,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
      * Sets the `locale` of the calendar.
      * Expects a valid BCP 47 language tag.
-     * By default the browser's language is used.
+     * Default value is `"en"`.
      * ```html
      * <igx-calendar [locale] = "de"></igx-calendar>
      * ```
@@ -610,7 +609,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
     /**
     *@hidden
     */
-    private _locale = window.navigator.language;
+    private _locale = 'en';
     /**
      *@hidden
      */
@@ -1266,7 +1265,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private deselectRange(value: Date[]) {
-        value = value.filter(v => v !== null && isDate(v));
+        value = value.filter(v => v !== null);
         if (value.length < 1) {
             return;
         }

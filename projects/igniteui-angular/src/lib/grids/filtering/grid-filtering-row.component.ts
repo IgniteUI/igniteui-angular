@@ -15,7 +15,7 @@ import {
 import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/drop-down.component';
+import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
@@ -24,7 +24,7 @@ import { IChipSelectEventArgs, IBaseChipEventArgs, IgxChipsAreaComponent, IgxChi
 import { ExpressionUI } from './grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from './grid-filtering.service';
-import { KEYS } from '../../core/utils';
+import { KEYS, isEdge } from '../../core/utils';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
 
 /**
@@ -61,6 +61,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private chipAreaScrollOffset = 0;
     private _column = null;
     private isKeyPressed = false;
+    private isComposing = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -140,11 +141,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
         this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
-
-        if (this.column.dataType === DataType.Date) {
-            // TODO: revise usage of cdr.detectChanges() here
-            this.cdr.detectChanges();
-        }
 
         this.input.nativeElement.focus();
     }
@@ -246,6 +242,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
 
         if (event.key === KEYS.ENTER) {
+            if (this.isComposing) {
+                return;
+            }
+
             this.chipsArea.chipsList.filter(chip => chip.selected = false);
 
             let indexToDeselect = -1;
@@ -286,9 +286,23 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (this.isKeyPressed) {
+        if (isEdge() || this.isKeyPressed) {
             this.value = eventArgs.target.value;
         }
+    }
+
+    /**
+     * Event handler for compositionstart on the input.
+     */
+    public onCompositionStart() {
+        this.isComposing = true;
+    }
+
+    /**
+     * Event handler for compositionend on the input.
+     */
+    public onCompositionEnd() {
+        this.isComposing = false;
     }
 
     /**

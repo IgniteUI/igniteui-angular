@@ -626,6 +626,7 @@
         overflow: hidden;
         z-index: 1;
     }
+
     %grid-tbody-container {
         display: flex;
         grid-row: 4;
@@ -1400,7 +1401,7 @@
         padding-left: map-get($grid-grouping-indicator-padding, 'compact');
     }
 
-    %igx-grid__grouparea {        
+    %igx-grid__grouparea {
         grid-row: 2;
         display: flex;
         align-items: center;

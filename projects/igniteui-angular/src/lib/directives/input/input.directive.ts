@@ -52,6 +52,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input('value')
     set value(value: any) {
         this.nativeElement.value = value;
+        this.checkValidity();
     }
     /**
      * Gets the `value` propery.
@@ -144,9 +145,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     @HostListener('input')
     public onInput() {
-        if (!this.ngControl && this._hasValidators()) {
-            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
-        }
+        this.checkValidity();
     }
     /**
      *@hidden
@@ -293,5 +292,11 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      */
     public set valid(value: IgxInputState) {
         this._valid = value;
+    }
+
+    private checkValidity() {
+        if (!this.ngControl && this._hasValidators()) {
+            this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
+        }
     }
 }
