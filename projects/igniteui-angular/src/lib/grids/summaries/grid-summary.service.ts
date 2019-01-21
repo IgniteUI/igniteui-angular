@@ -193,9 +193,7 @@ export class IgxGridSummaryService {
             if (current.toString() !== newExpr) {
                 this.clearSummaryCache();
             }
-            return;
-        }
-        if (current.length > newExpressions.length) {
+        } else {
             const currExpr = current.slice(0, newExpressions.length).toString();
             if (currExpr !== newExpressions.toString()) {
                 this.clearSummaryCache();
