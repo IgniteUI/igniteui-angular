@@ -150,22 +150,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         public cdr: ChangeDetectorRef) {
     }
 
-
     /**
      * @hidden
      */
-    notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
-    }
-
-    private _handleLayoutChanges(changes: SimpleChanges) {
-        for (const change in changes) {
-            if (changes.hasOwnProperty(change)) {
-                this.hGrid[change] = changes[change].currentValue;
-            }
-        }
-    }
-
     ngOnInit() {
         // setting child data only once on init
         // due to context change issues when moving cached views containing hierarchical child grids
@@ -180,6 +167,10 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
     }
+
+    /**
+     * @hidden
+     */
     ngAfterViewInit() {
         this.hGrid.childLayoutList = this.layout.children;
         if (this.layout.childColumns.length > 0 && !this.hGrid.autoGenerate) {
@@ -196,5 +187,20 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
 
         this.hGrid.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
+    public notGroups(arr) {
+        return arr.filter(c => !c.columnGroup);
+    }
+
+    private _handleLayoutChanges(changes: SimpleChanges) {
+        for (const change in changes) {
+            if (changes.hasOwnProperty(change)) {
+                this.hGrid[change] = changes[change].currentValue;
+            }
+        }
     }
 }

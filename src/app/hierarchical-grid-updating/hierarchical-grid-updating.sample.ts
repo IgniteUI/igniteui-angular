@@ -16,9 +16,11 @@ import { RemoteService } from '../shared/remote.service';
 })
 export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
-    isRowSelectable = false;
-    remoteData = [];
-    primaryKeys = [
+    public lastChildGrid: IgxHierarchicalGridComponent;
+    public lastIdx = 1000;
+    public isRowSelectable = false;
+    public remoteData = [];
+    public primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
         { name: 'OrderID', type: 'number', level: 1 },
         { name: 'EmployeeID', type: 'number', level: 2 },
@@ -74,22 +76,19 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
         this.lastChildGrid = event.grid;
     }
 
-    public lastChildGrid: IgxHierarchicalGridComponent;
-    public lastIdx = 1000;
-
     addRow() {
         this.hGrid.addRow({
-            "CustomerID": this.lastIdx,
-            "CompanyName": "Some Company " + this.lastIdx,
-            "ContactName": "Some Contact " + this.lastIdx,
-            "ContactTitle": "Some Title " + this.lastIdx++,
-            "Country": "Germany",
-            "Phone": "000-0000"
-        })
+            'CustomerID': this.lastIdx,
+            'CompanyName': 'Some Company ' + this.lastIdx,
+            'ContactName': 'Some Contact ' + this.lastIdx,
+            'ContactTitle': 'Some Title ' + this.lastIdx++,
+            'Country': 'Germany',
+            'Phone': '000-0000'
+        });
     }
 
     deleteRow() {
-        this.hGrid.deleteRow("ALFKI");
+        this.hGrid.deleteRow('ALFKI');
     }
 
     logTransactionsMain() {
