@@ -127,6 +127,19 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     public animateOnRelease = false;
 
     /**
+     * An @Input property that sets the element to which the dragged element will be appended.
+     * By default it's set to null and the dragged element is appended to the body.
+     * ```html
+     * <div #hostDiv></div>
+     * <div igxDrag [dragGhostHost]="hostDiv">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     */
+    @Input()
+    public dragGhostHost = null;
+
+    /**
      * Event triggered when the draggable element drag starts.
      * ```html
      * <div igxDrag [animateOnRelease]="'true'" (dragStart)="onDragStart()">
@@ -477,9 +490,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * This method is bound at first at the base element.
      * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
      * @param event PointerMove event captured
-     * @param hostElement Element where the dragged element is rendered. If not provided, element is rendered in the body.
      */
-    public onPointerMove(event, hostElement: any = null) {
+    public onPointerMove(event) {
         if (this._clicked) {
             const dragStartArgs: IDragStartEventArgs = {
                 originalEvent: event,
@@ -517,10 +529,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                 return;
             }
 
-            const hostLeft = hostElement ? hostElement.getBoundingClientRect().left : 0;
-            const hostTop = hostElement ? hostElement.getBoundingClientRect().top : 0;
-            this.left = this._dragStartX + totalMovedX - hostLeft;
-            this.top = this._dragStartY + totalMovedY - hostTop;
+            this.left = this._dragStartX + totalMovedX;
+            this.top = this._dragStartY + totalMovedY;
 
             this.dispatchDragEvents(pageX, pageY);
         }
@@ -580,21 +590,22 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * Bind all needed events.
      * @param event Pointer event required when the dragGhost is being initialized.
      * @param node The Node object to be cloned.
-     * @param hostElement Element where the dragged element is rendered. If not provided, element is rendered in the body.
      */
-    protected createDragGhost(event, node: any = null, hostElement: any = null) {
+    protected createDragGhost(event, node: any = null) {
         this._dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         this._dragGhost.style.transitionDuration = '0.0s';
         this._dragGhost.style.position = 'absolute';
-        this._dragGhost.style.top = this._dragStartY + 'px';
-        this._dragGhost.style.left = this._dragStartX + 'px';
+        const hostLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
+        const hostTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
+        this._dragGhost.style.top = this._dragStartY - hostTop + 'px';
+        this._dragGhost.style.left = this._dragStartX - hostLeft + 'px';
 
         if (this.ghostImageClass) {
             this.renderer.addClass(this._dragGhost, this.ghostImageClass);
         }
 
-        if (hostElement) {
-            hostElement.appendChild(this._dragGhost);
+        if (this.dragGhostHost) {
+            this.dragGhostHost.appendChild(this._dragGhost);
         } else {
             document.body.appendChild(this._dragGhost);
         }
