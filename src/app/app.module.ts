@@ -78,7 +78,7 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
-import { SelectComponent } from './select/select-sample';
+import { SelectSampleComponent } from './select/select-sample';
 
 const components = [
     AppComponent,
@@ -112,6 +112,7 @@ const components = [
     PageHeaderComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
+    SelectSampleComponent,
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
@@ -145,8 +146,7 @@ const components = [
     TypographySampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
-    GridColumnPercentageWidthsSampleComponent,
-    SelectComponent
+    GridColumnPercentageWidthsSampleComponent
 ];
 
 @NgModule({
