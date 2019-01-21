@@ -6,6 +6,9 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `combo.value` is now only a getter.
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+
+##7.1.3
+### Features
 - `igxDragDrop`
     - `dragGhostHost` input property added. Sets the element to which the dragged element will be appended. If not provided, the dragged element is appended to the body.
 
