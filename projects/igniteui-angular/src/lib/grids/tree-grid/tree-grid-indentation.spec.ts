@@ -10,6 +10,7 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DropPosition } from '../grid';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxTreeGrid - Indentation', () => {
     configureTestSuite();
@@ -22,7 +23,7 @@ describe('IgxTreeGrid - Indentation', () => {
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
             ],
-            imports: [IgxTreeGridModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));

@@ -16,7 +16,8 @@ import {
     Inject,
     NgZone,
     AfterViewInit,
-    HostListener
+    HostListener,
+    ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -287,7 +288,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (this._value) {
             return this._customFormatChecker(this.formatter, this._value);
         }
-        return '';
     }
 
     /**
@@ -311,7 +311,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         return '';
     }
 
-    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService, private _zone: NgZone) { }
+    constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
+        private _zone: NgZone,
+        private cdr: ChangeDetectorRef) { }
 
     /**
      * Gets the input group template.
@@ -608,6 +610,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      */
     public writeValue(value: Date) {
         this.value = value;
+        this.cdr.markForCheck();
     }
 
     /**

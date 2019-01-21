@@ -4,8 +4,8 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="disabled"
-            readonly />
+        <input #readonlyInput class="igx-date-picker__input-date" igxInput [value]="displayData" [value]="displayData || ''"
+            [disabled]="disabled" readonly />
     </igx-input-group>
 </ng-template>
 

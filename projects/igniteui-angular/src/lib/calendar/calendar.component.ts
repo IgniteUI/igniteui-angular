@@ -23,7 +23,6 @@ import {
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { isDate } from 'util';
 
 let NEXT_ID = 0;
 
@@ -1283,7 +1282,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * @hidden
      */
     private deselectRange(value: Date[]) {
-        value = value.filter(v => v !== null && isDate(v));
+        value = value.filter(v => v !== null);
         if (value.length < 1) {
             return;
         }
