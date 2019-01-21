@@ -1,14 +1,6 @@
-.avatars-wrapper {
-    display: flex;
-    flex-flow: row wrap;
-}
-
-.avatar-sample {
-    display: flex;
-    flex: 1 0 30%;
-    width: 88px;
-    height: 88px;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 72px;
+.avatars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 24px;
+    padding: 16px;
 }
