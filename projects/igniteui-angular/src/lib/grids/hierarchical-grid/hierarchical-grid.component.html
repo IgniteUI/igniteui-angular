@@ -53,8 +53,7 @@
     | gridTransaction:id:pipeTrigger
     | gridFiltering:filteringExpressionsTree:id:pipeTrigger
     | gridSort:sortingExpressions:pipeTrigger
-    | gridPaging:page:perPage:id:pipeTrigger
-    | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
+    | gridHierarchicalPaging:page:perPage:id:pipeTrigger
     | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">

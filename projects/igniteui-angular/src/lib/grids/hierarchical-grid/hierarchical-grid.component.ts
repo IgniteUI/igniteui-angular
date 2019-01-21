@@ -248,6 +248,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     /**
+    * @hidden
+    */
+   public get template(): TemplateRef<any> {
+        if (this.filteredData && this.filteredData.length === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.dataLength === 0) {
+            return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
+        }
+    }
+
+    /**
      * Gets calculated width of the pinned area.
      * ```typescript
      * const pinnedWidth = this.grid.getPinnedWidth();
@@ -279,13 +292,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
         return record.childGridData !== undefined;
-    }
-
-        /**
-     * @hidden
-     */
-    public isGroupByRecord(record: any): boolean {
-        return false;
     }
 
     /**

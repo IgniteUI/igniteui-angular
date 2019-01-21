@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild } from '@angular/core';
-import { IgxHierarchicalGridComponent, IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid.component';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -14,6 +14,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
+import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -187,85 +188,85 @@ describe('IgxHierarchicalGrid Integration', () => {
         });
     });
 
-    describe('GroupBy', () => {
-        it('Data should be rendered correctly when children are expanded', async() => {
-            const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-            // expand 1st row
-            firstRow.nativeElement.children[0].click();
-            await wait(100);
-            hierarchicalGrid.cdr.detectChanges();
+    // describe('GroupBy', () => {
+    //     it('Data should be rendered correctly when children are expanded', async() => {
+    //         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+    //         // expand 1st row
+    //         firstRow.nativeElement.children[0].click();
+    //         await wait(100);
+    //         hierarchicalGrid.cdr.detectChanges();
 
-            hierarchicalGrid.groupBy({
-                fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
-            });
-            hierarchicalGrid.cdr.detectChanges();
-            await wait(100);
+    //         hierarchicalGrid.groupBy({
+    //             fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+    //         });
+    //         hierarchicalGrid.cdr.detectChanges();
+    //         await wait(100);
 
-            expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxGridGroupByRowComponent).toBeTruthy();
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxHierarchicalRowComponent).toBeTruthy();
-            expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxChildGridRowComponent).toBeTruthy();
+    //         expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxGridGroupByRowComponent).toBeTruthy();
+    //         expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+    //         expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxChildGridRowComponent).toBeTruthy();
 
-            hierarchicalGrid.clearGrouping('ID');
-            hierarchicalGrid.cdr.detectChanges();
-            fixture.detectChanges();
-            expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxHierarchicalRowComponent).toBeTruthy();
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
-            expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxHierarchicalRowComponent).toBeTruthy();
-        });
+    //         hierarchicalGrid.clearGrouping('ID');
+    //         hierarchicalGrid.cdr.detectChanges();
+    //         fixture.detectChanges();
+    //         expect(hierarchicalGrid.getRowByIndex(0) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+    //         expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+    //         expect(hierarchicalGrid.getRowByIndex(2) instanceof IgxHierarchicalRowComponent).toBeTruthy();
+    //     });
 
-        it('child grids data should be correct after grouping in parent grid.',  (async () => {
-            const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-            // expand 1st row
-            firstRow.nativeElement.children[0].click();
-            fixture.detectChanges();
+    //     it('child grids data should be correct after grouping in parent grid.',  (async () => {
+    //         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+    //         // expand 1st row
+    //         firstRow.nativeElement.children[0].click();
+    //         fixture.detectChanges();
 
-            const sRow = hierarchicalGrid.dataRowList.toArray()[1];
-            // expand 2nd row
-            sRow.nativeElement.children[0].click();
-            fixture.detectChanges();
+    //         const sRow = hierarchicalGrid.dataRowList.toArray()[1];
+    //         // expand 2nd row
+    //         sRow.nativeElement.children[0].click();
+    //         fixture.detectChanges();
 
-            hierarchicalGrid.groupBy({
-                fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
-            });
-            fixture.detectChanges();
+    //         hierarchicalGrid.groupBy({
+    //             fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+    //         });
+    //         fixture.detectChanges();
 
-            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(100);
-            fixture.detectChanges();
-            hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
-            await wait(100);
-            fixture.detectChanges();
-            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-            const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            const childGrid2 = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
+    //         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+    //         await wait(100);
+    //         fixture.detectChanges();
+    //         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+    //         await wait(100);
+    //         fixture.detectChanges();
+    //         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+    //         const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+    //         const childGrid2 = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
 
-            expect(childGrid1.data).toBe(fixture.componentInstance.data[1]['childData']);
-            expect(childGrid2.data).toBe(fixture.componentInstance.data[0]['childData']);
-        }));
+    //         expect(childGrid1.data).toBe(fixture.componentInstance.data[1]['childData']);
+    //         expect(childGrid2.data).toBe(fixture.componentInstance.data[0]['childData']);
+    //     }));
 
-        it('virtualization should work as expected when scrolling in grid with expanded children and grouped columns.',  (async () => {
-            // expand 1st row
-            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
-            fixture.detectChanges();
-            // expand 2nd row
-            hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
-            fixture.detectChanges();
+    //     it('virtualization should work as expected when scrolling in grid with expanded children and grouped columns.',  (async () => {
+    //         // expand 1st row
+    //         hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+    //         fixture.detectChanges();
+    //         // expand 2nd row
+    //         hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
+    //         fixture.detectChanges();
 
-            hierarchicalGrid.groupBy({
-                fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
-            });
-            fixture.detectChanges();
+    //         hierarchicalGrid.groupBy({
+    //             fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance()
+    //         });
+    //         fixture.detectChanges();
 
-            hierarchicalGrid.verticalScrollContainer.scrollTo(10);
-            await wait(100);
-            fixture.detectChanges();
+    //         hierarchicalGrid.verticalScrollContainer.scrollTo(10);
+    //         await wait(100);
+    //         fixture.detectChanges();
 
-            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
-            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-            expect(childGrid.data).toBe(fixture.componentInstance.data[1]['childData']);
+    //         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+    //         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+    //         expect(childGrid.data).toBe(fixture.componentInstance.data[1]['childData']);
 
-        }));
-    });
+    //     }));
+    // });
 
     describe('Filtering', () => {
         it('should enable filter-row for root and child grids', (async () => {
