@@ -5,7 +5,7 @@
                 <igx-icon>today</igx-icon>
             </igx-prefix>
             <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-            <input class="igx-date-picker__input-date" igxInput [value]="displayData" [disabled]="disabled" readonly />
+            <input class="igx-date-picker__input-date" igxInput [value]="displayData || ''" [disabled]="disabled" readonly />
         </igx-input-group>
     </ng-template>
     <ng-container *ngTemplateOutlet="template; context: context"></ng-container>
