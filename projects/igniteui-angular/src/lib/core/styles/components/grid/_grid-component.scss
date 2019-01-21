@@ -50,16 +50,24 @@
         @extend %grid-thead-item !optional;
     }
 
-    @include e(tbody) {
-        @extend %grid-tbody !optional;
+    @include e(thead-thumb) {
+        @extend %grid-thead-thumb !optional;
     }
 
-    @include e(tbody-container) {
+    @include e(tbody) {
         @extend %grid-tbody-container !optional;
+    }
+
+    @include e(tbody-content) {
+        @extend %grid-tbody !optional;
     }
 
     @include e(tbody-message) {
         @extend %grid-tbody-message !optional;
+    }
+
+    @include e(tbody-scrollbar) {
+        @extend %grid-tbody-scrollbar !optional;
     }
 
     @include e(scroll) {
@@ -74,12 +82,12 @@
         @extend %grid-scroll-main !optional;
     }
 
-    @include e(scroll-thumb) {
-        @extend %grid-scroll-thumb !optional;
-    }
-
     @include e(tfoot) {
         @extend %grid-tfoot !optional;
+    }
+
+    @include e(tfoot-thumb) {
+        @extend %grid-tfoot-thumb !optional;
     }
 
     @include e(tr) {

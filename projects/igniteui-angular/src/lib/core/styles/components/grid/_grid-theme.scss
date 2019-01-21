@@ -650,9 +650,18 @@
         z-index: 10001;
     }
 
-    %grid-scroll-thumb {
+    %grid-thead-thumb {
         background: --var($theme, 'header-background');
-        border-left: $grid-header-border;
+        border-left: 1px solid igx-color($palette, 'grays', 300);
+    }
+
+    %grid-tfoot-thumb {
+        background: --var($theme, 'header-background');
+        border-left: 1px solid igx-color($palette, 'grays', 300);
+    }
+
+    %grid-tbody-scrollbar {
+        border-left: 1px solid igx-color($palette, 'grays', 300);
     }
 
     %grid-scroll-start {
