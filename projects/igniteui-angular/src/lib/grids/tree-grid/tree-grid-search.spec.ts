@@ -91,8 +91,16 @@ describe('IgxTreeGrid - search API', () => {
 
             actualCount = treeGrid.findPrev('Software Developer');
             verifySearchResult(fixNativeElement, actualCount, 6, 0);
-        });
 
+            actualCount = treeGrid.findNext('Software Developer');
+            verifySearchResult(fixNativeElement, actualCount, 6, 1);
+
+            actualCount = treeGrid.findNext('Software Developer');
+            verifySearchResult(fixNativeElement, actualCount, 6, 2);
+
+            actualCount = treeGrid.findPrev('Software Developer');
+            verifySearchResult(fixNativeElement, actualCount, 6, 1);
+        });
     });
 
     describe('Primary/Foreign key', () => {
@@ -114,7 +122,7 @@ function getActiveSpan(nativeParent: HTMLElement) {
 }
 
 /**
- * Verifies the results from a search execution by providing the actualSearchCount that is returned
+ * Verifies the results from a search execution by providing the actualAPISearchCount that is returned
  * by the findNext/findPrev methods and the expected count and active index.
 */
 function verifySearchResult(nativeParent, actualAPISearchCount, expectedHighlightSpansCount, expectedActiveSpanIndex) {
