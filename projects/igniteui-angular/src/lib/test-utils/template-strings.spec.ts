@@ -20,10 +20,10 @@ export class GridTemplateStrings {
 
     public static declareGrid(attributes = ``, events = ``, columnDefinitions: ColumnDefinitions = ``) {
         return `<igx-grid [data]="data"
-        ${ attributes }
-        ${ events }
+        ${ attributes}
+        ${ events}
         >
-        ${ columnDefinitions }
+        ${ columnDefinitions}
     </igx-grid>`;
     }
 
@@ -363,7 +363,7 @@ export class ColumnDefinitions {
         </igx-column-group>
   `;
 
-  public static multiColHeadersWithGroupingColumns = `
+    public static multiColHeadersWithGroupingColumns = `
   <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="false"
               [sortable]="true" [filterable]="true" field="Missing"></igx-column>
   <igx-column-group [movable]="true" header="General Information" [groupable]='true'>
@@ -393,12 +393,22 @@ export class ColumnDefinitions {
                 editable="true"></igx-column>
     `;
 
-    public static summariesGoupByColumns = `
+    public static summariesGroupByColumns = `
     <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
     <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
     <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
     <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
     <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+    `;
+
+    public static summariesGroupByTansColumns = `
+    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="false" [groupable]='true'></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true"
+        [groupable]='true' [summaries]="ageSummaryMinMax"></igx-column>
     <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
     `;
 }
