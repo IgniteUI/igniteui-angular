@@ -107,6 +107,7 @@ describe('IgxTreeGrid - search API', () => {
         beforeEach(() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
         });
 
@@ -120,6 +121,26 @@ describe('IgxTreeGrid - search API', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).not.toBeNull();
             expect(getHighlightedCellValue(cell)).toBe('1');
+        });
+
+        it('Search highlights should work for root and child rows', () => {
+            let actualCount = treeGrid.findNext('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 0);
+
+            actualCount = treeGrid.findNext('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 1);
+
+            actualCount = treeGrid.findPrev('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 0);
+
+            actualCount = treeGrid.findNext('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 1);
+
+            actualCount = treeGrid.findNext('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 2);
+
+            actualCount = treeGrid.findPrev('re');
+            verifySearchResult(fixNativeElement, actualCount, 7, 1);
         });
 
     });
