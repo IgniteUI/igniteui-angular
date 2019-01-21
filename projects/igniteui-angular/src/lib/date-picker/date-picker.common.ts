@@ -6,6 +6,6 @@ export interface IgxDatePickerBase {
     value: Date;
     format: string;
     mask: string;
-    rawData: string;
+    rawDateString: string;
     dateFormatParts: any[];
 }

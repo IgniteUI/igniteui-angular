@@ -15,7 +15,8 @@ import {
     TemplateRef,
     Inject,
     NgZone,
-    AfterViewInit
+    AfterViewInit,
+    HostListener
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -57,7 +58,8 @@ import {
     IFormatOptions,
     IFormatViews,
     DatePickerInteractionMode,
-    DEFAULT_LOCALE_DATE
+    DEFAULT_LOCALE_DATE,
+    SPIN_DELTA
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -333,7 +335,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         return {
             value: this.value,
             displayData: this.displayData,
-            openCalendar: (eventArgs) => { this.openCalendar(eventArgs); }
+            openCalendar: (event) => { this.openCalendar(event); }
         };
     }
 
@@ -353,6 +355,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     public set value(date: Date) {
         this._value = date;
+        this._onChangeCallback(date);
     }
     /**
      *An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
@@ -544,7 +547,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public displayValuePipe = new DatePickerDisplayValuePipe(this);
     public inputValuePipe = new DatePickerInputValuePipe(this);
     public dateFormatParts = [];
-    public rawData: string;
+    public rawDateString: string;
 
     private _formatOptions = {
         day: 'numeric',
@@ -582,6 +585,12 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     // public onSpaceClick(event) {
     //     this.openCalendar();
     //     event.preventDefault();
+    // }
+
+    // @HostListener('keydown.alt.arrowdown', ['$event'])
+    // public onAltArrowDownKeydown(event: KeyboardEvent) {
+    //     this.calculateDate(this.getEditElement().value, event.type);
+    //     this.openCalendar(event);
     // }
 
     /**
@@ -749,8 +758,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *
      * @hidden
      */
-    public openCalendar(eventArgs): void {
-        eventArgs.stopPropagation();
+    public openCalendar(event): void {
+        event.stopPropagation();
         switch (this.mode) {
             case DatePickerInteractionMode.READONLY: {
                 this.hasHeader = true;
@@ -776,10 +785,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.deselectDate();
     }
 
-    public calculateDate(data: string): void {
-        if (data !== '') {
-            const trimmedData = trimUnderlines(data);
+    public calculateDate(dateString: string, invokedByEvent: string): void {
+        if (dateString !== '') {
+            const trimmedData = trimUnderlines(dateString);
             const monthPart = this.dateFormatParts.filter(part => part.type === DATE_PARTS.MONTH);
+            let newValue;
 
             if (monthPart[0].formatType === FORMAT_DESC.NUMERIC
                 || monthPart[0].formatType === FORMAT_DESC.TWO_DIGITS) {
@@ -797,22 +807,33 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 const yearStartIdx = yearPartPosition[0];
                 const yearEndIdx = yearPartPosition[1];
 
-                if (this.rawData === undefined) {
-                    this.rawData = data;
-                }
-                const day = trimUnderlines(this.rawData.substring(dayStartIdx, dayEndIdx));
-                const month = trimUnderlines(this.rawData.substring(monthStartIdx, monthEndIdx));
-                const year = this.rawData.substring(yearStartIdx, yearEndIdx);
+                const strToManipulate = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
+
+                const day = trimUnderlines(strToManipulate.substring(dayStartIdx, dayEndIdx));
+                const month = trimUnderlines(strToManipulate.substring(monthStartIdx, monthEndIdx));
+                const year = strToManipulate.substring(yearStartIdx, yearEndIdx);
                 if (yearFormat === FORMAT_DESC.TWO_DIGITS) {
                     fullYear = '20'.concat(year);
                 } else {
                     fullYear = year;
                 }
 
-                this.value = createDate(Number(day), Number(month) - 1, Number(fullYear));
+                const originalDateValue = this.value;
+                newValue = createDate(Number(day), Number(month) - 1, Number(fullYear));
+                if (originalDateValue !== null) {
+                    newValue.setHours(originalDateValue.getHours());
+                    newValue.setMinutes(originalDateValue.getMinutes());
+                    newValue.setSeconds(originalDateValue.getSeconds());
+                    newValue.setMilliseconds(originalDateValue.getMilliseconds());
+                }
+
+                this.value = newValue;
             } else {
-                this.value = new Date(trimmedData);
+                newValue = new Date(trimmedData);
+                this.value = newValue;
             }
+
+            this._onChangeCallback(newValue);
         }
     }
 
@@ -846,53 +867,57 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.onSelection.emit(date);
     }
 
-    public onBlur(eventArgs): void {
-        this.calculateDate(eventArgs.target.value);
+    public onBlur(event): void {
+        this.calculateDate(event.target.value, event.type);
     }
 
-    private onKeydown(event) {
-        console.log('onKeydown 1 ');
-        // event.preventDefault();
-        // event.stopPropagation();
-        const cursorPos = this._getCursorPosition();
-        const inputValue = event.target.value;
-
-        console.log('repeat ' + event.repeat);
+    public onKeyDown(event) {
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
-                this.editableInput.nativeElement.value = getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, 1);
-                console.log('onKeydown 2 ');
+                this.spinValue(event);
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.calculateDate(this.editableInput.nativeElement.value);
+                    this.calculateDate(this.getEditElement().value, event.type);
                     this.openCalendar(event);
                 } else {
-                    this.editableInput.nativeElement.value =
-                        getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, -1);
+                    this.spinValue(event);
                 }
                 break;
             default:
                 return;
         }
-
-        // this._setCursorPosition(cursorPos);
-        // requestAnimationFrame(() => {
-        //     this._setCursorPosition(cursorPos);
-        //     console.log('onKeydown 4');
-        // });
-
-        console.log('onKeydown 3');
     }
 
-    private onMouseWheel(event) {
-        event.stopPropagation();
+    public onWheel(event) {
+        this.spinValue(event);
+    }
+
+    private spinValue(event) {
+        event.preventDefault();
         const cursorPos = this._getCursorPosition();
         const inputValue = event.target.value;
+        let sign = 0;
 
-        console.log('deltaX ' + event.deltaX + ' deltaY ' + event.deltaY + ' deltaMode ' + event.deltaMode);
+        if (event.key) {
+            sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
+        }
+
+        if (event.deltaY) {
+            sign = (event.deltaY > 0) ? -1 : 1;
+        }
+
+        this.getEditElement().value =
+            getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, SPIN_DELTA * sign);
+
+        this._setCursorPosition(cursorPos);
+        requestAnimationFrame(() => {
+            this._setCursorPosition(cursorPos);
+        });
+
+        // this.calculateDate(event.target.value, event.type);
     }
 
     private _onOpened(): void {
@@ -934,11 +959,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     private _getCursorPosition(): number {
-        return this.editableInput.nativeElement.selectionStart;
+        return this.getEditElement().selectionStart;
     }
 
     private _setCursorPosition(start: number, end: number = start): void {
-        this.editableInput.nativeElement.setSelectionRange(start, end);
+        this.getEditElement().setSelectionRange(start, end);
     }
 
     private _getFormatOptions(format: string): void {
