@@ -489,7 +489,6 @@
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow: hidden;
         z-index: 0;
 
         %cbx-display {
@@ -509,9 +508,10 @@
     %grid-thead,
     %grid-tfoot {
         position: relative;
-        display: block;
+        display: flex;
         background: --var($theme, 'header-background');
         color: --var($theme, 'header-text-color');
+        overflow: hidden;
 
         %grid-row {
             position: relative;
@@ -628,6 +628,7 @@
     }
 
     %grid-tbody-container {
+        position: relative;
         display: flex;
         grid-row: 4;
     }
@@ -650,8 +651,8 @@
     }
 
     %grid-scroll-thumb {
-        display: inline-flex;
         background: --var($theme, 'header-background');
+        border-left: $grid-header-border;
     }
 
     %grid-scroll-start {
@@ -1053,7 +1054,7 @@
     }
 
     %grid__resize-line {
-        position: absolute;
+        position: fixed;
         cursor: col-resize;
         width: 4px;
         background-color: --var($theme, 'resize-line-color');
@@ -1077,11 +1078,10 @@
     }
 
     %grid-summaries {
+        display: flex;
         overflow: hidden;
-        display: inline-flex;
         background: --var($theme, 'root-summaries-background');
 
-        // %igx-grid-summary__label,
         %igx-grid-summary__result {
             color: --var($theme, 'root-summaries-text-color');
         }

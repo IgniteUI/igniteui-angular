@@ -17,15 +17,15 @@
     }
 
     @include e(thead) {
+        @extend %grid-thead-container !optional;
+    }
+
+    @include e(thead-wrapper) {
         @extend %grid-thead !optional;
 
         igx-display-container {
             @extend %grid-display-container-thead !optional;
         }
-    }
-
-    @include e(thead-container) {
-        @extend %grid-thead-container !optional;
     }
 
     @include e(thead-title) {
@@ -397,13 +397,13 @@
             @extend %grid-cell-display--cosy !optional;
         }
 
-        @include e(thead) {
+        @include e(thead-wrapper) {
             @extend %grid-thead--cosy !optional;
         }
 
         @include e(thead-title) {
             @extend %grid-thead-title--cosy !optional;
-        }        
+        }
 
         @include e(th-title) {
             @extend %grid-cell-header-title--cosy !optional;
@@ -469,7 +469,7 @@
             @extend %grid-cell-display--compact !optional;
         }
 
-        @include e(thead) {
+        @include e(thead-wrapper) {
             @extend %grid-thead--compact !optional;
         }
 
