@@ -33,6 +33,7 @@ import {
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1138,6 +1139,14 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
+    }
+
+    /**
+     * Returns a reference to the header group of the column.
+     * @memberof IgxColumnComponent
+     */
+    get headerGroup(): IgxGridHeaderGroupComponent {
+        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
     }
 
     /**

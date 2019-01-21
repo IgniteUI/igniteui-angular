@@ -2483,17 +2483,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    get calcResizerHeight(): number {
-        if (this.hasSummarizedColumns) {
-            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
-                this.tfoot.nativeElement.clientHeight;
-        }
-        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
-    }
-
-    /**
-     * @hidden
-     */
     get headerCheckboxWidth() {
         if (this.headerCheckboxContainer) {
             return this.headerCheckboxContainer.nativeElement.clientWidth;
