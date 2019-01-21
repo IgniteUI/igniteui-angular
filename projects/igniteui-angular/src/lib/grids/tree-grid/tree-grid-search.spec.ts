@@ -2,13 +2,17 @@ import { async, TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
-import { IgxTreeGridSearchComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
+import {
+    IgxTreeGridSearchComponent,
+    IgxTreeGridPrimaryForeignKeyComponent,
+    IgxTreeGridSummariesScrollingComponent } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -23,7 +27,8 @@ describe('IgxTreeGrid - search API', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSearchComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
+                IgxTreeGridPrimaryForeignKeyComponent,
+                IgxTreeGridSummariesScrollingComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -281,6 +286,89 @@ describe('IgxTreeGrid - search API', () => {
             verifyVisibleCellValueDivsCount(fix);
         });
     });
+
+    describe('Scrollable TreeGrid', () => {
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
+            fix.detectChanges();
+            fixNativeElement = fix.debugElement.nativeElement;
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.expansionDepth = 0;
+            treeGrid.height = '400px';
+            treeGrid.columns[3].hasSummary = false;
+            fix.detectChanges();
+        });
+
+        const expectedValues = ['Andrew', 'Janet', 'Anne', 'Danielle', 'Callahan', 'Jonathan',
+            'Nancy', 'Wang', 'Buchanan', 'Buchanan', 'Armand', 'Dane', 'Declan'];
+
+        it('findNext should navigate search highlights with collapsed rows', async() => {
+            for (let i = 0; i < 14; i++) {
+                const expectedValue = expectedValues[i % expectedValues.length];
+                const actualCount = treeGrid.findNext('an');
+                fix.detectChanges();
+                await wait(16);
+                expect(actualCount).toBe(expectedValues.length);
+                verifyActiveCellValue(fixNativeElement, expectedValue);
+            }
+        });
+
+        it('findPrev should navigate search highlights with collapsed rows', async() => {
+            for (let i = 13; i >= 0; i--) {
+                const expectedValue = expectedValues[i % expectedValues.length];
+                const actualCount = treeGrid.findPrev('an');
+                fix.detectChanges();
+                await wait(16);
+                expect(actualCount).toBe(expectedValues.length);
+                verifyActiveCellValue(fixNativeElement, expectedValue);
+            }
+        });
+
+        it('findNext should navigate search highlights with paging', async() => {
+            treeGrid.expansionDepth = Infinity;
+            treeGrid.perPage = 5;
+            treeGrid.paging = true;
+            fix.detectChanges();
+            await wait(16);
+
+            const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
+
+            for (let i = 0; i < 14; i++) {
+                const index = i % expectedValues.length;
+                const expectedValue = expectedValues[index];
+                const actualCount = treeGrid.findNext('an');
+                fix.detectChanges();
+                await wait(16);
+
+                expect(treeGrid.page).toBe(expectedPages[index]);
+                expect(actualCount).toBe(expectedValues.length);
+                verifyActiveCellValue(fixNativeElement, expectedValue);
+            }
+        });
+
+        it('findNext should navigate search highlights with paging and collapsed rows', async() => {
+            treeGrid.perPage = 5;
+            treeGrid.paging = true;
+            fix.detectChanges();
+            await wait(16);
+
+            const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
+            const expectedPageCounts = [1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5];
+
+            for (let i = 0; i < 13; i++) {
+                const index = i % expectedValues.length;
+                const expectedValue = expectedValues[index];
+                const actualCount = treeGrid.findNext('an');
+                fix.detectChanges();
+                await wait(16);
+
+                expect(treeGrid.page).toBe(expectedPages[index]);
+                expect(treeGrid.totalPages).toBe(expectedPageCounts[index]);
+                expect(actualCount).toBe(expectedValues.length);
+                verifyActiveCellValue(fixNativeElement, expectedValue);
+            }
+        });
+    });
 });
 
 function getHighlightSpans(nativeParent: HTMLElement) {
@@ -332,4 +420,11 @@ function verifyVisibleCellValueDivsCount(fix) {
         // only one visible 'value div' should be present
         expect(valueDivs.filter(div => !div.hidden).length).toBe(1, 'incorrect visible value divs count');
     });
+}
+
+function verifyActiveCellValue(nativeParent: HTMLElement, expectedValue: string) {
+    const activeSpan = getActiveSpan(nativeParent);
+    const cell = activeSpan.parentElement.parentElement;
+    const cellValue = getHighlightedCellValue(cell);
+    expect(cellValue).toBe(expectedValue);
 }
