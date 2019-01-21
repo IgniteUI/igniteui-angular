@@ -489,7 +489,6 @@
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow: hidden;
         z-index: 0;
 
         %cbx-display {
@@ -512,6 +511,7 @@
         display: block;
         background: --var($theme, 'header-background');
         color: --var($theme, 'header-text-color');
+        overflow: hidden;
 
         %grid-row {
             position: relative;
