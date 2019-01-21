@@ -5,7 +5,7 @@ import {
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { first } from 'rxjs/operators';
-import { OverlaySettings, IgxOverlayService, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
+import { OverlaySettings, IgxOverlayService, AbsoluteScrollStrategy, AutoPositionStrategy, ElasticPositionStrategy } from '../../services';
 import { IgxDropDownModule } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxAutocompleteDropDownComponent } from './autocomplete.dropdown.component';
@@ -58,6 +58,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @Input('igxAutocomplete')
     data = [];
 
+    @Input('igxAutocompleteKey')
+    key = null;
+
+    @Input('igxAutocompleteGroupKey')
+    groupKey = null;
+
     @Input('igxAutocompleteDisabled')
     disabled = false;
 
@@ -65,7 +71,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     overlaySettings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy({ target: this.nativeElement })
+        positionStrategy: new ElasticPositionStrategy({ target: this.nativeElement })
     };
 
     @Input('igxAutocompleteCondition')
@@ -196,6 +202,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private select = (value: ISelectionEventArgs) => { // ?
+        if (!value.newSelection) {
+            return;
+        }
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
@@ -209,6 +218,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private createAutocompleteDropDown(dropdown: IgxAutocompleteDropDownComponent) { // ?
         dropdown.autocomplete = this;
         dropdown.data = this.data;
+        dropdown.key = this.key;
+        dropdown.groupKey = this.groupKey;
         dropdown.width = this.nativeElement.clientWidth;
         dropdown.itemTemplate = this.itemTemplate;
         dropdown.condition = this.condition;

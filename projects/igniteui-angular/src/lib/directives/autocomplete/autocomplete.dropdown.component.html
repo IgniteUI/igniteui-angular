@@ -1,9 +1,16 @@
 <div [style.width.px]="width" class="igx-drop-down__list">
-    <ng-container *ngFor="let item of data | filter:condition:term">
-        <ng-container *ngTemplateOutlet="template; context: { $implicit: item }"></ng-container>
+    <ng-container *ngFor="let item of data | filter:condition:term:key:groupKey">
+        <ng-container *ngIf="item[groupKey]">
+            <igx-drop-down-item [value]="key ? item[key] : item" [isHeader]="true">
+                <ng-container *ngTemplateOutlet="defaultItemTemplate; context: { $implicit: item }"></ng-container>
+            </igx-drop-down-item>
+        </ng-container>
+        <ng-container *ngIf="!item[groupKey]">
+            <igx-drop-down-item [value]="key ? item[key] : item">
+                <ng-container *ngTemplateOutlet="template; context: { $implicit: item }"></ng-container>
+            </igx-drop-down-item>
+        </ng-container>
     </ng-container>
 </div>
 
-<ng-template #defaultItemTemplate let-item>
-    <igx-drop-down-item [value]="item">{{item}}</igx-drop-down-item>
-</ng-template>
+<ng-template #defaultItemTemplate let-item> {{key ? item[key]: item }} </ng-template>

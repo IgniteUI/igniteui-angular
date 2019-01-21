@@ -2,50 +2,56 @@
     <app-page-header title="Autocomplete"></app-page-header>
     <section class="sample-content">
         <article class="sample-column">
-            <form class="input-sample" action="/" method="POST">
+            <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit($event)">
 
                 <igx-input-group>
                     <input igxInput name="towns" type="text" [(ngModel)]="town" required
-                        [igxAutocomplete]='towns'
-                        [igxAutocompleteHighlightMatch]='true' />
+                        [igxAutocomplete]='towns'/>
                     <label igxLabel for="towns">Towns</label>
                 </igx-input-group>
 
                 <igx-input-group>
+                    <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
+                    <igx-prefix igxRipple><igx-icon fontSet="material">language</igx-icon> </igx-prefix>
                     <input igxInput name="townsDetailed" type="text" [(ngModel)]="town" required
                         [igxAutocomplete]='townsDetailed'
+                        [igxAutocompleteKey]="'name'"
                         [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate"
-                        [igxAutocompleteCondition]="customFilter" />
+                        [igxAutocompleteCondition]="customFilter" 
+                        [igxAutocompleteHighlightMatch]='true' />
                     <label igxLabel for="townsDetailed">Towns Detailed</label>
+                    <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
                 </igx-input-group>
                 <ng-template #igxAutocompleteItemTemplate let-item>
-                    <igx-drop-down-item [value]="item.name">
-                        <img [src]="item.image" class='logo' width="50" height="50"/>
-                        {{item.name}}
-                    </igx-drop-down-item>
+                    <img [src]="item.image" class='logo' width="50" height="50"/>
+                    {{item.name}}
                 </ng-template>
 
                 <igx-input-group>
                     <input igxInput name="townsGrouped" type="text" [(ngModel)]="town" required
                         [igxAutocomplete]='townsGrouped'
-                        [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate"
+                        [igxAutocompleteKey]="'name'"
+                        [igxAutocompleteGroupKey]="'isHeader'"
+                        [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate1"
                         [igxAutocompleteCondition]="customFilter" 
                         [igxAutocompleteSettings]="customSettings" />
                     <label igxLabel for="townsGrouped">Towns Grouped</label>
                 </igx-input-group>
-                <ng-template #igxAutocompleteItemTemplate let-item>
-                    <igx-drop-down-item [value]="item.name" [isHeader]="item.isHeader">
-                        <img *ngIf="item.image" [src]="item.image" class='logo' width="50" height="50"/>
-                        {{item.name}}
-                    </igx-drop-down-item>
+                <ng-template #igxAutocompleteItemTemplate1 let-item>
+                    <img [src]="item.image" class='logo' width="50" height="50"/>
+                    {{item.name}}
                 </ng-template>
 
                 <igx-input-group>
+                    
                     <input igxInput name="townsDisabled" type="text" [(ngModel)]="town" required
                     [igxAutocomplete]='townsDetailed'
+                    [igxAutocompleteKey]="'name'"
                     [igxAutocompleteDisabled]="true"/>
                     <label igxLabel for="townsDisabled">Towns Disabled</label>
                 </igx-input-group>
+
+                <button>Submit</button>
             </form>
         </article>
     </section>

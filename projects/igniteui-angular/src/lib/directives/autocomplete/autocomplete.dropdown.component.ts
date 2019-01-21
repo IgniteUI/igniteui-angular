@@ -16,35 +16,27 @@ export class IgxAutocompleteDropDownComponent extends IgxDropDownBase {
         super(elementRef, cdr);
     }
 
-    private _list: QueryList<IgxDropDownItemBase>;
     @ViewChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent })
-    public set children(list: QueryList<IgxDropDownItemBase>) {
-        this._list = list;
-    }
-    public get children(): QueryList<IgxDropDownItemBase> {
-        return this._list;
-    }
+    children: QueryList<IgxDropDownItemBase>;
 
     @ViewChild('defaultItemTemplate', { read: TemplateRef })
     protected defaultItemTemplate: TemplateRef<any>;
 
-    @Input()
+    autocomplete: IgxAutocompleteDirective; // ?
+
     data = [];
 
-    @Input()
+    key = null;
+
+    groupKey = '';
+
     itemTemplate: TemplateRef<any>;
 
-    @Input()
     width: any;
 
-    @Input()
     condition: (item: any, term: any) => boolean;
 
-    @Input()
     term = '';
-
-    @Input()
-    autocomplete: IgxAutocompleteDirective; // ?
 
     get template(): TemplateRef<any> {
         return this.itemTemplate ? this.itemTemplate : this.defaultItemTemplate;
