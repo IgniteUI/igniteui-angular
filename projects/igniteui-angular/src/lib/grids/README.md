@@ -187,6 +187,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`summaryPosition`| GridSummaryPosition | The summary row position for the child levels. The default is top. |
 |`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels. |
 |`locale`| string | Determines the locale of the grid. Default value is `en`. |
+| `isLoading` | bool | Sets if the grid is waiting for data - default value false. |
 
 ### Outputs
 
