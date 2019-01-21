@@ -210,6 +210,76 @@ describe('IgxTreeGrid - search API', () => {
 
             verifySearchResult(fixNativeElement, 6, 3);
         });
+
+        it('Should update search highlights when a column is pinned/unpinned', () => {
+            treeGrid.findNext('casey');
+
+            // Verify a 'Name' cell is unpinned and has active search result in it.
+            let treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
+            let cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            expect(cell).not.toBe(treeCell);
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            // Pin column
+            const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            column.pinned = true;
+
+            // Verify a 'Name' cell is pinned tree cell and has active search result in it.
+            treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
+            cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            expect(cell).toBe(treeCell);
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            // Unpin column
+            column.pinned = false;
+
+            // Verify a 'Name' cell is unpinned and has active search result in it.
+            treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
+            cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            expect(cell).not.toBe(treeCell);
+            verifySearchResult(cell.nativeElement, 1, 0);
+        });
+
+        it('Should update search highlights when a column that doesnt contain search results is hidden/shown', () => {
+            treeGrid.findNext('casey');
+
+            let cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            // Hide 'Age' column
+            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            column.hidden = true;
+
+            cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            // Show 'Age' column
+            column.hidden = false;
+
+            cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            verifySearchResult(cell.nativeElement, 1, 0);
+        });
+
+        it('Should update search highlights when a column that contains search results is hidden/shown', () => {
+            treeGrid.findNext('casey');
+
+            let cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            // Hide 'Name' column
+            const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            column.hidden = true;
+
+            verifySearchResult(fixNativeElement, 0, -1);
+
+            // Show 'Name' column
+            column.hidden = false;
+
+            cell = TreeGridFunctions.getCell(fix, 0, 'Name');
+            verifySearchResult(cell.nativeElement, 1, 0);
+
+            verifyVisibleCellValueDivsCount(fix);
+        });
     });
 });
 
@@ -223,7 +293,8 @@ function getActiveSpan(nativeParent: HTMLElement) {
 
 /**
  * Verifies the results from a search execution by providing the expected highlighted elements count
- * and the expected active highlight index.
+ * and the expected active span index.
+ * expectedActiveSpanIndex should be passed as -1 if there should be no active span element.
  * (Optionally the result from findNext/findPrev methods - the actualAPISearchCount, can also be checked.)
 */
 function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedActiveSpanIndex, actualAPISearchCount?) {
@@ -233,11 +304,32 @@ function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedA
     if (actualAPISearchCount) {
         expect(actualAPISearchCount).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count returned from api');
     }
+
     expect(spans.length).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count');
-    expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
+
+    if (expectedActiveSpanIndex !== -1) {
+        // If active element should exist.
+        expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
+    } else {
+        // If active element should not exist. (used when spans.length is expected to be 0 as well)
+        expect(activeSpan).toBeNull('active element was found');
+    }
 }
 
 function getHighlightedCellValue(cell: HTMLElement) {
     const valueDivs: HTMLElement[] = Array.from(cell.querySelectorAll(CELL_VALUE_DIV_CSS_CLASS));
     return valueDivs.filter(v => !v.hidden).map(v => v.innerText.trim()).join('');
+}
+
+/**
+ * Verifies that every single cell contains only one visible div with the cell value in it.
+*/
+function verifyVisibleCellValueDivsCount(fix) {
+    // Verify that there is NO cell with a duplicated value.
+    const allCells = TreeGridFunctions.getAllCells(fix);
+    allCells.forEach(cell => {
+        const valueDivs: HTMLElement[] = Array.from(cell.nativeElement.querySelectorAll(CELL_VALUE_DIV_CSS_CLASS));
+        // only one visible 'value div' should be present
+        expect(valueDivs.filter(div => !div.hidden).length).toBe(1, 'incorrect visible value divs count');
+    });
 }

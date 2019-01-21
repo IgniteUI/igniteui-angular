@@ -51,6 +51,12 @@ export class TreeGridFunctions {
         return allDOMCells.filter((DOMcell) => DOMcell.componentInstance.column.field === columnKey);
     }
 
+    public static getAllCells(fix) {
+        const allTreeCells = fix.debugElement.queryAll(By.css('igx-tree-grid-cell'));
+        const allNormalCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
+        return allTreeCells.concat(allNormalCells);
+    }
+
     public static getCellValue(fix, rowIndex, columnKey) {
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
         const rowCells = [TreeGridFunctions.getTreeCell(rowDOM)].concat(TreeGridFunctions.getNormalCells(rowDOM));
