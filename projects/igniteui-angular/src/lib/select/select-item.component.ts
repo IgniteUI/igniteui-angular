@@ -1,5 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, ElementRef, Inject, HostBinding, Input } from '@angular/core';
+import { Component, ElementRef, Inject, HostBinding, Input, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from '../drop-down/drop-down.common';
 
@@ -9,7 +9,7 @@ let NEXT_ID = 0;
     selector: 'igx-select-item',
     templateUrl: 'select-item.component.html'
 })
-export class IgxSelectItemComponent extends IgxDropDownItemComponent {
+export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
@@ -51,5 +51,8 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
         if (value && !this.isHeader && !this.disabled) {
             this.dropDown.selectItem(this);
         }
+    }
+
+    ngDoCheck(): void {
     }
 }
