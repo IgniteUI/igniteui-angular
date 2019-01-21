@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
-import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
+import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridSearchComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -45,7 +45,7 @@ describe('IgxTreeGrid - search API', () => {
 
             // Verify occurrences within a tree cell
             const treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[1]);
-            expect(treeCell.nativeElement.innerText.trim()).toBe('Software Developer Evangelist');
+            expect(getHighlightedCellValue(treeCell.nativeElement)).toBe('Software Developer Evangelist');
 
             // Active highlight is in second tree cell.
             let spans = getHighlightSpans(treeCell.nativeElement);
@@ -73,7 +73,7 @@ describe('IgxTreeGrid - search API', () => {
             expect(activeSpan).not.toBe(spans[1]);
 
             const othertreeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[2]);
-            expect(othertreeCell.nativeElement.innerText.trim()).toBe('Junior Software Developer');
+            expect(getHighlightedCellValue(othertreeCell.nativeElement)).toBe('Junior Software Developer');
 
             // Active highlight is now in the third tree cell.
             spans = getHighlightSpans(othertreeCell.nativeElement);
@@ -110,6 +110,18 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid = fix.componentInstance.treeGrid;
         });
 
+        it('Search highlights should work for tree cells', () => {
+            treeGrid.findNext('1');
+            fix.detectChanges();
+
+            const cell = TreeGridFunctions.getCell(fix, 0, 'ID').nativeElement;
+            const highlights = getHighlightSpans(cell);
+            const activeHighlight = getActiveSpan(cell);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).not.toBeNull();
+            expect(getHighlightedCellValue(cell)).toBe('1');
+        });
+
     });
 });
 
@@ -132,4 +144,9 @@ function verifySearchResult(nativeParent, actualAPISearchCount, expectedHighligh
     expect(actualAPISearchCount).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count returned from api');
     expect(spans.length).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count');
     expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
+}
+
+function getHighlightedCellValue(cell: HTMLElement) {
+    const valueDivs: HTMLElement[] = Array.from(cell.querySelectorAll(CELL_VALUE_DIV_CSS_CLASS));
+    return valueDivs.filter(v => !v.hidden).map(v => v.innerText.trim()).join('');
 }
