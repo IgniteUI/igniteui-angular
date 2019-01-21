@@ -7,6 +7,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -41,7 +43,7 @@ describe('IgxTreeGrid - search API', () => {
             let actualCount = treeGrid.findNext('ev');
 
             // Verify total number of occurrences in treeGrid.
-            verifySearchResult(fixNativeElement, actualCount, 10, 0);
+            verifySearchResult(fixNativeElement, 10, 0, actualCount);
 
             // Verify occurrences within a tree cell
             const treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[1]);
@@ -84,22 +86,22 @@ describe('IgxTreeGrid - search API', () => {
 
         it('Search highlights should work for root and child rows', () => {
             let actualCount = treeGrid.findNext('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 0);
+            verifySearchResult(fixNativeElement, 6, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 1);
+            verifySearchResult(fixNativeElement, 6, 1, actualCount);
 
             actualCount = treeGrid.findPrev('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 0);
+            verifySearchResult(fixNativeElement, 6, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 1);
+            verifySearchResult(fixNativeElement, 6, 1, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 2);
+            verifySearchResult(fixNativeElement, 6, 2, actualCount);
 
             actualCount = treeGrid.findPrev('Software Developer');
-            verifySearchResult(fixNativeElement, actualCount, 6, 1);
+            verifySearchResult(fixNativeElement, 6, 1, actualCount);
         });
     });
 
@@ -125,24 +127,89 @@ describe('IgxTreeGrid - search API', () => {
 
         it('Search highlights should work for root and child rows', () => {
             let actualCount = treeGrid.findNext('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 0);
+            verifySearchResult(fixNativeElement, 7, 0, actualCount);
 
             actualCount = treeGrid.findNext('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 1);
+            verifySearchResult(fixNativeElement, 7, 1, actualCount);
 
             actualCount = treeGrid.findPrev('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 0);
+            verifySearchResult(fixNativeElement, 7, 0, actualCount);
 
             actualCount = treeGrid.findNext('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 1);
+            verifySearchResult(fixNativeElement, 7, 1, actualCount);
 
             actualCount = treeGrid.findNext('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 2);
+            verifySearchResult(fixNativeElement, 7, 2, actualCount);
 
             actualCount = treeGrid.findPrev('re');
-            verifySearchResult(fixNativeElement, actualCount, 7, 1);
+            verifySearchResult(fixNativeElement, 7, 1, actualCount);
         });
 
+        it('Should update search highlights when filtering', () => {
+            treeGrid.findNext('Software Developer');
+
+            verifySearchResult(fixNativeElement, 3, 0);
+
+            // Apply filter
+            treeGrid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            verifySearchResult(fixNativeElement, 2, 0);
+        });
+
+        it('Should update search highlights when clearing filter', () => {
+            // Apply filter
+            treeGrid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            treeGrid.findNext('Software Developer');
+
+            verifySearchResult(fixNativeElement, 2, 0);
+
+            // Clear filter
+            treeGrid.clearFilter();
+            fix.detectChanges();
+
+            verifySearchResult(fixNativeElement, 3, 0);
+        });
+
+        it('Should update search highlights when sorting', () => {
+            treeGrid.findNext('er');
+
+            verifySearchResult(fixNativeElement, 6, 0);
+
+            // Apply asc sorting
+            treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
+            fix.detectChanges();
+            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            fix.detectChanges();
+
+            verifySearchResult(fixNativeElement, 6, 3);
+
+            // Apply desc sorting
+            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
+            fix.detectChanges();
+
+            verifySearchResult(fixNativeElement, 6, 1);
+        });
+
+        it('Should update search highlights when clearing sorting', () => {
+            // Apply asc sorting
+            treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
+            fix.detectChanges();
+            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            fix.detectChanges();
+
+            treeGrid.findNext('er');
+
+            verifySearchResult(fixNativeElement, 6, 0);
+
+            // Clear sorting
+            treeGrid.clearSort();
+            fix.detectChanges();
+
+            verifySearchResult(fixNativeElement, 6, 3);
+        });
     });
 });
 
@@ -155,14 +222,17 @@ function getActiveSpan(nativeParent: HTMLElement) {
 }
 
 /**
- * Verifies the results from a search execution by providing the actualAPISearchCount that is returned
- * by the findNext/findPrev methods and the expected count and active index.
+ * Verifies the results from a search execution by providing the expected highlighted elements count
+ * and the expected active highlight index.
+ * (Optionally the result from findNext/findPrev methods - the actualAPISearchCount, can also be checked.)
 */
-function verifySearchResult(nativeParent, actualAPISearchCount, expectedHighlightSpansCount, expectedActiveSpanIndex) {
+function verifySearchResult(nativeParent, expectedHighlightSpansCount, expectedActiveSpanIndex, actualAPISearchCount?) {
     const spans = getHighlightSpans(nativeParent);
     const activeSpan = getActiveSpan(nativeParent);
 
-    expect(actualAPISearchCount).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count returned from api');
+    if (actualAPISearchCount) {
+        expect(actualAPISearchCount).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count returned from api');
+    }
     expect(spans.length).toBe(expectedHighlightSpansCount, 'incorrect highlight elements count');
     expect(activeSpan).toBe(spans[expectedActiveSpanIndex], 'incorrect active element');
 }
