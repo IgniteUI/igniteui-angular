@@ -10,7 +10,7 @@
         readonly= "true"
         [placeholder]="this.placeholder"
         [(ngModel)]="this.selectionValue"
-        [attr.aria-labelledby]="this.label.id"
+        [attr.aria-labelledby]="this.label ? this.label.id : ''"
         [attr.role]="'combobox'"
         [attr.aria-expanded]="ariaExpanded"
         [attr.aria-haspopup]="ariaHasPopUp"
