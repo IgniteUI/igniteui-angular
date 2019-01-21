@@ -21,10 +21,10 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             switch (key) {
                 case 'arrowdown':
                     this.target.toggle();
-                    break;
+                    return;
                 case 'arrowup':
                     this.target.toggle();
-                    break;
+                    return;
                 default:
                     break;
             }
