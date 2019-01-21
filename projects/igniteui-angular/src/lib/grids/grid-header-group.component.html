@@ -8,6 +8,7 @@
                                 [column]="child"
                                 [gridID]="child.gridID"
                                 [igxColumnMovingDrag]="child"
+                                [dragGhostHost]="grid.outletDirective.nativeElement"
                                 [attr.droppable]="true"
                                 [igxColumnMovingDrop]="child"
                                 [style.min-width.px]="child.width"
