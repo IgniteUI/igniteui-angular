@@ -476,10 +476,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
-        const rowID = this._gridAPI.get_row_id(this.id, row);
+        const rowData = typeof row === 'number' ? this.filteredSortedData[row] : row;
+        const rowID = this._gridAPI.get_row_id(this.id, rowData);
         const record = this.processedRecords.get(rowID);
         this._gridAPI.expand_path_to_recrod(this.id, record);
-        const rowIndex = this.processedExpandedFlatData.indexOf(row);
+        const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
 
         super.scrollTo(rowIndex, column);
     }
