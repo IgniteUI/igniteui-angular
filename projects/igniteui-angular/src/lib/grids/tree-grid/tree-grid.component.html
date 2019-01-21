@@ -39,11 +39,11 @@
                 [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
                 <igx-grid-header-group [igxColumnMovingDrag]="col" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
-            <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
         </div>
         <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
     <div class="igx-grid__thead-thumb" *ngIf='hasVerticalSroll()' [style.height.px]='headerHeight' [style.width]="'18px'"></div>
+    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
 
 <div class="igx-grid__tbody">
@@ -73,9 +73,9 @@
             <ng-container *igxTemplateOutlet="isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
-        <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
+    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div class="igx-grid__tbody-scrollbar" [style.width]="'18px'" [style.height.px]='calcHeight'>
         <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
     </div>
