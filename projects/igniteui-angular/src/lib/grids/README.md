@@ -167,10 +167,12 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`resourceStrings`| IGridResourceStrings | Resource strings of the grid. |
 |`autoGenerate`|boolean|Autogenerate grid's columns, default value is _false_|
 |`paging`|boolean|Enables the paging feature. Defaults to _false_.|
+|`page`| number | The current page index.|
 |`perPage`|number|Visible items per page, default is 15|
 |`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
 |`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
 |`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
+|`emptyFilteredGridMessage`| string | The message displayed when there are no records and the grid is filtered.|
 |`sortingExpressions`|Array|The sorting state of the grid.|
 |`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
@@ -185,7 +187,23 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`rowEditable` | boolean | enables/disables row editing mode |
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 |`summaryPosition`| GridSummaryPosition | The summary row position for the child levels. The default is top. |
-|`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels. |
+|`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels.|
+|`columnHiding`| boolean | Returns whether the column hiding UI for the `IgxGridComponent` is enabled.|
+| `columnHidingTitle`| string | The title to be displayed in the built-in column hiding UI.|
+| `columnPinning` | boolean | Returns if the built-in column pinning UI should be shown in the toolbar. |
+| `columnPinningTitle` | string | The title to be displayed in the UI of the column pinning.|
+| `rowHeight` | number | Sets the row height. |
+| `columnWidth` | string | The default width of the `IgxGridComponent`'s columns. |
+|`primaryKey`| any | Property that sets the primary key of the `IgxGridComponent`. |
+|`hiddenColumnsText`| string | The text to be displayed inside the toggle button for the built-in column hiding UI of the`IgxColumnComponent`. |
+|`pinnedColumnsText`| string | the text to be displayed inside the toggle button for the built-in column pinning UI of the`IgxColumnComponent`. |
+|`showToolbar`| boolean | Specifies whether the `IgxGridComponent`'s toolbar is shown or hidden.|
+|`toolbarTitle`| string | the toolbar's title. |
+|`exportExcel`| boolean | Returns whether the option for exporting to MS Excel is enabled or disabled. |
+|`exportCsv`| boolean | Returns whether the option for exporting to CSV is enabled or disabled.|
+|`exportText`| string | Returns the textual content for the main export button.|
+|`exportExcelText`| string | Sets the textual content for the main export button. |
+|`exportCsvText`| string | Returns the textual content for the CSV export button.|
 |`locale`| string | Determines the locale of the grid. Default value is `en`. |
 | `isLoading` | bool | Sets if the grid is waiting for data - default value false. |
 
@@ -205,6 +223,7 @@ A list of the events emitted by the **igx-grid**:
 |`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
 |`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
 |`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
+|`onFocusChange`| Emitted when changing the focus while navigating with the keyboard. Return the focused cell or focused group row. This event is cancelable. |
 |`onColumnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
 |`onSelection`|Emitted when a cell is selected. Returns the cell object.|
 |`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
@@ -214,11 +233,14 @@ A list of the events emitted by the **igx-grid**:
 |`onPagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
 |`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
 |`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
+|`onDataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
 |`onColumnPinning`|Emitted when a column is pinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property.|
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
-|`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.
+|`onColumnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
+|`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
+|`onToolbarExporting`| Emitted when an export process is initiated by the user.|
 
 
 Defining handlers for these event emitters is done using declarative event binding:

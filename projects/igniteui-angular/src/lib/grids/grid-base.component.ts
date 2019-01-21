@@ -686,7 +686,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * An @Input property that sets the primary key of the `IgxGridComponent`.
      * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="6" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
@@ -1325,6 +1325,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
+    /**
+     * Emitted when changing the focus while navigating with the keyboard.
+     * Return the focused cell or focused group row. This event is cancelable.
+     * ```typescript
+     * changeFocus(event: IGridFocusChangeEventArgs) {
+     *  const changedFocus = event;
+     * }
+     * ```
+     * ```html
+     * * <igx-grid (onFocusChange)="changeFocus($event)"></igx-grid>
+     * ```
+     */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
