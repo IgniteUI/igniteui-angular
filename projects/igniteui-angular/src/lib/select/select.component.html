@@ -10,7 +10,12 @@
         readonly= "true"
         [placeholder]="this.placeholder"
         [(ngModel)]="this.selectionValue"
-        [attr.role]="'textbox'"
+        [attr.aria-labelledby]="this.label.id"
+        [attr.role]="'combobox'"
+        [attr.aria-expanded]="ariaExpanded"
+        [attr.aria-haspopup]="ariaHasPopUp"
+        [attr.aria-owns]="ariaOwns"
+        [attr.aria-activedescendant]="this.selectedItem"
         />
     <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
         <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>

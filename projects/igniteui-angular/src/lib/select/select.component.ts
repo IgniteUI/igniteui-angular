@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, HostBinding } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -19,6 +19,7 @@ import { SelectPositioningStrategy } from './../services/overlay/position/select
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
+import { IgxLabelDirective } from '../input-group';
 
 const noop = () => { };
 
@@ -35,6 +36,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
     public children: QueryList<IgxSelectItemComponent>;
+    @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
 
     /**
      * An @Input property that sets how the input value.
@@ -57,16 +59,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
-    /**
-     * @hidden
-     */
-    @HostBinding(`attr.role`)
-    public role = 'combobox';
 
     /**
      * @hidden
      */
-    @HostBinding('attr.aria-expanded')
     public get ariaExpanded(): boolean {
         return !this.collapsed;
     }
@@ -74,15 +70,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     /**
      * @hidden
      */
-    @HostBinding('attr.aria-haspopup')
-    public get hasPopUp() {
+    public get ariaHasPopUp() {
         return 'listbox';
     }
 
     /**
      * @hidden
      */
-    @HostBinding('attr.aria-owns')
     public get ariaOwns() {
         return this.listId;
     }
@@ -122,12 +116,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
     public selectItem(newSelection: IgxDropDownItemBase, event?) {
         const oldSelection = this.selectedItem;
-        if (newSelection === null) {
+        if (newSelection.isHeader || newSelection.disabled || newSelection === null) {
             return;
         }
-        if (newSelection.isHeader) {
-            return;
-        }
+
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);
 
