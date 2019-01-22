@@ -2421,6 +2421,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+        this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.reflow();
+        });
     }
 
     private combineForOfCollections(dataList, summaryList) {
