@@ -30,7 +30,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseComponent, IgxGridExpandState } from './hierarchical-grid-base.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 
@@ -38,12 +38,6 @@ export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
     parendID: any;
     grid: IgxHierarchicalGridComponent;
-}
-
-export const enum IgxGridExpandState {
-    COLLAPSED = -1, // Set when all rows to be collapsed through expandChildren option
-    MIXED = 0, // Should be set when rows are manually expanded/collapsed
-    EXPANDED = 1 // Set when all rows to be expanded through expandChildren option
 }
 
 @Component({
@@ -55,8 +49,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
     private layout_id = `igx-row-island-`;
     private isInit = false;
-    private _expandChildren = false;
-    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
     public initialChanges = [];
     public rootGrid = null;
 
@@ -67,19 +59,20 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     set expandChildren(value) {
         this._expandChildren = value;
         this.childrenExpandState = value ? IgxGridExpandState.EXPANDED : IgxGridExpandState.COLLAPSED;
-        if (!this.parentIsland && this.rootGrid) {
-            this.rootGrid.markForCheck();
-        } else if (this.parentIsland) {
-            this.getGridsForIsland(this.parentIsland.key).forEach((grid) => {
-                if (document.body.contains(grid.nativeElement)) {
-                    // Detect changes right away if the grid is visible
-                    grid.markForCheck();
-                } else {
-                    // Else defer the detection on changes when the grid gets into view for performance.
-                    grid.updateOnRender = true;
-                }
-            });
-        }
+        this.getGridsForIsland(this.key).forEach((grid) => {
+            if (document.body.contains(grid.nativeElement)) {
+                // Detect changes right away if the grid is visible
+                grid.expandChildren = value;
+                grid.markForCheck();
+            } else {
+                // Else defer the detection on changes when the grid gets into view for performance.
+                grid.updateOnRender = true;
+            }
+        });
+    }
+
+    get expandChildren() {
+        return this._expandChildren;
     }
 
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
@@ -90,18 +83,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
 
     @Output()
     public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
-
-    get expandChildren() {
-        return this._expandChildren;
-    }
-
-    get shouldExpandAllChildren() {
-        return this.childrenExpandState === IgxGridExpandState.EXPANDED;
-    }
-
-    get shouldCollapseAllChildren() {
-        return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
-    }
 
     get id() {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';

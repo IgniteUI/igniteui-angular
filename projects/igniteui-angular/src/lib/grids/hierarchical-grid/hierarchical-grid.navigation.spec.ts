@@ -703,8 +703,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
-     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID">
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [expandChildren]='true' #rowIsland>
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
@@ -738,9 +738,10 @@ export class IgxHierarchicalGridTestBaseComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+    <igx-hierarchical-grid #grid1 [height]="'400px'" [width]="'500px'" [data]="data" [autoGenerate]="true"
+    [expandChildren]='true' #hierarchicalGrid>
         <igx-row-island [key]="'childData'" [autoGenerate]="true" [expandChildren]='true' [height]="'300px'" #rowIsland>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [height]="'200px'" [expandChildren]='true'>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [height]="'200px'" >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`
@@ -755,10 +756,11 @@ export class IgxHierarchicalGridTestComplexComponent extends IgxHierarchicalGrid
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="'100px'" [expandChildren]='true'>
+    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="true" [height]="'400px'" [width]="'500px'"
+    [expandChildren]='true' #hierarchicalGrid>
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="'100px'">
         </igx-row-island>
-        <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'" [expandChildren]='true'>
+        <igx-row-island [key]="'childData2'" [autoGenerate]="true" [height]="'100px'">
         </igx-row-island>
     </igx-hierarchical-grid>`
 })

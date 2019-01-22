@@ -24,7 +24,7 @@ import {
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { IgxRowIslandComponent, IgxGridExpandState } from './row-island.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
@@ -33,7 +33,7 @@ import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseComponent, IgxGridExpandState } from './hierarchical-grid-base.component';
 
 let NEXT_ID = 0;
 
@@ -80,7 +80,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @Input()
     public set hierarchicalState(value) {
         // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
-        this.childLayoutList.forEach(layout => layout.childrenExpandState = IgxGridExpandState.MIXED);
+        if (this.parent && this.parentIsland) {
+            this.parentIsland.childrenExpandState = IgxGridExpandState.MIXED;
+        } else {
+            this.childrenExpandState = IgxGridExpandState.MIXED;
+        }
         this._hierarchicalState = value;
     }
 
@@ -117,6 +121,24 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public get filteredData() {
         return this._filteredData;
+    }
+
+    @Input()
+    set expandChildren(value) {
+        this._expandChildren = value;
+        if (value && this.data) {
+            this.childrenExpandState = IgxGridExpandState.EXPANDED;
+            this.hierarchicalState = this.data.map((rec) => {
+                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+            });
+        } else if (this.data) {
+            this.childrenExpandState = IgxGridExpandState.COLLAPSED;
+            this.hierarchicalState = [];
+        }
+    }
+
+    get expandChildren() {
+        return this._expandChildren;
     }
 
     /**
@@ -227,6 +249,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super.ngAfterViewInit();
         this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
+
+        if (this.expandChildren && this.data && this.childrenExpandState !== IgxGridExpandState.EXPANDED) {
+            this.childrenExpandState = IgxGridExpandState.EXPANDED;
+            this.hierarchicalState = this.data.map((rec) => {
+                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+            });
+        }
     }
 
     /**

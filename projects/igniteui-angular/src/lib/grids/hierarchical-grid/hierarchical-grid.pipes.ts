@@ -34,23 +34,13 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 
     public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[]): T[] {
         const result = [];
-        const layoutsExpanded = grid.childLayoutList.filter(item => item.shouldExpandAllChildren).length;
-        const layoutsCollapsed = grid.childLayoutList.filter(item => item.shouldCollapseAllChildren).length;
-
-        if (layoutsCollapsed) {
-            // Splice it to keep the reference to the object
-            state.splice(0, state.length);
-        }
 
         data.forEach((v) => {
             result.push(v);
             childKeys.forEach((childKey) => {
                 const childData = v[childKey] ? v[childKey] : null;
-                if (!layoutsCollapsed && grid.isExpanded(v)) {
+                if (grid.isExpanded(v)) {
                     result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: childData, key: childKey });
-                } else if (layoutsExpanded) {
-                    result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridData: childData, key: childKey });
-                    state.push({ rowID: primaryKey ? v[primaryKey] : v });
                 }
             });
         });

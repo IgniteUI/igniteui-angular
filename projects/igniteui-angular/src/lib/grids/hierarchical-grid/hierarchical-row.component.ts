@@ -13,9 +13,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../grid';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +23,6 @@ import { IgxGridExpandState } from './row-island.component';
     providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) } ]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
-
     /**
      * The rendered cells in the row component.
      *

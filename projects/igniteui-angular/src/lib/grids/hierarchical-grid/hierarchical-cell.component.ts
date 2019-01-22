@@ -4,8 +4,6 @@ import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
      OnInit, AfterViewInit, forwardRef, HostListener } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxHierarchicalSelectionAPIService } from './selection';
-import { IgxSelectionAPIService } from '../../core/selection';
-import { IgxGridExpandState } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,

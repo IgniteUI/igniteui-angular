@@ -14,7 +14,7 @@ import {
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
-import { IgxRowIslandComponent, IgxGridExpandState } from './row-island.component';
+import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxSummaryOperand, IGridDataBindable } from '../grid';
@@ -36,10 +36,18 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
+export const enum IgxGridExpandState {
+    COLLAPSED = -1, // Set when all rows to be collapsed through expandChildren option
+    MIXED = 0, // Should be set when rows are manually expanded/collapsed
+    EXPANDED = 1 // Set when all rows to be expanded through expandChildren option
+}
+
 export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
+    protected _expandChildren = false;
     public abstract rootGrid;
     public hgridAPI: IgxHierarchicalGridAPIService;
     public parentIsland: IgxRowIslandComponent;
+    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
 
     @Input()
     public expandChildren: boolean;
@@ -56,6 +64,14 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     get maxLevelHeaderDepth() {
         this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         return this._maxLevelHeaderDepth;
+    }
+
+    get shouldExpandAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.EXPANDED;
+    }
+
+    get shouldCollapseAllChildren() {
+        return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
     }
 
     constructor(
