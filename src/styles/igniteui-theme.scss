@@ -36,10 +36,4 @@
     .igniteui-logo__rocket {
         fill: rgba(white, .38);
     }
-
-    $my-tabs-theme: igx-tabs-theme(
-        $item-background: #000
-    );
-
-    @include igx-tabs($my-tabs-theme);
 }
