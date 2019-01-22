@@ -4,6 +4,6 @@
         "module": "commonjs",
         "sourceMap": false,
         "declaration": true,
-        "outDir": "../../../dist/igniteui-angular/schematics/ng-add"
+        "outDir": "../../../dist/igniteui-angular/schematics/"
     }
 }
