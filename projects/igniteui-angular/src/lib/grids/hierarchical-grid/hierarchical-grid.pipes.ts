@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { DataUtil } from '../../data-operations/data-util';
 
 /**
  *@hidden
@@ -53,6 +54,34 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 }
             });
         });
+        return result;
+    }
+}
+
+/**
+ *@hidden
+ */
+@Pipe({
+    name: 'gridHierarchicalPaging',
+    pure: true
+})
+export class IgxGridHierarchicalPagingPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
+
+    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
+
+        if (!this.gridAPI.get(id).paging) {
+            return collection;
+        }
+
+        const state = {
+            index: page,
+            recordsPerPage: perPage
+        };
+
+        const result: any[] = DataUtil.page(cloneArray(collection), state);
+        this.gridAPI.get(id).pagingState = state;
         return result;
     }
 }

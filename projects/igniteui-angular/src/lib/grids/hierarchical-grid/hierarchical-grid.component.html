@@ -20,24 +20,6 @@
     </select>
 </ng-template>
 
-<div [style.width.px]='calcWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
-    <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
-        <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
-                (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                    <span>{{ getColumnByName(expr.fieldName).header || expr.fieldName }}</span>
-                    <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-            </igx-chip>
-            <span class="igx-grid__grouparea-connector">
-                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" >arrow_forward</igx-icon>
-            </span>
-        </ng-container>
-        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass" [attr.gridId]='this.id'>
-            <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
-        </div>
-    </igx-chips-area>
-</div>
-
 <div class="igx-grid__thead" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
     <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
@@ -45,11 +27,6 @@
         <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header" #headerHierarchyExpander>
             <igx-icon role="button" fontSet="material" [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
         </div>
-        <ng-container *ngIf="groupingExpressions.length > 0">
-            <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}" #headerGroupContainer>
-                <igx-icon role="button" class="igx-grid__group-expand-btn" (click)="toggleAllGroupRows()">reorder</igx-icon>
-            </div>
-        </ng-container>
         <ng-container *ngIf="rowSelectable">
             <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
                 <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
@@ -76,20 +53,17 @@
     | gridTransaction:id:pipeTrigger
     | gridFiltering:filteringExpressionsTree:id:pipeTrigger
     | gridSort:sortingExpressions:pipeTrigger
-    | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
-    | gridPaging:page:perPage:id:pipeTrigger
-    | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
-    | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
+    | gridHierarchicalPaging:page:perPage:id:pipeTrigger
     | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger"
     let-rowIndex="index" [igxForScrollOrientation]="'vertical'"
     [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template
-            [igxTemplateOutlet]='(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)))'
+            [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
             [igxTemplateOutletContext]='getContext(rowData)'
             (onViewCreated)='viewCreatedHandler($event)'
             (onViewMoved)='viewMovedHandler($event)'
             ></ng-template>
-        <!-- <ng-container *igxTemplateOutlet="(isGroupByRecord(rowData) ? group_template : (isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))); context: getContext(rowData)"></ng-container> -->
+        <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
     </ng-template>
     <ng-template #hierarchical_record_template let-rowIndex="index" let-rowData>
         <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
@@ -103,12 +77,8 @@
                 </igx-child-grid-row>
         </div>
     </ng-template>
-    <ng-template #group_template let-rowIndex="index" let-rowData>
-        <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
-        </igx-grid-groupby-row>
-    </ng-template>
     <ng-template #summary_template let-rowIndex="index" let-rowData>
-        <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [indentation]="groupingExpressions.length" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
+        <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
         </igx-grid-summary-row>
     </ng-template>
     <ng-container *ngTemplateOutlet="template"></ng-container>
@@ -118,7 +88,7 @@
 
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.width.px]='calcWidth' #tfoot>
-    <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [indentation]="groupingExpressions.length + 1" [index]="0" class="igx-grid__summaries"  #summaryRow>
+    <igx-grid-summary-row *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [indentation]="1" [index]="0" class="igx-grid__summaries"  #summaryRow>
     </igx-grid-summary-row>
 </div>
 
@@ -143,23 +113,19 @@
     <span class="igx-grid__tbody-message">{{emptyGridMessage}}</span>
 </ng-template>
 
-<ng-template #defaultDropArea>
-    <igx-icon fontSet="material" class="igx-drop-area__icon">group_work</igx-icon>
-    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
-</ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
-        <div [className]="bannerClass">
-            <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
-        </div>
+    <div [className]="bannerClass">
+        <ng-container *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }"></ng-container>
     </div>
+</div>
 <ng-template #defaultRowEditText>
     You have {{ rowChangesCount }} changes in this row
 </ng-template>
 <ng-template #defaultRowEditActions>
-        <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
-        <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
-    </ng-template>
+    <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
+</ng-template>
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">
@@ -167,10 +133,10 @@
         </span>
     </div>
     <div class="igx-banner__actions">
-            <div class="igx-banner__row">
-                <ng-container *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }"></ng-container>
-            </div>
+        <div class="igx-banner__row">
+            <ng-container *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }"></ng-container>
         </div>
+    </div>
 </ng-template>
 
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
