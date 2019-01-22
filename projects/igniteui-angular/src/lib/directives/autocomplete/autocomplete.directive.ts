@@ -1,68 +1,51 @@
 //#region imports
 import {
     Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
-    TemplateRef, NgModule, ComponentRef, ElementRef, HostListener } from '@angular/core';
+    NgModule, ElementRef, HostListener } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { first } from 'rxjs/operators';
-import { OverlaySettings, IgxOverlayService, AbsoluteScrollStrategy, AutoPositionStrategy, ElasticPositionStrategy } from '../../services';
-import { IgxDropDownModule } from '../../drop-down/drop-down.component';
-import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import { IgxAutocompleteDropDownComponent } from './autocomplete.dropdown.component';
+import { CancelableEventArgs } from '../../core/utils';
+import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
 import { ISelectionEventArgs } from '../../drop-down';
-import { IgxAutocompletePipe } from './autocomplete.pipe';
-import { IAutocompleteItemSelectionEventArgs } from './autocomplete.common';
+import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 //#endregion
+
+/**
+ * Interface that encapsulates onItemSelection event arguments - old selection, new selection and cancel selection.
+ * @export
+ */
+export interface IAutocompleteItemSelectionEventArgs extends CancelableEventArgs {
+    value: string;
+}
 
 @Directive({
     selector: '[igxAutocomplete]'
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective {
 
-    //#region constructor
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
-                protected elementRef: ElementRef,
-                protected overlay: IgxOverlayService) {
+                protected elementRef: ElementRef) {
         super(null);
     }
-    //#endregion
 
-    //#region private properties
-    //#endregion
-
-    //#region protected properties
-    protected ref: ComponentRef<IgxAutocompleteDropDownComponent>;
     protected id: string;
     protected get model() {
         return this.ngModel ? this.ngModel : this.formControl;
     }
-    //#endregion
 
-    //#region @ContentChild
-
-    //#endregion
-
-    //#region public properties
     get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
     }
 
-    get collapsed(): boolean {
+    private get collapsed(): boolean {
         return this.target ? this.target.collapsed : true;
     }
 
-    //#endregion
-
-    //#region inputs
     @Input('igxAutocomplete')
-    data = [];
-
-    @Input('igxAutocompleteKey')
-    key = null;
-
-    @Input('igxAutocompleteGroupKey')
-    groupKey = null;
+    dropDown: IgxDropDownComponent;
 
     @Input('igxAutocompleteDisabled')
     disabled = false;
@@ -71,34 +54,15 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     overlaySettings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ElasticPositionStrategy({ target: this.nativeElement })
+        positionStrategy: new ConnectedPositioningStrategy({ target: this.nativeElement })
     };
-
-    @Input('igxAutocompleteCondition')
-    condition: (item: any, term: any) => boolean;
-
-    @Input('igxAutocompleteItemTemplate')
-    protected itemTemplate: TemplateRef<any>;
 
     @Input('igxAutocompleteHighlightMatch')
     protected highlightMatch = false;
 
-    // @Input() width: number;
-    // @Input() itemHeight: number;
-    // @Input() itemsMaxHeight: number;
-    //#endregion
-
-    //#region outputs
     @Output()
     onItemSelected = new EventEmitter<any>();
-    //#endregion
 
-    //#region aria @HostBindings
-    /**
-     * @hidden
-     */
-    @HostBinding('class.igx-autocomplete')
-    public cssClass = 'igx-autocomplete';
     /**
      * @hidden
      */
@@ -133,72 +97,40 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     public get ariaOwns() {
         return this.id;
     }
-    //#endregion
 
-    //#region @HostListeners
     @HostListener('input', ['$event'])
     onInput() {
         if (this.disabled)  {
             return;
         }
-        if (this.collapsed) {
-            this.open();
-        } else {
-            this.filter();
-            this.highlightItem();
-        }
+        this.open();
     }
     @HostListener('blur', ['$event'])
     onBlur() {
         this.close();
     }
-    //#endregion
 
-    //#region igxDropDownItemNavigationDirective overrides
     handleFocus() {}
     handleKeyDown(event) {
         if (!this.collapsed) {
             super.handleKeyDown(event);
         }
     }
-    //#endregion
 
-    //#region public methods
-    close() {
-        if (!this.collapsed) {
-            this.overlay.hide(this.id);
-        }
+    private close() {
+        this.dropDown.close();
     }
-    //#endregion
-
-    //#region private methods
 
     private open() {
-        this.overlay.onOpening
-            .pipe(first())
-            .subscribe(event => {
-                this.ref = event.componentRef as ComponentRef<IgxAutocompleteDropDownComponent>;
-                this.target = this.ref.instance;
-                this.target.collapsed = false;
-                this.createAutocompleteDropDown(this.target as IgxAutocompleteDropDownComponent); // ?
-                this.filter();
+        if (this.collapsed) {
+            this.dropDown.open(this.overlaySettings);
+            this.target = this.dropDown;
+            this.dropDown.width = this.nativeElement.clientWidth + 'px';
+            this.dropDown.onSelection.subscribe(this.select);
+            this.dropDown.onOpened.pipe(first()).subscribe(() => {
+                this.target.focusedItem = this.target.items[0];
             });
-        this.overlay.onOpened
-            .pipe(first())
-            .subscribe(() => {
-                this.highlightItem();
-            });
-        this.overlay.onClosing
-            .pipe()
-            .subscribe(() => {
-                this.target.collapsed = true;
-            });
-
-        this.id = this.overlay.show(IgxAutocompleteDropDownComponent, this.overlaySettings);
-    }
-
-    private filter () {
-        (this.target as IgxAutocompleteDropDownComponent).term = this.nativeElement.value;
+        }
     }
 
     private select = (value: ISelectionEventArgs) => { // ?
@@ -214,34 +146,14 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
     }
-
-    private createAutocompleteDropDown(dropdown: IgxAutocompleteDropDownComponent) { // ?
-        dropdown.autocomplete = this;
-        dropdown.data = this.data;
-        dropdown.key = this.key;
-        dropdown.groupKey = this.groupKey;
-        dropdown.width = this.nativeElement.clientWidth;
-        dropdown.itemTemplate = this.itemTemplate;
-        dropdown.condition = this.condition;
-        dropdown.onSelection.subscribe(this.select);
-    }
-
-    private highlightItem() {
-        if (this.highlightMatch) {
-            this.onArrowDownKeyDown();
-        }
-    }
-    //#endregion
 }
 
-//#region module
 @NgModule({
     imports: [IgxDropDownModule, CommonModule],
-    declarations: [IgxAutocompleteDirective, IgxAutocompleteDropDownComponent, IgxAutocompletePipe],
-    entryComponents: [IgxAutocompleteDropDownComponent],
+    declarations: [IgxAutocompleteDirective],
     exports: [IgxAutocompleteDirective]
 })
 export class IgxAutocompleteModule { }
-//#endregion
+
 
 

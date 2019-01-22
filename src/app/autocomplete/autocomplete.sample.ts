@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
-import { IGX_DROPDOWN_BASE } from 'projects/igniteui-angular/src/lib/drop-down/drop-down.common';
-import { IgxAutocompleteDropDownComponent
-    } from 'projects/igniteui-angular/src/lib/directives/autocomplete/autocomplete.dropdown.component';
+import { Component, PipeTransform, Pipe } from '@angular/core';
 
 @Component({
     selector: 'app-autocomplete-sample',
     styleUrls: ['autocomplete.sample.css'],
-    templateUrl: `autocomplete.sample.html`})
+    templateUrl: `autocomplete.sample.html`
+})
 export class AutocompleteSampleComponent {
-    town;
+    townSelected;
     towns;
     townsDetailed;
     townsGrouped;
+    disabled;
 
     constructor() {
         this.towns = [
@@ -56,17 +55,25 @@ export class AutocompleteSampleComponent {
             { id: 14, name: 'Nesebar', image: 'https://goo.gl/ZeR9h5'},
             { id: 15, name: 'Sungurlare', image: 'https://goo.gl/JqNm5T'},
         ];
+
+        this.disabled = true;
     }
 
     customSettings = {
         closeOnOutsideClick: false
     };
 
-    customFilter = (value: any, term: any): boolean => {
-        return value.toLowerCase().indexOf(term.toLowerCase()) > -1;
-    }
-
     onSubmit(event) {
         console.log(event);
+    }
+}
+
+@Pipe({ name: 'startsWith' })
+export class IgxAutocompletePipeStartsWith implements PipeTransform {
+    public transform(collection: any[], term = '', key?: string) {
+        return collection.filter(item => {
+            const currItem = key ? item[key] : item;
+            return currItem.toString().toLowerCase().startsWith(term.toString().toLowerCase());
+        });
     }
 }
