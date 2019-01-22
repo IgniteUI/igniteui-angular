@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Self, Inject, ViewChildren, QueryList
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, forwardRef
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -14,7 +14,7 @@ import {
     IgxComboToggleIconDirective,
     IgxComboClearIconDirective
 } from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NG_VALIDATORS } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs } from '../core/utils';
@@ -37,7 +37,6 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { takeUntil } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 
@@ -100,7 +99,15 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService]
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService, {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => IgxComboComponent),
+        multi: true
+    }, {
+        provide: NG_VALIDATORS,
+        useExisting: forwardRef(() => IgxComboComponent),
+        multi: true
+    }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -156,14 +163,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
-        if (this.ngControl) {
-            // Note: we provide the value accessor through here, instead of
-            // the `providers` to avoid running into a circular import.
-            this.ngControl.valueAccessor = this;
-        }
         this.comboAPI.register(this);
     }
 
@@ -884,30 +885,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    @HostListener('blur')
-    public onBlur(): void {
-        if (this.dropdown.collapsed) {
-            this.valid = IgxComboState.INITIAL;
-            if (this.ngControl) {
-                if (!this.ngControl.valid) {
-                    this.valid = IgxComboState.INVALID;
-                }
-            } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
-                this.valid = IgxComboState.INVALID;
-            }
-        }
-    }
-
-    private _hasValidators(): boolean {
-        if (this.elementRef.nativeElement.hasAttribute('required')) {
-            return true;
-        }
-        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
-    }
-
-    /**
-     * @hidden
-     */
     @HostListener('keydown.ArrowDown', ['$event'])
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     onArrowDown(event: Event) {
@@ -1297,11 +1274,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    protected onStatusChanged() {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+    protected onStatusChanged(formControl: FormControl): boolean {
+        if ((formControl.touched || formControl.dirty) &&
+            (formControl.validator || formControl.asyncValidator)) {
+            this.valid = this.value ? IgxComboState.VALID : IgxComboState.INVALID;
+            return !this.value;
         }
+        return null;
     }
 
     /**
@@ -1320,9 +1299,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
-        if (this.ngControl && this.ngControl.value) {
-            this.selectItems(this.ngControl.value, true);
-        }
     }
 
     /**
@@ -1330,10 +1306,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
-
-        if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
-        }
     }
 
     /**
@@ -1371,13 +1343,27 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {}
 
     /**
      * @hidden
      */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+    }
+
+    /**
+     * @hidden
+     */
+    public getEditElement(): HTMLElement {
+        return this.comboInput.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
+    public validate(c: FormControl) {
+        return this.onStatusChanged(c);
     }
 
     /**
