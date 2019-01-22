@@ -212,7 +212,6 @@ describe('IgxGrid Component Tests', () => {
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             // The scrollbar is no longer visible
-            //   
             // console.log(gridBodyHeight);
             // console.log(window.getComputedStyle(gridBody.nativeElement).height);
             // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
