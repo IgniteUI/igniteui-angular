@@ -86,12 +86,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
 
     public get selectionValue () {
-        return this.selection.first_item(this.id);
+        return this.selection.first_item(this.id) ? this.selection.first_item(this.id) : null;
     }
 
-    public set selectionValue (value) {
-        this.value = value;
-    }
     public get selectedItem(): any {
         const selectedValue = this.selection.first_item(this.id);
         return this.items.find(x => x.value === selectedValue) ;
@@ -138,7 +135,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
 
         if (this.selectedItem) {
             this.value = this.selectedItem.value;
-            this._onChangeCallback(this.selectionValue);
+            this._onChangeCallback(this.value);
         }
     }
 
