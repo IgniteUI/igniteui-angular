@@ -221,6 +221,28 @@
         }
     }
 
+    %igx-drop-down__group {
+        @extend %igx-drop-down__header !optional;
+        padding: rem(8px) 0;
+        flex-flow: column;
+        align-items: baseline;
+        pointer-events: auto;
+        
+        label {
+            padding-left: rem($desktop-header-padding);
+        }
+
+        @media only screen and (max-width: $mobile-break-point) {
+            label {
+                padding-left: rem($mobile-header-padding);
+            }
+        }
+
+        %igx-drop-down__item {
+            padding: 0 rem($desktop-item-padding * 2);
+        }
+    }
+
     %igx-drop-down__item--focused {
         background: --var($theme, 'focused-item-background');
         color: --var($theme, 'focused-item-text-color');

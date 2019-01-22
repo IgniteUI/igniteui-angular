@@ -42,11 +42,17 @@
 
         <button igxButton="raised" igxRipple [igxToggleAction]="group" [igxDropDownItemNavigation]="group">Group</button>
         <igx-drop-down #group (onSelection)="onSelection($event)" height='400px'>
-            <igx-drop-down-group header="A group">
+            <igx-drop-down-item-group label="A group">
                 <igx-drop-down-item>One</igx-drop-down-item>
                 <igx-drop-down-item>Two</igx-drop-down-item>
                 <igx-drop-down-item>Three</igx-drop-down-item>
-            </igx-drop-down-group>
+            </igx-drop-down-item-group>
+
+            <igx-drop-down-item-group label="Disabled group" [disabled]="true">
+                <igx-drop-down-item>Four</igx-drop-down-item>
+                <igx-drop-down-item>Five</igx-drop-down-item>
+            </igx-drop-down-item-group>
+
             <div>
                     <igx-drop-down-item *ngFor="let item of items" [disabled]="item.disabled" [isHeader]="item.header">
                             <div class="igx-drop-down__item-template">

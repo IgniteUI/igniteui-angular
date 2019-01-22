@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostBinding } from '@angular/core';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 
 /**
@@ -6,20 +6,20 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
  * a `<igx-drop-down>` container.
  */
 @Component({
-    selector: 'igx-drop-down-group',
+    selector: 'igx-drop-down-item-group',
     template: `
-        <label>{{ header }}</label>
+        <label>{{ label }}</label>
         <ng-content></ng-content>
-    `,
-    styles: [`:host.igx-drop-down__header { flex-flow: column; align-items: baseline; }`]
+    `
 })
 export class IgxDropDownGroupComponent extends IgxDropDownItemBase {
-    /** @hidden */
+    /** @hidden @internal */
+    @HostBinding('class.igx-drop-down__group')
     get isHeader() {
         return true;
     }
 
     /** */
     @Input()
-    public header: string;
+    public label: string;
 }
