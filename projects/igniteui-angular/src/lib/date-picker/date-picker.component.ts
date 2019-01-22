@@ -60,7 +60,11 @@ import {
     IFormatViews,
     DatePickerInteractionMode,
     DEFAULT_LOCALE_DATE,
-    SPIN_DELTA
+    SPIN_DELTA,
+    addPromptCharsEditMode,
+    getDateValueFromInput,
+    getDateFormatPart,
+    trimMaskSymbols
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -308,7 +312,11 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         if (this._value) {
             return this._transformDate(this._value);
         }
-        return '';
+        return trimMaskSymbols(this.mask);
+    }
+
+    public set transformedDate(value: string) {
+        this._transformedDate = value;
     }
 
     constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
@@ -566,6 +574,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _componentID: string;
     private _format: string;
     private _value: Date;
+    private _transformedDate: string;
+    private _inEditMode: boolean;
     private _defaultDateFormat: string = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
 
     private _disabledDates: DateRangeDescriptor[] = null;
@@ -791,30 +801,19 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public calculateDate(dateString: string, invokedByEvent: string): void {
         if (dateString !== '') {
             const trimmedData = trimUnderlines(dateString);
-            const monthPart = this.dateFormatParts.filter(part => part.type === DATE_PARTS.MONTH);
+            const monthFormatType = getDateFormatPart(this.dateFormatParts, DATE_PARTS.MONTH).formatType;
             let newValue;
 
-            if (monthPart[0].formatType === FORMAT_DESC.NUMERIC
-                || monthPart[0].formatType === FORMAT_DESC.TWO_DIGITS) {
+            if (monthFormatType === FORMAT_DESC.NUMERIC
+                || monthFormatType === FORMAT_DESC.TWO_DIGITS) {
                 let fullYear;
-
-                const dayPartPosition = this.dateFormatParts.filter(part => part.type === DATE_PARTS.DAY)[0].position;
-                const dayStartIdx = dayPartPosition[0];
-                const dayEndIdx = dayPartPosition[1];
-
-                const monthStartIdx = monthPart[0].position[0];
-                const monthEndIdx = monthPart[0].position[1];
-
-                const yearFormat = this.dateFormatParts.filter(part => part.type === DATE_PARTS.YEAR)[0].formatType;
-                const yearPartPosition = this.dateFormatParts.filter(part => part.type === DATE_PARTS.YEAR)[0].position;
-                const yearStartIdx = yearPartPosition[0];
-                const yearEndIdx = yearPartPosition[1];
-
                 const strToManipulate = (invokedByEvent === 'blur') ? this.rawDateString : dateString;
 
-                const day = trimUnderlines(strToManipulate.substring(dayStartIdx, dayEndIdx));
-                const month = trimUnderlines(strToManipulate.substring(monthStartIdx, monthEndIdx));
-                const year = strToManipulate.substring(yearStartIdx, yearEndIdx);
+                const day = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, strToManipulate);
+                const month = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, strToManipulate);
+                const year = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, strToManipulate);
+
+                const yearFormat = getDateFormatPart(this.dateFormatParts, DATE_PARTS.YEAR).formatType;
                 if (yearFormat === FORMAT_DESC.TWO_DIGITS) {
                     fullYear = '20'.concat(year);
                 } else {
@@ -871,6 +870,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     public onBlur(event): void {
+        this._inEditMode = false;
         this.calculateDate(event.target.value, event.type);
     }
 
@@ -898,11 +898,30 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.spinValue(event);
     }
 
+    public onInput(event) {
+        const inputValue = event.target.value;
+        const oldVal = this.value;
+
+        // Mandatory date parts
+        const dayValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue);
+        const monthValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue);
+        const yearValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, inputValue);
+
+        if (dayValue === '' && monthValue === '' && yearValue === '') {
+            this.deselectDate();
+        }
+
+        // if (dayValue !== '' && monthValue !== '' && yearValue !== '') {
+        //     this.calculateDate(inputValue, event.type);
+        // }
+    }
+
     private spinValue(event) {
         event.preventDefault();
         const cursorPos = this._getCursorPosition();
         const inputValue = event.target.value;
         let sign = 0;
+        this._inEditMode = true;
 
         if (event.key) {
             sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
@@ -920,7 +939,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             this._setCursorPosition(cursorPos);
         });
 
-        // this.calculateDate(event.target.value, event.type);
+        this.calculateDate(event.target.value, event.type);
     }
 
     private _onOpened(): void {
@@ -1015,7 +1034,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     * @returns formatted string
     */
     private _transformDate(value: any): string {
-        return formatDate(value, this.format, DEFAULT_LOCALE_DATE);
+        const formattedDate = formatDate(value, this.format, DEFAULT_LOCALE_DATE);
+        const editFormattedDate = addPromptCharsEditMode(this.value, formattedDate, this.dateFormatParts);
+        return (this._inEditMode) ? editFormattedDate : formattedDate;
     }
 
     private _onTouchedCallback: () => void = () => { };

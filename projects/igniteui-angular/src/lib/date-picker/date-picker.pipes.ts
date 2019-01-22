@@ -33,7 +33,6 @@ export class DatePickerInputValuePipe implements PipeTransform {
         if (this._datePicker.value !== null && this._datePicker.value !== undefined) {
             return addPromptCharsEditMode(this._datePicker.value, value, this._datePicker.dateFormatParts);
         }
-
         return trimMaskSymbols(this._datePicker.mask);
     }
 }
