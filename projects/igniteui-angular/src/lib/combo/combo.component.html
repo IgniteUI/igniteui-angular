@@ -26,13 +26,13 @@
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
     </ng-container>
-    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
+    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" igxRipple (click)="handleClearItems($event)">
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate; context: {$implicit: this}"></ng-container>
         </ng-container>
         <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
     </igx-suffix>
-    <igx-suffix igxButton="icon" class="clearButton" igxRipple>
+    <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this}"></ng-container>
         </ng-container>
