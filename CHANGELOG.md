@@ -6,6 +6,15 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `combo.value` is now only a getter.
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+    - **Breaking Change** the `index` property representing the visible index of the rendered item in the virtualized dropdown container is now called `itemIndex`.
+    - Added an input for the data index (such as the one coming from ngFor) of the `IgxDropDownItem` component.
+    ```html
+        <igx-drop-down>
+            <igx-drop-down-item *ngFor="let item of items; let i = index" [index]="i">
+                {{ item.field }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    ```
 
 ## 7.1.2
 ### Features
@@ -37,19 +46,6 @@ All notable changes for each version of this project will be documented in this 
 
 ### Other
 * update typedoc-plugin-localization version to 1.4.1 ([#3440](https://github.com/IgniteUI/igniteui-angular/issues/3440))
-
-
-## 7.2.0
-### Features
-- `IgxDropDown`:
-    - Added an input for the data index (such as the one coming from ngFor) of the `IgxDropDownItem` component.
-    ```html
-        <igx-drop-down>
-            <igx-drop-down-item *ngFor="let item of items; let i = index" [index]="i">
-                {{ item.field }}
-            </igx-drop-down-item>
-        </igx-drop-down>
-    ```
 
 ## 7.1.0
 ### Features
