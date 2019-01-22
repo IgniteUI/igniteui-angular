@@ -552,7 +552,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
             await wait(50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 475, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 485, 30);
             await wait(1000);
             fixture.detectChanges();
 
