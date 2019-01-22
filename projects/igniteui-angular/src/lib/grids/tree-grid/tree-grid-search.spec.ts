@@ -288,7 +288,7 @@ describe('IgxTreeGrid - search API', () => {
     });
 
     describe('Scrollable TreeGrid', () => {
-        beforeEach(() => {
+        beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
@@ -297,6 +297,7 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.height = '400px';
             treeGrid.columns[3].hasSummary = false;
             fix.detectChanges();
+            await wait(16);
         });
 
         const expectedValues = ['Andrew', 'Janet', 'Anne', 'Danielle', 'Callahan', 'Jonathan',
