@@ -11,11 +11,11 @@ import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings } from 'ignit
     styleUrls: ['./select-sample.scss'],
     templateUrl: './select-sample.html'
 })
-export class SelectComponent implements OnInit {
+export class SelectSampleComponent implements OnInit {
 
     @ViewChild(IgxSelectComponent) public igxSelect: IgxSelectComponent;
     public items: any[] = [];
-    //public value: string;
+
     public value = 'notContainedInItemsValue';
 
     customOverlaySettings: OverlaySettings = {
