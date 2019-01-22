@@ -2366,7 +2366,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
         this.initPinning();
-        this.calculateGridSizes();
+
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
@@ -2375,6 +2375,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
         });
         this._ngAfterViewInitPaassed = true;
+        this.calculateGridSizes();
 
         // In some rare cases we get the AfterViewInit before the grid is added to the DOM
         // and as a result we get 0 width and can't size ourselves properly.
@@ -3703,11 +3704,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public getPossibleColumnWidth() {
-        let computedWidth = parseInt(
+        let computedWidth = this.calcWidth || parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
-        if (this.hasVerticalSroll()) {
-            computedWidth -= 18;
-        }
         if (this.showRowCheckboxes) {
             computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.clientWidth : 0;
         }
@@ -3755,7 +3753,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = el.offsetWidth;
         }
 
-        this._derivePossibleWidth();
 
         if (!width) {
             width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
@@ -3766,20 +3763,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         if (Number.isFinite(width) && width !== this.calcWidth) {
             this.calcWidth = width;
-            this.cdr.markForCheck();
+            this.cdr.detectChanges();
         }
+        this._derivePossibleWidth();
     }
 
     public hasVerticalSroll() {
-        return this.verticalScrollContainer.igxForOf &&
+        if (!this._ngAfterViewInitPaassed) { return false; }
+        const count = this.totalItemCount !== null ? this.totalItemCount :
+        (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
+        return this.calcWidth && this.verticalScrollContainer.igxForOf &&
         this.verticalScrollContainer.igxForOf.length > 0 &&
-        !this.verticalScrollContainer.dc.instance.notVirtual;
+        this.verticalScrollContainer.state.chunkSize < count;
     }
 
     /**
      * @hidden
      */
     protected calculateGridSizes() {
+        const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
@@ -3793,6 +3795,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this.cdr.detectChanges();
+        // in case scrollbar has appeared recalc to size correctly.
+        if (hasScroll !== this.hasVerticalSroll()) {
+            this.calculateGridWidth();
+            this.cdr.detectChanges();
+        }
     }
 
     /**
@@ -3825,12 +3832,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        let width = this._width && this._width.indexOf('%') !== -1 ?
+        const isPercentage = this._width && this._width.indexOf('%') !== -1;
+        let width = isPercentage ?
             this.calcWidth :
             parseInt(this._width, 10);
-            if (this.hasVerticalSroll()) {
-                width -= 18;
-            }
+        if (this.hasVerticalSroll() && !isPercentage) {
+            width -= 18;
+        }
         return width - this.getPinnedWidth(takeHidden);
     }
 
