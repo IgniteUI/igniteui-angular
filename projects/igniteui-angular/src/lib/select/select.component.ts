@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, HostBinding } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -59,6 +59,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
+    /**
+     * @hidden
+     */
+    @HostBinding('style.maxHeight')
+    public maxHeight = '256px';
 
     /**
      * @hidden
@@ -142,6 +147,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
+    public getElementPadding() {
+        return this.input.nativeElement.getBoundingClientRect().x - this.inputGroup.element.nativeElement.getBoundingClientRect().x + `px`;
+    }
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled) {
             return;
@@ -151,7 +159,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(
                 this,
-                { target: this.input.nativeElement }
+                { target: this.inputGroup.element.nativeElement }
             ),
             scrollStrategy: new AbsoluteScrollStrategy()
         });
