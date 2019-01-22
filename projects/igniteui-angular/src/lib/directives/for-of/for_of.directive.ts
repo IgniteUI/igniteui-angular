@@ -263,6 +263,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.onScroll(event);
     }
 
+    public isScrollable() {
+        return this.vh.instance.height > parseInt(this.igxForContainerSize, 10);
+    }
+
     /**
      * @hidden
      */

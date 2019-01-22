@@ -566,7 +566,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.calculateGridHeight();
+                this.reflow();
                 this.cdr.markForCheck();
             });
         }
@@ -3781,9 +3781,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._ngAfterViewInitPaassed) { return false; }
         const count = this.totalItemCount !== null ? this.totalItemCount :
         (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
+        const isScrollable = this.verticalScrollContainer.isScrollable();
         return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
         this.verticalScrollContainer.igxForOf.length > 0 &&
-        this.verticalScrollContainer.state.chunkSize < count);
+        isScrollable);
     }
 
     /**
