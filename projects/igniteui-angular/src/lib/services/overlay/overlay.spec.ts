@@ -732,7 +732,6 @@ describe('igxOverlay', () => {
             const fix = TestBed.createComponent(EmptyPageComponent);
             const button = fix.componentInstance.buttonElement;
             const overlay = fix.componentInstance.overlay;
-            const div = fix.componentInstance.divElement;
             fix.detectChanges();
 
             const overlaySettings: OverlaySettings = {
@@ -744,6 +743,7 @@ describe('igxOverlay', () => {
             overlaySettings.positionStrategy.settings.target = button.nativeElement;
 
             overlay.show(SimpleDynamicComponent, overlaySettings);
+            overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
             overlay.show(SimpleDynamicComponent, overlaySettings);
             fix.detectChanges();
             tick();
@@ -754,7 +754,7 @@ describe('igxOverlay', () => {
             expect(overlayDiv.children[0].localName).toEqual('div');
             expect(overlayDiv.children[1].localName).toEqual('div');
 
-            div.nativeElement.click();
+            (<any>overlay)._overlayInfos[0].elementRef.nativeElement.click();
             fix.detectChanges();
             tick();
 
@@ -3417,7 +3417,6 @@ export class SimpleDynamicWithDirectiveComponent {
 @Component({
     template: `
         <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
-        <div #div style='position: absolute; width:100px; height: 100px; background-color: blue; left: 300px;'></div>
     `
 })
 export class EmptyPageComponent {
