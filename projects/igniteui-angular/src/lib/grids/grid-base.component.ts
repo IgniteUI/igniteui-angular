@@ -166,6 +166,7 @@ export enum GridSummaryCalculationMode {
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _data: any[];
+    private _scrollWidth: number;
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -182,6 +183,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set data(value: any[]) {
         this._data = value;
         this.summaryService.clearSummaryCache();
+    }
+
+    public get scrollWidth() {
+        return this._scrollWidth;
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -2308,6 +2313,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
         });
+        this._scrollWidth = this.getScrollWidth();
     }
 
     /**
@@ -3762,7 +3768,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         if (this.hasVerticalSroll()) {
-            width -= 18;
+            width -= this.scrollWidth;
         }
         if (Number.isFinite(width) && width !== this.calcWidth) {
             this.calcWidth = width;
@@ -3840,7 +3846,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calcWidth :
             parseInt(this._width, 10);
         if (this.hasVerticalSroll() && !isPercentage) {
-            width -= 18;
+            width -= this.scrollWidth;
         }
         return width - this.getPinnedWidth(takeHidden);
     }
@@ -3889,6 +3895,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return DataType.Date;
         }
         return DataType.String;
+    }
+
+    private getScrollWidth() {
+        const div = document.createElement('div');
+        const style = div.style;
+        style.width = '100px';
+        style.height = '100px';
+        style.position = 'absolute';
+        style.top = '-10000px';
+        style.top = '-10000px';
+        style.overflow = 'scroll';
+        document.body.appendChild(div);
+        const scrollWidth = div.offsetWidth - div.clientWidth;
+        div.remove();
+        return scrollWidth;
     }
 
     /**
