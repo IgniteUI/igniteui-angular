@@ -283,6 +283,20 @@ describe('IgxTreeGrid - search API', () => {
 
             verifyVisibleCellValueDivsCount(fix);
         });
+
+        it('Search highlights should work for case sensitive and exact match searches', () => {
+            let actualCount = treeGrid.findNext('er');
+            verifySearchResult(fixNativeElement, 6, 0, actualCount);
+
+            actualCount = treeGrid.findNext('er', true, false);
+            verifySearchResult(fixNativeElement, 5, 0, actualCount);
+
+            actualCount = treeGrid.findNext('Software Developer');
+            verifySearchResult(fixNativeElement, 3, 0, actualCount);
+
+            actualCount = treeGrid.findNext('Software Developer', false, true);
+            verifySearchResult(fixNativeElement, 1, 0, actualCount);
+        });
     });
 
     describe('Scrollable TreeGrid', () => {
