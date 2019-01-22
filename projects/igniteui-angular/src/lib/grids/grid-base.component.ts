@@ -3716,7 +3716,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let computedWidth = this.calcWidth || parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.clientWidth : 0;
+            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -3781,9 +3781,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._ngAfterViewInitPaassed) { return false; }
         const count = this.totalItemCount !== null ? this.totalItemCount :
         (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
-        return this.calcWidth && this.verticalScrollContainer.igxForOf &&
+        return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
         this.verticalScrollContainer.igxForOf.length > 0 &&
-        this.verticalScrollContainer.state.chunkSize < count;
+        this.verticalScrollContainer.state.chunkSize < count);
     }
 
     /**
