@@ -148,6 +148,7 @@ describe('IgxTabs', () => {
 
     it('check select selection when tabs collection is modified', fakeAsync(() => {
         const fixture = TestBed.createComponent(TabsTest2Component);
+        fixture.detectChanges();
         const tabs = fixture.componentInstance.tabs;
         let tabItems;
         let tab1: IgxTabItemComponent;
@@ -178,8 +179,8 @@ describe('IgxTabs', () => {
         expect(tab3.isSelected).toBeTruthy();
 
         fixture.componentInstance.resetCollectionFourTabs();
-        tick(100);
         fixture.detectChanges();
+        tick(100);
         expect(tabs.selectedIndex).toBe(2);
 
         fixture.componentInstance.resetCollectionOneTab();
@@ -374,7 +375,7 @@ class TabsTestComponent {
 
 @Component({
     template: `
-        <div #wrapperDiv style="display:flex">
+        <div #wrapperDiv style="display: flex;">
             <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
             </igx-tabs>

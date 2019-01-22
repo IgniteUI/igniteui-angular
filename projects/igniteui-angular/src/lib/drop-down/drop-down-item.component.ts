@@ -1,11 +1,16 @@
 import {
     Component,
-    ElementRef,
     Input,
-    DoCheck
+    DoCheck,
+    HostListener,
+    HostBinding
 } from '@angular/core';
-import { IgxDropDownBase, IgxDropDownItemBase } from './drop-down.base';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
+/**
+ * The `<igx-drop-down-item>` is a container intended for row items in
+ * a `<igx-drop-down>` container.
+ */
 @Component({
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'
@@ -14,41 +19,30 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     /**
      * @hidden
      */
-    protected _isSelected = false;
-
-    constructor(
-        public dropDown: IgxDropDownBase,
-        protected elementRef: ElementRef
-    ) {
-        super(dropDown, elementRef);
+    @HostBinding('attr.tabindex')
+    get setTabIndex() {
+        const shouldSetTabIndex = this.dropDown.allowItemsFocus && !(this.disabled || this.isHeader);
+        if (shouldSetTabIndex) {
+            return 0;
+        } else {
+            return null;
+        }
     }
 
     /**
-     * Sets/Gets if the item is the currently selected one in the dropdown
-     *
-     * ```typescript
-     *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemSelected = mySelectedItem.isSelected; // true
-     * ```
+     * @hidden
      */
-    get isSelected() {
-        return this._isSelected;
-    }
-    @Input()
-    set isSelected(value: boolean) {
-        if (this.isHeader) {
+    @HostListener('click', ['$event'])
+    clicked(event) {
+        if (this.disabled || this.isHeader) {
+            const focusedItem = this.dropDown.items.find((item) => item.focused);
+            if (this.dropDown.allowItemsFocus && focusedItem) {
+                focusedItem.element.nativeElement.focus({ preventScroll: true });
+            }
             return;
         }
-
-        this._isSelected = value;
-    }
-
-    ngDoCheck(): void {
-        if (this.isSelected) {
-            const dropDownSelectedItem = this.dropDown.selectedItem;
-            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
-                this.dropDown.selectItem(this);
-            }
+        if (this.selection) {
+            this.dropDown.selectItem(this, event);
         }
     }
 }

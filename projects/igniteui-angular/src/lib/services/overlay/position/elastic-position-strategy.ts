@@ -23,7 +23,6 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy implements 
                 break;
             }
         }
-
         element.style.width = `${innerRect.width - extend}px`;
         (<any>element.firstChild).style.width = `${innerRect.width - extend}px`;
     }

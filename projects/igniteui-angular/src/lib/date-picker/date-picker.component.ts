@@ -17,7 +17,6 @@ import {
     ElementRef,
     TemplateRef,
     Directive,
-    isDevMode,
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -74,7 +73,7 @@ let NEXT_ID = 0;
     providers:
         [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true }],
     // tslint:disable-next-line:component-selector
-    selector: 'igx-datePicker, igx-date-picker',
+    selector: 'igx-date-picker',
     styles: [':host {display: block;}'],
     templateUrl: 'date-picker.component.html'
 })
@@ -379,8 +378,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
-
-        return '';
     }
 
     /**
@@ -446,7 +443,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
 
-    constructor(private resolver: ComponentFactoryResolver, private element: ElementRef, private cdr: ChangeDetectorRef) { }
+    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef) { }
 
     /**
      *Method that sets the selected date.
@@ -487,10 +484,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
     public ngOnInit(): void {
         this.alert.onOpen.pipe(takeUntil(this.destroy$)).subscribe((ev) => this._focusCalendarDate());
         this.alert.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((ev) => this.handleDialogCloseAction());
-
-        if (isDevMode() && this.element.nativeElement.tagName === 'IGX-DATEPICKER') {
-            console.warn('IgxDatePickerComponent: \'igx-datePicker\' selector is deprecated. Use \'igx-date-picker\' selector instead.');
-        }
     }
 
     /**
