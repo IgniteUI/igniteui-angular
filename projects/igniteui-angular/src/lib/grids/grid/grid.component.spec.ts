@@ -49,7 +49,8 @@ describe('IgxGrid Component Tests', () => {
                 declarations: [
                     IgxGridTestComponent,
                     IgxGridMarkupDeclarationComponent,
-                    IgxGridRemoteVirtualizationComponent
+                    IgxGridRemoteVirtualizationComponent,
+                    IgxGridRemoteOnDemandComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule.forRoot()]
@@ -310,7 +311,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
@@ -342,7 +343,7 @@ describe('IgxGrid Component Tests', () => {
             tick(100);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
         }));
 
         it('should render loading indicator when loading is enabled when there is height', fakeAsync(() => {
@@ -356,7 +357,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
@@ -387,7 +388,7 @@ describe('IgxGrid Component Tests', () => {
             tick(100);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -402,7 +403,7 @@ describe('IgxGrid Component Tests', () => {
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
@@ -421,7 +422,38 @@ describe('IgxGrid Component Tests', () => {
             tick(100);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
-            expect(loadingIndicator).toBeDefined();
+            expect(loadingIndicator).not.toBeNull();
+        }));
+
+        it('should render loading indicator when loading is enabled and autoGenerate is enabled and async data', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.instance;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).not.toBeNull();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            fixture.componentInstance.bind();
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
+        }));
+
+        it('should allow applying custom loading indicator', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridRemoteOnDemandComponent);
+            fixture.componentInstance.instance.loadingGridTemplate = fixture.componentInstance.customTemaplate;
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.instance;
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+
+            expect(gridBody.nativeElement.textContent).toEqual('Loading...');
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
         }));
     });
 
@@ -3679,6 +3711,40 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     }
 
     public ngAfterViewInit() {
+        this.localService.getData(this.instance.virtualizationState, (count) => {
+            this.instance.totalItemCount = count;
+            this.cdr.detectChanges();
+        });
+    }
+
+    dataLoading(evt) {
+        this.localService.getData(evt, () => {
+            this.cdr.detectChanges();
+        });
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+        </igx-grid>
+
+        <ng-template #customTemplate>
+            <span>Loading...</span>
+        </ng-template>
+    `,
+    providers: [LocalService]
+})
+export class IgxGridRemoteOnDemandComponent {
+    public data;
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    public instance: IgxGridComponent;
+    @ViewChild('customTemplate', { read: TemplateRef })
+    public customTemaplate: TemplateRef<any>;
+    constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
+
+    public bind() {
+        this.data = this.localService.records;
         this.localService.getData(this.instance.virtualizationState, (count) => {
             this.instance.totalItemCount = count;
             this.cdr.detectChanges();
