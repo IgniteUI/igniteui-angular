@@ -11,7 +11,6 @@
  	</metadata>
  	<files>
  		<file src="dist\igniteui-angular\docs\**\*.*" target="\" />
-		<file src="extras\PreDeploy.ps1" target="" />
  		<!-- <file src="web.config" target="" /> -->
  	</files>
 </package>
