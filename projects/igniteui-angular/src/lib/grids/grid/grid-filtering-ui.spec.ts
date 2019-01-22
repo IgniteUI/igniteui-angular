@@ -2218,7 +2218,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const idCellChip = filteringCells[0].query(By.css('igx-chip'));
-        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
 
         const cellElem = filteringCells[0].nativeElement;
         expect(cellElem.offsetParent.offsetHeight + cellElem.offsetHeight).toBeCloseTo(thead.clientHeight, 10);
@@ -2263,7 +2263,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
 
         // check if it is positioned at the bottom of the thead.
-        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
         const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
         const frElem = filteringRow.nativeElement;
         expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
