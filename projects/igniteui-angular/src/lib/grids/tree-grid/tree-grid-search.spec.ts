@@ -8,8 +8,6 @@ import {
     IgxTreeGridSummariesScrollingComponent } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
