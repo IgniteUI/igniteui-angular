@@ -1,0 +1,23 @@
+.wrap {
+    flex-direction: column;
+}
+
+.wrap, .selects, .buttons, .inputs {
+    display: flex;
+}
+
+igx-select, button {
+    flex: 1 1 auto;
+    position: inherit;
+}
+
+input {
+    flex: 1 1 auto;
+}
+
+.buttons {
+    padding-top: 250px;
+}
+.igx-drop-down {
+    position: relative !important;
+}

@@ -78,7 +78,9 @@ import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
-import { SelectSampleComponent } from './select/select-sample';
+import { SelectSampleComponent } from './select/select.sample';
+import { SelectFormSampleComponent } from './select/select-form.sample';
+
 
 const components = [
     AppComponent,
@@ -113,6 +115,7 @@ const components = [
     ProgressbarSampleComponent,
     RippleSampleComponent,
     SelectSampleComponent,
+    SelectFormSampleComponent,
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
