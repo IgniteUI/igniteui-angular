@@ -719,11 +719,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public get inputEmpty(): boolean {
         return !this.value && !this.placeholder;
     }
-    /**
-     * @hidden
-     */
-    @ViewChildren(IgxInputGroupComponent, { read: IgxInputGroupComponent })
-    public inputGroups: QueryList<IgxInputGroupComponent>;
 
     /**
      * Defines the placeholder value for the combo dropdown search field
