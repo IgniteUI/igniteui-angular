@@ -520,6 +520,12 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private documentClicked = (ev: Event) => {
+        //  if we get to modal overlay just return - we should not close anything under it
+        //  if we get to non-modal overlay do the next:
+        //   1. Check it has close on outside click. If not go on to next overlay;
+        //   2. If true check if click is on the element. If it is on the element we have closed
+        //  already all previous non-modal with close on outside click elements, so we return. If
+        //  not close the overlay and check next
         for (let i = this._overlayInfos.length; i--;) {
             const info = this._overlayInfos[i];
             if (info.settings.modal) {
@@ -528,7 +534,8 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.closeOnOutsideClick) {
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
                     this.hide(info.id);
-                    // TODO: should we return here too and not closing all no-modal overlays?
+                } else {
+                    return;
                 }
             }
         }
