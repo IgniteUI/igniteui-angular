@@ -20,7 +20,7 @@ import { IgxDropDownBase } from './drop-down.base';
 import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, isIE } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBase } from './drop-down-item.base';
@@ -135,10 +135,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * let currentItem = this.dropdown.selectedItem;
      * ```
      */
-    public get selectedItem(): any {
+    public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (selectedItem.isSelected) {
+            if (selectedItem.selected) {
                 return selectedItem;
             }
             this.selection.clear(this.id);
@@ -284,7 +284,18 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     protected scrollToItem(item: IgxDropDownItemBase) {
         const itemPosition = this.calculateScrollPosition(item);
-        this.scrollContainer.scrollTop = (itemPosition);
+
+        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
+        //  to appear on screen before animation start. As a result dropdown
+        //  flickers badly. This is why we set scrollTop just a little later
+        //  allowing animation to start and prevent dropdown flickering
+        if (isIE()) {
+            setTimeout(() => {
+                this.scrollContainer.scrollTop = (itemPosition);
+            }, 1);
+        } else {
+            this.scrollContainer.scrollTop = (itemPosition);
+        }
     }
 
     protected calculateScrollPosition(item: IgxDropDownItemBase): number {
@@ -341,10 +352,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (!args.cancel) {
             this.selection.set(this.id, new Set([newSelection]));
             if (oldSelection) {
-                oldSelection.isSelected = false;
+                oldSelection.selected = false;
             }
             if (newSelection) {
-                newSelection.isSelected = true;
+                newSelection.selected = true;
             }
             if (event) {
                 this.toggleDirective.close();

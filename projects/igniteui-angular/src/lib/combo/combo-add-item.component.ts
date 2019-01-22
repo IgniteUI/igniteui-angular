@@ -7,10 +7,10 @@ import { Component } from '@angular/core';
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent}]
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
-    get isSelected(): boolean {
+    get selected(): boolean {
         return false;
     }
-    set isSelected(value: boolean) {
+    set selected(value: boolean) {
     }
 
     clicked(event?) {

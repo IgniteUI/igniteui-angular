@@ -20,6 +20,7 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
+import { CancelableEventArgs } from '../core/utils';
 
 const noop = () => { };
 
@@ -163,6 +164,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             ),
             scrollStrategy: new AbsoluteScrollStrategy()
         });
+    }
+
+    public onToggleOpening(event: CancelableEventArgs) {
+        this.onOpening.emit(event);
+        if (event.cancel) {
+            return;
+        }
+        this.scrollToItem(this.selectedItem);
     }
 }
 
