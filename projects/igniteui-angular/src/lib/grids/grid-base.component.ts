@@ -3398,8 +3398,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (updateActiveInfo) {
                 const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
                 this.lastSearchInfo.matchInfoCache.forEach((match, i) => {
-                    if (match.column === activeInfo.columnID &&
-                        match.row === activeInfo.rowID &&
+                    if (match.column === activeInfo.column &&
+                        match.row === activeInfo.row &&
                         match.index === activeInfo.index) {
                         this.lastSearchInfo.activeMatchIndex = i;
                     }
@@ -4192,8 +4192,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
 
             IgxTextHighlightDirective.setActiveHighlight(this.id, {
-                columnID: matchInfo.column,
-                rowID: matchInfo.row,
+                column: matchInfo.column,
+                row: matchInfo.row,
                 index: matchInfo.index,
             });
 

@@ -24,8 +24,8 @@ interface ISearchInfo {
 }
 
 export interface IActiveHighlightInfo {
-    rowID?: any;
-    columnID?: any;
+    row?: any;
+    column?: any;
     index: number;
 }
 
@@ -180,8 +180,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     public static clearActiveHighlight(groupName) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
-            rowID: null,
-            columnID: null,
+            row: null,
+            column: null,
             index: -1
         });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
@@ -237,8 +237,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     ngAfterViewInit() {
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
-                rowID: null,
-                columnID: null,
+                row: null,
+                column: null,
                 index: -1
             });
         }
@@ -298,7 +298,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
-        if (group.columnID === this.column && group.rowID === this.row) {
+        if (group.column === this.column && group.row === this.row) {
             this.activate(group.index);
         }
     }

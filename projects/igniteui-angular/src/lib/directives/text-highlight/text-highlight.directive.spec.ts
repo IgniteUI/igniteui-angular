@@ -309,8 +309,8 @@ class HighlightLoremIpsumComponent {
 
     public activate(index: number) {
         const activeHighlightInfo: IActiveHighlightInfo = {
-            rowID: 0,
-            columnID: 0,
+            row: 0,
+            column: 0,
             index: index
         };
         IgxTextHighlightDirective.setActiveHighlight(this.groupName, activeHighlightInfo);
