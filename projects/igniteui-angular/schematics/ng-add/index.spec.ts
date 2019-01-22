@@ -3,7 +3,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import * as path from 'path';
 import { getWorkspace } from '@schematics/angular/utility/config';
 
-describe('schematics', () => {
+describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
   let tree: UnitTestTree;
@@ -19,8 +19,8 @@ describe('schematics', () => {
   };
 
   const pkgJsonConfig = {
-    dependencies: null,
-    devDependencies: null
+    dependencies: {},
+    devDependencies: {}
   };
 
   beforeEach(() => {
@@ -33,7 +33,6 @@ describe('schematics', () => {
     expect(tree).toBeTruthy();
     expect(tree.exists('/angular.json')).toBeTruthy();
     expect(tree.exists('/package.json')).toBeTruthy();
-
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect).toBeTruthy();
 
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
@@ -42,7 +41,6 @@ describe('schematics', () => {
 
   it('should add packages to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
     expect(pkgJsonData.dependencies).toBeTruthy();
     expect(pkgJsonData.devDependencies).toBeTruthy();
@@ -50,26 +48,15 @@ describe('schematics', () => {
 
   it('should add the correct igniteui-angular packages to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
-
-    const dependenciesFound = Object.keys(pkgJsonData.dependencies)
-      .filter(pkg =>
-        pkg.includes('igniteui-angular') ||
-        pkg.includes('web-animations-js') ||
-        pkg.includes('jszip') ||
-        pkg.includes('hammerjs'));
-
-    expect(dependenciesFound.length).toBeGreaterThan(0);
+    expect(pkgJsonData.dependencies['jszip']).toBeTruthy();
+    expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should add hammer.js to the workspace', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const workspace = getWorkspace(tree) as any;
     const currentProjectName = workspace.defaultProject;
-
     expect(
       workspace.projects[currentProjectName].architect.test.options.scripts.filter(d => d.includes('hammerjs')).length
     )
@@ -82,21 +69,50 @@ describe('schematics', () => {
 
   it('should add hammer.js to package.json dependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
-
-    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('hammerjs')).length).toBeGreaterThan(0);
+    expect(pkgJsonData.dependencies['hammerjs']).toBeTruthy();
   });
 
   it('should add the CLI only to devDependencies', () => {
     runner.runSchematic('ng-add', {}, tree);
-
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(pkgJsonData.dependencies).toBeTruthy();
-    expect(pkgJsonData.devDependencies).toBeTruthy();
 
-    expect(Object.keys(pkgJsonData.devDependencies).filter(k => k.includes('igniteui-cli')).length).toBeGreaterThan(0);
-    expect(Object.keys(pkgJsonData.dependencies).filter(k => k.includes('igniteui-cli')).length).toBe(0);
+    expect(pkgJsonData.devDependencies['igniteui-cli']).toBeTruthy();
+    expect(pkgJsonData.dependencies['igniteui-cli']).toBeFalsy();
+  });
+
+  it('should properly add polyfills', () => {
+    const polyfills = `
+// import 'core-js/es6/object';
+// import 'core-js/es6/function';
+/** a comment */
+// import 'core-js/es6/reflect';
+// import 'core-js/es6/set';
+
+/** comment */
+// import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
+`;
+    const result = `
+import 'core-js/es6/object';
+import 'core-js/es6/function';
+/** a comment */
+import 'core-js/es6/reflect';
+import 'core-js/es6/set';
+/** ES7 \`Object.entries\` needed for igxGrid to render in IE. */
+import 'core-js/es7/object';
+
+/** comment */
+import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
+`;
+
+    tree.create('src/polyfills.ts', polyfills);
+    runner.runSchematic('ng-add', { polyfills: true }, tree);
+    expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
+  });
+
+  it('should properly add web animations', () => {
+    runner.runSchematic('ng-add', {}, tree);
+    const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
+    expect(pkgJsonData.dependencies['web-animations-js']).toBeTruthy();
   });
 });
