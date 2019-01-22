@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -30,7 +30,7 @@ const noop = () => { };
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSelectComponent, multi: true },
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor {
+export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
@@ -86,7 +86,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
 
     public get selectionValue () {
-        return this.selection.first_item(this.id) ? this.selection.first_item(this.id) : null;
+        return this.selection.first_item(this.id) ? this.selection.first_item(this.id) : '';
     }
 
     public get selectedItem(): any {
@@ -153,6 +153,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             scrollStrategy: new AbsoluteScrollStrategy()
         });
     }
+
+    // Initially the items are still not existing, so handle ngAfterContentInit
+    ngAfterContentInit() {
+        this.children.changes.subscribe(() => {
+            if (this.items.find(x => x.value === this.value)) {
+                this.selection.set(this.id, new Set([this.value]));
+                this.cdr.detectChanges();
+            }
+        });
+            Promise.resolve().then(() => this.children.notifyOnChanges());
+        }
 }
 
 @NgModule({
