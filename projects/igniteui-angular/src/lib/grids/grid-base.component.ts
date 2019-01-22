@@ -2389,6 +2389,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+
+        this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.lastSearchInfo.searchText) {
+                this.cdr.detectChanges();
+                this.restoreHighlight(true);
+            }
+        });
     }
 
     private combineForOfCollections(dataList, summaryList) {
@@ -4298,23 +4305,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         const groupIndexData = this.getGroupIncrementData();
         const groupByRecords = this.getGroupByRecords();
-        let collapsedRowsCount = 0;
 
         data.forEach((dataRow, i) => {
             const groupByRecord = groupByRecords ? groupByRecords[i] : null;
             const groupByIncrement = groupIndexData ? groupIndexData[i] : 0;
             const pagingIncrement = this.getPagingIncrement(groupByIncrement, groupIndexData, Math.floor(i / this.perPage));
-            let rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
+            const rowIndex = this.paging ? (i % this.perPage) + pagingIncrement : i + groupByIncrement;
 
-            if (this.paging && i % this.perPage === 0) {
-                collapsedRowsCount = 0;
-            }
-
-            rowIndex -= collapsedRowsCount;
-
-            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-                collapsedRowsCount++;
-            }
             columnItems.forEach((c, j) => {
                 const value = c.formatter ? c.formatter(dataRow[c.field]) : dataRow[c.field];
                 if (value !== undefined && value !== null && c.searchable) {
@@ -4388,7 +4385,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected restoreHighlight(): void {
+    protected restoreHighlight(shouldUpdateUI?: boolean): void {
         if (this.lastSearchInfo.searchText) {
             const activeInfo = IgxTextHighlightDirective.highlightGroupsMap.get(this.id);
             const matchInfo = this.lastSearchInfo.matchInfoCache[this.lastSearchInfo.activeMatchIndex];
@@ -4405,6 +4402,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const row = this.paging ? (rowIndex % this.perPage) + increment : rowIndex + increment;
 
             this.rebuildMatchCache();
+            if (shouldUpdateUI) {
+                // update UI
+                this.rowList.forEach((r) => {
+                    if (r.cells) {
+                        r.cells.forEach((c) => {
+                            c.highlightText(
+                                this.lastSearchInfo.searchText,
+                                 this.lastSearchInfo.caseSensitive,
+                                 this.lastSearchInfo.exactMatch);
+                        });
+                    }
+                });
+            }
 
             if (rowIndex !== -1) {
                 if (this.collapsedHighlightedItem && groupByIncrements !== null) {

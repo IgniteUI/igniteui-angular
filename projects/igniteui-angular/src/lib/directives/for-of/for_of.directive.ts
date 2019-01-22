@@ -144,6 +144,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onChunkLoad = new EventEmitter<IForOfState>();
 
     /**
+     * An event that is emitted after data has been changed.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onDataChanged)="dataChanged($event)"></ng-template>
+     * ```
+     * ```typescript
+     * dataChanged(e){
+     * alert("data changed!");
+     * }
+     * ```
+     */
+    @Output()
+    public onDataChanged = new EventEmitter<any>();
+
+    /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
      * ```html
@@ -373,6 +387,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
+                    this.onDataChanged.emit();
                 });
             }
         }
@@ -1254,11 +1269,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(diff) > 0 && scr.scrollTop > 0) {
-            requestAnimationFrame(() => {
                 this.recalcUpdateSizes();
                 const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
                 scr.scrollTop = this.sizesCache[this.state.startIndex] - offset;
-            });
         }
     }
 
@@ -1279,6 +1292,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
+                this.onDataChanged.emit();
             }
         }
     }

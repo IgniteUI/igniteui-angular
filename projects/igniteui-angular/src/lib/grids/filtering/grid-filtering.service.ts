@@ -13,6 +13,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IgxColumnComponent, IgxColumnGroupComponent, IgxDatePipeComponent } from '../grid';
+import { IgxGridSortingPipe } from '../grid/grid.pipes';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -322,7 +323,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public resolveFilteredSortedData(): any[] {
-        let data: any[] = this.filteredData ? this.filteredData : this.grid.data;
+        let data: any[] = this.filteredData ? this.filteredData : this.sortedData;
         if (!this.filteredData && this.grid.transactions.enabled) {
             data = DataUtil.mergeTransactions(
                 cloneArray(data),
@@ -336,6 +337,11 @@ export class IgxFilteringService implements OnDestroy {
 
     public get filteredData() {
         return this.grid.filteredData;
+    }
+
+    public get sortedData() {
+        const sortData = new IgxGridSortingPipe().transform(this.grid.data, this.grid.sortingExpressions, 0);
+        return sortData;
     }
 
     /**

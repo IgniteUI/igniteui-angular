@@ -707,6 +707,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
                         levelIncrement += gbr.level;
                     }
 
+                    if (!this.isExpandedGroup(gbr)) {
+                        // if this is not expanded then subtract the invsible recs
+                        increment -= gbr.records.length;
+                    }
+
                     increment += levelIncrement;
                     prevHierarchy = gbr;
                     values.push(gbr);

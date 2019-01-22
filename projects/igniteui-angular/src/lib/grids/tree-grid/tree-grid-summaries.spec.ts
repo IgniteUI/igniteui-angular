@@ -1568,8 +1568,15 @@ describe('IgxTreeGrid - Summaries', () => {
         (row as IgxTreeGridRowComponent).expanded = true;
         fix.detectChanges();
         await wait(16);
+        const tbodyHeight = treeGrid.calcHeight;
+        const allRows = treeGrid.rowList.toArray();
+        const heightSum = allRows.map((r) => {
+            const h = r.nativeElement.offsetHeight;
+            return h;
 
-        expect(treeGrid.dataRowList.length).toEqual(9);
+        }).reduce((acc, val) => acc + val);
+        // check if rows fill available space
+        expect(heightSum).toBeGreaterThan(tbodyHeight);
     });
 
     function verifySummaryForRow147(fixture, visibleIndex) {
