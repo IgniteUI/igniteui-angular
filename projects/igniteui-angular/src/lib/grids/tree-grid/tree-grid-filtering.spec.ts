@@ -233,7 +233,7 @@ describe('IgxTreeGrid - Filtering actions', () => {
         expect(grid.getCellByColumn(6, 'ID').value).toEqual(12);
 
         expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(7))).toEqual(true);
-        expect(grid.getCellByColumn(7, 'ID').value).toEqual(101);
+        expect(grid.getCellByColumn(7, 'ID').value).toEqual(109);
 
         grid.clearFilter();
         fix.detectChanges();
