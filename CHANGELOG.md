@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `combo.value` is now only a getter.
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+- `Theme Elevations & Shadows` - Components with shadows, set by an elevation level or otherwise, are now fully configurable by the user via schema and/or theme properties. User can also provide a custom elevations set to component themes that support them.
+    - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
 
 ## 7.1.2
 ### Features
