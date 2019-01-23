@@ -1,15 +1,15 @@
-import { AbsoluteScrollStrategy } from './../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
+import { AbsoluteScrollStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/scroll/absolute-scroll-strategy';
 // tslint:disable-next-line:max-line-length
-import { SelectPositioningStrategy } from './../../../projects/igniteui-angular/src/lib/services/overlay/position/select-positioning-strategy';
-import { IgxSelectComponent } from './../../../projects/igniteui-angular/src/lib/select/select.component';
+import { SelectPositioningStrategy } from '../../../projects/igniteui-angular/src/lib/services/overlay/position/select-positioning-strategy';
+import { IgxSelectComponent } from '../../../projects/igniteui-angular/src/lib/select/select.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ISelectionEventArgs, CancelableEventArgs, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
     selector: 'app-select-sample',
-    styleUrls: ['./select-sample.scss'],
-    templateUrl: './select-sample.html'
+    styleUrls: ['./select.sample.scss'],
+    templateUrl: './select.sample.html'
 })
 export class SelectSampleComponent implements OnInit {
 
@@ -34,7 +34,7 @@ export class SelectSampleComponent implements OnInit {
     }
 
     public testOnSelection(evt: ISelectionEventArgs) {
-        // console.log('testOnSelection.....................' + evt.cancel);
+         console.log('testOnSelection.....................' + evt.cancel);
     }
 
     public testOnOpening(evt: CancelableEventArgs) {
@@ -61,7 +61,7 @@ export class SelectSampleComponent implements OnInit {
     public handleOpen() {
         if (this.igxSelect.collapsed) {
             // console.log('onOpen.....................: ');
-            this.igxSelect.open();
+            this.igxSelect.open(this.customOverlaySettings);
         }
     }
 

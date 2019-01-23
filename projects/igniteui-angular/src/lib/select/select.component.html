@@ -1,33 +1,33 @@
 <igx-input-group #inputGroup class="input-group" [disabled]="disabled" (click)="toggle()">
-    <ng-container ngProjectAs="[igxLabel]">
-        <ng-content select="[igxLabel]"></ng-content>
-    </ng-container>
-    <ng-container ngProjectAs="igx-prefix">
-        <ng-content select="igx-prefix"></ng-content>
-    </ng-container>
+        <ng-container ngProjectAs="[igxLabel]">
+            <ng-content select="[igxLabel]"></ng-content>
+        </ng-container>
+        <ng-container ngProjectAs="igx-prefix">
+            <ng-content select="igx-prefix"></ng-content>
+        </ng-container>
 
-    <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
-        readonly= "true"
-        [placeholder]="this.placeholder"
-        [(ngModel)]="this.selectionValue"
-        [attr.aria-labelledby]="this.label ? this.label.id : ''"
-        [attr.role]="'combobox'"
-        [attr.aria-expanded]="ariaExpanded"
-        [attr.aria-haspopup]="ariaHasPopUp"
-        [attr.aria-owns]="ariaOwns"
-        [attr.aria-activedescendant]="this.selectedItem"
-        />
-    <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
-        <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
-        <ng-template #toggleUp>
-            <igx-icon fontSet="material">arrow_drop_up</igx-icon>
-        </ng-template>
-    </igx-suffix>
-</igx-input-group>
-<div class="igx-drop-down__list" igxToggle [style.maxHeight]="maxHeight"
-    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
-    [attr.id]="this.listId" [attr.role]="'listbox'">
-    <ng-content select="igx-select-item">
-    </ng-content>
-</div>
+        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
+            readonly= "true"
+            [placeholder]="this.placeholder"
+            [value]="this.selectionValue"
+            [attr.aria-labelledby]="this.label ? this.label.id : ''"
+            [attr.role]="'combobox'"
+            [attr.aria-expanded]="ariaExpanded"
+            [attr.aria-haspopup]="ariaHasPopUp"
+            [attr.aria-owns]="ariaOwns"
+            [attr.aria-activedescendant]="this.selectedItem"
+            />
+        <igx-suffix igxButton="icon" class="dropdownToggleButton" igxRipple>
+            <igx-icon *ngIf="collapsed; else toggleUp" fontSet="material">arrow_drop_down</igx-icon>
+            <ng-template #toggleUp>
+                <igx-icon fontSet="material">arrow_drop_up</igx-icon>
+            </ng-template>
+        </igx-suffix>
+    </igx-input-group>
+    <div class="igx-drop-down__list" igxToggle [style.maxHeight]="maxHeight"
+        (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
+        (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()"
+        [attr.id]="this.listId" [attr.role]="'listbox'">
+        <ng-content select="igx-select-item">
+        </ng-content>
+    </div>
