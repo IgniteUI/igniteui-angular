@@ -398,10 +398,22 @@ export class IgxToggleActionDirective implements OnInit {
         if (this.outlet) {
             this._overlayDefaults.outlet = this.outlet;
         }
-        if (this.overlaySettings && this.overlaySettings.positionStrategy && !this.overlaySettings.positionStrategy.settings.target) {
-            this.overlaySettings.positionStrategy.settings.target = this.element.nativeElement;
-        }
+
+        this.updateOverlaySettings(this.overlaySettings);
         this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
+    }
+
+    /**
+     * Updates provided overlay settings
+     * @param settings settings to update
+     * @returns returns updated copy of provided overlay settings
+     */
+    protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
+        if (settings && settings.positionStrategy) {
+            settings.positionStrategy.settings.target = this.element.nativeElement;
+        }
+
+        return settings;
     }
 }
 
