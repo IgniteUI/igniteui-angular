@@ -33,11 +33,6 @@
 
     @include e(item, $m: disabled) {
         @extend %igx-drop-down__item--disabled !optional;
-
-        .igx-drop-down__item {
-            // nested items (in groups)
-            @extend %igx-drop-down__item--disabled !optional;
-        }
     }
 
     @include e(header) {
@@ -46,5 +41,9 @@
 
     @include e(group) {
         @extend %igx-drop-down__group !optional;
+    }
+
+    @include e(group, $m: disabled) {
+        @extend %igx-drop-down__item--disabled !optional;
     }
 }

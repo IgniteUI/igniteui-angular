@@ -297,7 +297,8 @@
     $item: map-get($categories, 'item');
 
     @include igx-scope('.igx-typography') {
-        %igx-drop-down__header {
+        %igx-drop-down__header,
+        %igx-drop-down__group {
             @include igx-type-style($type-scale, $header);
         }
 
