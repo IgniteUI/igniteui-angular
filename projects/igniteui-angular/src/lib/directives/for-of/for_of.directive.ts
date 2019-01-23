@@ -1288,11 +1288,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (operations.length > 0) {
                     // only update if some operation was done - adding/removing/moving of items
                     this._updateSizeCache();
+                    this._applyChanges(changes);
+                    this.cdr.markForCheck();
+                    this._updateScrollOffset();
+                    this.onDataChanged.emit();
                 }
-                this._applyChanges(changes);
-                this.cdr.markForCheck();
-                this._updateScrollOffset();
-                this.onDataChanged.emit();
             }
         }
     }
