@@ -28,13 +28,13 @@
     </ng-container>
     <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" igxRipple (click)="handleClearItems($event)">
         <ng-container *ngIf="clearIconTemplate">
-            <ng-container *ngTemplateOutlet="clearIconTemplate; context: {$implicit: this}"></ng-container>
+            <ng-container *ngTemplateOutlet="clearIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>
         <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
     </igx-suffix>
     <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
         <ng-container *ngIf="toggleIconTemplate">
-            <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this}"></ng-container>
+            <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>
         <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>

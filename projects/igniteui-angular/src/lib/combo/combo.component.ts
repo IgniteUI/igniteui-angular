@@ -27,7 +27,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownModule } from '../drop-down/drop-down.component';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
+import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
