@@ -11,10 +11,10 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
 
     constructor(renderer: Renderer, basePath) {
         super(renderer, basePath);
-        Handlebars.registerHelper('envUrl', this.retrieveEnvUrl);
+        Handlebars.registerHelper('getConfigData', this.getConfigData);
     }
 
-    private retrieveEnvUrl() {
+    private getConfigData(prop) {
         const fileName = 'config.json';
         let settings;
         let config;
@@ -32,6 +32,6 @@ export default class EnvironmentLinkSetup extends DefaultTheme {
             data = config[settings.localize][process.env.NODE_ENV.trim()];
         }
 
-        return data ? data.url : '';
+        return data ? data[prop] : '';
     }
 }
