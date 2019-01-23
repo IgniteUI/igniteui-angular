@@ -171,7 +171,7 @@ describe('IgxTabs', () => {
 
         tab3.select();
 
-        tick(100);
+        tick(200);
         fixture.detectChanges();
 
         expect(tabs.selectedIndex).toBe(2);
@@ -180,7 +180,7 @@ describe('IgxTabs', () => {
 
         fixture.componentInstance.resetCollectionFourTabs();
         fixture.detectChanges();
-        tick(100);
+        tick(200);
         expect(tabs.selectedIndex).toBe(2);
 
         fixture.componentInstance.resetCollectionOneTab();
