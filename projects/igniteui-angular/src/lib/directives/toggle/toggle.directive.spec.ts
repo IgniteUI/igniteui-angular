@@ -371,7 +371,7 @@ describe('IgxToggle', () => {
 
             fixture.componentInstance.toggleAction.onClick();
             positionStrategy = toggleSpy.calls.mostRecent().args[0].positionStrategy as IPositionStrategy;
-            expect(positionStrategy.settings.target).toBe(document.body);
+            expect(positionStrategy.settings.target).toBe(button);
         });
 
         it('Should fire toggle "onClosing" event when closing through closeOnOutsideClick', fakeAsync(() => {
