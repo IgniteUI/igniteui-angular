@@ -478,7 +478,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick(100);
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('280px');
+        const expetedWidth = grid.calcPinnedContainerMaxWidth - parseInt(grid.columns[1].width, 10) - parseInt(grid.columns[2].width, 10);
+        expect(grid.columns[0].width).toEqual(expetedWidth + 'px');
         expect(grid.columns[1].width).toEqual('100px');
         expect(grid.columns[2].width).toEqual('100px');
     }));
