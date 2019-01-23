@@ -231,12 +231,10 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public scrollElement(element: any, scrollRight: boolean): void {
-        requestAnimationFrame(() => {
-            const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
-            this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-            this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
-        });
+        this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
+        this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
     }
 
     /**

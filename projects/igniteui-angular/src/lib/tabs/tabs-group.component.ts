@@ -162,7 +162,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *```
      * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 50) {
+    public select(focusDelay = 200) {
         if (this.disabled || this.isSelected) {
             return;
         }
