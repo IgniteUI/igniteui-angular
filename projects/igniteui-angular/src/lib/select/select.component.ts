@@ -21,6 +21,7 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.c
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
 import { CancelableEventArgs } from '../core/utils';
+import { slideInTop, scaleInCenter, scaleOutCenter, scaleOutHorCenter, scaleInHorCenter } from '../animations/main';
 
 const noop = () => { };
 
@@ -160,9 +161,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(
                 this,
-                { target: this.inputGroup.element.nativeElement }
+                { target: this.inputGroup.element.nativeElement,
+                    closeAnimation: scaleOutHorCenter,
+                    openAnimation: scaleInHorCenter
+                }
             ),
-            scrollStrategy: new AbsoluteScrollStrategy()
+            scrollStrategy: new AbsoluteScrollStrategy(),
         });
     }
 
