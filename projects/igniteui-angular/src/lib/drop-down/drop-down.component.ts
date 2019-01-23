@@ -135,10 +135,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * let currentItem = this.dropdown.selectedItem;
      * ```
      */
-    public get selectedItem(): any {
+    public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (selectedItem.isSelected) {
+            if (selectedItem.selected) {
                 return selectedItem;
             }
             this.selection.clear(this.id);
@@ -352,10 +352,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (!args.cancel) {
             this.selection.set(this.id, new Set([newSelection]));
             if (oldSelection) {
-                oldSelection.isSelected = false;
+                oldSelection.selected = false;
             }
             if (newSelection) {
-                newSelection.isSelected = true;
+                newSelection.selected = true;
             }
             if (event) {
                 this.toggleDirective.close();

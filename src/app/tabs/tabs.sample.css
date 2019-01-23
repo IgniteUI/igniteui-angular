@@ -7,6 +7,7 @@
     width: 100%;
     padding: 20px;
     min-width: 250px;
+    margin-bottom: 30px;
 }
 
 .items-wrapper__item-small {
@@ -24,7 +25,12 @@
 }
 
 .my-tab-content {
-    padding: 0 15px;
+    padding: 15px;
+}
+
+.my-tab-content h3 {
+    font-size: 20px;
+    font-weight: 900;
 }
 
 .design-1 .my-tab-content {
