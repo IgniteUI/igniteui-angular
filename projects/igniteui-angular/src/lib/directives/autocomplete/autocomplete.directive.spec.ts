@@ -1,15 +1,19 @@
 import { Component, ViewChild, Pipe, PipeTransform } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxAutocompleteModule } from './autocomplete.directive';
+import { IgxAutocompleteModule, IgxAutocompleteDirective } from './autocomplete.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
 import { IgxInputGroupModule } from '../../input-group';
-import { IgxDropDownModule } from '../../drop-down';
+import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-describe('IgxAutocomplete', () => {
+fdescribe('IgxAutocomplete', () => {
+    let fixture;
+    let autocomplete: IgxAutocompleteDirective;
+    let input: IgxInputDirective;
+    let dropDown: IgxDropDownComponent;
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -29,12 +33,53 @@ describe('IgxAutocomplete', () => {
         })
         .compileComponents();
     }));
+    describe('Binding to primitives', () => {
+        configureTestSuite();
 
-    fit('Initializes autocomplete.', () => {
-        const fixture = TestBed.createComponent(AutocompleteComponent);
-        fixture.detectChanges();
-        const input = fixture.componentInstance.input;
-        UIInteractions.sendInput(input, 's', fixture);
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(AutocompleteComponent);
+            fixture.detectChanges();
+            autocomplete = fixture.componentInstance.autocomplete;
+            input = fixture.componentInstance.input;
+            dropDown = fixture.componentInstance.dropDown;
+            input.nativeElement.click();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
+
+        it('Opening and closing.', fakeAsync(() => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('escape', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+
+            input.nativeElement.click();
+            UIInteractions.sendInput(input, 'a', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            autocomplete.onBlur();
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
+
+        it('Auto-highlighting first item', fakeAsync(() => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(fixture.componentInstance.townSelected).toBe('Sofia');
+        }));
     });
 });
 
@@ -51,7 +96,9 @@ describe('IgxAutocomplete', () => {
     </igx-drop-down>`
 })
 class AutocompleteComponent {
+    @ViewChild(IgxAutocompleteDirective) public autocomplete: IgxAutocompleteDirective;
     @ViewChild(IgxInputDirective) public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
     townSelected;
     towns;
 

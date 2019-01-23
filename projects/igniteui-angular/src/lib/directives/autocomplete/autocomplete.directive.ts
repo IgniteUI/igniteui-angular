@@ -103,7 +103,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (this.disabled)  {
             return;
         }
-        this.open();
+        if (this.collapsed) {
+            this.open();
+        } else {
+            this.highlightFirstItem();
+        }
     }
     @HostListener('blur', ['$event'])
     onBlur() {
@@ -122,15 +126,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private open() {
-        if (this.collapsed) {
-            this.dropDown.open(this.overlaySettings);
-            this.target = this.dropDown;
-            this.dropDown.width = this.nativeElement.clientWidth + 'px';
-            this.dropDown.onSelection.subscribe(this.select);
-            this.dropDown.onOpened.pipe(first()).subscribe(() => {
-                this.target.focusedItem = this.target.items[0];
-            });
-        }
+        this.dropDown.open(this.overlaySettings);
+        this.target = this.dropDown;
+        this.dropDown.width = this.nativeElement.clientWidth + 'px';
+        this.dropDown.onSelection.subscribe(this.select);
+        this.dropDown.onOpened.pipe(first()).subscribe(() => {
+            this.highlightFirstItem();
+        });
     }
 
     private select = (value: ISelectionEventArgs) => { // ?
@@ -146,6 +148,14 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
+    }
+
+    private highlightFirstItem() {
+        const firstMatch = this.target.items[0];
+        if (firstMatch) {
+            firstMatch.isFocused = true;
+            this.target.focusedItem = firstMatch;
+        }
     }
 }
 
