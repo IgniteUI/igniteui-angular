@@ -1,8 +1,9 @@
 (function () {
     const baseUrl = $('body').data('base-url');
+    const versionsJson = $('body').data('api-versions-json');
 
     $.ajax({
-        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.jsonhttp://10.14.0.51/test.json",
+        url: versionsJson,
         type: "get",
         contentType: 'application/json',
         xhrFields: {
