@@ -111,20 +111,17 @@ const theme = themeleon(__dirname, function (t) {
             trimType: (value) => {
                 return value.substring(0, 3);
             },
-            retrieveEnvLink: () => {
-                let {
-                    NODE_ENV: node,
-                    SASSDOC_LANG: lang
-                } = process.env;
-
-                if (!node || !lang) {
-                    return;
-                }
-
-                const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
-                const config_file = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
-                const config = config_file[lang.trim()][node.trim()];
+            baseURl: () => {
+                const config = getConfigData(process.env);
                 return config ? config.url : '';
+            },
+            gaID: () => {
+                const config = getConfigData(process.env);
+                return config ? config.gaID : '';
+            },
+            versionsUrl: () => {
+                const config = getConfigData(process.env);
+                return config ? config.versions : '';
             },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
@@ -290,3 +287,18 @@ module.exports = function (dest, ctx) {
      */
     return theme.apply(this, arguments);
 };
+
+function getConfigData(envs) {
+    let {
+        NODE_ENV: env,
+        SASSDOC_LANG: lang
+    } = envs;
+
+    if (!env || !lang) {
+        return;
+    }
+
+    const pathConfig = path.join('extras', 'docs', 'themes', 'config.json');
+    const data = JSON.parse(fs.readFileSync(pathConfig, 'utf8'));
+    return data[lang.trim()][env.trim()];
+}
