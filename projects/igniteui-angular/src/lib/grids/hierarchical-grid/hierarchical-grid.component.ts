@@ -45,6 +45,7 @@ let NEXT_ID = 0;
     providers: [
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService
     ]
@@ -152,12 +153,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
-
-    /**
-     * @hidden
-     */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
-    public columnList: QueryList<IgxColumnComponent>;
 
     @ViewChild('hierarchical_record_template', { read: TemplateRef })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
