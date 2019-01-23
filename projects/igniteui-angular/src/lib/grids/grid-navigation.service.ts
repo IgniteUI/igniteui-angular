@@ -266,7 +266,8 @@ export class IgxGridNavigationService {
     public navigateBottom(visibleColumnIndex) {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         const cellSelector = this.isTreeGrid && visibleColumnIndex === 0 ? 'igx-tree-grid-cell' : 'igx-grid-cell';
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+        if (verticalScroll.scrollHeight === 0 ||
+            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             cells[cells.length - 1].focus();
@@ -406,7 +407,8 @@ export class IgxGridNavigationService {
 
     public goToLastCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+        if (verticalScroll.scrollHeight === 0 ||
+            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rows = this.getAllRows();
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);
@@ -425,7 +427,8 @@ export class IgxGridNavigationService {
 
     public goToLastBodyElement() {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        if (verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+        if (verticalScroll.scrollHeight === 0 ||
+            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
             const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
             if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
