@@ -230,18 +230,18 @@ describe('IgxTabs', () => {
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.focus();
         let args = { key: 'ArrowRight', bubbles: true };
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(1);
 
         tabs.tabs.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: 'ArrowLeft', bubbles: true };
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(1);
     }));
@@ -257,13 +257,13 @@ describe('IgxTabs', () => {
 
         let args = { key: 'End', bubbles: true };
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         args = { key: 'Home', bubbles: true };
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new KeyboardEvent('keydown', args));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
     }));
@@ -306,12 +306,12 @@ describe('IgxTabs', () => {
         fixture.detectChanges();
 
         tabs.tabs.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(2);
 
         tabs.tabs.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
-        tick(100);
+        tick(200);
         fixture.detectChanges();
         expect(tabs.selectedIndex).toBe(0);
     }));
