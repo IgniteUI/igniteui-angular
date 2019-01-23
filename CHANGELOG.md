@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
 - `IgxTreeGridComponent`
     - We can now search in the treegrid's data by using the `findNext` and the `findPrev` methods and we can clear the search results with the `clearSearch` method.
+- `IgxTextHighlightDirective`
+    - **Breaking Change** `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are now removed. Instead, `row` and `column` optional properties are added. `IgxTextHighlightDirective.page` input property is deprecated.
 
 ## 7.1.2
 ### Features
