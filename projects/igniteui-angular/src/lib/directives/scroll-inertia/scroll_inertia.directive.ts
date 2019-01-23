@@ -146,6 +146,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 this.IgxScrollInertiaScrollContainer.offsetHeight;
             if (0 < curScrollTop && curScrollTop < maxScrollTop) {
                 evt.preventDefault();
+                if (evt.stopPropagation) {
+                    evt.stopPropagation();
+                }
             }
         }
 
