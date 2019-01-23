@@ -463,7 +463,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
             return;
         }
 
-        if (this.cms.column.grid.id !== this.column.grid.id) {
+        if (this.column && this.cms.column.grid.id !== this.column.grid.id) {
             this.cms.icon.innerText = 'block';
             return;
         }
