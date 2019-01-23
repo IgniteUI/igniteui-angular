@@ -26,7 +26,20 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
 
     }
 
-    private scrollContainerToItem() {
+    private checkItemPositionInView() {
+
+    }
+    private getItemsOutOfView(contentElement: HTMLElement): {
+        TOP: number,
+        BOTTOM: number
+    } {
+        const currentScroll = contentElement.scrollTop;
+        const remainingScroll = this.select.items.length * this.select.items[0].element.nativeElement.getBoundingClientRect()
+         - currentScroll - contentElement.getBoundingClientRect().height;
+        return {
+            TOP: contentElement.scrollTop,
+            BOTTOM: remainingScroll
+        };
     }
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
         const inputRect = this.select.input.nativeElement.getBoundingClientRect();
