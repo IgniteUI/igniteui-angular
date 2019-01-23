@@ -56,7 +56,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         protected elementRef: ElementRef,
         @Inject(IgxSelectionAPIService) protected selection: IgxSelectionAPIService
     ) {
-        super(dropDown, elementRef, selection);
+        super(dropDown, elementRef, null, selection);
     }
 
     /**

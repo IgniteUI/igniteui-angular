@@ -13,10 +13,10 @@ import {
     EventEmitter,
     Output,
 } from '@angular/core';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down-navigation.directive';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs, isIE } from '../core/utils';
