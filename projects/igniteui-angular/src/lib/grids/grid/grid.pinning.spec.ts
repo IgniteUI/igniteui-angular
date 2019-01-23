@@ -63,7 +63,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
-        expect(grid.unpinnedWidth + 18).toEqual(400);
+        expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
     }));
 
     it('should allow pinning/unpinning via the grid API', fakeAsync(() => {
@@ -96,7 +96,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(200);
-        expect(grid.unpinnedWidth + 18).toEqual(600);
+        expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(600);
 
         // pin back the column.
         grid.pinColumn('CompanyName');
@@ -109,7 +109,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
-        expect(grid.unpinnedWidth).toEqual(382);
+        expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(400);
 
         expect(col.pinned).toBe(true);
         expect(col.visibleIndex).toEqual(1);
@@ -139,7 +139,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(600);
-        expect(grid.unpinnedWidth + 18).toEqual(200);
+        expect(grid.unpinnedWidth + grid.scrollWidth).toEqual(200);
 
         col.pinned = false;
 
@@ -152,7 +152,7 @@ describe('IgxGrid - Column Pinning ', () => {
 
         // verify container widths
         expect(grid.pinnedWidth).toEqual(400);
-        expect(grid.unpinnedWidth).toEqual(382);
+        expect(grid.unpinnedWidth  + grid.scrollWidth).toEqual(400);
     }));
 
     it('on unpinning should restore the original location(index) of the column', fakeAsync(() => {

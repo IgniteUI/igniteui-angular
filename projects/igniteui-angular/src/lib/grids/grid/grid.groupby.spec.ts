@@ -1949,7 +1949,7 @@ describe('IgxGrid - GroupBy', () => {
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
         expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
-        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - 18);
+        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollWidth);
 
         grid.clearGrouping();
         tick();
@@ -1963,7 +1963,8 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
-        expect(grid.unpinnedWidth).toEqual(400);
+        const expectedWidth = parseInt(grid.width, 10) - grid.scrollWidth;
+        expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));
 
     it('should expose tree structure to access groups', fakeAsync(() => {
