@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `combo.value` is now only a getter.
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+- `igxToggleAction`
+    - setting `igxToggleAction` on a given Component/Directive forces element of the Component/Directive to become target for toggle positioning strategy.
 
 ## 7.1.2
 ### Features
