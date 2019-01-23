@@ -1,6 +1,9 @@
-(function() {
+(function () {
+    const baseUrl = $('body').data('base-url');
+    const versionsJson = $('body').data('api-versions-json');
+
     $.ajax({
-        url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.jsonhttp://10.14.0.51/test.json",
+        url: versionsJson,
         type: "get",
         xhrFields: {
             withCredentials: false
@@ -11,7 +14,7 @@
 
         folders.forEach(f => {
             select.append($('<option>', {
-                value: `${baseUrl}/angular-docs/${f}/sass`,
+                value: `${baseUrl}/angular-docs/${f}/typescript`,
                 text: f
             }));
         });
