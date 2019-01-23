@@ -35,7 +35,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
     @HostListener('click', ['$event'])
     clicked(event) {
         if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.items.find((item) => item.isFocused);
+            const focusedItem = this.dropDown.items.find((item) => item.focused);
             if (this.dropDown.allowItemsFocus && focusedItem) {
                 focusedItem.element.nativeElement.focus({ preventScroll: true });
             }
