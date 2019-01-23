@@ -335,7 +335,7 @@ export class IgxAmPmItemDirective {
 }
 
 /**
- * @hidden
+ * This directive should be used to mark which ng-template will be used from IgxTimePicker when re-templating its input group.
  */
 @Directive({
     selector: '[igxTimePickerTemplate]'
