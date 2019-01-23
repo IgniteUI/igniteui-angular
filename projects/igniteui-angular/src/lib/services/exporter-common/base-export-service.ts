@@ -10,17 +10,61 @@ import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
 
+/**
+ * onRowExport event arguments
+ * this.exporterService.onRowExport.subscribe((args: IRowExportingEventArgs) => {
+ * // set args properties here
+ * })
+ */
 export interface IRowExportingEventArgs {
+    /**
+     * Contains the exporting row data
+     */
     rowData: any;
+
+    /**
+     * Contains the exporting row index
+     */
     rowIndex: number;
+
+    /**
+     * Skip the exporting row when set to true
+     */
     cancel: boolean;
 }
 
+/**
+    * onColumnExport event arguments
+    * ```typescript
+    * this.exporterService.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+    * // set args properties here
+    * });
+    * ```
+    */
 export interface IColumnExportingEventArgs {
+    /**
+     * Contains the exporting column header
+     */
     header: string;
+
+    /**
+     * Contains the exporting column field name
+     */
     field: string;
+
+    /**
+     * Contains the exporting column index
+     */
     columnIndex: number;
+
+    /**
+     * Skip the exporting column when set to true
+     */
     cancel: boolean;
+
+    /**
+     * Export the column's data without applying its formatter, when set to true
+     */
     skipFormatter: boolean;
 }
 
@@ -101,7 +145,7 @@ export abstract class IgxBaseExporter {
 
         // Append the hidden columns to the end of the list
         hiddenColumns.forEach((hiddenColumn) => {
-           this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
+            this._columnList[++lastVisbleColumnIndex] = hiddenColumn;
         });
 
         const data = this.prepareData(grid, options);
@@ -122,7 +166,7 @@ export abstract class IgxBaseExporter {
 
         if (!this._columnList || this._columnList.length === 0) {
             const keys = ExportUtilities.getKeysFromData(data);
-            this._columnList = keys.map((k) => ({ header: k, field: k, skip: false}));
+            this._columnList = keys.map((k) => ({ header: k, field: k, skip: false }));
         }
 
         let skippedPinnedColumnsCount = 0;
