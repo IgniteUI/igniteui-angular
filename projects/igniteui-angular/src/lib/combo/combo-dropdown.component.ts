@@ -53,10 +53,14 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
             this.items.length - 1;
     }
 
-    @ContentChildren(IgxComboItemComponent, { descendants: true })
-    protected children: QueryList<IgxDropDownItemBase> = null;
-
     private _scrollPosition = 0;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxComboItemComponent, { descendants: true })
+    public children: QueryList<IgxDropDownItemBase> = null;
 
     /**
      * @hidden

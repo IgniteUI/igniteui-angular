@@ -49,13 +49,17 @@ import { OverlaySettings } from '../services';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
-    protected children: QueryList<IgxDropDownItemBase>;
-
     @ViewChild(IgxToggleDirective)
     protected toggleDirective: IgxToggleDirective;
 
     protected destroy$ = new Subject<boolean>();
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    public children: QueryList<IgxDropDownItemBase>;
+
     /**
      * Gets/sets whether items take focus. Disabled by default.
      * When enabled, drop down items gain tab index and are focused when active -

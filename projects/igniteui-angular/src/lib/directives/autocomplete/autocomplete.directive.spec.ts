@@ -9,7 +9,7 @@ import { IgxInputGroupModule } from '../../input-group';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-fdescribe('IgxAutocomplete', () => {
+describe('IgxAutocomplete', () => {
     let fixture;
     let autocomplete: IgxAutocompleteDirective;
     let input: IgxInputDirective;
@@ -69,17 +69,43 @@ fdescribe('IgxAutocomplete', () => {
             expect(dropDown.collapsed).toBeTruthy();
         }));
 
-        it('Auto-highlighting first item', fakeAsync(() => {
+        it('Auto-highlight first item', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
             tick();
+            expect(dropDown.children.first.focused).toBeTruthy();
             expect(dropDown.items[0].focused).toBeTruthy();
+            expect(dropDown.items[0].value).toBe('Sofia');
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             fixture.detectChanges();
             tick();
             expect(fixture.componentInstance.townSelected).toBe('Sofia');
+
+            UIInteractions.sendInput(input, 'st', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.children.first.focused).toBeTruthy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+            expect(dropDown.items[0].value).toBe('Stara Zagora');
+
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.children.first.focused).toBeTruthy();
+            expect(dropDown.items[0].focused).toBeTruthy();
+            expect(dropDown.items[0].value).toBe('Sofia');
+            expect(dropDown.items[1].focused).toBeFalsy();
+            expect(dropDown.items[1].value).toBe('Stara Zagora');
         }));
+
+        it('Disabled', fakeAsync(() => {}));
+        it('Selection and events', fakeAsync(() => {}));
+        it('Keyboard Navigation', fakeAsync(() => {}));
+        it('DropDown settings', fakeAsync(() => {}));
+        it('DropDown default width', fakeAsync(() => {}));
+        it('Aria', fakeAsync(() => {}));
+        it('ReactiveForm', fakeAsync(() => {}));
     });
 });
 

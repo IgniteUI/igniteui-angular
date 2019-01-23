@@ -1,15 +1,16 @@
 //#region imports
 import {
     Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
-    NgModule, ElementRef, HostListener } from '@angular/core';
+    NgModule, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { first } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
 import { ISelectionEventArgs } from '../../drop-down';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
+import { Subject } from 'rxjs';
 //#endregion
 
 /**
@@ -27,11 +28,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
-                protected elementRef: ElementRef) {
+                protected elementRef: ElementRef,
+                protected cdr: ChangeDetectorRef) {
         super(null);
     }
 
     protected id: string;
+    protected queryListNotifier$ = new Subject<boolean>();
     protected get model() {
         return this.ngModel ? this.ngModel : this.formControl;
     }
@@ -41,7 +44,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private get collapsed(): boolean {
-        return this.target ? this.target.collapsed : true;
+        return this.dropDown ? this.dropDown.collapsed : true;
     }
 
     @Input('igxAutocomplete')
@@ -106,7 +109,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (this.collapsed) {
             this.open();
         } else {
-            this.highlightFirstItem();
+            this.unhighlightFirstItem();
         }
     }
     @HostListener('blur', ['$event'])
@@ -123,6 +126,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     private close() {
         this.dropDown.close();
+        this.queryListNotifier$.complete();
     }
 
     private open() {
@@ -133,13 +137,14 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.dropDown.onOpened.pipe(first()).subscribe(() => {
             this.highlightFirstItem();
         });
+        this.dropDown.children.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => this.highlightFirstItem());
     }
 
     private select = (value: ISelectionEventArgs) => { // ?
         if (!value.newSelection) {
             return;
         }
-        value.cancel = true;
+        value.cancel = true; // Disable selection in the drop down, because in auto complete we do not save selection.
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
@@ -150,12 +155,20 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.close();
     }
 
-    private highlightFirstItem() {
-        const firstMatch = this.target.items[0];
-        if (firstMatch) {
-            firstMatch.isFocused = true;
-            this.target.focusedItem = firstMatch;
+    private unhighlightFirstItem() {
+        const firstItem = this.dropDown.items[0];
+        if (firstItem) {
+            firstItem.isFocused = false;
         }
+    }
+
+    private highlightFirstItem() {
+        const firstItem = this.dropDown.items[0];
+        if (firstItem) {
+            firstItem.isFocused = true;
+            this.dropDown.focusedItem = firstItem;
+        }
+        this.cdr.detectChanges();
     }
 }
 
