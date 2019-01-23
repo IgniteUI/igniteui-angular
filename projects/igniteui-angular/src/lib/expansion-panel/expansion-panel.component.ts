@@ -219,6 +219,9 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
      * ```
      */
     expand(evt?: Event) {
+        if (!this.collapsed) { // If the panel is already opened, do nothing
+            return;
+        }
         this.collapsed = false;
         this.cdr.detectChanges();
         this.playOpenAnimation(
