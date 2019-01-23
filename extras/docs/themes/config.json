@@ -1,24 +1,30 @@
 {
     "en": {
         "development": {
-            "url": "https://dev.infragistics.local"
+            "url": "https://dev.infragistics.local",
+            "gaID": "GTM-WLXLBZD"
         },
         "staging": {
-            "url": "https://staging.infragistics.local"
+            "url": "https://staging.infragistics.local",
+            "gaID": "GTM-NCKNPN"
         },
         "production": {
-            "url": "https://www.infragistics.com"
+            "url": "https://www.infragistics.com",
+            "gaID": "GTM-T65CF7"
         }
     },
     "jp": {
         "development": {
-            "url": "https://jp.dev.infragistics.local"
+            "url": "https://jp.dev.infragistics.local",
+            "gaID": "GTM-NNHVMC7"
         },
         "staging": {
-            "url": "https://jp.staging.infragistics.local"
+            "url": "https://jp.staging.infragistics.local",
+            "gaID": "GTM-WLWSDK"
         },
         "production": {
-            "url": "https://jp.infragistics.com"
+            "url": "https://jp.infragistics.com",
+            "gaID": "GTM-KVNSWJ"
         }
-    }   
+    }
 }
