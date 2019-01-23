@@ -3,7 +3,7 @@
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
 - `igxGrid` now has `isLoading` input property. When enabled will show loading indicator, until the data is available. It can be best utilized for remote scenarios. Another input property `loadingGridTemplate` allows customizing the loading indicator.
-        + ```html
+        ```html
         <!-- Example -->
 
         <igx-grid [isLoading]="true" ...>
