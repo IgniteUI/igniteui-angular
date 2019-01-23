@@ -11,6 +11,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxRadioComponent } from './radio.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadio', () => {
     configureTestSuite();
@@ -26,7 +27,7 @@ describe('IgxRadio', () => {
                 RadioExternalLabelComponent,
                 RadioInvisibleLabelComponent
             ],
-            imports: [FormsModule, IgxRippleModule]
+            imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
     }));
