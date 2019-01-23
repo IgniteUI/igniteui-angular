@@ -197,6 +197,9 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase {
      * ```
      */
     collapse(evt?: Event) {
+        if (this.collapsed) { // If expansion panel is already collapsed, do nothing
+            return;
+        }
         this.playCloseAnimation(
             () => {
                 this.onCollapsed.emit({ event: evt, panel: this });
