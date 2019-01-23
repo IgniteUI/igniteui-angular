@@ -715,7 +715,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * An @Input property that sets whether the grid is going to show loading indicator.
      * ```html
-     * <igx-grid #grid [data]="Data" [loading]="true" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
