@@ -137,6 +137,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!value.newSelection) {
             return;
         }
+        value.cancel = true;
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
