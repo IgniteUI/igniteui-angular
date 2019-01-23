@@ -67,13 +67,14 @@
     $large-size: 88px;
 
     %igx-avatar-display {
+        position: relative;
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        position: relative;
         user-select: none;
         color: --var($theme, 'initials-color');
         background: --var($theme, 'initials-background');
+        vertical-align: middle;
     }
 
     %igx-avatar--rounded {
