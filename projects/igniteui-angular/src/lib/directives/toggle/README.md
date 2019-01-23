@@ -53,7 +53,7 @@ handlers when the toggle is opened and respectively closed.
 
 # IgxToggleAction Directive
 
-The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Component/Directive which implements **IToggleView** interface by providing the reference to this particular Component/Directive or ID which is registered into **IgxNavigationService**. It is also applicable upon **IgxToggle**
+The **IgxToggleAction** provides a way for user to Open/Close(toggle) every Component/Directive which implements **IToggleView** interface by providing the reference to this particular Component/Directive or ID which is registered into **IgxNavigationService**. It is also applicable upon **IgxToggle**. When applied to a Component/Directive **IgxToggleAction** forces **IToggleView**'s target to be the element where **IgxToggleAction** is set.
 
 You can see it in action [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toggle.html)
 
