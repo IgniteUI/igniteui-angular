@@ -9,7 +9,7 @@ let NEXT_ID = 0;
     selector: 'igx-drop-down-item-group, igx-select-item-group, igx-autocomplete-item-group',
     template: `
         <label id="{{labelId}}">{{ label }}</label>
-        <ng-content></ng-content>
+        <ng-content select="igx-drop-down-item, igx-select-item-group, igx-autocomplete-item-group"></ng-content>
     `
 })
 export class IgxDropDownGroupComponent {

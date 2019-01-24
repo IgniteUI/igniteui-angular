@@ -27,7 +27,7 @@ To provide more useful visual information, use `isHeader` to group items semanti
 ```
 
 ## Grouping items
-The **igxDropDown** allows for items to be grouped using the ***igxDropDownItemGroup** component. The example below illustrates how to display hierarchical data in drop down groups:
+The ***igx-drop-down-item-group*** component can be used inside of the ***igx-drop-down*** to group ***igx-drop-down-items***. The example below illustrates how to display hierarchical data in drop down groups:
 ```typescript
     // in example.component.ts
     export class MyExampleComponent {
@@ -67,6 +67,8 @@ The **igxDropDown** allows for items to be grouped using the ***igxDropDownItemG
         </igx-drop-down-item-group>
     </igx-drop-down>
 ```
+
+***NOTE:*** The ***igx-drop-down-item-group*** tag can be used for grouping of ***igx-drop-down-item*** only an will forfeit any other content passed to it. 
 
 ### API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
