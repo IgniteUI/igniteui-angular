@@ -289,9 +289,63 @@ describe('IgxToggle', () => {
         expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
     }));
 
+    it('fix for #3636 - All toggles should scroll correctly', fakeAsync(() => {
+        const fixture = TestBed.createComponent(TestWithThreeToggleActionsComponent);
+        fixture.detectChanges();
+
+        let button = fixture.componentInstance.button1.nativeElement;
+        button.click();
+        button = fixture.componentInstance.button2.nativeElement;
+        button.click();
+        button = fixture.componentInstance.button3.nativeElement;
+        button.click();
+        fixture.detectChanges();
+        tick();
+
+        let toggle = fixture.debugElement.query(By.css('#toggle1'));
+        let toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button1.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle2'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button2.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle3'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button3.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        document.documentElement.scrollTop += 100;
+        document.dispatchEvent(new Event('scroll'));
+        tick();
+
+        toggle = fixture.debugElement.query(By.css('#toggle1'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button1.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle2'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button2.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+
+        toggle = fixture.debugElement.query(By.css('#toggle3'));
+        toggleRect = toggle.nativeElement.getBoundingClientRect();
+        button = fixture.componentInstance.button3.nativeElement;
+        expect(toggleRect.right).toBe(button.getBoundingClientRect().right);
+        expect(toggleRect.top).toBe(button.getBoundingClientRect().bottom);
+    }));
+
     describe('overlay settings', () => {
         configureTestSuite();
-        it('should pass correct defaults from IgxToggleActionDiretive and respect outsideClickClose', fakeAsync(() => {
+        it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
             spyOn(IgxToggleDirective.prototype, 'toggle');
@@ -519,7 +573,7 @@ export class TestWithOnPushComponent {
 
 @Component({
     template: `
-        <button #button1 igxToggleAction="toggle1" [overlaySettings]="overlaySettings" style="position:fixed; left: 100px; top: 100px">
+        <button #button1 igxToggleAction="toggle1" [overlaySettings]="overlaySettings" style="position:absolute; left: 100px; top: 10%">
             BUTTON 1
         </button>
         <div id="toggle1" igxToggle style="width: 100px; height: 100px;">
@@ -528,7 +582,7 @@ export class TestWithOnPushComponent {
             </p>
         </div>
 
-        <button #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:fixed; left: 300px; top: 50px">
+        <button #button2 igxToggleAction="toggle2" [overlaySettings]="overlaySettings" style="position:absolute; left: 300px; top: 50%">
             BUTTON 2
         </button>
         <div id="toggle2" igxToggle style="width: 100px; height: 100px;">
@@ -537,7 +591,7 @@ export class TestWithOnPushComponent {
             </p>
         </div>
 
-        <button #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:fixed; left: 500px; top: 8px">
+        <button #button3 igxToggleAction="toggle3" [overlaySettings]="overlaySettings" style="position:absolute; left: 500px; top: 110%">
             BUTTON 3
         </button>
         <div id="toggle3" igxToggle style="width: 100px; height: 100px;">
@@ -559,5 +613,6 @@ export class TestWithThreeToggleActionsComponent implements OnInit {
             horizontalDirection: HorizontalAlignment.Left,
             horizontalStartPoint: HorizontalAlignment.Right
         });
+        this.overlaySettings.closeOnOutsideClick = false;
     }
 }
