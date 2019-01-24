@@ -2352,17 +2352,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const config = { childList: true, subtree: true };
             let observer: MutationObserver = null;
             const callback = (mutationsList) => {
-                mutationsList.forEach((mutation) => {
-                    if (mutation.type === 'childList') {
-                        for (let i = 0; i < mutation.addedNodes.length; i++) {
-                            const added = this.checkIfGridIsAdded(mutation.addedNodes[i]);
-                            if (added) {
-                                this.reflow();
-                                observer.disconnect();
-                            }
-                        }
-                    }
-                });
+                const childListHasChanged = mutationsList.filter((mutation) => {
+                    return mutation.type === 'childList';
+                }).length > 0;
+                if (childListHasChanged && this.isAttachedToDom) {
+                    this.reflow();
+                    observer.disconnect();
+                }
             };
 
             observer = new MutationObserver(callback);
