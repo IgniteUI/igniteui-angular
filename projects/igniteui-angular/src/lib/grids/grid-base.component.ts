@@ -2208,6 +2208,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private verticalScrollHandler(event) {
         this.verticalScrollContainer.onScroll(event);
+        const tag = this.document.activeElement.tagName.toLowerCase();
+        if (tag.includes('igx') && tag.includes('cell')) {
+            this.document.activeElement.blur();
+        }
         this.disableTransitions = true;
         this.zone.run(() => {
             this.cdr.detectChanges();
@@ -2221,7 +2225,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private horizontalScrollHandler(event) {
         const scrollLeft = event.target.scrollLeft;
-
+        const tag = this.document.activeElement.tagName.toLowerCase();
+        if (tag.includes('igx') && tag.includes('cell')) {
+            this.document.activeElement.blur();
+        }
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.zone.run(() => {
