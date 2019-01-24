@@ -4,6 +4,7 @@
     $.ajax({
         url: "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/test.json",
         type: "get",
+        contentType: 'application/json',
         xhrFields: {
             withCredentials: false
         }
