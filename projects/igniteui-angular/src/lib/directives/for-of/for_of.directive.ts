@@ -144,6 +144,20 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onChunkLoad = new EventEmitter<IForOfState>();
 
     /**
+     * An event that is emitted after data has been changed.
+     * ```html
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onDataChanged)="dataChanged($event)"></ng-template>
+     * ```
+     * ```typescript
+     * dataChanged(e){
+     * alert("data changed!");
+     * }
+     * ```
+     */
+    @Output()
+    public onDataChanged = new EventEmitter<any>();
+
+    /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
      * ```html
@@ -243,6 +257,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.onScroll(event);
     }
 
+    public isScrollable() {
+        return this.vh.instance.height > parseInt(this.igxForContainerSize, 10);
+    }
+
     /**
      * @hidden
      */
@@ -279,7 +297,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
             const factory: ComponentFactory<VirtualHelperComponent> = this.resolver.resolveComponentFactory(VirtualHelperComponent);
-            this.vh = this._viewContainer.createComponent(factory, 1);
+            this.vh = vc.createComponent(factory);
+
             this._maxHeight = this._calcMaxBrowserHeight();
             this.vh.instance.height = this.igxForOf ? this._calcHeight() : 0;
             this._zone.runOutsideAngular(() => {
@@ -367,6 +386,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this._applyChanges(changes);
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
+                    this.onDataChanged.emit();
                 });
             }
         }
@@ -1242,6 +1262,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
+                this.onDataChanged.emit();
             }
         }
     }
