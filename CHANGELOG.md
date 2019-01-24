@@ -7,7 +7,7 @@ All notable changes for each version of this project will be documented in this 
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
 - `igxToggleAction`
-    - setting `igxToggleAction` on a given Component/Directive forces element of the Component/Directive to become target for toggle positioning strategy.
+    - when applied `igxToggleAction` will set its host element as the position strategy target.
 
 ## 7.1.2
 ### Features
