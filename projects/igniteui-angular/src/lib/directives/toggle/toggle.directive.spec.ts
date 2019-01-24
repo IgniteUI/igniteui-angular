@@ -561,7 +561,7 @@ export class IgxOverlayServiceComponent {
 @Component({
     template: `
         <button igxToggleAction="toggleID">Open/Close Toggle</button>
-        <div style igxToggle id="toggleID">
+        <div igxToggle id="toggleID">
             <p>Some content</p>
         </div>
     `,

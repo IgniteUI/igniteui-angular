@@ -36,6 +36,7 @@ export interface IPanStateChangeEventArgs {
 export interface IListItemClickEventArgs {
     item: IgxListItemComponent;
     event: Event;
+    direction: IgxListPanState;
 }
 
 export interface IListItemPanningEventArgs {
