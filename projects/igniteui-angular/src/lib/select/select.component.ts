@@ -20,6 +20,8 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
+import { fromEvent, interval } from 'rxjs';
+import { buffer, debounceTime, map } from 'rxjs/operators';
 
 const noop = () => { };
 
@@ -86,12 +88,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     }
 
     public get selectionValue () {
-        return this.selection.first_item(this.id) ? this.selection.first_item(this.id) : '';
+        const selectedItem = this.selectedItem;
+        return selectedItem ? selectedItem.itemText : '';
     }
 
-    public get selectedItem(): any {
+    public get selectedItem(): IgxSelectItemComponent {
         const selectedValue = this.selection.first_item(this.id);
-        return this.items.find(x => x.value === selectedValue) ;
+        return this.items.find(x => x.value === selectedValue) as IgxSelectItemComponent;
     }
 
     //#region IMPLEMENT ControlValueAccessor METHODS
@@ -163,7 +166,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             }
         });
             Promise.resolve().then(() => this.children.notifyOnChanges());
-        }
+    }
 }
 
 @NgModule({

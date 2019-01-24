@@ -43,6 +43,10 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
     @Input()
     public id = `igx-drop-down-item-${NEXT_ID++}`;
 
+    public get itemText() {
+        return this.elementRef.nativeElement.innerText;
+    }
+
     public get isSelected () {
         return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this.value);
     }
