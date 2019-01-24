@@ -23,9 +23,33 @@ interface ISearchInfo {
     exactMatch: boolean;
 }
 
+/**
+ * An interface describing information for the active highlight.
+ */
 export interface IActiveHighlightInfo {
+    /**
+     * The row index of the highlight. This property is deprecated, use `row` instead.
+     */
+    rowIndex?: number;
+    /**
+     * The column index of the highlight. This property is deprecated, use `column` instead.
+     */
+    columnIndex?: number;
+    /**
+     * The page index of the highlight. This property is deprecated.
+     */
+    page?: number;
+    /**
+     * The row of the highlight.
+     */
     row?: any;
+    /**
+     * The column of the highlight.
+     */
     column?: any;
+    /**
+     * The index of the highlight.
+     */
     index: number;
 }
 
@@ -148,8 +172,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     @Input('column')
     public column: any;
 
-    @DeprecateProperty(`IgxTextHighlightDirective 'page' input is deprecated. There is no need to set it.`)
     @Input('page')
+    @DeprecateProperty(`IgxTextHighlightDirective 'page' input property is deprecated.`)
     public page: number;
 
     /**
@@ -180,8 +204,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     public static clearActiveHighlight(groupName) {
         IgxTextHighlightDirective.highlightGroupsMap.set(groupName, {
-            row: null,
-            column: null,
             index: -1
         });
         IgxTextHighlightDirective.onActiveElementChanged.emit(groupName);
@@ -237,8 +259,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     ngAfterViewInit() {
         if (IgxTextHighlightDirective.highlightGroupsMap.has(this.groupName) === false) {
             IgxTextHighlightDirective.highlightGroupsMap.set(this.groupName, {
-                row: null,
-                column: null,
                 index: -1
             });
         }
@@ -298,7 +318,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     public activateIfNecessary(): void {
         const group = IgxTextHighlightDirective.highlightGroupsMap.get(this.groupName);
-        if (group.column === this.column && group.row === this.row) {
+        const column = group.columnIndex === undefined ? group.column : group.columnIndex;
+        const row = group.rowIndex === undefined ? group.row : group.rowIndex;
+
+        if (column === this.column && row === this.row && group.page === this.page) {
             this.activate(group.index);
         }
     }
