@@ -10,7 +10,6 @@
 /// Does ___not___ apply for disabled state colors.
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {String} $button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
 ///
 /// @param {Color} $flat-background [null] - The background color of a flat button.
 /// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
@@ -56,17 +55,15 @@
 ///   );
 ///   // Pass the theme to the igx-button component mixin
 ///   @include igx-button($my-button-theme);
+
 @function igx-button-theme(
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $min-roundness: null,
-    $max-roundness: null,
-
-    $min-roundness-fab: null,
-    $max-roundness-fab: null,
-
-    $button-roundness: null,
+    $roundness-flat: null,
+    $roundness-raised: null,
+    $roundness-fab: null,
+    $roundness-icon: null,
 
     $flat-text-color: null,
     $flat-background: null,
@@ -100,6 +97,7 @@
     $disabled-background: null
 ) {
     $name: 'igx-button';
+    $button-schema: map-get($schema, $name);
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($flat-text-color) and $flat-background {
@@ -182,19 +180,30 @@
         $icon-hover-color: text-contrast($icon-hover-background);
     }
 
+    @if not($roundness-flat) {
+        $roundness-flat: round-borders(map_get($button-schema, 'roundness-flat'), 0, 20px);
+    }
 
+    @if not($roundness-raised) {
+        $roundness-raised: round-borders(map_get($button-schema, 'roundness-raised'), 0, 20px);
+    }
+
+    @if not($roundness-fab) {
+        $roundness-fab: round-borders(map_get($button-schema, 'roundness-fab'), 12, 28px);
+    }
+
+    @if not($roundness-icon) {
+        $roundness-icon: round-borders(map_get($button-schema, 'roundness-icon'), 0, 18px);
+    }
 
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        button-roundness: $button-roundness,
 
-        min-roundness: $min-roundness,
-        max-roundness: $max-roundness,
-
-        min-roundness-fab: $min-roundness-fab,
-        max-roundness-fab: $max-roundness-fab,
-
+        roundness-flat: round-borders($roundness-flat, 0, 20px),
+        roundness-raised: round-borders($roundness-raised, 0, 20px),
+        roundness-fab: round-borders($roundness-fab, 12, 28px),
+        roundness-icon: round-borders($roundness-icon, 0, 18px),
 
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
@@ -243,7 +252,6 @@
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
     $button-transition: all .15s ease-out;
-    $button-round-radius: round-borders(.5, --var($theme, 'min-roundness-fab'), --var($theme, 'max-roundness-fab'));
 
     $button-disabled-shadow: none;
 
@@ -270,7 +278,6 @@
         height: $button-height;
         padding: $button-padding;
         border: $button-border;
-        border-radius: round-borders(--var($theme, 'button-roundness'), --var($theme, 'min-roundness'), --var($theme, 'max-roundness'));
         cursor: pointer;
         user-select: none;
         outline: none;
@@ -283,6 +290,7 @@
     %igx-button--flat {
         background: --var($theme, 'flat-background');
         color: --var($theme, 'flat-text-color');
+        border-radius: --var($theme, 'roundness-flat');
 
         &:hover {
             background: --var($theme, 'flat-hover-background');
@@ -300,6 +308,7 @@
         color: --var($theme, 'raised-text-color');
         background: --var($theme, 'raised-background');
         box-shadow: $button-raised-shadow;
+        border-radius: --var($theme, 'roundness-raised');
 
         &:focus,
         &:hover {
@@ -322,7 +331,7 @@
         justify-content: center;
         align-items: center;
         border: $button-border;
-        border-radius: $button-round-radius;
+        border-radius: --var($theme, 'roundness-fab');
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -339,6 +348,7 @@
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
         box-shadow: $button-floating-shadow;
+        border-radius: --var($theme, 'roundness-fab');
 
         &:hover {
             box-shadow: $button-floating-hover-shadow;
@@ -360,6 +370,7 @@
         padding: $button-icon-padding;
         color: --var($theme, 'icon-color');
         background: --var($theme, 'icon-background');
+        border-radius: --var($theme, 'roundness-icon');
 
         &:hover {
             transition: $button-transition;

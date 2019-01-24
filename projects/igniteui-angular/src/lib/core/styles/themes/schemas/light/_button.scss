@@ -36,13 +36,13 @@
 /// @see $default-palette
 $_light-button: (
 
-    min-roundness: 0,
-    max-roundness: 20px,
+    roundness-flat: .2,
 
-    min-roundness-fab: 12,
-    max-roundness-fab: 28,
+    roundness-raised: .2,
 
-    button-roundness: .2,
+    roundness-fab: 1,
+
+    roundness-icon: 1,
 
     flat-background: transparent,
 
