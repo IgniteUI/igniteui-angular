@@ -49,7 +49,6 @@ fdescribe('IgxAutocomplete', () => {
             input.nativeElement.click();
             expect(dropDown.collapsed).toBeTruthy();
         }));
-
         it('Opening and closing.', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
@@ -71,8 +70,15 @@ fdescribe('IgxAutocomplete', () => {
             fixture.detectChanges();
             tick();
             expect(dropDown.collapsed).toBeTruthy();
-        }));
 
+            autocomplete.open();
+            tick();
+            expect(dropDown.collapsed).toBeFalsy();
+
+            autocomplete.close();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
         it('Auto-highlight first item', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);
             fixture.detectChanges();
@@ -102,10 +108,51 @@ fdescribe('IgxAutocomplete', () => {
             expect(dropDown.items[1].focused).toBeFalsy();
             expect(dropDown.items[1].value).toBe('Stara Zagora');
         }));
+        it('Disabled', fakeAsync(() => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeFalsy();
 
-        it('Disabled', fakeAsync(() => {}));
-        it('Selection and events', fakeAsync(() => {}));
-        it('Keyboard Navigation', fakeAsync(() => {}));
+            autocomplete.disabled = true;
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.collapsed).toBeTruthy();
+        }));
+        it('Selection and events', fakeAsync(() => {
+            spyOn(autocomplete.onItemSelected, 'emit');
+            UIInteractions.sendInput(input, 'st', fixture);
+            fixture.detectChanges();
+            tick();
+
+            UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
+            expect(fixture.componentInstance.townSelected).toBe('Stara Zagora');
+            expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(1);
+        }));
+        it('Keyboard Navigation', fakeAsync(() => {
+            UIInteractions.sendInput(input, 'a', fixture);
+            fixture.detectChanges();
+            tick();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.items[1].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.items[0].focused).toBeTruthy();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input.nativeElement, true);
+            fixture.detectChanges();
+            tick();
+            expect(dropDown.items[0].focused).toBeTruthy();
+        }));
         it('DropDown settings', fakeAsync(() => {}));
         it('DropDown default width', fakeAsync(() => {
             UIInteractions.sendInput(input, 's', fixture);

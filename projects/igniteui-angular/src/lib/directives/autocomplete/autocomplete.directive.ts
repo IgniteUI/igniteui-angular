@@ -35,6 +35,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         super(null);
     }
 
+    private _disabled = false;
     protected id: string;
     protected queryListNotifier$ = new Subject<boolean>();
     protected get model() {
@@ -57,7 +58,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     dropDown: IgxDropDownComponent;
 
     @Input('igxAutocompleteDisabled')
-    disabled = false;
+    get disabled() {
+        return this._disabled;
+    }
+    set disabled(value) {
+        this._disabled = value;
+        this.close();
+    }
 
     @Input('igxAutocompleteSettings')
     overlaySettings: OverlaySettings = {
@@ -130,12 +137,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
     }
 
-    private close() {
+    public close() {
         this.dropDown.close();
         this.queryListNotifier$.complete();
     }
 
-    private open() {
+    public open() {
         this.dropDown.open(this.overlaySettings);
         this.target = this.dropDown;
         this.dropDown.width = this.parentElement.clientWidth + 'px';
