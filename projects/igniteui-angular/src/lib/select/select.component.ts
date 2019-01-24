@@ -22,7 +22,7 @@ import { IgxSelectItemNavigationDirective } from './select-navigation.directive'
 import { IgxLabelDirective } from '../input-group';
 import { timer, Subscription } from 'rxjs';
 import { CancelableEventArgs } from '../core/utils';
-import { slideInTop, scaleInCenter, scaleOutCenter, scaleOutHorCenter, scaleInHorCenter } from '../animations/main';
+import { fadeIn, fadeOut } from '../animations/main';
 
 const noop = () => { };
 @Component({
@@ -33,6 +33,9 @@ const noop = () => { };
         { provide: IGX_DROPDOWN_BASE, useExisting: IgxSelectComponent }]
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
+
+    /** @hidden @internal TODO: igx-select class hostbind? */
+    public cssClass = false;
 
     @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
     @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
@@ -160,8 +163,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             positionStrategy: new SelectPositioningStrategy(
                 this,
                 { target: this.inputGroup.element.nativeElement,
-                    closeAnimation: scaleOutHorCenter,
-                    openAnimation: scaleInHorCenter
+                    closeAnimation: fadeOut,
+                    openAnimation: fadeIn
                 }
             ),
             scrollStrategy: new AbsoluteScrollStrategy(),
