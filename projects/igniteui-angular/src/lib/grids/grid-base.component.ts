@@ -2538,6 +2538,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
+     * The width is 80% of the total grid width.
      * ```typescript
      * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
      * ```
@@ -2549,6 +2550,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Returns the minimum width of the container for the unpinned `IgxColumnComponent`s.
+     * The width is 20% of the total grid width.
      * ```typescript
      * const minUnpinnedColWidth = this.grid.unpinnedAreaMinWidth;
      * ```
