@@ -5,6 +5,7 @@
     $.ajax({
         url: versionsJson,
         type: "get",
+        contentType: 'application/json',
         xhrFields: {
             withCredentials: false
         }
