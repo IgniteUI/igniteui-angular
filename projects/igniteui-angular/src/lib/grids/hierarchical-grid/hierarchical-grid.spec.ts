@@ -166,6 +166,29 @@ describe('Basic IgxHierarchicalGrid', () => {
         const hScroll = hierarchicalGrid.parentVirtDir.getHorizontalScroll();
         expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
     });
+
+    it('should allow extracting child grids using hgridAPI', () => {
+        // set first row as expanded.
+        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        hierarchicalGrid.cdr.detectChanges();
+        const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        // verify row is expanded
+        expect(row1.expanded).toBe(true);
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrid([{ rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' }]);
+        expect(childGrid).not.toBeNull();
+        childGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0].childData[0] }];
+        childGrid.cdr.detectChanges();
+        const grandChildGrid = hierarchicalGrid.hgridAPI.getChildGrid([
+            { rowID: fixture.componentInstance.data[0], rowIslandKey: 'childData' },
+            { rowID: fixture.componentInstance.data[0].childData[0], rowIslandKey: 'childData' }
+        ]);
+        expect(grandChildGrid).not.toBeNull();
+
+        const rowIsland1 = hierarchicalGrid.hgridAPI.getLayout('igx-row-island-childData');
+        const rowIsland2 = hierarchicalGrid.hgridAPI.getLayout('igx-row-island-childData-childData');
+        expect(rowIsland1.key).toBe('childData');
+        expect(rowIsland2.key).toBe('childData');
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {
