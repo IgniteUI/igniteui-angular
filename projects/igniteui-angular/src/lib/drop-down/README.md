@@ -94,6 +94,5 @@ The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `itemIndex` | `number` | Gets ***visible*** item index. |
 | `elementHeight` | `number` | Gets item element height. |
 | `element`| `ElementRef` | Get item's html element. |

@@ -108,19 +108,6 @@ export abstract class IgxDropDownBase implements IDropDownList {
     public cssClass = true;
 
     /**
-     * @hidden
-     */
-    protected get sortedChildren(): IgxDropDownItemBase[] {
-        if (this.children !== undefined) {
-            return this.children.toArray()
-                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
-                    return a.index - b.index;
-                });
-        }
-        return null;
-    }
-
-    /**
      * Get all non-header items
      *
      * ```typescript
@@ -130,8 +117,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     public get items(): IgxDropDownItemBase[] {
         const items: IgxDropDownItemBase[] = [];
         if (this.children !== undefined) {
-            const sortedChildren = this.sortedChildren;
-            for (const child of sortedChildren) {
+            for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
                     items.push(child);
                 }

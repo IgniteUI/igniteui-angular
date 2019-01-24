@@ -308,6 +308,40 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden
      */
+    protected get sortedChildren(): IgxDropDownItemBase[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
+                    return a.index - b.index;
+                });
+        }
+        return null;
+    }
+
+    /**
+     * Get all non-header items
+     *
+     * ```typescript
+     * let myDropDownItems = this.dropdown.items;
+     * ```
+     */
+    public get items(): IgxDropDownItemBase[] {
+        const items: IgxDropDownItemBase[] = [];
+        if (this.children !== undefined) {
+            const sortedChildren = this.sortedChildren;
+            for (const child of sortedChildren) {
+                if (!child.isHeader) {
+                    items.push(child);
+                }
+            }
+        }
+
+        return items;
+    }
+
+    /**
+     * @hidden
+     */
     protected scrollToItem() {
     }
     /**
