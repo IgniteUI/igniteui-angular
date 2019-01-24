@@ -322,6 +322,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * let disabledDates = this.calendar.disabledDates;
      * ```
      */
+    @Input()
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
@@ -333,8 +334,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *public calendar: IgCalendarComponent;
      *ngOnInit(){
      *    this.calendar.disabledDates = [
-     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
-     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
+     *     {type: DateRangeType.Weekends}];
      *}
      *```
      */
@@ -348,6 +349,7 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      * let specialDates = this.calendar.specialDates;
      * ```
      */
+    @Input()
     public get specialDates(): DateRangeDescriptor[] {
         return this._specialDates;
     }
@@ -359,8 +361,8 @@ export class IgxCalendarComponent implements OnInit, ControlValueAccessor {
      *public calendar: IgCalendarComponent;
      *ngOnInit(){
      *    this.calendar.specialDates = [
-     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
-     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
+     *     {type: DateRangeType.Weekends}];
      *}
      *```
      */
