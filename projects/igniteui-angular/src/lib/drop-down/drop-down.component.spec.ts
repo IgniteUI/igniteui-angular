@@ -1246,11 +1246,32 @@ describe('IgxDropDown ', () => {
 
     describe('DropDownGroup Tests', () => {
         configureTestSuite();
+        it('Should properly render item groups aria attributes - label, role, labelledby', fakeAsync(() => {
+            const fixture = TestBed.createComponent(GroupDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropDown;
+            const groups = fixture.componentInstance.groups;
+            expect(dropdown.collapsed).toBeTruthy();
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            const groupItems = document.querySelectorAll('.igx-drop-down__group');
+            for (let i = 0; i < groupItems.length; i++) {
+                const elemAttr = groupItems[i].attributes;
+                expect(elemAttr['aria-disabled'].value).toEqual('false');
+                expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                expect(elemAttr['role'].value).toEqual(`group`);
+            }
+            groups.first.disabled = true;
+            fixture.detectChanges();
+            expect(document.querySelectorAll('.igx-drop-down__group')[0].attributes['aria-disabled'].value).toEqual('true');
+        }));
+
         it('Should properly display items within drop-down groups', fakeAsync(() => {
             const fixture = TestBed.createComponent(GroupDropDownComponent);
             fixture.detectChanges();
             const dropdown = fixture.componentInstance.dropDown;
-            const items = fixture.componentInstance.items;
+            const items = fixture.componentInstance.data;
             expect(dropdown.collapsed).toBeTruthy();
             dropdown.toggle();
             tick();
@@ -1266,12 +1287,12 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.items[i].value).toEqual(items[currentIndex].children[i % 3].value);
             }
         }));
-
         it('Should properly disable all items within a disabled drop-down group', fakeAsync(() => {
             const fixture = TestBed.createComponent(GroupDropDownComponent);
             fixture.detectChanges();
             const dropdown = fixture.componentInstance.dropDown;
             const groups = fixture.componentInstance.groups;
+            const items = fixture.componentInstance.items;
             expect(dropdown.collapsed).toBeTruthy();
             dropdown.toggle();
             tick();
@@ -1284,6 +1305,10 @@ describe('IgxDropDown ', () => {
             expect(allDropDownItems.length).toEqual(9);
             expect(dropdown.items.length).toEqual(9);
             expect(allDisabled.length).toEqual(3);
+            const disabledGroup = [...items.toArray()].splice(0, 3);
+            for (let i = 0; i < disabledGroup.length; i++) {
+                expect(disabledGroup[i].disabled).toEqual(true);
+            }
         }));
     });
 });
@@ -1773,7 +1798,7 @@ class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {
 @Component({
     template: `
     <igx-drop-down>
-        <igx-drop-down-item-group *ngFor="let parent of items" [label]="parent.name">
+        <igx-drop-down-item-group *ngFor="let parent of data" [label]="parent.name">
             <igx-drop-down-item *ngFor="let child of parent.children" [value]="child.value">
                 {{ child.name }}
             </igx-drop-down-item>
@@ -1785,15 +1810,17 @@ class GroupDropDownComponent {
     public dropDown: IgxDropDownComponent;
     @ViewChildren(IgxDropDownGroupComponent, { read: IgxDropDownGroupComponent })
     public groups: QueryList<IgxDropDownGroupComponent>;
-    public items = [];
+    @ViewChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent })
+    public items: QueryList<IgxDropDownItemComponent>;
+    public data = [];
     constructor() {
         for (let i = 0; i < 3; i++) {
-            this.items.push({
+            this.data.push({
                 name: `Parent ${i + 1}`,
                 children: []
             });
             for (let j = 0; j < 3; j++) {
-                this.items[i].children.push({
+                this.data[i].children.push({
                     name: `Child ${j + 1} of Parent ${i + 1}`,
                     value: `custom-${i + '_' + j}`
                 });
