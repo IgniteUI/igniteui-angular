@@ -28,5 +28,6 @@
     $('#versions').on('change', (...rest) => {
         const val = $('#versions').val();
         sessionStorage.apiVersion = val;
-    })
+        window.location.assign(val);
+    });
 })();
