@@ -59,7 +59,7 @@ export class IgxDropDownGroupComponent {
      * </igx-drop-down-item-group>
      * ```
      *
-     * *NOTE*: All items inside of a disabled drop down group will be treated as disabled
+     * **NOTE:** All items inside of a disabled drop down group will be treated as disabled
      */
     @Input()
     @HostBinding(`attr.aria-disabled`)
