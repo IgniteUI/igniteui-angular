@@ -432,7 +432,7 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[6];
+        cell = cells[5];
 
         UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
 
@@ -763,12 +763,13 @@ describe('IgxGrid - Keyboard navigation', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(rowDisplayContainer.style.left).toEqual('-25px');
+            expect(rowDisplayContainer.style.left).toEqual('-40px');
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('3');
         });
 
         it('should scroll first row into view when pressing arrow up', (async () => {
+            grid.reflow();
             fix.componentInstance.scrollTop(25);
             await wait(100);
             fix.detectChanges();
