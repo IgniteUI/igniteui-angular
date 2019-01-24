@@ -16,7 +16,8 @@ import {
     HostListener,
     ElementRef,
     TemplateRef,
-    Directive
+    Directive,
+    ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
@@ -377,8 +378,6 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
         if (this.value) {
             return this._customFormatChecker(this.formatter, this.value);
         }
-
-        return '';
     }
 
     /**
@@ -444,7 +443,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
 
     @ViewChild(IgxInputDirective) protected input: IgxInputDirective;
 
-    constructor(private resolver: ComponentFactoryResolver) { }
+    constructor(private resolver: ComponentFactoryResolver, private cdr: ChangeDetectorRef) { }
 
     /**
      *Method that sets the selected date.
@@ -461,6 +460,7 @@ export class IgxDatePickerComponent implements ControlValueAccessor, EditorProvi
      */
     public writeValue(value: Date) {
         this.value = value;
+        this.cdr.markForCheck();
     }
 
     /**

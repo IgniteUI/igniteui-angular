@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit, HostBinding } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -21,6 +21,8 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.c
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
 import { timer, Subscription } from 'rxjs';
+import { CancelableEventArgs } from '../core/utils';
+import { slideInTop, scaleInCenter, scaleOutCenter, scaleOutHorCenter, scaleInHorCenter } from '../animations/main';
 
 const noop = () => { };
 @Component({
@@ -59,6 +61,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
+    /**
+     * @hidden
+     */
+    @HostBinding('style.maxHeight')
+    public maxHeight = '256px';
 
     /**
      * @hidden
@@ -140,6 +147,9 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
+    public getElementPadding() {
+        return this.input.nativeElement.getBoundingClientRect().x - this.inputGroup.element.nativeElement.getBoundingClientRect().x + `px`;
+    }
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled) {
             return;
@@ -149,9 +159,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
             closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(
                 this,
-                { target: this.input.nativeElement }
+                { target: this.inputGroup.element.nativeElement,
+                    closeAnimation: scaleOutHorCenter,
+                    openAnimation: scaleInHorCenter
+                }
             ),
-            scrollStrategy: new AbsoluteScrollStrategy()
+            scrollStrategy: new AbsoluteScrollStrategy(),
         });
     }
 
@@ -211,6 +224,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         } else {
             this.selectItem(nextItem);
         }
+    }
+
+    public onToggleOpening(event: CancelableEventArgs) {
+        this.onOpening.emit(event);
+        if (event.cancel) {
+            return;
+        }
+        this.scrollToItem(this.selectedItem);
     }
 }
 
