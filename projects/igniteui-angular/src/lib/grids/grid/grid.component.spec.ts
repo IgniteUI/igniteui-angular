@@ -246,7 +246,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
             grid.displayDensity = 'cosy';
             fixture.detectChanges();
             tick(200);
@@ -254,7 +254,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
             grid.displayDensity = 'compact';
             fixture.detectChanges();
             tick(200);
@@ -262,7 +262,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
         }));
 
         it('should render empty message', fakeAsync(() => {
