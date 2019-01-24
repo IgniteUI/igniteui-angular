@@ -35,7 +35,14 @@
 /// @property {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
 /// @see $default-palette
 $_light-button: (
-    button-roundness: 4px,
+
+    min-roundness: 0,
+    max-roundness: 20px,
+
+    min-roundness-fab: 12,
+    max-roundness-fab: 28,
+
+    button-roundness: .2,
 
     flat-background: transparent,
 

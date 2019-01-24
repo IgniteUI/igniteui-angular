@@ -60,6 +60,12 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
+    $min-roundness: null,
+    $max-roundness: null,
+
+    $min-roundness-fab: null,
+    $max-roundness-fab: null,
+
     $button-roundness: null,
 
     $flat-text-color: null,
@@ -176,10 +182,19 @@
         $icon-hover-color: text-contrast($icon-hover-background);
     }
 
+
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
         button-roundness: $button-roundness,
+
+        min-roundness: $min-roundness,
+        max-roundness: $max-roundness,
+
+        min-roundness-fab: $min-roundness-fab,
+        max-roundness-fab: $max-roundness-fab,
+
 
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
@@ -228,7 +243,7 @@
     $button-height: rem(36px);
     $button-padding: 0 rem(16px, 16px);
     $button-transition: all .15s ease-out;
-    $button-round-radius: 50%;
+    $button-round-radius: round-borders(.5, --var($theme, 'min-roundness-fab'), --var($theme, 'max-roundness-fab'));
 
     $button-disabled-shadow: none;
 
@@ -255,7 +270,7 @@
         height: $button-height;
         padding: $button-padding;
         border: $button-border;
-        border-radius: --var($theme, 'button-roundness');
+        border-radius: round-borders(--var($theme, 'button-roundness'), --var($theme, 'min-roundness'), --var($theme, 'max-roundness'));
         cursor: pointer;
         user-select: none;
         outline: none;
