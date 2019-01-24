@@ -5,13 +5,15 @@ import { IgxAutocompleteModule, IgxAutocompleteDirective } from './autocomplete.
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxInputDirective } from '../input/input.directive';
-import { IgxInputGroupModule } from '../../input-group';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../../input-group';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxIconModule } from '../../icon';
 
-describe('IgxAutocomplete', () => {
+fdescribe('IgxAutocomplete', () => {
     let fixture;
     let autocomplete: IgxAutocompleteDirective;
+    let group: IgxInputGroupComponent;
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
     configureTestSuite();
@@ -28,7 +30,8 @@ describe('IgxAutocomplete', () => {
                 IgxAutocompleteModule,
                 FormsModule,
                 ReactiveFormsModule,
-                NoopAnimationsModule
+                NoopAnimationsModule,
+                IgxIconModule
             ]
         })
         .compileComponents();
@@ -40,6 +43,7 @@ describe('IgxAutocomplete', () => {
             fixture = TestBed.createComponent(AutocompleteComponent);
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
+            group = fixture.componentInstance.group;
             input = fixture.componentInstance.input;
             dropDown = fixture.componentInstance.dropDown;
             input.nativeElement.click();
@@ -103,17 +107,28 @@ describe('IgxAutocomplete', () => {
         it('Selection and events', fakeAsync(() => {}));
         it('Keyboard Navigation', fakeAsync(() => {}));
         it('DropDown settings', fakeAsync(() => {}));
-        it('DropDown default width', fakeAsync(() => {}));
+        it('DropDown default width', fakeAsync(() => {
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            const dropDownAny = dropDown as any;
+            expect(dropDownAny.scrollContainer.getBoundingClientRect().width)
+                .toEqual(group.element.nativeElement.getBoundingClientRect().width);
+        }));
         it('Aria', fakeAsync(() => {}));
         it('ReactiveForm', fakeAsync(() => {}));
+        it('On HTML input', fakeAsync(() => {}));
+        it('On textarea', fakeAsync(() => {}));
     });
 });
 
 @Component({
     template: `<igx-input-group>
+        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'/>
         <label igxLabel for="towns">Towns</label>
+        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel>
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
@@ -123,6 +138,7 @@ describe('IgxAutocomplete', () => {
 })
 class AutocompleteComponent {
     @ViewChild(IgxAutocompleteDirective) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent) public group: IgxInputGroupComponent;
     @ViewChild(IgxInputDirective) public input: IgxInputDirective;
     @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
     townSelected;

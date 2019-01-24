@@ -4,13 +4,14 @@ import {
     NgModule, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
 import { ISelectionEventArgs } from '../../drop-down';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import { Subject } from 'rxjs';
+import { IgxInputGroupComponent } from '../../input-group';
 //#endregion
 
 /**
@@ -28,6 +29,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
+                @Optional() protected group: IgxInputGroupComponent,
                 protected elementRef: ElementRef,
                 protected cdr: ChangeDetectorRef) {
         super(null);
@@ -41,6 +43,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
 
     get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
+    }
+
+    get parentElement(): HTMLElement {
+        return this.group ? this.group.element.nativeElement : this.nativeElement;
     }
 
     private get collapsed(): boolean {
@@ -57,7 +63,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     overlaySettings: OverlaySettings = {
         modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy({ target: this.nativeElement })
+        positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
     };
 
     @Input('igxAutocompleteHighlightMatch')
@@ -132,7 +138,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private open() {
         this.dropDown.open(this.overlaySettings);
         this.target = this.dropDown;
-        this.dropDown.width = this.nativeElement.clientWidth + 'px';
+        this.dropDown.width = this.parentElement.clientWidth + 'px';
         this.dropDown.onSelection.subscribe(this.select);
         this.dropDown.onOpened.pipe(first()).subscribe(() => {
             this.highlightFirstItem();
