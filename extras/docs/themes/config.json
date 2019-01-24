@@ -2,29 +2,35 @@
     "en": {
         "development": {
             "url": "https://dev.infragistics.local",
-            "gaID": "GTM-WLXLBZD"
+            "gaID": "GTM-WLXLBZD",
+            "versions": "https://staging.infragistics.local/angular-docs/angular-api-docs-versions.json"
         },
         "staging": {
             "url": "https://staging.infragistics.local",
-            "gaID": "GTM-NCKNPN"
+            "gaID": "GTM-NCKNPN",
+            "versions": "https://staging.infragistics.local/angular-docs/angular-api-docs-versions.json"
         },
         "production": {
             "url": "https://www.infragistics.com",
-            "gaID": "GTM-T65CF7"
+            "gaID": "GTM-T65CF7",
+            "versions": "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/angular-api-docs-versions-prod.json"
         }
     },
     "jp": {
         "development": {
             "url": "https://jp.dev.infragistics.local",
-            "gaID": "GTM-NNHVMC7"
+            "gaID": "GTM-NNHVMC7",
+            "versions": "https://jp.staging.infragistics.local/angular-docs/angular-api-docs-versions-jp.json"
         },
         "staging": {
             "url": "https://jp.staging.infragistics.local",
-            "gaID": "GTM-WLWSDK"
+            "gaID": "GTM-WLWSDK",
+            "versions": "https://jp.staging.infragistics.local/angular-docs/angular-api-docs-versions-jp.json"
         },
         "production": {
             "url": "https://jp.infragistics.com",
-            "gaID": "GTM-KVNSWJ"
+            "gaID": "GTM-KVNSWJ",
+            "versions": "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/angular-api-docs-versions-prod-jp.json"
         }
     }
 }
