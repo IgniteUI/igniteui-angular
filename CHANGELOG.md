@@ -9,7 +9,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTreeGridComponent`
     - We can now search in the treegrid's data by using the `findNext` and the `findPrev` methods and we can clear the search results with the `clearSearch` method.
 - `IgxTextHighlightDirective`
-    - **Breaking Change** `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are now removed. Instead, `row` and `column` optional properties are added. `IgxTextHighlightDirective.page` input property is deprecated.
+    - `IgxTextHighlightDirective.page` input property is deprecated. `rowIndex`, `columnIndex` and `page` properties of the `IActiveHighlightInfo` interface are also deprecated. Instead, `row` and `column` optional properties are added.
 
 ## 7.1.2
 ### Features
