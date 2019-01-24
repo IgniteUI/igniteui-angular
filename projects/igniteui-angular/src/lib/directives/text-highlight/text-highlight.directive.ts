@@ -9,7 +9,8 @@ import {
     OnDestroy,
     Output,
     Renderer2,
-    SimpleChanges
+    SimpleChanges,
+    AfterViewChecked
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -56,7 +57,7 @@ export interface IActiveHighlightInfo {
 @Directive({
     selector: '[igxTextHighlight]'
 })
-export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnChanges {
+export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
     private static onActiveElementChanged = new EventEmitter<string>();
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
@@ -66,6 +67,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
+    private _oldValue: any;
 
     /**
      * Determines the `CSS` class of the highlight elements.
@@ -237,11 +239,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      * @hidden
      */
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.value && !changes.value.firstChange) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
-            this.activateIfNecessary();
-        }
-
         if ((changes.row !== undefined && !changes.row.firstChange) ||
             (changes.column !== undefined && !changes.column.firstChange) ||
             (changes.page !== undefined && !changes.page.firstChange)) {
@@ -272,6 +269,17 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         };
 
         this._container = this.parentElement.firstElementChild;
+    }
+
+    /**
+     * @hidden
+     */
+    ngAfterViewChecked() {
+        if (this.value !== this._oldValue) {
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+            this.activateIfNecessary();
+            this._oldValue = this.value;
+        }
     }
 
     /**
