@@ -478,7 +478,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         tick(100);
         fixture.detectChanges();
 
-        expect(grid.columns[0].width).toEqual('280px');
+        const expetedWidth = grid.calcPinnedContainerMaxWidth - parseInt(grid.columns[1].width, 10) - parseInt(grid.columns[2].width, 10);
+        expect(grid.columns[0].width).toEqual(expetedWidth + 'px');
         expect(grid.columns[1].width).toEqual('100px');
         expect(grid.columns[2].width).toEqual('100px');
     }));
@@ -751,21 +752,22 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const headerGroups = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
         const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_SELECTOR));
+        const grid = fixture.componentInstance.grid;
+        const expectedWidth = (parseInt(grid.width, 10) - grid.scrollWidth) / 4;
+        expect(headers[0].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headers[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headers[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headers[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
 
-        expect(headers[0].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headers[1].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headers[2].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headers[3].nativeElement.getBoundingClientRect().width).toBe(100);
+        expect(filteringCells[0].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(filteringCells[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(filteringCells[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(filteringCells[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
 
-        expect(filteringCells[0].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(filteringCells[1].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(filteringCells[2].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(filteringCells[3].nativeElement.getBoundingClientRect().width).toBe(100);
-
-        expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(100);
-        expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBe(100);
+        expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+        expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
     }));
 });
 
@@ -790,7 +792,7 @@ export class PinnedColumnsComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(`width="600px" height="600px"`, ``,
+    template: GridTemplateStrings.declareGrid(`width="618px" height="600px"`, ``,
         `<igx-column [field]="'Released'" [pinned]="true" width="100px" dataType="boolean" [resizable]="true"></igx-column>
         <igx-column [field]="'ReleaseDate'" [pinned]="true" width="100px" dataType="date" [resizable]="true"
             [formatter]="returnVal"></igx-column>
