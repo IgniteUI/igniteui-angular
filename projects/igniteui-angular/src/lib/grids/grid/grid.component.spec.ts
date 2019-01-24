@@ -401,12 +401,16 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fixture.componentInstance.grid;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            let colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
 
             expect(loadingIndicator).not.toBeNull();
+            expect(colHeaders.length).toBe(0);
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
             // Check for loaded rows in grid's container
+            fixture.componentInstance.grid.shouldGenerate = true;
             fixture.componentInstance.data = [
                 { Number: 1, String: '1', Boolean: true, Date: new Date(Date.now()) }
             ];
@@ -414,6 +418,8 @@ describe('IgxGrid Component Tests', () => {
             tick(1000);
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
+            expect(colHeaders.length).toBeGreaterThan(0);
             expect(loadingIndicator).toBeNull();
 
             // Clearing grid's data and check for empty grid message
@@ -431,14 +437,18 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fixture.componentInstance.instance;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
             expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
+            fixture.componentInstance.instance.shouldGenerate = true;
             fixture.componentInstance.bind();
 
+            const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(colHeaders.length).toBeGreaterThan(0);
             expect(loadingIndicator).toBeNull();
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
@@ -450,10 +460,17 @@ describe('IgxGrid Component Tests', () => {
 
             const grid = fixture.componentInstance.instance;
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
 
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
+            fixture.componentInstance.instance.shouldGenerate = true;
+            fixture.componentInstance.bind();
+
+            const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
+            expect(colHeaders.length).toBeGreaterThan(0);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
     });
 

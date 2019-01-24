@@ -45,6 +45,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     }
 
     public loadData() {
+        this.grid.shouldGenerate = true;
         this.remoteData = this.remoteService.remoteData;
     }
 

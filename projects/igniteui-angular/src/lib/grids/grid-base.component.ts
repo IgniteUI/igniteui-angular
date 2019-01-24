@@ -722,7 +722,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Input() isLoading = false;
 
     /**
-     * @hidden
+     * A property that allows the columns to be auto-generated once again after the initialization of the grid.
+     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
+     * Note that after generating the columns, this property would be disabled to avoid re-creating columns each time a new data is assigned.
+     * ```typescript
+     *  this.grid.shouldGenerate = true;
+     *  this.remoteData = this.remoteService.remoteData;
+     * ```
      */
     public shouldGenerate: boolean;
 
@@ -2345,6 +2351,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
         });
+        this.shouldGenerate = this.autoGenerate;
     }
 
     protected setupColumns() {
@@ -3927,11 +3934,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             ref.changeDetectorRef.detectChanges();
             columns.push(ref.instance);
         });
-        if (columns.length === 0) {
-            this.shouldGenerate = true;
-        }
 
         this.columnList.reset(columns);
+        this.shouldGenerate = false;
     }
 
     /**
