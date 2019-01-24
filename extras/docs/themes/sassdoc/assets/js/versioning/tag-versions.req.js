@@ -15,7 +15,7 @@
 
         folders.forEach(f => {
             select.append($('<option>', {
-                value: `${baseUrl}/angular-docs/${f}/typescript`,
+                value: `${baseUrl}/angular-docs/${f}/sass`,
                 text: f
             }));
         });
