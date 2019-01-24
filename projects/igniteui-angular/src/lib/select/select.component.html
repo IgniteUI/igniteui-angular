@@ -6,7 +6,7 @@
             <ng-content select="igx-prefix"></ng-content>
         </ng-container>
 
-        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
+        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this" (keyup)="captureKey($event)"
             readonly="true"
             [placeholder]="this.placeholder"
             [value]="this.selectionValue"

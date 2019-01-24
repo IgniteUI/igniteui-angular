@@ -20,11 +20,9 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
-import { fromEvent, interval } from 'rxjs';
-import { buffer, debounceTime, map } from 'rxjs/operators';
+import { timer, Subscription } from 'rxjs';
 
 const noop = () => { };
-
 @Component({
     selector: 'igx-select',
     templateUrl: './select.component.html',
@@ -34,8 +32,8 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
-    @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
-    @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
+    @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
     public children: QueryList<IgxSelectItemComponent>;
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
@@ -87,7 +85,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         return this.id + '-list';
     }
 
-    public get selectionValue () {
+    public get selectionValue() {
         const selectedItem = this.selectedItem;
         return selectedItem ? selectedItem.itemText : '';
     }
@@ -145,7 +143,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled) {
             return;
-         }
+        }
         super.open({
             modal: false,
             closeOnOutsideClick: true,
@@ -165,7 +163,54 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
                 this.cdr.detectChanges();
             }
         });
-            Promise.resolve().then(() => this.children.notifyOnChanges());
+        Promise.resolve().then(() => this.children.notifyOnChanges());
+    }
+
+    // tslint:disable:member-ordering
+    private inputStream = '';
+    private cancelSub$: Subscription;
+
+    // Key listeners go here
+    public captureKey(event: KeyboardEvent) {
+        if (!event) {
+            return;
+        }
+        this.inputStream += event.key;
+        const focusedItem = this.focusedItem as IgxSelectItemComponent;
+        // select the item
+        if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.startsWith(this.inputStream)) {
+            return;
+        }
+        this.activateItemByText(this.inputStream);
+        console.log(this.inputStream);
+        if (this.cancelSub$) {
+            this.cancelSub$.unsubscribe();
+        }
+        this.cancelSub$ = timer(500).subscribe(() => {
+            console.log('---');
+            this.inputStream = '';
+        });
+    }
+
+    public activateItemByText(text: string) {
+        const items = this.items as IgxSelectItemComponent[];
+        const activeItemIndex = items.indexOf(this.focusedItem as IgxSelectItemComponent) || 0;
+        // ^ this is focused OR selected if the dd is closed
+        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && x.itemText.startsWith(text));
+
+        if (!nextItem) {
+            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && x.itemText.startsWith(text));
+        }
+
+        if (!nextItem) {
+            return;
+        }
+
+        if (!this.collapsed) {
+            this.navigateItem(items.indexOf(nextItem));
+        } else {
+            this.selectItem(nextItem);
+        }
     }
 }
 
