@@ -2,6 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 6.2.5
+
+### Bug Fixes
+- Setting required IgxInput's value not via typing does not clear the invalid style ([3550](https://github.com/IgniteUI/igniteui-angular/issues/3550))
+- igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([3047](https://github.com/IgniteUI/igniteui-angular/issues/3047)) 
+- igxGrid minimal body height when no total height is set or inferred ([1693](https://github.com/IgniteUI/igniteui-angular/issues/1693))
+- Horizontal scrollbar is not shown when column's width is set to a percentage value ([3513](https://github.com/IgniteUI/igniteui-angular/issues/3513))
+- Visible @hidden tag due to comment structure ([3523](https://github.com/IgniteUI/igniteui-angular/issues/3523))
+- Faulty link in Typedoc ([3531](https://github.com/IgniteUI/igniteui-angular/issues/3531))
+- Several warnings on app launch 6.2.0 RC1 and now 7.0.2 ([2915](https://github.com/IgniteUI/igniteui-angular/issues/2915))
+- For_of directive doesn't scroll to next elements in some cases ([3482](https://github.com/IgniteUI/igniteui-angular/issues/3482))
+- Not setting width in percentage on one or more columns results in columns going out of view ([1245](https://github.com/IgniteUI/igniteui-angular/issues/1245))
+- Calendar test is failing because of wrong selector ([3508](https://github.com/IgniteUI/igniteui-angular/issues/3508))
+- When transactions are enabled and delete a row page is changed to first page ([3425](https://github.com/IgniteUI/igniteui-angular/issues/3425))
+- When a column is sorted and change value in a cell after commit and press enter on selected cell the focus is not in the input ([2801](https://github.com/IgniteUI/igniteui-angular/issues/2801))
+- igxFor with scrollOrientation: horizontal - Almost all the items are not rendered when they don't have width property ([3087](https://github.com/IgniteUI/igniteui-angular/issues/3087))  
+- Pressing ESC on a cell in an editable column throws an error ([3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
+
 ## 6.2.4
 
 ### Bug Fixes
