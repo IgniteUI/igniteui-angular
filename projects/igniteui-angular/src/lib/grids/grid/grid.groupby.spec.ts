@@ -983,7 +983,7 @@ describe('IgxGrid - GroupBy', () => {
 
         let grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
         }
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
@@ -1010,7 +1010,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
         }
     }));
 
@@ -1037,7 +1037,7 @@ describe('IgxGrid - GroupBy', () => {
 
         const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
         }
     }));
 
@@ -1061,7 +1061,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth).toEqual(500);
+            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(500);
         }
     }));
 
@@ -1949,7 +1949,7 @@ describe('IgxGrid - GroupBy', () => {
         const indentation = fix.debugElement.query(By.css('.igx-grid__header-indentation'));
 
         expect(grid.pinnedWidth).toEqual(parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
-        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10));
+        expect(grid.unpinnedWidth).toEqual(400 - parseInt(window.getComputedStyle(indentation.nativeElement).width, 10) - grid.scrollWidth);
 
         grid.clearGrouping();
         tick();
@@ -1963,7 +1963,8 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(grid.calcHeight).toEqual(expectedHeight);
         expect(grid.pinnedWidth).toEqual(0);
-        expect(grid.unpinnedWidth).toEqual(400);
+        const expectedWidth = parseInt(grid.width, 10) - grid.scrollWidth;
+        expect(grid.unpinnedWidth).toEqual(expectedWidth);
     }));
 
     it('should expose tree structure to access groups', fakeAsync(() => {
