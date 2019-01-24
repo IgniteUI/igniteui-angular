@@ -727,6 +727,42 @@ describe('igxOverlay', () => {
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('fix for #3673 - Should not close dropdown in dropdown', fakeAsync(() => {
+            const fix = TestBed.createComponent(EmptyPageComponent);
+            const button = fix.componentInstance.buttonElement;
+            const overlay = fix.componentInstance.overlay;
+            fix.detectChanges();
+
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ConnectedPositioningStrategy(),
+                modal: false,
+                closeOnOutsideClick: true
+            };
+
+            overlaySettings.positionStrategy.settings.target = button.nativeElement;
+
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            overlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
+            overlay.show(SimpleDynamicComponent, overlaySettings);
+            fix.detectChanges();
+            tick();
+
+            let overlayDiv: Element = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.children.length).toEqual(2);
+            expect(overlayDiv.children[0].localName).toEqual('div');
+            expect(overlayDiv.children[1].localName).toEqual('div');
+
+            (<any>overlay)._overlayInfos[0].elementRef.nativeElement.click();
+            fix.detectChanges();
+            tick();
+
+            overlayDiv = document.getElementsByClassName(CLASS_OVERLAY_MAIN)[0];
+            expect(overlayDiv).toBeDefined();
+            expect(overlayDiv.children.length).toEqual(1);
+            expect(overlayDiv.children[0].localName).toEqual('div');
+        }));
     });
 
     describe('Unit Tests - Scroll Strategies: ', () => {
@@ -3379,12 +3415,15 @@ export class SimpleDynamicWithDirectiveComponent {
 }
 
 @Component({
-    template: `<button #button (click)=\'click($event)\' class='button'>Show Overlay</button>`
+    template: `
+        <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
+    `
 })
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
     @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('div') divElement: ElementRef;
 
     click(event) {
         this.overlay.show(SimpleDynamicComponent);
