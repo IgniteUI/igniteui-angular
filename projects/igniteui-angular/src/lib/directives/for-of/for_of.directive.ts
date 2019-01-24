@@ -960,14 +960,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
             } else {
                 arr.push(item);
-                length = dimension === this.igxForSizePropName ? arr.length + 1 : arr.length;
-                if (dimension === 'height') {
-                    const maxItemSize = arr.reduce((pr, c) => Math.max(pr, this._getItemSize(c, dimension)), 0);
-                    if (sum - availableSize < maxItemSize) {
-                        // add one more for vertical smooth scroll
-                        length++;
-                    }
-                }
+                length = arr.length + 1;
                 arr.splice(0, 1);
             }
             if (length > maxLength) {
