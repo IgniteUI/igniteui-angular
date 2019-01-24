@@ -16,7 +16,7 @@ describe('IgxCalendar', () => {
     configureTestSuite();
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent],
+            declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
     });
@@ -1051,6 +1051,62 @@ describe('IgxCalendar', () => {
         });
     });
 
+    it('Should be able to set disabled and active dates as @Input', () => {
+        const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+        fixture.detectChanges();
+        const calendar = fixture.componentInstance.calendar;
+        expect(calendar.specialDates).toEqual([{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}]);
+        expect(calendar.disabledDates).toEqual([{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}]);
+        let specialDates = calendar.dates.toArray().filter(d => {
+            const dateTime = getDate(d).getTime();
+            return (dateTime >= new Date(2017, 5, 1).getTime() &&
+                dateTime <= new Date(2017, 5, 6).getTime());
+        });
+
+        specialDates.forEach(d => {
+            expect(d.isSpecial).toBe(true);
+            expect(d.isSpecialCSS).toBe(true);
+        });
+
+        let disabledDates = calendar.dates.toArray().filter(d => {
+            const dateTime = getDate(d).getTime();
+            return (dateTime >= new Date(2017, 5, 23).getTime() &&
+                dateTime <= new Date(2017, 5, 29).getTime());
+        });
+
+        disabledDates.forEach(d => {
+            expect(d.isDisabled).toBe(true);
+            expect(d.isDisabledCSS).toBe(true);
+        });
+
+        // change Inputs
+        fixture.componentInstance.disabledDates = [{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}];
+        fixture.componentInstance.specialDates = [{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}];
+        fixture.detectChanges();
+
+        expect(calendar.disabledDates).toEqual([{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}]);
+        expect(calendar.specialDates).toEqual([{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}]);
+         specialDates = calendar.dates.toArray().filter(d => {
+            const dateTime = getDate(d).getTime();
+            return (dateTime >= new Date(2017, 5, 20).getTime());
+        });
+
+        specialDates.forEach(d => {
+            expect(d.isSpecial).toBe(true);
+            expect(d.isSpecialCSS).toBe(true);
+        });
+
+        disabledDates = calendar.dates.toArray().filter(d => {
+            const dateTime = getDate(d).getTime();
+            return (dateTime <= new Date(2017, 5, 9).getTime());
+        });
+
+        disabledDates.forEach(d => {
+            expect(d.isDisabled).toBe(true);
+            expect(d.isDisabledCSS).toBe(true);
+        });
+    });
+
     it('Should disable date when using "After" date descriptor.', () => {
         DateRangesPropertiesTester.testAfter(
             DateRangesPropertiesTester.assignDisableDatesDescriptors,
@@ -1565,6 +1621,20 @@ export class IgxCalendarSampleComponent {
 })
 export class IgxCalendaRangeComponent {
     public viewDate = new Date(2017, 5, 13);
+    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+}
+
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" [(ngModel)]="model" [disabledDates]="disabledDates" [specialDates]="specialDates">
+        </igx-calendar>
+    `
+})
+export class IgxCalendarDisabledSpecialDatesComponent {
+    public model: Date | Date[] = new Date(2017, 5, 13);
+    public viewDate = new Date(2017, 5, 13);
+    public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
+    public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];
     @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
 }
 
