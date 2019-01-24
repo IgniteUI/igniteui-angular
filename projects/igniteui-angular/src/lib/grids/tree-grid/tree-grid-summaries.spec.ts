@@ -1317,7 +1317,6 @@ describe('IgxTreeGrid - Summaries', () => {
         });
 
         it('Should not change active summary cell when press Ctrl+ArrowUp/Down', async () => {
-            pending('Test related to bug #3651');
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -1347,7 +1346,6 @@ describe('IgxTreeGrid - Summaries', () => {
         });
 
         it('Should be able to navigate with Arrow keys Left/Right and Ctrl on a child summary', async () => {
-            pending('Test related to bug #3652');
             treeGrid.expandAll();
             fix.detectChanges();
 
