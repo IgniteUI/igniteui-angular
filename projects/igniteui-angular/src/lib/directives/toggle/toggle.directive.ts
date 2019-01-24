@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
+import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
@@ -399,8 +399,9 @@ export class IgxToggleActionDirective implements OnInit {
             this._overlayDefaults.outlet = this.outlet;
         }
 
-        this.updateOverlaySettings(this.overlaySettings);
-        this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
+        const clonedSettings = Object.assign({}, this._overlayDefaults, this.overlaySettings);
+        this.updateOverlaySettings(clonedSettings);
+        this.target.toggle(clonedSettings);
     }
 
     /**
@@ -410,7 +411,12 @@ export class IgxToggleActionDirective implements OnInit {
      */
     protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
         if (settings && settings.positionStrategy) {
-            settings.positionStrategy.settings.target = this.element.nativeElement;
+            const positionStrategyClone: IPositionStrategy = Object.assign(
+                Object.create(Object.getPrototypeOf(settings.positionStrategy)),
+                settings.positionStrategy);
+
+            positionStrategyClone.settings = Object.assign({}, positionStrategyClone.settings, { 'target': this.element.nativeElement });
+            settings.positionStrategy = positionStrategyClone;
         }
 
         return settings;
