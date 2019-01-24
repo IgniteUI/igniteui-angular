@@ -28,7 +28,7 @@
     </ng-container>
     <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" igxRipple (click)="handleClearItems($event)">
         <ng-container *ngIf="clearIconTemplate">
-            <ng-container *ngTemplateOutlet="clearIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
+            <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
         <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
     </igx-suffix>
@@ -47,7 +47,7 @@
             (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
     </igx-input-group>
-    <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
+    <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
         [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0"
@@ -67,15 +67,15 @@
     </div>
     <div class="igx-combo__add" *ngIf="filteredData.length === 0 || isAddButtonVisible()">
         <div class="igx-combo__empty" *ngIf="filteredData.length === 0">
-            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
+            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
             </ng-container>
         </div>
         <igx-combo-add-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
             class="igx-combo__add-item" igxRipple role="button" aria-label="Add Item">
-            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
+            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
             </ng-container>
         </igx-combo-add-item>
     </div>
-    <ng-container *ngTemplateOutlet="footerTemplate; context: {$implicit: this}">
+    <ng-container *ngTemplateOutlet="footerTemplate">
     </ng-container>
 </igx-combo-drop-down>

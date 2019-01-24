@@ -185,8 +185,8 @@ When defining one of the them, you need to reference list of predefined names, a
 
 ```html
 <igx-combo>
-    <ng-template igxComboToggleIcon let-state>
-        <igx-icon>{{ state.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+    <ng-template igxComboToggleIcon let-collapsed>
+        <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
     </ng-template>
 </igx-combo>
 ```
