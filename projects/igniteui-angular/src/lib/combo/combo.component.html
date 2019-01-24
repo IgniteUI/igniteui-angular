@@ -39,7 +39,7 @@
         [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
         <ng-template igxFor let-item let-index="index" [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
-            (onChunkPreload)="dataLoading($event)" #virtualScrollContainer>
+            (onChunkPreload)="dataLoading($event)">
             <igx-combo-item  [itemHeight]='itemHeight' [value]="item" isHeader={{item.isHeader}} role="option" [index]="index">
                 <ng-container *ngIf="item.isHeader">
                     <ng-container *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase; context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}"></ng-container>
@@ -56,7 +56,7 @@
             </ng-container>
         </div>
         <igx-combo-add-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-            class="igx-combo__add-item" igxRipple
+            class="igx-combo__add-item" igxRipple [index]="virtualScrollContainer.igxForOf.length"
             role="button" aria-label="Add Item">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
             </ng-container>

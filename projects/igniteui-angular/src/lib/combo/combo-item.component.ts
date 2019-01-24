@@ -29,17 +29,6 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     public itemHeight = '';
 
     /**
-     * The data index of the combo dropdown item.
-     *
-     * ```typescript
-     * // get the data index of the second selected combo item
-     * let selectedItemIndex = this.combo.selectedItems()[1].index
-     * ```
-     */
-    @Input()
-    public index: number;
-
-    /**
      * @hidden
      */
     public get itemID() {
