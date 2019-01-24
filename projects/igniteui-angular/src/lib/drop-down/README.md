@@ -26,6 +26,48 @@ To provide more useful visual information, use `isHeader` to group items semanti
 </igx-drop-down>
 ```
 
+## Grouping items
+The **igxDropDown** allows for items to be grouped using the ***igxDropDownItemGroup** component. The example below illustrates how to display hierarchical data in drop down groups:
+```typescript
+    // in example.component.ts
+    export class MyExampleComponent {
+        ...
+        foods: any[] =  [{
+            name: 'Vegetables',
+            entries: [{
+                    name: 'Cucumber',
+                    refNo: `00000` 
+                }, {
+                    name: 'Lettuce',
+                    refNo: `00001`
+                },
+                ...
+            ]   
+        }, {
+            name: 'Fruits',
+            entries: [{
+                    name: 'Banana',
+                    refNo: `10000` 
+                }, {
+                    name: 'Tomato',
+                    refNo: `10001`
+                },
+                ...
+            ]   
+        }];
+    }
+```
+```html
+    <!-- in example.component.html -->
+    <igx-drop-down>
+        <igx-drop-down-item-group *ngFor="let foodGroup of foods" [label]="foodGroup.name">
+            <igx-drop-down-item *ngFor="let food of foodGroup.entries" [value]='food.refNo'>
+                {{ food.name }}
+            </igx-drop-down-item>
+        </igx-drop-down-item-group>
+    </igx-drop-down>
+```
+
 ### API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
 
