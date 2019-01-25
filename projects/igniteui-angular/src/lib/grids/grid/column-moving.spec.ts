@@ -552,7 +552,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 56, 56);
             await wait(50);
-            UIInteractions.simulatePointerEvent('pointermove', header, 490, 30);
+            UIInteractions.simulatePointerEvent('pointermove', header, 485, 30);
             await wait(1000);
             fixture.detectChanges();
 
@@ -577,7 +577,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - start moving a column and verify columns are scrolled into view,
             // when holding the drag ghost over the left edge of the grid
-            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
+            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
@@ -610,7 +610,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 2 - start moving a column and verify columns are scrolled into view,
             // when holding the drag ghost before pinned area edge
-            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[6].nativeElement;
+            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 450, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 456, 56);
@@ -729,7 +729,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             // step 4 - reorder that column among columns that are currently out of view
-            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[5].nativeElement;
+            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[4].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
@@ -892,7 +892,6 @@ describe('IgxGrid - Column Moving', () => {
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ID').pinned = true;
             grid.getColumnByName('ContactTitle').pinned = true;
-            grid.getColumnByName('ContactName').pinned = true;
             fixture.detectChanges();
 
             // step 2 - try drag/drop an unpinned column among pinned columns
@@ -908,7 +907,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             // step 3 - verify column cannot be pinned
-            expect(grid.pinnedColumns.length).toEqual(4);
+            expect(grid.pinnedColumns.length).toEqual(3);
             expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
             expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
         }));

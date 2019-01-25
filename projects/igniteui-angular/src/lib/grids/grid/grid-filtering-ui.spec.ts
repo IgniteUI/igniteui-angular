@@ -1641,7 +1641,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(idCellChips.length).toBe(1);
         }));
 
-    it('should render correct input and dropdown in filter row for different column types', fakeAsync(() => {
+    it('should render correct input and dropdown in filter row for different column types', () => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
 
@@ -1660,7 +1660,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         let close = filterUIRow.queryAll(By.css('button'))[1];
         close.nativeElement.click();
-        tick(100);
         fix.detectChanges();
 
         // open for number
@@ -1672,7 +1671,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         close = filterUIRow.queryAll(By.css('button'))[1];
         close.nativeElement.click();
-        tick(100);
         fix.detectChanges();
 
         // open for date
@@ -1684,7 +1682,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         close = filterUIRow.queryAll(By.css('button'))[1];
         close.nativeElement.click();
-        tick(100);
         fix.detectChanges();
 
         // open for bool
@@ -1696,9 +1693,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         close = filterUIRow.queryAll(By.css('button'))[1];
         close.nativeElement.click();
-        tick(100);
         fix.detectChanges();
-    }));
+    });
 
     it('should apply  multiple conditions to grid immediately while the filter row is still open', fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridFilteringComponent);
@@ -2218,7 +2214,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         const filteringCells = fix.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
         const idCellChip = filteringCells[0].query(By.css('igx-chip'));
-        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
 
         const cellElem = filteringCells[0].nativeElement;
         expect(cellElem.offsetParent.offsetHeight + cellElem.offsetHeight).toBeCloseTo(thead.clientHeight, 10);
@@ -2233,7 +2229,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
     }));
 
-    it('should position filter row and chips correctly when grid has column groups and one is hidden.', fakeAsync(() => {
+    it('should position filter row and chips correctly when grid has column groups and one is hidden.', () => {
         const fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
         fix.detectChanges();
 
@@ -2263,7 +2259,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         fix.detectChanges();
 
         // check if it is positioned at the bottom of the thead.
-        const thead = fix.debugElement.query(By.css('.igx-grid__thead')).nativeElement;
+        const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
         const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
         const frElem = filteringRow.nativeElement;
         expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
@@ -2278,7 +2274,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         const prodNameChipContent = filteringCells[1].query(By.css('igx-chip')).query(By.css('.igx-chip__content'));
         expect(prodNameChipContent.nativeElement.textContent.trim()).toEqual('Ignite');
-    }));
+    });
 
     // Filtering + Moving
     it('should move chip under the correct column when column is moved and filter row should open for correct column.', fakeAsync(() => {
