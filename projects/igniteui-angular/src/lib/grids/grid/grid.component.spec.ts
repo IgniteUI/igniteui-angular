@@ -39,7 +39,7 @@ describe('IgxGrid Component Tests', () => {
     const ROW_EDITING_OUTLET_CLASS = '.igx-grid__row-editing-outlet';
     const BANNER = 'igx-banner';
     const EDIT_OVERLAY_CONTENT = 'igx-overlay__content';
-    const TBODY_CLASS = '.igx-grid__tbody';
+    const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
 
     describe('IgxGrid - input properties', () => {
@@ -175,6 +175,8 @@ describe('IgxGrid Component Tests', () => {
             tick(200);
             fix.detectChanges();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
+            // no horizontal scr, since columns have no width hence they should
+            // distrubute the available width between them
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
             verticalScrollHeight = fix.componentInstance.getVerticalScrollHeight();
             grid.width = '200px';
@@ -210,7 +212,6 @@ describe('IgxGrid Component Tests', () => {
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10);
 
             // The scrollbar is no longer visible
-            //    - parseInt(window.getComputedStyle(gridScroll.nativeElement).height, 10);
             // console.log(gridBodyHeight);
             // console.log(window.getComputedStyle(gridBody.nativeElement).height);
             // console.log(gridBodyHeight === parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10));
@@ -245,7 +246,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(50);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(51);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
             grid.displayDensity = 'cosy';
             fixture.detectChanges();
             tick(200);
@@ -253,7 +254,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(40);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(41);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
             grid.displayDensity = 'compact';
             fixture.detectChanges();
             tick(200);
@@ -261,7 +262,7 @@ describe('IgxGrid Component Tests', () => {
             expect(grid.defaultRowHeight).toBe(32);
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
-            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight);
+            expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultRowHeight - 1);
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -453,7 +454,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(grid.columns[0].width).toEqual('100px');
                 expect(grid.columns[4].width).toEqual('100px');
 
-                const actualGridWidth = grid.nativeElement.clientWidth;
+                const actualGridWidth = grid.unpinnedWidth;
 
                 const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
                     parseInt(grid.columns[0].width, 10) -
@@ -775,7 +776,7 @@ describe('IgxGrid Component Tests', () => {
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
 
-            expect(header0.nativeElement.offsetWidth).toEqual(350);
+            expect(header0.nativeElement.offsetWidth).toEqual(351);
             expect(header1.nativeElement.offsetWidth).toEqual(136);
             expect(header2.nativeElement.offsetWidth).toEqual(136);
             expect(hScroll.nativeElement.hidden).toBe(false);
@@ -804,7 +805,7 @@ describe('IgxGrid Component Tests', () => {
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
-            expect(header0.nativeElement.offsetWidth).toEqual(700);
+            expect(header0.nativeElement.offsetWidth).toEqual(701);
             expect(header1.nativeElement.offsetWidth).toEqual(150);
             expect(header2.nativeElement.offsetWidth).toEqual(150);
 
@@ -857,7 +858,7 @@ describe('IgxGrid Component Tests', () => {
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
 
-            expect(header0.nativeElement.offsetWidth).toEqual(250);
+            expect(header0.nativeElement.offsetWidth).toEqual(251);
             expect(header1.nativeElement.offsetWidth).toEqual(100);
             expect(header2.nativeElement.offsetWidth).toEqual(150);
             expect(hScroll.nativeElement.hidden).toBe(true);
@@ -3228,9 +3229,9 @@ describe('IgxGrid Component Tests', () => {
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(600);
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(601);
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(600);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(601);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
         });
 
@@ -3248,7 +3249,7 @@ describe('IgxGrid Component Tests', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(500);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(501);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
         });
 

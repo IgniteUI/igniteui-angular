@@ -166,6 +166,7 @@ export enum GridSummaryCalculationMode {
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _data: any[];
+    private _scrollWidth: number;
 
     /**
      * An @Input property that lets you fill the `IgxGridComponent` with an array of data.
@@ -182,6 +183,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set data(value: any[]) {
         this._data = value;
         this.summaryService.clearSummaryCache();
+    }
+
+    public get scrollWidth() {
+        return this._scrollWidth;
     }
 
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
@@ -561,7 +566,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             requestAnimationFrame(() => {
-                this.calculateGridHeight();
+                this.reflow();
                 this.cdr.markForCheck();
             });
         }
@@ -1376,9 +1381,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._rowList) {
             return res;
         }
-        const rList = this._rowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
+        const rList = this._rowList
+            .filter((item) => {
+                return item.element.nativeElement.parentElement !== null;
+            })
+            .sort((a, b) => {
+                return a.index - b.index;
+            });
         res.reset(rList);
         return res;
     }
@@ -1446,6 +1455,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
+
+        /**
+     * @hidden
+     */
+    @ViewChild('verticalScrollHolder', { read: IgxGridForOfDirective })
+    public verticalScroll: IgxGridForOfDirective<any>;
 
     /**
      * @hidden
@@ -2302,6 +2317,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
         });
+        this._scrollWidth = this.getScrollWidth();
     }
 
     /**
@@ -2360,7 +2376,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.nativeElement.addEventListener('keydown', this._keydownListener);
         });
         this.initPinning();
-        this.calculateGridSizes();
+
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
@@ -2369,6 +2385,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
         });
         this._ngAfterViewInitPaassed = true;
+        this.calculateGridSizes();
 
         // In some rare cases we get the AfterViewInit before the grid is added to the DOM
         // and as a result we get 0 width and can't size ourselves properly.
@@ -2414,6 +2431,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+        this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.reflow();
+        });
     }
 
     private combineForOfCollections(dataList, summaryList) {
@@ -2472,17 +2492,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get nativeElement() {
         return this.elementRef.nativeElement;
-    }
-
-    /**
-     * @hidden
-     */
-    get calcResizerHeight(): number {
-        if (this.hasSummarizedColumns) {
-            return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight +
-                this.tfoot.nativeElement.clientHeight;
-        }
-        return this.theadRow.nativeElement.clientHeight + this.tbody.nativeElement.clientHeight;
     }
 
     /**
@@ -3664,7 +3673,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         return pagingHeight;
     }
-
     /**
      * @hidden
      */
@@ -3700,15 +3708,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return height;
     }
 
+    public get headerHeight() {
+       return this.theadRow ? this.theadRow.nativeElement.clientHeight : 0;
+    }
+
+    public get outerWidth() {
+        return this.hasVerticalSroll() ? this.calcWidth + 18 : this.calcWidth;
+    }
     /**
      * @hidden
      */
     public getPossibleColumnWidth() {
-        let computedWidth = parseInt(
+        let computedWidth = this.calcWidth || parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
-
         if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.clientWidth : 0;
+            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -3754,22 +3768,36 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = el.offsetWidth;
         }
 
-        this._derivePossibleWidth();
 
         if (!width) {
             width = this.columnList.reduce((sum, item) =>  sum + parseInt((item.width || item.defaultWidth), 10), 0);
         }
 
+        if (this.hasVerticalSroll()) {
+            width -= this.scrollWidth;
+        }
         if (Number.isFinite(width) && width !== this.calcWidth) {
             this.calcWidth = width;
-            this.cdr.markForCheck();
+            this.cdr.detectChanges();
         }
+        this._derivePossibleWidth();
+    }
+
+    public hasVerticalSroll() {
+        if (!this._ngAfterViewInitPaassed) { return false; }
+        const count = this.totalItemCount !== null ? this.totalItemCount :
+        (this.verticalScrollContainer.igxForOf ? this.verticalScrollContainer.igxForOf.length : 0);
+        const isScrollable = this.verticalScrollContainer.isScrollable();
+        return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
+        this.verticalScrollContainer.igxForOf.length > 0 &&
+        isScrollable);
     }
 
     /**
      * @hidden
      */
     protected calculateGridSizes() {
+        const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
         this.cdr.detectChanges();
         this.calculateGridHeight();
@@ -3783,6 +3811,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this.cdr.detectChanges();
+        // in case scrollbar has appeared recalc to size correctly.
+        if (hasScroll !== this.hasVerticalSroll()) {
+            this.calculateGridWidth();
+            this.cdr.detectChanges();
+        }
     }
 
     /**
@@ -3815,9 +3848,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     protected getUnpinnedWidth(takeHidden = false) {
-        const width = this._width && this._width.indexOf('%') !== -1 ?
+        const isPercentage = this._width && this._width.indexOf('%') !== -1;
+        let width = isPercentage ?
             this.calcWidth :
             parseInt(this._width, 10);
+        if (this.hasVerticalSroll() && !isPercentage) {
+            width -= this.scrollWidth;
+        }
         return width - this.getPinnedWidth(takeHidden);
     }
 
@@ -3865,6 +3902,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return DataType.Date;
         }
         return DataType.String;
+    }
+
+    private getScrollWidth() {
+        const div = document.createElement('div');
+        const style = div.style;
+        style.width = '100px';
+        style.height = '100px';
+        style.position = 'absolute';
+        style.top = '-10000px';
+        style.top = '-10000px';
+        style.overflow = 'scroll';
+        document.body.appendChild(div);
+        const scrollWidth = div.offsetWidth - div.clientWidth;
+        div.remove();
+        return scrollWidth;
     }
 
     /**
