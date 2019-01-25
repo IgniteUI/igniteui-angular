@@ -476,7 +476,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     public getPossibleColumnWidth() {
-        let computedWidth = parseInt(
+        let computedWidth = this.calcWidth || parseInt(
             this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         computedWidth -= this.headerHierarchyExpander.nativeElement.clientWidth;
         return super.getPossibleColumnWidth(computedWidth);
