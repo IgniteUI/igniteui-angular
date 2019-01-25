@@ -182,53 +182,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         Promise.resolve().then(() => this.children.notifyOnChanges());
     }
 
-    // tslint:disable:member-ordering
-    private inputStream = '';
-    private cancelSub$: Subscription;
-
-    // Key listeners go here
-    public captureKey(event: KeyboardEvent) {
-        if (!event) {
-            return;
-        }
-        this.inputStream += event.key;
-        const focusedItem = this.focusedItem as IgxSelectItemComponent;
-        // select the item
-        if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.startsWith(this.inputStream)) {
-            return;
-        }
-        this.activateItemByText(this.inputStream);
-        console.log(this.inputStream);
-        if (this.cancelSub$) {
-            this.cancelSub$.unsubscribe();
-        }
-        this.cancelSub$ = timer(500).subscribe(() => {
-            console.log('---');
-            this.inputStream = '';
-        });
-    }
-
-    public activateItemByText(text: string) {
-        const items = this.items as IgxSelectItemComponent[];
-        const activeItemIndex = items.indexOf(this.focusedItem as IgxSelectItemComponent) || 0;
-        // ^ this is focused OR selected if the dd is closed
-        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && x.itemText.startsWith(text));
-
-        if (!nextItem) {
-            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && x.itemText.startsWith(text));
-        }
-
-        if (!nextItem) {
-            return;
-        }
-
-        if (!this.collapsed) {
-            this.navigateItem(items.indexOf(nextItem));
-        } else {
-            this.selectItem(nextItem);
-        }
-    }
-
     public onToggleOpening(event: CancelableEventArgs) {
         this.onOpening.emit(event);
         if (event.cancel) {
