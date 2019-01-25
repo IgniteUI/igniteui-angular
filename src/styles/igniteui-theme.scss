@@ -38,8 +38,7 @@
     }
 
     $my-button: igx-button-theme(
-        $fab-background: red,
-        $roundness-fab: .5
+        $fab-background: red
     );
 
     @include igx-button($my-button)

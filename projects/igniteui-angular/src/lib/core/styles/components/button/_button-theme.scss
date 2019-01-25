@@ -100,10 +100,27 @@
     $button-schema: map-get($schema, $name);
     $theme: apply-palette($button-schema, $palette);
 
-    $roundness-flat: round-borders(map-get($button-schema, 'roundness-flat'), 0, 20px);
-    $roundness-raised: round-borders(map-get($button-schema, 'roundness-raised'), 0, 20px);
-    $roundness-fab: round-borders(map-get($button-schema, 'roundness-fab'), 12, 28px);
-    $roundness-icon: round-borders(map-get($button-schema, 'roundness-icon'), 0, 18px);
+    $roundness-flat: round-borders($roundness-flat, 0, 20px);
+    $roundness-raised: round-borders($roundness-raised, 0, 20px);
+    $roundness-fab: round-borders($roundness-fab, 12, 28px);
+    $roundness-icon: round-borders($roundness-icon, 0, 18px);
+
+
+    @if not($roundness-raised) {
+        $roundness-raised: round-borders(map-get($button-schema, 'roundness-raised'), 0, 20px);
+    }
+
+    @if not($roundness-flat) {
+        $roundness-flat: round-borders(map-get($button-schema, 'roundness-flat'), 0, 20px);
+    }
+
+    @if not($roundness-icon) {
+        $roundness-icon: round-borders(map-get($button-schema, 'roundness-icon'), 0, 18px);
+    }
+
+    @if not($roundness-fab) {
+        $roundness-fab: round-borders(map-get($button-schema, 'roundness-fab'), 12, 28px);
+    }
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
