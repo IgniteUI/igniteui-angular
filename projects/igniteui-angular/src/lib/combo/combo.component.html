@@ -15,28 +15,43 @@
 </ng-template>
 
 <igx-input-group [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
+    <ng-container ngProjectAs="[igxLabel]">
+        <ng-content select="[igxLabel]"></ng-content>
+    </ng-container>
+    <ng-container ngProjectAs="igx-prefix">
+        <ng-content select="igx-prefix"></ng-content>
+    </ng-container>
     <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [placeholder]="placeholder"
-        [disabled]="disabled"/>
-    <igx-suffix *ngIf="value.length" class="clearButton" aria-label="Clear Selection" igxRipple (click)="handleClearItems($event)">
-        <igx-icon fontSet="material">clear</igx-icon>
+        [disabled]="disabled" />
+    <ng-container ngProjectAs="igx-suffix">
+        <ng-content select="igx-suffix"></ng-content>
+    </ng-container>
+    <igx-suffix *ngIf="value.length" aria-label="Clear Selection" class="igx-combo__clear-button" igxRipple (click)="handleClearItems($event)">
+        <ng-container *ngIf="clearIconTemplate">
+            <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
+        </ng-container>
+        <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
     </igx-suffix>
-    <igx-suffix igxButton="icon" class="igx-combo__clear-button" igxRipple>
-        <igx-icon fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
+    <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
+        <ng-container *ngIf="toggleIconTemplate">
+            <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
+        </ng-container>
+        <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>
-<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'"
-(onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)" 
-(onOpened)="handleOpened()" (onClosed)="handleClosed()">
+<igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [width]="itemsWidth || '100%'" (onOpening)="handleOpening($event)"
+    (onClosing)="handleClosing($event)" (onOpened)="handleOpened()" (onClosed)="handleClosed()">
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
-        <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text" [(ngModel)]="searchValue"
-            (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)" (keydown)="handleKeyDown($event)"
-            (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder" aria-autocomplete="both"
-            [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
+        <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text"
+            [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
+            (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder"
+            aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
     </igx-input-group>
-    <ng-container *ngTemplateOutlet="headerTemplate; context: {$implicit: this}">
+    <ng-container *ngTemplateOutlet="headerTemplate">
     </ng-container>
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'" [style.maxHeight.px]="itemsMaxHeight"
-        [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
+        [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()" [tabindex]="dropdown.collapsed ? -1 : 0"
+        role="listbox" [attr.id]="dropdown.id">
         <ng-template igxFor let-item let-index="index" [igxForOf]="data | comboFiltering:filteringExpressions:filteringLogic | comboSorting:sortingExpressions | comboGrouping:groupKey"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="itemHeight"
             (onChunkPreload)="dataLoading($event)">
@@ -52,16 +67,15 @@
     </div>
     <div class="igx-combo__add" *ngIf="filteredData.length === 0 || isAddButtonVisible()">
         <div class="igx-combo__empty" *ngIf="filteredData.length === 0">
-            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty; context: {$implicit: this}">
+            <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
             </ng-container>
         </div>
         <igx-combo-add-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()" [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1"
-            class="igx-combo__add-item" igxRipple [index]="virtualScrollContainer.igxForOf.length"
-            role="button" aria-label="Add Item">
-            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault; context: {$implicit: this}">
+            class="igx-combo__add-item" igxRipple role="button" aria-label="Add Item" [index]="virtualScrollContainer.igxForOf.length">
+            <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
             </ng-container>
         </igx-combo-add-item>
     </div>
-    <ng-container *ngTemplateOutlet="footerTemplate; context: {$implicit: this}">
+    <ng-container *ngTemplateOutlet="footerTemplate">
     </ng-container>
 </igx-combo-drop-down>
