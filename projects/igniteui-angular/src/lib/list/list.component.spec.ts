@@ -284,6 +284,25 @@ describe('List', () => {
         expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
     });
 
+    it('Should show loading template when isLoading=\'true\' even when there are children.', () => {
+        const fixture = TestBed.createComponent(ListWithHeaderComponent);
+        const list = fixture.componentInstance.list;
+        list.isLoading = true;
+        const listLoadingItemsMessage = 'Loading data from the server...';
+
+        fixture.detectChanges();
+
+        verifyItemsCount(list, 3);
+
+        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
+        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+
+        list.isLoading = false;
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.css('p'))).toBeFalsy();
+    });
+
     it('Should have custom loading template.', () => {
         const fixture = TestBed.createComponent(ListCustomLoadingComponent);
         const list = fixture.componentInstance.list;
@@ -340,6 +359,66 @@ describe('List', () => {
             done();
         });
     }, 5000);
+
+    it('should emit ItemClicked with correct direction argument when swiping left', (done) => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+
+        list.onItemClicked.subscribe((eventArgs) => {
+            expect(eventArgs.direction).toBe(IgxListPanState.LEFT);
+            unsubscribeEvents(list);
+            done();
+        });
+
+        fixture.detectChanges();
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItemWithClick(itemNativeElements[1], -0.3); // operating over the second list item because the first one is a header
+    });
+
+    it('should emit ItemClicked with correct direction argument when panning left', (done) => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+
+        list.onItemClicked.subscribe((eventArgs) => {
+            expect(eventArgs.direction).toBe(IgxListPanState.LEFT);
+            unsubscribeEvents(list);
+            done();
+        });
+
+        fixture.detectChanges();
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItemWithClick(itemNativeElements[1], -0.8); // operating over the second list item because the first one is a header
+    });
+
+    it('should emit ItemClicked with correct direction argument when swiping right', (done) => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+
+        list.onItemClicked.subscribe((eventArgs) => {
+            expect(eventArgs.direction).toBe(IgxListPanState.RIGHT);
+            unsubscribeEvents(list);
+            done();
+        });
+
+        fixture.detectChanges();
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItemWithClick(itemNativeElements[1], 0.3); // operating over the second list item because the first one is a header
+    });
+
+    it('should emit ItemClicked with correct direction argument when panning right', (done) => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+
+        list.onItemClicked.subscribe((eventArgs) => {
+            expect(eventArgs.direction).toBe(IgxListPanState.RIGHT);
+            unsubscribeEvents(list);
+            done();
+        });
+
+        fixture.detectChanges();
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        panItemWithClick(itemNativeElements[1], 0.8); // operating over the second list item because the first one is a header
+    });
 
     it('should display multiple headers properly.', () => {
         const fixture = TestBed.createComponent(TwoHeadersListComponent);
@@ -590,6 +669,11 @@ describe('List', () => {
         return new Promise((resolve, reject) => {
             resolve();
         });
+    }
+
+    function panItemWithClick(elementRefObject, factorX) {
+        panItem(elementRefObject, factorX);
+        elementRefObject.triggerEventHandler('click', null);
     }
 
     function clickAndDrag(itemNativeElement, factorX) {
