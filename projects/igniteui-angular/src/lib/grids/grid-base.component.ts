@@ -3991,7 +3991,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.columnList.reset(columns);
-        this.shouldGenerate = false;
+        if (this.data && this.data.length > 0) {
+            this.shouldGenerate = false;
+        }
     }
 
     /**

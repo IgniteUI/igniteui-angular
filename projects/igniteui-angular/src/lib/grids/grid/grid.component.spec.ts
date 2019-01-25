@@ -444,7 +444,6 @@ describe('IgxGrid Component Tests', () => {
             expect(loadingIndicator).not.toBeNull();
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
-            fixture.componentInstance.instance.shouldGenerate = true;
             fixture.componentInstance.bind();
 
             const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
@@ -466,7 +465,6 @@ describe('IgxGrid Component Tests', () => {
             expect(gridBody.nativeElement.textContent).toEqual('Loading...');
             expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
 
-            fixture.componentInstance.instance.shouldGenerate = true;
             fixture.componentInstance.bind();
 
             const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
