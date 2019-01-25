@@ -983,7 +983,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             } else {
                 arr.push(item);
                 length = arr.length + 1;
-                arr.splice(0, 1);
+                arr.shift();
             }
             if (length > maxLength) {
                 maxLength = length;
