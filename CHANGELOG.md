@@ -33,6 +33,16 @@ All notable changes for each version of this project will be documented in this 
             </igx-drop-down-item>
         </igx-drop-down>
     ```
+    - **Feature** `IgxDropDownGroupComponent` has been added. It allows for easier grouping of multi-level data, without the need of flattening it. The `igx-drop-down-item-group` tag accepts `igx-drop-down-item`s and displays them in the appropriate grouped fashion.
+        ```html
+            <igx-drop-down>
+                <igx-drop-down-item-group *ngFor="let country of contries" [label]="country.name">
+                    <igx-drop-down-item *ngFor="let city of country.cities" [value]='city.refNo'>
+                        {{ city.name }}
+                    </igx-drop-down-item>
+                </igx-drop-down-item-group>
+            </igx-drop-down>
+        ```
 
 ## 7.1.2
 ### Features
