@@ -3,8 +3,9 @@
     <section class="sample-content">
         <article class="sample-column">
             <form class="input-sample" action="/" method="POST" (ngSubmit)="onSubmit($event)">
-                <div>
-                    <igx-input-group>
+                <div class="box">
+                    <igx-input-group class="group">
+                        <igx-prefix igxRipple><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
                         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsPanel'/>
                         <label igxLabel for="towns">Towns</label>
@@ -14,12 +15,12 @@
                             {{town}}
                         </igx-drop-down-item>
                     </igx-drop-down>
-
-                    <igx-input-group>
-                        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
-                        <igx-prefix igxRipple><igx-icon fontSet="material">language</igx-icon> </igx-prefix>
+                </div>
+                <div class="box">
+                    <igx-input-group class="group">
+                        <igx-prefix igxRipple><igx-icon fontSet="material">place</igx-icon> </igx-prefix>
                         <input igxInput name="townsDetailed" type="text" [(ngModel)]="townSelected" required
-                            [igxAutocomplete]='townsDetailedPanel' />
+                            [igxAutocomplete]='townsDetailedPanel' [igxAutocompleteSettings]='settings' />
                         <label igxLabel for="townsDetailed">Towns Detailed</label>
                         <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
                     </igx-input-group>
@@ -29,31 +30,20 @@
                                 {{town.name}}
                         </igx-drop-down-item>
                     </igx-drop-down>
-
-                    <!--<igx-input-group>
-                        <input igxInput name="townsGrouped" type="text" [(ngModel)]="town" required
-                            [igxAutocomplete]='townsGrouped'
-                            [igxAutocompleteKey]="'name'"
-                            [igxAutocompleteGroupKey]="'isHeader'"
-                            [igxAutocompleteItemTemplate]="igxAutocompleteItemTemplate1"
-                            [igxAutocompleteCondition]="customFilter" 
-                            [igxAutocompleteSettings]="customSettings" />
-                        <label igxLabel for="townsGrouped">Towns Grouped</label>
-                    </igx-input-group>
-                    <ng-template #igxAutocompleteItemTemplate1 let-item>
-                        <img [src]="item.image" class='logo' width="50" height="50"/>
-                        {{item.name}}
-                    </ng-template> -->
-
-                    <igx-input-group>
+                </div>
+                <div class="box">
+                    <igx-input-group class="group">
+                        <igx-prefix igxRipple><igx-icon fontSet="material">{{ enabled ? 'place' : 'not_interested' }}</igx-icon> </igx-prefix>
                         <input igxInput name="townsDisabled" type="text" [(ngModel)]="townSelected" required
                             [igxAutocomplete]='townsDetailedPanel'
-                            [igxAutocompleteDisabled]="disabled"/>
+                            [igxAutocompleteDisabled]="!enabled"/>
                         <label igxLabel for="townsDisabled">Towns Disabled</label>
                     </igx-input-group>
-                    <igx-switch name="toggle" [(ngModel)]="disabled"></igx-switch>
+                    <igx-switch name="toggle" [(ngModel)]="enabled"></igx-switch>
                 </div>
-                <button>Submit</button>
+                <div class="submit">
+                    <button igxButton>Submit</button>
+                </div>
             </form>
         </article>
     </section>

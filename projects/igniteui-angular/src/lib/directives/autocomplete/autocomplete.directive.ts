@@ -6,12 +6,13 @@ import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../../services';
+import { CancelableEventArgs, mergeObjects } from '../../core/utils';
+import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy, IScrollStrategy, IPositionStrategy } from '../../services';
 import { ISelectionEventArgs } from '../../drop-down';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxInputGroupComponent } from '../../input-group';
+import { IgxOverlayOutletDirective } from 'igniteui-angular';
 //#endregion
 
 /**
@@ -20,6 +21,15 @@ import { IgxInputGroupComponent } from '../../input-group';
  */
 export interface IAutocompleteItemSelectionEventArgs extends CancelableEventArgs {
     value: string;
+}
+
+export interface AutocompleteOverlaySettings {
+    /** Position strategy to use with this settings */
+    positionStrategy?: IPositionStrategy;
+    /** Scroll strategy to use with this settings */
+    scrollStrategy?: IScrollStrategy;
+    /** Set the outlet container to attach the overlay to */
+    outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
 @Directive({
@@ -36,6 +46,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _disabled = false;
+    private _autocompleteSettings: AutocompleteOverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
+    };
+
     protected id: string;
     protected queryListNotifier$ = new Subject<boolean>();
     protected get model() {
@@ -67,11 +82,31 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     @Input('igxAutocompleteSettings')
-    overlaySettings: OverlaySettings = {
-        modal: false,
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
-    };
+    get autocompleteSettings(): AutocompleteOverlaySettings {
+        return this._autocompleteSettings;
+    }
+    set autocompleteSettings(value: AutocompleteOverlaySettings) {
+        if (value.scrollStrategy) {
+            this._autocompleteSettings.scrollStrategy = mergeObjects(this._autocompleteSettings.scrollStrategy, value.scrollStrategy);
+        }
+        if (value.positionStrategy.settings) {
+            this._autocompleteSettings.positionStrategy = mergeObjects(this._autocompleteSettings.positionStrategy, value.positionStrategy);
+            if (!value.positionStrategy.settings.target) {
+                this._autocompleteSettings.positionStrategy.settings.target = this.parentElement;
+            }
+        }
+        if (value.outlet) {
+            this._autocompleteSettings.outlet = value.outlet;
+        }
+
+    }
+
+    get settings(): OverlaySettings {
+        const settings = this.autocompleteSettings as OverlaySettings;
+        settings.modal = false;
+        settings.closeOnOutsideClick = true;
+        return settings;
+    }
 
     @Input('igxAutocompleteHighlightMatch')
     protected highlightMatch = false;
@@ -143,7 +178,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     public open() {
-        this.dropDown.open(this.overlaySettings);
+        this.dropDown.open(this.settings);
         this.target = this.dropDown;
         this.dropDown.width = this.parentElement.clientWidth + 'px';
         this.dropDown.onSelection.subscribe(this.select);
