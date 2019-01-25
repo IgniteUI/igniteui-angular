@@ -1306,7 +1306,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this._applyChanges(changes);
                 this.cdr.markForCheck();
                 this._updateScrollOffset();
-                this.onDataChanged.emit();
+                if (operations.length > 0) {
+                    this.onDataChanged.emit();
+                }
             }
         }
     }
