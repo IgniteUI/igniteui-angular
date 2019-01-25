@@ -843,6 +843,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
+    @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy: string;
 
     /**
