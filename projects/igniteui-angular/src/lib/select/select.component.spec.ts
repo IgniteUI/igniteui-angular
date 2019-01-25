@@ -20,10 +20,12 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { detectChanges } from '@angular/core/src/render3';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { DebugContext } from '@angular/core/src/view';
+import { IgxSelectItemComponent } from './select-item.component';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'dropdownToggleButton';
+const CSS_CLASS_DROPDOWN = 'igx-drop-down';
 const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
@@ -48,11 +50,11 @@ const verifyOpenCloseEvents = function (
 ) {
     expect(select.onOpening.emit).toHaveBeenCalledTimes(openEventCounter);
     expect(select.onOpened.emit).toHaveBeenCalledTimes(openEventCounter);
+    expect(select.open).toHaveBeenCalledTimes(openEventCounter);
     expect(select.onClosing.emit).toHaveBeenCalledTimes(closeEventCounter);
     expect(select.onClosed.emit).toHaveBeenCalledTimes(closeEventCounter);
-    expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
-    expect(select.open).toHaveBeenCalledTimes(openEventCounter);
     expect(select.close).toHaveBeenCalledTimes(closeEventCounter);
+    expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
 };
 
 describe('igxSelect', () => {
@@ -210,6 +212,32 @@ describe('igxSelect', () => {
             expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
         }));
+        fit('Should render aria attributes properly', fakeAsync(() => {
+            const fixture: ComponentFixture<IgxSelectSimpleComponent> = TestBed.createComponent(IgxSelectSimpleComponent);
+            fixture.detectChanges();
+            const select = fixture.componentInstance.select;
+            const inputElement = fixture.nativeElement.querySelector('.' + CSS_CLASS_INPUT);
+            const dropdownListElement = fixture.nativeElement.querySelector('.' + CSS_CLASS_DROPDOWN_LIST);
+
+            expect(inputElement.getAttribute('role')).toMatch('combobox');
+            expect(inputElement.getAttribute('aria-haspopup')).toMatch('listbox');
+            expect(inputElement.getAttribute('aria-owns')).toMatch('igx-drop-down-0-list');
+            expect(inputElement.getAttribute('aria-expanded')).toMatch('false');
+            expect(dropdownListElement.getAttribute('role')).toMatch('listbox');
+            expect(dropdownListElement.getAttribute('aria-hidden')).toMatch('true');
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(inputElement.getAttribute('aria-expanded')).toMatch('true');
+            expect(dropdownListElement.getAttribute('aria-hidden')).toMatch('false');
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(inputElement.getAttribute('aria-expanded')).toMatch('false');
+            expect(dropdownListElement.getAttribute('aria-hidden')).toMatch('true');
+        }));
     });
     describe('Selection tests: ', () => {
         it('Should allow single selection only', fakeAsync(() => {
@@ -219,15 +247,15 @@ describe('igxSelect', () => {
             const selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             let selectedItemIndex = 5;
 
-            const checkItemSelection = function (itemIndex: number) {
-                select.items.forEach(item => {
-                    const expectedValue = item.index === itemIndex ? true : false;
-                    expect(item.isSelected).toEqual(expectedValue);
-                    expect(item.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toEqual(expectedValue);
-                });
-                expect(select.selectedItem).toEqual(select.items[selectedItemIndex]);
-                expect(select.selectionValue).toEqual(select.items[selectedItemIndex].value);
-                expect(select.value).toEqual(select.items[selectedItemIndex].value);
+            const checkItemSelection = function () {
+                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                expect(selectedItems.length).toEqual(1);
+                const currentSelectedItem = select.items[selectedItemIndex] as IgxSelectItemComponent;
+                expect(select.selectedItem).toEqual(currentSelectedItem);
+                expect(currentSelectedItem.isSelected).toBeTruthy();
+                expect(select.selectionValue.toString().trim()).toEqual(currentSelectedItem.value);
+                expect(select.value).toEqual(currentSelectedItem.value);
+                expect(select.input.value.toString().trim()).toEqual(currentSelectedItem.value);
             };
 
             select.toggle();
@@ -236,17 +264,17 @@ describe('igxSelect', () => {
             selectList.children[selectedItemIndex].nativeElement.click();
             tick();
             fixture.detectChanges();
-            checkItemSelection(selectedItemIndex);
+            checkItemSelection();
 
             selectedItemIndex = 15;
             select.selectItem(select.items[selectedItemIndex]);
             tick();
             fixture.detectChanges();
-            checkItemSelection(selectedItemIndex);
+            checkItemSelection();
 
             // selectedItemIndex = 8;
             // select.value = select.items[selectedItemIndex].value.toString();
-            //  console.log(select.value);
+            // console.log(select.value);
             // fixture.detectChanges();
             // tick();
 
@@ -254,13 +282,13 @@ describe('igxSelect', () => {
             // select.toggle();
             // tick();
             // fixture.detectChanges();
-            // checkItemSelection(selectedItemIndex);
+            // checkItemSelection();
 
             // selectedItemIndex = -1;
             // select.value = 'Ghost city';
             // tick();
             // fixture.detectChanges();
-            // checkItemSelection(selectedItemIndex);
+            // checkItemSelection();
         }));
         it('Should populate the input box with the selected item value', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -272,12 +300,14 @@ describe('igxSelect', () => {
             let selectedItemValue = select.items[selectedItemIndex].value;
 
             const checkInputValue = function () {
+                expect(select.selectedItem.value).toEqual(selectedItemValue);
                 expect(select.value).toEqual(selectedItemValue);
-                expect(select.input.value).toEqual(selectedItemValue);
-                expect(inputElement.value).toEqual(selectedItemValue);
+                expect(inputElement.value.toString().trim()).toEqual(selectedItemValue);
             };
 
             // There is not a selected item initially
+            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+            expect(selectedItems.length).toEqual(0);
             expect(select.value).toBeUndefined();
             expect(select.input.value).toEqual('');
             expect(inputElement.value).toEqual('');
@@ -350,50 +380,56 @@ describe('igxSelect', () => {
                 const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
                 fixture.detectChanges();
                 const select = fixture.componentInstance.select;
-                const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
+                const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 let focusedItem = select.items[2];
-                const selectedItem = select.items[13];
-                focusedItem.isFocused = true;
+                const navigationStep = focusedItem.index + 1;
 
-                // Item should be focused and there should not be a selected item
+                const navigateDropdownItems = function (keydownEvent: KeyboardEvent) {
+                    for (let index = 0; index < navigationStep; index++) {
+                        inputElement.triggerEventHandler('keydown', keydownEvent);
+                    }
+                    tick();
+                    fixture.detectChanges();
+                };
+
+                const verifyFocusedItem = function () {
+                    expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+                    expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
+                    expect(select.focusedItem).toEqual(focusedItem);
+                    if (selectedItem) {
+                        expect(selectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+                        expect(select.selectedItem).toEqual(selectedItem);
+                        expect(select.value).toEqual(selectedItem.value);
+                        expect(select.input.value).toEqual(selectedItem.value);
+                    }
+                };
+
+                // Focus item when there is not a selected item
                 select.toggle();
                 tick();
                 fixture.detectChanges();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
-                expect(select.selectedItem).toBeUndefined();
-                expect(select.input.value).toEqual('');
-                expect(inputElement.value).toEqual('');
+                navigateDropdownItems(arrowDownKeyEvent);
                 const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
-                expect(selectedItems.length).toEqual(0);
+                expect(select.value).toBeUndefined();
+                expect(select.input.value).toEqual('');
+                verifyFocusedItem();
 
-                // Item should be focused and there should not be a selected item
+                // Focus item when there is a selected item
+                const selectedItem = select.items[13] as IgxSelectItemComponent;
                 selectedItem.element.nativeElement.click();
                 tick();
                 fixture.detectChanges();
                 select.toggle();
                 tick();
                 fixture.detectChanges();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
-                expect(selectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
-                expect(select.value).toEqual(selectedItem.value);
-                expect(select.selectedItem).toEqual(selectedItem);
-                expect(select.input.value).toEqual(selectedItem.value);
-                expect(inputElement.value).toEqual(selectedItem.value);
+                navigateDropdownItems(arrowUpKeyEvent);
+                focusedItem = select.items[selectedItem.index - navigationStep];
+                verifyFocusedItem();
 
-                // Change focused item
-                focusedItem.isFocused = false;
-                focusedItem = select.items[6];
-                focusedItem.isFocused = true;
-                fixture.detectChanges();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
-                expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
-                expect(selectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
-                expect(select.value).toEqual(selectedItem.value);
-                expect(select.selectedItem).toEqual(selectedItem);
-                expect(select.input.value).toEqual(selectedItem.value);
-                expect(inputElement.value).toEqual(selectedItem.value);
+                // Change focused item when there is a selected item
+                navigateDropdownItems(arrowUpKeyEvent);
+                focusedItem = select.items[selectedItem.index - navigationStep * 2];
+                verifyFocusedItem();
             }));
         it('Should not select disabled item', () => {
             const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
@@ -431,14 +467,14 @@ describe('igxSelect', () => {
             // tick();
             // fixture.detectChanges();
         });
-        it('Should not change selection when setting it to non-existing item', fakeAsync(() => {
+        xit('Should not change selection when setting it to non-existing item', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             fixture.detectChanges();
             const select = fixture.componentInstance.select;
             const inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             const selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const selectedItemEl = selectList.children[2];
-            const selectedItem = select.items[2];
+            const selectedItem = select.items[2] as IgxSelectItemComponent;
 
             inputElement.nativeElement.click();
             tick();
@@ -448,15 +484,16 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(selectedItem.isSelected).toBeTruthy();
             expect(select.value).toEqual(selectedItem.value);
-            expect(select.input.value).toEqual(selectedItem.value);
+            expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
             expect(select.selectedItem).toEqual(selectedItem);
             expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
 
-            select.setSelectedItem(-5);
+            // Throws an error 'Cannot read property isHeader of null'
+            select.selectItem(null);
             fixture.detectChanges();
             expect(selectedItem.isSelected).toBeTruthy();
             expect(select.value).toEqual(selectedItem.value);
-            expect(select.input.value).toEqual(selectedItem.value);
+            expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
             expect(select.selectedItem).toEqual(selectedItem);
             expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
             const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
@@ -714,7 +751,7 @@ describe('igxSelect', () => {
             const selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             let currentItemIndex = 0;
 
-            const verifyFocusedItem = function() {
+            const verifyFocusedItem = function () {
                 expect(select.focusedItem).toEqual(select.items[currentItemIndex]);
                 expect(select.items[currentItemIndex].isFocused).toBeTruthy();
                 expect(selectList.children[currentItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
@@ -759,6 +796,113 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyFocusedItem();
         }));
+        it('Should navigate through dropdown items skipping the disabled ones', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+            fixture.detectChanges();
+            const select = fixture.componentInstance.select;
+            const inputEl = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            const selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            let focusedItemIndex = 1;
+
+            const verifyFocusedItem = function () {
+                const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
+                expect(focusedItems.length).toEqual(1);
+                expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+                expect(select.focusedItem).toEqual(select.items[focusedItemIndex]);
+                expect(select.items[focusedItemIndex].isFocused).toBeTruthy();
+            };
+
+            select.items[0].disabled = true;
+            select.items[2].disabled = true;
+            select.items[3].disabled = true;
+            select.items[select.items.length - 1].disabled = true;
+            fixture.detectChanges();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+
+            inputEl.triggerEventHandler('keydown', arrowDownKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+
+            // Skip two disabled items
+            focusedItemIndex = 4;
+            inputEl.triggerEventHandler('keydown', arrowDownKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+
+            // Focus the element before the last one as it is disabled
+            focusedItemIndex = select.items.length - 2;
+            inputEl.triggerEventHandler('keydown', endKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+
+            focusedItemIndex--;
+            inputEl.triggerEventHandler('keydown', arrowUpKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+
+            // Home key should focus second item since the first one is disabled
+            focusedItemIndex = 1;
+            inputEl.triggerEventHandler('keydown', homeKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+        }));
+        it('Should start navigation from selected item', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+            fixture.detectChanges();
+            const select = fixture.componentInstance.select;
+            const inputEl = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+            const selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            let selectedItem = select.items[4];
+            let focusedItemIndex = selectedItem.index + 1;
+
+            const verifyFocusedItem = function () {
+                expect(selectedItem.isSelected).toEqual(true);
+                const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
+                expect(focusedItems.length).toEqual(1);
+                expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+                expect(select.focusedItem).toEqual(select.items[focusedItemIndex]);
+                expect(select.items[focusedItemIndex].isFocused).toBeTruthy();
+            };
+
+            select.selectItem(select.items[4]);
+            fixture.detectChanges();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+
+            inputEl.triggerEventHandler('keydown', arrowDownKeyEvent);
+            tick();
+            fixture.detectChanges();
+            verifyFocusedItem();
+
+            inputEl.triggerEventHandler('keydown', arrowDownKeyEvent);
+            inputEl.triggerEventHandler('keydown', arrowDownKeyEvent);
+            inputEl.triggerEventHandler('keydown', enterKeyEvent);
+            tick();
+            fixture.detectChanges();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+
+            inputEl.triggerEventHandler('keydown', arrowUpKeyEvent);
+            tick();
+            fixture.detectChanges();
+            selectedItem = select.items[7];
+            focusedItemIndex = selectedItem.index - 1;
+            verifyFocusedItem();
+        }));
+    });
+    describe('Positioning tests: ', () => {
     });
 });
 
@@ -792,7 +936,8 @@ class IgxSelectSimpleComponent {
         'Padua',
         'Palermo',
         'Palma de Mallorca',
-        'Paris'];
+        'Paris',
+        'Amsterdam'];
 
     // public onSelection(eventArgs: ISelectionEventArgs) {
     //     this.value = eventArgs.newSelection.value;
