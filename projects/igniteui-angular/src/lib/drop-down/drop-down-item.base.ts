@@ -1,8 +1,10 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
+
+let warningShown = false;
 
 /**
  * An abstract class defining a drop-down item:
@@ -17,6 +19,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     protected _isFocused = false;
     protected _isSelected = false;
+    protected _index = null;
     protected _disabled = false;
 
     /**
@@ -24,6 +27,30 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     public get itemID() {
         return this;
+    }
+
+    /**
+     * The data index of the dropdown item.
+     *
+     * ```typescript
+     * // get the data index of the selected dropdown item
+     * let selectedItemIndex = this.dropdown.selectedItem.index
+     * ```
+     */
+    @Input()
+    public get index(): number {
+        if (this._index === null) {
+            warningShown = showMessage(
+                'IgxDropDownItemBase: Automatic index is deprecated.' +
+                'Bind in the template instead using `<igx-drop-down-item [index]="i"` instead.`',
+                warningShown);
+            return this.itemIndex;
+        }
+        return this._index;
+    }
+
+    public set index(value) {
+        this._index = value;
     }
 
     /**
@@ -192,9 +219,9 @@ export abstract class IgxDropDownItemBase implements DoCheck {
 
     /**
      * Gets item index
-     * @hidden
+     * @hidden @internal
      */
-    public get index(): number {
+    public get itemIndex(): number {
         return this.dropDown.items.indexOf(this);
     }
 

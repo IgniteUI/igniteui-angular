@@ -19,7 +19,7 @@ import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
@@ -219,6 +219,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('complex', { read: TemplateRef })
     protected complexTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxForOfDirective)
+    public virtualScrollContainer: IgxForOfDirective<any>;
 
     /**
      * @hidden
