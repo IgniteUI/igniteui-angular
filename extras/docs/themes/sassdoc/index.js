@@ -127,23 +127,23 @@ const theme = themeleon(__dirname, function (t) {
                 switch (operator) {
                     case '==':
                         // tslint:disable-next-line:triple-equals
-                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 == v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '===':
-                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 === v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '<':
-                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 < v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '<=':
-                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 <= v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '>':
-                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 > v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '>=':
-                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 >= v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '&&':
-                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 && v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '||':
-                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 || v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     default:
-                        return options.inverse(this);
+                        return options.inverse(options.data.root);
                 }
             },
             localize: (options) => {
