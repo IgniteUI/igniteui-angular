@@ -42,12 +42,26 @@
                 text-decoration: none
 
         > .version
-            font-size: 12px
-            background: #666
-            color: #efefef
-            padding: 4px 8px
             margin-left: 12px
-            font-weight: 500
+
+            select
+                -webkit-appearance: none
+                -moz-appearance: none
+                appearance: none
+                border-radius: 0
+                border: none
+                min-width: 64px
+                max-width: 128px
+
+                font-size: rem(13)
+                background: url('../images/baseline-arrow_drop_down-24px.svg') no-repeat 96% #666
+                background-size: 20px
+                color: #efefef
+                padding: rem(4) rem(24) rem(4) rem(8)
+                outline-style: none
+
+                &::-ms-expand
+                    display: none
 
 .tsd-nav-toggle
     label
