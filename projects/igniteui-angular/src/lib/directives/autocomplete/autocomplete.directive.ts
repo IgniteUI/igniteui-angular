@@ -6,7 +6,7 @@ import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs, mergeObjects } from '../../core/utils';
+import { CancelableEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy, IScrollStrategy, IPositionStrategy } from '../../services';
 import { ISelectionEventArgs } from '../../drop-down';
 import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
@@ -46,7 +46,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _disabled = false;
-    private _autocompleteSettings: AutocompleteOverlaySettings = {
+    private settings: OverlaySettings = {
+        modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
     };
@@ -82,34 +83,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     @Input('igxAutocompleteSettings')
-    get autocompleteSettings(): AutocompleteOverlaySettings {
-        return this._autocompleteSettings;
-    }
-    set autocompleteSettings(value: AutocompleteOverlaySettings) {
-        if (value.scrollStrategy) {
-            this._autocompleteSettings.scrollStrategy = mergeObjects(this._autocompleteSettings.scrollStrategy, value.scrollStrategy);
-        }
-        if (value.positionStrategy.settings) {
-            this._autocompleteSettings.positionStrategy = mergeObjects(this._autocompleteSettings.positionStrategy, value.positionStrategy);
-            if (!value.positionStrategy.settings.target) {
-                this._autocompleteSettings.positionStrategy.settings.target = this.parentElement;
-            }
-        }
-        if (value.outlet) {
-            this._autocompleteSettings.outlet = value.outlet;
-        }
-
-    }
-
-    get settings(): OverlaySettings {
-        const settings = this.autocompleteSettings as OverlaySettings;
-        settings.modal = false;
-        settings.closeOnOutsideClick = true;
-        return settings;
-    }
-
-    @Input('igxAutocompleteHighlightMatch')
-    protected highlightMatch = false;
+    autocompleteSettings: AutocompleteOverlaySettings;
 
     @Output()
     onItemSelected = new EventEmitter<any>();
@@ -178,7 +152,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     public open() {
-        this.dropDown.open(this.settings);
+        const settings = Object.assign({}, this.settings, this.autocompleteSettings);
+        if (!settings.positionStrategy.settings.target) {
+            settings.positionStrategy.settings.target = this.parentElement;
+        }
+        this.dropDown.open(settings);
         this.target = this.dropDown;
         this.dropDown.width = this.parentElement.clientWidth + 'px';
         this.dropDown.onSelection.subscribe(this.select);
@@ -192,7 +170,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (!value.newSelection) {
             return;
         }
-        value.cancel = true; // Disable selection in the drop down, because in auto complete we do not save selection.
+        value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
@@ -226,6 +204,3 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     exports: [IgxAutocompleteDirective]
 })
 export class IgxAutocompleteModule { }
-
-
-
