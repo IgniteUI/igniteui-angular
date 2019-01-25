@@ -510,7 +510,6 @@
         border-radius: $grid-br;
         box-shadow: $grid-shadow;
         outline-style: none;
-        overflow: hidden;
         z-index: 0;
 
         %cbx-display {
@@ -530,9 +529,10 @@
     %grid-thead,
     %grid-tfoot {
         position: relative;
-        display: block;
+        display: flex;
         background: --var($theme, 'header-background');
         color: --var($theme, 'header-text-color');
+        overflow: hidden;
 
         %grid-row {
             position: relative;
@@ -548,7 +548,6 @@
     }
 
     %grid-thead {
-        grid-row: 3;
         border-bottom: $grid-header-border;
         z-index: 2;
 
@@ -566,6 +565,11 @@
         %grid-row:last-of-type {
             border-bottom: none;
         }
+    }
+
+    %grid-thead-container {
+        grid-row: 3;
+        display: flex;
     }
 
     %grid-thead--cosy {
@@ -638,11 +642,16 @@
 
     %grid-tbody {
         position: relative;
-        grid-row: 4;
         background: --var($theme, 'content-background');
         color: --var($theme, 'content-text-color');
         overflow: hidden;
         z-index: 1;
+    }
+
+    %grid-tbody-container {
+        position: relative;
+        display: flex;
+        grid-row: 4;
     }
 
     %grid-tbody-message {
@@ -653,6 +662,19 @@
         color: --var($theme, 'content-text-color');
     }
 
+    %igx-grid__loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 100px;
+
+        > %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
+    }
+
     %grid-scroll {
         grid-row: 6;
         display: flex;
@@ -660,6 +682,20 @@
         width: 100%;
         background: --var($theme, 'header-background');
         z-index: 10001;
+    }
+
+    %grid-thead-thumb {
+        background: --var($theme, 'header-background');
+        border-left: 1px solid igx-color($palette, 'grays', 300);
+    }
+
+    %grid-tfoot-thumb {
+        background: --var($theme, 'header-background');
+        border-left: 1px solid igx-color($palette, 'grays', 300);
+    }
+
+    %grid-tbody-scrollbar {
+        border-left: 1px solid igx-color($palette, 'grays', 300);
     }
 
     %grid-scroll-start {
@@ -1061,7 +1097,7 @@
     }
 
     %grid__resize-line {
-        position: absolute;
+        position: fixed;
         cursor: col-resize;
         width: 4px;
         background-color: --var($theme, 'resize-line-color');
@@ -1086,9 +1122,9 @@
 
     %grid-summaries {
         display: flex;
+        overflow: hidden;
         background: --var($theme, 'root-summaries-background');
 
-        // %igx-grid-summary__label,
         %igx-grid-summary__result {
             color: --var($theme, 'root-summaries-text-color');
         }

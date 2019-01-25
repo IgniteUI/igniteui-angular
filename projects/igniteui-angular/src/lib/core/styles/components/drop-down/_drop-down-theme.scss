@@ -226,9 +226,17 @@
         color: --var($theme, 'header-text-color');
         pointer-events: none;
         padding: rem(8px) rem($desktop-header-padding);
+    }
 
-        @media only screen and (max-width: $mobile-break-point) {
-            padding: rem(8px) rem($mobile-header-padding);
+    %igx-drop-down__group {
+        pointer-events: auto;
+
+        label {
+            @extend %igx-drop-down__header;
+        }
+
+        %igx-drop-down__item {
+            text-indent: rem($desktop-header-padding);
         }
     }
 
@@ -286,7 +294,8 @@
     $item: map-get($categories, 'item');
 
     @include igx-scope('.igx-typography') {
-        %igx-drop-down__header {
+        %igx-drop-down__header,
+        %igx-drop-down__group > label {
             @include igx-type-style($type-scale, $header);
         }
 

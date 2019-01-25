@@ -56,7 +56,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         protected elementRef: ElementRef,
         @Inject(IgxSelectionAPIService) protected selection: IgxSelectionAPIService
     ) {
-        super(dropDown, elementRef, selection);
+        super(dropDown, elementRef, null, selection);
     }
 
     /**
@@ -83,7 +83,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             }
             return;
         }
-        this.dropDown.navigateItem(this.index);
+        this.dropDown.navigateItem(this.itemIndex);
         this.comboAPI.set_selected_item(this.itemID, event);
     }
 
