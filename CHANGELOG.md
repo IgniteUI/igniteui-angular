@@ -11,6 +11,25 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
+    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <label igxLabel>Genres</label>
+            <igx-prefix><igx-icon>music_note</igx-icon></igx-prefix>
+        </igx-combo>
+     ```
+    - **Feature** the default combo 'clear' and 'toggle' icons can now be templated. Two new directives are added (with selector `[igxComboClearIcon]` and `[igxComboToggleIcon]`). Passing an `ng-template` with one of the directives will overwrite the default conent of the respective icon. Functionality will remain unaffected. Expample:
+    ```html
+        <!-- customize combo input --->
+        <igx-combo #myCombo [data]="myGenres">
+            ...
+            <ng-template igxComboToggleIcon let-collapsed>
+                <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+            </ng-template>
+        </igx-combo>
+    ```
 - `igxDropDown`
     - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
     - Added an `@Input` for the `index` property (such as the one coming from ngFor) of the `IgxDropDownItem` component. This **deprecates** the automatic index calculation.
