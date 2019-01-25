@@ -171,7 +171,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             tick();
             expect(input.nativeElement.attributes['aria-expanded'].value).toMatch('true');
-            this.dropDown.close();
+            dropDown.close();
         }));
         it('ReactiveForm', fakeAsync(() => {}));
         it('On textarea', fakeAsync(() => {}));
