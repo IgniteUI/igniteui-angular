@@ -1,6 +1,5 @@
 import {
     Component,
-    Input,
     DoCheck,
     HostListener,
     HostBinding
