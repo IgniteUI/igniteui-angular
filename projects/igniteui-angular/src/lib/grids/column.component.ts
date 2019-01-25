@@ -33,6 +33,7 @@ import {
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -979,12 +980,17 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
+     * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
+     * Column cannot be pinned if:
+     * - Is already pinned
+     * - index argument is out of range
+     * - The pinned area exceeds 80% of the grid width
      * ```typescript
-     * this.column.pin();
+     * let success = this.column.pin();
      * ```
      * @memberof IgxColumnComponent
      */
-    public pin(index?) {
+    public pin(index?: number): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
         if (this.grid) {
@@ -1043,12 +1049,16 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
+     * Returns `true` if the column is successfully unpinned. Returns `false` if the column cannot be unpinned.
+     * Column cannot be unpinned if:
+     * - Is already unpinned
+     * - index argument is out of range
      * ```typescript
-     * this.column.unpin();
+     * let success = this.column.unpin();
      * ```
      * @memberof IgxColumnComponent
      */
-    public unpin(index?) {
+    public unpin(index?: number): boolean {
         if (this.grid) {
             this.grid.endEdit(true);
         }
@@ -1138,6 +1148,14 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
+    }
+
+    /**
+     * Returns a reference to the header group of the column.
+     * @memberof IgxColumnComponent
+     */
+    get headerGroup(): IgxGridHeaderGroupComponent {
+        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
     }
 
     /**
@@ -1233,9 +1251,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const unpinnedColumns = this.grid.unpinnedColumns;
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
-            let cellWidth = isLastUnpinned && hasVerticalScroll &&
-            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
+            let cellWidth = colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';

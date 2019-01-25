@@ -232,6 +232,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      * let disabledDates = this.datepicker.disabledDates;
      * ```
      */
+    @Input()
     public get disabledDates(): DateRangeDescriptor[] {
         return this._disabledDates;
     }
@@ -243,8 +244,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *public datePicker: IgxDatePickerComponent;
      *ngAfterViewInit(){
      *    this.datePicker.disabledDates = [
-     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
-     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
+     *     {type: DateRangeType.Weekends}];
      *}
      *```
      */
@@ -258,6 +259,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      * let specialDates = this.datepicker.specialDates;
      * ```
      */
+    @Input()
     public get specialDates(): DateRangeDescriptor[] {
         return this._specialDates;
     }
@@ -269,8 +271,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *public datePicker: IgxDatePickerComponent;
      *ngAfterViewInit(){
      *    this.datePicker.specialDates = [
-     *      new DateRangeDescriptor(DateRangeType.Between, [new Date("2020-1-1"), new Date("2020-1-15")]),
-     *      new DateRangeDescriptor(DateRangeType.Weekends)];
+     *     {type: DateRangeType.Between, dateRange: [new Date("2020-1-1"), new Date("2020-1-15")]},
+     *     {type: DateRangeType.Weekends}];
      *}
      *```
      */
