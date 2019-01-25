@@ -1,0 +1,14 @@
+{
+    "$schema": "../../common/schema/theme-props.schema.json",
+    "changes": [{
+            "name": "$search-shadow-color",
+            "replaceWith": "$search-resting-shadow",
+            "owner": "igx-input-group-theme"
+        },
+        {
+            "name": "$search-disabled-shadow-color",
+            "replaceWith": "$search-disabled-shadow",
+            "owner": "igx-input-group-theme"
+        }
+    ]
+}

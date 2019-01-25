@@ -7,9 +7,11 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navbar background color.
 /// @param {Color} $text-color [null] - The navbar text color.
+/// @param {box-shadow} $shadow [null] - The shadow of the navbar.
 /// @param {Color} $idle-icon-color [null] - The navbar idle icon color.
 /// @param {Color} $hover-icon-color [null] - The navbar hover icon color.
 /// @param {Bool} $disable-shadow [true] - Sets the navbar shadow visibility.
@@ -29,17 +31,18 @@
 @function igx-navbar-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $background: null,
     $text-color: null,
+    $shadow: null,
     $idle-icon-color: null,
     $hover-icon-color: null,
     $disable-shadow: false
 ) {
-    $nav-shadow: if($disable-shadow == false, igx-elevation($elevations, 4), none);
-
     $name: 'igx-navbar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $navbar-schema: map-get($schema, $name);
+    $theme: apply-palette($navbar-schema, $palette);
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -53,6 +56,15 @@
         $hover-icon-color: text-contrast($background);
     }
 
+    @if not($shadow) {
+        $elevation: map-get($navbar-schema, 'elevation');
+        $shadow: igx-elevation($elevations, $elevation);
+    }
+
+    @if $disable-shadow {
+        $shadow: none;
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -60,7 +72,7 @@
         text-color: $text-color,
         idle-icon-color: $idle-icon-color,
         hover-icon-color: $hover-icon-color,
-        nav-shadow: $nav-shadow
+        shadow: $shadow
     ));
 }
 
@@ -87,7 +99,7 @@
         padding: $navbar-padding;
         background: --var($theme, 'background');
         color: --var($theme, 'text-color');
-        box-shadow: --var($theme, 'nav-shadow');
+        box-shadow: --var($theme, 'shadow');
         z-index: 4;
     }
 
