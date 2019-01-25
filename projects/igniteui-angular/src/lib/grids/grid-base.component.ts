@@ -1318,6 +1318,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
+    @ViewChild('footerSummary', { read: IgxSummaryRowComponent })
+    protected footerSummary: IgxSummaryRowComponent;
 
     public get summariesRowList() {
         const res = new QueryList<any>();
@@ -3623,6 +3625,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupAreaHeight = this.getGroupAreaHeight();
         let gridHeight;
 
+        // When columns are not yet loaded and later initialized summaries rerender multiple times and dom removal is not instant
+        // so when rendering new summaries the old ones are still there.
+        const summariesLeftoversHeight = this.footerSummary ? this.footerSummary.nativeElement.clientHeight - this.summariesHeight : 0;
+
         if (!this.isAttachedToDom) {
             return null;
         }
@@ -3635,8 +3641,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         const height = Math.abs(gridHeight - toolbarHeight -
                 this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - pagingHeight - groupAreaHeight -
-                footerBordersAndScrollbars -
+                this.summariesHeight - summariesLeftoversHeight -
+                pagingHeight - groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
