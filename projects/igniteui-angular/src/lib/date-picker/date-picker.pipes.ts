@@ -31,7 +31,7 @@ export class DatePickerInputValuePipe implements PipeTransform {
     constructor(@Inject(IGX_DATE_PICKER_COMPONENT) private _datePicker: IgxDatePickerBase) { }
     transform(value: any, args?: any): any {
         if (this._datePicker.value !== null && this._datePicker.value !== undefined) {
-            return addPromptCharsEditMode(this._datePicker.value, value, this._datePicker.dateFormatParts);
+            return addPromptCharsEditMode(this._datePicker.dateFormatParts, this._datePicker.value, value);
         }
         return trimMaskSymbols(this._datePicker.mask);
     }

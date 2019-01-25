@@ -64,7 +64,11 @@ import {
     addPromptCharsEditMode,
     getDateValueFromInput,
     getDateFormatPart,
-    trimMaskSymbols
+    trimMaskSymbols,
+    isFullMonthInput,
+    isFullDayInput,
+    isFullYearInput,
+    getDatePartOnPosition
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -309,14 +313,16 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
      *```
      */
     public get transformedDate(): string {
+        let result = '';
         if (this._value) {
-            return this._transformDate(this._value);
+            const formattedDate = this._transformDate(this._value);
+            result = (this._isInEditMode) ? addPromptCharsEditMode(this.dateFormatParts, this.value, formattedDate) : formattedDate;
+        } else {
+            if (this._cleanInput) {
+                result = trimMaskSymbols(this.mask);
+            }
         }
-        return trimMaskSymbols(this.mask);
-    }
-
-    public set transformedDate(value: string) {
-        this._transformedDate = value;
+        return result;
     }
 
     constructor(@Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
@@ -574,8 +580,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     private _componentID: string;
     private _format: string;
     private _value: Date;
-    private _transformedDate: string;
-    private _inEditMode: boolean;
+    private _cleanInput = false;
+    private _isInEditMode: boolean;
     private _defaultDateFormat: string = PREDEFINED_FORMAT_OPTIONS.SHORT_DATE;
 
     private _disabledDates: DateRangeDescriptor[] = null;
@@ -597,12 +603,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     // public onSpaceClick(event) {
     //     this.openCalendar();
     //     event.preventDefault();
-    // }
-
-    // @HostListener('keydown.alt.arrowdown', ['$event'])
-    // public onAltArrowDownKeydown(event: KeyboardEvent) {
-    //     this.calculateDate(this.getEditElement().value, event.type);
-    //     this.openCalendar(event);
     // }
 
     /**
@@ -694,15 +694,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         //             .subscribe((res) => {
         //                 this.onKeydown(res);
         //             });
-
-        //         fromEvent(this.getEditElement(), 'mousewheel').pipe(
-        //             throttle(() => interval(0, animationFrameScheduler)),
-        //             takeUntil(this._destroy$))
-        //             .subscribe((res) => {
-        //                 this.onMouseWheel(res);
-        //             });
-        //     });
-        // }
     }
 
     /**
@@ -781,8 +772,8 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             }
             case DatePickerInteractionMode.EDITABLE: {
                 if (this.collapsed) {
-                    this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
                     this.hasHeader = false;
+                    this._dropDownOverlaySettings.positionStrategy.settings.target = this.editableInputGroup.nativeElement;
                     this._componentID = this._overlayService.show(this.calendarContainer, this._dropDownOverlaySettings);
                 }
                 break;
@@ -796,12 +787,16 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
     public clear(): void {
         this.deselectDate();
+        requestAnimationFrame(() => {
+            this._setCursorPosition(0);
+        });
     }
 
     public calculateDate(dateString: string, invokedByEvent: string): void {
         if (dateString !== '') {
             const trimmedData = trimUnderlines(dateString);
             const monthFormatType = getDateFormatPart(this.dateFormatParts, DATE_PARTS.MONTH).formatType;
+            const originalDateValue = this.value;
             let newValue;
 
             if (monthFormatType === FORMAT_DESC.NUMERIC
@@ -814,34 +809,25 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 const year = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, strToManipulate);
 
                 const yearFormat = getDateFormatPart(this.dateFormatParts, DATE_PARTS.YEAR).formatType;
-                if (yearFormat === FORMAT_DESC.TWO_DIGITS) {
-                    fullYear = '20'.concat(year);
-                } else {
-                    fullYear = year;
-                }
+                fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? '20'.concat(year) : year;
 
-                const originalDateValue = this.value;
                 newValue = createDate(Number(day), Number(month) - 1, Number(fullYear));
-                if (originalDateValue !== null) {
-                    newValue.setHours(originalDateValue.getHours());
-                    newValue.setMinutes(originalDateValue.getMinutes());
-                    newValue.setSeconds(originalDateValue.getSeconds());
-                    newValue.setMilliseconds(originalDateValue.getMilliseconds());
-                }
-
-                this.value = newValue;
             } else {
                 newValue = new Date(trimmedData);
-                this.value = newValue;
             }
 
+            // Restore the time part if any
+            if (originalDateValue !== null) {
+                newValue.setHours(originalDateValue.getHours());
+                newValue.setMinutes(originalDateValue.getMinutes());
+                newValue.setSeconds(originalDateValue.getSeconds());
+                newValue.setMilliseconds(originalDateValue.getMilliseconds());
+            }
+
+            this.value = newValue;
             this._onChangeCallback(newValue);
         }
     }
-
-    // public isDateValid(data) {
-    //     return new Date(DatePickerUtil.trimUnderlines(data)).toString() !== 'Invalid Date';
-    // }
 
     /**
      * Evaluates when @calendar.onSelection event was fired
@@ -861,16 +847,13 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
 
         this.value = date;
         this.calendar.viewDate = date;
-
         this._onChangeCallback(date);
-
         this.closeCalendar();
-
         this.onSelection.emit(date);
     }
 
     public onBlur(event): void {
-        this._inEditMode = false;
+        this._isInEditMode = false;
         this.calculateDate(event.target.value, event.type);
     }
 
@@ -898,22 +881,45 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.spinValue(event);
     }
 
+    public onDoubleClick(event) {
+        const datePart = getDatePartOnPosition(this.dateFormatParts, this._getCursorPosition());
+        this.getEditElement().setSelectionRange(datePart.position[0], datePart.position[1]);
+    }
+
     public onInput(event) {
         const inputValue = event.target.value;
-        const oldVal = this.value;
-
         // Mandatory date parts
         const dayValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue);
         const monthValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue);
         const yearValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, inputValue);
 
+        const dayStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue, false);
+        const monthStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue, false);
+
+        // While editting, if the input is deleted, total clean up
         if (dayValue === '' && monthValue === '' && yearValue === '') {
+            this._cleanInput = true;
             this.deselectDate();
         }
 
-        // if (dayValue !== '' && monthValue !== '' && yearValue !== '') {
-        //     this.calculateDate(inputValue, event.type);
-        // }
+        // While editting, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
+        if (dayValue === '' || monthValue === '' || yearValue === '') {
+            this.deselectDate();
+            const cursorPosition = this._getCursorPosition();
+            requestAnimationFrame(() => {
+                this.getEditElement().value = inputValue;
+                this._setCursorPosition(cursorPosition);
+            });
+        }
+
+        // If all date parts are completed, change the date-picker value, stay in edit mode
+        if (isFullDayInput(this.dateFormatParts, dayValue, dayStr)
+            && isFullMonthInput(this.dateFormatParts, monthValue, monthStr)
+            && isFullYearInput(this.dateFormatParts, yearValue)
+            && event.inputType !== 'deleteContentBackward') {
+            this._isInEditMode = true;
+            this.calculateDate(inputValue, event.type);
+        }
     }
 
     private spinValue(event) {
@@ -921,7 +927,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         const cursorPos = this._getCursorPosition();
         const inputValue = event.target.value;
         let sign = 0;
-        this._inEditMode = true;
+        this._isInEditMode = true;
 
         if (event.key) {
             sign = (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE) ? 1 : -1;
@@ -1034,9 +1040,7 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     * @returns formatted string
     */
     private _transformDate(value: any): string {
-        const formattedDate = formatDate(value, this.format, DEFAULT_LOCALE_DATE);
-        const editFormattedDate = addPromptCharsEditMode(this.value, formattedDate, this.dateFormatParts);
-        return (this._inEditMode) ? editFormattedDate : formattedDate;
+        return formatDate(value, this.format, DEFAULT_LOCALE_DATE);
     }
 
     private _onTouchedCallback: () => void = () => { };
