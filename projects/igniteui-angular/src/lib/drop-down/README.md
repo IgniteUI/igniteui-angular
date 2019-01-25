@@ -85,6 +85,7 @@ The following inputs are available in the **igx-drop-down-item** component:
 | `selected` | boolean| Defines if the item is the selected item. Only one item can be selected at time. |
 | `isHeader` | boolean| Defines if the item is a group header. |
 | `disabled` | boolean| Disables the given item. |
+| `index` | number | The data index of the drop down item. |
 | `focused` | boolean| Defines if the given item is focused. |
 | `value` | any | The value of the drop-down item. |
 
@@ -93,6 +94,5 @@ The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `index` | `number` | Gets item index. |
 | `elementHeight` | `number` | Gets item element height. |
 | `element`| `ElementRef` | Get item's html element. |

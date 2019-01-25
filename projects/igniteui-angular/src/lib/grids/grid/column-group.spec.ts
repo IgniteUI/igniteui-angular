@@ -169,9 +169,9 @@ describe('IgxGrid - multi-column headers', () => {
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(componentInstance.gridWrapperWidthPx);
+        expect(parseInt(locationColGroup.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
         const cityColumn = grid.getColumnByName('City');
-        expect(cityColumn.width).toBe(componentInstance.gridWrapperWidthPx);
+        expect(parseInt(cityColumn.width, 10) + grid.scrollWidth).toBe(parseInt(componentInstance.gridWrapperWidthPx, 10));
     });
 
     it('Width should be correct. Column group with column. Width in px.', fakeAsync(() => {
@@ -185,9 +185,9 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
 
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(gridWidthPx.toString());
+        expect(parseInt(locationColGroup.width, 10) + grid.scrollWidth).toBe(gridWidthPx);
         const cityColumn = grid.getColumnByName('City');
-        expect(cityColumn.width).toBe(gridWidthPx.toString());
+        expect(parseInt(cityColumn.width, 10) + grid.scrollWidth).toBe(gridWidthPx);
     }));
 
     it('Width should be correct. Column group with column. Width in percent.', fakeAsync(() => {
@@ -202,7 +202,7 @@ describe('IgxGrid - multi-column headers', () => {
 
         const locationColGroup = getColGroup(grid, 'Location');
         const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
+            parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollWidth;
         expect(locationColGroup.width).toBe(gridWidthInPx.toString());
         const cityColumn = grid.getColumnByName('City');
         expect(cityColumn.width).toBe(gridWidthInPx.toString());
@@ -272,9 +272,10 @@ describe('IgxGrid - multi-column headers', () => {
 
         const componentInstance = fixture.componentInstance;
         const grid = componentInstance.grid;
+        const availableWidth = (parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollWidth).toString();
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(componentInstance.gridWrapperWidthPx);
-        const colWidth = parseInt(componentInstance.gridWrapperWidthPx, 10) / 3;
+        const colWidth = parseInt(availableWidth, 10) / 3;
+        expect(locationColGroup.width).toBe((Math.round(colWidth) * 3).toString());
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(colWidth.toString());
         const regionColumn = grid.getColumnByName('Region');
@@ -285,17 +286,16 @@ describe('IgxGrid - multi-column headers', () => {
 
     it('Width should be correct. Column group with three columns. Width in px.', fakeAsync(() => {
         const fixture = TestBed.createComponent(OneGroupThreeColsGridComponent);
-        const gridWidth = '600px';
-        const gridWidthInPx = parseInt(gridWidth, 10);
         const componentInstance = fixture.componentInstance;
+        const gridWidth = '600px';
         const grid = componentInstance.grid;
         grid.width = gridWidth;
         tick();
         fixture.detectChanges();
-
+        const gridWidthInPx = parseInt(gridWidth, 10) - grid.scrollWidth;
+        const colWidth = gridWidthInPx / 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(gridWidthInPx.toString());
-        const colWidth = parseInt(gridWidth, 10) / 3;
+        expect(locationColGroup.width).toBe((Math.round(colWidth) * 3).toString());
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(colWidth.toString());
         const regionColumn = grid.getColumnByName('Region');
@@ -314,10 +314,10 @@ describe('IgxGrid - multi-column headers', () => {
         fixture.detectChanges();
 
         const gridWidthInPx = (parseInt(gridWidth, 10) / 100) *
-            parseInt(componentInstance.gridWrapperWidthPx, 10);
+            parseInt(componentInstance.gridWrapperWidthPx, 10) - grid.scrollWidth;
         const colWidth = gridWidthInPx / 3;
         const locationColGroup = getColGroup(grid, 'Location');
-        expect(locationColGroup.width).toBe(gridWidthInPx.toString());
+        expect(locationColGroup.width).toBe((Math.round(colWidth) * 3).toString());
         const countryColumn = grid.getColumnByName('Country');
         expect(countryColumn.width).toBe(colWidth.toString());
         const regionColumn = grid.getColumnByName('Region');

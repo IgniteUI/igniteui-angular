@@ -234,7 +234,9 @@ describe('Column Pinning UI', () => {
         });
 
         it('- pinning group column pins all children.', () => {
+            fix.detectChanges();
             const columnName = 'General Information';
+            GridFunctions.getCheckboxInput('Missing', columnChooserElement, fix).click();
             GridFunctions.getCheckboxInput(columnName, columnChooserElement, fix).click();
 
             fix.detectChanges();
@@ -245,6 +247,7 @@ describe('Column Pinning UI', () => {
 
         it('- unpinning group column unpins all children.', () => {
             const columnName = 'General Information';
+            grid.columns[0].unpin();
             grid.columns[1].pin();
             fix.detectChanges();
 
