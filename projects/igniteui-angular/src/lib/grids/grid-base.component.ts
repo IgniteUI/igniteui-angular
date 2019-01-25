@@ -1428,9 +1428,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._rowList) {
             return res;
         }
-        const rList = this._rowList.filter((item) => {
-            return item.element.nativeElement.parentElement !== null;
-        });
+        const rList = this._rowList
+            .filter((item) => {
+                return item.element.nativeElement.parentElement !== null;
+            })
+            .sort((a, b) => {
+                return a.index - b.index;
+            });
         res.reset(rList);
         return res;
     }

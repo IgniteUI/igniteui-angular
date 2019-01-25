@@ -195,6 +195,7 @@ export class IgxGridNavigationService {
             this.performHorizontalScrollToCell(rowIndex, editableIndex);
         }
     }
+
     public onKeydownHome(rowIndex, isSummary = false) {
         let rowElement = this.grid.dataRowList.find((row) => row.index === rowIndex);
         let cellTag = this.isTreeGrid ? 'igx-tree-grid-cell' : 'igx-grid-cell';
@@ -229,16 +230,16 @@ export class IgxGridNavigationService {
         }
         if (!rowElement) { return; }
         rowElement = rowElement.nativeElement;
-        const allCells = rowElement.querySelectorAll(`${cellTag}`);
-        const lastCell = allCells[allCells.length - 1];
         if (this.isColumnFullyVisible(index)) {
-            lastCell.focus({ preventScroll: true });
+            const allCells = rowElement.querySelectorAll(`${cellTag}`);
+            allCells[allCells.length - 1].focus({ preventScroll: true });
         } else {
             this.grid.parentVirtDir.onChunkLoad
                 .pipe(first())
                 .subscribe(() => {
                     this.grid.nativeElement.focus({ preventScroll: true });
-                    lastCell.focus({ preventScroll: true });
+                    const allCells = rowElement.querySelectorAll(`${cellTag}`);
+                    allCells[allCells.length - 1].focus({ preventScroll: true });
                 });
             this.horizontalScroll(rowIndex).scrollTo(this.getColumnUnpinnedIndex(index));
         }
