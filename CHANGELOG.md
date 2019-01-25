@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
+- `igxAutocomplete` - new directive that provides a way to enhance a text input by showing a panel of suggested options, provided by the developer.
+    ```html
+    <input igxInput type="text" [igxAutocomplete]="townsPanel" />
+    <igx-drop-down #townsPanel>
+        <igx-drop-down-item *ngFor="let town of towns" [value]="town">
+            {{town}}
+        </igx-drop-down-item>
+    </igx-drop-down>
+    ```
 - `igxGrid` now has `isLoading` input property. When enabled will show loading indicator, until the data is available. It can be best utilized for remote scenarios. Another input property `loadingGridTemplate` allows customizing the loading indicator.
     ```html
     <!-- Example -->
