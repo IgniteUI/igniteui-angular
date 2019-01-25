@@ -214,7 +214,7 @@ export class HelperUtils {
     public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 50) {
         const visibleSummaries = HelperUtils.getAllVisibleSummaries(fix);
         visibleSummaries.forEach(summary => {
-            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight);
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight - 1);
             expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
         });
     }

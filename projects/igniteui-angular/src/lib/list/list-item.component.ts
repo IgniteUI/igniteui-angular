@@ -40,6 +40,11 @@ export class IgxListItemComponent implements IListChild {
     private panOffset = 0;
 
     /**
+     *@hidden
+     */
+    private lastPanDir = IgxListPanState.NONE;
+
+    /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
      * const leftPanTmpl = this.listItem.leftPanningTemplateElement;
@@ -165,7 +170,8 @@ export class IgxListItemComponent implements IListChild {
      */
     @HostListener('click', ['$event'])
     clicked(evt) {
-        this.list.onItemClicked.emit({ item: this, event: evt });
+        this.list.onItemClicked.emit({ item: this, event: evt, direction: this.lastPanDir });
+        this.lastPanDir = IgxListPanState.NONE;
     }
 
     /**
@@ -222,6 +228,9 @@ export class IgxListItemComponent implements IListChild {
             return; // no panning has occured
         }
 
+        const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
+        this.lastPanDir = dir;
+
         const oldPanState = this._panState;
         if (Math.abs(relativeOffset) < widthTriggeringGrip) {
             this.setContentElementLeft(0);
@@ -230,7 +239,6 @@ export class IgxListItemComponent implements IListChild {
             return;
         }
 
-        const dir = relativeOffset > 0 ? IgxListPanState.RIGHT : IgxListPanState.LEFT;
         const args = { item: this, direction: dir, keepItem: false};
 
         if (dir === IgxListPanState.LEFT) {

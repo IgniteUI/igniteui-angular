@@ -449,7 +449,6 @@ export class GridFunctions {
         const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
         const close = editingBtns.queryAll(By.css('button'))[1];
         close.nativeElement.click();
-        tick(100);
         fix.detectChanges();
     }
 

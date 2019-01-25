@@ -87,7 +87,7 @@ function generateUniqueKey(target: any, key: string): string {
 /**
  * @hidden
  */
-function showMessage(message: string, isMessageShown: boolean): boolean {
+export function showMessage(message: string, isMessageShown: boolean): boolean {
     if (!isMessageShown && isDevMode()) {
         console.warn(message);
     }
