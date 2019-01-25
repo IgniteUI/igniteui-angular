@@ -157,6 +157,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     @Output()
     public onDataChanged = new EventEmitter<any>();
 
+    @Output()
+    public onBeforeViewDestroyed = new EventEmitter<any>();
+
     /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
@@ -1096,6 +1099,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
+        this.onBeforeViewDestroyed.emit(oldElem);
         oldElem.destroy();
 
         this.state.chunkSize--;
@@ -1288,11 +1292,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (operations.length > 0) {
                     // only update if some operation was done - adding/removing/moving of items
                     this._updateSizeCache();
-                    this._applyChanges(changes);
-                    this.cdr.markForCheck();
-                    this._updateScrollOffset();
-                    this.onDataChanged.emit();
                 }
+                this._applyChanges(changes);
+                this.cdr.markForCheck();
+                this._updateScrollOffset();
+                this.onDataChanged.emit();
             }
         }
     }

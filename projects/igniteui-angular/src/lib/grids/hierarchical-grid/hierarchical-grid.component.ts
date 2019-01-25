@@ -34,6 +34,8 @@ import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent, IgxGridExpandState } from './hierarchical-grid-base.component';
+import { takeUntil } from 'rxjs/operators';
+import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 
 let NEXT_ID = 0;
 
@@ -88,6 +90,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
         this._hierarchicalState = value;
     }
+
+    @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
+    public templateOutlets: QueryList<any>;
+
 
     public get hierarchicalState() {
         return this._hierarchicalState;
@@ -251,6 +257,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
         }
+
+        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+            if (this.isChildGridRecord(view.context.$implicit)) {
+                const index = view.context.index;
+                const tmplOutlet = this.templateOutlets.toArray()[index];
+                tmplOutlet._viewContainerRef.detach(0);
+            }
+        });
     }
 
     /**
