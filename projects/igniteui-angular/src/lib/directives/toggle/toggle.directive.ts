@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { IgxNavigationService, IToggleView } from '../../core/navigation';
 import { IgxOverlayService } from '../../services/overlay/overlay';
-import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../services';
+import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, AbsoluteScrollStrategy, IPositionStrategy } from '../../services';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayCancelableEventArgs } from '../../services/overlay/utilities';
@@ -276,7 +276,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         delete this._overlayId;
         this.onClosed.emit();
         this.unsubscribe();
-    }
+    };
 
     private unsubscribe() {
         this.clearSubscription(this._overlayOpenedSub);
@@ -398,10 +398,28 @@ export class IgxToggleActionDirective implements OnInit {
         if (this.outlet) {
             this._overlayDefaults.outlet = this.outlet;
         }
-        if (this.overlaySettings && this.overlaySettings.positionStrategy && !this.overlaySettings.positionStrategy.settings.target) {
-            this.overlaySettings.positionStrategy.settings.target = this.element.nativeElement;
+
+        const clonedSettings = Object.assign({}, this._overlayDefaults, this.overlaySettings);
+        this.updateOverlaySettings(clonedSettings);
+        this.target.toggle(clonedSettings);
+    }
+
+    /**
+     * Updates provided overlay settings
+     * @param settings settings to update
+     * @returns returns updated copy of provided overlay settings
+     */
+    protected updateOverlaySettings(settings: OverlaySettings): OverlaySettings {
+        if (settings && settings.positionStrategy) {
+            const positionStrategyClone: IPositionStrategy = Object.assign(
+                Object.create(Object.getPrototypeOf(settings.positionStrategy)),
+                settings.positionStrategy);
+
+            positionStrategyClone.settings = Object.assign({}, positionStrategyClone.settings, { 'target': this.element.nativeElement });
+            settings.positionStrategy = positionStrategyClone;
         }
-        this.target.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings));
+
+        return settings;
     }
 }
 
