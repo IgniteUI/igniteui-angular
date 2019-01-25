@@ -1,6 +1,6 @@
 import { IgxInputDirective } from './../directives/input/input.directive';
 // tslint:disable-next-line:max-line-length
-import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit } from '@angular/core';
+import { NgModule, Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild, AfterContentInit, HostBinding } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -20,11 +20,11 @@ import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxSelectItemNavigationDirective } from './select-navigation.directive';
 import { IgxLabelDirective } from '../input-group';
-import { fromEvent, interval } from 'rxjs';
-import { buffer, debounceTime, map } from 'rxjs/operators';
+import { timer, Subscription } from 'rxjs';
+import { CancelableEventArgs } from '../core/utils';
+import { fadeIn, fadeOut } from '../animations/main';
 
 const noop = () => { };
-
 @Component({
     selector: 'igx-select',
     templateUrl: './select.component.html',
@@ -34,8 +34,11 @@ const noop = () => { };
 })
 export class IgxSelectComponent extends IgxDropDownComponent implements ControlValueAccessor, AfterContentInit {
 
-    @ViewChild('inputGroup', { read: IgxInputGroupComponent}) public inputGroup: IgxInputGroupComponent;
-    @ViewChild('input', { read: IgxInputDirective}) public input: IgxInputDirective;
+    /** @hidden @internal TODO: igx-select class hostbind? */
+    public cssClass = false;
+
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent }) public inputGroup: IgxInputGroupComponent;
+    @ViewChild('input', { read: IgxInputDirective }) public input: IgxInputDirective;
     @ContentChildren(forwardRef(() => IgxSelectItemComponent))
     public children: QueryList<IgxSelectItemComponent>;
     @ContentChild(IgxLabelDirective) label: IgxLabelDirective;
@@ -61,6 +64,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
     @Input()
     overlaySettings: OverlaySettings;
 
+    /**
+     * @hidden
+     */
+    @HostBinding('style.maxHeight')
+    public maxHeight = '256px';
 
     /**
      * @hidden
@@ -87,7 +95,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         return this.id + '-list';
     }
 
-    public get selectionValue () {
+    public get selectionValue() {
         const selectedItem = this.selectedItem;
         return selectedItem ? selectedItem.itemText : '';
     }
@@ -142,18 +150,24 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
         }
     }
 
+    public getElementPadding() {
+        return this.input.nativeElement.getBoundingClientRect().x - this.inputGroup.element.nativeElement.getBoundingClientRect().x + `px`;
+    }
     public open(overlaySettings?: OverlaySettings) {
         if (this.disabled) {
             return;
-         }
+        }
         super.open({
             modal: false,
             closeOnOutsideClick: true,
             positionStrategy: new SelectPositioningStrategy(
                 this,
-                { target: this.input.nativeElement }
+                { target: this.inputGroup.element.nativeElement,
+                    closeAnimation: fadeOut,
+                    openAnimation: fadeIn
+                }
             ),
-            scrollStrategy: new AbsoluteScrollStrategy()
+            scrollStrategy: new AbsoluteScrollStrategy(),
         });
     }
 
@@ -165,7 +179,62 @@ export class IgxSelectComponent extends IgxDropDownComponent implements ControlV
                 this.cdr.detectChanges();
             }
         });
-            Promise.resolve().then(() => this.children.notifyOnChanges());
+        Promise.resolve().then(() => this.children.notifyOnChanges());
+    }
+
+    // tslint:disable:member-ordering
+    private inputStream = '';
+    private cancelSub$: Subscription;
+
+    // Key listeners go here
+    public captureKey(event: KeyboardEvent) {
+        if (!event) {
+            return;
+        }
+        this.inputStream += event.key;
+        const focusedItem = this.focusedItem as IgxSelectItemComponent;
+        // select the item
+        if (focusedItem && this.inputStream.length > 1 && focusedItem.itemText.startsWith(this.inputStream)) {
+            return;
+        }
+        this.activateItemByText(this.inputStream);
+        console.log(this.inputStream);
+        if (this.cancelSub$) {
+            this.cancelSub$.unsubscribe();
+        }
+        this.cancelSub$ = timer(500).subscribe(() => {
+            console.log('---');
+            this.inputStream = '';
+        });
+    }
+
+    public activateItemByText(text: string) {
+        const items = this.items as IgxSelectItemComponent[];
+        const activeItemIndex = items.indexOf(this.focusedItem as IgxSelectItemComponent) || 0;
+        // ^ this is focused OR selected if the dd is closed
+        let nextItem = items.slice(activeItemIndex + 1).find(x => !x.disabled && x.itemText.startsWith(text));
+
+        if (!nextItem) {
+            nextItem = items.slice(0, activeItemIndex).find(x => !x.disabled && x.itemText.startsWith(text));
+        }
+
+        if (!nextItem) {
+            return;
+        }
+
+        if (!this.collapsed) {
+            this.navigateItem(items.indexOf(nextItem));
+        } else {
+            this.selectItem(nextItem);
+        }
+    }
+
+    public onToggleOpening(event: CancelableEventArgs) {
+        this.onOpening.emit(event);
+        if (event.cancel) {
+            return;
+        }
+        this.scrollToItem(this.selectedItem);
     }
 }
 

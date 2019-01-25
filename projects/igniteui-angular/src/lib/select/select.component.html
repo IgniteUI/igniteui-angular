@@ -1,12 +1,12 @@
 <igx-input-group #inputGroup class="input-group" [disabled]="disabled" (click)="toggle()">
-        <ng-container ngProjectAs="[igxLabel]">
-            <ng-content select="[igxLabel]"></ng-content>
-        </ng-container>
-        <ng-container ngProjectAs="igx-prefix">
-            <ng-content select="igx-prefix"></ng-content>
-        </ng-container>
+    <ng-container ngProjectAs="[igxLabel]">
+        <ng-content select="[igxLabel]"></ng-content>
+    </ng-container>
+    <ng-container ngProjectAs="igx-prefix">
+        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+    </ng-container>
 
-        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
+        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this" (keyup)="captureKey($event)"
             readonly="true"
             [placeholder]="this.placeholder"
             [value]="this.selectionValue"

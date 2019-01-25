@@ -20,6 +20,7 @@ import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, An
 import { fromEvent, Subject } from 'rxjs';
 import { take, filter, takeUntil } from 'rxjs/operators';
 import { IAnimationParams } from '../../animations/main';
+import { ElasticPositionStrategy } from './position';
 
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay_main.html)
@@ -166,7 +167,10 @@ export class IgxOverlayService implements OnDestroy {
             this.updateSize(info);
             this._overlayInfos.push(info);
 
-            info.originalElementStyle = info.elementRef.nativeElement.style;
+            const elementStyle = info.elementRef.nativeElement.style;
+            if (settings.positionStrategy instanceof ElasticPositionStrategy) {
+                info.originalElementStyleSize = { width: elementStyle.width, height: elementStyle.height };
+            }
             settings.positionStrategy.position(
                 info.elementRef.nativeElement.parentElement,
                 { width: info.initialSize.width, height: info.initialSize.height },
@@ -260,7 +264,10 @@ export class IgxOverlayService implements OnDestroy {
 
         overlayInfo.settings.positionStrategy.position(
             overlayInfo.elementRef.nativeElement.parentElement,
-            { width: overlayInfo.initialSize.width, height: overlayInfo.initialSize.height },
+            {
+                width: overlayInfo.elementRef.nativeElement.parentElement.clientWidth,
+                height: overlayInfo.elementRef.nativeElement.parentElement.clientHeight
+            },
             this._document,
             false,
             overlayInfo.settings.positionStrategy.settings.minSize);
@@ -403,7 +410,13 @@ export class IgxOverlayService implements OnDestroy {
             this._overlayElement.parentElement.removeChild(this._overlayElement);
             this._overlayElement = null;
         }
-        info.elementRef.nativeElement.style = info.originalElementStyle;
+
+        //  restore the element's original width and height if any
+        if (info.originalElementStyleSize) {
+            info.elementRef.nativeElement.style.height = info.originalElementStyleSize.height;
+            info.elementRef.nativeElement.style.width = info.originalElementStyleSize.width;
+        }
+
         this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
     }
 
@@ -507,6 +520,12 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private documentClicked = (ev: Event) => {
+        //  if we get to modal overlay just return - we should not close anything under it
+        //  if we get to non-modal overlay do the next:
+        //   1. Check it has close on outside click. If not go on to next overlay;
+        //   2. If true check if click is on the element. If it is on the element we have closed
+        //  already all previous non-modal with close on outside click elements, so we return. If
+        //  not close the overlay and check next
         for (let i = this._overlayInfos.length; i--;) {
             const info = this._overlayInfos[i];
             if (info.settings.modal) {
@@ -515,7 +534,8 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.closeOnOutsideClick) {
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
                     this.hide(info.id);
-                    // TODO: should we return here too and not closing all no-modal overlays?
+                } else {
+                    return;
                 }
             }
         }

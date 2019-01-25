@@ -4,6 +4,9 @@ All notable changes for each version of this project will be documented in this 
 ## 7.2.0
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
+- `igxDropDown`
+    - `IgxDropDownItemBase` and it's descendants (of which `IgxDropDownItem`) have had their `isSelected` and `isFocused` properties **deprecated**. Instead, use `selected` and `focused` properties.
+
 ## 7.1.2
 ### Features
 - `igx-circular-bar` and `igx-linear-bar` now feature an indeterminate input property. When this property is set to true the indicator will be continually growing and shrinking along the track.
@@ -23,6 +26,39 @@ All notable changes for each version of this project will be documented in this 
             {{ value }}
         </ng-template>
         ```
+
+### Bug Fixes
+
+- When transactions are enabled and delete a row page is changed to first page ([3425](https://github.com/IgniteUI/igniteui-angular/issues/3425))
+- Row selectors header is not updated when commit transactions ([3424](https://github.com/IgniteUI/igniteui-angular/issues/3424))
+- When a column is sorted and change value in a cell after commit and press enter on selected cell the focus is not in the input ([2801](https://github.com/IgniteUI/igniteui-angular/issues/2801))
+- Closing the filter UI cuts the grid on the left ([3451](https://github.com/IgniteUI/igniteui-angular/issues/3451))
+- GroupedRecords class should be hidden for doc generation. ([3483](https://github.com/IgniteUI/igniteui-angular/issues/3483))
+- Badly formatted table in the JP documentation ([3484](https://github.com/IgniteUI/igniteui-angular/issues/3484))
+- Not setting width in percentage on one or more columns results in columns going out of view ([1245](https://github.com/IgniteUI/igniteui-angular/issues/1245))
+- Feature Request : locale property on a grid level ([3455](https://github.com/IgniteUI/igniteui-angular/issues/3455))
+- Excel cannot open the exported data ([3332](https://github.com/IgniteUI/igniteui-angular/issues/3332))
+- API DOC header links on header nav in JP leads to EN product page ([3516](https://github.com/IgniteUI/igniteui-angular/issues/3516))
+- IgxGridHeaderGroupComponent should have preset min width ([3071](https://github.com/IgniteUI/igniteui-angular/issues/3071))
+- Adding a custom svg to snackbar ([3328](https://github.com/IgniteUI/igniteui-angular/issues/3328))
+- Feature request: Using text field input for date and time picker ([2337](https://github.com/IgniteUI/igniteui-angular/issues/2337))
+- Summaries Keyboard navigation issues ([3407](https://github.com/IgniteUI/igniteui-angular/issues/3407))
+- IgxRipple - animate() function not supported in Safari ([3506](https://github.com/IgniteUI/igniteui-angular/issues/3506))
+- Faulty link in Typedoc ([3531](https://github.com/IgniteUI/igniteui-angular/issues/3531))
+- [IE11] igx-grid - Filtering is cleared when clicking filtering chip if resourceString.igx_grid_filter_row_placeholder is set to Japanese character. ([3504](https://github.com/IgniteUI/igniteui-angular/issues/3504))
+- Setting required IgxInput's value not via typing does not clear the invalid style. ([3550](https://github.com/IgniteUI/igniteui-angular/issues/3550))
+- Add bodyTemplate as @Input() for igx-column ([3562](https://github.com/IgniteUI/igniteui-angular/issues/3562))
+- Horizontal scrollbar is not shown when column's width is set to a percentage value. ([3513](https://github.com/IgniteUI/igniteui-angular/issues/3513))
+- When select a date filter the date is not previewed in the input ([3362](https://github.com/IgniteUI/igniteui-angular/issues/3362))
+- Missing locale errors on a browser with non-en language ([3569](https://github.com/IgniteUI/igniteui-angular/issues/3569))
+- igx-action-icon is not vertically aligned in IgxNavbar ([3584](https://github.com/IgniteUI/igniteui-angular/issues/3584))
+- [IE11] igx-grid filtering condition is reverted when typing Japanese character in the filtering textbox. ([3577](https://github.com/IgniteUI/igniteui-angular/issues/3577))
+- TreeGrid has empty space when Summaries are enabled and expand/collapse ([3409](https://github.com/IgniteUI/igniteui-angular/issues/3409))
+- Filtering row: no chip is created while typing Japanese characters on Edge ([3599](https://github.com/IgniteUI/igniteui-angular/issues/3599))
+- PowerShell script should be added in order to apply some rules for deployment of the API DOCS (sassdoc, typedoc) ([3618](https://github.com/IgniteUI/igniteui-angular/issues/3618))
+- igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group. ([3047](https://github.com/IgniteUI/igniteui-angular/issues/3047))
+- Cells' content is shown twice when entering edit mode after searching. ([3637](https://github.com/IgniteUI/igniteui-angular/issues/3637))
+- ng add improvements ([3528](https://github.com/IgniteUI/igniteui-angular/issues/3528))
 
 ## 7.1.1
 ### Bug Fixes
@@ -147,6 +183,24 @@ All notable changes for each version of this project will be documented in this 
 ## 7.0.0
 - Updated package dependencies to Angular 7 ([#3000](https://github.com/IgniteUI/igniteui-angular/pull/3000))
 - Themes: Add dark schemas and mixins (PR [#3025](https://github.com/IgniteUI/igniteui-angular/pull/3025))
+
+## 6.2.5
+
+### Bug Fixes
+- Setting required IgxInput's value not via typing does not clear the invalid style ([3550](https://github.com/IgniteUI/igniteui-angular/issues/3550))
+- igx-grid isn't displayed properly in IE11 when it is inside an igx-tabs-group ([3047](https://github.com/IgniteUI/igniteui-angular/issues/3047)) 
+- igxGrid minimal body height when no total height is set or inferred ([1693](https://github.com/IgniteUI/igniteui-angular/issues/1693))
+- Horizontal scrollbar is not shown when column's width is set to a percentage value ([3513](https://github.com/IgniteUI/igniteui-angular/issues/3513))
+- Visible @hidden tag due to comment structure ([3523](https://github.com/IgniteUI/igniteui-angular/issues/3523))
+- Faulty link in Typedoc ([3531](https://github.com/IgniteUI/igniteui-angular/issues/3531))
+- Several warnings on app launch 6.2.0 RC1 and now 7.0.2 ([2915](https://github.com/IgniteUI/igniteui-angular/issues/2915))
+- For_of directive doesn't scroll to next elements in some cases ([3482](https://github.com/IgniteUI/igniteui-angular/issues/3482))
+- Not setting width in percentage on one or more columns results in columns going out of view ([1245](https://github.com/IgniteUI/igniteui-angular/issues/1245))
+- Calendar test is failing because of wrong selector ([3508](https://github.com/IgniteUI/igniteui-angular/issues/3508))
+- When transactions are enabled and delete a row page is changed to first page ([3425](https://github.com/IgniteUI/igniteui-angular/issues/3425))
+- When a column is sorted and change value in a cell after commit and press enter on selected cell the focus is not in the input ([2801](https://github.com/IgniteUI/igniteui-angular/issues/2801))
+- igxFor with scrollOrientation: horizontal - Almost all the items are not rendered when they don't have width property ([3087](https://github.com/IgniteUI/igniteui-angular/issues/3087))  
+- Pressing ESC on a cell in an editable column throws an error ([3429](https://github.com/IgniteUI/igniteui-angular/issues/3429))
 
 ## 6.2.4
 

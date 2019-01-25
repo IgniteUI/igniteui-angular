@@ -295,7 +295,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     }
 
     private checkValidity() {
-        if (!this.ngControl && this._hasValidators) {
+        if (!this.ngControl && this._hasValidators()) {
             this._valid = this.nativeElement.checkValidity() ? IgxInputState.VALID : IgxInputState.INVALID;
         }
     }
