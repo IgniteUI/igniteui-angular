@@ -184,6 +184,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set data(value: any[]) {
         this._data = value;
         this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
     }
 
     public get scrollWidth() {
@@ -232,6 +236,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Input()
     public emptyGridTemplate: TemplateRef<any>;
+
+    /**
+     * An @Input property that sets a custom template when the `IgxGridComponent` is loading.
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="Data" [loadingGridTemplate]="myTemplate" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    public loadingGridTemplate: TemplateRef<any>;
 
     @Input()
     public get filteringLogic() {
@@ -678,7 +692,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * An @Input property that sets the primary key of the `IgxGridComponent`.
      * ```html
-     * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="6" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [showToolbar]="true" [primaryKey]="'ProductID'" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
@@ -703,6 +717,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get emptyGridMessage(): string {
         return this._emptyGridMessage || this.resourceStrings.igx_grid_emptyGrid_message;
     }
+
+    /**
+     * An @Input property that sets whether the grid is going to show loading indicator.
+     * ```html
+     * <igx-grid #grid [data]="Data" [isLoading]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input() isLoading = false;
+
+    /**
+     * A property that allows the columns to be auto-generated once again after the initialization of the grid.
+     * This will allow to bind the grid to remote data and having auto-generated columns at the same time.
+     * Note that after generating the columns, this property would be disabled to avoid re-creating
+     * columns each time a new data is assigned.
+     * ```typescript
+     *  this.grid.shouldGenerate = true;
+     *  this.remoteData = this.remoteService.remoteData;
+     * ```
+     */
+    public shouldGenerate: boolean;
 
     /**
      * An @Input property that sets the message displayed when there are no records and the grid is filtered.
@@ -1303,6 +1338,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
+    /**
+     * Emitted when changing the focus while navigating with the keyboard.
+     * Return the focused cell or focused group row. This event is cancelable.
+     * ```typescript
+     * changeFocus(event: IGridFocusChangeEventArgs) {
+     *  const changedFocus = event;
+     * }
+     * ```
+     * ```html
+     * * <igx-grid (onFocusChange)="changeFocus($event)"></igx-grid>
+     * ```
+     */
     @Output()
     public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
@@ -1434,6 +1481,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('defaultEmptyGrid', { read: TemplateRef })
     public emptyGridDefaultTemplate: TemplateRef<any>;
+
+    @ViewChild('defaultLoadingGrid', { read: TemplateRef })
+    public loadingGridDefaultTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -2319,13 +2369,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             }
         });
+        this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
     }
 
-    /**
-     * @hidden
-     */
-    public ngAfterContentInit() {
+    protected setupColumns() {
         if (this.autoGenerate) {
             this.autogenerateColumns();
         }
@@ -2337,35 +2385,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._derivePossibleHeight();
 
         this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxColumnComponent>) => {
-                const diff = this.columnListDiffer.diff(change);
-                if (diff) {
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((change: QueryList<IgxColumnComponent>) => {
+            const diff = this.columnListDiffer.diff(change);
+            if (diff) {
 
-                    this.initColumns(this.columnList);
+                this.initColumns(this.columnList);
 
-                    diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                    this.summaryService.clearSummaryCache();
+                    this.calculateGridSizes();
+                    this.onColumnInit.emit(record.item);
+                });
+
+                requestAnimationFrame(() => {
+                    diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                        // Recalculate Summaries
                         this.summaryService.clearSummaryCache();
                         this.calculateGridSizes();
-                        this.onColumnInit.emit(record.item);
+
+                        // Clear Filtering
+                        this.gridAPI.clear_filter(this.id, record.item.field);
+
+                        // Clear Sorting
+                        this.gridAPI.clear_sort(this.id, record.item.field);
                     });
+                });
+            }
+            this.markForCheck();
+        });
+    }
 
-                    requestAnimationFrame(() => {
-                        diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                            // Recalculate Summaries
-                            this.summaryService.clearSummaryCache();
-                            this.calculateGridSizes();
-
-                            // Clear Filtering
-                            this.gridAPI.clear_filter(this.id, record.item.field);
-
-                            // Clear Sorting
-                            this.gridAPI.clear_sort(this.id, record.item.field);
-                        });
-                    });
-                }
-                this.markForCheck();
-            });
+    /**
+     * @hidden
+     */
+    public ngAfterContentInit() {
+        this.setupColumns();
     }
 
     /**
@@ -3926,7 +3981,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected autogenerateColumns() {
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const fields = Object.keys(this.data[0]);
+        const fields = Object.keys(this.data && this.data.length !== 0 ? this.data[0] : []);
         const columns = [];
 
         fields.forEach((field) => {
@@ -3938,6 +3993,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.columnList.reset(columns);
+        if (this.data && this.data.length > 0) {
+            this.shouldGenerate = false;
+        }
     }
 
     /**
@@ -4013,6 +4071,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
         if (this.data && this.dataLength === 0) {
