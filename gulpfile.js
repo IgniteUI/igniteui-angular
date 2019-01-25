@@ -266,11 +266,6 @@ gulp.task('sassdoc-build', [
     'sassdoc-js'
 ])
 
-const TRANSLATIONS_REPO = {
-    NAME: 'igniteui-angular-api-i18n',
-    LINK: `https://github.com/IgniteUI/igniteui-angular-api-i18n`
-};
-
 const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
 
 const TYPEDOC = {
@@ -291,28 +286,20 @@ gulp.task('typedoc-build:import', ['typedoc-build'],
     shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.EXPORT_JSON_PATH}`)
 );
 
-gulp.task('clean-translations:localization:repo', () => {
-    del.sync(`${DOCS_OUTPUT_PATH}/${TRANSLATIONS_REPO.NAME}`)
-});
-
 gulp.task('create:docs-output-path', () => {
     !fs.existsSync(DOCS_OUTPUT_PATH) && fs.mkdirSync(DOCS_OUTPUT_PATH);
 });
-
-gulp.task('copy-translations:localization:repo', ['clean-translations:localization:repo', 'create:docs-output-path'],
-    shell.task(`git -C ${DOCS_OUTPUT_PATH} clone ${TRANSLATIONS_REPO.LINK}`)
-);
 
 gulp.task('typedoc:clean-docs-dir', () => {
     del.sync(`${DOCS_OUTPUT_PATH}typescript`)
 });
 
-gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'copy-translations:localization:repo'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}\\${TRANSLATIONS_REPO.NAME}\\typedoc\\ja --templateStrings ${TYPEDOC.TEMPLATE_STRINGS_PATH} --localize jp`)
+gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'create:docs-output-path', 'typedoc:clean-docs-dir'],
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')} --templateStrings ${TYPEDOC.TEMPLATE_STRINGS_PATH} --localize jp`)
 );
 
-gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'typedoc:clean-docs-dir', 'copy-translations:localization:repo'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${DOCS_OUTPUT_PATH}\\${TRANSLATIONS_REPO.NAME}\\typedoc\\en --localize en`)
+gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'create:docs-output-path', 'typedoc:clean-docs-dir'],
+    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --localize en`)
 );
 
 const SASSDOC = {
@@ -341,8 +328,8 @@ gulp.task('sassdoc-build:import', () => {
         .pipe(sassdoc(options))
 });
 
-gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
-    const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'ja');
+gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir'], () => {
+    const pathTranslations = path.join(__dirname, 'i18nRepo', 'sassdoc', 'ja');
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'jp';
@@ -353,13 +340,10 @@ gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-
         .pipe(sassdoc(options));
 });
 
-gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir', 'copy-translations:localization:repo'], () => {
-    const pathTranslations = path.join(DOCS_OUTPUT_PATH, TRANSLATIONS_REPO.NAME, 'sassdoc', 'en');
+gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir'], () => {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'en';
-    options.render = argv.render;
-    options.json_dir = pathTranslations;
 
     return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
