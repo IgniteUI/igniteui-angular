@@ -277,6 +277,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 tmplOutlet._viewContainerRef.detach(0);
             }
         });
+
+        if (this.parent) {
+            this._displayDensity = this.rootGrid._displayDensity;
+            this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                requestAnimationFrame(() => {
+                    this._displayDensity = this.rootGrid._displayDensity;
+                    if (document.body.contains(this.nativeElement)) {
+                        this.reflow();
+                    } else {
+                        this.updateOnRender = true;
+                    }
+                });
+            });
+        }
     }
 
     /**
@@ -462,7 +476,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 const relatedGrid = this.hgridAPI.getChildGridByID(layoutKey, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
-                    relatedGrid.cdr.detectChanges();
+                    relatedGrid.reflow();
                     relatedGrid.updateOnRender = false;
                 }
             });
