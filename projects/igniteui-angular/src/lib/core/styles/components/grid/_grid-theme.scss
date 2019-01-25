@@ -641,6 +641,19 @@
         color: --var($theme, 'content-text-color');
     }
 
+    %igx-grid__loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 100px;
+
+        > %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
+    }
+
     %grid-scroll {
         grid-row: 6;
         display: flex;
