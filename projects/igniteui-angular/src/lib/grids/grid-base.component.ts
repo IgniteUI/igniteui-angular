@@ -2457,10 +2457,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.reflow();
             if (this.lastSearchInfo.searchText) {
                 this.restoreHighlight(true);
             }
-            this.reflow();
         });
     }
 
