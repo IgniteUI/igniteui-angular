@@ -16,6 +16,10 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
     @ViewChild('grid1') public grid1: IgxGridComponent;
 
+    log(event) {
+        console.log(event);
+    }
+
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 80, resizable: true, movable: true },
@@ -465,6 +469,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 'Contract': false
             }
         ];
+        // this.data = [...this.data, ...this.data, ...this.data];
     }
 
     toggleColumn(name: string) {

@@ -25,8 +25,8 @@ import {
     InjectionToken,
     Optional
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, interval } from 'rxjs';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isNavigationKey, mergeObjects, CancelableEventArgs, flatten } from '../core/utils';
 import { DataType, DataUtil } from '../data-operations/data-util';
@@ -68,6 +68,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { DeprecateMethod } from '../core/deprecateDecorators';
+import { IgxGridSelectionService } from '../core/grid-selection';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2260,6 +2261,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     constructor(
+        protected gridSelection: IgxGridSelectionService,
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
@@ -2304,7 +2306,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.endEdit(true);
         });
         this.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
-        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
+        this.onPagingDone.pipe(takeUntil(this.destroy$)).subscribe(() => { this.endEdit(true); this.gridSelection.clear(); });
         this.onSortingDone.pipe(takeUntil(this.destroy$)).subscribe(() => this.endEdit(true));
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.summaryService.clearSummaryCache();
@@ -4173,6 +4175,95 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public deselectAllRows() {
         this.triggerRowSelectionChange(this.selection.get_empty());
+    }
+
+    clearCellSelection() {
+        this.gridSelection.clear();
+        this.cdr.markForCheck();
+    }
+
+    parseDimensions(event) {
+        const clientRect = this.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect();
+        const [x, y] = [event.clientX, event.clientY];
+        const dimensions = {};
+
+        dimensions['x'] = x;
+        dimensions['y'] = y;
+        dimensions['width'] = clientRect.width;
+        dimensions['height'] = clientRect.height;
+        dimensions['x1'] = clientRect.x;
+        dimensions['x2'] = dimensions['x1'] + clientRect.width;
+        dimensions['y1'] = clientRect.y;
+        dimensions['y2'] = dimensions['y1'] + clientRect.height;
+
+        return dimensions;
+    }
+
+    @Output()
+    onRangeSelection = new EventEmitter<any>();
+
+    dragSelect(event) {
+
+        if (!this.gridSelection.inDragMode) {
+            return;
+        }
+
+        const {x, y, x1, y1, x2, y2 } = this.parseDimensions(event) as any;
+        const isValid = () =>  {
+            if (this.gridSelection.inDragMode) {
+                (document.activeElement as any).blur();
+            }
+            return this.gridSelection.inDragMode;
+        };
+
+        if (x <= (x1 * 1.2)) {
+            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.parentVirtDir.getHorizontalScroll().scrollLeft -= 20);
+        } else if (x >= (x2 * 0.9)) {
+            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.parentVirtDir.getHorizontalScroll().scrollLeft += 20);
+        }
+
+        if (y <= (y1 * 1.2)) {
+            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.verticalScrollContainer.getVerticalScroll().scrollTop -= 20);
+        } else if (y >= (y2 * 0.9)) {
+            interval(100).pipe(takeWhile(isValid)).subscribe(() => this.verticalScrollContainer.getVerticalScroll().scrollTop += 20);
+        }
+
+    }
+
+    out() {
+        // TODO: Do we really need that 🤔
+        this.gridSelection.inDragMode = false;
+    }
+
+
+    setSelection(x1, x2, y1, y2) {
+        this.gridSelection.startNode = [x1, y1];
+        this.gridSelection.updateDragSelection(x2, y2);
+        this.gridSelection.addRangeMeta(x2, y2);
+        this.gridSelection.startNode = null;
+        this.cdr.markForCheck();
+    }
+
+    getSelectedData() {
+        const rs = [];
+        const combined = Array.from(this.gridSelection.selection);
+        const source = (this.filteredData && this.filteredData.length ) ? this.filteredData : this.data;
+        const visibleColumns = this.visibleColumns;
+
+        // TODO: Add boundry check when accessing `source`
+
+        for (const [row, set] of combined) {
+            const arr = Array.from(set);
+            let record = {};
+            for (const each of arr) {
+                record[visibleColumns[each].field] = source[row][visibleColumns[each].field];
+            }
+            rs.push(record);
+            record = {};
+        }
+        console.log(Array.from(this.gridSelection.metaSelection).map(each => JSON.parse(each)));
+        console.log(rs);
+        return rs;
     }
 
     /**

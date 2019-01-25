@@ -30,6 +30,7 @@ import { IgxHierarchicalTransactionService } from '../../services';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxGridSelectionService } from '../../core/grid-selection';
 
 let NEXT_ID = 0;
 
@@ -54,7 +55,7 @@ let NEXT_ID = 0;
     preserveWhitespaces: false,
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
-    providers: [IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
+    providers: [IgxGridSelectionService, IgxGridNavigationService, IgxGridSummaryService, { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent {
@@ -238,6 +239,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
     private _gridAPI: IgxTreeGridAPIService;
 
     constructor(
+        gridSelection: IgxGridSelectionService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent>,
         selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
@@ -252,7 +254,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent {
         filteringService: IgxFilteringService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+            super(gridSelection, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
     }

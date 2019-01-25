@@ -60,6 +60,7 @@ import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
 import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
+import { IgxGridSelectionService } from '../core/grid-selection';
 
 @NgModule({
     declarations: [
@@ -169,6 +170,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnPinningModule
     ],
     providers: [
+        IgxGridSelectionService,
         IgxSelectionAPIService,
         IgxColumnMovingService,
         IgxGridNavigationService,

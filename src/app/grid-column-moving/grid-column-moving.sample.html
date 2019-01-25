@@ -8,13 +8,16 @@
             <igx-grid
                 #grid1
                 [data]="data"
+                selectionType='multi'
+                displayDensity='cosy'
                 [allowFiltering]="true"
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
                 (onColumnMovingEnd)="onColumnMovingEnd($event)"
-                [rowSelectable]="true"
+                (onRangeSelection)="log($event)"
+                [rowSelectable]="false"
                 [paging]="false"
-                [width]="'900px'"
+                width="900px"
                 [height]="'800px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
@@ -26,14 +29,16 @@
                                                     [filterable]="true"
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
-                                                    [hasSummary]="true"
+                                                    [hasSummary]="false"
                                                     [dataType]="c.type">
                 </igx-column>
             </igx-grid>
+            Drag mode: {{ grid1.gridSelection.inDragMode }}
             <div class="sample-buttons">
-                <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
                 <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
+                <button igxButton (click)="grid1.setSelection(1, 10, 1, 10)">Select 💯 cells</button>
+                <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
+                <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
             </div>
         </div>
     </div>

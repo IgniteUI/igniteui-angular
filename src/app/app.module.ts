@@ -23,7 +23,7 @@ import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
-import { MaskSampleComponent } from './mask/mask.sample';
+import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
@@ -144,7 +144,9 @@ const components = [
     TypographySampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
-    GridColumnPercentageWidthsSampleComponent
+    GridColumnPercentageWidthsSampleComponent,
+    DisplayFormatPipe,
+    InputFormatPipe
 ];
 
 @NgModule({
@@ -156,7 +158,7 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
-        IgxGridModule.forRoot(),
+        IgxGridModule,
         IgxTreeGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
