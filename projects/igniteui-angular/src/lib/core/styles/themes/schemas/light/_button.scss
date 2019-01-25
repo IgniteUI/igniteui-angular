@@ -39,6 +39,11 @@
 /// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
+///
+/// @prop {Number} flat-border-radius [.2] - The border radius fraction used for flat button.
+/// @prop {Number} raised-border-radius [.2] - The border radius fraction used for raised button.
+/// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
+/// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
 /// @see $default-palette
 $_light-button: (
 

@@ -11,8 +11,12 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
-/// @param {String} $button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
-///
+
+/// @param {border-radius} $flat-border-radius [null] - The border radius used for flat button.
+/// @param {border-radius} $raised-border-radius [null] - The border radius used for raised button.
+/// @param {border-radius} $fab-border-radius [null] - The border radius used for fab button.
+/// @param {border-radius} $icon-border-radius [null] - The border radius used for icon button.
+
 /// @param {Color} $flat-background [null] - The background color of a flat button.
 /// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
 /// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
@@ -59,6 +63,7 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: igx-button-theme(
@@ -119,12 +124,6 @@
     $name: 'igx-button';
     $button-schema: map-get($schema, $name);
     $theme: apply-palette($button-schema, $palette);
-
-    $flat-border-radius: round-borders($flat-border-radius, 0, 20px);
-    $raised-border-radius: round-borders($raised-border-radius, 0, 20px);
-    $fab-border-radius: round-borders($fab-border-radius, 12, 28px);
-    $icon-border-radius: round-borders($icon-border-radius, 0, 18px);
-
 
     $flat-border-radius: round-borders(
         if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
