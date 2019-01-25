@@ -88,7 +88,7 @@ describe('IgxTreeGrid Component Tests', () => {
                 expect(defaultHeightNum).toBeGreaterThan(300);
                 expect(defaultHeightNum).toBeLessThan(330);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-                expect(grid.rowList.length).toEqual(11);
+                expect(grid.rowList.length).toEqual(12);
         }));
     });
 

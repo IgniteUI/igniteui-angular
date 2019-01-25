@@ -380,7 +380,7 @@ describe('IgxForOf directive -', () => {
 
         it('should detect width change and update initially rendered columns', () => {
             let rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(9);
+            expect(rows.length).toBe(10);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
                 expect(rows[i].children[3].textContent)
@@ -392,7 +392,7 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
 
             rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(9);
+            expect(rows.length).toBe(10);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(9);
                 expect(rows[i].children[4].textContent)
@@ -402,7 +402,7 @@ describe('IgxForOf directive -', () => {
 
         it('should detect height change and update initially rendered rows', () => {
             let rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(9);
+            expect(rows.length).toBe(10);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
                 expect(rows[i].children[2].textContent)
@@ -414,7 +414,7 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
 
             rows = displayContainer.querySelectorAll('igx-display-container');
-            expect(rows.length).toBe(15);
+            expect(rows.length).toBe(16);
             for (let i = 0; i < rows.length; i++) {
                 expect(rows[i].children.length).toBe(7);
                 expect(rows[i].children[2].textContent)
@@ -430,7 +430,7 @@ describe('IgxForOf directive -', () => {
             expect(horizontalScroller).not.toBeNull();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
 
             /** Step 1. Lower the amount of rows to 5. The vertical scrollbar then should not be rendered */
             expect(() => {
@@ -471,7 +471,7 @@ describe('IgxForOf directive -', () => {
             expect(horizontalScroller.scrollLeft).toBe(1000);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
         });
 
         it('should not render vertical scrollbars when number of rows change to 0 after scrolling down', async () => {
@@ -482,7 +482,7 @@ describe('IgxForOf directive -', () => {
             expect(horizontalScroller).not.toBeNull();
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
 
             dg.generateData300x50000(fix.componentInstance);
             fix.detectChanges();
@@ -524,7 +524,7 @@ describe('IgxForOf directive -', () => {
             expect(verticalScroller.scrollTop).toBe(0);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
         });
 
         it('should not render vertical scrollbar when number of rows change to 0 after scrolling right', async () => {
@@ -533,7 +533,7 @@ describe('IgxForOf directive -', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             expect(colsRendered.length).toBe(7);
 
             /** Step 1. Scroll to the right. */
@@ -581,7 +581,7 @@ describe('IgxForOf directive -', () => {
             // expect(horizontalScroller.scrollLeft).toBe(0); To be investigated
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             // expect(colsRendered.length).toBe(4); To be investigated
 
             for (let i = 0; i < rowsRendered.length; i++) {
@@ -597,7 +597,7 @@ describe('IgxForOf directive -', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             expect(colsRendered.length).toBe(7);
 
             /** Step 1. Lower the amount of cols to 3 so there would be no horizontal scrollbar */
@@ -615,7 +615,7 @@ describe('IgxForOf directive -', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             expect(colsRendered.length).toBe(3);
 
             /** Step 2. Scroll down. There should be no errors then and everything should be still the same */
@@ -634,7 +634,7 @@ describe('IgxForOf directive -', () => {
 
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(false);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             expect(colsRendered.length).toBe(3);
 
             /** Step 3. Set the data back to have 300 columns and the horizontal scrollbar should render now. */
@@ -653,7 +653,7 @@ describe('IgxForOf directive -', () => {
             expect(verticalScroller.scrollTop).toBe(1000);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBe(true);
             expect(fix.componentInstance.isHorizontalScrollbarVisible()).toBe(true);
-            expect(rowsRendered.length).toBe(9);
+            expect(rowsRendered.length).toBe(10);
             expect(colsRendered.length).toBe(7);
         });
 
@@ -848,7 +848,7 @@ describe('IgxForOf directive -', () => {
                 const rowsRendered = displayContainer.querySelectorAll('igx-display-container');
                 for (let i = 0; i < 8; i++) {
                     expect(rowsRendered[i].children[1].textContent)
-                        .toBe(fix.componentInstance.data[49991 + i][1].toString());
+                        .toBe(fix.componentInstance.data[49990 + i][1].toString());
                 }
                 wait().then(done);
             });
@@ -892,7 +892,7 @@ describe('IgxForOf directive -', () => {
             expect(chunkPreLoadSpy).toHaveBeenCalledTimes(1);
 
             // change size so that chunk size does not change
-            fix.componentInstance.height = '399px';
+            fix.componentInstance.height = '401px';
             fix.detectChanges();
             await wait();
 
