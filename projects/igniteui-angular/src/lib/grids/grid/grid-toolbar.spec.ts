@@ -507,7 +507,7 @@ describe('IgxGrid - Grid Toolbar', () => {
         grid.columnHiding = true;
         fixture.detectChanges();
 
-        expect(parseInt(grid.toolbar.columnHidingUI.columnsAreaMaxHeight, 10)).toBe(134);
+        expect(parseFloat(grid.toolbar.columnHidingUI.columnsAreaMaxHeight)).toBe(grid.calcHeight * 0.7);
 
         grid.height = '600px';
         tick(100);

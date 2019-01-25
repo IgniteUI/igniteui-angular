@@ -43,7 +43,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
     }
 
     get minHeight() {
-        return this.grid.summaryService.calcMaxSummaryHeight();
+        return this.grid.summaryService.calcMaxSummaryHeight() - 1;
     }
 
     @ViewChildren(IgxSummaryCellComponent, { read: IgxSummaryCellComponent })
