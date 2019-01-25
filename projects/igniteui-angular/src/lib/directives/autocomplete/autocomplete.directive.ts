@@ -8,11 +8,11 @@ import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { CancelableEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy, IScrollStrategy, IPositionStrategy } from '../../services';
-import { ISelectionEventArgs } from '../../drop-down';
-import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { IgxDropDownModule, ISelectionEventArgs } from '../../drop-down';
+import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
 import { IgxInputGroupComponent } from '../../input-group';
-import { IgxOverlayOutletDirective } from 'igniteui-angular';
+import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 //#endregion
 
 /**
