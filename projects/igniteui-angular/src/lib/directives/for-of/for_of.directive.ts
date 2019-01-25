@@ -962,7 +962,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.heightCache[i] :
                 this._getItemSize(item, dimension);
             sum = arr.reduce(reducer, size);
-            if (sum <= availableSize) {
+            if (sum < availableSize) {
                 arr.push(item);
                 length = arr.length;
                 if (i === this.igxForOf.length - 1) {
