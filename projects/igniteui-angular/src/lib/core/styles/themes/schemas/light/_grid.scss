@@ -60,6 +60,8 @@
 /// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the body.
 /// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the summary groups located the footer.
 /// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
+/// @prop {number} grid-elevation [2] - The elevation used for the grid.
+/// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
 /// @see $default-palette
 $_light-grid: (
     header-background: (
@@ -276,5 +278,9 @@ $_light-grid: (
 
     row-highlight: (
         igx-color: ('secondary', 500)
-    )
+    ),
+
+    grid-elevation: 2,
+
+    drag-elevation: 5
 );

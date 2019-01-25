@@ -87,6 +87,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     protected groupingDiffer;
+    private _data;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
 
@@ -115,10 +116,21 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxGridComponent
-     */
+     * @memberof IgxGridBaseComponent
+    */
     @Input()
-    public data: any[];
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+    }
 
     /**
      * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
@@ -676,6 +688,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
    public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
         if (this.dataLength === 0) {

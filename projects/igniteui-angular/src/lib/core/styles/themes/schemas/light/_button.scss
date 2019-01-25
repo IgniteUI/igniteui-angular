@@ -6,33 +6,39 @@
 
 /// Generates a light button schema.
 /// @type {Map}
-/// @property {String} button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
-/// @property {Color} flat-background [transparent] - The background color of a flat button.
-/// @property {Map} flat-text-color [igx-color: ('secondary', 500)] - The idle text color of a flat button.
-/// @property {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .05 ] - The hover background color of a flat button.
-/// @property {Map} flat-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a flat button.
-/// @property {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
-/// @property {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
-/// @property {Map} raised-background [igx-color: ('secondary', 500)] - The background color of a raised button.
-/// @property {Map} raised-text-color [igx-contrast-color: ('secondary', 500)] - The idle text color of a raised button.
-/// @property {Map} raised-hover-background [igx-color: ('secondary', 300)] - The hover background of a raised button.
-/// @property {Map} raised-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a raised button.
-/// @property {Map} raised-focus-background [igx-color: ('secondary', 300)] - The focus background color of a raised button.
-/// @property {Map} raised-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a raised button.
-/// @property {Map} fab-background [igx-color: ('secondary', 500)] - The background color of a floating action button.
-/// @property {Map} fab-text-color [igx-contrast-color: ('secondary', 500)] - The text color of a floating action button.
-/// @property {Map} fab-hover-background [igx-color: ('secondary', 300)] - The hover background color of a floating action button.
-/// @property {Map} fab-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a floating action button.
-/// @property {Map} fab-focus-background [igx-color: ('secondary', 300)] - The focus background color of floating action button.
-/// @property {Map} fab-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a floating action button.
-/// @property {Map} icon-color [igx-color: ('grays', 800)] - The icon color of an icon button.
-/// @property {Map} icon-hover-color [igx-color: ('grays', 800)] - The hover icon color of an icon button.
-/// @property {Color} icon-background [transparent] - The background color of the an icon button.
-/// @property {Map} icon-hover-background [igx-color: ('grays', 100)] - The hover background color of an icon button.
-/// @property {Map} icon-focus-color [igx-color: ('grays', 800)] - The focus icon color of an icon button.
-/// @property {Map} icon-focus-background [igx-color: ('grays', 400] - The focus background color an icon button.
-/// @property {Color} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
-/// @property {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {String} button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
+/// @prop {Color} flat-background [transparent] - The background color of a flat button.
+/// @prop {Map} flat-text-color [igx-color: ('secondary', 500)] - The idle text color of a flat button.
+/// @prop {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .05 ] - The hover background color of a flat button.
+/// @prop {Map} flat-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a flat button.
+/// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
+/// @prop {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
+/// @prop {Map} raised-background [igx-color: ('secondary', 500)] - The background color of a raised button.
+/// @prop {Map} raised-text-color [igx-contrast-color: ('secondary', 500)] - The idle text color of a raised button.
+/// @prop {Map} raised-hover-background [igx-color: ('secondary', 300)] - The hover background of a raised button.
+/// @prop {Map} raised-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a raised button.
+/// @prop {Map} raised-focus-background [igx-color: ('secondary', 300)] - The focus background color of a raised button.
+/// @prop {Map} raised-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a raised button.
+/// @prop {Map} fab-background [igx-color: ('secondary', 500)] - The background color of a floating action button.
+/// @prop {Map} fab-text-color [igx-contrast-color: ('secondary', 500)] - The text color of a floating action button.
+/// @prop {Map} fab-hover-background [igx-color: ('secondary', 300)] - The hover background color of a floating action button.
+/// @prop {Map} fab-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a floating action button.
+/// @prop {Map} fab-focus-background [igx-color: ('secondary', 300)] - The focus background color of floating action button.
+/// @prop {Map} fab-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a floating action button.
+/// @prop {Map} icon-color [igx-color: ('grays', 800)] - The icon color of an icon button.
+/// @prop {Map} icon-hover-color [igx-color: ('grays', 800)] - The hover icon color of an icon button.
+/// @prop {Color} icon-background [transparent] - The background color of the an icon button.
+/// @prop {Map} icon-hover-background [igx-color: ('grays', 100)] - The hover background color of an icon button.
+/// @prop {Map} icon-focus-color [igx-color: ('grays', 800)] - The focus icon color of an icon button.
+/// @prop {Map} icon-focus-background [igx-color: ('grays', 400] - The focus background color an icon button.
+/// @prop {Color} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
+/// @prop {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
 /// @see $default-palette
 $_light-button: (
     button-roundness: 4px,
@@ -138,5 +144,13 @@ $_light-button: (
 
     disabled-background: (
         igx-color: ('grays', 100)
-    )
+    ),
+
+    raised-resting-elevation: 2,
+    raised-hover-elevation: 4,
+    raised-focus-elevation: 8,
+
+    fab-resting-elevation: 6,
+    fab-hover-elevation: 12,
+    fab-focus-elevation: 12
 );
