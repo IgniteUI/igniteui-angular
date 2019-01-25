@@ -36,10 +36,4 @@
     .igniteui-logo__rocket {
         fill: rgba(white, .38);
     }
-
-    $my-button: igx-button-theme(
-        $fab-background: red
-    );
-
-    @include igx-button($my-button)
 }

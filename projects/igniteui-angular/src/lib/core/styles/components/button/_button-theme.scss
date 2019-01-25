@@ -60,10 +60,10 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
-    $roundness-flat: null,
-    $roundness-raised: null,
-    $roundness-fab: null,
-    $roundness-icon: null,
+    $flat-border-radius: null,
+    $raised-border-radius: null,
+    $fab-border-radius: null,
+    $icon-border-radius: null,
 
     $flat-text-color: null,
     $flat-background: null,
@@ -100,27 +100,28 @@
     $button-schema: map-get($schema, $name);
     $theme: apply-palette($button-schema, $palette);
 
-    $roundness-flat: round-borders($roundness-flat, 0, 20px);
-    $roundness-raised: round-borders($roundness-raised, 0, 20px);
-    $roundness-fab: round-borders($roundness-fab, 12, 28px);
-    $roundness-icon: round-borders($roundness-icon, 0, 18px);
+    $flat-border-radius: round-borders($flat-border-radius, 0, 20px);
+    $raised-border-radius: round-borders($raised-border-radius, 0, 20px);
+    $fab-border-radius: round-borders($fab-border-radius, 12, 28px);
+    $icon-border-radius: round-borders($icon-border-radius, 0, 18px);
 
 
-    @if not($roundness-raised) {
-        $roundness-raised: round-borders(map-get($button-schema, 'roundness-raised'), 0, 20px);
-    }
+    $flat-border-radius: round-borders(
+        if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
+    );
 
-    @if not($roundness-flat) {
-        $roundness-flat: round-borders(map-get($button-schema, 'roundness-flat'), 0, 20px);
-    }
+    $raised-border-radius: round-borders(
+        if($raised-border-radius, $raised-border-radius, map-get($button-schema, 'raised-border-radius')), 0, 20px
+    );
 
-    @if not($roundness-icon) {
-        $roundness-icon: round-borders(map-get($button-schema, 'roundness-icon'), 0, 18px);
-    }
+    $fab-border-radius: round-borders(
+        if($fab-border-radius, $fab-border-radius, map-get($button-schema, 'fab-border-radius')), 12, 28px
+    );
 
-    @if not($roundness-fab) {
-        $roundness-fab: round-borders(map-get($button-schema, 'roundness-fab'), 12, 28px);
-    }
+    $icon-border-radius: round-borders(
+        if($icon-border-radius, $icon-border-radius, map-get($button-schema, 'icon-border-radius')), 0, 20px
+    );
+
 
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
@@ -206,10 +207,10 @@
         name: $name,
         palette: $palette,
 
-        roundness-flat: $roundness-flat,
-        roundness-raised: $roundness-raised,
-        roundness-fab: $roundness-fab,
-        roundness-icon: $roundness-icon,
+        flat-border-radius: $flat-border-radius,
+        raised-border-radius: $raised-border-radius,
+        fab-border-radius: $fab-border-radius,
+        icon-border-radius: $icon-border-radius,
 
         flat-text-color: $flat-text-color,
         flat-background: $flat-background,
@@ -296,7 +297,7 @@
     %igx-button--flat {
         background: --var($theme, 'flat-background');
         color: --var($theme, 'flat-text-color');
-        border-radius: --var($theme, 'roundness-flat');
+        border-radius: --var($theme, 'flat-border-radius');
 
         &:hover {
             background: --var($theme, 'flat-hover-background');
@@ -314,7 +315,7 @@
         color: --var($theme, 'raised-text-color');
         background: --var($theme, 'raised-background');
         box-shadow: $button-raised-shadow;
-        border-radius: --var($theme, 'roundness-raised');
+        border-radius: --var($theme, 'raised-border-radius');
 
         &:focus,
         &:hover {
@@ -337,7 +338,7 @@
         justify-content: center;
         align-items: center;
         border: $button-border;
-        border-radius: --var($theme, 'roundness-fab');
+        border-radius: --var($theme, 'fab-border-radius');
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -354,7 +355,7 @@
         color: --var($theme, 'fab-text-color');
         background: --var($theme, 'fab-background');
         box-shadow: $button-floating-shadow;
-        border-radius: --var($theme, 'roundness-fab');
+        border-radius: --var($theme, 'fab-border-radius');
 
         &:hover {
             box-shadow: $button-floating-hover-shadow;
@@ -376,7 +377,7 @@
         padding: $button-icon-padding;
         color: --var($theme, 'icon-color');
         background: --var($theme, 'icon-background');
-        border-radius: --var($theme, 'roundness-icon');
+        border-radius: --var($theme, 'icon-border-radius');
 
         &:hover {
             transition: $button-transition;
