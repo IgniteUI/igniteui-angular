@@ -113,6 +113,11 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         }
         return returnVals;
     }
+
+    private adjustItemTextPadding(): number {
+        return 8; // current styling item text padding
+    }
+
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, minSize?: Size): void {
         const inputRect = this.select.input.nativeElement.getBoundingClientRect();
         const inputGroupRect = this.select.inputGroup.element.nativeElement.getBoundingClientRect();
@@ -166,7 +171,8 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         }
         let transformString = '';
         transformString += `translateX(${START.X + this.settings.horizontalDirection * size.width}px) `;
-        transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height}px)`;
+        transformString += `translateY(${CURRENT_POSITION_Y + this.settings.verticalDirection * size.height -
+            this.adjustItemTextPadding()}px)`;
         contentElement.style.transform = transformString.trim();
         const boundingRect = contentElement.getBoundingClientRect();
         // if (this.LIST_OUT_OF_BOUNDS({ top: boundingRect.top, bottom: boundingRect.bottom }, document)) {

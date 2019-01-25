@@ -27,8 +27,8 @@ export class SelectSampleComponent implements OnInit {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
     public ngOnInit() {
-        for (let i = 1; i < 5; i ++) {
-            const item = { field: 'Option ' + i };
+        for (let i = 1; i < 15; i ++) {
+            const item = { field: 'opt' + i };
             this.items.push(item);
         }
     }
