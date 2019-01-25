@@ -10,7 +10,8 @@ import {
     Output,
     Renderer2,
     SimpleChanges,
-    AfterViewChecked
+    AfterViewChecked,
+    SimpleChange
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -43,7 +44,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
-    private _oldValue: any;
+    private _valueChanged: boolean;
 
     /**
      * Determines the `CSS` class of the highlight elements.
@@ -223,7 +224,9 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngOnChanges(changes: SimpleChanges) {
-        if ((changes.row !== undefined && !changes.row.firstChange) ||
+        if (changes.value && !changes.value.firstChange) {
+            this._valueChanged = true;
+        } else if ((changes.row !== undefined && !changes.row.firstChange) ||
             (changes.column !== undefined && !changes.column.firstChange) ||
             (changes.page !== undefined && !changes.page.firstChange)) {
             if (this._activeElementIndex !== -1) {
@@ -262,10 +265,10 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
      * @hidden
      */
     ngAfterViewChecked() {
-        if (this.value !== this._oldValue) {
+        if (this._valueChanged) {
             this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
             this.activateIfNecessary();
-            this._oldValue = this.value;
+            this._valueChanged = false;
         }
     }
 
