@@ -179,7 +179,7 @@ gulp.task('typedoc-copy-config', () => {
 });
 
 gulp.task('typedoc-images', ['typedoc:clean-images'], () => {
-    return gulp.src(`${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,gif,jpg}`)
+    return gulp.src(`${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,gif,jpg,svg}`)
         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/images`));
 });
 
