@@ -50,6 +50,9 @@ All notable changes for each version of this project will be documented in this 
                 </igx-drop-down-item-group>
             </igx-drop-down>
         ```
+ - `Theme Elevations & Shadows` - Components with shadows, set by an elevation level or otherwise, are now fully configurable by the user via schema and/or theme properties. User can also provide a custom elevations set to component themes that support them.
+    - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
+
 
 ## 7.1.2
 ### Features

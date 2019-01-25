@@ -6,9 +6,10 @@
 
 /// Generates a light bottom navigation scheme.
 /// @type {Map}
-/// @property {Color} background [#fff] - The background color used for the toast.
-/// @property {Color} idle-item-color [igx-color: ('grays', 700)] - The text-color used for the idle color.
-/// @property {Color} active-item-color [igx-color: ('primary', 500)] - The text-color used for the active color.
+/// @prop {Color} background [#fff] - The background color used for the toast.
+/// @prop {Color} idle-item-color [igx-color: ('grays', 700)] - The text-color used for the idle color.
+/// @prop {Color} active-item-color [igx-color: ('primary', 500)] - The text-color used for the active color.
+/// @prop {number} elevation [8] - The elevation level of the bar.
 /// @see $default-palette
 
 $_light-bottom-nav: (
@@ -20,5 +21,7 @@ $_light-bottom-nav: (
 
     active-item-color: (
         igx-color: ('primary', 500)
-    )
+    ),
+
+    elevation: 8
 );

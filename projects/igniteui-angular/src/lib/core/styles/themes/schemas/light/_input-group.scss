@@ -7,36 +7,38 @@
 /// Generates a light input-group schema.
 /// @type {Map}
 ///
-/// @property {map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
-/// @property {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
-/// @property {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
-/// @property {map} disabled-text-color [igx-color: ('grays', 500)] - The input text color in the disabled state.
+/// @prop {map} idle-text-color [igx-color: ('grays', 600)] - The input text color in the idle state.
+/// @prop {map} filled-text-color [igx-color: ('grays', 900)] - The input text color in the filled state.
+/// @prop {map} focused-text-color [igx-color: ('grays', 900)] - The input text color in the focused state.
+/// @prop {map} disabled-text-color [igx-color: ('grays', 500)] - The input text color in the disabled state.
 ///
-/// @property {map} idle-secondary-color [igx-color: ('grays', 600)] - The label color in the idle state.
-/// @property {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
-/// @property {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
+/// @prop {map} idle-secondary-color [igx-color: ('grays', 600)] - The label color in the idle state.
+/// @prop {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
+/// @prop {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
 ///
-/// @property {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
-/// @property {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
-/// @property {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
-/// @property {map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
-/// @property {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
-/// @property {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border.
+/// @prop {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
+/// @prop {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
+/// @prop {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
+/// @prop {map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
+/// @prop {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
+/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border.
 ///
-/// @property {map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
-/// @property {map} box-disabled-background [igx-color: ('grays', 50)] - The background color of an input group of type box in the disabled state.
+/// @prop {map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
+/// @prop {map} box-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type box in the disabled state.
 ///
-/// @property {Color} border-background [transparent] - The background color of an input group of type border.
-/// @property {map} border-disabled-background [igx-color: ('grays', 50)] - The background color of an input group of type border in the disabled state.
+/// @prop {Color} border-background [transparent] - The background color of an input group of type border.
+/// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
-/// @property {Color} search-background [#fff] - The background color of an input group of type search.
-/// @property {Color} search-disabled-background [#fff] - The background color of an input group of type search in the disabled state.
-/// @property {map} search-shadow-color [igx-color: ('grays', 600)] - The shadow color of an input group of type search.
-/// @property {map} search-disabled-shadow-color [igx-color: ('grays', 300)] - The shadow color of an input group of type search in the disabled state.
+/// @prop {Color} search-background [#fff] - The background color of an input group of type search.
+/// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
 ///
-/// @property {map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
-/// @property {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
-/// @property {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
+/// @prop {Number} search-resting-elevation [1] - The elevation level, between 0-24, to be used for the resting state of the search input.
+/// @prop {Number} search-hover-elevation [2] - The elevation level, between 0-24, to be used for the hover state of the search input.
+/// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
+///
+/// @prop {map} success-secondary-color [igx-color: ('success')] - The success color used in the valid state.
+/// @prop {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
+/// @prop {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
 ///
 /// @see $default-palette
 
@@ -101,25 +103,26 @@ $_light-input-group: (
     ),
 
     box-disabled-background: (
-        igx-color: ('grays', 50)
+        igx-color: ('grays', 100)
     ),
 
     border-background: transparent,
 
     border-disabled-background: (
-        igx-color: ('grays', 50)
+        igx-color: ('grays', 100)
     ),
 
     search-background: #fff,
-    search-disabled-background: #fff,
 
-    search-shadow-color: (
-        igx-color: ('grays', 600)
+    search-disabled-background: (
+        igx-color: ('grays', 100)
     ),
 
-    search-disabled-shadow-color: (
-        igx-color: ('grays', 300)
-    ),
+    search-resting-elevation: 1,
+
+    search-hover-elevation: 2,
+
+    search-disabled-elevation: 0,
 
     success-secondary-color: (
         igx-color: ('success')
