@@ -18,8 +18,8 @@ All notable changes for each version of this project will be documented in this 
         <!-- customize combo input --->
         <igx-combo #myCombo [data]="myGenres">
             ...
-            <ng-template igxComboToggleIcon let-item>
-                <igx-icon>{{ item.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+            <ng-template igxComboToggleIcon let-collapsed>
+                <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
             </ng-template>
         </igx-combo>
     ```

@@ -342,8 +342,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <!-- Set in markup -->
      *  <igx-combo #combo>
      *      ...
-     *      <ng-template igxComboToggleIcon let-comboContext>
-     *          <igx-icon>{{ comboContext.collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+     *      <ng-template igxComboToggleIcon let-collapsed>
+     *          <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
      *      </ng-template>
      *  </igx-combo>
      * ```
@@ -363,7 +363,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * <!-- Set in markup -->
      *  <igx-combo #combo>
      *      ...
-     *      <ng-template igxComboClearIcon let-combo>
+     *      <ng-template igxComboClearIcon>
      *          <igx-icon>clear</igx-icon>
      *      </ng-template>
      *  </igx-combo>
