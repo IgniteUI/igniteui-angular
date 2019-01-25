@@ -11,6 +11,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DataType } from '../../data-operations/data-util';
 
 describe('IgxGrid - search API', () => {
     configureTestSuite();
@@ -462,6 +463,48 @@ describe('IgxGrid - search API', () => {
             highlights = cellName.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
+        });
+
+        it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
+            grid.columns[0].dataType = DataType.Number;
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(0, 'ID').nativeElement;
+            let activeHighlight: any;
+            let highlights: any[];
+
+            grid.findNext('1');
+
+            activeHighlight = cell.querySelector('.' + component.activeClass);
+            highlights = cell.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.columns[0].hidden = true;
+            fix.detectChanges();
+
+            grid.columns[0].hidden = false;
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(0, 'ID').nativeElement;
+            highlights = cell.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(cell.innerText).toBe('1');
+        });
+
+        it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
+            pending('Related to the bug 3691');
+            grid.columns[1].hidden = true;
+            fix.detectChanges();
+
+            let finds =  grid.findNext('Director');
+            expect(finds).toEqual(2);
+
+            grid.columns[2].hidden = true;
+            fix.detectChanges();
+
+            finds =  grid.findNext('Director');
+            expect(finds).toEqual(0);
         });
 
         it('Clear filter properly updates the highlights', async () => {

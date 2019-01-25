@@ -8,7 +8,8 @@ import {
     forwardRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    DoCheck
+    DoCheck,
+    ElementRef
 } from '@angular/core';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
@@ -174,6 +175,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     constructor(private cdr: ChangeDetectorRef,
                 public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+                private element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }
 
@@ -194,7 +196,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             this.colResizingService.column = this.column;
             this.colResizingService.showResizer = true;
             this.colResizingService.isColumnResizing = true;
-            this.colResizingService.resizerHeight = this.column.grid.calcResizerHeight;
+            this.colResizingService.resizerHeight = this.calcResizerHeight;
             this.colResizingService.startResizePos = event.clientX;
         } else {
             this.colResizingService.resizeCursor = null;
@@ -209,5 +211,30 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
             this.colResizingService.column = this.column;
             this.colResizingService.autosizeColumnOnDblClick();
          }
+    }
+
+    /**
+     * @hidden
+     */
+    get height() {
+        return this.element.nativeElement.getBoundingClientRect().height;
+    }
+
+    /**
+     * @hidden
+     */
+    get calcResizerHeight(): number {
+
+        let height = this.column.grid.theadRow.nativeElement.clientHeight + this.column.grid.tbody.nativeElement.clientHeight;
+
+        if (this.column.grid.hasSummarizedColumns) {
+            height += this.column.grid.tfoot.nativeElement.clientHeight;
+        }
+
+        if (this.column.level !== 0) {
+            height -= this.column.topLevelParent.headerGroup.height - this.column.headerGroup.height;
+        }
+
+        return height;
     }
 }

@@ -21,6 +21,10 @@
     }
 
     @include e(thead) {
+        @extend %grid-thead-container !optional;
+    }
+
+    @include e(thead-wrapper) {
         @extend %grid-thead !optional;
 
         igx-display-container {
@@ -50,12 +54,24 @@
         @extend %grid-thead-item !optional;
     }
 
+    @include e(thead-thumb) {
+        @extend %grid-thead-thumb !optional;
+    }
+
     @include e(tbody) {
+        @extend %grid-tbody-container !optional;
+    }
+
+    @include e(tbody-content) {
         @extend %grid-tbody !optional;
     }
 
     @include e(tbody-message) {
         @extend %grid-tbody-message !optional;
+    }
+
+    @include e(tbody-scrollbar) {
+        @extend %grid-tbody-scrollbar !optional;
     }
 
     @include e(scroll) {
@@ -72,6 +88,10 @@
 
     @include e(tfoot) {
         @extend %grid-tfoot !optional;
+    }
+
+    @include e(tfoot-thumb) {
+        @extend %grid-tfoot-thumb !optional;
     }
 
     @include e(tr) {
@@ -410,7 +430,7 @@
             @extend %grid-cell-display--cosy !optional;
         }
 
-        @include e(thead) {
+        @include e(thead-wrapper) {
             @extend %grid-thead--cosy !optional;
         }
 
@@ -498,7 +518,7 @@
             @extend %grid-cell-display--compact !optional;
         }
 
-        @include e(thead) {
+        @include e(thead-wrapper) {
             @extend %grid-thead--compact !optional;
         }
 
