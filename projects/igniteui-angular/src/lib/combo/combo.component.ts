@@ -24,7 +24,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/drop-down.component';
+import { IgxDropDownModule } from '../drop-down/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
