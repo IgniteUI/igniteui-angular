@@ -161,9 +161,19 @@ describe('IgxAutocomplete', () => {
             expect(dropDownAny.scrollContainer.getBoundingClientRect().width)
                 .toEqual(group.element.nativeElement.getBoundingClientRect().width);
         }));
-        it('Aria', fakeAsync(() => {}));
+        it('Aria and attributes', fakeAsync(() => {
+            expect(input.nativeElement.attributes['autocomplete'].value).toMatch('off');
+            expect(input.nativeElement.attributes['role'].value).toMatch('combobox');
+            expect(input.nativeElement.attributes['aria-haspopup'].value).toMatch('listbox');
+            expect(input.nativeElement.attributes['aria-owns'].value).toMatch(dropDown.id);
+            expect(input.nativeElement.attributes['aria-expanded'].value).toMatch('false');
+            UIInteractions.sendInput(input, 's', fixture);
+            fixture.detectChanges();
+            tick();
+            expect(input.nativeElement.attributes['aria-expanded'].value).toMatch('true');
+            this.dropDown.close();
+        }));
         it('ReactiveForm', fakeAsync(() => {}));
-        it('On HTML input', fakeAsync(() => {}));
         it('On textarea', fakeAsync(() => {}));
     });
 

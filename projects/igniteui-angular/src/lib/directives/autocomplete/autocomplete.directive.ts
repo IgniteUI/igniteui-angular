@@ -146,7 +146,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     @HostBinding('attr.aria-owns')
     public get ariaOwns() {
-        return this.id;
+        return this.dropDown.id;
     }
 
     @HostListener('input', ['$event'])
