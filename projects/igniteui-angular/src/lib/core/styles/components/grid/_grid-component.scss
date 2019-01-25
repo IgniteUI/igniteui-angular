@@ -70,6 +70,10 @@
         @extend %grid-tbody-message !optional;
     }
 
+    @include e(loading) {
+        @extend %igx-grid__loading !optional;
+    }
+
     @include e(tbody-scrollbar) {
         @extend %grid-tbody-scrollbar !optional;
     }

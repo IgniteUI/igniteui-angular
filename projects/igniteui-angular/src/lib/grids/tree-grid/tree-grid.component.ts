@@ -62,6 +62,7 @@ let NEXT_ID = 0;
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
+    private _data;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -91,7 +92,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 	 * @memberof IgxTreeGridComponent
      */
     @Input()
-    public data: any[];
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+    }
 
     /**
      * Returns an array of objects containing the filtered data in the `IgxGridComponent`.
@@ -531,6 +543,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
         if (this.dataLength === 0) {

@@ -59,6 +59,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private _scrollTop = 0;
     private _scrollLeft = 0;
     private _hierarchicalState = [];
+    private _data;
     private _filteredData = null;
     public highlightedRowID = null;
     public updateOnRender = false;
@@ -75,10 +76,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * ```html
      * <igx-grid [data]="Data" [autoGenerate]="true"></igx-grid>
      * ```
-	 * @memberof IgxHierarchicalGridComponent
+     * @memberof IgxHierarchicalGridComponent
      */
     @Input()
-    public data: any[];
+    public get data(): any[] {
+        return this._data;
+    }
+
+    public set data(value: any[]) {
+        this._data = value;
+        this.summaryService.clearSummaryCache();
+        if (this.shouldGenerate) {
+            this.setupColumns();
+            this.reflow();
+        }
+    }
 
     @Input()
     public set hierarchicalState(value) {
@@ -291,6 +303,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
    public get template(): TemplateRef<any> {
         if (this.filteredData && this.filteredData.length === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
+        }
+
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
+            return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }
 
         if (this.dataLength === 0) {

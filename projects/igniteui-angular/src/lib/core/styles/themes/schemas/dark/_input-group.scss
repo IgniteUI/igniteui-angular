@@ -9,12 +9,10 @@
 /// Generates a light input-group schema.
 /// @type {Map}
 /// @prop {Color} search-background [#222] - The background color of an input group of type search.
-/// @prop {Color} search-disabled-background [darken(#222, 5%)] - The background color of an input group of type search in the disabled state.
 /// @requires {function} extend
 /// @requires $_light-input-group
 /// @see $default-palette
 
 $_dark-input-group: extend($_light-input-group, (
-    search-background: #222,
-    search-disabled-background: darken(#222, 5%)
+    search-background: #222
 ));
