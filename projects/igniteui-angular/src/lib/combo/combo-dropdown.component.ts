@@ -19,6 +19,8 @@ import { Navigate } from '../drop-down/drop-down.common';
     providers: [{ provide: IgxDropDownBase, useExisting: IgxComboDropDownComponent }]
 })
 export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterViewInit, OnDestroy {
+    /** These items present in the drop-down list but are not visible */
+    private _extraVirtaulItems = 2;
     private _children: QueryList<IgxDropDownItemBase>;
     private _scrollPosition = 0;
     private destroy$ = new Subject<boolean>();
@@ -236,7 +238,8 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
             }
         }
         let targetDataIndex = newIndex === -1 ? this.itemIndexInData(this.focusedItem.index) + 1 : this.itemIndexInData(newIndex);
-        const lastLoadedIndex = vContainer.state.startIndex + vContainer.state.chunkSize - 1; // Last item is not visible, so require scroll
+         // Last item is not visible, so require scroll
+        const lastLoadedIndex = vContainer.state.startIndex + vContainer.state.chunkSize - this._extraVirtaulItems;
         if (targetDataIndex < lastLoadedIndex) { // If no scroll is required
             if (newIndex !== -1 || newIndex === children.length - 1 - extraScroll) { // Use normal nav for visible items
                 super.navigateItem(newIndex);
@@ -249,15 +252,16 @@ export class IgxComboDropDownComponent extends IgxDropDownBase implements AfterV
             targetDataIndex += addedIndex; // Add steps to the target index
             if (addedIndex === -1) { // If there are no more non-header items & add button is visible
                 this.focusAddItemButton();
-            } else if (targetDataIndex === allData.length - 1 && !this.isScrolledToLast) {
+            } else if (targetDataIndex >= allData.length - this._extraVirtaulItems && !this.isScrolledToLast) {
                 // If target is very last loaded item, but scroll is not at the bottom (item is in DOM but not visible)
                 vContainer.scrollTo(targetDataIndex); // This will not trigger `onChunkLoad`
-                super.navigateItem(items.length - 1 - extraScroll); // Target last item (excluding Add Button)
+                super.navigateItem(newIndex); // Target last item (excluding Add Button)
             } else { // Perform virtual scroll
                 this.subscribeNext(vContainer, () => {
                     // children = all items in the DD (including addItemButton)
                     // length - 2 instead of -1, because we do not want to focus the last loaded item (in DOM, but not visible)
-                    super.navigateItem(children[children.length - 2 - extraScroll].index); // Focus last item (excluding Add Button)
+                     // Focus last item (excluding Add Button)
+                    super.navigateItem(children[children.length - 1 - this._extraVirtaulItems - extraScroll].index);
                 });
                 vContainer.scrollTo(targetDataIndex); // Perform virtual scroll
             }
