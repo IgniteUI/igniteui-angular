@@ -10,6 +10,7 @@
 /// @property {map} background [igx-color: ('grays', 900)] - The background color used in the snackbar.
 /// @property {map} text-color [igx-contrast-color: ('grays', 900)] - The text color used in the snackbar.
 /// @property {map} button-color [igx-color: ('secondary', 500)] - The button color used in the snackbar.
+/// @property {number} elevation [4] - The elevation level (shadow) used in the snackbar.
 ///
 /// @see $default-palette
 
@@ -24,5 +25,7 @@ $_light-snackbar: (
 
     button-color: (
         igx-color: ('secondary', 500)
-    )
+    ),
+
+    elevation: 4
 );
