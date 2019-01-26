@@ -17,6 +17,8 @@
 /// @param {box-shadow} $resting-shadow [null] - The shadow of the card in its resting state.
 /// @param {box-shadow} $hover-shadow [null] - The shadow of the card in its hover state.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for card component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -37,6 +39,7 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
+    $border-radius: null,
     $background: null,
     $header-text-color: null,
     $subtitle-text-color: null,
@@ -47,8 +50,11 @@
 ) {
     $name: 'igx-card';
     $card-schema: map-get($schema, $name);
-
     $theme: apply-palette($card-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($card-schema, 'border-radius')),0 ,24px
+    );
 
     @if not($header-text-color) and $background {
         $header-text-color: text-contrast($background);
@@ -80,6 +86,7 @@
         name: $name,
         palette: $palette,
         background: $background,
+        border-radius: $border-radius,
         header-text-color: $header-text-color,
         subtitle-text-color: $subtitle-text-color,
         content-text-color: $content-text-color,
@@ -97,7 +104,6 @@
 @mixin igx-card($theme) {
     @include igx-root-css-vars($theme);
 
-    $card-border-radius: 4px;
     $card-title-fz: em(24px, 16px);
     $card-title-line-height: em(24px, 16px);
     $card-subtitle-line-height: em(24px, 16px);
@@ -119,7 +125,7 @@
         flex-flow: row wrap;
         box-shadow: --var($theme, 'resting-shadow');
         overflow: hidden;
-        border-radius: $card-border-radius;
+        border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
