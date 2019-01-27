@@ -25,7 +25,7 @@
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
 /// @see $default-palette
 $_light-chip: (
-    roundness: rem(32px),
+    roundness: 1,
 
     text-color: (
         igx-color: ('grays', 700)

@@ -70,7 +70,12 @@
     $focus-selected-border-color: null
 ) {
     $name: 'igx-chip';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $chip-schema: map-get($schema, $name);
+    $theme: apply-palette($chip-schema, $palette);
+
+    $roundness: round-borders(
+        if($roundness, $roundness, map-get($chip-schema, 'roundness')), 0, 20px
+    );
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
