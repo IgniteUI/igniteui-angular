@@ -1,3 +1,4 @@
+import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const FEBRUARY = 1;
@@ -45,6 +46,66 @@ export function monthRange(year: number, month: number): number[] {
         nDays++;
     }
     return [day, nDays];
+}
+
+export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boolean {
+    date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const dateInMs = date.getTime();
+
+    for (const descriptor of ranges) {
+        const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
+            r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
+        switch (descriptor.type) {
+            case (DateRangeType.After):
+                if (dateInMs > dRanges[0].getTime()) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Before):
+                if (dateInMs < dRanges[0].getTime()) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Between):
+                const dRange = dRanges.map(d => d.getTime());
+                const min = Math.min(dRange[0], dRange[1]);
+                const max = Math.max(dRange[0], dRange[1]);
+                if (dateInMs >= min && dateInMs <= max) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Specific):
+                const datesInMs = dRanges.map(d => d.getTime());
+                for (const specificDateInMs of datesInMs) {
+                    if (dateInMs === specificDateInMs) {
+                        return true;
+                    }
+                }
+
+                break;
+            case (DateRangeType.Weekdays):
+                const day = date.getDay();
+                if (day % 6 !== 0) {
+                    return true;
+                }
+
+                break;
+            case (DateRangeType.Weekends):
+                const weekday = date.getDay();
+                if (weekday % 6 === 0) {
+                    return true;
+                }
+
+                break;
+            default:
+                return false;
+        }
+    }
+
+    return false;
 }
 
 export interface ICalendarDate {
@@ -130,6 +191,7 @@ export class Calendar {
 
             value = this.generateICalendarDate(date, year, month);
             res.push(value);
+
             date = this.timedelta(date, 'day', 1);
 
             if ((date.getMonth() !== month) && (date.getDay() === this.firstWeekDay)) {
@@ -269,15 +331,4 @@ export class Calendar {
 
         return date.getFullYear() > year;
     }
-}
-
-export const IGX_CALENDAR_COMPONENT = 'IgxCalendarComponentToken';
-
-export interface IgxCalendarBase {
-    value: Date | Date[];
-    selection: string;
-    isCurrentYear(value: Date): boolean;
-    isCurrentMonth(value: Date): boolean;
-    isDateDisabled(value: Date): boolean;
-    isDateSpecial(value: Date): boolean;
 }

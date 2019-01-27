@@ -46,6 +46,7 @@ import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
+import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 
 const appRoutes = [
     {
@@ -72,6 +73,10 @@ const appRoutes = [
     {
         path: 'calendar',
         component: CalendarSampleComponent
+    },
+    {
+        path: 'calendar-views',
+        component: CalendarViewsSampleComponent
     },
     {
         path: 'card',

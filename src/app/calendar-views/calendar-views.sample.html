@@ -1,0 +1,51 @@
+<div class="sample-wrapper">
+    <app-page-header title="Calendar">Calendar Views</app-page-header>
+    <section class="sample-content">
+        <article class="sample-column">
+            <div class="calendar-sample" style="width: 400px">
+                <h4 class="sample-title">Default Calendar</h4>
+                <igx-card>
+                    <igx-calendar name="calendar" [(ngModel)]="date1" #calendar
+                                                  [viewDate]="date1"
+                                                  [weekStart]="'1'"
+                                                  [locale]="locale"
+                                                  [specialDates]="specialDates"
+                                                  [disabledDates]="disabledDates"
+                                                  [selection]="'single'">
+                    </igx-calendar>
+                </igx-card>
+            </div>
+            {{ date1 }}
+        </article>
+    </section>
+    <div class="sample-content">
+        <section class="sample-content">
+            <article class="sample-column">
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-months-view [(ngModel)]="date" [locale]="locale"></igx-months-view>
+                    </igx-card>
+                </div>
+            </article>
+            <article class="sample-column">
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-years-view [(ngModel)]="date" [locale]="locale"></igx-years-view>
+                    </igx-card>
+                </div>
+            </article>
+            <article class="sample-column">
+                <div style="width: 400px">
+                    <igx-card>
+                        <igx-days-view [(ngModel)]="date" #daysView
+                                       [viewDate]="date"
+                                       [locale]="locale"
+                                       [selection]="'single'">
+                        </igx-days-view>
+                    </igx-card>
+                </div>
+            </article>
+        </section>
+        {{ date }}
+    </div>
+</div>
