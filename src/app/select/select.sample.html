@@ -1,23 +1,41 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<div class="testDiv"></div>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
 <igx-select #select
+    [width]="'260px'" [placeholder]="'Pick One'"
+    [(ngModel)]="value"
+    (onOpening)="testOnOpening($event)"
+    (onOpened)="testOnOpened()"
+    (onClosing)="testOnClosing($event)"
+    (onClosed)="testOnClosed()"
+    (onSelection)="testOnSelection($event)"
+    [disabled]="false"
+    [overlaySettings]="customOverlaySettings"
+>
+    <label igxLabel>Sample Label</label>
+    <igx-prefix igxPrefix igxButton="icon" igxRipple>
+        <igx-icon fontSet="material">alarm</igx-icon>
+    </igx-prefix>
+    <igx-select-item>None</igx-select-item>
+    <igx-select-item *ngFor="let item of items; let inx=index"
+        [value]="item.field"
+        isFocused="inx === 1"
+         >
+        {{ item.field }}
+    </igx-select-item>
+</igx-select>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<igx-select #select1
     [width]="'260px'" [placeholder]="'Pick One'"
     [(ngModel)]="value"
     (onOpening)="testOnOpening($event)"
@@ -37,17 +55,50 @@
         [value]="item.field"
 
         isFocused="inx === 1"
-        [disabled]="inx === 4"
-        [isSelected]="inx === 5"
+
          >
         {{ item.field }}
     </igx-select-item>
 </igx-select>
 <br>
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<igx-select #select2
+    [width]="'260px'" [placeholder]="'Pick One'"
+    [(ngModel)]="value"
+    (onOpening)="testOnOpening($event)"
+    (onOpened)="testOnOpened()"
+    (onClosing)="testOnClosing($event)"
+    (onClosed)="testOnClosed()"
+    (onSelection)="testOnSelection($event)"
+    [disabled]="false"
+    [overlaySettings]="customOverlaySettings"
+>
+    <label igxLabel>Sample Label</label>
+    <igx-prefix igxPrefix igxButton="icon" igxRipple>
+        <igx-icon fontSet="material">alarm</igx-icon>
+    </igx-prefix>
+    <igx-select-item>None</igx-select-item>
+    <igx-select-item *ngFor="let item of items; let inx=index"
+        [value]="item.field"
+        isFocused="inx === 1"
+         >
+        {{ item.field }}
+    </igx-select-item>
+</igx-select>
 <br/>
 <div style="padding-left: 50px">
-    <span>IgxSelect - value:
+    <!-- <span>IgxSelect - value:
         <span class="spanValue">{{value}}</span>
     </span>
     <br/>
@@ -86,6 +137,6 @@
         <button (click)="handleClose()">Close</button>
         <button (click)="handleToggle()">Toggle</button>
         <button (click)="toggleDisabled()">toggleDisable</button>
-    </span>
+    </span> -->
 </div>
-
+<div class="testDiv"></div>

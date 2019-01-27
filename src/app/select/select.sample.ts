@@ -27,14 +27,14 @@ export class SelectSampleComponent implements OnInit {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
     public ngOnInit() {
-        for (let i = 1; i < 15; i ++) {
+        for (let i = 1; i < 5; i ++) {
             const item = { field: 'opt' + i };
             this.items.push(item);
         }
     }
 
     public testOnSelection(evt: ISelectionEventArgs) {
-         console.log('testOnSelection.....................' + evt.cancel);
+        //  console.log('testOnSelection.....................' + evt.cancel);
     }
 
     public testOnOpening(evt: CancelableEventArgs) {

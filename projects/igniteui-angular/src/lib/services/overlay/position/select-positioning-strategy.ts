@@ -109,6 +109,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             returnVals.DIRECTION = ENUM_DIRECTION.BOTTOM;
             returnVals.AMOUNT = container.BOTTOM - documentElement.BOTTOM;
         } else {
+            // there is enough space to fit the drop-down container on the window
             return null;
         }
         return returnVals;
@@ -138,6 +139,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         // This should maybe be recursive?
         const ITEM_VISIBLE_INDEX = this.CHECK_ITEM_POSITION_IN_VIEW(contentElement, this.select.selectedItem.element.nativeElement);
         const ITEM_HEIGHT = this.select.selectedItem.element.nativeElement.getBoundingClientRect().height;
+        const INPUT_HEIGHT = this.select.input.nativeElement.getBoundingClientRect().height;
         let CURRENT_POSITION_Y = START.Y - ITEM_VISIBLE_INDEX * ITEM_HEIGHT;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + contentElement.getBoundingClientRect().height;
         const OUT_OF_BOUNDS: {
@@ -162,9 +164,17 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             } else {
                 if (OUT_OF_BOUNDS.DIRECTION === ENUM_DIRECTION.TOP) {
                     CURRENT_POSITION_Y =
-                    this.select.inputGroup.element.nativeElement.getBoundingClientRect().height;
+                    /* if OUT_OF_BOUNDS on TOP, move the container DOWN by one item height minus half the input and
+                    item height difference (48px-32px)/2, thus position the container down so the first item LTP  match input LTP.
+                    --> <mat-select> like */
+                    this.select.inputGroup.element.nativeElement.getBoundingClientRect().height - (ITEM_HEIGHT -
+                     (ITEM_HEIGHT - INPUT_HEIGHT) / 2);
+
                 } else {
-                    CURRENT_POSITION_Y = -1 * LIST_HEIGHT;
+                    /* if OUT_OF_BOUNDS on BOTTOM, move the container DOWN by one item height minus half the input and
+                    item height difference (48px-32px)/2, thus position the container down so the last item LBP match input LBP.
+                    --> <mat-select> like */
+                    CURRENT_POSITION_Y = -1 * (LIST_HEIGHT - (ITEM_HEIGHT - (ITEM_HEIGHT - INPUT_HEIGHT) / 2));
                 }
                 CURRENT_POSITION_Y += START.Y;
             }
