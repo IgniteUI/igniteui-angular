@@ -141,7 +141,6 @@
         if($icon-border-radius, $icon-border-radius, map-get($button-schema, 'icon-border-radius')), 0, 20px
     );
 
-
     @if not($flat-text-color) and $flat-background {
         $flat-text-color: text-contrast($flat-background);
     }
