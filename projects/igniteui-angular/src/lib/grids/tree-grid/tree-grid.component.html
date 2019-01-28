@@ -23,22 +23,22 @@
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow>
         <div class="igx-grid__tr" [style.width.px]='calcWidth + 1' role="row">
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
-        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-        <ng-container *ngIf="rowSelectable">
-            <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
-                <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="pinnedColumns.length > 0">
-            <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
+            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left" [style.left.px]="headerCheckboxWidth"></span>
+            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+            <ng-container *ngIf="rowSelectable">
+                <div class="igx-grid__cbx-selection" #headerCheckboxContainer>
+                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="pinnedColumns.length > 0">
+                <ng-template ngFor let-col [ngForOf]="onlyTopLevel(pinnedColumns)">
+                    <igx-grid-header-group [igxColumnMovingDrag]="col" [dragGhostHost]="igxFilteringOverlayOutlet" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                </ng-template>
+            </ng-container>
+            <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
+                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
                 <igx-grid-header-group [igxColumnMovingDrag]="col" [dragGhostHost]="igxFilteringOverlayOutlet" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
-        </ng-container>
-        <ng-template igxGridFor let-col [igxGridForOf]="onlyTopLevel(unpinnedColumns)" [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-            [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges' #headerContainer>
-            <igx-grid-header-group [igxColumnMovingDrag]="col" [dragGhostHost]="igxFilteringOverlayOutlet" [attr.droppable]="true" [igxColumnMovingDrop]="col" [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)" [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
-        </ng-template>
     </div>
     <igx-grid-filtering-row *ngIf="filteringService.isFilterRowVisible" [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
 </div>
@@ -48,19 +48,18 @@
 
 <div class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
-    <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
-    <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-    <ng-template igxGridFor let-rowData [igxGridForOf]="data
-	| treeGridTransaction:id:pipeTrigger
-	| treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
-    | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
-    | treeGridSorting:sortingExpressions:id:pipeTrigger
-    | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
-    | treeGridPaging:page:perPage:id:pipeTrigger
-    | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
-
+        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
+        <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+        <ng-template igxGridFor let-rowData [igxGridForOf]="data
+        | treeGridTransaction:id:pipeTrigger
+        | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
+        | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
+        | treeGridSorting:sortingExpressions:id:pipeTrigger
+        | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
+        | treeGridPaging:page:perPage:id:pipeTrigger
+        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
         let-rowIndex="index" [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
-    [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+        [igxForContainerSize]='calcHeight' [igxForItemSize]="rowHeight" #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
         <ng-template #record_template>
             <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
             </igx-tree-grid-row>
@@ -69,12 +68,11 @@
             <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [firstCellIndentation]="rowData.cellIndentation" [index]="rowIndex" class="igx-grid__summaries--body" #summaryRow>
             </igx-grid-summary-row>
         </ng-template>
-
         <ng-container *igxTemplateOutlet="isSummaryRow(rowData) ? summary_template : record_template; context: getContext(rowData) "></ng-container>
-    </ng-template>
-    <ng-container *ngTemplateOutlet="template"></ng-container>
-    <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
-</div>
+        </ng-template>
+        <ng-container *ngTemplateOutlet="template"></ng-container>
+        <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
+    </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth" [style.height.px]='calcHeight'>
         <ng-template igxGridFor [igxGridForOf]='[]' #verticalScrollHolder></ng-template>
