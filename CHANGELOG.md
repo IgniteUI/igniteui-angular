@@ -54,9 +54,6 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
 - `igxToggleAction`
     - when applied `igxToggleAction` will set its host element as the position strategy target.
-
-##7.1.3
-### Features
 - `igxDragDrop`
     - `dragGhostHost` input property added. Sets the element to which the dragged element will be appended. If not provided, the dragged element is appended to the body.
 
