@@ -5,10 +5,6 @@ import { first } from 'rxjs/operators';
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
-    get parentVerticalDisplayContainerElement() {
-        return this.grid.parent ? this.grid.parent.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement : null;
-    }
-
     protected getCellSelector(visibleIndex?: number) {
        return 'igx-hierarchical-grid-cell';
     }
