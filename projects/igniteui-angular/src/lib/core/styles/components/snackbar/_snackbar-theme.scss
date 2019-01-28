@@ -10,16 +10,20 @@
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The background color used in the snackbar.
 /// @param {Color} $text-color [null] - The text color used in the snackbar.
 /// @param {Color} $button-color [null] - The button color used in the snackbar.
+/// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the snackbar.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Set a custom background color
 ///   $my-snackbar-theme: igx-snackbar-theme($background: white);
@@ -28,13 +32,16 @@
 @function igx-snackbar-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $background: null,
     $text-color: null,
-    $button-color: null
+    $button-color: null,
+    $shadow: null
 ) {
     $name: 'igx-snackbar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $snackbar-schema: map-get($schema, $name);
+    $theme: apply-palette($snackbar-schema, $palette);
 
     @if not($button-color) and $background {
         $button-color: text-contrast($background);
@@ -44,12 +51,18 @@
         $text-color: text-contrast($background);
     }
 
+    @if not($shadow) {
+        $elevation: map-get($snackbar-schema, 'elevation');
+        $shadow: igx-elevation($elevations, $elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
         background: $background,
         text-color: $text-color,
-        button-color: $button-color
+        button-color: $button-color,
+        shadow: $shadow
     ));
 }
 
@@ -76,9 +89,12 @@
         justify-content: space-between;
         min-height: $snackbar-min-height;
         padding: $snackbar-padding;
+        border-radius: 4px;
+        margin: 8px;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
         backface-visibility: hidden;
+        box-shadow: --var($theme, 'shadow');
     }
 
     %igx-snackbar-button {
