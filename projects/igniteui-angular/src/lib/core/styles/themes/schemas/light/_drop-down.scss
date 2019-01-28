@@ -21,6 +21,7 @@
 /// @prop {Map} selected-focus-item-text-color [igx-contrast-color: ('secondary', 300)] - The drop-down selected item focus text color.
 /// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
 /// @prop {Map} disabled-item-text-color [igx-color: ('grays', 500)] - The drop-down disabled item text color.
+/// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @see $default-palette
 $_light-drop-down: (
     background-color: #fff,
@@ -74,7 +75,10 @@ $_light-drop-down: (
     ),
 
     disabled-item-background: transparent,
+
     disabled-item-text-color: (
         igx-color: ('grays', 500)
-    )
+    ),
+
+    elevation: 8
 );
