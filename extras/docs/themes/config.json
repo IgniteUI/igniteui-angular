@@ -13,7 +13,7 @@
         "production": {
             "url": "https://www.infragistics.com",
             "gaID": "GTM-T65CF7",
-            "versions": "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/angular-api-docs-versions-prod.json"
+            "versions": "https://www.infragistics.com/angular-docs/angular-api-docs-versions-prod.json"
         }
     },
     "jp": {
@@ -30,7 +30,7 @@
         "production": {
             "url": "https://jp.infragistics.com",
             "gaID": "GTM-KVNSWJ",
-            "versions": "http://bg.test.download.infragistics.local/products/infragistics/IgniteUI/angular-api-docs-versions-prod-jp.json"
+            "versions": "https://www.infragistics.com/angular-docs/angular-api-docs-versions-prod-jp.json"
         }
     }
 }
