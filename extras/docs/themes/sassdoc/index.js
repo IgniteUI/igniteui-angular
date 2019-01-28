@@ -111,7 +111,7 @@ const theme = themeleon(__dirname, function (t) {
             trimType: (value) => {
                 return value.substring(0, 3);
             },
-            retrieveEnvLink: () => {
+            baseURl: () => {
                 const config = getConfigData(process.env);
                 return config ? config.url : '';
             },
@@ -119,27 +119,31 @@ const theme = themeleon(__dirname, function (t) {
                 const config = getConfigData(process.env);
                 return config ? config.gaID : '';
             },
+            versionsUrl: () => {
+                const config = getConfigData(process.env);
+                return config ? config.versions : '';
+            },
             ifCond: (v1, operator, v2, options) => {
                 switch (operator) {
                     case '==':
                         // tslint:disable-next-line:triple-equals
-                        return (v1 == v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 == v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '===':
-                        return (v1 === v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 === v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '<':
-                        return (v1 < v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 < v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '<=':
-                        return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 <= v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '>':
-                        return (v1 > v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 > v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '>=':
-                        return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 >= v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '&&':
-                        return (v1 && v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 && v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     case '||':
-                        return (v1 || v2) ? options.fn(this) : options.inverse(this);
+                        return (v1 || v2) ? options.fn(options.data.root) : options.inverse(options.data.root);
                     default:
-                        return options.inverse(this);
+                        return options.inverse(options.data.root);
                 }
             },
             localize: (options) => {
