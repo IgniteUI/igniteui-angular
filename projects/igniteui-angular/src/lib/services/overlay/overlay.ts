@@ -593,7 +593,8 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private repositionAll = (ev: Event) => {
+    /** @hidden */
+    public repositionAll = () => {
         for (let i = this._overlayInfos.length; i--;) {
             this.reposition(this._overlayInfos[i].id);
         }

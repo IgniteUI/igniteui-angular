@@ -7,10 +7,11 @@
 /// Generates a light navbar schema.
 /// @type {Map}
 ///
-/// @property {map} $background [igx-color: ('primary', 500)] - The navbar background color.
-/// @property {map} $text-color [igx-contrast-color: ('primary', 500)] - The navbar text color.
-/// @property {map} $idle-icon-color [igx-contrast-color: ('primary', 500)] - The navbar idle icon color.
-/// @property {map} $hover-icon-color [igx-contrast-color: ('primary', 500)] - The navbar hover icon color.
+/// @prop {map} $background [igx-color: ('primary', 500)] - The navbar background color.
+/// @prop {map} $text-color [igx-contrast-color: ('primary', 500)] - The navbar text color.
+/// @prop {map} $idle-icon-color [igx-contrast-color: ('primary', 500)] - The navbar idle icon color.
+/// @prop {map} $hover-icon-color [igx-contrast-color: ('primary', 500)] - The navbar hover icon color.
+/// @prop {Number} $elevation [4] - The navbar elevation shadow level.
 ///
 /// @see $default-palette
 
@@ -29,5 +30,7 @@ $_light-navbar: (
 
     hover-icon-color: (
         igx-contrast-color: ('primary', 500)
-    )
+    ),
+
+    elevation: 4
 );
