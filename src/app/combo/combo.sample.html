@@ -16,7 +16,7 @@
                 </igx-input-group>
             </div>
             <div class="input-row">
-                <igx-combo class="input-container" placeholder="Location(s)"
+                <igx-combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
                             (onSelectionChange)="handleSelectionChange($event)"
                             [data]="items"
@@ -36,17 +36,20 @@
                             <div class="display-value--sub"></div>
                         </div>
                     </ng-template>
-                    <ng-template #headerTemplate let-display let-key="valueKey">
+                    <ng-template igxComboHeader>
+                        <div>This is a header</div>
                     </ng-template>
-                    <ng-template igxComboFooterTemplate let-display let-key="valueKey">
+                    <ng-template igxComboFooter>
                         <div>This is a footer</div>
                     </ng-template>
                     <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display let-key="groupKey">
                         <div>Group header for {{display[key]}}</div>
                     </ng-template>
-                    <ng-template igxComboAddItem let-display let-control>
-                        <button igxButton="flat" igxRipple>Add CUSTOM item</button>
+                    <ng-template igxComboAddItem>
+                        <button igxButton="flat" igxRipple>Add VERY CUSTOM item</button>
                     </ng-template>
+                    <label igxLabel>States</label>
+                    <igx-prefix><igx-icon>home</igx-icon></igx-prefix>
                 </igx-combo>
             </div>
             <div class="btn-wrapper mb24">

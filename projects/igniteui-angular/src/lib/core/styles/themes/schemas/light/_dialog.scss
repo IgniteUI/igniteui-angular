@@ -9,6 +9,7 @@
 /// @prop {Color} background [#fff] - The dialog background color.
 /// @prop {Map} title-color [igx-color: ('grays', 800)] - The dialog title text color.
 /// @prop {Map} message-color [igx-color: ('grays', 600)] - The dialog message text color.
+/// @prop {number} elevation [24] - The elevation level for the dialog.
 /// @see $default-palette
 $_light-dialog: (
     background: #fff,
@@ -19,5 +20,7 @@ $_light-dialog: (
 
     message-color: (
         igx-color: ('grays', 600)
-    )
+    ),
+
+    elevation: 24
 );

@@ -622,7 +622,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual('182px');
+            expect(item.cells.last.width).toEqual('200px');
         });
     }));
 
@@ -665,7 +665,7 @@ describe('IgxGrid - Cell component', () => {
         // Calculate where the end of the cell is. Relative left position should equal the grid calculated width
         expect(lastCell.getBoundingClientRect().left +
             lastCell.offsetWidth +
-            verticalScroll.offsetWidth).toEqual(grid.calcWidth);
+            verticalScroll.offsetWidth).toEqual(grid.outerWidth);
     }));
 
     it('should not reduce the width of last pinned cell when there is vertical scroll.', fakeAsync(() => {
@@ -681,7 +681,7 @@ describe('IgxGrid - Cell component', () => {
         });
         const rows = fix.componentInstance.instance.rowList;
         rows.forEach((item) => {
-            expect(item.cells.last.width).toEqual('182px');
+            expect(item.cells.last.width).toEqual('200px');
         });
     }));
 
@@ -707,7 +707,7 @@ describe('IgxGrid - Cell component', () => {
         });
     });
 
-    it('should make last column smaller when vertical scrollbar is on the left of last cell', async () => {
+    it('should not make last column smaller when vertical scrollbar is on the left of last cell', async () => {
         GridColumnWidthsComponent.COLUMN_WIDTH = '500px';
         const fix = TestBed.createComponent(GridColumnWidthsComponent);
         fix.detectChanges();
@@ -722,7 +722,7 @@ describe('IgxGrid - Cell component', () => {
         const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
         fix.detectChanges();
         lastColumnCells.forEach(function (item) {
-            expect(item.width).toEqual('482px');
+            expect(item.width).toEqual('500px');
         });
     });
 

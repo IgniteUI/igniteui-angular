@@ -33,6 +33,7 @@ import {
 import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1099,6 +1100,14 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
+     * Returns a reference to the header group of the column.
+     * @memberof IgxColumnComponent
+     */
+    get headerGroup(): IgxGridHeaderGroupComponent {
+        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
+    }
+
+    /**
      * Autosize the column to the longest currently visible cell value, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
@@ -1191,9 +1200,7 @@ export class IgxColumnComponent implements AfterContentInit {
             const unpinnedColumns = this.grid.unpinnedColumns;
             const isLastUnpinned = unpinnedColumns[unpinnedColumns.length - 1] === this;
 
-            let cellWidth = isLastUnpinned && hasVerticalScroll &&
-            (this.grid.unpinnedWidth - this.grid.totalWidth < 0) ?
-                parseInt(colWidth, 10) - 18 + '' : colWidth;
+            let cellWidth = colWidth;
 
             if (typeof cellWidth !== 'string' || cellWidth.endsWith('px') === false) {
                 cellWidth += 'px';
