@@ -32,7 +32,7 @@ export const IgxHierarchicalTransactionServiceFactory = {
 };
 
 export interface IPathSegment {
-    rowID: string | object;
+    rowID: any;
     rowIslandKey: string;
 }
 
@@ -43,11 +43,7 @@ export const enum IgxGridExpandState {
 }
 
 export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
-    protected _expandChildren = false;
     public abstract rootGrid;
-    public hgridAPI: IgxHierarchicalGridAPIService;
-    public parentIsland: IgxRowIslandComponent;
-    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
 
     @Input()
     public expandChildren: boolean;
@@ -66,13 +62,36 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         return this._maxLevelHeaderDepth;
     }
 
+    /**
+     * @hidden
+     */
     get shouldExpandAllChildren() {
         return this.childrenExpandState === IgxGridExpandState.EXPANDED;
     }
 
+    /**
+     * @hidden
+     */
     get shouldCollapseAllChildren() {
         return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
     }
+
+    /**
+     * @hidden
+     */
+    public hgridAPI: IgxHierarchicalGridAPIService;
+
+    /**
+     * @hidden
+     */
+    public parentIsland: IgxRowIslandComponent;
+
+    /**
+     * @hidden
+     */
+    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
+
+    protected _expandChildren = false;
 
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
