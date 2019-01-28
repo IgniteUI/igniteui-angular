@@ -10,11 +10,11 @@
 /// @prop {Map} title-color [igx-color: ('grays', 800)] - The dialog title text color.
 /// @prop {Map} message-color [igx-color: ('grays', 600)] - The dialog message text color.
 /// @prop {number} elevation [24] - The elevation level for the dialog.
-/// @prop {Number} roundness [.9] - The border radius fraction, between 0-1 to be used for dialog component.
+/// @prop {Number} border-radius [.9] - The border radius fraction, between 0-1 to be used for dialog component.
 /// @see $default-palette
 $_light-dialog: (
 
-    roundness: .1,
+    border-radius: .1,
 
     background: #fff,
 

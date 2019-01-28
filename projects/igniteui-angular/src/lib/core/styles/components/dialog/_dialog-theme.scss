@@ -13,7 +13,7 @@
 /// @param {Color} $title-color [null] - The dialog title text color.
 /// @param {Color} $message-color [null] - The dialog message text color.
 /// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
-/// @param {border-radius} roundness [null] - The border radius used for dialog component.
+/// @param {border-radius} $border-radius [null] - The border radius used for dialog component.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -32,7 +32,7 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
-    $roundness: null,
+    $border-radius: null,
 
     $background: null,
     $title-color: null,
@@ -43,8 +43,8 @@
     $dialog-schema: map-get($schema, $name);
     $theme: apply-palette($dialog-schema, $palette);
 
-    $roundness: round-borders(
-        if($roundness, $roundness, map-get($dialog-schema, 'roundness')), 0 , 36px
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($dialog-schema, 'border-radius')), 0 , 36px
     );
 
     @if not($title-color) and $background{
@@ -63,7 +63,7 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
-        roundness: $roundness,
+        border-radius: $border-radius,
         background: $background,
         title-color: $title-color,
         message-color: $message-color,
@@ -94,7 +94,7 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background');
         box-shadow: --var($theme, 'shadow');
         overflow: hidden;
