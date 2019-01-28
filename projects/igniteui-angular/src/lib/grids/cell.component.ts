@@ -15,7 +15,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey, isEdge, getNodeSizeViaRange, KEYS } from '../core/utils';
+import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { DataType } from '../data-operations/data-util';
