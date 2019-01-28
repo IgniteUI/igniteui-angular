@@ -47,7 +47,7 @@
 ///
 /// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
 ///
-/// @param {border-radius} $border-radius [null] - The border radius used for calendar date.
+/// @param {border-radius} $border-radius [null] - The border radius used for calendar.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -253,6 +253,7 @@
         background: --var($theme, 'content-background');
         overflow: hidden;
         outline: none;
+        border-radius: --var($theme, 'border-radius');
     }
 
     %cal-display--vertical {
@@ -356,7 +357,7 @@
         height: $cal-value-h;
         min-width: 2ch;
         margin: $cal-value-margin;
-        border-radius: --var($theme, 'border-radius');
+        border-radius: $cal-value-br;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
