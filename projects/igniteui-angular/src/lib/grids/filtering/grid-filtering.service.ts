@@ -186,16 +186,20 @@ export class IgxFilteringService implements OnDestroy {
 
             this.columnToExpressionsMap.forEach((value: ExpressionUI[], key: string) => {
                 const column = this.grid.columns.find((col) => col.field === key);
-                value.length = 0;
+                if (column) {
+                    value.length = 0;
 
-                this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, value);
+                    this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, value);
 
-                const isComplex = this.isFilteringTreeComplex(column.filteringExpressionsTree);
-                if (isComplex) {
-                    this.columnsWithComplexFilter.add(key);
+                    const isComplex = this.isFilteringTreeComplex(column.filteringExpressionsTree);
+                    if (isComplex) {
+                        this.columnsWithComplexFilter.add(key);
+                    }
+
+                    this.updateFilteringCell(column);
+                } else {
+                    this.columnToExpressionsMap.delete(key);
                 }
-
-                this.updateFilteringCell(column);
             });
         }
     }
