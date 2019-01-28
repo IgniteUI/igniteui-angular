@@ -15,7 +15,7 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { isNavigationKey, getNodeSizeViaRange, KEYS } from '../core/utils';
+import { isNavigationKey, isEdge, getNodeSizeViaRange, KEYS } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs } from './grid-base.component';
 import { DataType } from '../data-operations/data-util';
@@ -493,6 +493,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
         }
     }
+
+    public isInCompositionMode = false;
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
@@ -824,6 +826,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownEnterEditMode(event) {
+        if (this.isInCompositionMode) {
+            return;
+        }
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
@@ -880,6 +885,10 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
     private isKeySupportedInCell(key) {
         return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
+    }
+
+    public setComposition(value) {
+        this.isInCompositionMode = value;
 
     }
 
