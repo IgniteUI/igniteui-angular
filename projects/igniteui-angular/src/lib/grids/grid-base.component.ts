@@ -4261,9 +4261,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return dimensions;
     }
 
+    // tslint:disable-next-line:member-ordering
     @Output()
     onRangeSelection = new EventEmitter<any>();
 
+    // TODO: Refactor
     dragSelect(event) {
 
         if (!this.gridSelection.inDragMode) {
@@ -4323,8 +4325,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             rs.push(record);
             record = {};
         }
-        console.log(Array.from(this.gridSelection.metaSelection).map(each => JSON.parse(each)));
-        console.log(rs);
         return rs;
     }
 

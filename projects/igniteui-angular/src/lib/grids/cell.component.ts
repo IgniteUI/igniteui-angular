@@ -513,6 +513,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
      * @internal
      */
     public _updateCellSelectionStatus(fireFocus = true, event) {
+        // TODO: Refactor this. We won't need the `_clear/saveCellSelection` methods in their current form.
         if (fireFocus) {
             this.nativeElement.focus();
         }
@@ -521,7 +522,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             this.grid.endEdit(true);
         }
         if (this.gridSelection.kbShiftEnabled) {
-            // this.gridSelection.clear();
             this.gridSelection.updateDragSelection(this.rowIndex, this.visibleColumnIndex);
             return;
         }
@@ -533,17 +533,17 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         //     this.
         //     return;
         // }
-        // this._clearCellSelection();
+        this._clearCellSelection();
         // // this._saveCellSelection();
-        // const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
-        // if (hasFilteredResults) {
-        //     if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
-        //         this.inEditMode = true;
-        //     }
-        //     if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
-        //         // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
-        //         this.grid.endEdit(true);
-        //     }
+        const hasFilteredResults = this.grid.filteredData ? this.grid.filteredData.length > 0 : true;
+        if (hasFilteredResults) {
+            if (this.column.editable && this.previousCellEditMode && hasFilteredResults) {
+                this.inEditMode = true;
+            }
+            if (!this.inEditMode && this.gridAPI.get_edit_row_state(this.gridID)) {
+                // If there is a row being edited & this cell did not enter edit mode (!editable, row.deleted)
+                this.grid.endEdit(true);
+            }
         //     this.selected = true;
         //     if (fireFocus) {
         //         this.nativeElement.focus();
@@ -553,7 +553,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         //         }
         //     }
             this.grid.onSelection.emit({ cell: this, event });
-        // }
+        }
     }
 
     private _clearCellSelection() {
@@ -592,6 +592,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         this.selection.set(this.cellSelectionID, newSelection);
     }
 
+    // TODO: Refactor
     private _getLastSelectedCell() {
         const cellID = this.selection.first_item(this.cellSelectionID);
         if (cellID) {
@@ -662,6 +663,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         this.gridSelection.kbShiftEnabled = false;
         this._updateCellSelectionStatus(true, event);
 
+        // TODO: Simplify
         if (event.shiftKey) {
             this.gridSelection.clear();
             this.gridSelection.updateDragSelection(this.rowIndex, this.visibleColumnIndex);
@@ -763,6 +765,7 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return;
         }
         const shift = event.shiftKey;
+        // TODO: Simplify
         if (!this.gridSelection.kbShiftEnabled && shift) {
             this.gridSelection.kbShiftEnabled = event.shiftKey && key !== 'tab';
             if (this.gridSelection.kbShiftEnabled && !this.gridSelection.kbStartNode) {
