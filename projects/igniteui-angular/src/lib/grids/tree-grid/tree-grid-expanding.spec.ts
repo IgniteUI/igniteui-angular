@@ -775,7 +775,7 @@ describe('IgxTreeGrid - Expanding / Collapsing', () => {
             expect(treeGrid.totalPages).toBe(1);
         });
 
-        fit('Should update the paginator when navigating through pages', () => {
+        it('Should update the paginator when navigating through pages', () => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
