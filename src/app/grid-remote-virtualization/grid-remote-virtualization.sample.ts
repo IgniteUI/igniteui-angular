@@ -41,6 +41,11 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
             { field: 'QuantityPerUnit', width: '200px' },
             { field: 'Discontinued', width: '50px' }
         ];
+        //this.remoteData = this.remoteService.remoteData;
+    }
+
+    public loadData() {
+        this.grid.shouldGenerate = true;
         this.remoteData = this.remoteService.remoteData;
     }
 
