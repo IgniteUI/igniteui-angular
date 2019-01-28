@@ -3970,7 +3970,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         style.overflow = 'scroll';
         document.body.appendChild(div);
         const scrollWidth = div.offsetWidth - div.clientWidth;
-        div.remove();
+        document.body.removeChild(div);
         return scrollWidth;
     }
 
