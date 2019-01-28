@@ -21,6 +21,7 @@
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
+/// @param {border-radius} $border-radius [null] - The border radius used for navdrawer item.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -29,6 +30,7 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 ///
 /// @example scss Change the background and item colors
 ///   $navdrawer-theme: igx-navdrawer-theme(
@@ -43,6 +45,8 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
+    $right-border-radius: null,
+    $left-border-radius: null,
     $background: null,
     $border-color: null,
 
@@ -57,12 +61,19 @@
     $item-hover-background: null,
     $item-hover-text-color: null,
     $item-hover-icon-color: null,
-    $shadow: null,
+    $shadow: null
 ) {
     $name: 'igx-navdrawer';
     $navdrawer-schema: map-get($schema, $name);
-
     $theme: apply-palette($navdrawer-schema, $palette);
+
+    $right-border-radius: round-borders(
+        if($right-border-radius, $right-border-radius, map-get($navdrawer-schema, 'right-border-radius')), 0, 36px
+    );
+
+    $left-border-radius: round-borders(
+        if($left-border-radius, $left-border-radius, map-get($navdrawer-schema, 'left-border-radius')), 0, 36px
+    );
 
     @if not($item-header-text-color) and $background {
         $item-header-text-color: text-contrast($background);
@@ -104,6 +115,8 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        right-border-radius: $right-border-radius,
+        left-border-radius: $left-border-radius,
         background: $background,
         border-color: $border-color,
         item-text-color:$item-text-color,
@@ -148,6 +161,7 @@
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: --var($theme, 'shadow');
         border-right: 1px solid --var($theme, 'border-color');
+        border-radius: --var($theme, 'border-radius');
     }
 
     %aside-panning {
