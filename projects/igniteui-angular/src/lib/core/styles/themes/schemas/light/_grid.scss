@@ -61,8 +61,11 @@
 /// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
+/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for the grid component.
 /// @see $default-palette
 $_light-grid: (
+    grid-border-radius: .2,
+
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #fff

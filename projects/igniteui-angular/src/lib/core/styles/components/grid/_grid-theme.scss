@@ -70,6 +70,8 @@
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 ///
+/// @param {border-radius} $grid-border-radius [null] - The border radius used for the grid component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -79,9 +81,12 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
+/// @requires round-borders
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+
+    $grid-border-radius:null,
 
     $header-background: null,
     $header-text-color: null,
@@ -159,12 +164,16 @@
     $root-summaries-text-color: null,
 
     $grid-shadow: null,
-    $drag-shadow: null,
+    $drag-shadow: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
-
     $theme: apply-palette($grid-schema, $palette);
+
+    $grid-border-radius: round-borders(
+        if($grid-border-radius, $grid-border-radius, map-get($grid-schema, 'grid-border-radius')), 0, 20px
+    );
+
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
@@ -328,6 +337,7 @@
         name: $name,
         palette: $palette,
 
+        grid-border-radius: $grid-border-radius,
         header-background: $header-background,
         header-text-color: $header-text-color,
         header-border-width: $header-border-width,
@@ -426,7 +436,6 @@
     $palette: map-get($theme, 'palette');
     // @debug $theme;
 
-    $grid-br: 2px;
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $grid-caption-fs: rem(20px);
@@ -507,7 +516,8 @@
         display: grid;
         grid-template-rows: auto auto auto 1fr auto auto;
         grid-template-columns: 1fr;
-        border-radius: $grid-br;
+        border-radius: --var($theme, 'grid-border-radius');
+        overflow: hidden;
         box-shadow: $grid-shadow;
         outline-style: none;
         z-index: 0;
