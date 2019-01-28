@@ -13,6 +13,8 @@
 /// @param {Color} $text-color [null] - The text color of the tooltip.
 /// @param {Number} $roundness [null] - The border roundness of the tooltip. Smaller values mean less roundness.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for the tooltip component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -27,13 +29,17 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
+    $border-radius: null,
     $background: null,
-    $text-color: null,
-    $roundness: null
+    $text-color: null
 ) {
-    $border-radius: rem(4px);
     $name: 'igx-tooltip';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $tooltip-schema: map-get($schema, $name);
+    $theme: apply-palette($tooltip-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($tooltip-schema, 'border-radius')), 0, 16px
+    );
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -43,8 +49,8 @@
         name: $name,
         palette: $default-palette,
         background: $background,
+        border-radius: $border-radius,
         text-color: $text-color,
-        roundness: $roundness
     ));
 }
 
@@ -60,7 +66,7 @@
         flex-flow: column wrap;
         background-color: --var($theme, 'background');
         color: --var($theme, 'text-color');
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'border-radius');
         margin: 0 auto;
     }
 
