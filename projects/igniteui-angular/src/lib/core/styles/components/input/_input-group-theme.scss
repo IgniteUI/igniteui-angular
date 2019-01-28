@@ -41,7 +41,9 @@
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
-/// @param {border-radius} $roundness [null] - The border radius used for box, border and search input types.
+/// @param {border-radius} $box-border-radius [null] - The border radius used for box input.
+/// @param {border-radius} $border-border-radius [null] - The border radius used for border input.
+/// @param {border-radius} $search-border-radius [null] - The border radius used for search input.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -59,7 +61,11 @@
     $palette: $default-palette,
     $schema: $light-schema,
     $elevations: $elevations,
-    $roundness: null,
+
+    $box-border-radius: null,
+    $border-border-radius: null,
+    $search-border-radius: null,
+
     $idle-text-color: null,
     $filled-text-color: null,
     $focused-text-color: null,
@@ -99,8 +105,14 @@
     $input-group-schema: map-get($schema, $name);
     $theme: apply-palette($input-group-schema, $palette);
 
-    $roundness: round-borders(
-        if($roundness, $roundness, map-get($input-group-schema, 'roundness')), 0, 20px
+    $box-border-radius: round-borders(
+        if($box-border-radius, $box-border-radius, map-get($input-group-schema, 'box-border-radius')), 0, 20px
+    );
+    $border-border-radius: round-borders(
+        if($border-border-radius, $border-border-radius, map-get($input-group-schema, 'border-border-radius')), 0, 20px
+    );
+    $search-border-radius: round-borders(
+        if($search-border-radius, $search-border-radius, map-get($input-group-schema, 'search-border-radius')), 0, 20px
     );
 
     $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
@@ -136,7 +148,9 @@
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
 
-        roundness: $roundness,
+        box-border-radius: $box-border-radius,
+        border-border-radius: $border-border-radius,
+        search-border-radius: $search-border-radius,
 
         idle-secondary-color: $idle-secondary-color,
         filled-secondary-color: $filled-secondary-color,
@@ -289,7 +303,7 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'box-border-radius');
         overflow: hidden;
     }
 
@@ -374,7 +388,7 @@
     %form-group-bundle--border {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
@@ -413,7 +427,7 @@
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        border-radius: --var($theme, 'roundness');
+        border-radius: --var($theme, 'search-border-radius');
         border-bottom: none;
         background: --var($theme, 'search-background');
         box-shadow: --var($theme, 'search-resting-shadow');
