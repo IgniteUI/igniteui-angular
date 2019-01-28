@@ -887,11 +887,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
         return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
     }
 
-    public setComposition(value) {
-        this.isInCompositionMode = value;
-
-    }
-
     /**
      * @hidden
      */
