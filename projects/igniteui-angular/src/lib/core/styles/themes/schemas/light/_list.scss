@@ -15,9 +15,16 @@
 /// @property {map} item-background-active [igx-color: ('grays', 100), hexrgba: ()] - The active list item background color.
 /// @property {map} item-text-color-active [igx-color: ('grays', 800)] - The active list item text color.
 ///
+/// @prop {Number} roundness-list [0] - The border radius fraction, between 0-1 to be used for list component.
+/// @prop {Number} roundness-list-item [0] - The border radius fraction, between 0-1 to be used for list item.
+///
 /// @see $default-palette
 
 $_light-list: (
+
+    roundness-list: 0,
+    roundness-list-item: 0,
+
     background: #fff,
 
     header-background: #fff,

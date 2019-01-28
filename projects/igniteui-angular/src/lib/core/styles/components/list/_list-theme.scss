@@ -16,6 +16,9 @@
 /// @param {Color} $item-background-active [null] - The active list item background color.
 /// @param {Color} $item-text-color-active [null] - The active list item text color.
 ///
+/// @param {border-radius} $roundness-list [null] - The border radius used for list component.
+/// @param {border-radius} $roundness-list-item [null] - The border radius used for list item.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -30,6 +33,8 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
+    $roundness-list: null,
+    $roundness-list-item: null,
     $background: null,
     $header-background: null,
     $header-text-color: null,
@@ -39,7 +44,16 @@
     $item-text-color-active: null
 ) {
     $name: 'igx-list';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $list-schema: map-get($schema, $name);
+    $theme: apply-palette($list-schema, $palette);
+
+    $roundness-list: round-borders(
+        if($roundness-list, $roundness-list, map-get($list-schema, 'roundness-list')), 0, 24px
+    );
+
+    $roundness-list-item: round-borders(
+        if($roundness-list-item, $roundness-list-item, map-get($list-schema, 'roundness-list-item')), 0, 24px
+    );
 
     @if not($header-background) and $background {
         $header-background: $background;
@@ -72,6 +86,8 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+        roundness-list: $roundness-list,
+        roundness-list-item: $roundness-list-item,
         background: $background,
         header-background: $header-background,
         header-text-color: $header-text-color,
@@ -102,6 +118,7 @@
         height: 100%;
         overflow: hidden;
         z-index: 0;
+        border-radius: --var($theme, 'roundness-list');
     }
 
     %igx-list-empty {
@@ -134,6 +151,7 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
+        border-radius: --var($theme, 'roundness-list-item');
     }
 
     %igx-list-item-pan {
@@ -153,6 +171,7 @@
         color: --var($theme, 'item-text-color');
         background-color: --var($theme, 'item-background');
         z-index: 2;
+        border-radius: --var($theme, 'roundness-list-item');
     }
 
     %igx-list-item-content--active {
