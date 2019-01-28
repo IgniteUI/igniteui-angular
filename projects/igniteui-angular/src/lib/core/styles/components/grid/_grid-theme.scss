@@ -161,7 +161,7 @@
 
     $row-highlight: null,
     $grid-shadow: null,
-    $drag-shadow: null,
+    $drag-shadow: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -1421,7 +1421,7 @@
         align-items: center;
         position: relative;
         padding-left: map-get($grid-grouping-indicator-padding, 'comfortable');
-        padding-right: $grouping-padding-right;
+        padding-right: map-get($grid-grouping-indicator-padding, 'comfortable');
 
         &::after {
             content: '';
@@ -1449,10 +1449,12 @@
 
     %igx-grid__row-indentation--cosy {
         padding-left: map-get($grid-grouping-indicator-padding, 'cosy');
+        padding-right: map-get($grid-grouping-indicator-padding, 'cosy')
     }
 
     %igx-grid__row-indentation--compact {
         padding-left: map-get($grid-grouping-indicator-padding, 'compact');
+        padding-right: map-get($grid-grouping-indicator-padding, 'compact')
     }
 
     %igx-grid__grouparea {
