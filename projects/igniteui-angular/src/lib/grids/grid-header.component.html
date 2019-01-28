@@ -8,5 +8,7 @@
 </span>
 <div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
     <igx-icon class="sort-icon" *ngIf="column.sortable">{{sortingIcon}}</igx-icon>
+    <igx-grid-excel-style-filtering (click)="onFilterIconClick($event)" [column]="column" *ngIf="grid.allowFiltering == true && column.filterable && grid.filterMode == 'excelStyleFilter'">
+    </igx-grid-excel-style-filtering>
 </div>
 

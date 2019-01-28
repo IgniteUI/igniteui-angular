@@ -164,6 +164,11 @@ export enum GridSummaryCalculationMode {
     rootAndChildLevels = 'rootAndChildLevels'
 }
 
+export enum FilterMode {
+    quickFilter = 'quickFilter',
+    excelStyleFilter = 'excelStyleFilter'
+}
+
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
     private _data: any[];
 
@@ -809,6 +814,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.markForCheck();
             }
         }
+    }
+
+    /**
+     * Returns the filter mode.
+     * ```typescript
+     *  let filtering = this.grid.filterMode;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get filterMode() {
+        return this._filterMode;
+    }
+
+    /**
+     * Sets filter mode.
+     * By default it's set to FilterMode.quickFilter.
+     * ```html
+     * <igx-grid #grid [data]="localData" [filterMode]="'quickFilter'" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set filterMode(value) {
+        this._filterMode = value;
     }
 
     /**
@@ -2171,6 +2200,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _wheelListener = null;
     protected _allowFiltering = false;
+    protected _filterMode = FilterMode.quickFilter;
     private _filteredData = null;
     private resizeHandler;
     private columnListDiffer;

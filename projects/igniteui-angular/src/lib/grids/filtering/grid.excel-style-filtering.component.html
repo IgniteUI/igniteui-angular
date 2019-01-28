@@ -1,0 +1,22 @@
+<span >
+    <igx-icon [attr.draggable]="false" (click)="onIconClick($event)">filter_list</igx-icon>
+</span>
+
+<igx-drop-down #dropdown>
+    <div style="width:300px; height:500px;" >
+        <span>{{ column.field }}</span>
+        <span>Sorting</span>
+        <igx-buttongroup #sortButtonGroup [multiSelection]="false">
+            <span #ascButton type="button" igxButton [attr.data-togglable]="true"  (click)="onSortButtonClicked(1)">
+                <igx-icon>arrow_upwards</igx-icon>
+                Ascending
+            </span>
+            <span #descButton type="button" igxButton [attr.data-togglable]="true" (click)="onSortButtonClicked(2)">
+                    <igx-icon>arrow_downwards</igx-icon>
+                Descending
+            </span>
+        </igx-buttongroup>
+        <span (click)="onPin()" *ngIf="!column.pinned">Pin Column<igx-icon>pin_drop</igx-icon></span>
+        <span (click)="onPin()" *ngIf="column.pinned">Unpin Column<igx-icon>pin_drop</igx-icon></span>
+    </div>
+</igx-drop-down>

@@ -141,6 +141,10 @@ export class IgxGridHeaderComponent implements DoCheck {
         }
     }
 
+    public onFilterIconClick(event) {
+        event.stopPropagation();
+    }
+
     get grid(): any {
         return this.gridAPI.get(this.gridID);
     }

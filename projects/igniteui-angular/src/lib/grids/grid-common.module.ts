@@ -23,6 +23,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
+import { IgxGridExcelStyleFilteringComponent } from './filtering/grid.excel-style-filtering.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -84,6 +85,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxGridTransactionPipe,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxDatePipeComponent,
         IgxDecimalPipeComponent,
         IgxSummaryDataPipe,
@@ -141,6 +143,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
         IgxColumnPinningModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
+        IgxGridExcelStyleFilteringComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent
