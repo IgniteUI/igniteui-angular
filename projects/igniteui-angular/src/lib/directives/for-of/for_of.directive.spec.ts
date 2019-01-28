@@ -1028,7 +1028,7 @@ describe('IgxForOf directive -', () => {
 
             const children = fix.componentInstance.childVirtDirs;
             const instance = fix.componentInstance;
-            const expectedElementsLength = (parseInt(instance.width, 10) / instance.itemSize) + 2;
+            const expectedElementsLength = (parseInt(instance.width, 10) / instance.itemSize) + 1;
             expect(children.length).toEqual(expectedElementsLength);
         });
     });
