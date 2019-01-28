@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { IgxTreeGridWrappedInContComponent } from '../../test-utils/tree-grid-components.spec';
 
 describe('IgxTreeGrid Component Tests', () => {
+    const TBODY_CLASS = '.igx-grid__tbody-content';
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
         configureTestSuite();
@@ -44,7 +45,7 @@ describe('IgxTreeGrid Component Tests', () => {
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
             fix.detectChanges();
-            const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
@@ -55,7 +56,7 @@ describe('IgxTreeGrid Component Tests', () => {
             grid.height = '600px';
             tick();
             fix.detectChanges();
-            const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
@@ -68,7 +69,7 @@ describe('IgxTreeGrid Component Tests', () => {
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
                 tick();
                 fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).not.toBeNull();
                 expect(parseInt(defaultHeight, 10)).toBeGreaterThan(200);
                 expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
@@ -81,7 +82,7 @@ describe('IgxTreeGrid Component Tests', () => {
                 fix.componentInstance.density = DisplayDensity.compact;
                 tick();
                 fix.detectChanges();
-                const defaultHeight = fix.debugElement.query(By.css('.igx-grid__tbody')).styles.height;
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 const defaultHeightNum = parseInt(defaultHeight, 10);
                 expect(defaultHeight).not.toBeNull();
                 expect(defaultHeightNum).toBeGreaterThan(300);

@@ -1,6 +1,6 @@
 <div class="sample-wrapper dark-grid">
-    <igx-grid #grid1 [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field">
-        </igx-column>
+    <igx-grid #grid1 [isLoading]="true" [autoGenerate]="true" [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
     </igx-grid>
+
+    <button (click)="loadData()">loadData</button>
 </div>

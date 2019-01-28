@@ -6,6 +6,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
@@ -31,8 +32,10 @@
 ///
 /// @param {Color} $search-background [null] - The background color of an input group of type search.
 /// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
-/// @param {Color} $search-shadow-color [null] - The shadow color of an input group of type search.
-/// @param {Color} $search-disabled-shadow-color [null] - The shadow color of an input group of type search in the disabled state.
+///
+/// @param {box-shadow} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
+/// @param {box-shadow} $search-hover-shadow [null] - The shadow color of an input group of type search in its hover state.
+/// @param {box-shadow} $search-disabled-shadow [null] - The shadow color of an input group of type search in its disabled state.
 ///
 /// @param {Color} $success-secondary-color [null] - The success color used in the valid state.
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
@@ -43,6 +46,8 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Change the focused border and label colors
 ///   $my-input-group-theme: igx-input-group-theme($focused-secondary-color: pink, $focused-bottom-line-color: pink);
@@ -51,6 +56,7 @@
 @function igx-input-group-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $idle-text-color: null,
     $filled-text-color: null,
@@ -75,8 +81,10 @@
 
     $search-background: null,
     $search-disabled-background: null,
-    $search-shadow-color: null,
-    $search-disabled-shadow-color: null,
+
+    $search-resting-shadow: null,
+    $search-hover-shadow: null,
+    $search-disabled-shadow: null,
 
     $success-secondary-color: null,
     $warning-secondary-color: null,
@@ -86,7 +94,32 @@
     $disabled-placeholder-color: null
 ) {
     $name: 'igx-input-group';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $input-group-schema: map-get($schema, $name);
+    $theme: apply-palette($input-group-schema, $palette);
+
+    $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
+    $search-hover-elevation: map-get($input-group-schema, 'search-hover-elevation');
+    $search-disabled-elevation: map-get($input-group-schema, 'search-disabled-elevation');
+
+    @if not($placeholder-color) and $box-background {
+        $placeholder-color: text-contrast($box-background);
+    }
+
+    @if not($placeholder-color) and $search-background {
+        $placeholder-color: text-contrast($search-background);
+    }
+
+    @if not($search-resting-shadow) {
+        $search-resting-shadow: igx-elevation($elevations, $search-resting-elevation);
+    }
+
+    @if not($search-hover-shadow) {
+        $search-hover-shadow: igx-elevation($elevations, $search-hover-elevation);
+    }
+
+    @if not($search-disabled-shadow) {
+        $search-disabled-shadow: igx-elevation($elevations, $search-disabled-elevation);
+    }
 
     @return extend($theme, (
         palette: $palette,
@@ -116,8 +149,10 @@
 
         search-background: $search-background,
         search-disabled-background: $search-disabled-background,
-        search-shadow-color: $search-shadow-color,
-        search-disabled-shadow-color: $search-disabled-shadow-color,
+
+        search-resting-shadow: $search-resting-shadow,
+        search-hover-shadow: $search-hover-shadow,
+        search-disabled-shadow: $search-disabled-shadow,
 
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
@@ -125,22 +160,12 @@
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
     ));
-
-    @if not($placeholder-color) and $box-background {
-        $placeholder-color: text-contrast($box-background);
-    }
-
-    @if not($placeholder-color) and $search-background {
-        $placeholder-color: text-contrast($search-background);
-    }
 }
 
 
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires --var
@@ -150,9 +175,7 @@
     $palette: map-get($theme, 'palette');
 
     $transition-timing: .25s $ease-out-cubic;
-    $search-shadow: igx-elevation($elevations, 1);
-    $search-shadow-hover: igx-elevation($elevations, 2);
-    $search-shadow-disabled: igx-elevation($elevations, 1);
+
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
@@ -388,7 +411,7 @@
         border-radius: $group-bundle-border-radius;
         border-bottom: none;
         background: --var($theme, 'search-background');
-        box-shadow: $search-shadow;
+        box-shadow: --var($theme, 'search-resting-shadow');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -404,24 +427,24 @@
     }
 
     %form-group-bundle-search--hover {
-        box-shadow: $search-shadow-hover;
+        box-shadow: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--focus {
-        box-shadow: $search-shadow-hover;
+        box-shadow: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--error {
-        box-shadow: $search-shadow-hover;
+        box-shadow: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--success {
-        box-shadow: $search-shadow-hover;
+        box-shadow: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--disabled {
         background: --var($theme, 'search-disabled-background');
-        box-shadow: $search-shadow-disabled;
+        box-shadow: --var($theme, 'search-disabled-shadow');
     }
 
     %form-group-bundle-main {
