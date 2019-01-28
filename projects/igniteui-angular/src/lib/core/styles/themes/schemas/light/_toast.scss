@@ -9,10 +9,13 @@
 ///
 /// @property {map} background [igx-color: ('grays', 600)] - The background color used for the toast.
 /// @property {map} text-color [igx-contrast-color: ('grays', 600)] - The text-color used for the toast.
+/// @prop {Number} border-radius [.17] - The border radius fraction, between 0-1 to be used for the toast component.
 ///
 /// @see $default-palette
 
 $_light-toast: (
+    border-radius: .17,
+
     background: (
         igx-color: ('grays', 600)
     ),
