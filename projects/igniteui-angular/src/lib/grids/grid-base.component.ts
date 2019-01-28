@@ -4561,31 +4561,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
-    private checkIfGridIsAdded(node): boolean {
-        if (node === this.nativeElement) {
-            return true;
-        } else if (node.childNodes) {
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
-
-            if (!node.childNodes) {
-                return false;
-            }
-
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
     /**
      * @hidden
      */
