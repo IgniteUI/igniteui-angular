@@ -41,6 +41,8 @@
 /// @param {Color} $warning-secondary-color [null] - The warning color used in the warning state.
 /// @param {Color} $error-secondary-color [null] - The error color used in the error state.
 ///
+/// @param {border-radius} $roundness [null] - The border radius used for box and border input types.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -57,7 +59,7 @@
     $palette: $default-palette,
     $schema: $light-schema,
     $elevations: $elevations,
-
+    $roundness: null,
     $idle-text-color: null,
     $filled-text-color: null,
     $focused-text-color: null,
@@ -97,6 +99,10 @@
     $input-group-schema: map-get($schema, $name);
     $theme: apply-palette($input-group-schema, $palette);
 
+    $roundness: round-borders(
+        if($roundness, $roundness, map-get($input-group-schema, 'roundness')), 0, 20px
+    );
+
     $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
     $search-hover-elevation: map-get($input-group-schema, 'search-hover-elevation');
     $search-disabled-elevation: map-get($input-group-schema, 'search-disabled-elevation');
@@ -129,6 +135,8 @@
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
+
+        roundness: $roundness,
 
         idle-secondary-color: $idle-secondary-color,
         filled-secondary-color: $filled-secondary-color,
@@ -178,9 +186,6 @@
 
     $required-symbol: '*';
     $required-symbol-margin: 2px;
-
-    // This should become configurable by the user.
-    $group-bundle-border-radius: 4px;
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -284,7 +289,7 @@
     }
 
     %form-group-box-wrapper {
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'roundness');
         overflow: hidden;
     }
 
@@ -369,7 +374,7 @@
     %form-group-bundle--border {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'roundness');
         background: --var($theme, 'border-background');
 
         %form-group-label--box + %form-group-input--box {
@@ -408,7 +413,7 @@
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        border-radius: $group-bundle-border-radius;
+        border-radius: --var($theme, 'roundness');
         border-bottom: none;
         background: --var($theme, 'search-background');
         box-shadow: --var($theme, 'search-resting-shadow');
