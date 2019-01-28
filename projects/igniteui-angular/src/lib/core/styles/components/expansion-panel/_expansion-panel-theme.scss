@@ -16,11 +16,14 @@
 /// @param {Color} $body-background [null] - The panel body background color.
 /// @param {Color} $disabled-color [null] - The panel body disabled text color.
 ///
+/// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires round-borders
 ///
 /// @example scss Change the background color
 ///   $my-expansion-panel-theme: igx-expansion-panel($header-background: black);
@@ -30,6 +33,7 @@
     $palette: $default-palette,
     $schema: $light-schema,
 
+    $border-radius:null,
     $header-background: null,
     $header-focus-background: null,
     $header-title-color: null,
@@ -40,7 +44,13 @@
     $disabled-color: null
 ) {
     $name: 'igx-expansion-panel';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $expansion-panel-schema: map-get($schema, $name);
+    $theme: apply-palette($expansion-panel-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($expansion-panel-schema, 'border-radius')), 0, 16px
+    );
+
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);
@@ -62,6 +72,7 @@
         name: $name,
         palette: $palette,
         header-background: $header-background,
+        border-radius: $border-radius,
         header-focus-background: $header-focus-background,
         header-title-color: $header-title-color,
         header-description-color: $header-description-color,
@@ -87,6 +98,8 @@
     %igx-expansion-panel {
         display: flex;
         flex-direction: column;
+        border-radius: --var($theme, 'border-radius');
+        overflow: hidden;
     }
 
     %igx-expansion-panel__header-title {

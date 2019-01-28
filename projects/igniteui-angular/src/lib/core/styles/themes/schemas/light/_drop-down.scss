@@ -22,7 +22,7 @@
 /// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
 /// @prop {Map} disabled-item-text-color [igx-color: ('grays', 500)] - The drop-down disabled item text color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
-/// @prop {Number} border-radius [.9] - The border radius fraction, between 0-1 to be used for drop-down component.
+/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
 /// @see $default-palette
 $_light-drop-down: (
     background-color: #fff,
