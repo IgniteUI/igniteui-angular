@@ -43,7 +43,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     private _isScrolledToBottom(grid) {
         const scrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
         const scrollHeight = grid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        return Math.round(scrollTop +  grid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
+        return scrollHeight === 0 || Math.round(scrollTop +  grid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
     }
     private getIsChildAtIndex(index) {
         return this.grid.isChildGridRecord(this.grid.verticalScrollContainer.igxForOf[index]);

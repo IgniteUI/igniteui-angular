@@ -1366,9 +1366,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ViewChildren('summaryRow', { read: IgxSummaryRowComponent })
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
-    @ViewChild('footerSummary', { read: IgxSummaryRowComponent })
-    protected footerSummary: IgxSummaryRowComponent;
-
     public get summariesRowList() {
         const res = new QueryList<any>();
         if (!this._summaryRowList) {
@@ -3683,10 +3680,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const groupAreaHeight = this.getGroupAreaHeight();
         let gridHeight;
 
-        // When columns are not yet loaded and later initialized summaries rerender multiple times and dom removal is not instant
-        // so when rendering new summaries the old ones are still there.
-        const summariesLeftoversHeight = this.footerSummary ? this.footerSummary.nativeElement.clientHeight - this.summariesHeight : 0;
-
         if (!this.isAttachedToDom) {
             return null;
         }
@@ -3699,8 +3692,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         const height = Math.abs(gridHeight - toolbarHeight -
                 this.theadRow.nativeElement.offsetHeight -
-                this.summariesHeight - summariesLeftoversHeight -
-                pagingHeight - groupAreaHeight - footerBordersAndScrollbars -
+                this.summariesHeight - pagingHeight -
+                groupAreaHeight - footerBordersAndScrollbars -
                 this.scr.nativeElement.clientHeight);
 
         if (height === 0 || isNaN(gridHeight)) {
@@ -4559,31 +4552,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     */
     protected getGroupIncrementData(): number[] {
         return null;
-    }
-
-    private checkIfGridIsAdded(node): boolean {
-        if (node === this.nativeElement) {
-            return true;
-        } else if (node.childNodes) {
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
-
-            if (!node.childNodes) {
-                return false;
-            }
-
-            for (const childNode of node.childNodes) {
-                const added = this.checkIfGridIsAdded(childNode);
-                if (added) {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 
     /**

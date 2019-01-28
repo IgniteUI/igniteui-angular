@@ -112,7 +112,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         horizontalScrDir.scrollTo(7);
         await wait(10);
         fixture.detectChanges();
-        const lastCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[4];
+        const lastCell = hierarchicalGrid.getCellByKey(0, 'childData2');
         lastCell.nativeElement.focus();
         await wait(10);
         fixture.detectChanges();
@@ -139,7 +139,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         childFirstCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
         await wait(10);
         fixture.detectChanges();
-        const lastCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[4];
+        const lastCell = hierarchicalGrid.getCellByKey(0, 'childData2');
         expect(lastCell.selected).toBe(true);
         expect(lastCell.focused).toBe(true);
     }));
@@ -163,7 +163,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         UIInteractions.triggerKeyDownEvtUponElem('Tab', childLastCell.nativeElement, true);
         await wait(10);
         fixture.detectChanges();
-        const nextCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        const nextCell = hierarchicalGrid.getCellByKey(1, 'ID');
         expect(nextCell.selected).toBe(true);
         expect(nextCell.focused).toBe(true);
 
@@ -172,10 +172,10 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 
     it('should allow navigation with Shift+Tab from parent into child grid.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        await wait(10);
+        await wait(100);
         fixture.detectChanges();
 
-        const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
         parentCell.nativeElement.focus();
 
         await wait(100);
@@ -367,14 +367,14 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         await wait(100);
         fixture.detectChanges();
 
-        const lastParentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[4];
+        const lastParentCell = hierarchicalGrid.getCellByKey(0, 'childData2');
         lastParentCell.nativeElement.focus();
         fixture.detectChanges();
         UIInteractions.triggerKeyDownEvtUponElem('Tab', lastParentCell.nativeElement, true);
         await wait(100);
         fixture.detectChanges();
 
-        const firstChildCell = childGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        const firstChildCell = childGrid.getCellByColumn(0, 'ID');
         expect(firstChildCell.selected).toBe(true);
         expect(firstChildCell.focused).toBe(true);
         expect(firstChildCell.rowIndex).toBe(0);
@@ -386,7 +386,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(100);
         fixture.detectChanges();
-        const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+        const parentCell =  hierarchicalGrid.getCellByKey(1, 'ID');
         parentCell.nativeElement.focus();
 
         await wait(100);
@@ -561,7 +561,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             await wait(100);
             fixture.detectChanges();
 
-            const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
+            const parentCell = hierarchicalGrid.getCellByColumn(2, 'ID');
             parentCell.nativeElement.focus();
             await wait(100);
             fixture.detectChanges();
@@ -575,7 +575,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
             fixture.detectChanges();
 
             const nestedChild = child.hgridAPI.getChildGrids(false)[5];
-            const lastCell = nestedChild.dataRowList.toArray()[3].cells.toArray()[0];
+            const lastCell = nestedChild.getCellByColumn(4, 'ID');
             expect(lastCell.selected).toBe(true);
             expect(lastCell.focused).toBe(true);
             expect(lastCell.rowIndex).toBe(4);
