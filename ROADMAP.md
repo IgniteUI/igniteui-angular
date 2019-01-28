@@ -6,7 +6,7 @@
 ## Milestone 6 (28.02.2019)
 
 1. Hierarchical Grid [issue](https://github.com/IgniteUI/igniteui-angular/issues/827)   
-2. igxGrid rendering strategies (like record-based rendering) [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
+2. **[DROPPED]**igxGrid rendering strategies (like record-based rendering) [issue](https://github.com/IgniteUI/igniteui-angular/issues/2384)  
 3. Auto-complete (inline editable)
 4. Excel Style Filtering  
 5. Multi-cell Selection 
