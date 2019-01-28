@@ -37,20 +37,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     /**
      * @hidden
      */
-    public get childData() {
-        return this.rowData.childGridData || this.hGrid.data;
-    }
-
-    /**
-     * @hidden
-     */
-    public get highlighted() {
-        return this.hGrid.parent && this.hGrid.parent.highlightedRowID === this.rowData.rowID;
-    }
-
-    /**
-     * @hidden
-     */
     public get parentHasScroll() {
         return !this.parentGrid.verticalScrollContainer.dc.instance.notVirtual;
     }
