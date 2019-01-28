@@ -457,21 +457,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        const flatDataWithCascadeOnDeleteAndTransactions =
-            this.primaryKey &&
-            this.foreignKey &&
-            this.cascadeOnDelete &&
-            this.transactions.enabled;
+        this._gridAPI.deleteRowById(this.id, rowId);
 
-        if (flatDataWithCascadeOnDeleteAndTransactions) {
-            this.transactions.startPending();
-        }
-
-        super.deleteRowById(rowId);
-
-        if (flatDataWithCascadeOnDeleteAndTransactions) {
-            this.transactions.endPending(true);
-        }
     }
 
     /**

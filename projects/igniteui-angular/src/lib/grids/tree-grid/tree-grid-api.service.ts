@@ -135,6 +135,25 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
+    public deleteRowById(gridID: string, rowID: any) {
+        const treeGrid = this.get(gridID);
+        const flatDataWithCascadeOnDeleteAndTransactions =
+        treeGrid.primaryKey &&
+        treeGrid.foreignKey &&
+        treeGrid.cascadeOnDelete &&
+        treeGrid.transactions.enabled;
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
+            treeGrid.transactions.startPending();
+        }
+
+        super.deleteRowById(gridID, rowID);
+
+        if (flatDataWithCascadeOnDeleteAndTransactions) {
+            treeGrid.transactions.endPending(true);
+        }
+    }
+
     public deleteRowFromData(gridID: string, rowID: any, index: number) {
         const treeGrid = this.get(gridID);
         if (treeGrid.primaryKey && treeGrid.foreignKey) {
@@ -145,7 +164,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 if (treeRecord && treeRecord.children && treeRecord.children.length > 0) {
                     for (let i = 0; i < treeRecord.children.length; i++) {
                         const child = treeRecord.children[i];
-                        treeGrid.deleteRowById(child.rowID);
+                        super.deleteRowById(gridID, child.rowID);
                     }
                 }
             }
