@@ -202,6 +202,10 @@ describe('IgxTreeGrid - Key Board Navigation', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed on a gridCell', async () => {
+            treeGrid.width = '400px';
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
             let cell = treeGrid.getCellByColumn(3, 'Name');
 
             cell.nativeElement.dispatchEvent(new Event('focus'));
