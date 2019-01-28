@@ -725,6 +725,24 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             expect(headerButton.children[1].classList).toContain(IconPositionClass.NONE);
         });
+
+        it('Should not call animate method when `collapse` is called on a collapsed panel', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const animationSpy = spyOn<any>(panel, 'playCloseAnimation');
+            panel.collapse();
+            expect(animationSpy).not.toHaveBeenCalled();
+        });
+
+        it('Should not call animate method when `expand` is called on an expanded panel', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const animationSpy = spyOn<any>(panel, 'playOpenAnimation');
+            panel.collapse();
+            expect(animationSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('Aria tests', () => {
