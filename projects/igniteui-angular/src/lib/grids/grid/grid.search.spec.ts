@@ -11,6 +11,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DataType } from '../../data-operations/data-util';
 
 describe('IgxGrid - search API', () => {
     configureTestSuite();
@@ -464,6 +465,48 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
+        it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
+            grid.columns[0].dataType = DataType.Number;
+            fix.detectChanges();
+
+            let cell = grid.getCellByColumn(0, 'ID').nativeElement;
+            let activeHighlight: any;
+            let highlights: any[];
+
+            grid.findNext('1');
+
+            activeHighlight = cell.querySelector('.' + component.activeClass);
+            highlights = cell.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(activeHighlight).toBe(highlights[0]);
+
+            grid.columns[0].hidden = true;
+            fix.detectChanges();
+
+            grid.columns[0].hidden = false;
+            fix.detectChanges();
+
+            cell = grid.getCellByColumn(0, 'ID').nativeElement;
+            highlights = cell.querySelectorAll('.' + component.highlightClass);
+            expect(highlights.length).toBe(1);
+            expect(cell.innerText).toBe('1');
+        });
+
+        it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
+            pending('Related to the bug 3691');
+            grid.columns[1].hidden = true;
+            fix.detectChanges();
+
+            let finds =  grid.findNext('Director');
+            expect(finds).toEqual(2);
+
+            grid.columns[2].hidden = true;
+            fix.detectChanges();
+
+            finds =  grid.findNext('Director');
+            expect(finds).toEqual(0);
+        });
+
         it('Clear filter properly updates the highlights', async () => {
             let gilbertoDirectorCell = grid.getCellByColumn(1, 'JobTitle').nativeElement;
             let tanyaDirectorCell = grid.getCellByColumn(2, 'JobTitle').nativeElement;
@@ -714,8 +757,7 @@ describe('IgxGrid - search API', () => {
             expect(isInView(3, grid.rowList.first.virtDirRow.state)).toBeTruthy();
         });
 
-        it('should keep the active highlight when active cell enters and exits edit mode', () => {
-            pending('When the cell enters edit mode, the highlight stays and the content is doubled! Happens in tests only!');
+        it('should keep the active highlight when active cell enters and exits edit mode', async () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             const cell = grid.getCellByColumn(0, 'ID');
             const initialValue = rv.textContent;
@@ -724,6 +766,7 @@ describe('IgxGrid - search API', () => {
 
             cell.column.editable = true;
             fix.detectChanges();
+            await wait(16);
 
             grid.findNext('1');
 
@@ -731,6 +774,7 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).not.toBeNull();
 
             cell.inEditMode = true;
+            await wait(16);
             fix.detectChanges();
 
             expect(cell.inEditMode).toBe(true);
@@ -738,17 +782,16 @@ describe('IgxGrid - search API', () => {
             expect(activeHighlight).toBeNull();
 
             cell.inEditMode = false;
+            await wait(16);
             fix.detectChanges();
 
-            expect(rv.textContent).toBe(initialValue);
+            expect(rv.innerText).toBe(initialValue);
             expect(rv.querySelectorAll('.' + component.highlightClass).length).toBe(1);
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
         });
 
-        it('should update highlights when a new value is entered', () => {
-            pending('When the cell enters edit mode, the highlight stays and the content is doubled! Happens in tests only!');
-
+        it('should update highlights when a new value is entered', async () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
             const cell = grid.getCellByColumn(0, 'ID');
             cell.column.editable = true;
@@ -774,8 +817,9 @@ describe('IgxGrid - search API', () => {
 
             cell.update(inputElem.value);
             fix.detectChanges();
+            await wait(16);
 
-            expect(rv.nativeElement.textContent).toBe('11');
+            expect(rv.nativeElement.innerText).toBe('11');
             activeHighlight = rv.nativeElement.querySelector('.' + component.activeClass);
             const highlights = rv.nativeElement.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(2);
