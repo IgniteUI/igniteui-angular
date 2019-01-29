@@ -189,6 +189,34 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(rowIsland1.key).toBe('childData');
         expect(rowIsland2.key).toBe('childData');
     });
+
+    it('should allow setting expandChildren after bound to data', () => {
+        // set first row as expanded.
+        hierarchicalGrid.hierarchicalState = [{ rowID: fixture.componentInstance.data[0] }];
+        hierarchicalGrid.cdr.detectChanges();
+        let row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        // verify row is expanded
+        expect(row1.expanded).toBe(true);
+        hierarchicalGrid.expandChildren = false;
+        hierarchicalGrid.cdr.detectChanges();
+        row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        expect(row1.expanded).toBe(false);
+        const expandIcons = fixture.debugElement.queryAll(By.css('#igx-icon-15'));
+        expect(expandIcons.length).toBe(0);
+        let rows = hierarchicalGrid.dataRowList.toArray();
+        rows.forEach((r) => {
+            expect(r.expanded).toBe(false);
+        });
+        hierarchicalGrid.expandChildren = true;
+        hierarchicalGrid.cdr.detectChanges();
+        rows = hierarchicalGrid.dataRowList.toArray();
+        rows.forEach((r) => {
+            expect(r.expanded).toBe(true);
+        });
+
+        row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        expect(row1.expanded).toBe(true);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {

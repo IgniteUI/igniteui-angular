@@ -3083,46 +3083,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /** @hidden */
     public deleteRowById(rowId: any) {
-        let index: number;
-        const data = this.gridAPI.get_all_data(this.id);
-        if (this.primaryKey) {
-            index = data.map((record) => record[this.primaryKey]).indexOf(rowId);
-        } else {
-            index = data.indexOf(rowId);
-        }
-        const state: State = this.transactions.getState(rowId);
-        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
-
-        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
-        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
-        //  Otherwise just exit - there is nothing to delete
-        if (index !== -1 || hasRowInNonDeletedState) {
-            // Always exit edit when row is deleted
-            this.endEdit(true);
-        } else {
-            return;
-        }
-
-        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        this.onRowDeleted.emit({ data: data[index] });
-
-        //  first deselect row then delete it
-        if (this.rowSelectable && this.selection.is_item_selected(this.id, rowId)) {
-            this.deselectRows([rowId]);
-        } else {
-            this.checkHeaderCheckboxStatus();
-        }
-
-        this.gridAPI.deleteRowFromData(this.id, rowId, index);
-        this._pipeTrigger++;
-        this.cdr.markForCheck();
-        // Data needs to be recalculated if transactions are in place
-        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
-        const dataAfterDelete = this.transactions.enabled ? this.dataWithAddedInTransactionRows : data;
-        this.refreshSearch();
-        if (dataAfterDelete.length % this.perPage === 0 && dataAfterDelete.length / this.perPage - 1 < this.page && this.page !== 0) {
-            this.page--;
-        }
+       this.gridAPI.deleteRowById(this.id, rowId);
     }
 
     /**

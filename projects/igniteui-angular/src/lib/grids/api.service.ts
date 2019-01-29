@@ -631,6 +631,50 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
+    public deleteRowById(gridID: string, rowId: any) {
+        let index: number;
+        const grid = this.get(gridID);
+        const data = this.get_all_data(gridID);
+        if (grid.primaryKey) {
+            index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
+        } else {
+            index = data.indexOf(rowId);
+        }
+        const state: State = grid.transactions.getState(rowId);
+        const hasRowInNonDeletedState = state && state.type !== TransactionType.DELETE;
+
+        //  if there is a row (index !== -1) and the we have cell in edit mode on same row exit edit mode
+        //  if there is no row (index === -1), but there is a row in ADD or UPDATE state do as above
+        //  Otherwise just exit - there is nothing to delete
+        if (index !== -1 || hasRowInNonDeletedState) {
+            // Always exit edit when row is deleted
+            grid.endEdit(true);
+        } else {
+            return;
+        }
+
+        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+        grid.onRowDeleted.emit({ data: data[index] });
+
+        //  first deselect row then delete it
+        if (grid.rowSelectable && grid.selection.is_item_selected(grid.id, rowId)) {
+            grid.deselectRows([rowId]);
+        } else {
+            grid.checkHeaderCheckboxStatus();
+        }
+
+        this.deleteRowFromData(gridID, rowId, index);
+        (grid as any)._pipeTrigger++;
+        grid.cdr.markForCheck();
+        // Data needs to be recalculated if transactions are in place
+        // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
+        const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;
+        grid.refreshSearch();
+        if (dataAfterDelete.length % grid.perPage === 0 && dataAfterDelete.length / grid.perPage - 1 < grid.page && grid.page !== 0) {
+            grid.page--;
+        }
+    }
+
     public get_row_id(id: string, rowData) {
         const grid = this.get(id);
         return grid.primaryKey ? rowData[grid.primaryKey] : rowData;

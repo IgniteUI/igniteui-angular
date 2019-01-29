@@ -13,6 +13,7 @@ import {
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxRowIslandComponent } from './row-island.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,21 +33,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public expanded = false;
 
     @Input()
-    layout;
-
-    /**
-     * @hidden
-     */
-    public get childData() {
-        return this.rowData.childGridData || this.hGrid.data;
-    }
-
-    /**
-     * @hidden
-     */
-    public get highlighted() {
-        return this.hGrid.parent && this.hGrid.parent.highlightedRowID === this.rowData.rowID;
-    }
+    layout: IgxRowIslandComponent;
 
     /**
      * @hidden
@@ -182,7 +169,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
 
         this.layout.onGridCreated.emit({
             owner: this.layout,
-            parendID: this.rowData.rowID,
+            parentID: this.rowData.rowID,
             grid: this.hGrid
         });
 
