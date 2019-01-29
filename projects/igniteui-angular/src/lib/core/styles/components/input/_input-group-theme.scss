@@ -814,6 +814,10 @@
         display: flex;
         justify-content: space-between;
         padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
+
+        &:empty {
+            display: none;
+        }
     }
 
     %form-group-help--cosy {
