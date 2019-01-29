@@ -494,6 +494,8 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
             return this.gridAPI.get_cell_inEditMode(this.gridID).cell.editValue;
         }
     }
+
+    public isInCompositionMode = false;
     public focused = false;
     protected isSelected = false;
     private cellSelectionID: string;
@@ -899,6 +901,9 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
 
     public onKeydownEnterEditMode() {
+        if (this.isInCompositionMode) {
+            return;
+        }
         if (this.column.editable) {
             if (this.inEditMode) {
                 this.grid.endEdit(true);
@@ -955,7 +960,6 @@ export class IgxGridCellComponent implements OnInit, AfterViewInit {
     }
     private isKeySupportedInCell(key: string) {
         return isNavigationKey(key) || key === 'tab' || key === 'enter' || key === 'f2' || key === 'escape' || key === 'esc';
-
     }
 
     /**
