@@ -37,10 +37,10 @@
                         </div>
                     </ng-template>
                     <ng-template igxComboHeader>
-                        <div>This is a header</div>
+                        <div class="custom-combo-header">This is a header</div>
                     </ng-template>
                     <ng-template igxComboFooter>
-                        <div>This is a footer</div>
+                        <div class="custom-combo-footer">This is a footer</div>
                     </ng-template>
                     <ng-template *ngIf="currentDataType !== 'primitive'" #headerItemTemplate let-display let-key="groupKey">
                         <div>Group header for {{display[key]}}</div>
