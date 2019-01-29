@@ -470,7 +470,7 @@
 }
 
 
-
+/// Returns value between min and max value
 /// @access private
 @function fraction-clamp($factor, $min, $max) {
     $min: if(unitless($min), $min * 1px, $min);
@@ -484,6 +484,8 @@
 }
 
 
+/// Returns value or list of values between 0 and 1 if the $value is unitless
+/// or return the value or list of values with the unit you pass
 /// @access private
 @function round-borders($value, $min: 0, $max: 0) {
     @if type-of($value) == 'number' and unitless($value) {
@@ -492,7 +494,7 @@
             @error 'Roundness factor should be between 0 and 1';
         }
 
-        @return fraction-clamp($value, $min, $max);
+        @return round(fraction-clamp($value, $min, $max));
     }
 
     @if type-of($value) == 'list' and length($value) <= 4 {
