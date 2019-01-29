@@ -259,7 +259,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return this.dropDown ? this.dropDown.collapsed : true;
     }
 
-    private select = (value: ISelectionEventArgs) => { // ?
+    private select = (value: ISelectionEventArgs) => {
         if (!value.newSelection) {
             return;
         }
@@ -278,6 +278,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         const firstItem = this.dropDown.items[0];
         if (firstItem) {
             firstItem.isFocused = false;
+            this.dropDown.focusedItem = null;
         }
     }
 
