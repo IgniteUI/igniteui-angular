@@ -10,6 +10,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $thumb-on-color [null] - The color of the thumb when the switch is on.
 /// @param {Color} $track-on-color [null] - The color of the track when the switch is on.
@@ -19,11 +20,16 @@
 /// @param {Color} $track-disabled-color [null] - The color of the track when the switch is disabled.
 /// @param {Color} $label-color [null] - The color of the switch label
 /// @param {Color} $label-disabled-color [null] - The color of the switch label when the switch is disabled
+/// @param {box-shadow} $resting-shadow [null] - The shadow used for the thumb in resting state of the switch.
+/// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
+/// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Set custom track and thumb on colors
 ///   $my-switch-theme: igx-toast-theme($thumb-on-color: black, $track-on-color: yellow);
@@ -43,10 +49,31 @@
     $thumb-disabled-color: null,
 
     $label-color: null,
-    $label-disabled-color: null
+    $label-disabled-color: null,
+
+    $resting-shadow: null,
+    $hover-shadow: null,
+    $disabled-shadow: null
 ) {
     $name: 'igx-switch';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $switch-schema: map-get($schema, $name);
+
+    $theme: apply-palette($switch-schema, $palette);
+
+    @if not($resting-shadow) {
+        $resting-elevation: map-get($switch-schema, 'resting-elevation');
+        $resting-shadow: igx-elevation($elevations, $resting-elevation);
+    }
+
+    @if not($hover-shadow) {
+        $hover-elevation: map-get($switch-schema, 'hover-elevation');
+        $hover-shadow: igx-elevation($elevations, $hover-elevation);
+    }
+
+    @if not($disabled-shadow) {
+        $disabled-elevation: map-get($switch-schema, 'disabled-elevation');
+        $disabled-shadow: igx-elevation($elevations, $disabled-elevation);
+    }
 
     @return extend($theme, (
         name: $name,
@@ -63,6 +90,10 @@
 
         label-color: $label-color,
         label-disabled-color: $label-disabled-color,
+
+        resting-shadow: $resting-shadow,
+        hover-shadow: $hover-shadow,
+        disabled-shadow: $disabled-shadow,
     ));
 }
 
@@ -73,8 +104,6 @@
 /// @requires {mixin} igx-ripple
 /// @requires {mixin} hide-default
 /// @requires igx-ripple-theme
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
@@ -92,10 +121,6 @@
 
     $switch-thumb-width: 20px ;
     $switch-thumb-height: $switch-thumb-width ;
-
-    $switch-shadow: igx-elevation($elevations, 2);
-    $switch-hover-shadow: igx-elevation($elevations, 3);
-    $switch-disabled-shadow: igx-elevation($elevations, 1);
 
     $ripple-size: em(48px);
     $ripple-radius: $ripple-size / 2;
@@ -153,11 +178,11 @@
         min-width: $switch-thumb-width;
         border-radius: 50%;
         background: --var($theme, 'thumb-off-color');
-        box-shadow: $switch-shadow;
+        box-shadow: --var($theme, 'resting-shadow');
         transition: $input-transition;
 
         &:hover {
-            box-shadow: $switch-hover-shadow;
+            box-shadow: --var($theme, 'hover-shadow');
         }
     }
 
@@ -172,7 +197,7 @@
 
     %switch-composite-thumb--disabled {
         background: --var($theme, 'thumb-disabled-color');
-        box-shadow: $switch-disabled-shadow;
+        box-shadow: --var($theme, 'disabled-shadow');
     }
 
     %switch-ripple {

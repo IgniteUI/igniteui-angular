@@ -6,6 +6,7 @@ import {
     NoOpScrollStrategy,
     IgxOverlayOutletDirective
 } from 'igniteui-angular';
+import { foods } from './foods';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -20,6 +21,7 @@ export class DropDownSampleComponent implements OnInit {
     @ViewChild(IgxOverlayOutletDirective) public igxOverlayOutlet: IgxOverlayOutletDirective;
 
     items: any[] = [];
+    public foods = foods;
 
     ngOnInit() {
         this.igxDropDown.height = '400px';

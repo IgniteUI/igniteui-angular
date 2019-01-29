@@ -54,3 +54,22 @@ export class IgxComboHeaderItemDirective {
 })
 export class IgxComboAddItemDirective {
 }
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxComboToggleIcon]'
+})
+export class IgxComboToggleIconDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxComboClearIcon]'
+})
+export class IgxComboClearIconDirective {
+}
+
