@@ -24,12 +24,28 @@
     }
 
     @include e(logo-version) {
-        font-size: rem(12);
-        background: #666;
-        color: #efefef;
-        padding: rem(4) rem(8);
         margin-left: rem(12);
-        font-weight: 500;
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;       /* remove default arrow */
+            border-radius: 0;
+            border: none;
+            min-width: 64px;
+            max-width: 128px;
+
+            font-size: rem(13);
+            background: url('../img/baseline-arrow_drop_down-24px.svg') no-repeat 96% #666;
+            background-size: 20px;
+            color: #efefef;
+            padding: rem(4) rem(24) rem(4) rem(8);
+            outline-style: none;
+
+            &::-ms-expand {
+                display: none;
+            }
+        }
     }
 
     @include m(sticky) {
