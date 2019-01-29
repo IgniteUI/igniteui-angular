@@ -143,6 +143,25 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
+    it('Should blur selected cell when scrolling with mouse wheel', (async () => {
+        const fixture = TestBed.createComponent(GridColumnWidthsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        const cell = grid.getCellByColumn(3, '1');
+        cell.nativeElement.focus();
+        cell.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(document.activeElement).toEqual(cell.nativeElement);
+
+        const displayContainer = grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+        await UIInteractions.simulateWheelEvent(displayContainer, 0, 200);
+        fixture.detectChanges();
+
+        expect(document.activeElement).toEqual(document.body);
+    }));
+
     describe('Cell Editing', () => {
         configureTestSuite();
 

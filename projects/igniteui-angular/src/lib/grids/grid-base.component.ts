@@ -2453,6 +2453,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._horizontalForOfs = this.combineForOfCollections(this._dataRowList, this._summaryRowList);
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+        vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
 
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.reflow();
@@ -2478,6 +2479,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this._hScrollListener);
             const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
             vertScrDC.removeEventListener('scroll', (evt) => { this.scrollHandler(evt); });
+            vertScrDC.removeEventListener('wheel', () => { this.wheelHandler(); });
         });
         this.destroy$.next(true);
         this.destroy$.complete();
