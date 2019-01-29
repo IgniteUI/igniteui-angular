@@ -24,8 +24,8 @@ const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
-const CSS_CLASS_DROPDOWNBUTTON = 'igx-combo__clear-button';
-const CSS_CLASS_CLEARBUTTON = 'clearButton';
+const CSS_CLASS_DROPDOWNBUTTON = 'igx-combo__toggle-button';
+const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_CHECK_GENERAL = 'igx-combo__checkbox';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
 const CSS_CLASS_CHECKED = 'igx-checkbox--checked';
@@ -1553,7 +1553,7 @@ describe('igxCombo', () => {
             expect(inputGroupElement.classList.contains(CSS_CLASS_INPUTGROUP)).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--box')).toBeTruthy();
             expect(inputGroupElement.classList.contains('igx-input-group--placeholder')).toBeTruthy();
-            expect(inputGroupElement.childElementCount).toEqual(1);
+            expect(inputGroupElement.childElementCount).toEqual(2);
 
             const inputGroupWrapper = inputGroupElement.children[0];
             expect(inputGroupWrapper.classList.contains(CSS_CLASS_INPUTGROUP_WRAPPER)).toBeTruthy();

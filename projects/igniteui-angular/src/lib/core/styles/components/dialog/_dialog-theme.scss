@@ -8,15 +8,19 @@
 /// Dialog Theme
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The dialog background color.
 /// @param {Color} $title-color [null] - The dialog title text color.
 /// @param {Color} $message-color [null] - The dialog message text color.
+/// @param {box-shadow} $shadow [null] - The shadow used for the dialog.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 ///
 /// @example scss Change the background color
 ///   $my-dialog-theme: igx-dialog-theme($background: black);
@@ -25,13 +29,17 @@
 @function igx-dialog-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $background: null,
     $title-color: null,
-    $message-color: null
+    $message-color: null,
+    $shadow: null
 ) {
     $name: 'igx-dialog';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $dialog-schema: map-get($schema, $name);
+
+    $theme: apply-palette($dialog-schema, $palette);
 
     @if not($title-color) and $background{
         $title-color: text-contrast($background);
@@ -41,19 +49,23 @@
         $message-color: rgba(text-contrast($background), .8);
     }
 
+    @if not($shadow) {
+        $elevation: map-get($dialog-schema, 'elevation');
+        $shadow: igx-elevation($elevations, $elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
         background: $background,
         title-color: $title-color,
-        message-color: $message-color
+        message-color: $message-color,
+        shadow: $shadow
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires --var
 @mixin igx-dialog($theme) {
@@ -77,7 +89,7 @@
         min-width: $dialog-min-width;
         border-radius: 4px;
         background: --var($theme, 'background');
-        box-shadow: igx-elevation($elevations, 24);
+        box-shadow: --var($theme, 'shadow');
         overflow: hidden;
 
         .igx-calendar {

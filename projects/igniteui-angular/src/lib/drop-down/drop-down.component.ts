@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -14,10 +13,10 @@ import {
     EventEmitter,
     Output,
 } from '@angular/core';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down-navigation.directive';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs, isIE } from '../core/utils';
@@ -57,7 +56,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @hidden
      * @internal
      */
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
     public children: QueryList<IgxDropDownItemBase>;
 
     /**
@@ -368,13 +367,3 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    imports: [CommonModule, IgxToggleModule],
-    providers: [IgxSelectionAPIService]
-})
-export class IgxDropDownModule { }

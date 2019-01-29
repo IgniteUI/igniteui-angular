@@ -1,25 +1,27 @@
 //#region imports
 import {
     Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
-    NgModule, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+    NgModule, ElementRef, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs, mergeObjects } from '../../core/utils';
-import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy, IScrollStrategy, IPositionStrategy } from '../../services';
-import { ISelectionEventArgs } from '../../drop-down';
-import { IgxDropDownModule, IgxDropDownComponent } from '../../drop-down/drop-down.component';
-import { IgxDropDownItemNavigationDirective } from '../../drop-down/drop-down-navigation.directive';
-import { IgxInputGroupComponent } from '../../input-group';
-import { IgxOverlayOutletDirective } from 'igniteui-angular';
+import { CancelableEventArgs } from '../../core/utils';
+import { OverlaySettings, AbsoluteScrollStrategy, ConnectedPositioningStrategy,
+    IScrollStrategy, IPositionStrategy } from '../../services/index';
+import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
+import { IgxInputGroupComponent } from '../../input-group/index';
+import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 //#endregion
 
 /**
- * Interface that encapsulates onItemSelection event arguments - old selection, new selection and cancel selection.
+ * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
  * @export
  */
 export interface IAutocompleteItemSelectionEventArgs extends CancelableEventArgs {
+    /**
+     * New value selected from the drop down
+     */
     value: string;
 }
 
@@ -32,10 +34,27 @@ export interface AutocompleteOverlaySettings {
     outlet?: IgxOverlayOutletDirective | ElementRef;
 }
 
+/**
+ * **Ignite UI for Angular Autocomplete** -
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete.html)
+ *
+ * The igxAutocomplete directive provides a way to enhance a text input
+ * by showing a drop down of suggested options, provided by the developer.
+ *
+ * Example:
+ * ```html
+ * <input type="text" [igxAutocomplete]="townsPanel" />
+ * <igx-drop-down #townsPanel>
+ *     <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
+ *         {{town}}
+ *     </igx-drop-down-item>
+ * </igx-drop-down>
+ * ```
+ */
 @Directive({
     selector: '[igxAutocomplete]'
 })
-export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective {
+export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
@@ -46,32 +65,54 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private _disabled = false;
-    private _autocompleteSettings: AutocompleteOverlaySettings = {
+    private settings: OverlaySettings = {
+        modal: false,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new ConnectedPositioningStrategy({ target: this.parentElement })
     };
 
     protected id: string;
-    protected queryListNotifier$ = new Subject<boolean>();
+    protected dropDownOpened$ = new Subject<boolean>();
     protected get model() {
         return this.ngModel ? this.ngModel : this.formControl;
     }
 
+    /**
+     * @hidden
+     */
     get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
     }
 
+    /**
+     * @hidden
+     */
     get parentElement(): HTMLElement {
         return this.group ? this.group.element.nativeElement : this.nativeElement;
     }
 
-    private get collapsed(): boolean {
-        return this.dropDown ? this.dropDown.collapsed : true;
-    }
-
+    /**
+     * @hidden
+     */
     @Input('igxAutocomplete')
-    dropDown: IgxDropDownComponent;
+    public dropDown: IgxDropDownComponent;
 
+    /**
+     * Enables/disables autocomplete component
+     *
+     * ```typescript
+     * // get
+     * let disabled = this.autocomplete.disabled;
+     * ```
+     * ```html
+     * <!--set-->
+     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteDisabled]="disabled"/>
+     * ```
+     * ```typescript
+     * // set
+     * public disabled = true;
+     * ```
+     */
     @Input('igxAutocompleteDisabled')
     get disabled() {
         return this._disabled;
@@ -81,36 +122,37 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.close();
     }
 
+    /**
+     * Provide overlay settings for the autocomplete drop down
+     *
+     * ```typescript
+     * // get
+     * let settings = this.autocomplete.autocompleteSettings;
+     * ```
+     * ```html
+     * <!--set-->
+     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteSettings]="settings"/>
+     * ```
+     * ```typescript
+     * // set
+     * this.settings = {
+     *  positionStrategy: new ConnectedPositioningStrategy({
+     *      closeAnimation: null,
+     *      openAnimation: null
+     *  })
+     * };
+     * ```
+     */
     @Input('igxAutocompleteSettings')
-    get autocompleteSettings(): AutocompleteOverlaySettings {
-        return this._autocompleteSettings;
-    }
-    set autocompleteSettings(value: AutocompleteOverlaySettings) {
-        if (value.scrollStrategy) {
-            this._autocompleteSettings.scrollStrategy = mergeObjects(this._autocompleteSettings.scrollStrategy, value.scrollStrategy);
-        }
-        if (value.positionStrategy.settings) {
-            this._autocompleteSettings.positionStrategy = mergeObjects(this._autocompleteSettings.positionStrategy, value.positionStrategy);
-            if (!value.positionStrategy.settings.target) {
-                this._autocompleteSettings.positionStrategy.settings.target = this.parentElement;
-            }
-        }
-        if (value.outlet) {
-            this._autocompleteSettings.outlet = value.outlet;
-        }
+    autocompleteSettings: AutocompleteOverlaySettings;
 
-    }
-
-    get settings(): OverlaySettings {
-        const settings = this.autocompleteSettings as OverlaySettings;
-        settings.modal = false;
-        settings.closeOnOutsideClick = true;
-        return settings;
-    }
-
-    @Input('igxAutocompleteHighlightMatch')
-    protected highlightMatch = false;
-
+    /**
+     * Emitted after item from the drop down is selected
+     *
+     * ```html
+     * <input igxInput [igxAutocomplete]="townsPanel" (onItemSelected)='itemSelected()' />
+     * ```
+     */
     @Output()
     onItemSelected = new EventEmitter<any>();
 
@@ -119,6 +161,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     @HostBinding('attr.autocomplete')
     public autofill = 'off';
+
     /**
      * @hidden
      */
@@ -149,6 +192,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return this.dropDown.id;
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('input', ['$event'])
     onInput() {
         if (this.disabled)  {
@@ -160,39 +206,62 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             this.unhighlightFirstItem();
         }
     }
+
+    /**
+     * @hidden
+     */
     @HostListener('blur', ['$event'])
     onBlur() {
         this.close();
     }
 
+    /**
+     * @hidden
+     */
     handleFocus() {}
+
+    /**
+     * @hidden
+     */
     handleKeyDown(event) {
         if (!this.collapsed) {
             super.handleKeyDown(event);
         }
     }
 
+    /**
+     * Closes autocomplete drop down
+     */
     public close() {
         this.dropDown.close();
-        this.queryListNotifier$.complete();
+        this.dropDownOpened$.next();
     }
 
+    /**
+     * Opens autocomplete drop down
+     */
     public open() {
-        this.dropDown.open(this.settings);
+        const settings = Object.assign({}, this.settings, this.autocompleteSettings);
+        if (!settings.positionStrategy.settings.target) {
+            settings.positionStrategy.settings.target = this.parentElement;
+        }
+        this.dropDown.open(settings);
         this.target = this.dropDown;
         this.dropDown.width = this.parentElement.clientWidth + 'px';
-        this.dropDown.onSelection.subscribe(this.select);
-        this.dropDown.onOpened.pipe(first()).subscribe(() => {
-            this.highlightFirstItem();
-        });
-        this.dropDown.children.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => this.highlightFirstItem());
+        this.dropDown.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
+        this.dropDown.onOpened.pipe(first()).subscribe(() => { this.highlightFirstItem(); });
+        this.dropDown.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(() => this.highlightFirstItem());
     }
 
-    private select = (value: ISelectionEventArgs) => { // ?
+    private get collapsed(): boolean {
+        return this.dropDown ? this.dropDown.collapsed : true;
+    }
+
+    private select = (value: ISelectionEventArgs) => {
         if (!value.newSelection) {
             return;
         }
-        value.cancel = true; // Disable selection in the drop down, because in auto complete we do not save selection.
+        value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
         const newValue = value.newSelection.value;
         const args: IAutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
         this.onItemSelected.emit(args);
@@ -204,6 +273,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private unhighlightFirstItem() {
+        this.dropDown.focusedItem = null;
         const firstItem = this.dropDown.items[0];
         if (firstItem) {
             firstItem.isFocused = false;
@@ -218,6 +288,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         this.cdr.detectChanges();
     }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.dropDownOpened$.complete();
+    }
 }
 
 @NgModule({
@@ -226,6 +303,3 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     exports: [IgxAutocompleteDirective]
 })
 export class IgxAutocompleteModule { }
-
-
-

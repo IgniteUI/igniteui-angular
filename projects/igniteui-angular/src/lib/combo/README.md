@@ -118,7 +118,7 @@ When defining one of the them, you need to reference list of predefined names, a
 #### Defining item template:
 ```html
 <igx-combo>
-	<ng-template #itemTemplate let-display let-key="valueKey">
+	<ng-template igxComboItem let-display let-key="valueKey">
 		<div class="item">
 			<span class="state">State: {{ display[key] }}</span>
 			<span class="region">Region: {{ display.region }}</span>
@@ -127,11 +127,23 @@ When defining one of the them, you need to reference list of predefined names, a
 </igx-combo>
 ```
 
+#### Defining group headers template:
+
+```html
+<igx-combo>
+    <ng-template igxComboHeaderItem let-headerItem let-key="groupKey">
+        <div class="group-header-class">
+            Header for {{ headerItem[key] }}
+        </div>
+    </ng-template>
+</igx-combo>
+```
+
 #### Defining header template:
 
 ```html
 <igx-combo>
-    <ng-template #headerTemplate>
+    <ng-template igxComboHeader>
         <div class="header-class">Custom header</div>
         <img src=""/>
     </ng-template>
@@ -142,7 +154,7 @@ When defining one of the them, you need to reference list of predefined names, a
 
 ```html
 <igx-combo>
-    <ng-template #footerTemplate>
+    <ng-template igxComboFooter>
         <div class="footer-class">Custom footer</div>
         <img src=""/>
     </ng-template>
@@ -153,7 +165,7 @@ When defining one of the them, you need to reference list of predefined names, a
 
 ```html
 <igx-combo>
-    <ng-template #emptyTemplate>
+    <ng-template igxComboEmpty>
         <span>List is empty</div>
     </ng-template>
 </igx-combo>
@@ -163,11 +175,32 @@ When defining one of the them, you need to reference list of predefined names, a
 
 ```html
 <igx-combo>
-    <ng-template #addItemTemplate>
+    <ng-template igxComboAddItem>
         <span>Add town</span>
     </ng-template>
 </igx-combo>
 ```
+
+#### Defining toggle icon template:
+
+```html
+<igx-combo>
+    <ng-template igxComboToggleIcon let-collapsed>
+        <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+    </ng-template>
+</igx-combo>
+```
+
+#### Defining toggle icon template:
+
+```html
+<igx-combo>
+    <ng-template igxComboClearIcon>
+        <igx-icon>clear</igx-icon>
+    </ng-template>
+</igx-combo>
+```
+
 <div class="divider--half"></div>
 
 ## Keyboard Navigation
@@ -181,7 +214,7 @@ When igxCombo is opened and search input is focused:
   > Note: Any other key stroke will be handled by the input.
 
 When igxCombo is opened and list item is focused:
-- `ArrowDown` will move to next list item. If the active item is the last one in hte list and custom values are enabled then focus will be moved to the Add item button.
+- `ArrowDown` will move to next list item. If the active item is the last one in the list and custom values are enabled then focus will be moved to the Add item button.
 
 - `ArrowUp` will move to previous list item. If the active item is the first one in the list then focus will be moved back to the search input.
 

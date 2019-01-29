@@ -2,6 +2,7 @@ import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
+import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 let warningShown = false;
 
@@ -19,6 +20,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     protected _isFocused = false;
     protected _isSelected = false;
     protected _index = null;
+    protected _disabled = false;
 
     /**
      * @hidden
@@ -185,7 +187,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @Input()
     @HostBinding('class.igx-drop-down__header')
-    public isHeader = false;
+    public isHeader: boolean;
 
     /**
      * Sets/gets if the given item is disabled
@@ -203,10 +205,17 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *      </div>
      *  </igx-drop-down-item>
      * ```
+     * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
      */
     @Input()
     @HostBinding('class.igx-drop-down__item--disabled')
-    public disabled = false;
+    public get disabled(): boolean {
+        return this.group ? this.group.disabled || this._disabled : this._disabled;
+    }
+
+    public set disabled(value: boolean) {
+        this._disabled = value;
+    }
 
     /**
      * Gets item index
@@ -235,6 +244,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
+        @Optional() protected group: IgxDropDownGroupComponent,
         @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
     ) { }
 
