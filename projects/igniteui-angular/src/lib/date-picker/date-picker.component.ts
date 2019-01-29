@@ -16,7 +16,6 @@ import {
     Inject,
     NgZone,
     AfterViewInit,
-    HostListener,
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -67,8 +66,7 @@ import {
     trimMaskSymbols,
     isFullMonthInput,
     isFullDayInput,
-    isFullYearInput,
-    getDatePartOnPosition
+    isFullYearInput
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IgxDatePickerBase } from './date-picker.common';
@@ -450,6 +448,15 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     public mode = DatePickerInteractionMode.READONLY;
 
     /**
+     *An @Input property that sets whether `IgxDatePickerComponent` date parts would spin continously.
+     *```html
+     *<igx-date-picker [isSpinLoop]="false"></igx-date-picker>
+     *```
+     */
+    @Input()
+    public isSpinLoop = true;
+
+    /**
     *@hidden
     */
     @Input()
@@ -685,17 +692,18 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
     }
 
     /**
-     *@hidden
-     */
+    *@hidden
+    */
     public ngAfterViewInit(): void {
-        // if (this.mode === DatePickerInteractionMode.EDITABLE) {
-        //     this._zone.runOutsideAngular(() => {
-        //         fromEvent(this.getEditElement(), 'keydown').pipe(
-        //             throttle(() => interval(0, animationFrameScheduler)),
-        //             takeUntil(this._destroy$))
-        //             .subscribe((res) => {
-        //                 this.onKeydown(res);
-        //             });
+        if (this.mode === DatePickerInteractionMode.EDITABLE) {
+            this._zone.runOutsideAngular(() => {
+                fromEvent(this.getEditElement(), 'keydown')
+                    .pipe(throttle(() => interval(0, animationFrameScheduler)), takeUntil(this._destroy$))
+                    .subscribe((res) => {
+                        this.onKeyDown(res);
+                    });
+            });
+        }
     }
 
     /**
@@ -811,7 +819,16 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 const year = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, strToManipulate);
 
                 const yearFormat = getDateFormatPart(this.dateFormatParts, DATE_PARTS.YEAR).formatType;
-                fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? '20'.concat(year) : year;
+                let yearPrefix;
+                if (originalDateValue !== null) {
+                    const originalYear = originalDateValue.getFullYear().toString();
+                    if (originalYear.length === 4) {
+                        yearPrefix = originalYear.substring(0, 2);
+                    }
+                } else {
+                    yearPrefix = '20';
+                }
+                fullYear = (yearFormat === FORMAT_DESC.TWO_DIGITS) ? yearPrefix.concat(year) : year;
 
                 newValue = createDate(Number(day), Number(month) - 1, Number(fullYear));
             } else {
@@ -875,6 +892,15 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                 }
                 break;
             default:
+                // Prevent week day name typing modification
+                const weekDayPart = getDateFormatPart(this.dateFormatParts, DATE_PARTS.WEEKDAY);
+                const cursorPosition = this._getCursorPosition();
+                if (weekDayPart !== undefined
+                    && cursorPosition >= weekDayPart.position[0]
+                    && cursorPosition <= weekDayPart.position[1]) {
+                    event.preventDefault();
+                }
+
                 return;
         }
     }
@@ -883,18 +909,13 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         this.spinValue(event);
     }
 
-    public onDoubleClick(event) {
-        const datePart = getDatePartOnPosition(this.dateFormatParts, this._getCursorPosition());
-        this.getEditElement().setSelectionRange(datePart.position[0], datePart.position[1]);
-    }
-
     public onInput(event) {
         const inputValue = event.target.value;
+        const cursorPosition = this._getCursorPosition();
         // Mandatory date parts
         const dayValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue);
         const monthValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue);
         const yearValue = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.YEAR, inputValue);
-
         const dayStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.DAY, inputValue, false);
         const monthStr = getDateValueFromInput(this.dateFormatParts, DATE_PARTS.MONTH, inputValue, false);
 
@@ -907,7 +928,6 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         // While editting, if one date part is deleted, date-picker value is set to null, the remaining input stays intact
         if (dayValue === '' || monthValue === '' || yearValue === '') {
             this.deselectDate();
-            const cursorPosition = this._getCursorPosition();
             requestAnimationFrame(() => {
                 this.getEditElement().value = inputValue;
                 this._setCursorPosition(cursorPosition);
@@ -921,12 +941,15 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
             && event.inputType !== 'deleteContentBackward') {
             this._isInEditMode = true;
             this.calculateDate(inputValue, event.type);
+            requestAnimationFrame(() => {
+                this._setCursorPosition(cursorPosition);
+            });
         }
     }
 
     private spinValue(event) {
         event.preventDefault();
-        const cursorPos = this._getCursorPosition();
+        const cursorPosition = this._getCursorPosition();
         const inputValue = event.target.value;
         let sign = 0;
         this._isInEditMode = true;
@@ -940,14 +963,13 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         }
 
         this.getEditElement().value =
-            getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPos, SPIN_DELTA * sign);
-
-        this._setCursorPosition(cursorPos);
-        requestAnimationFrame(() => {
-            this._setCursorPosition(cursorPos);
-        });
+            getSpinnedDateInput(this.dateFormatParts, inputValue, cursorPosition, SPIN_DELTA * sign, this.isSpinLoop);
 
         this.calculateDate(event.target.value, event.type);
+
+        requestAnimationFrame(() => {
+            this._setCursorPosition(cursorPosition);
+        });
     }
 
     private _onOpened(): void {

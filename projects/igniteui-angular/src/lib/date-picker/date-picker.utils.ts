@@ -142,107 +142,80 @@ export const WEEKDAYS_NAMES_ARRAY = [
  *@hidden
  */
 export function getYearFormatType(format: string): string {
-    let type;
     const occurences = format.match(new RegExp(DATE_CHARS.YEAR_CHAR, 'g')).length;
-
     switch (occurences) {
         case 1: {
             // y (2020)
-            type = FORMAT_DESC.NUMERIC;
-            break;
+            return FORMAT_DESC.NUMERIC;
         }
         case 4: {
             // yyyy (2020)
-            type = FORMAT_DESC.NUMERIC;
-            break;
+            return FORMAT_DESC.NUMERIC;
         }
         case 2: {
             // yy (20)
-            type = FORMAT_DESC.TWO_DIGITS;
-            break;
+            return FORMAT_DESC.TWO_DIGITS;
         }
     }
-
-    return type;
 }
 
 /**
  *@hidden
  */
 export function getMonthFormatType(format: string): string {
-    let type;
     const occurences = format.match(new RegExp(DATE_CHARS.MONTH_CHAR, 'g')).length;
-
     switch (occurences) {
         case 1: {
             // M
-            type = FORMAT_DESC.NUMERIC;
-            break;
+            return FORMAT_DESC.NUMERIC;
         }
         case 2: {
             // MM
-            type = FORMAT_DESC.TWO_DIGITS;
-            break;
+            return FORMAT_DESC.TWO_DIGITS;
         }
         case 3: {
             // MMM
-            type = FORMAT_DESC.SHORT;
-            break;
+            return FORMAT_DESC.SHORT;
         }
         case 4: {
             // MMMM
-            type = FORMAT_DESC.LONG;
-            break;
+            return FORMAT_DESC.LONG;
         }
     }
-
-    return type;
 }
 
 /**
  *@hidden
  */
 export function getDayFormatType(format: string): string {
-    let type;
     const occurences = format.match(new RegExp(DATE_CHARS.DAY_CHAR, 'g')).length;
-
     switch (occurences) {
         case 1: {
             // d
-            type = FORMAT_DESC.NUMERIC;
-            break;
+            return FORMAT_DESC.NUMERIC;
         }
         case 2: {
             // dd
-            type = FORMAT_DESC.TWO_DIGITS;
-            break;
+            return FORMAT_DESC.TWO_DIGITS;
         }
     }
-
-    return type;
 }
 
 /**
  *@hidden
  */
 export function getWeekDayFormatType(format: string): string {
-    let type;
     const occurences = format.match(new RegExp(DATE_CHARS.WEEKDAY_CHAR, 'g')).length;
-
     switch (occurences) {
         case 3: {
             // EEE (Tue)
-            type = FORMAT_DESC.SHORT;
-            break;
+            return FORMAT_DESC.SHORT;
         }
         case 4: {
             // EEEE (Tuesday)
-            type = FORMAT_DESC.LONG;
-            break;
+            return FORMAT_DESC.LONG;
         }
     }
-
-    return type;
 }
 
 /**
@@ -434,96 +407,151 @@ export function getNumericFormatPrefix(formatType: string): string {
 /**
  *@hidden
  */
-export function getSpinnedDateInput(dateFormatParts: any[], inputValue: string, position: number, delta: number): string {
-    const datePart = getDatePartOnPosition(dateFormatParts, position);
-    const positionsArray = datePart.position;
-    const startIdx = positionsArray[0];
-    const endIdx = positionsArray[1];
-    const datePartType = datePart.type;
-    const datePartFormatType = datePart.formatType;
+export function getSpinnedDateInput(dateFormatParts: any[],
+    inputValue: string,
+    position: number,
+    delta: number,
+    isSpinLoop: boolean): string {
+    const spinnedDatePart = getDatePartOnPosition(dateFormatParts, position);
+    const datePartType = spinnedDatePart.type;
+    const datePartFormatType = spinnedDatePart.formatType;
+    let newValue;
+    switch (datePartFormatType) {
+        case FORMAT_DESC.LONG:
+        case FORMAT_DESC.SHORT: {
+            if (datePartType === DATE_PARTS.MONTH) {
+                newValue = getMonthIndexByName(dateFormatParts, inputValue) - 1;
+            }
 
-    const partValue = getDateValueFromInput(dateFormatParts, datePartType, inputValue);
-    let newValue = parseInt(partValue, 10);
-
-    if (isNaN(newValue)) {
-        if (datePartType === DATE_PARTS.MONTH
-            && (datePartFormatType === FORMAT_DESC.LONG || datePartFormatType === FORMAT_DESC.SHORT)) {
-            newValue = getMonthIndexFromString(dateFormatParts, inputValue) - 1;
+            if (datePartType === DATE_PARTS.WEEKDAY) {
+                newValue = getDayIndexByName(dateFormatParts, inputValue);
+            }
+            break;
         }
-        if (datePartType === DATE_PARTS.WEEKDAY) {
-            newValue = getDayIndexFromString(dateFormatParts, inputValue) - 1;
+        default: {
+            const datePartValue = getDateValueFromInput(dateFormatParts, datePartType, inputValue);
+            newValue = parseInt(datePartValue, 10);
+            break;
         }
     }
 
     let maxValue, minValue;
     if (!isNaN(newValue)) {
-        switch (datePartType) {
-            case DATE_PARTS.MONTH: {
-                // Max 12 months
-                if (datePartFormatType === FORMAT_DESC.LONG || datePartFormatType === FORMAT_DESC.SHORT) {
-                    minValue = 0;
-                    maxValue = NUMBER_OF_MONTHS - 1;
-                } else {
-                    minValue = 1;
-                    maxValue = NUMBER_OF_MONTHS;
-                }
-                break;
-            }
-            case DATE_PARTS.DAY: {
-                minValue = 1;
-                maxValue = daysInMonth(
-                    getFullYearFromString(dateFormatParts, inputValue),
-                    getMonthIndexFromString(dateFormatParts, inputValue));
-                break;
-            }
-            case DATE_PARTS.YEAR: {
-                if (datePartFormatType === FORMAT_DESC.TWO_DIGITS) {
-                    minValue = 0;
-                    maxValue = 99;
-                } else {
-                    // Infinite loop
-                    minValue = 'infinite';
-                    maxValue = 'infinite';
-                }
-                break;
-            }
-            case DATE_PARTS.WEEKDAY: {
-                minValue = 0;
-                maxValue = 6;
-                break;
-            }
-        }
+        const minMax = getMinMaxValue(dateFormatParts, spinnedDatePart, inputValue);
+        minValue = minMax[0];
+        maxValue = minMax[1];
     }
 
     let tempValue = newValue;
     tempValue += delta;
-    if ((tempValue <= maxValue && tempValue >= minValue) || maxValue === 'infinite' || minValue === 'infinite') {
+
+    // Infinite loop for full years
+    if (maxValue === 'infinite' && minValue === 'infinite') {
         newValue = tempValue;
     }
 
+    if (isSpinLoop) {
+        if (tempValue > maxValue) {
+            tempValue = minValue;
+        }
+        if (tempValue < minValue) {
+            tempValue = maxValue;
+        }
+        newValue = tempValue;
+    } else {
+        if (tempValue <= maxValue && tempValue >= minValue) {
+            newValue = tempValue;
+        }
+    }
+
+    const startIdx = spinnedDatePart.position[0];
+    const endIdx = spinnedDatePart.position[1];
     const start = inputValue.slice(0, startIdx);
     const end = inputValue.slice(endIdx, inputValue.length);
     let changedPart: string;
 
-    if (datePartType === DATE_PARTS.MONTH
-        && (datePartFormatType === FORMAT_DESC.LONG || datePartFormatType === FORMAT_DESC.SHORT)) {
-        // Named months
-        const monthName = getMonthNameFromIndex(dateFormatParts, newValue);
-        let suffix = '';
-        const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? MAX_MONTH_SYMBOLS - monthName.length : 3;
-        for (let i = 0; i < promptCharToAdd; i++) {
-            suffix += PROMPT_CHAR;
+    switch (datePartFormatType) {
+        case FORMAT_DESC.LONG:
+        case FORMAT_DESC.SHORT: {
+            // Named months
+            if (datePartType === DATE_PARTS.MONTH) {
+                const monthName = getMonthNameByIndex(dateFormatParts, newValue);
+                let suffix = '';
+                const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_MONTH_SYMBOLS - monthName.length) : 3;
+                for (let i = 0; i < promptCharToAdd; i++) {
+                    suffix += PROMPT_CHAR;
+                }
+                changedPart = (monthName.length < promptCharToAdd) ? `${monthName}${suffix}` : `${monthName}`;
+            }
+
+            if (datePartType === DATE_PARTS.WEEKDAY) {
+                const dayName = geDayNameByIndex(dateFormatParts, newValue);
+                let suffix = '';
+                const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_WEEKDAY_SYMBOLS - dayName.length) : 3;
+                for (let i = 0; i < promptCharToAdd; i++) {
+                    suffix += PROMPT_CHAR;
+                }
+                changedPart = (dayName.length < promptCharToAdd) ? `${dayName}${suffix}` : `${dayName}`;
+            }
+
+            break;
         }
-        changedPart = (monthName.length < promptCharToAdd) ? `${monthName}${suffix}` : `${monthName}`;
-    } else {
-        // Numeric data
-        // Handling leading zero format
-        const prefix = getNumericFormatPrefix(datePartFormatType);
-        changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
+        default: {
+            // Numeric data
+            // Handling leading zero format
+            const prefix = getNumericFormatPrefix(datePartFormatType);
+            changedPart = (newValue < 10) ? `${prefix}${newValue}` : `${newValue}`;
+            break;
+        }
     }
 
     return `${start}${changedPart}${end}`;
 }
+
+/**
+ *@hidden
+ */
+export function getMinMaxValue(dateFormatParts: any[], spinnedDatePart, inputValue: string): any[] {
+    let maxValue, minValue;
+    switch (spinnedDatePart.type) {
+        case DATE_PARTS.MONTH: {
+            // Max 12 months
+            if (spinnedDatePart.formatType === FORMAT_DESC.LONG || spinnedDatePart.formatType === FORMAT_DESC.SHORT) {
+                minValue = 0;
+                maxValue = NUMBER_OF_MONTHS - 1;
+            } else {
+                minValue = 1;
+                maxValue = NUMBER_OF_MONTHS;
+            }
+            break;
+        }
+        case DATE_PARTS.DAY: {
+            minValue = 1;
+            maxValue = daysInMonth(
+                getFullYearFromString(getDateFormatPart(dateFormatParts, DATE_PARTS.YEAR), inputValue),
+                getMonthIndexByName(dateFormatParts, inputValue));
+            break;
+        }
+        case DATE_PARTS.YEAR: {
+            if (spinnedDatePart.formatType === FORMAT_DESC.TWO_DIGITS) {
+                minValue = 0;
+                maxValue = 99;
+            } else {
+                // Infinite loop
+                minValue = 'infinite';
+                maxValue = 'infinite';
+            }
+            break;
+        }
+        case DATE_PARTS.WEEKDAY: {
+            minValue = 0;
+            maxValue = 6;
+            break;
+        }
+    }
+    return [minValue, maxValue];
+}
+
 
 /**
  *@hidden
@@ -592,12 +620,8 @@ export function addPromptCharsEditMode(dateFormatParts: any[], date: Date, input
  *@hidden
  */
 export function getDateValueFromInput(dateFormatParts: any[], type: string, inputValue: string, trim: boolean = true): string {
-    const part = getDateFormatPart(dateFormatParts, type);
-    const partPosition = part.position;
-    const startIdx = partPosition[0];
-    const endIdx = partPosition[1];
-    const result = inputValue.substring(startIdx, endIdx);
-
+    const partPosition = getDateFormatPart(dateFormatParts, type).position;
+    const result = inputValue.substring(partPosition[0], partPosition[1]);
     return (trim) ? trimUnderlines(result) : result;
 }
 
@@ -611,7 +635,7 @@ export function getDateFormatPart(dateFormatParts: any[], type: string): any {
 /**
  *@hidden
  */
-export function getMonthIndexFromString(dateFormatParts: any[], inputValue): number {
+export function getMonthIndexByName(dateFormatParts: any[], inputValue: string): number {
     let monthIndex = -1;
     const formatType = getDateFormatPart(dateFormatParts, DATE_PARTS.MONTH).formatType;
     const value = getDateValueFromInput(dateFormatParts, DATE_PARTS.MONTH, inputValue);
@@ -632,6 +656,24 @@ export function getMonthIndexFromString(dateFormatParts: any[], inputValue): num
             break;
         }
     }
+    return monthIndex;
+}
+
+/**
+ *@hidden
+ */
+export function findMonthByName(formatType: string, name: string): number {
+    let monthIndex = -1;
+    switch (formatType) {
+        case FORMAT_DESC.SHORT: {
+            monthIndex = MONTHS_NAMES_ARRAY.findIndex((month) => month.short.toLowerCase() === name.toLowerCase());
+            break;
+        }
+        case FORMAT_DESC.LONG: {
+            monthIndex = MONTHS_NAMES_ARRAY.findIndex((month) => month.long.toLowerCase() === trimUnderlines(name).toLowerCase());
+            break;
+        }
+    }
 
     return monthIndex;
 }
@@ -641,8 +683,8 @@ export function getMonthIndexFromString(dateFormatParts: any[], inputValue): num
  */
 export function isFullMonthInput(dateFormatParts: any[], value: any, input: string): boolean {
     let isFullMonth = false;
-    const monthPart = getDateFormatPart(dateFormatParts, DATE_PARTS.MONTH);
-    switch (monthPart.formatType) {
+    const formatType = getDateFormatPart(dateFormatParts, DATE_PARTS.MONTH).formatType;
+    switch (formatType) {
         case FORMAT_DESC.NUMERIC:
         case FORMAT_DESC.TWO_DIGITS: {
             if (value !== '' && input.length === 2 && input.charAt(1) !== PROMPT_CHAR) {
@@ -652,7 +694,7 @@ export function isFullMonthInput(dateFormatParts: any[], value: any, input: stri
         }
         case FORMAT_DESC.SHORT:
         case FORMAT_DESC.LONG: {
-            if (getMonthIndexFromString(dateFormatParts, input) > -1) {
+            if (findMonthByName(formatType, input) > -1) {
                 isFullMonth = true;
             }
             break;
@@ -666,8 +708,7 @@ export function isFullMonthInput(dateFormatParts: any[], value: any, input: stri
  */
 export function isFullDayInput(dateFormatParts: any[], value: any, input: string): boolean {
     let isFullDay = false;
-    const dayPart = getDateFormatPart(dateFormatParts, DATE_PARTS.DAY);
-    switch (dayPart.formatType) {
+    switch (getDateFormatPart(dateFormatParts, DATE_PARTS.DAY).formatType) {
         case FORMAT_DESC.NUMERIC:
         case FORMAT_DESC.TWO_DIGITS: {
             if (value !== '' && input.length === 2 && input.charAt(1) !== PROMPT_CHAR) {
@@ -789,17 +830,15 @@ function fillDatePartsPositions(dateArray: any[]): void {
 /**
  *@hidden
  */
-function getFullYearFromString(dateFormatParts: any[], inputValue): number {
-    const partPos = getDateFormatPart(dateFormatParts, DATE_PARTS.YEAR).position;
-    return Number(inputValue.substring(partPos[0], partPos[1]));
+function getFullYearFromString(yearPart, inputValue): number {
+    return Number(inputValue.substring(yearPart.position[0], yearPart.position[1]));
 }
 
 /**
  *@hidden
  */
-function getMonthNameFromIndex(dateFormatParts: any[], index: number): string {
-    const formatType = getDateFormatPart(dateFormatParts, DATE_PARTS.MONTH).formatType;
-    switch (formatType) {
+function getMonthNameByIndex(dateFormatParts: any[], index: number): string {
+    switch (getDateFormatPart(dateFormatParts, DATE_PARTS.MONTH).formatType) {
         case FORMAT_DESC.LONG: {
             return MONTHS_NAMES_ARRAY[index].long;
         }
@@ -812,7 +851,7 @@ function getMonthNameFromIndex(dateFormatParts: any[], index: number): string {
 /**
  *@hidden
  */
-function geDayNameFromIndex(dateFormatParts: any[], index: number): string {
+function geDayNameByIndex(dateFormatParts: any[], index: number): string {
     const formatType = getDateFormatPart(dateFormatParts, DATE_PARTS.WEEKDAY).formatType;
     switch (formatType) {
         case FORMAT_DESC.LONG: {
@@ -827,7 +866,7 @@ function geDayNameFromIndex(dateFormatParts: any[], index: number): string {
 /**
  *@hidden
  */
-function getDayIndexFromString(dateFormatParts: any[], inputValue): number {
+function getDayIndexByName(dateFormatParts: any[], inputValue): number {
     let dayIndex;
     const formatType = getDateFormatPart(dateFormatParts, DATE_PARTS.WEEKDAY).formatType;
     const value = getDateValueFromInput(dateFormatParts, DATE_PARTS.WEEKDAY, inputValue);
