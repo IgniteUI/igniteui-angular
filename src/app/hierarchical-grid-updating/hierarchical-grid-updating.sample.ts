@@ -69,7 +69,7 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     }
 
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
-        this.remoteService.getData({ parentID: event.parendID, level: rowIsland.level, key: rowIsland.key }, (data) => {
+        this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
             event.grid.data = data['value'];
             event.grid.cdr.detectChanges();
         });

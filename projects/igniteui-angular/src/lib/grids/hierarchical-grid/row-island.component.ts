@@ -36,7 +36,7 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 
 export interface IGridCreatedEventArgs {
     owner: IgxRowIslandComponent;
-    parendID: any;
+    parentID: any;
     grid: IgxHierarchicalGridComponent;
 }
 
@@ -47,16 +47,33 @@ export interface IGridCreatedEventArgs {
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
-    private layout_id = `igx-row-island-`;
-    private isInit = false;
-    public initialChanges = [];
-    public rootGrid = null;
-
+    /**
+     * Sets the key of the row island by which child data would be taken from the row data if such is provided.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'">
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
     @Input()
     public key: string;
 
+    /**
+     * Sets if all immediate children of the `IgxRowIslandComponent` should be expanded/collapsed.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'" [expandChildren]="true" #rowIsland>
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
     @Input()
-    set expandChildren(value) {
+    set expandChildren(value: boolean) {
         this._expandChildren = value;
         this.childrenExpandState = value ? IgxGridExpandState.EXPANDED : IgxGridExpandState.COLLAPSED;
         this.getGridsForIsland(this.key).forEach((grid) => {
@@ -71,28 +88,61 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         });
     }
 
-    get expandChildren() {
+    /**
+     * Sets if all immediate children of the `IgxRowIslandComponent` should be expanded/collapsed.
+     * ```typescript
+     * const expanded = this.rowIsland.expandChildren;
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
+    get expandChildren(): boolean {
         return this._expandChildren;
     }
 
+    /**
+     * @hidden
+     */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
     public children = new QueryList<IgxRowIslandComponent>();
 
+    /**
+     * @hidden
+     */
     @Output()
     public onLayoutChange = new EventEmitter<any>();
 
+    /**
+     * Event emmited when a grid is being created based on this row island.
+     * ```html
+     * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
+     *      <igx-row-island [key]="'childData'" (onGridCreated)="gridCreated($event)" #rowIsland>
+     *          <!-- ... -->
+     *      </igx-row-island>
+     * </igx-hierarchical-grid>
+     * ```
+     * @memberof IgxRowIslandComponent
+     */
     @Output()
     public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
+    /**
+     * @hidden
+     */
     get id() {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
         return this.layout_id + pId +  this.key;
     }
 
+    /**
+     * @hidden
+     */
     get parentId() {
        return this.parentIsland ? this.parentIsland.id : null;
     }
 
+    /**
+     * @hidden
+     */
     get level() {
         let ptr = this.parentIsland;
         let lvl = 0;
@@ -111,6 +161,18 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         const grids = this.getGridsForIsland(this.key);
         return grids.length ? grids[0].transactions : this._transactions;
     }
+
+    /**
+     * @hidden
+     */
+    public initialChanges = [];
+
+    /**
+     * @hidden
+     */
+    public rootGrid = null;
+    private layout_id = `igx-row-island-`;
+    private isInit = false;
 
     constructor(
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
@@ -146,9 +208,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 
+    /**
+     * @hidden
+     */
     ngOnInit() {
     }
 
+    /**
+     * @hidden
+     */
     ngAfterContentInit() {
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
@@ -162,10 +230,16 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         this.childColumns.reset(topCols);
     }
 
+    /**
+     * @hidden
+     */
     ngAfterViewInit() {
         this.hgridAPI.registerLayout(this);
     }
 
+    /**
+     * @hidden
+     */
     ngOnChanges(changes) {
         this.onLayoutChange.emit(changes);
         if (!this.isInit) {
@@ -173,6 +247,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         }
     }
 
+    /**
+     * @hidden
+     */
     ngOnDestroy() {
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
@@ -180,7 +257,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         this.hgridAPI.unset(this.id);
     }
 
+    /**
+     * @hidden
+     */
     reflow() {}
 
+    /**
+     * @hidden
+     */
     calculateGridHeight() {}
 }

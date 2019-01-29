@@ -1572,15 +1572,29 @@ p {
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-    color: #fff;
     font-size: 1.125rem; }
+  .header__logo-name {
+    color: #fff;
+    text-decoration: none; }
   .header__logo-version {
-    font-size: 0.75rem;
-    background: #666;
-    color: #efefef;
-    padding: 0.25rem 0.5rem;
-    margin-left: 0.75rem;
-    font-weight: 500; }
+    margin-left: 0.75rem; }
+    .header__logo-version select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      /* remove default arrow */
+      border-radius: 0;
+      border: none;
+      min-width: 64px;
+      max-width: 128px;
+      font-size: 0.8125rem;
+      background: url("../img/baseline-arrow_drop_down-24px.svg") no-repeat 96% #666;
+      background-size: 20px;
+      color: #efefef;
+      padding: 0.25rem 1.5rem 0.25rem 0.5rem;
+      outline-style: none; }
+      .header__logo-version select::-ms-expand {
+        display: none; }
   .header--sticky {
     position: fixed;
     width: 100%;
