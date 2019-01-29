@@ -10,6 +10,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { DisplayDensity } from '../../core/displayDensity';
 
 describe('Basic IgxHierarchicalGrid', () => {
     configureTestSuite();
@@ -217,6 +218,30 @@ describe('Basic IgxHierarchicalGrid', () => {
         row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         expect(row1.expanded).toBe(true);
     });
+
+    it('should render correctly when display density is changed', fakeAsync(() => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        expect(hierarchicalGrid.displayDensity).toEqual(DisplayDensity.comfortable);
+
+        hierarchicalGrid.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        tick(100);
+
+        expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--cosy')).toBe(true);
+        expect(childGrid.displayDensity).toBe(DisplayDensity.cosy);
+
+        hierarchicalGrid.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        tick(100);
+
+        expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
+        expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
+    }));
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {
@@ -367,6 +392,50 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     });
 });
 
+describe('IgxHierarchicalGrid Remote Scenarios', () => {
+    configureTestSuite();
+    let fixture;
+    const TBODY_CLASS = '.igx-grid__tbody-content';
+    const THEAD_CLASS = '.igx-grid__thead';
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHGridRemoteOnDemandComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
+        fixture.detectChanges();
+    }));
+
+    it('should render loading indicator when loading and autoGenerate are enabled', fakeAsync(() => {
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+        const gridHead = fixture.debugElement.query(By.css(THEAD_CLASS));
+        let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+        let colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
+
+        expect(loadingIndicator).not.toBeNull();
+        expect(colHeaders.length).toBe(0);
+        expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+        // Check for loaded rows in grid's container
+        grid.shouldGenerate = true;
+        fixture.componentInstance.bind();
+        fixture.detectChanges();
+        tick(1000);
+
+        loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+        colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
+        expect(colHeaders.length).toBeGreaterThan(0);
+        expect(loadingIndicator).toBeNull();
+    }));
+});
+
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
@@ -433,3 +502,43 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland1: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
 }
+
+@Component({
+    template: `
+        <igx-hierarchical-grid [data]="data" (onDataPreLoad)="dataLoading($event)"
+         [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [height]="height" [isLoading]="true" #rowIsland1>
+            </igx-row-island>
+        </igx-hierarchical-grid>
+    `
+})
+export class IgxHGridRemoteOnDemandComponent {
+    public data;
+    @ViewChild(IgxHierarchicalGridComponent, { read: IgxHierarchicalGridComponent })
+    public instance: IgxHierarchicalGridComponent;
+    @ViewChild('customTemplate', { read: TemplateRef })
+    public customTemaplate: TemplateRef<any>;
+    constructor(public cdr: ChangeDetectorRef) { }
+
+    generateDataUneven(count: number, level: number, parendID: string = null) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+            if (level > 0 ) {
+               // Have child grids for row with even id less rows by not multiplying by 2
+               children = this.generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
+            }
+            prods.push({
+                ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+                'Col2': i, 'Col3': i, childData: children, childData2: children });
+        }
+        return prods;
+    }
+
+    bind () {
+        this.data = this.generateDataUneven(20, 3);
+    }
+}
+
