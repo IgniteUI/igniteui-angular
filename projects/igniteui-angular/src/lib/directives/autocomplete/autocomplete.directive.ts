@@ -1,7 +1,7 @@
 //#region imports
 import {
     Directive, Input, Self, Optional, Inject, HostBinding, Output, EventEmitter,
-    NgModule, ElementRef, HostListener, ChangeDetectorRef } from '@angular/core';
+    NgModule, ElementRef, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -54,7 +54,7 @@ export interface AutocompleteOverlaySettings {
 @Directive({
     selector: '[igxAutocomplete]'
 })
-export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective {
+export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy {
 
     constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
                 @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
@@ -72,7 +72,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     };
 
     protected id: string;
-    protected queryListNotifier$ = new Subject<boolean>();
+    protected dropDownOpened$ = new Subject<boolean>();
     protected get model() {
         return this.ngModel ? this.ngModel : this.formControl;
     }
@@ -234,7 +234,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      */
     public close() {
         this.dropDown.close();
-        this.queryListNotifier$.complete();
+        this.dropDownOpened$.next();
     }
 
     /**
@@ -248,11 +248,9 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.dropDown.open(settings);
         this.target = this.dropDown;
         this.dropDown.width = this.parentElement.clientWidth + 'px';
-        this.dropDown.onSelection.subscribe(this.select);
-        this.dropDown.onOpened.pipe(first()).subscribe(() => {
-            this.highlightFirstItem();
-        });
-        this.dropDown.children.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => this.highlightFirstItem());
+        this.dropDown.onSelection.pipe(takeUntil(this.dropDownOpened$)).subscribe(this.select);
+        this.dropDown.onOpened.pipe(first()).subscribe(() => { this.highlightFirstItem(); });
+        this.dropDown.children.changes.pipe(takeUntil(this.dropDownOpened$)).subscribe(() => this.highlightFirstItem());
     }
 
     private get collapsed(): boolean {
@@ -275,10 +273,10 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     private unhighlightFirstItem() {
+        this.dropDown.focusedItem = null;
         const firstItem = this.dropDown.items[0];
         if (firstItem) {
             firstItem.isFocused = false;
-            this.dropDown.focusedItem = null;
         }
     }
 
@@ -289,6 +287,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             this.dropDown.focusedItem = firstItem;
         }
         this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.dropDownOpened$.complete();
     }
 }
 
