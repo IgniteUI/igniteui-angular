@@ -7,6 +7,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
@@ -66,6 +67,8 @@
 /// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
 /// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
+/// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
+/// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -74,6 +77,8 @@
 /// @requires text-contrast
 /// @requires hexrgba
 /// @requires extend
+/// @requires igx-elevation
+/// @requires $elevations
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -151,10 +156,15 @@
     $body-summaries-background: null,
     $body-summaries-text-color: null,
     $root-summaries-background: null,
-    $root-summaries-text-color: null
+    $root-summaries-text-color: null,
+
+    $grid-shadow: null,
+    $drag-shadow: null,
 ) {
     $name: 'igx-grid';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $grid-schema: map-get($schema, $name);
+
+    $theme: apply-palette($grid-schema, $palette);
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
@@ -304,6 +314,16 @@
         $root-summaries-text-color: text-contrast($root-summaries-background);
     }
 
+    @if not($grid-shadow) {
+        $grid-elevation: map-get($grid-schema, 'grid-elevation');
+        $grid-shadow: igx-elevation($elevations, $grid-elevation);
+    }
+
+    @if not($drag-shadow) {
+        $drag-elevation: map-get($grid-schema, 'drag-elevation');
+        $drag-shadow: igx-elevation($elevations, $drag-elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -386,7 +406,10 @@
         body-summaries-text-color: $body-summaries-text-color,
         root-summaries-background: $root-summaries-background,
         root-summaries-text-color: $root-summaries-text-color,
-        row-selected-cell-background: $row-selected-cell-background
+        row-selected-cell-background: $row-selected-cell-background,
+
+        grid-shadow: $grid-shadow,
+        drag-shadow: $drag-shadow,
     ));
 }
 
@@ -395,8 +418,6 @@
 /// @requires {mixin} ellipsis
 /// @requires igx-color
 /// @requires igx-contrast-color
-/// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires --var
 @mixin igx-grid($theme) {
@@ -406,7 +427,7 @@
     // @debug $theme;
 
     $grid-br: 2px;
-    $grid-shadow: igx-elevation($elevations, 2);
+    $grid-shadow: --var($theme, 'grid-shadow');
 
     $grid-caption-fs: rem(20px);
     $grid-caption-lh: rem(32px);
@@ -639,6 +660,19 @@
         align-items: center;
         height: 100%;
         color: --var($theme, 'content-text-color');
+    }
+
+    %igx-grid__loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 100px;
+
+        > %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
     }
 
     %grid-scroll {
@@ -1200,7 +1234,7 @@
         top: -99999px;
         left: -99999px;
         border: none;
-        box-shadow: igx-elevation($elevations, 5);
+        box-shadow: --var($theme, 'drag-shadow');
         overflow: hidden;
         z-index: 20;
 

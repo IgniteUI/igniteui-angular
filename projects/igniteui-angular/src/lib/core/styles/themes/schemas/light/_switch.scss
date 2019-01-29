@@ -15,6 +15,9 @@
 /// @property {map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
 /// @property {map} label-color [gx-color: ('grays', 900)] - The color of the switch label
 /// @property {map} label-disabled-color [gx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
+/// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
 ///
 /// @see $default-palette
 
@@ -53,4 +56,10 @@ $_light-switch: (
     label-disabled-color: (
         igx-color: ('grays', 400)
     ),
+
+    resting-elevation: 2,
+
+    hover-elevation: 3,
+
+    disabled-elevation: 1
 );
