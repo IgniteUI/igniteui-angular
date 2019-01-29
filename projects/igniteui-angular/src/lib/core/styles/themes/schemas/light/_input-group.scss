@@ -40,7 +40,7 @@
 /// @prop {map} warning-secondary-color [igx-color: ('warn')] - The warning color used in the warning state.
 /// @prop {map} error-secondary-color [igx-color: ('error')] - The error color used in the error state.
 ///
-/// @prop {Number} box-border-radius [.2] - The border radius fraction, between 0-1 to be used for box input .
+/// @prop {Number} box-border-radius [.2 .2 0 0] - The border radius fraction, between 0-1 to be used for box input .
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
 /// @prop {Number} search-border-radius [.2] - The border radius fraction, between 0-1 to be used for search input .
 ///
