@@ -1,16 +1,17 @@
-import { Component, ViewChild, OnInit, ElementRef, DebugElement } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, DebugElement, ViewChildren, QueryList } from '@angular/core';
 import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxDropDownComponent, IgxDropDownModule } from './drop-down.component';
+import { IgxDropDownComponent, IgxDropDownModule } from './index';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
+import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -38,7 +39,8 @@ describe('IgxDropDown ', () => {
                 DropDownWithValuesComponent,
                 IgxDropDownSelectComponent,
                 DropDownWithMaxHeightComponent,
-                DropDownWithUnusedMaxHeightComponent
+                DropDownWithUnusedMaxHeightComponent,
+                GroupDropDownComponent
             ],
             imports: [
                 IgxDropDownModule,
@@ -1241,6 +1243,74 @@ describe('IgxDropDown ', () => {
             expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(0);
         }));
     });
+
+    describe('DropDownGroup Tests', () => {
+        configureTestSuite();
+        it('Should properly render item groups aria attributes - label, role, labelledby', fakeAsync(() => {
+            const fixture = TestBed.createComponent(GroupDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropDown;
+            const groups = fixture.componentInstance.groups;
+            expect(dropdown.collapsed).toBeTruthy();
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            const groupItems = document.querySelectorAll('.igx-drop-down__group');
+            for (let i = 0; i < groupItems.length; i++) {
+                const elemAttr = groupItems[i].attributes;
+                expect(elemAttr['aria-disabled'].value).toEqual('false');
+                expect(elemAttr['aria-labelledby'].value).toEqual(`igx-item-group-label-${i}`);
+                expect(elemAttr['role'].value).toEqual(`group`);
+            }
+            groups.first.disabled = true;
+            fixture.detectChanges();
+            expect(document.querySelectorAll('.igx-drop-down__group')[0].attributes['aria-disabled'].value).toEqual('true');
+        }));
+
+        it('Should properly display items within drop-down groups', fakeAsync(() => {
+            const fixture = TestBed.createComponent(GroupDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropDown;
+            const items = fixture.componentInstance.data;
+            expect(dropdown.collapsed).toBeTruthy();
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(dropdown.collapsed).toBeFalsy();
+            const allDropDownItems = document.querySelectorAll('igx-drop-down-item');
+            const allLabels = document.querySelectorAll('label');
+            expect(allDropDownItems.length).toEqual(9);
+            expect(dropdown.items.length).toEqual(9);
+            for (let i = 0; i < allDropDownItems.length; i++) {
+                const currentIndex = Math.floor(i / 3);
+                expect(allDropDownItems[i].innerHTML.trim()).toEqual(items[currentIndex].children[i % 3].name);
+                expect(dropdown.items[i].value).toEqual(items[currentIndex].children[i % 3].value);
+            }
+        }));
+        it('Should properly disable all items within a disabled drop-down group', fakeAsync(() => {
+            const fixture = TestBed.createComponent(GroupDropDownComponent);
+            fixture.detectChanges();
+            const dropdown = fixture.componentInstance.dropDown;
+            const groups = fixture.componentInstance.groups;
+            const items = fixture.componentInstance.items;
+            expect(dropdown.collapsed).toBeTruthy();
+            dropdown.toggle();
+            tick();
+            fixture.detectChanges();
+            groups.first.disabled = true;
+            fixture.detectChanges();
+            expect(dropdown.collapsed).toBeFalsy();
+            const allDropDownItems = document.querySelectorAll('.igx-drop-down__item');
+            const allDisabled = document.querySelectorAll('.' + CSS_CLASS_DISABLED);
+            expect(allDropDownItems.length).toEqual(9);
+            expect(dropdown.items.length).toEqual(9);
+            expect(allDisabled.length).toEqual(3);
+            const disabledGroup = [...items.toArray()].splice(0, 3);
+            for (let i = 0; i < disabledGroup.length; i++) {
+                expect(disabledGroup[i].disabled).toEqual(true);
+            }
+        }));
+    });
 });
 
 @Component({
@@ -1250,7 +1320,7 @@ describe('IgxDropDown ', () => {
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
         <igx-drop-down-item *ngFor="let item of items">
-            {{ item.field }}
+            {{item.field}}
         </igx-drop-down-item>
     </igx-drop-down>`
 })
@@ -1724,3 +1794,37 @@ class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
     </igx-drop-down>`
 })
 class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {}
+
+@Component({
+    template: `
+    <igx-drop-down>
+        <igx-drop-down-item-group *ngFor="let parent of data" [label]="parent.name">
+            <igx-drop-down-item *ngFor="let child of parent.children" [value]="child.value">
+                {{ child.name }}
+            </igx-drop-down-item>
+        </igx-drop-down-item-group>
+    </igx-drop-down>`
+})
+class GroupDropDownComponent {
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    public dropDown: IgxDropDownComponent;
+    @ViewChildren(IgxDropDownGroupComponent, { read: IgxDropDownGroupComponent })
+    public groups: QueryList<IgxDropDownGroupComponent>;
+    @ViewChildren(IgxDropDownItemComponent, { read: IgxDropDownItemComponent })
+    public items: QueryList<IgxDropDownItemComponent>;
+    public data = [];
+    constructor() {
+        for (let i = 0; i < 3; i++) {
+            this.data.push({
+                name: `Parent ${i + 1}`,
+                children: []
+            });
+            for (let j = 0; j < 3; j++) {
+                this.data[i].children.push({
+                    name: `Child ${j + 1} of Parent ${i + 1}`,
+                    value: `custom-${i + '_' + j}`
+                });
+            }
+        }
+    }
+}
