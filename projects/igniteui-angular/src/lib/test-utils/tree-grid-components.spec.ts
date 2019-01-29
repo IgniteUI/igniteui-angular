@@ -52,7 +52,7 @@ export class IgxTreeGridSimpleComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="300px" height="400px" columnWidth="100px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="318px" height="400px" columnWidth="100px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -284,6 +284,24 @@ export class IgxTreeGridSummariesComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
+    width="400px" height="800px">
+        <igx-column [field]="'ID'" width="150px" dataType="number"></igx-column>
+        <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridSummariesKeyScroliingComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
         width="900px" height="1000px" summaryCalculationMode="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
@@ -301,6 +319,28 @@ export class IgxTreeGridSummariesKeyComponent {
     public ageSummaryTest = AgeSummaryTest;
 }
 
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
+        width="800px" height="800px" summaryCalculationMode="calculationMode">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="false"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [hasSummary]="true" [summaries]="ageSummary"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean" [hasSummary]="true"></igx-column>
+        <igx-column [field]="'ParentID'" dataType="number" [hasSummary]="false"></igx-column>
+    </igx-tree-grid>
+    `
+    , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class IgxTreeGridSummariesTransactionsComponent {
+    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKey();
+    public calculationMode = 'rootAndChildLevels';
+    public ageSummary = AgeSummaryMinMax;
+    public ageSummaryTest = AgeSummaryTest;
+}
+
 class AgeSummary extends IgxNumberSummaryOperand {
     constructor() {
         super();
@@ -309,6 +349,26 @@ class AgeSummary extends IgxNumberSummaryOperand {
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
             if (obj.key === 'average' || obj.key === 'sum' || obj.key === 'count') {
+                const summaryResult = obj.summaryResult;
+                // apply formatting to float numbers
+                if (Number(summaryResult) === summaryResult) {
+                    obj.summaryResult = summaryResult.toLocaleString('en-us', { maximumFractionDigits: 2 });
+                }
+                return obj;
+            }
+        });
+        return result;
+    }
+}
+
+class AgeSummaryMinMax extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[]): IgxSummaryResult[] {
+        const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'min' || obj.key === 'max') {
                 const summaryResult = obj.summaryResult;
                 // apply formatting to float numbers
                 if (Number(summaryResult) === summaryResult) {

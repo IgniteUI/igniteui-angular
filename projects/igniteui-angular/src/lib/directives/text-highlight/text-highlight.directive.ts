@@ -9,7 +9,9 @@ import {
     OnDestroy,
     Output,
     Renderer2,
-    SimpleChanges
+    SimpleChanges,
+    AfterViewChecked,
+    SimpleChange
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -32,7 +34,7 @@ export interface IActiveHighlightInfo {
 @Directive({
     selector: '[igxTextHighlight]'
 })
-export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnChanges {
+export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecked, OnDestroy, OnChanges {
     private static onActiveElementChanged = new EventEmitter<string>();
     public static highlightGroupsMap = new Map<string, IActiveHighlightInfo>();
 
@@ -42,6 +44,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
     private _nodeWasRemoved = false;
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
+    private _valueChanged: boolean;
 
     /**
      * Determines the `CSS` class of the highlight elements.
@@ -222,11 +225,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
      */
     ngOnChanges(changes: SimpleChanges) {
         if (changes.value && !changes.value.firstChange) {
-            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
-            this.activateIfNecessary();
-        }
-
-        if ((changes.row !== undefined && !changes.row.firstChange) ||
+            this._valueChanged = true;
+        } else if ((changes.row !== undefined && !changes.row.firstChange) ||
             (changes.column !== undefined && !changes.column.firstChange) ||
             (changes.page !== undefined && !changes.page.firstChange)) {
             if (this._activeElementIndex !== -1) {
@@ -259,6 +259,17 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         };
 
         this._container = this.parentElement.firstElementChild;
+    }
+
+    /**
+     * @hidden
+     */
+    ngAfterViewChecked() {
+        if (this._valueChanged) {
+            this.highlight(this._lastSearchInfo.searchedText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+            this.activateIfNecessary();
+            this._valueChanged = false;
+        }
     }
 
     /**
@@ -318,7 +329,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
         if (this._observer === null) {
             const callback = (mutationList) => {
                 mutationList.forEach((mutation) => {
-                    const removedNodes = new Array(... mutation.removedNodes);
+                    const removedNodes = Array.from(mutation.removedNodes);
                     removedNodes.forEach((n) => {
                         if (n === this._container) {
                             this._nodeWasRemoved = true;
@@ -326,7 +337,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, OnDestroy, OnCh
                         }
                     });
 
-                    const addedNodes = new Array(... mutation.addedNodes);
+                    const addedNodes = Array.from(mutation.addedNodes);
                     addedNodes.forEach((n) => {
                         if (n === this.parentElement.firstElementChild && this._nodeWasRemoved) {
                             this._container = this.parentElement.firstElementChild;

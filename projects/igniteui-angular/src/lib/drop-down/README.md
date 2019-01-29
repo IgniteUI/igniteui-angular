@@ -26,6 +26,50 @@ To provide more useful visual information, use `isHeader` to group items semanti
 </igx-drop-down>
 ```
 
+## Grouping items
+The ***igx-drop-down-item-group*** component can be used inside of the ***igx-drop-down*** to group ***igx-drop-down-items***. The example below illustrates how to display hierarchical data in drop down groups:
+```typescript
+    // in example.component.ts
+    export class MyExampleComponent {
+        ...
+        foods: any[] =  [{
+            name: 'Vegetables',
+            entries: [{
+                    name: 'Cucumber',
+                    refNo: `00000` 
+                }, {
+                    name: 'Lettuce',
+                    refNo: `00001`
+                },
+                ...
+            ]   
+        }, {
+            name: 'Fruits',
+            entries: [{
+                    name: 'Banana',
+                    refNo: `10000` 
+                }, {
+                    name: 'Tomato',
+                    refNo: `10001`
+                },
+                ...
+            ]   
+        }];
+    }
+```
+```html
+    <!-- in example.component.html -->
+    <igx-drop-down>
+        <igx-drop-down-item-group *ngFor="let foodGroup of foods" [label]="foodGroup.name">
+            <igx-drop-down-item *ngFor="let food of foodGroup.entries" [value]='food.refNo'>
+                {{ food.name }}
+            </igx-drop-down-item>
+        </igx-drop-down-item-group>
+    </igx-drop-down>
+```
+
+***NOTE:*** The ***igx-drop-down-item-group*** tag can be used for grouping of ***igx-drop-down-item*** only an will forfeit any other content passed to it. 
+
 ### API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
 
@@ -82,10 +126,11 @@ The following inputs are available in the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `isSelected` | boolean| Defines if the item is the selected item. Only one item can be selected at time. |
+| `selected` | boolean| Defines if the item is the selected item. Only one item can be selected at time. |
 | `isHeader` | boolean| Defines if the item is a group header. |
 | `disabled` | boolean| Disables the given item. |
-| `isFocused` | boolean| Defines if the given item is focused. |
+| `index` | number | The data index of the drop down item. |
+| `focused` | boolean| Defines if the given item is focused. |
 | `value` | any | The value of the drop-down item. |
 
 #### Getters
@@ -93,6 +138,5 @@ The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |
 | :--- | :--- | :--- |
-| `index` | `number` | Gets item index. |
 | `elementHeight` | `number` | Gets item element height. |
 | `element`| `ElementRef` | Get item's html element. |

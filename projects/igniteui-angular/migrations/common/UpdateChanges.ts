@@ -201,18 +201,19 @@ export class UpdateChanges {
             let searchPattern;
 
             if (type === BindingType.output) {
-                base = String.raw`\(${change.name}\)`;
-                replace = `(${change.replaceWith})`;
+                base = String.raw`\(${change.name}\)=(["'])`;
+                replace = `(${change.replaceWith})=$1`;
             } else {
-                base = String.raw`(\[?)${change.name}(\]?)`;
-                replace = String.raw`$1${change.replaceWith}$2`;
+                // Match both bound - [name] - and regular - name
+                base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])`;
+                replace = String.raw`$1${change.replaceWith}$2$3`;
                 groups = 3;
             }
 
             let reg = new RegExp(base, 'g');
             if (change.remove || change.moveBetweenElementTags) {
                 // Group match (\1) as variable as it looks like octal escape (error in strict)
-                reg = new RegExp(String.raw`\s*${base}=(["']).*?${'\\' + groups}(?=\s|\>)`, 'g');
+                reg = new RegExp(String.raw`\s*${base}.*?${'\\' + groups}(?=\s|\>)`, 'g');
                 replace = '';
             }
             switch (change.owner.type) {

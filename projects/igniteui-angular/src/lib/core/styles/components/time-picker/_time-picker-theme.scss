@@ -10,6 +10,7 @@
 ///
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $text-color [null] - The text color of a open time picker.
 /// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
@@ -19,11 +20,15 @@
 /// @param {Color} $header-hour-text-color [null] - The header hour text color of a time picker.
 /// @param {Color} $header-time-period-color [null] - The header AM/PM text color of a time picker.
 /// @param {Color} $background-color [null] - The time-picker panel background color.
+/// @param {box-shadow} $modal-shadow [null] - The custom shadow to be used for the time picker in modal mode.
+/// @param {box-shadow} $dropdown-shadow [null] - The custom shadow to be used for the time picker in dropdown mode.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires text-contrast
+/// @requires igx-elevation
+/// @requires $elevations
 /// @requires extend
 ///
 /// @example scss Change the background and text colors in  time picker
@@ -36,6 +41,7 @@
 @function igx-time-picker-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $text-color: null,
     $hover-text-color: null,
@@ -44,10 +50,14 @@
     $header-background: null,
     $header-hour-text-color: null,
     $header-time-period-color: null,
-    $background-color: null
+    $background-color: null,
+    $modal-shadow: null,
+    $dropdown-shadow: null
 ) {
     $name: 'igx-time-picker';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $time-picker-schema: map-get($schema, $name);
+
+    $theme: apply-palette($time-picker-schema, $palette);
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -69,6 +79,16 @@
         $active-item-background: rgba(text-contrast($background-color), .12);
     }
 
+    @if not($modal-shadow) {
+        $elevation: map-get($time-picker-schema, 'modal-elevation');
+        $modal-shadow: igx-elevation($elevations, $elevation);
+    }
+
+    @if not($dropdown-shadow) {
+        $elevation: map-get($time-picker-schema, 'dropdown-elevation');
+        $dropdown-shadow: igx-elevation($elevations, $elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -79,7 +99,9 @@
         header-background: $header-background,
         header-hour-text-color: $header-hour-text-color,
         header-time-period-color: $header-time-period-color,
-        background-color: $background-color
+        background-color: $background-color,
+        modal-shadow: $modal-shadow,
+        dropdown-shadow: $dropdown-shadow,
     ));
 }
 
@@ -98,7 +120,7 @@
         max-width: 340px;
         min-width: 320px;
         border-radius: rem(4px);
-        box-shadow: igx-elevation($elevations, 24);
+        box-shadow: --var($theme, 'modal-shadow');
         overflow: hidden;
     }
 
@@ -114,7 +136,7 @@
 
     %time-picker--dropdown {
         min-width: 200px;
-        box-shadow: igx-elevation($elevations, 3);
+        box-shadow: --var($theme, 'dropdown-shadow');
     }
 
     %time-picker__body {

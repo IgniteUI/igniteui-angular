@@ -156,6 +156,11 @@ export class HelperUtils {
                 resolve();
             })
 
+    public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
+        const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
+        HelperUtils.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
+    }
+
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
         // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
         const summary = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);
@@ -189,12 +194,12 @@ export class HelperUtils {
         return summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
     }
 
-    public static getAllVisbleSummariesLength(fix) {
-        return HelperUtils.getAllVisbleSummaries(fix).length;
+    public static getAllVisibleSummariesLength(fix) {
+        return HelperUtils.getAllVisibleSummaries(fix).length;
     }
 
-    public static getAllVisbleSummariesRowIndexes(fix) {
-        const summaries = HelperUtils.getAllVisbleSummaries(fix);
+    public static getAllVisibleSummariesRowIndexes(fix) {
+        const summaries = HelperUtils.getAllVisibleSummaries(fix);
         const rowIndexes = [];
         summaries.forEach(summary => {
             rowIndexes.push(Number(summary.attributes['data-rowIndex']));
@@ -202,14 +207,14 @@ export class HelperUtils {
         return rowIndexes.sort((a: number, b: number) => a - b);
     }
 
-    public static getAllVisbleSummaries(fix) {
+    public static getAllVisibleSummaries(fix) {
         return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
     }
 
-    public static verifyVisbleSummariesHeight(fix, summariesRows, rowHeight = 50) {
-        const visibleSummaries = HelperUtils.getAllVisbleSummaries(fix);
+    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 50) {
+        const visibleSummaries = HelperUtils.getAllVisibleSummaries(fix);
         visibleSummaries.forEach(summary => {
-            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight);
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight - 1);
             expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
         });
     }
@@ -231,7 +236,7 @@ export class HelperUtils {
             resolve();
         })
 
-        public static focusSummaryCell =
+    public static focusSummaryCell =
         (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);

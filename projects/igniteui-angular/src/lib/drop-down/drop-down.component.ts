@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -14,10 +13,10 @@ import {
     EventEmitter,
     Output,
 } from '@angular/core';
-import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemNavigationDirective, DropDownActionKey } from './drop-down-navigation.directive';
+import { DropDownActionKey } from './drop-down-navigation.directive';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs, Navigate } from './drop-down.common';
 import { CancelableEventArgs, isIE } from '../core/utils';
@@ -49,7 +48,7 @@ import { OverlaySettings } from '../services';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy {
-    @ContentChildren(forwardRef(() => IgxDropDownItemComponent))
+    @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
     protected children: QueryList<IgxDropDownItemBase>;
 
     @ViewChild(IgxToggleDirective)
@@ -135,10 +134,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * let currentItem = this.dropdown.selectedItem;
      * ```
      */
-    public get selectedItem(): any {
+    public get selectedItem(): IgxDropDownItemBase {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
-            if (selectedItem.isSelected) {
+            if (selectedItem.selected) {
                 return selectedItem;
             }
             this.selection.clear(this.id);
@@ -352,10 +351,10 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (!args.cancel) {
             this.selection.set(this.id, new Set([newSelection]));
             if (oldSelection) {
-                oldSelection.isSelected = false;
+                oldSelection.selected = false;
             }
             if (newSelection) {
-                newSelection.isSelected = true;
+                newSelection.selected = true;
             }
             if (event) {
                 this.toggleDirective.close();
@@ -364,13 +363,3 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    exports: [IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective],
-    imports: [CommonModule, IgxToggleModule],
-    providers: [IgxSelectionAPIService]
-})
-export class IgxDropDownModule { }

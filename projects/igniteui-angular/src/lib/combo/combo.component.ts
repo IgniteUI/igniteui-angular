@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Self, Inject, ViewChildren, QueryList
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, forwardRef
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -10,21 +10,23 @@ import {
     IgxComboHeaderItemDirective,
     IgxComboHeaderDirective,
     IgxComboFooterDirective,
-    IgxComboAddItemDirective
+    IgxComboAddItemDirective,
+    IgxComboToggleIconDirective,
+    IgxComboClearIconDirective
 } from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NgControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, NG_VALIDATORS } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IgxForOfModule, IForOfState } from '../directives/for-of/for_of.directive';
+import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxDropDownModule } from '../drop-down/drop-down.component';
+import { IgxDropDownModule } from '../drop-down/index';
 import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -35,7 +37,6 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
-import { takeUntil } from 'rxjs/operators';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 
@@ -98,7 +99,15 @@ const noop = () => { };
 @Component({
     selector: 'igx-combo',
     templateUrl: 'combo.component.html',
-    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService]
+    providers: [{ provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }, IgxComboAPIService, {
+        provide: NG_VALUE_ACCESSOR,
+        useExisting: forwardRef(() => IgxComboComponent),
+        multi: true
+    }, {
+        provide: NG_VALIDATORS,
+        useExisting: forwardRef(() => IgxComboComponent),
+        multi: true
+    }]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit, OnDestroy {
     /**
@@ -154,14 +163,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
-        @Self() @Optional() public ngControl: NgControl,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
-        if (this.ngControl) {
-            // Note: we provide the value accessor through here, instead of
-            // the `providers` to avoid running into a circular import.
-            this.ngControl.valueAccessor = this;
-        }
         this.comboAPI.register(this);
     }
 
@@ -190,23 +193,185 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         return this.filterable || this.allowCustomValues;
     }
 
+    /**
+     * The custom template, if any, that should be used when rendering ITEMS in the combo list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.itemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboItem>
+     *          <div class="custom-item" let-item let-key="valueKey">
+     *              <div class="custom-item__name">{{ item[key] }}</div>
+     *              <div class="custom-item__cost">{{ item.cost }}</div>
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboItemDirective, { read: TemplateRef })
     public itemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the HEADER for the combo items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.headerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboHeader>
+     *          <div class="combo__header">
+     *              This is a custom header
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
     public headerTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the FOOTER for the combo items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.footerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboFooter>
+     *          <div class="combo__footer">
+     *              This is a custom footer
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
     public footerTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering HEADER ITEMS for groups in the combo list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.headerItemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboHeaderItem let-item let-key="groupKey">
+     *          <div class="custom-item--group">Group header for {{ item[key] }}</div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.addItemTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboAddItem>
+     *          <button class="combo__add-button">
+     *              Click to add item
+     *          </button>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
     public addItemTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the ADD BUTTON in the combo drop down
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.emptyTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboEmpty>
+     *          <div class="combo--emtpy">
+     *              There are no items to display
+     *          </div>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
     @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the combo TOGGLE(open/close) button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.toggleIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboToggleIcon let-collapsed>
+     *          <igx-icon>{{ collapsed ? 'remove_circle' : 'remove_circle_outline'}}</igx-icon>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
+    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
+    public toggleIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the combo CLEAR button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.combo.clearIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-combo #combo>
+     *      ...
+     *      <ng-template igxComboClearIcon>
+     *          <igx-icon>clear</igx-icon>
+     *      </ng-template>
+     *  </igx-combo>
+     * ```
+     */
+    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
+    public clearIconTemplate: TemplateRef<any> = null;
+
     /**
      * @hidden
      */
@@ -218,6 +383,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('complex', { read: TemplateRef })
     protected complexTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxForOfDirective)
+    public virtualScrollContainer: IgxForOfDirective<any>;
 
     /**
      * @hidden
@@ -549,6 +720,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public placeholder = '';
 
     /**
+     * @hidden
+     */
+    public get inputEmpty(): boolean {
+        return !this.value && !this.placeholder;
+    }
+
+    /**
      * Defines the placeholder value for the combo dropdown search field
      *
      * ```typescript
@@ -665,6 +843,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
+    @HostBinding('attr.aria-labelledby')
     public ariaLabelledBy: string;
 
     /**
@@ -704,30 +883,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      */
     public searchValue = '';
-
-    /**
-     * @hidden
-     */
-    @HostListener('blur')
-    public onBlur(): void {
-        if (this.dropdown.collapsed) {
-            this.valid = IgxComboState.INITIAL;
-            if (this.ngControl) {
-                if (!this.ngControl.valid) {
-                    this.valid = IgxComboState.INVALID;
-                }
-            } else if (this._hasValidators() && !this.elementRef.nativeElement.checkValidity()) {
-                this.valid = IgxComboState.INVALID;
-            }
-        }
-    }
-
-    private _hasValidators(): boolean {
-        if (this.elementRef.nativeElement.hasAttribute('required')) {
-            return true;
-        }
-        return !!this.ngControl && (!!this.ngControl.control.validator || !!this.ngControl.control.asyncValidator);
-    }
 
     /**
      * @hidden
@@ -1121,11 +1276,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    protected onStatusChanged() {
-        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
-            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+    protected onStatusChanged(formControl: FormControl): boolean {
+        if ((formControl.touched || formControl.dirty) &&
+            (formControl.validator || formControl.asyncValidator)) {
+            this.valid = this.value ? IgxComboState.VALID : IgxComboState.INVALID;
+            return !this.value;
         }
+        return null;
     }
 
     /**
@@ -1144,9 +1301,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
         this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
-        if (this.ngControl && this.ngControl.value) {
-            this.selectItems(this.ngControl.value, true);
-        }
     }
 
     /**
@@ -1154,10 +1308,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngAfterViewInit() {
         this.filteredData = [...this.data];
-
-        if (this.ngControl) {
-            this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged.bind(this));
-        }
     }
 
     /**
@@ -1195,13 +1345,27 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden
      */
-    public registerOnTouched(fn: any): void { }
+    public registerOnTouched(fn: any): void {}
 
     /**
      * @hidden
      */
     public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
+    }
+
+    /**
+     * @hidden
+     */
+    public getEditElement(): HTMLElement {
+        return this.comboInput.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
+    public validate(c: FormControl) {
+        return this.onStatusChanged(c);
     }
 
     /**
@@ -1448,14 +1612,18 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
-        IgxComboAddItemDirective],
+        IgxComboAddItemDirective,
+        IgxComboToggleIconDirective,
+        IgxComboClearIconDirective],
     exports: [IgxComboComponent, IgxComboItemComponent, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
         IgxComboHeaderDirective,
         IgxComboFooterDirective,
-        IgxComboAddItemDirective],
+        IgxComboAddItemDirective,
+        IgxComboToggleIconDirective,
+        IgxComboClearIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
     providers: [IgxSelectionAPIService]

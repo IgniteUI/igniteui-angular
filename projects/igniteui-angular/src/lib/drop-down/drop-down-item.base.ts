@@ -1,6 +1,10 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
+import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
+import { IgxDropDownGroupComponent } from './drop-down-group.component';
+
+let warningShown = false;
 
 /**
  * An abstract class defining a drop-down item:
@@ -15,12 +19,38 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     protected _isFocused = false;
     protected _isSelected = false;
+    protected _index = null;
+    protected _disabled = false;
 
     /**
      * @hidden
      */
     public get itemID() {
         return this;
+    }
+
+    /**
+     * The data index of the dropdown item.
+     *
+     * ```typescript
+     * // get the data index of the selected dropdown item
+     * let selectedItemIndex = this.dropdown.selectedItem.index
+     * ```
+     */
+    @Input()
+    public get index(): number {
+        if (this._index === null) {
+            warningShown = showMessage(
+                'IgxDropDownItemBase: Automatic index is deprecated.' +
+                'Bind in the template instead using `<igx-drop-down-item [index]="i"` instead.`',
+                warningShown);
+            return this.itemIndex;
+        }
+        return this._index;
+    }
+
+    public set index(value) {
+        this._index = value;
     }
 
     /**
@@ -56,15 +86,15 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemSelected = mySelectedItem.isSelected; // true
+     *  let isMyItemSelected = mySelectedItem.selected; // true
      * ```
      */
     @Input()
-    get isSelected(): boolean {
+    get selected(): boolean {
         return this._isSelected;
     }
 
-    set isSelected(value: boolean) {
+    set selected(value: boolean) {
         if (this.isHeader) {
             return;
         }
@@ -74,10 +104,27 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */
+    @Input()
+    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is depracated.\n` +
+        `Use \`selected\` instead.`)
+    get isSelected(): boolean {
+        return this.selected;
+    }
+
+    /**
+     * @hidden
+     */
+    set isSelected(value: boolean) {
+        this.selected = value;
+    }
+
+    /**
+     * @hidden
+     */
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-drop-down__item--selected')
     get selectedStyle(): boolean {
-        return this.isSelected;
+        return this.selected;
     }
 
     /**
@@ -88,7 +135,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
-    get isFocused(): boolean {
+    get focused(): boolean {
         return (!this.isHeader && !this.disabled) && this._isFocused;
     }
 
@@ -101,8 +148,24 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *  </igx-drop-down-item>
      * ```
      */
-    set isFocused(value: boolean) {
+    set focused(value: boolean) {
         this._isFocused = value;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-drop-down__item--focused')
+    @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
+        `Use \`focused\` instead.`)
+    get isFocused(): boolean {
+        return this.focused;
+    }
+    /**
+     * @hidden
+     */
+    set isFocused(value: boolean) {
+        this.focused = value;
     }
 
     /**
@@ -124,7 +187,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      */
     @Input()
     @HostBinding('class.igx-drop-down__header')
-    public isHeader = false;
+    public isHeader: boolean;
 
     /**
      * Sets/gets if the given item is disabled
@@ -142,16 +205,23 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *      </div>
      *  </igx-drop-down-item>
      * ```
+     * **NOTE:** Drop-down items inside of a disabled `IgxDropDownGroup` will always count as disabled
      */
     @Input()
     @HostBinding('class.igx-drop-down__item--disabled')
-    public disabled = false;
+    public get disabled(): boolean {
+        return this.group ? this.group.disabled || this._disabled : this._disabled;
+    }
+
+    public set disabled(value: boolean) {
+        this._disabled = value;
+    }
 
     /**
      * Gets item index
-     * @hidden
+     * @hidden @internal
      */
-    public get index(): number {
+    public get itemIndex(): number {
         return this.dropDown.items.indexOf(this);
     }
 
@@ -174,6 +244,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     constructor(
         @Inject(IGX_DROPDOWN_BASE) protected dropDown: IDropDownBase,
         protected elementRef: ElementRef,
+        @Optional() protected group: IgxDropDownGroupComponent,
         @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
     ) { }
 
@@ -185,7 +256,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     ngDoCheck(): void {
-        if (this.isSelected) {
+        if (this.selected) {
             const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
             if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
