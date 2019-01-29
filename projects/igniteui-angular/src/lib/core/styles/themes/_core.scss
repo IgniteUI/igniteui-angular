@@ -6,8 +6,7 @@
 // Anything imported here shouldn't affect
 // theme configuration
 
-// Import normalize and utilities
-@import '../base/normalize';
+// Import utilities
 @import './utilities';
 
 
@@ -61,6 +60,11 @@
 
 /// Includes the base for each theme.
 @mixin igx-core() {
-    @include normalize();
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
     @include igx-typography();
 }
