@@ -14,8 +14,6 @@ All notable changes for each version of this project will be documented in this 
             </igx-drop-down-item>
         </igx-drop-down>
     ```
-- `igxToggleAction`
-    - when applied `igxToggleAction` will set its host element as the position strategy target.
 
 ## 7.1.2
 ### Features
