@@ -432,7 +432,7 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         expect(fix.componentInstance.selectedCell.value).toEqual('Ana Trujillo Emparedados y helados');
         expect(fix.componentInstance.selectedCell.column.field).toMatch('CompanyName');
-        cell = cells[6];
+        cell = cells[5];
 
         UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
 
