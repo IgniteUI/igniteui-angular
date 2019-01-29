@@ -290,10 +290,10 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
         ri.cdr.detectChanges();
-        await wait(10);
+        await wait(100);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.verticalScrollContainer.scrollTo(9);
-        await wait(10);
+        await wait(100);
         fixture.detectChanges();
         let currScrTop = childGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
         expect(currScrTop).toBeGreaterThan(0);
