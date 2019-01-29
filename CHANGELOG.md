@@ -20,7 +20,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `igxCombo`
     - **Breaking Change** `combo.value` is now only a getter.
-    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
+    - **Feature** added support for templating the default input group of the component. The `igx-combo` now allows for `igx-prefix`, `igx-suffix`,`igx-hint` and `[igxLabel]` components to be passed as `ng-content` and they will be renderer accordingly on the combo's input. Example:
     ```html
         <!-- customize combo input --->
         <igx-combo #myCombo [data]="myGenres">
