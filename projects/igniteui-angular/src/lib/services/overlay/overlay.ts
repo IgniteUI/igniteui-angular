@@ -539,7 +539,7 @@ export class IgxOverlayService implements OnDestroy {
                 }
             }
         }
-    };
+    }
 
     private addOutsideClickListener(info: OverlayInfo) {
         if (info.settings.closeOnOutsideClick) {
@@ -598,7 +598,7 @@ export class IgxOverlayService implements OnDestroy {
         for (let i = this._overlayInfos.length; i--;) {
             this.reposition(this._overlayInfos[i].id);
         }
-    };
+    }
 
     /**
      *@hidden
