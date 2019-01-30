@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
@@ -58,6 +58,24 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             expect(document.querySelectorAll('igx-grid-header').length).toEqual(6);
         });
+
+        it('should apply height correctly with and without filtering', fakeAsync(() => {
+            let filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(600);
+
+            hierarchicalGrid.height = '800px';
+            tick();
+            fixture.detectChanges();
+            expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(800);
+            expect(filteringCells.length).toBe(3);
+
+            hierarchicalGrid.allowFiltering = false;
+            fixture.detectChanges();
+            expect(hierarchicalGrid.nativeElement.offsetHeight).toBe(800);
+            filteringCells = fixture.debugElement.queryAll(By.css('igx-grid-filtering-cell'));
+            expect(filteringCells.length).toBe(0);
+
+        }));
     });
 
     describe('Selection', () => {

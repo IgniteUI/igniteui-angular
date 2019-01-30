@@ -215,14 +215,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
-    get maxLevelHeaderDepth() {
-        this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
-        return this._maxLevelHeaderDepth;
-    }
-
-    /**
-     * @hidden
-     */
     get hasExpandableChildren() {
         if (!this.data || this.data.length === 0) {
             return false;
