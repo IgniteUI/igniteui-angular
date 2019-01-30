@@ -79,6 +79,20 @@ export class CSVWrapper {
         `10${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._eor}`;
     }
 
+    get simpleGridDataFormatted() {
+        return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
+        `1${this._delimiter}CASEY HOUSTON${this._delimiter}vice president${this._eor}` +
+        `2${this._delimiter}GILBERTO TODD${this._delimiter}director${this._eor}` +
+        `3${this._delimiter}TANYA BENNETT${this._delimiter}director${this._eor}` +
+        `4${this._delimiter}JACK SIMON${this._delimiter}software developer${this._eor}` +
+        `5${this._delimiter}CELIA MARTINEZ${this._delimiter}senior software developer${this._eor}` +
+        `6${this._delimiter}ERMA WALSH${this._delimiter}ceo${this._eor}` +
+        `7${this._delimiter}DEBRA MORTON${this._delimiter}associate software developer${this._eor}` +
+        `8${this._delimiter}ERIKA WELLS${this._delimiter}software development team lead${this._eor}` +
+        `9${this._delimiter}LESLIE HANSEN${this._delimiter}associate software developer${this._eor}` +
+        `10${this._delimiter}EDUARDO RAMIREZ${this._delimiter}manager${this._eor}`;
+    }
+
     get sortedSimpleGridData() {
         return `ID${this._delimiter}Name${this._delimiter}JobTitle${this._eor}` +
         `1${this._delimiter}Casey Houston${this._delimiter}Vice President${this._eor}` +
@@ -184,6 +198,18 @@ export class CSVWrapper {
 `6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}CEO${this._delimiter}52${this._eor}` +
 `10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}Manager${this._delimiter}53${this._eor}` +
 `9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}Associate Software Developer${this._delimiter}44${this._eor}`;
+    }
+
+    get treeGridDataFormatted() {
+        return `ID${this._delimiter}ParentID${this._delimiter}Name${this._delimiter}JobTitle${this._delimiter}Age${this._eor}` +
+`1${this._delimiter}-1${this._delimiter}Casey Houston${this._delimiter}vice president${this._delimiter}384${this._eor}` +
+`2${this._delimiter}1${this._delimiter}Gilberto Todd${this._delimiter}director${this._delimiter}492${this._eor}` +
+`3${this._delimiter}2${this._delimiter}Tanya Bennett${this._delimiter}director${this._delimiter}348${this._eor}` +
+`7${this._delimiter}2${this._delimiter}Debra Morton${this._delimiter}associate software developer${this._delimiter}420${this._eor}` +
+`4${this._delimiter}1${this._delimiter}Jack Simon${this._delimiter}software developer${this._delimiter}396${this._eor}` +
+`6${this._delimiter}-1${this._delimiter}Erma Walsh${this._delimiter}ceo${this._delimiter}624${this._eor}` +
+`10${this._delimiter}-1${this._delimiter}Eduardo Ramirez${this._delimiter}manager${this._delimiter}636${this._eor}` +
+`9${this._delimiter}10${this._delimiter}Leslie Hansen${this._delimiter}associate software developer${this._delimiter}528${this._eor}`;
     }
 
     get treeGridDataSorted() {
