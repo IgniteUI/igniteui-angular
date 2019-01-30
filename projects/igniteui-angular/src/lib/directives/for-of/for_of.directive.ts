@@ -1295,10 +1295,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 if (operations.length > 0) {
                     // only update if some operation was done - adding/removing/moving of items
                     this._updateSizeCache();
-                this._applyChanges(changes);
-                this.cdr.markForCheck();
-                this._updateScrollOffset();
+                    this._applyChanges(changes);
+                    this.cdr.markForCheck();
+                    this._updateScrollOffset();
                     this.onDataChanged.emit();
+                } else {
+                    this._updateViews(this.state.chunkSize);
+                    this.cdr.markForCheck();
+                    this._updateScrollOffset();
                 }
             }
         }
@@ -1357,10 +1361,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.state.chunkSize++;
     }
 
-    protected _applyChanges(changes: IterableChanges<T>) {
-        const prevChunkSize = this.state.chunkSize;
-        this.applyChunkSizeChange();
-        this._recalcScrollBarSize();
+    protected _updateViews(prevChunkSize) {
         if (this.igxForOf && this.igxForOf.length && this.dc) {
             const embeddedViewCopy = Object.assign([], this._embeddedViews);
             let startIndex;
@@ -1400,6 +1401,12 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 });
             }
         }
+    }
+    protected _applyChanges(changes: IterableChanges<T>) {
+        const prevChunkSize = this.state.chunkSize;
+        this.applyChunkSizeChange();
+        this._recalcScrollBarSize();
+        this._updateViews(prevChunkSize);
     }
 }
 /**
