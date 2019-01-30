@@ -423,19 +423,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
-    public getTemplate(rowData: any): TemplateRef<any> {
-        let template;
-        if (this.isChildGridRecord(rowData)) {
-            template = this.childTemplate;
-        } else {
-            template = this.hierarchicalRecordTemplate;
-        }
-        return template;
-    }
-
-    /**
-     * @hidden
-     */
     public getContext(rowData): any {
         if (this.isChildGridRecord(rowData)) {
             const cachedData = this.childGridTemplates.get(rowData.rowID);
