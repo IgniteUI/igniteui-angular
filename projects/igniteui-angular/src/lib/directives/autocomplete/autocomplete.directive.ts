@@ -276,6 +276,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         const focusedItem = this.dropDown.focusedItem;
         if (focusedItem) {
             focusedItem.focused = false;
+            this.dropDown.focusedItem = null;
         }
         const firstItem = this.dropDown.items[0];
         if (firstItem) {
