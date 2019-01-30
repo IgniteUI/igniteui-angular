@@ -885,7 +885,9 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
         switch (event.key) {
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
-                this.spinValue(event);
+                if (!this.preventWeekdayChange(event)) {
+                    this.spinValue(event);
+                }
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
@@ -893,24 +895,34 @@ export class IgxDatePickerComponent implements IgxDatePickerBase, ControlValueAc
                     this.calculateDate(this.getEditElement().value, event.type);
                     this.openCalendar(event);
                 } else {
-                    this.spinValue(event);
+                    if (!this.preventWeekdayChange(event)) {
+                        this.spinValue(event);
+                    }
                 }
                 break;
             default:
-                // Prevent week day name typing modification
-                const weekDayPart = getDateFormatPart(this.dateFormatParts, DATE_PARTS.WEEKDAY);
-                const cursorPosition = this._getCursorPosition();
-                if (weekDayPart !== undefined
-                    && cursorPosition >= weekDayPart.position[0]
-                    && cursorPosition <= weekDayPart.position[1]) {
-                    event.preventDefault();
-                }
-                break;
+                return;
+        }
+    }
+
+    private preventWeekdayChange(event): boolean {
+        const weekDayPart = getDateFormatPart(this.dateFormatParts, DATE_PARTS.WEEKDAY);
+        const cursorPosition = this._getCursorPosition();
+        if (weekDayPart !== undefined
+            && cursorPosition >= weekDayPart.position[0]
+            && cursorPosition <= weekDayPart.position[1]
+            && (event.key !== KEYS.RIGHT_ARROW && event.key !== KEYS.RIGHT_ARROW_IE
+                && event.key !== KEYS.LEFT_ARROW && event.key !== KEYS.LEFT_ARROW_IE)
+        ) {
+            event.preventDefault();
+            return true;
         }
     }
 
     public onWheel(event) {
-        this.spinValue(event);
+        if (!this.preventWeekdayChange(event)) {
+            this.spinValue(event);
+        }
     }
 
     public onInput(event) {

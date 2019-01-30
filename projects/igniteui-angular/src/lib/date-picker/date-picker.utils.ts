@@ -423,9 +423,10 @@ export function getSpinnedDateInput(dateFormatParts: any[],
                 newValue = getMonthIndexByName(dateFormatParts, inputValue) - 1;
             }
 
-            if (datePartType === DATE_PARTS.WEEKDAY) {
-                newValue = getDayIndexByName(dateFormatParts, inputValue);
-            }
+            // Not implemented for now
+            // if (datePartType === DATE_PARTS.WEEKDAY) {
+            //     newValue = getDayIndexByName(dateFormatParts, inputValue);
+            // }
             break;
         }
         default: {
@@ -484,15 +485,16 @@ export function getSpinnedDateInput(dateFormatParts: any[],
                 changedPart = (monthName.length < promptCharToAdd) ? `${monthName}${suffix}` : `${monthName}`;
             }
 
-            if (datePartType === DATE_PARTS.WEEKDAY) {
-                const dayName = geDayNameByIndex(dateFormatParts, newValue);
-                let suffix = '';
-                const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_WEEKDAY_SYMBOLS - dayName.length) : 3;
-                for (let i = 0; i < promptCharToAdd; i++) {
-                    suffix += PROMPT_CHAR;
-                }
-                changedPart = (dayName.length < promptCharToAdd) ? `${dayName}${suffix}` : `${dayName}`;
-            }
+            // Not implemented for now
+            // if (datePartType === DATE_PARTS.WEEKDAY) {
+            //     const dayName = geDayNameByIndex(dateFormatParts, newValue);
+            //     let suffix = '';
+            //     const promptCharToAdd = (datePartFormatType === FORMAT_DESC.LONG) ? (MAX_WEEKDAY_SYMBOLS - dayName.length) : 3;
+            //     for (let i = 0; i < promptCharToAdd; i++) {
+            //         suffix += PROMPT_CHAR;
+            //     }
+            //     changedPart = (dayName.length < promptCharToAdd) ? `${dayName}${suffix}` : `${dayName}`;
+            // }
 
             break;
         }
@@ -543,11 +545,11 @@ export function getMinMaxValue(dateFormatParts: any[], spinnedDatePart, inputVal
             }
             break;
         }
-        case DATE_PARTS.WEEKDAY: {
-            minValue = 0;
-            maxValue = 6;
-            break;
-        }
+        // case DATE_PARTS.WEEKDAY: {
+        //     minValue = 0;
+        //     maxValue = 6;
+        //     break;
+        // }
     }
     return [minValue, maxValue];
 }
