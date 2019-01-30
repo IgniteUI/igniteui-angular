@@ -218,11 +218,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /**
      * @hidden
      */
-    handleFocus() {}
-
-    /**
-     * @hidden
-     */
     handleKeyDown(event) {
         if (!this.collapsed) {
             super.handleKeyDown(event);
