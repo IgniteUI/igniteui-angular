@@ -33,7 +33,7 @@ import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent, IgxGridExpandState } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 
@@ -114,26 +114,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
-    public set hierarchicalState(value: HierarchicalStateRecord[]) {
-        // Expanding or collapsing any of the rows no longear means that all rows should be expanded/collapsed.
-        if (this.parent && this.parentIsland) {
-            this.parentIsland.childrenExpandState = IgxGridExpandState.MIXED;
-        } else {
-            this.childrenExpandState = IgxGridExpandState.MIXED;
-        }
-        this._hierarchicalState = value;
-    }
-
-    /**
-     * Returns the state of the `IgxHierarchicalGridComponent` containing which rows are expanded.
-     * ```typescript
-     * let state = this.grid.hierarchicalState;
-     * ```
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public get hierarchicalState(): HierarchicalStateRecord[] {
-        return this._hierarchicalState;
-    }
+    public hierarchicalState: HierarchicalStateRecord[] = [];
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.
@@ -178,12 +159,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     set expandChildren(value: boolean) {
         this._expandChildren = value;
         if (value && this.data) {
-            this.childrenExpandState = IgxGridExpandState.EXPANDED;
             this.hierarchicalState = this.data.map((rec) => {
                 return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
         } else if (this.data) {
-            this.childrenExpandState = IgxGridExpandState.COLLAPSED;
             this.hierarchicalState = [];
         }
     }
@@ -332,8 +311,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
 
-        if (this.expandChildren && this.data && this.childrenExpandState !== IgxGridExpandState.EXPANDED) {
-            this.childrenExpandState = IgxGridExpandState.EXPANDED;
+        if (this.expandChildren && this.data && this.hierarchicalState.length !== this.data.length) {
             this.hierarchicalState = this.data.map((rec) => {
                 return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });

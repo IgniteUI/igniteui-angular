@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 7.2.0
+- **New component** `IgxHierarchicalGrid`:
+    - Provides the ability to represent and manipulate hierarchical data in which each level has a different schema. Each level is represented by a component derived from **igx-grid** and supports most of its functionality. Read up more information about the IgxHierarchicalGrid in the official [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid.html) or the [ReadMe](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/grids/hierarchical-grid/README.md)
+
 - `igxGrid` now has `isLoading` input property. When enabled will show loading indicator, until the data is available. It can be best utilized for remote scenarios. Another input property `loadingGridTemplate` allows customizing the loading indicator.
     ```html
     <!-- Example -->
@@ -52,8 +55,6 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `Theme Elevations & Shadows` - Components with shadows, set by an elevation level or otherwise, are now fully configurable by the user via schema and/or theme properties. User can also provide a custom elevations set to component themes that support them.
     - **Breaking Change** - The `$search-shadow-color` and `$search-disabled-shadow-color` properties on the `igx-input-group-theme` have been replaced with `$search-resting-shadow` and `$search-disabled-shadow` respectively. Use `ng update` to migrate automatically.
-- `igxToggleAction`
-    - when applied `igxToggleAction` will set its host element as the position strategy target.
 
 ## 7.1.2
 ### Features

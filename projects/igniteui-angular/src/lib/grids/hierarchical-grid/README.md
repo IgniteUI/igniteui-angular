@@ -68,8 +68,10 @@ Most applications are designed to load as little data as possible initially for 
 
 ```html
 <igx-hierarchical-grid #grid1 [isLoading]="true" [data]="remoteData" [autoGenerate]="true">
-    <igx-row-island #rowIsland1 [key]="'Orders'" [isLoading]="true" [autoGenerate]="true" (onGridCreated)="gridCreated($event, rowIsland1)">
-        <igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true" (onGridCreated)="gridCreated($event, rowIsland2)">
+    <igx-row-island #rowIsland1 [key]="'Orders'" [isLoading]="true" [autoGenerate]="true"
+    (onGridCreated)="gridCreated($event, rowIsland1)">
+        <igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true"
+        (onGridCreated)="gridCreated($event, rowIsland2)">
         </igx-row-island>
     </igx-row-island>
 </igx-hierarchical-grid>
@@ -77,11 +79,17 @@ Most applications are designed to load as little data as possible initially for 
 
 ```typescript
     gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
-        this.remoteService.getData({ parentID: event.parendID, level: rowIsland.level, key: rowIsland.key }, (data) => {
-            event.grid.data = data['value'];
-            event.grid.isLoading = false;
-            event.grid.cdr.detectChanges();
-        });
+        this.remoteService.getData(
+            {
+                parentID: event.parendID,
+                level: rowIsland.level,
+                key: rowIsland.key
+            }, (data) => {
+                event.grid.data = data['value'];
+                event.grid.isLoading = false;
+                event.grid.cdr.detectChanges();
+            }
+        );
     }
 ```
 
@@ -111,8 +119,8 @@ The following features are no supported and not exposed in the API of the Hierar
 Enabling and configuring features is done through the **igx-row-island** markup and is applied for every grid that is created for it. Changing options on runtime through the row instance changes them for each of the grids it spawned. 
 
 ```html
-<igx-hierarchical-grid [data]="localData" [displayDensity]="density" [autoGenerate]="false" [allowFiltering]='true' [paging]="true" [height]="'600px'"
-    [width]="'800px'" #hGrid>
+<igx-hierarchical-grid [data]="localData" [displayDensity]="density" [autoGenerate]="false"
+    [allowFiltering]='true' [paging]="true" [height]="'600px'" [width]="'800px'" #hGrid>
     <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
     <igx-column-group header="Information">
         <igx-column field="ChildLevels"></igx-column>
@@ -175,7 +183,8 @@ Below is the list of all inputs that the developers may set to configure the gri
 Defining handlers for this event emitter is done using declarative event binding:
 
 ```html
-<<igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true" (onGridCreated)="gridCreated($event, rowIsland2)">
+<igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true"
+    (onGridCreated)="gridCreated($event, rowIsland2)">
 </igx-row-island>
 ```
 

@@ -36,12 +36,6 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
-export const enum IgxGridExpandState {
-    COLLAPSED = -1, // Set when all rows to be collapsed through expandChildren option
-    MIXED = 0, // Should be set when rows are manually expanded/collapsed
-    EXPANDED = 1 // Set when all rows to be expanded through expandChildren option
-}
-
 export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
     public abstract rootGrid;
 
@@ -65,31 +59,12 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     /**
      * @hidden
      */
-    get shouldExpandAllChildren() {
-        return this.childrenExpandState === IgxGridExpandState.EXPANDED;
-    }
-
-    /**
-     * @hidden
-     */
-    get shouldCollapseAllChildren() {
-        return this.childrenExpandState === IgxGridExpandState.COLLAPSED;
-    }
-
-    /**
-     * @hidden
-     */
     public hgridAPI: IgxHierarchicalGridAPIService;
 
     /**
      * @hidden
      */
     public parentIsland: IgxRowIslandComponent;
-
-    /**
-     * @hidden
-     */
-    public childrenExpandState: IgxGridExpandState = IgxGridExpandState.COLLAPSED;
 
     protected _expandChildren = false;
 
