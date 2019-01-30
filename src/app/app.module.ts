@@ -79,6 +79,7 @@ import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchica
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
+import { DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 
@@ -150,7 +151,9 @@ const components = [
     HierarchicalGridSampleComponent,
     HierarchicalGridRemoteSampleComponent,
     HierarchicalGridUpdatingSampleComponent,
-    GridColumnPercentageWidthsSampleComponent
+    GridColumnPercentageWidthsSampleComponent,
+    DisplayFormatPipe,
+    InputFormatPipe
 ];
 
 @NgModule({
